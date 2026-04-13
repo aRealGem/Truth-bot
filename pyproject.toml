@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "truthbot"
+version = "0.1.0"
+description = "Automated political rhetoric fact-checker"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jackie McLean" }]
+
+dependencies = [
+    "pydantic>=2.0",
+    "httpx>=0.25",
+    "anthropic>=0.25",
+    "jinja2>=3.1",
+    "feedgen>=0.9",
+    "python-dateutil>=2.8",
+    "diskcache>=5.6",
+    "thefuzz>=0.20",
+    "python-levenshtein>=0.23",
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+    "pillow>=10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.23",
+    "respx>=0.20",
+    "black>=24.0",
+    "ruff>=0.3",
+]
+
+[project.scripts]
+truthbot = "truthbot.pipeline:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
