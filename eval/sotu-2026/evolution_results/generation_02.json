@@ -1,0 +1,239 @@
+{
+  "generation": 2,
+  "individuals": [
+    {
+      "id": "e064051_sbd640d",
+      "generation": 1,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 1,
+        "filtering_idx": 1,
+        "examples_idx": 1,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 2,
+        "evidence_weighting_idx": 2,
+        "confidence_idx": 1,
+        "reasoning_idx": 1,
+        "nuance_idx": 0,
+        "format_idx": 1
+      },
+      "fitness": 0.6516449999999999,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.7448,
+      "explanation_quality": 0.6688,
+      "source_citation_quality": 0.2963,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 7318,
+      "synthesis_token_count": 28509,
+      "parent_hashes": [
+        "e064051_s3ff2ba",
+        "e064051_s3ff2ba"
+      ],
+      "mutation_log": [
+        "synthesis.verdict_taxonomy_idx: 1 -> 2",
+        "synthesis.evidence_weighting_idx: 1 -> 2",
+        "synthesis.nuance_idx: 1 -> 0"
+      ]
+    },
+    {
+      "id": "e064051_s3ff2ba",
+      "generation": 1,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 1,
+        "filtering_idx": 1,
+        "examples_idx": 1,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 1,
+        "nuance_idx": 1,
+        "format_idx": 1
+      },
+      "fitness": 0.6403650000000001,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.7034,
+      "explanation_quality": 0.6259,
+      "source_citation_quality": 0.3611,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 7318,
+      "synthesis_token_count": 34666,
+      "parent_hashes": [
+        "e064051_s3ff2ba"
+      ],
+      "mutation_log": [
+        "[elite carry-forward]"
+      ]
+    },
+    {
+      "id": "ea55583_s79bfc5",
+      "generation": 1,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 0,
+        "taxonomy_idx": 2,
+        "format_idx": 1,
+        "filtering_idx": 1,
+        "examples_idx": 0,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 0,
+        "verdict_taxonomy_idx": 3,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 0,
+        "reasoning_idx": 0,
+        "nuance_idx": 0,
+        "format_idx": 2
+      },
+      "fitness": 0.631985,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.7793,
+      "explanation_quality": 0.491,
+      "source_citation_quality": 0.3333,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 6934,
+      "synthesis_token_count": 18648,
+      "parent_hashes": [
+        "edbe96b_sd40bd1",
+        "edbe96b_sd40bd1"
+      ],
+      "mutation_log": [
+        "extraction.filtering_idx: 0 -> 1",
+        "synthesis.evidence_weighting_idx: 0 -> 1",
+        "synthesis.format_idx: 0 -> 2"
+      ]
+    },
+    {
+      "id": "edbe96b_s9ede40",
+      "generation": 1,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 0,
+        "taxonomy_idx": 2,
+        "format_idx": 1,
+        "filtering_idx": 0,
+        "examples_idx": 0,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 0,
+        "verdict_taxonomy_idx": 2,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 0,
+        "reasoning_idx": 0,
+        "nuance_idx": 0,
+        "format_idx": 1
+      },
+      "fitness": 0.630525,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.8069,
+      "explanation_quality": 0.5344,
+      "source_citation_quality": 0.2105,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 7219,
+      "synthesis_token_count": 19603,
+      "parent_hashes": [
+        "edbe96b_sd40bd1",
+        "edbe96b_sd40bd1"
+      ],
+      "mutation_log": [
+        "synthesis.verdict_taxonomy_idx: 3 -> 2",
+        "synthesis.format_idx: 0 -> 1"
+      ]
+    },
+    {
+      "id": "edbe96b_sd40bd1",
+      "generation": 1,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 0,
+        "taxonomy_idx": 2,
+        "format_idx": 1,
+        "filtering_idx": 0,
+        "examples_idx": 0,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 0,
+        "verdict_taxonomy_idx": 3,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 0,
+        "reasoning_idx": 0,
+        "nuance_idx": 0,
+        "format_idx": 0
+      },
+      "fitness": 0.6002,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.7724,
+      "explanation_quality": 0.4871,
+      "source_citation_quality": 0.1404,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 7219,
+      "synthesis_token_count": 16907,
+      "parent_hashes": [
+        "edbe96b_sd40bd1"
+      ],
+      "mutation_log": [
+        "[elite carry-forward]"
+      ]
+    },
+    {
+      "id": "e3adabd_s960946",
+      "generation": 1,
+      "extraction_genome": {
+        "persona_idx": 4,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 1,
+        "filtering_idx": 1,
+        "examples_idx": 1,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 0,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 2,
+        "nuance_idx": 2,
+        "format_idx": 1
+      },
+      "fitness": 0.57763,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.7172,
+      "explanation_quality": 0.3957,
+      "source_citation_quality": 0.2222,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 7106,
+      "synthesis_token_count": 31073,
+      "parent_hashes": [
+        "e064051_s3ff2ba",
+        "e064051_s3ff2ba"
+      ],
+      "mutation_log": [
+        "extraction.persona_idx: 1 -> 4",
+        "synthesis.verdict_taxonomy_idx: 1 -> 0",
+        "synthesis.reasoning_idx: 1 -> 2",
+        "synthesis.nuance_idx: 1 -> 2"
+      ]
+    }
+  ]
+}

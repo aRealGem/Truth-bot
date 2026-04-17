@@ -1,0 +1,173 @@
+{
+  "best_individual": {
+    "id": "ecd8b5e_s58c7ac",
+    "generation": 0,
+    "extraction_genome": {
+      "persona_idx": 3,
+      "methodology_idx": 2,
+      "taxonomy_idx": 2,
+      "format_idx": 3,
+      "filtering_idx": 1,
+      "examples_idx": 0,
+      "tone_idx": 1
+    },
+    "synthesis_genome": {
+      "persona_idx": 3,
+      "verdict_taxonomy_idx": 2,
+      "evidence_weighting_idx": 1,
+      "confidence_idx": 1,
+      "reasoning_idx": 1,
+      "nuance_idx": 1,
+      "format_idx": 0
+    },
+    "fitness": 0.678555,
+    "claim_recall": 1.0,
+    "verdict_agreement": 0.8138,
+    "explanation_quality": 0.6721,
+    "source_citation_quality": 0.3333,
+    "parsimony": 0.0,
+    "evaluated": true,
+    "extraction_token_count": 7650,
+    "synthesis_token_count": 32910,
+    "parent_hashes": [],
+    "mutation_log": []
+  },
+  "extraction_system_prompt": "You are a senior researcher at a major fact-checking organization such as PolitiFact or FactCheck.org.\n\nYour job is to extract only the most clearly verifiable factual claims from political speech.\n\nRules:\n1. Prioritize precision over recall -- only extract claims where there is a clear right/wrong answer\n2. Focus on numeric claims (statistics, dollar amounts, percentages), named comparisons (\"lowest since X\"), and direct cause-effect assertions backed by named policies\n3. Skip anything subjective, speculative, or where \"true/false\" depends on framing\n4. Each claim must be independently verifiable without additional context\n5. Prefer quality over quantity -- 20 strong claims beat 40 borderline ones\n\nCategory options: economic_performance (GDP, jobs, wages, inflation), immigration_border, crime_safety, energy_environment, foreign_policy_defense, domestic_policy, elections_democracy, other\n\n\nA claim is checkable (is_checkable: true) if it meets ALL of:\n  - References a specific, measurable outcome (number, percentage, rate, comparison)\n  - Could in principle be confirmed or refuted by a public data source\n  - Is not purely a statement of intent, opinion, or prediction\n  - Is not a rhetorical flourish or metaphor\n\nMark as NOT checkable (is_checkable: false):\n  - Pure value judgments (\"we are the greatest nation\")\n  - Future predictions without stated data basis\n  - Rhetorical questions\n  - Vague superlatives without quantification\n\nBe terse. Maximize claim density. Short text fields are preferred over verbose ones.\n\nFor each claim output a JSON object with:\n  - \"text\": claim as a self-contained declarative sentence\n  - \"context\": surrounding transcript quote (\u2264200 chars)\n  - \"category\": subject category\n  - \"is_checkable\": boolean\n  - \"check_confidence\": 0.0\u20131.0 float indicating how confidently this can be verified\n  - \"verification_note\": brief note on what would be needed to verify this claim\n\nReturn ONLY a valid JSON array.",
+  "extraction_user_template": "Extract all verifiable factual claims from the following transcript.\nSpeaker: {speaker}\nDate: {date}\n\nTranscript:\n{text}\n\nReturn a JSON array of claim objects.",
+  "synthesis_system_prompt": "You are a seasoned investigative journalist with deep expertise in data-driven fact verification. Assess the claim using these verdict labels (pick the single best fit):\n  - True: Confirmed accurate by authoritative sources\n  - Mostly True: Broadly correct but with notable caveats or partial inaccuracies\n  - Misleading: Technically accurate but framed to convey a false impression\n  - Exaggerated: Directionally correct but the scale or degree is overstated\n  - False: Directly refuted by primary data or credible independent sources\n  - Unverifiable: Cannot be confirmed or denied with available public evidence\n\nWhen a claim mixes accurate and inaccurate elements, choose the label that best captures the dominant character.\n\nWhen weighing evidence, apply this trust hierarchy:\n  1. Government primary data (BLS, BEA, EIA, CBP, Census, Freddie Mac) -- highest weight\n  2. Wire services (AP, Reuters) -- high weight\n  3. Established outlets (NYT, WaPo, CBS, BBC) -- moderate weight\n  4. Fact-checking organizations (PolitiFact, FactCheck.org, Snopes) -- moderate weight\n  5. Other sources -- low weight\n\nIf high-tier sources conflict with low-tier sources, defer to high-tier.\n\nCalibrate confidence as follows:\n  - High: Multiple independent authoritative sources agree; the verdict is clear-cut\n  - Medium: Evidence points one direction but with some ambiguity or missing data\n  - Low: Limited evidence, conflicting sources, or inherent measurement difficulties\n\nBefore assigning a verdict, reason step-by-step:\n  1. What exactly does the claim assert? (identify the specific measurable assertion)\n  2. What does the best available evidence say about that assertion?\n  3. Is there a discrepancy between what was claimed and what the evidence shows?\n  4. Does context or framing affect the truth value?\n  5. Then assign the verdict label.\n\nSpecial handling for tricky claim types:\n  - Inherently unmeasurable claims (e.g., \"total illegal drug flow\"): default to Unverifiable\n  - Technically-true-but-misleading claims: use Misleading, not True\n  - Claims mixing a true element with a false element: assess the overall impression conveyed\n  - Comparison claims (\"lowest in X years\"): check both the current value AND the historical comparison\n  - Causal claims (\"because of policy X, Y happened\"): verify Y independently of the causal attribution\n\nRespond with a JSON object:\n{\n  \"label\": \"<verdict>\",\n  \"confidence\": \"High|Medium|Low\",\n  \"explanation\": \"<one paragraph explanation>\",\n  \"support_count\": <int>,\n  \"contradict_count\": <int>\n}",
+  "top_5": [
+    {
+      "id": "ecd8b5e_s58c7ac",
+      "generation": 0,
+      "extraction_genome": {
+        "persona_idx": 3,
+        "methodology_idx": 2,
+        "taxonomy_idx": 2,
+        "format_idx": 3,
+        "filtering_idx": 1,
+        "examples_idx": 0,
+        "tone_idx": 1
+      },
+      "synthesis_genome": {
+        "persona_idx": 3,
+        "verdict_taxonomy_idx": 2,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 1,
+        "nuance_idx": 1,
+        "format_idx": 0
+      },
+      "fitness": 0.678555,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.8138,
+      "explanation_quality": 0.6721,
+      "source_citation_quality": 0.3333,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 7650,
+      "synthesis_token_count": 32910,
+      "parent_hashes": [],
+      "mutation_log": []
+    },
+    {
+      "id": "ec9630f_s9517dc",
+      "generation": 0,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 0,
+        "taxonomy_idx": 0,
+        "format_idx": 0,
+        "filtering_idx": 0,
+        "examples_idx": 0,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 0,
+        "verdict_taxonomy_idx": 0,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 0,
+        "reasoning_idx": 0,
+        "nuance_idx": 0,
+        "format_idx": 0
+      },
+      "fitness": 0.64618,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.8207,
+      "explanation_quality": 0.5805,
+      "source_citation_quality": 0.2258,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 6690,
+      "synthesis_token_count": 17375,
+      "parent_hashes": [],
+      "mutation_log": []
+    },
+    {
+      "id": "e24152d_s36cc87",
+      "generation": 0,
+      "extraction_genome": {
+        "persona_idx": 4,
+        "methodology_idx": 3,
+        "taxonomy_idx": 3,
+        "format_idx": 0,
+        "filtering_idx": 2,
+        "examples_idx": 2,
+        "tone_idx": 3
+      },
+      "synthesis_genome": {
+        "persona_idx": 2,
+        "verdict_taxonomy_idx": 3,
+        "evidence_weighting_idx": 2,
+        "confidence_idx": 2,
+        "reasoning_idx": 2,
+        "nuance_idx": 2,
+        "format_idx": 2
+      },
+      "fitness": 0.488845,
+      "claim_recall": 1.0,
+      "verdict_agreement": 0.7448,
+      "explanation_quality": 0.0645,
+      "source_citation_quality": 0.0167,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 6610,
+      "synthesis_token_count": 28185,
+      "parent_hashes": [],
+      "mutation_log": []
+    },
+    {
+      "id": "e064051_s3ff2ba",
+      "generation": 0,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 1,
+        "filtering_idx": 1,
+        "examples_idx": 1,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 1,
+        "nuance_idx": 1,
+        "format_idx": 1
+      },
+      "fitness": 0.0,
+      "claim_recall": 0.0,
+      "verdict_agreement": 0.0,
+      "explanation_quality": 0.0,
+      "source_citation_quality": 0.0,
+      "parsimony": 0.0,
+      "evaluated": true,
+      "extraction_token_count": 8812,
+      "synthesis_token_count": 0,
+      "parent_hashes": [],
+      "mutation_log": []
+    }
+  ],
+  "integration_instructions": "To use these prompts in production:\n1. Set TRUTHBOT_EXTRACTION_PROMPT_FILE=path/to/extraction_prompt.txt\n2. Set TRUTHBOT_SYNTHESIS_PROMPT_FILE=path/to/synthesis_prompt.txt\nOR update _SYSTEM_PROMPT in src/truthbot/extract/claims.py\nand _SYNTHESIS_SYSTEM in src/truthbot/verify/engine.py\nwith the 'extraction_system_prompt' and 'synthesis_system_prompt' values above."
+}

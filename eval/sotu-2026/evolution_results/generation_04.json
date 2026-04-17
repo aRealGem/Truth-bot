@@ -1,0 +1,313 @@
+{
+  "generation": 4,
+  "individuals": [
+    {
+      "id": "ec9630f_s9517dc",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 0,
+        "taxonomy_idx": 0,
+        "format_idx": 0,
+        "filtering_idx": 0,
+        "examples_idx": 0,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 0,
+        "verdict_taxonomy_idx": 0,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 0,
+        "reasoning_idx": 0,
+        "nuance_idx": 0,
+        "format_idx": 0
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "ec9630f_s9517dc"
+      ],
+      "mutation_log": [
+        "[elite carry-forward]"
+      ]
+    },
+    {
+      "id": "e064051_s3ff2ba",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 1,
+        "filtering_idx": 1,
+        "examples_idx": 1,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 1,
+        "nuance_idx": 1,
+        "format_idx": 1
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "e064051_s3ff2ba"
+      ],
+      "mutation_log": [
+        "[elite carry-forward]"
+      ]
+    },
+    {
+      "id": "e77304f_s938c4e",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 4,
+        "methodology_idx": 1,
+        "taxonomy_idx": 2,
+        "format_idx": 3,
+        "filtering_idx": 0,
+        "examples_idx": 1,
+        "tone_idx": 1
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 1,
+        "nuance_idx": 0,
+        "format_idx": 2
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "e574583_s3ff2ba",
+        "e92508d_se037cf"
+      ],
+      "mutation_log": [
+        "extraction.persona_idx: 1 -> 4",
+        "extraction.filtering_idx: 2 -> 0",
+        "synthesis.nuance_idx: 1 -> 0"
+      ]
+    },
+    {
+      "id": "e16829d_se3fd52",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 0,
+        "taxonomy_idx": 1,
+        "format_idx": 0,
+        "filtering_idx": 1,
+        "examples_idx": 2,
+        "tone_idx": 3
+      },
+      "synthesis_genome": {
+        "persona_idx": 3,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 0,
+        "nuance_idx": 2,
+        "format_idx": 1
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "e574583_s3ff2ba",
+        "e92508d_se037cf"
+      ],
+      "mutation_log": []
+    },
+    {
+      "id": "ea73f35_s3d76e4",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 3,
+        "filtering_idx": 1,
+        "examples_idx": 2,
+        "tone_idx": 3
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 0,
+        "reasoning_idx": 1,
+        "nuance_idx": 1,
+        "format_idx": 0
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "ec0fcb1_s3d76e4",
+        "e92508d_se037cf"
+      ],
+      "mutation_log": [
+        "extraction.methodology_idx: 2 -> 1",
+        "extraction.examples_idx: 1 -> 2"
+      ]
+    },
+    {
+      "id": "e2e23ee_se037cf",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 0,
+        "taxonomy_idx": 2,
+        "format_idx": 2,
+        "filtering_idx": 2,
+        "examples_idx": 2,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 3,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 0,
+        "nuance_idx": 2,
+        "format_idx": 2
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "ec0fcb1_s3d76e4",
+        "e92508d_se037cf"
+      ],
+      "mutation_log": []
+    },
+    {
+      "id": "e8acad1_s4d7833",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 3,
+        "taxonomy_idx": 1,
+        "format_idx": 0,
+        "filtering_idx": 1,
+        "examples_idx": 1,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 0,
+        "reasoning_idx": 0,
+        "nuance_idx": 0,
+        "format_idx": 1
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "ec9630f_s9517dc",
+        "e416f72_s474fc2"
+      ],
+      "mutation_log": [
+        "extraction.methodology_idx: 0 -> 3",
+        "extraction.taxonomy_idx: 0 -> 1",
+        "extraction.filtering_idx: 0 -> 1",
+        "synthesis.verdict_taxonomy_idx: 0 -> 1"
+      ]
+    },
+    {
+      "id": "e8d091f_s737122",
+      "generation": 3,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 0,
+        "filtering_idx": 0,
+        "examples_idx": 0,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 0,
+        "verdict_taxonomy_idx": 0,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 2,
+        "reasoning_idx": 0,
+        "nuance_idx": 1,
+        "format_idx": 1
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "ec9630f_s9517dc",
+        "e416f72_s474fc2"
+      ],
+      "mutation_log": [
+        "extraction.taxonomy_idx: 2 -> 1",
+        "extraction.format_idx: 3 -> 0",
+        "synthesis.evidence_weighting_idx: 0 -> 1",
+        "synthesis.confidence_idx: 0 -> 2",
+        "synthesis.format_idx: 0 -> 1"
+      ]
+    }
+  ]
+}

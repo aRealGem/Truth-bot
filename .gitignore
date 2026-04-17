@@ -46,3 +46,10 @@ output/
 # Misc
 .DS_Store
 *.log
+
+# Eval — generated / regeneratable
+eval/sotu-2026/evolution_results/runner_cache/
+eval/sotu-2026/evolution_results/runner_cache_sonnet_backup/
+eval/sotu-2026/opus-4-7-results/runner_cache/
+eval/sotu-2026/opus-optimized-results/runner_cache/
+eval/sotu-2026/*/runner_cache*/

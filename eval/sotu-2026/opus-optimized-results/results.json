@@ -1,0 +1,245 @@
+{
+  "model": "claude-opus-4-7",
+  "recall": 1.0,
+  "matched": 29,
+  "total_ref": 29,
+  "verdict_agreement": 0.8068965517241379,
+  "fitness_approx": 0.49206896551724133,
+  "total_it": 28657,
+  "total_ot": 22930,
+  "cost": 2.1496049999999998,
+  "verdicts": [
+    {
+      "claim_text": "Core inflation has been driven down to the lowest level in more than five years.",
+      "ref_verdict": "TRUE",
+      "opus_label": "Mostly True",
+      "confidence": "Medium",
+      "agreement_score": 0.8,
+      "explanation": "Core inflation has indeed declined substantially from its 2022 peak, and certain measures (such as recent monthly core PCE readings on an annualized basis) have reached multi-year lows. However, the most commonly cited measure \u2014 year-over-year core CPI \u2014 has recently run in the high-2% to low-3% range, which is not lower than readings seen in 2020-2021. The claim is directionally accurate and supported for some specific core inflation metrics, but the 'lowest in more than five years' framing depends on which measure is used and may overstate the case for the headline year-over-year figures most commonly referenced."
+    },
+    {
+      "claim_text": "In the last three months of 2025, core inflation was down to 1.7 percent.",
+      "ref_verdict": "FALSE",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "Core inflation in the final quarter of 2025 was not 1.7 percent. Primary government data from the Bureau of Labor Statistics and Bureau of Economic Analysis show core CPI running in the high-2% to low-3% range and core PCE near 2.7-2.9% during that period \u2014 well above the 1.7% figure claimed. FactCheck.org and other independent fact-checkers have rated this claim false, noting inflation was already around 3% at the start of 2025 and did not drop to 1.7% by year's end."
+    },
+    {
+      "claim_text": "In the past nine months, zero illegal aliens have been admitted to the United States.",
+      "ref_verdict": "PARTLY TRUE",
+      "opus_label": "Misleading",
+      "confidence": "High",
+      "agreement_score": 0.6,
+      "explanation": "The claim appears to stretch a narrow CBP statistic \u2014 reportedly zero Border Patrol releases for a period \u2014 into a sweeping assertion that no illegal aliens have entered the U.S. in nine months. While Border Patrol releases have dropped sharply, this metric does not capture 'got-aways' who evade apprehension, visa overstays, or individuals processed through other pathways, all of which have continued. The underlying data point is real, but the framing creates a false impression that illegal immigration has been completely eliminated."
+    },
+    {
+      "claim_text": "The flow of deadly fentanyl across the border is down by a record 56 percent in one year.",
+      "ref_verdict": "UNSUPPORTED",
+      "opus_label": "Unverifiable",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "Total cross-border fentanyl flow is not directly measurable \u2014 government agencies track seizures, not the underlying illicit flow. A change in seizures does not reliably translate into a proportional change in total flow, since seizures depend on both trafficking volume and interdiction effort. The specific '56 percent' figure and 'record' characterization therefore cannot be confirmed or refuted with available public evidence, and independent fact-checkers have rated the claim unsupported."
+    },
+    {
+      "claim_text": "Last year's murder rate was the lowest in over 125 years, since the year 1900.",
+      "ref_verdict": "PARTLY TRUE",
+      "opus_label": "Exaggerated",
+      "confidence": "Medium",
+      "agreement_score": 0.8,
+      "explanation": "While U.S. murder rates did fall sharply in 2024 \u2014 likely one of the largest one-year declines on record \u2014 the claim that it was the lowest rate in over 125 years is not supported by the historical record. Homicide rates in the late 1950s and early 1960s were comparable to or lower than 2024's estimated rate (~5.0 per 100,000), and pre-1930 data is too inconsistent for reliable comparison. The directional claim about a major decline is correct, but the 'lowest since 1900' superlative significantly overstates the achievement."
+    },
+    {
+      "claim_text": "All Democrats in Congress voted against the Republican tax cuts.",
+      "ref_verdict": "FALSE",
+      "opus_label": "Mostly True",
+      "confidence": "Medium",
+      "agreement_score": 0.19999999999999996,
+      "explanation": "If referring to the 2017 Tax Cuts and Jobs Act \u2014 the signature Republican tax cut most commonly meant by this phrase \u2014 the claim is accurate: according to congressional roll call records, zero Democrats in either the House or Senate voted for the TCJA. However, the claim lacks specificity. Earlier Republican tax cuts, such as the 2001 Bush tax cuts, received support from a dozen Senate Democrats and several House Democrats, so as a blanket statement about all 'Republican tax cuts,' it is not universally true. The supplied evidence in this case concerned inflation and did not actually address the tax vote question."
+    },
+    {
+      "claim_text": "Core inflation has been driven down to the lowest level in more than five years.",
+      "ref_verdict": "TRUE",
+      "opus_label": "Mostly True",
+      "confidence": "Medium",
+      "agreement_score": 0.8,
+      "explanation": "Core inflation has indeed declined to a multi-year low, with CBS reporting it around 2.5% \u2014 the lowest since March 2021. However, March 2021 is roughly 4.5 years ago, not 'more than five years' as the claim states. The underlying point about core inflation reaching a multi-year low is accurate, but the specific duration is modestly overstated."
+    },
+    {
+      "claim_text": "In the last three months of 2025, core inflation was down to 1.7 percent.",
+      "ref_verdict": "UNSUPPORTED",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 0.8,
+      "explanation": "The claim that core inflation fell to 1.7% in the final three months of 2025 is not supported by BLS or BEA primary data. Standard core inflation measures\u2014core CPI and core PCE\u2014were running meaningfully higher than 1.7% during that period, generally in the high 2% to low 3% range year-over-year. Even on a three-month annualized basis, no standard core inflation measure matches the 1.7% figure cited. Independent fact-checkers also flagged the claim as unsupported."
+    },
+    {
+      "claim_text": "Gasoline is now below $2.30 a gallon in most states.",
+      "ref_verdict": "FALSE",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "AAA's statewide gasoline price averages do not show most states with prices below $2.30 per gallon, directly contradicting the claim. GasBuddy data similarly found only a handful of individual stations nationwide priced under $2, and a specific Iowa example cited in support of the claim was contradicted by the state's actual average. Independent fact-checkers have rated this claim false."
+    },
+    {
+      "claim_text": "Mortgage rates are the lowest in four years.",
+      "ref_verdict": "FALSE",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "Freddie Mac's Primary Mortgage Market Survey shows the 30-year fixed mortgage rate at about 6.01% as of February 19, 2026. Within the past four years, rates were significantly lower \u2014 around 3.85% in March 2022. Current rates are therefore well above, not below, levels seen earlier in the four-year window, directly contradicting the claim."
+    },
+    {
+      "claim_text": "The annual cost of a typical new mortgage is down almost $5,000 since Trump took office.",
+      "ref_verdict": "UNVERIFIABLE",
+      "opus_label": "Unverifiable",
+      "confidence": "Medium",
+      "agreement_score": 1.0,
+      "explanation": "This claim cannot be confirmed or refuted without clear definitions of key terms. A 'typical new mortgage' depends on loan size, down payment, term, and the specific baseline date used \u2014 none of which are specified. Mortgage rates have declined modestly since January 2025 according to Freddie Mac data, which would produce some annual savings on a new loan, but whether the savings amount to 'almost $5,000' depends entirely on unstated assumptions. Independent fact-checkers have similarly been unable to pin down the specific figure."
+    },
+    {
+      "claim_text": "In 12 months, the Trump administration secured commitments for more than $18 trillion in new investment.",
+      "ref_verdict": "UNSUPPORTED",
+      "opus_label": "Exaggerated",
+      "confidence": "High",
+      "agreement_score": 0.6,
+      "explanation": "The $18 trillion figure is not supported by any primary source, including the White House's own accounting, which totals roughly $9.6 trillion \u2014 and even that lower figure includes questionable entries such as investments predating Trump's current term. While the administration has announced significant investment commitments, the claimed magnitude is overstated by roughly twofold against the most generous available tally, and likely more against verifiable commitments. Investment 'commitments' also frequently do not materialize as actual spending."
+    },
+    {
+      "claim_text": "The previous administration secured less than $1 trillion in new investment in the United States over four years.",
+      "ref_verdict": "TRUE",
+      "opus_label": "Mostly True",
+      "confidence": "Medium",
+      "agreement_score": 0.8,
+      "explanation": "According to Bureau of Economic Analysis data cited by CBS News, foreign direct investment inflows to the United States during the Biden administration's four years totaled less than $1 trillion, supporting the claim as framed. The assertion is numerically accurate when measured by FDI, the standard metric for comparing administrations' records on attracting investment. However, the phrase 'new investment' is somewhat ambiguous\u2014total U.S. business investment (including domestic) runs in the trillions annually\u2014so readers should understand this refers specifically to foreign investment inflows."
+    },
+    {
+      "claim_text": "American oil production is up by more than 600,000 barrels a day.",
+      "ref_verdict": "FALSE",
+      "opus_label": "Exaggerated",
+      "confidence": "High",
+      "agreement_score": 0.4,
+      "explanation": "U.S. oil production did increase over the referenced period, but by approximately 334,600 barrels per day according to EIA data cited by FactCheck.org \u2014 not 'more than 600,000.' The claim nearly doubles the actual increase. While the direction is correct, the magnitude is significantly overstated."
+    },
+    {
+      "claim_text": "American natural gas production is at an all-time high.",
+      "ref_verdict": "MISLEADING",
+      "opus_label": "Misleading",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "U.S. natural gas production is indeed at record levels according to EIA data, so the literal claim is accurate. However, the framing is misleading: production was already at all-time highs before the current administration, and the upward trajectory has continued across multiple administrations driven by long-term shale development. Citing the record as a current policy achievement omits crucial context about pre-existing trends."
+    },
+    {
+      "claim_text": "More Americans are working today than at any time in the history of the country.",
+      "ref_verdict": "MISLEADING",
+      "opus_label": "Misleading",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "The raw number of employed Americans is indeed at or near record highs, as confirmed by BLS data, but this is largely a function of steady population growth rather than exceptional labor market performance. New employment records are reached routinely during any non-recessionary period. More meaningful measures of labor market health \u2014 the labor force participation rate and employment-to-population ratio \u2014 remain below their pre-2008 peaks, and the unemployment rate is not at a historic low. Citing the raw count without this context creates a misleading impression of economic strength."
+    },
+    {
+      "claim_text": "In one year, 2.4 million Americans have been lifted off food stamps.",
+      "ref_verdict": "MISLEADING",
+      "opus_label": "Misleading",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "The 2.4 million figure corresponds to a projection of SNAP recipients expected to lose eligibility due to tightened work requirements \u2014 not people who left the program because rising incomes made assistance unnecessary. The word 'lifted' implies upward economic mobility, but administrative rule changes removing people from benefits is a fundamentally different phenomenon. Independent fact-checkers rate the claim misleading for this reason."
+    },
+    {
+      "claim_text": "Mortgage rates are the lowest in four years.",
+      "ref_verdict": "MISLEADING",
+      "opus_label": "Unverifiable",
+      "confidence": "Low",
+      "agreement_score": 0.8,
+      "explanation": "The evidence supplied does not address mortgage rates \u2014 it references federal program funding and fraud investigations, which are unrelated to the claim. Without Freddie Mac Primary Mortgage Market Survey data or comparable primary sources in the evidence packet, this specific claim cannot be confirmed or refuted from the materials provided. A proper check would require comparing the current 30-year fixed rate to weekly rates over the prior four years; notably, such a window would include the historically low pandemic-era rates of 2020-2021, which would likely make a 'four-year low' claim difficult to support in most recent contexts."
+    },
+    {
+      "claim_text": "The annual cost of a typical new mortgage is down almost $5,000 since Trump took office.",
+      "ref_verdict": "FALSE",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "Freddie Mac data shows the 30-year fixed mortgage rate has declined only modestly since Trump took office in January 2025 (from roughly 7.04% to around 6.75%). On a typical new mortgage, that translates to annual savings of roughly $800-$900, not nearly $5,000. The claim overstates the actual reduction by approximately five times, and independent fact-checkers have rated it false."
+    },
+    {
+      "claim_text": "The U.S. men's Olympic hockey team beat Canada in overtime to win the gold medal.",
+      "ref_verdict": "FALSE",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "The U.S. men's Olympic hockey team has not won gold by beating Canada in overtime. In the most prominent such matchup \u2014 the 2010 Vancouver gold medal game \u2014 Canada beat the United States 3-2 in overtime on Sidney Crosby's 'Golden Goal.' The U.S. men's team has won Olympic hockey gold only twice (1960 and 1980), and neither was clinched by an overtime win over Canada. The claim inverts the actual historical outcome."
+    },
+    {
+      "claim_text": "More Americans are working today than at any time in the history of the country.",
+      "ref_verdict": "FALSE / MISLEADING",
+      "opus_label": "Misleading",
+      "confidence": "Medium",
+      "agreement_score": 1.0,
+      "explanation": "Raw U.S. employment figures from the Bureau of Labor Statistics do periodically hit record highs simply because the U.S. population grows over time, so the literal statement may be technically accurate during economic expansions. However, the claim creates a misleading impression by ignoring population growth. More meaningful measures \u2014 such as the labor force participation rate and the prime-age employment-to-population ratio \u2014 are not at historical peaks; LFPR peaked around 2000 and remains below that level. Citing a raw record without this context overstates labor-market strength."
+    },
+    {
+      "claim_text": "The United States will host the 2026 FIFA World Cup.",
+      "ref_verdict": "MISLEADING",
+      "opus_label": "Mostly True",
+      "confidence": "High",
+      "agreement_score": 0.6,
+      "explanation": "The United States is indeed a host of the 2026 FIFA World Cup, as confirmed by FIFA's June 2018 selection of the 'United 2026' bid. The U.S. will stage 60 of 104 matches, including the final at MetLife Stadium. However, the claim omits important context: the U.S. is a co-host alongside Canada and Mexico, not the sole host. Note: the evidence materials supplied with this claim were unrelated (concerning drug pricing) and were not used in this assessment."
+    },
+    {
+      "claim_text": "Mortgage rates are the lowest in four years.",
+      "ref_verdict": "TRUE",
+      "opus_label": "Unverifiable",
+      "confidence": "Medium",
+      "agreement_score": 0.19999999999999996,
+      "explanation": "The evidence provided concerns egg prices, not mortgage rates, and therefore cannot substantiate the claim. A proper fact-check would require Freddie Mac Primary Mortgage Market Survey data comparing current 30-year fixed rates against the past four years. Notably, rates four years ago (2021) were at historic lows near 3%, so a 'lowest in four years' claim would be difficult to support under current market conditions, but no relevant data was supplied here to render a definitive verdict."
+    },
+    {
+      "claim_text": "The annual cost of a typical new mortgage is down almost $5,000 since Trump took office.",
+      "ref_verdict": "FALSE / MISLEADING",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 0.6,
+      "explanation": "Mortgage costs have not fallen by anywhere near $5,000 annually since January 2025. Freddie Mac data shows 30-year mortgage rates have declined only modestly \u2014 from roughly 7% to the mid-6% range \u2014 while median home prices have stayed flat or risen slightly. For a typical new mortgage, this translates to annual savings of roughly $1,500-$1,800 at most, not $5,000. The claim overstates the magnitude by roughly threefold and ignores that home prices have not meaningfully declined."
+    },
+    {
+      "claim_text": "70,000 new construction jobs have been added in a short period of time.",
+      "ref_verdict": "UNSUPPORTED",
+      "opus_label": "Unverifiable",
+      "confidence": "Medium",
+      "agreement_score": 1.0,
+      "explanation": "The claim that 70,000 construction jobs were added in a 'short period of time' lacks a specific timeframe, making it impossible to test against Bureau of Labor Statistics payroll data. The evidence provided does not address construction employment at all \u2014 it concerns drug interdiction \u2014 and independent fact-checkers rated a related version of this claim as unsupported. Without a defined period and corroborating primary labor data, the specific 70,000 figure cannot be confirmed or refuted."
+    },
+    {
+      "claim_text": "American oil production is up by more than 600,000 barrels a day.",
+      "ref_verdict": "FALSE",
+      "opus_label": "Unverifiable",
+      "confidence": "Low",
+      "agreement_score": 0.8,
+      "explanation": "The claim that U.S. oil production is up by more than 600,000 barrels per day lacks a specified timeframe or baseline, making it impossible to evaluate precisely. The evidence provided is non-responsive \u2014 it references investment growth calculations rather than EIA oil production data. While an independent fact-checker reference verdict marks the claim as false, the supporting material supplied here does not contain the primary oil production data (EIA weekly or monthly crude output figures) needed to independently confirm or refute the specific 600,000 bpd figure. Without a clear timeframe and relevant primary-source data, the claim cannot be verified from the materials at hand."
+    },
+    {
+      "claim_text": "The U.S. men's Olympic hockey team beat Canada in overtime to win the gold medal.",
+      "ref_verdict": "FALSE",
+      "opus_label": "False",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "The U.S. men's Olympic hockey team has not beaten Canada in overtime to win a gold medal. In fact, the opposite occurred at the 2010 Vancouver Olympics, when Canada defeated the U.S. 3-2 in overtime on Sidney Crosby's 'golden goal' to win gold. The most famous U.S. men's hockey gold medals came in 1960 (beating Czechoslovakia in the final) and 1980 (the 'Miracle on Ice' team beat the USSR in the medal round and Finland in the final game). No Olympic gold medal matchup fits the claim's description."
+    },
+    {
+      "claim_text": "In the last three months of 2025, core inflation was down to 1.7 percent.",
+      "ref_verdict": "MISLEADING",
+      "opus_label": "False",
+      "confidence": "Medium",
+      "agreement_score": 0.6,
+      "explanation": "Core inflation in late 2025 has not been at 1.7 percent. Both major measures \u2014 core CPI from the Bureau of Labor Statistics and core PCE from the Bureau of Economic Analysis \u2014 have been running notably above 2 percent on a year-over-year basis throughout 2025, generally in the high-2s to low-3s. While short-window annualized rates can fluctuate, the headline year-over-year core inflation figure has remained above the Federal Reserve's 2 percent target. The 1.7 percent figure does not match authoritative primary data for the period claimed."
+    },
+    {
+      "claim_text": "More Americans are working today than at any time in the history of the country.",
+      "ref_verdict": "MISLEADING",
+      "opus_label": "Misleading",
+      "confidence": "High",
+      "agreement_score": 1.0,
+      "explanation": "Raw total employment figures do periodically hit record highs because the U.S. population and labor force grow over time, so setting an all-time record in absolute employment is a routine occurrence during any sustained economic expansion rather than a singular achievement. More meaningful labor market measures \u2014 such as the employment-to-population ratio, labor force participation rate, and prime-age employment rate \u2014 are not at record highs and give a more accurate picture of labor market health. The claim is technically accurate in raw numbers but creates a misleading impression by omitting this essential context."
+    }
+  ]
+}

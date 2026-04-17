@@ -1,0 +1,263 @@
+[
+  {
+    "id": 1,
+    "topic": "Calendar / history",
+    "claim": "The U.S. 250th anniversary is less than five months away (July 4, 2026).",
+    "verdict": "TRUE",
+    "explanation": "Date math aligns with the speech's timing and the 1776 to 2026 anniversary framing.",
+    "sources": ["R1"],
+    "confidence_note": null
+  },
+  {
+    "id": 2,
+    "topic": "Inflation",
+    "claim": "Inflation was at \"record levels\" when he took office.",
+    "verdict": "FALSE",
+    "explanation": "FactCheck.org reports inflation was about 3% when he took office and notes historic peaks were far higher (e.g., 1920).",
+    "sources": ["R5"],
+    "confidence_note": null
+  },
+  {
+    "id": 3,
+    "topic": "Immigration",
+    "claim": "\"Zero illegal aliens admitted\" in the past nine months.",
+    "verdict": "PARTLY TRUE",
+    "explanation": "CBP reported zero Border Patrol releases for a period, but that does not mean zero illegal entries or zero releases by other pathways (and does not measure \"got-aways\").",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 4,
+    "topic": "Fentanyl",
+    "claim": "Fentanyl \"flow\" across the border is down 56% in one year.",
+    "verdict": "UNSUPPORTED",
+    "explanation": "Total illicit flow is not directly measurable; seizure data changed, but it cannot prove the stated percent change in total flow.",
+    "sources": ["R5"],
+    "confidence_note": "Inherently unmeasurable claim"
+  },
+  {
+    "id": 5,
+    "topic": "Crime",
+    "claim": "2025 murder rate had the biggest one-year decline; \"lowest in 125 years.\"",
+    "verdict": "PARTLY TRUE",
+    "explanation": "Largest decline is likely, but \"lowest in 125 years\" is less certain (data comparability + final FBI 2025 report timing).",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 6,
+    "topic": "Inflation history",
+    "claim": "Biden/Democrats produced the \"worst inflation in history.\"",
+    "verdict": "FALSE",
+    "explanation": "Worst U.S. inflation was far higher historically; inflation had cooled to around 3% by Trump's start.",
+    "sources": ["R5"],
+    "confidence_note": null
+  },
+  {
+    "id": 7,
+    "topic": "Inflation",
+    "claim": "Core inflation is the lowest in more than five years.",
+    "verdict": "TRUE",
+    "explanation": "CBS reports core inflation around 2.5% and describes it as the lowest since March 2021 (about five years).",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 8,
+    "topic": "Inflation",
+    "claim": "Core inflation was 1.7% in the last three months of 2025.",
+    "verdict": "UNSUPPORTED",
+    "explanation": "CBS reports sourcing is unclear and available CPI/core CPI figures do not show that number as stated.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 9,
+    "topic": "Energy costs",
+    "claim": "Gas is below $2.30 in most states; some $1.99; saw $1.85 in Iowa.",
+    "verdict": "FALSE",
+    "explanation": "AAA statewide averages did not show most states below $2.30; Iowa average was higher; GasBuddy found only a handful of stations under $2 and the Iowa station claim was contradicted.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 10,
+    "topic": "Mortgages",
+    "claim": "Mortgage rates are the lowest in four years.",
+    "verdict": "FALSE",
+    "explanation": "Freddie Mac PMMS shows about 6.01% (Feb 19, 2026), while in March 2022 rates were about 3.85% (within four years and lower).",
+    "sources": ["R7"],
+    "confidence_note": null
+  },
+  {
+    "id": 11,
+    "topic": "Mortgages",
+    "claim": "Typical new mortgage annual cost is down \"almost $5,000\" since he took office.",
+    "verdict": "UNVERIFIABLE",
+    "explanation": "Requires defining \"typical\" (loan size, down payment, term, baseline date). The specific $5,000 figure is not pinned down in the cited fact checks.",
+    "sources": ["R1"],
+    "confidence_note": "Inherently unmeasurable without definition of 'typical'"
+  },
+  {
+    "id": 12,
+    "topic": "Investment",
+    "claim": "Secured more than $18 trillion in investment commitments in 12 months.",
+    "verdict": "UNSUPPORTED",
+    "explanation": "CBS found no evidence near $18T; a White House list totals $9.6T and includes questionable inclusions (some predate his term).",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 13,
+    "topic": "Investment",
+    "claim": "Biden got less than $1T in new foreign direct investment over four years.",
+    "verdict": "TRUE",
+    "explanation": "CBS cites BEA data indicating Biden-era FDI inflows add up to under $1T (as framed).",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 14,
+    "topic": "Energy",
+    "claim": "Oil production is up by more than 600,000 barrels/day.",
+    "verdict": "FALSE",
+    "explanation": "FactCheck.org cites EIA data showing an increase closer to about 334,600 bpd over the compared period.",
+    "sources": ["R5"],
+    "confidence_note": null
+  },
+  {
+    "id": 15,
+    "topic": "Energy",
+    "claim": "Natural gas production is at an all-time high because of his \"drill\" policy.",
+    "verdict": "MISLEADING",
+    "explanation": "Production is very high, but it was already at record levels before he took office; trends were in motion.",
+    "sources": ["R5"],
+    "confidence_note": null
+  },
+  {
+    "id": 16,
+    "topic": "Jobs",
+    "claim": "More Americans are working than ever; all new jobs are private-sector.",
+    "verdict": "MISLEADING",
+    "explanation": "Record employed is true in raw count, but population growth matters; labor force participation is roughly flat and unemployment slightly higher.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 17,
+    "topic": "SNAP",
+    "claim": "He \"lifted\" 2.4 million people off food stamps.",
+    "verdict": "MISLEADING",
+    "explanation": "The number matches a projection of people losing eligibility due to work requirements, not people lifted by prosperity.",
+    "sources": ["R4"],
+    "confidence_note": null
+  },
+  {
+    "id": 18,
+    "topic": "Fraud",
+    "claim": "Minnesota: \"Somali community\" pillaged $19B from taxpayers.",
+    "verdict": "MISLEADING",
+    "explanation": "Figure refers to total federal funding for many programs; fraud totals were still under investigation and the claim overgeneralizes a community.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 19,
+    "topic": "Economy / shutdown",
+    "claim": "The shutdown \"cost us two points\" of GDP.",
+    "verdict": "FALSE",
+    "explanation": "BEA attributed roughly 1 percentage point drag on GDP growth to the shutdown, not 2.",
+    "sources": ["R5"],
+    "confidence_note": null
+  },
+  {
+    "id": 20,
+    "topic": "Elections",
+    "claim": "\"Cheating is rampant\"; noncitizen voting is rampant; SAVE Act needed to stop it.",
+    "verdict": "FALSE",
+    "explanation": "FactCheck.org cites DHS/SAVE-style checks showing tiny fractions flagged (and many false positives), contradicting a \"rampant\" framing.",
+    "sources": ["R5"],
+    "confidence_note": null
+  },
+  {
+    "id": 21,
+    "topic": "Tariffs",
+    "claim": "Tariffs are paid by foreign countries and could replace income taxes.",
+    "verdict": "FALSE / MISLEADING",
+    "explanation": "NY Fed analysis indicates most tariff costs are passed to U.S. importers/consumers; tariffs are a small revenue share historically and cannot replace income tax at proposed scales.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 22,
+    "topic": "Drug pricing",
+    "claim": "MFN means Americans will pay the lowest prices in the world for drugs.",
+    "verdict": "MISLEADING",
+    "explanation": "U.S. drug prices are higher than peers, but MFN details are limited and there is no evidence of lowest prices across all drugs for all payers.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 23,
+    "topic": "Prices",
+    "claim": "Egg prices are down about 60%.",
+    "verdict": "TRUE",
+    "explanation": "BLS data show egg prices down about 59% from the March 2025 peak, consistent with a ~60% rounded claim.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 24,
+    "topic": "Prices",
+    "claim": "Chicken, butter, fruit, hotels, autos, rent are all lower \"by a lot\" vs when he took office.",
+    "verdict": "FALSE / MISLEADING",
+    "explanation": "BLS/USDA/FRED indicators show many items are flat or up modestly; \"lower by a lot\" is not supported broadly.",
+    "sources": ["R6"],
+    "confidence_note": null
+  },
+  {
+    "id": 25,
+    "topic": "Drugs / interdiction",
+    "claim": "Drugs coming by sea were \"virtually stopped\" by a new military campaign.",
+    "verdict": "UNSUPPORTED",
+    "explanation": "No evidence of \"virtually stopped\"; seizures do not reveal total flow; strikes do not establish drug reduction.",
+    "sources": ["R4"],
+    "confidence_note": "Inherently unmeasurable claim"
+  },
+  {
+    "id": 26,
+    "topic": "Policy: accounts",
+    "claim": "With modest contributions, \"Trump Accounts\" could exceed $100,000 by age 18.",
+    "verdict": "FALSE",
+    "explanation": "Using SEC-style growth assumptions/calculators, typical growth from $1,000 seed money is far below $100k; claim is not realistic as stated.",
+    "sources": ["R4"],
+    "confidence_note": null
+  },
+  {
+    "id": 27,
+    "topic": "Iran",
+    "claim": "U.S. \"obliterated\" / \"wiped out\" Iran's nuclear program.",
+    "verdict": "FALSE",
+    "explanation": "Experts and an initial intel assessment indicated damage but not \"obliteration\"; the program continues.",
+    "sources": ["R5"],
+    "confidence_note": null
+  },
+  {
+    "id": 28,
+    "topic": "Foreign policy",
+    "claim": "He ended \"eight wars\" in his first 10 months.",
+    "verdict": "MISLEADING",
+    "explanation": "Claim is highly exaggerated; in some cases there were no wars to end and influence varies widely across conflicts.",
+    "sources": ["R8"],
+    "confidence_note": null
+  },
+  {
+    "id": 29,
+    "topic": "Tariffs / budget",
+    "claim": "Tariff revenues are \"saving our country\" (major fiscal effect).",
+    "verdict": "MISLEADING",
+    "explanation": "Tariffs are not large enough to erase deficits; estimates are large but not deficit-ending and manufacturing job gains did not track with tariffs.",
+    "sources": ["R8"],
+    "confidence_note": null
+  }
+]

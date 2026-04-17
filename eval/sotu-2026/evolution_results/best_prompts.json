@@ -1,0 +1,228 @@
+{
+  "best_individual": {
+    "id": "ec9630f_s9517dc",
+    "generation": 0,
+    "extraction_genome": {
+      "persona_idx": 0,
+      "methodology_idx": 0,
+      "taxonomy_idx": 0,
+      "format_idx": 0,
+      "filtering_idx": 0,
+      "examples_idx": 0,
+      "tone_idx": 0
+    },
+    "synthesis_genome": {
+      "persona_idx": 0,
+      "verdict_taxonomy_idx": 0,
+      "evidence_weighting_idx": 0,
+      "confidence_idx": 0,
+      "reasoning_idx": 0,
+      "nuance_idx": 0,
+      "format_idx": 0
+    },
+    "fitness": 0.54565,
+    "claim_recall": 0.8966,
+    "verdict_agreement": 0.7154,
+    "explanation_quality": 0.0344,
+    "source_citation_quality": 0.0,
+    "parsimony": 1.0,
+    "evaluated": true,
+    "extraction_token_count": 0,
+    "synthesis_token_count": 0,
+    "parent_hashes": [],
+    "mutation_log": []
+  },
+  "extraction_system_prompt": "You are a professional fact-checker.\n\nYour job is to extract verifiable factual claims from political speech transcripts.\n\nRules:\n1. Extract only atomic claims -- one specific assertion per item\n2. Exclude opinions, predictions, and value judgments\n3. Normalize claims to third-person (\"The speaker claimed X\" \u2192 just \"X\")\n4. Include statistical claims, policy claims, historical claims, comparative claims\n5. Exclude rhetorical questions and vague platitudes\n\nCategory options: economy, immigration, healthcare, crime, foreign_policy, environment, education, other\n\nFor each claim, output a JSON object with these fields:\n  - \"text\": The claim restated as a clear, standalone declarative sentence\n  - \"context\": The surrounding quote from the original transcript (max 200 chars)\n  - \"category\": Subject category\n  - \"is_checkable\": true if this is a factual assertion, false if it's an opinion or value judgment\n\nReturn a JSON array of claim objects. Nothing else.",
+  "extraction_user_template": "Extract all verifiable factual claims from the following transcript.\nSpeaker: {speaker}\nDate: {date}\n\nTranscript:\n{text}\n\nReturn a JSON array of claim objects.",
+  "synthesis_system_prompt": "You are an expert fact-checker. Given a claim and a set of evidence snippets, determine the verdict according to this taxonomy:\n  - True: Accurate and supported by primary sources\n  - Mostly True: Accurate but missing nuance\n  - Misleading: Technically accurate framing that implies something false\n  - Exaggerated: Directionally correct but overstated\n  - False: Contradicted by credible evidence\n  - Unverifiable: Insufficient evidence\n\nRespond with a JSON object:\n{\n  \"label\": \"<verdict>\",\n  \"confidence\": \"High|Medium|Low\",\n  \"explanation\": \"<one paragraph explanation>\",\n  \"support_count\": <int>,\n  \"contradict_count\": <int>\n}",
+  "top_5": [
+    {
+      "id": "ec9630f_s9517dc",
+      "generation": 4,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 0,
+        "taxonomy_idx": 0,
+        "format_idx": 0,
+        "filtering_idx": 0,
+        "examples_idx": 0,
+        "tone_idx": 0
+      },
+      "synthesis_genome": {
+        "persona_idx": 0,
+        "verdict_taxonomy_idx": 0,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 0,
+        "reasoning_idx": 0,
+        "nuance_idx": 0,
+        "format_idx": 0
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "ec9630f_s9517dc"
+      ],
+      "mutation_log": [
+        "[elite carry-forward]"
+      ]
+    },
+    {
+      "id": "e064051_s3ff2ba",
+      "generation": 4,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 1,
+        "filtering_idx": 1,
+        "examples_idx": 1,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 1,
+        "nuance_idx": 1,
+        "format_idx": 1
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "e064051_s3ff2ba"
+      ],
+      "mutation_log": [
+        "[elite carry-forward]"
+      ]
+    },
+    {
+      "id": "e2e23ee_se037cf",
+      "generation": 4,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 0,
+        "taxonomy_idx": 2,
+        "format_idx": 2,
+        "filtering_idx": 2,
+        "examples_idx": 2,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 3,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 1,
+        "confidence_idx": 1,
+        "reasoning_idx": 0,
+        "nuance_idx": 2,
+        "format_idx": 2
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "e2e23ee_se037cf",
+        "e2e23ee_se037cf"
+      ],
+      "mutation_log": []
+    },
+    {
+      "id": "e2e23ee_sb4f99d",
+      "generation": 4,
+      "extraction_genome": {
+        "persona_idx": 1,
+        "methodology_idx": 0,
+        "taxonomy_idx": 2,
+        "format_idx": 2,
+        "filtering_idx": 2,
+        "examples_idx": 2,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 3,
+        "verdict_taxonomy_idx": 1,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 1,
+        "reasoning_idx": 0,
+        "nuance_idx": 2,
+        "format_idx": 2
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "e2e23ee_se037cf",
+        "e2e23ee_se037cf"
+      ],
+      "mutation_log": [
+        "synthesis.evidence_weighting_idx: 1 -> 0"
+      ]
+    },
+    {
+      "id": "ee12d55_sf6955e",
+      "generation": 4,
+      "extraction_genome": {
+        "persona_idx": 0,
+        "methodology_idx": 1,
+        "taxonomy_idx": 1,
+        "format_idx": 3,
+        "filtering_idx": 1,
+        "examples_idx": 0,
+        "tone_idx": 2
+      },
+      "synthesis_genome": {
+        "persona_idx": 1,
+        "verdict_taxonomy_idx": 0,
+        "evidence_weighting_idx": 0,
+        "confidence_idx": 2,
+        "reasoning_idx": 0,
+        "nuance_idx": 1,
+        "format_idx": 1
+      },
+      "fitness": 0.54565,
+      "claim_recall": 0.8966,
+      "verdict_agreement": 0.7154,
+      "explanation_quality": 0.0344,
+      "source_citation_quality": 0.0,
+      "parsimony": 1.0,
+      "evaluated": true,
+      "extraction_token_count": 0,
+      "synthesis_token_count": 0,
+      "parent_hashes": [
+        "e8d091f_s737122",
+        "e064051_s3ff2ba"
+      ],
+      "mutation_log": [
+        "extraction.format_idx: 0 -> 3",
+        "synthesis.evidence_weighting_idx: 1 -> 0"
+      ]
+    }
+  ],
+  "integration_instructions": "To use these prompts in production:\n1. Set TRUTHBOT_EXTRACTION_PROMPT_FILE=path/to/extraction_prompt.txt\n2. Set TRUTHBOT_SYNTHESIS_PROMPT_FILE=path/to/synthesis_prompt.txt\nOR update _SYSTEM_PROMPT in src/truthbot/extract/claims.py\nand _SYNTHESIS_SYSTEM in src/truthbot/verify/engine.py\nwith the 'extraction_system_prompt' and 'synthesis_system_prompt' values above."
+}
