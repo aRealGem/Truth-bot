@@ -306,6 +306,14 @@ def main() -> None:
         random.seed(args.seed)
         logger.info("Random seed: %d", args.seed)
 
+    if args.dry_run:
+        logger.warning("=" * 60)
+        logger.warning("DRY-RUN MODE ACTIVE: No API calls will be made.")
+        logger.warning("All genomes receive identical stub claims.")
+        logger.warning("Evolution cannot produce meaningful results in dry-run mode.")
+        logger.warning("Use --dry-run only to test pipeline structure/logging.")
+        logger.warning("=" * 60)
+
     # --show-prompts: print baseline prompts and exit
     if args.show_prompts:
         show_prompts()
@@ -332,15 +340,24 @@ def main() -> None:
         _run_dry_evaluation(args, results_dir)
         return
 
-    # Check API key for live runs
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        print(
-            "ERROR: ANTHROPIC_API_KEY not set. Either set it in .env or environment.\n"
-            "Use --dry-run to test without API calls.",
-            file=sys.stderr,
-        )
+    # Pre-flight sanity checks for live runs
+    from evolver.preflight import PreflightChecker
+    _checker = PreflightChecker()
+    _preflight = _checker.run_all(
+        provider="anthropic",
+        transcript_path=args.transcript_file or None,
+        budget_usd=args.budget,
+        dry_run=False,
+        model=args.extraction_model,
+        results_dir=results_dir,
+    )
+    for w in _preflight.warnings:
+        logger.warning("PREFLIGHT: %s", w)
+    for e in _preflight.errors:
+        logger.error("PREFLIGHT: %s", e)
+    if not _preflight.passed:
         sys.exit(1)
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
 
     # Fetch/load transcript
     logger.info("Loading SOTU transcript...")

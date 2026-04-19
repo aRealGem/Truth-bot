@@ -15,6 +15,7 @@ dependencies = [
     "pydantic>=2.0",
     "httpx>=0.25",
     "anthropic>=0.25",
+    "openai>=1.0",
     "jinja2>=3.1",
     "feedgen>=0.9",
     "python-dateutil>=2.8",

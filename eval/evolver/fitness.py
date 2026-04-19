@@ -19,7 +19,7 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-# ── Reference data ─────────────────────────────────────────────────────────────
+# ââ Reference data âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 _REFERENCE_PATH = Path(__file__).parent.parent / "sotu-2026" / "reference.json"
 
@@ -30,20 +30,31 @@ def load_reference() -> list[dict]:
         return json.load(f)
 
 
-# ── Verdict distance matrix ────────────────────────────────────────────────────
-# Maps (reference_label, predicted_label) → penalty [0.0, 1.0]
+# ââ Verdict distance matrix ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+# Maps (reference_label, predicted_label) â penalty [0.0, 1.0]
 # 0.0 = perfect match, 1.0 = maximum disagreement
 
 # Normalized labels: map reference.json verdicts to VerdictLabel-like strings
 _LABEL_NORMALIZE: dict[str, str] = {
+    # Core canonical labels
     "TRUE": "true",
     "FALSE": "false",
     "PARTLY TRUE": "mostly_true",
+    "MOSTLY TRUE": "mostly_true",
     "UNSUPPORTED": "unverifiable",
     "MISLEADING": "misleading",
     "EXAGGERATED": "exaggerated",
-    "FALSE / MISLEADING": "misleading",
     "UNVERIFIABLE": "unverifiable",
+    # Compound / qualified labels from march-2025-congress and similar references
+    "FALSE / MISLEADING": "misleading",
+    "PARTLY TRUE / MISLEADING": "misleading",
+    "FALSE / CONTRADICTS MEDICAL CONSENSUS": "false",
+    "IDEOLOGICAL CLAIM / CONTRADICTS MEDICAL CONSENSUS": "false",
+    "TRUE (AS TO ACTION)": "true",
+    "LITERALLY TRUE / SCIENTIFICALLY MISLEADING": "misleading",
+    "TRUE (ACTION ONLY; SCALE OVERSTATED)": "true",
+    "PARTLY TRUE / UNSUPPORTED": "mostly_true",
+    "MISLEADING / UNSUPPORTED": "misleading",
 }
 
 _TRUTHBOT_LABEL_NORMALIZE: dict[str, str] = {
@@ -55,7 +66,7 @@ _TRUTHBOT_LABEL_NORMALIZE: dict[str, str] = {
     "Unverifiable": "unverifiable",
 }
 
-# Ordered list (most positive → most negative)
+# Ordered list (most positive â most negative)
 _LABEL_ORDER = ["true", "mostly_true", "exaggerated", "misleading", "unverifiable", "false"]
 _LABEL_POS = {label: i for i, label in enumerate(_LABEL_ORDER)}
 
@@ -63,13 +74,20 @@ _LABEL_POS = {label: i for i, label in enumerate(_LABEL_ORDER)}
 def verdict_distance(ref_verdict: str, pred_verdict: str) -> float:
     """
     Return a penalty in [0, 1] for the distance between two verdict labels.
-    0 = perfect match, 1 = opposite ends (true ↔ false).
+    0 = perfect match, 1 = opposite ends (true <-> false).
     """
     ref_norm = _LABEL_NORMALIZE.get(ref_verdict.upper().strip(), "unverifiable")
     pred_norm = _TRUTHBOT_LABEL_NORMALIZE.get(pred_verdict.strip(), None)
     if pred_norm is None:
         # Try normalizing via the reference map too
-        pred_norm = _LABEL_NORMALIZE.get(pred_verdict.upper().strip(), "unverifiable")
+        pred_norm = _LABEL_NORMALIZE.get(pred_verdict.upper().strip(), None)
+    if pred_norm is None:
+        # Last resort: default to unverifiable with a warning
+        logger.warning(
+            "verdict_distance: unrecognised predicted label %r; defaulting to 'unverifiable'",
+            pred_verdict,
+        )
+        pred_norm = "unverifiable"
 
     if ref_norm == pred_norm:
         return 0.0
@@ -85,7 +103,7 @@ def verdict_agreement_score(ref_verdict: str, pred_verdict: str) -> float:
     return 1.0 - verdict_distance(ref_verdict, pred_verdict)
 
 
-# ── Fuzzy claim matching ───────────────────────────────────────────────────────
+# ââ Fuzzy claim matching âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 def _normalize_text(text: str) -> str:
     """Lowercase, strip punctuation, collapse whitespace."""
@@ -97,7 +115,7 @@ def _normalize_text(text: str) -> str:
 def fuzzy_claim_similarity(claim_a: str, claim_b: str) -> float:
     """
     Compute token Jaccard similarity between two claim strings.
-    Returns 0.0–1.0.
+    Returns 0.0â1.0.
     Falls back to thefuzz if available for a combined score.
     """
     a_tokens = set(_normalize_text(claim_a).split())
@@ -155,7 +173,7 @@ def match_claims_to_reference(
     return results
 
 
-# ── Explanation quality scoring ────────────────────────────────────────────────
+# ââ Explanation quality scoring ââââââââââââââââââââââââââââââââââââââââââââââââ
 
 # Keywords indicating data-backed, source-cited explanations
 _DATA_KEYWORDS = [
@@ -175,7 +193,7 @@ _DATA_PATTERNS = [re.compile(p, re.IGNORECASE) for p in _DATA_KEYWORDS]
 def explanation_quality_score(explanation: str) -> float:
     """
     Score explanation quality by counting data signals.
-    Returns 0.0–1.0, saturating at 5+ signals.
+    Returns 0.0â1.0, saturating at 5+ signals.
     """
     if not explanation:
         return 0.0
@@ -186,7 +204,7 @@ def explanation_quality_score(explanation: str) -> float:
     return 0.6 * signal_score + 0.4 * length_score
 
 
-# ── Source citation quality ────────────────────────────────────────────────────
+# ââ Source citation quality ââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 _AUTHORITATIVE_SOURCES = [
     r"\bBLS\b", r"\bBEA\b", r"\bEIA\b", r"\bCBP\b", r"\bFBI\b", r"\bCBO\b",
@@ -204,7 +222,7 @@ _SOURCE_PATTERNS = [re.compile(p, re.IGNORECASE) for p in _AUTHORITATIVE_SOURCES
 def source_citation_score(explanation: str) -> float:
     """
     Score whether the explanation references authoritative sources.
-    Returns 0.0–1.0.
+    Returns 0.0â1.0.
     """
     if not explanation:
         return 0.0
@@ -212,11 +230,21 @@ def source_citation_score(explanation: str) -> float:
     return min(hits / 3.0, 1.0)
 
 
-# ── Parsimony scoring ──────────────────────────────────────────────────────────
+# ââ Parsimony scoring ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
-def parsimony_score(token_count: int, target_min: int = 500, target_max: int = 2000) -> float:
+def parsimony_score(
+    token_count: int,
+    target_min: int = 4_000,
+    target_max: int = 30_000,
+) -> float:
     """
-    Reward lower token counts. Returns 1.0 at/below target_min, 0.0 at target_max.
+    Reward lower token counts. Returns 1.0 at/below target_min, 0.0 at/above target_max.
+
+    Calibrated for real synthesis runs:
+    - 4,000 tokens: very efficient (extraction only or very terse synthesis)
+    - 30,000 tokens: verbose (29 claims x ~900 tokens synthesis + extraction overhead)
+
+    Previous values (500, 2000) caused parsimony to always be 0.0 for real runs.
     """
     if token_count <= target_min:
         return 1.0
@@ -225,7 +253,46 @@ def parsimony_score(token_count: int, target_min: int = 500, target_max: int = 2
     return 1.0 - (token_count - target_min) / (target_max - target_min)
 
 
-# ── Main fitness scorer ────────────────────────────────────────────────────────
+# -- Numeric error direction -------------------------------------------------
+
+import re as _re
+
+_NUMBER_RE = _re.compile(
+    r'[$]?([\d,]+(?:\.\d+)?)\s*(?:million|billion|thousand|M|B|K)?',
+    _re.IGNORECASE,
+)
+
+
+def extract_first_number(text: str) -> 'float | None':
+    """Extract the first significant number from text. Returns None if not found."""
+    for m in _NUMBER_RE.finditer(text):
+        try:
+            val = float(m.group(1).replace(',', ''))
+            if val > 0:
+                return val
+        except ValueError:
+            continue
+    return None
+
+
+def numeric_error_direction(ref_explanation: str, pred_explanation: str) -> str:
+    """
+    Compare first numbers in reference vs predicted explanation.
+    Returns: 'inflated' | 'deflated' | 'match' | 'unknown'
+    """
+    ref_num = extract_first_number(ref_explanation)
+    pred_num = extract_first_number(pred_explanation)
+    if ref_num is None or pred_num is None:
+        return 'unknown'
+    ratio = pred_num / ref_num
+    if ratio > 1.15:
+        return 'inflated'
+    elif ratio < 0.85:
+        return 'deflated'
+    return 'match'
+
+
+
 
 class FitnessScorer:
     """
@@ -320,6 +387,22 @@ class FitnessScorer:
             + w["parsimony"] * pars
         )
 
+        # 6. Numeric error directions for matched claims
+        ned_list = []
+        for match in matches:
+            if not match["matched"]:
+                continue
+            verdict = self._find_verdict(match["matched_claim"], verdicts)
+            if verdict is None:
+                continue
+            ned_list.append({
+                "ref_id": match["ref_id"],
+                "direction": numeric_error_direction(
+                    match.get("ref_explanation", ""),
+                    verdict.get("explanation", ""),
+                ),
+            })
+
         return {
             "claim_recall": round(recall, 4),
             "verdict_agreement": round(verdict_agreement, 4),
@@ -329,6 +412,7 @@ class FitnessScorer:
             "fitness": round(fitness, 4),
             "matched_count": sum(1 for m in matches if m["matched"]),
             "total_extracted": len(checkable),
+            "numeric_error_directions": ned_list,
         }
 
     def score_extraction_only(self, extracted_claims: list[dict], token_count: int = 0) -> dict:

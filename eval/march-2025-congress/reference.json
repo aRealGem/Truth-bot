@@ -1,0 +1,119 @@
+[
+  {
+    "id": 1,
+    "topic": "Gender identity / executive action",
+    "claim": "The president signed an executive order declaring only two sexes, male and female.",
+    "verdict": "MISLEADING",
+    "explanation": "The EO exists and was signed, but the 'two sexes' framing is scientifically misleading. Intersex people make up roughly 1.7% of the population, and the order conflates biological sex with gender identity, a distinction rejected by major medical and scientific organizations.",
+    "sources": [
+      "GLAAD",
+      "NBC News"
+    ],
+    "confidence_note": "Technically accurate as to the action, but the framing implies a scientific consensus that does not exist."
+  },
+  {
+    "id": 2,
+    "topic": "Sports / transgender athletes",
+    "claim": "The president signed an executive order banning transgender women from women's sports.",
+    "verdict": "TRUE",
+    "explanation": "The EO exists and was signed shortly after taking office. However, the premise that this addresses a widespread problem is weak: the NCAA has said fewer than 10 of roughly 500,000 college athletes are openly transgender.",
+    "sources": [
+      "NBC News",
+      "Q Voice News"
+    ],
+    "confidence_note": "True as to the action taken; the stated justification is disproportionate to the documented scale."
+  },
+  {
+    "id": 3,
+    "topic": "Education / curriculum",
+    "claim": "The president signed an executive order banning public schools from indoctrinating children with transgender ideology.",
+    "verdict": "MISLEADING",
+    "explanation": "The EO exists, but the federal government has very limited authority over local school curricula. The Every Student Succeeds Act (2015) explicitly prohibits federal interference in curriculum and teaching materials, making the claimed effect largely unenforceable.",
+    "sources": [
+      "NPR"
+    ],
+    "confidence_note": "True as to the EO signing; misleading as to the actual federal authority over school curricula."
+  },
+  {
+    "id": 4,
+    "topic": "Sports / individual injury claim",
+    "claim": "Payton McNabb was partially paralyzed and her athletic career ended after being hit by a transgender volleyball player.",
+    "verdict": "PARTLY TRUE / MISLEADING",
+    "explanation": "An injury occurred, but there is insufficient evidence to verify whether the athlete who hit McNabb was transgender. Only two trans girls were allowed to compete in NC high school sports from 2019-2023. McNabb subsequently played competitive high school basketball and softball, contradicting the claim her career ended. Head injuries are the second-most-common injury among female volleyball athletes generally.",
+    "sources": [
+      "Snopes"
+    ],
+    "confidence_note": "Injury is documented; causal transgender attribution and career-ending characterization are unsupported or false."
+  },
+  {
+    "id": 5,
+    "topic": "Sports / cycling record",
+    "claim": "A male broke a women's cycling record by 5 hours and 14 minutes.",
+    "verdict": "MISLEADING",
+    "explanation": "Refers to Austin Killips at the Arizona Trail Race, but the race is open to everyone: it is a coed individual time trial, not a women's race. Killips' record was later beaten by Justinas Leveika, a male cyclist who completed it over a full day faster.",
+    "sources": [
+      "Arizona Trail Association"
+    ],
+    "confidence_note": "The race has no separate women's category; framing as breaking a women's record is false."
+  },
+  {
+    "id": 6,
+    "topic": "Foreign aid / LGBTQ+ spending",
+    "claim": "The government spent $8 million to promote LGBTQI+ issues in Lesotho.",
+    "verdict": "FALSE",
+    "explanation": "PolitiFact could not find an $8 million grant for LGBTQ+ issues in Lesotho; the most identified was approximately $2 million. Lesotho's main LGBTQ+ organization says it receives no US grants. The majority of US aid to Lesotho funds HIV/AIDS treatment in a country where roughly 25% of the population is HIV-positive.",
+    "sources": [
+      "PolitiFact"
+    ],
+    "confidence_note": "Dollar figure is significantly overstated; the characterization of the aid's purpose is misleading."
+  },
+  {
+    "id": 7,
+    "topic": "NIH funding / transgender research",
+    "claim": "The government spent $8 million making mice transgender.",
+    "verdict": "FALSE",
+    "explanation": "The NIH awarded a total of $477,121 across three projects (2021-2022) that administered feminizing hormones to mice, not $8 million. The studies examined effects of gender-affirming hormones on asthma, breast cancer risk, and HIV vaccine effectiveness, with findings applicable broadly.",
+    "sources": [
+      "LGBTQ Nation",
+      "PBS NewsHour"
+    ],
+    "confidence_note": "Dollar figure is off by a factor of ~17x; characterization of research purpose is false."
+  },
+  {
+    "id": 8,
+    "topic": "Parental rights / school policy",
+    "claim": "January Littlejohn's school committed child abuse by concealing information about her child's gender identity.",
+    "verdict": "MISLEADING",
+    "explanation": "A federal judge dismissed Littlejohn's lawsuit in 2022 after the school amended its support plan, ruling her claim did not meet the burden to show a parental-rights violation. Her own original complaint showed she was in contact with the school about her child's gender identity throughout, contradicting the concealment framing.",
+    "sources": [
+      "NBC News"
+    ],
+    "confidence_note": "The legal characterization as child abuse was rejected by a federal court."
+  },
+  {
+    "id": 9,
+    "topic": "Gender-affirming care",
+    "claim": "Gender-affirming care is sexual mutilation of our youth.",
+    "verdict": "FALSE",
+    "explanation": "Gender-affirming care is supported by major professional medical associations under specific clinical guidance. Surgical interventions typically occur after age 18. Care is associated with improved mental health outcomes. A JAMA Pediatrics study found fewer than 0.1% of privately insured minors ages 8-17 received puberty blockers or hormones (2018-2022); no child under 12 received a hormone prescription. The executive order banning such care has been blocked by federal courts.",
+    "sources": [
+      "FactCheck.org",
+      "JAMA Pediatrics"
+    ],
+    "confidence_note": "Contradicts the established position of the AMA, AAP, and other major medical bodies."
+  },
+  {
+    "id": 10,
+    "topic": "Gender identity / medical consensus",
+    "claim": "It is a 'big lie' that a child could be trapped in the wrong body.",
+    "verdict": "FALSE / CONTRADICTS MEDICAL CONSENSUS",
+    "explanation": "Gender dysphoria is a recognized medical diagnosis in both the DSM-5 and ICD-11. A 2024 study in Nature Human Behavior found that states passing laws against gender-affirming care saw increased suicide attempts among transgender and gender non-conforming youth. Major medical associations including the AMA, AAP, and APA recognize gender dysphoria and support evidence-based care.",
+    "sources": [
+      "NPR",
+      "Nature Human Behavior (2024)",
+      "DSM-5",
+      "ICD-11"
+    ],
+    "confidence_note": "Characterizing this as a lie contradicts the established consensus of mainstream medicine and psychiatry."
+  }
+]

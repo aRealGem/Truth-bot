@@ -97,11 +97,45 @@ class CachedRunner:
             stub = self._stub_extraction(transcript_text, speaker, date_str)
             return stub, 0
 
-        claims, tokens = self._call_extraction_api(
+        claims, tokens = self._call_extraction_api_with_retry(
             transcript_text, speaker, date_str, system_prompt, user_template
         )
-        self._save_cache(cache_key, {"claims": claims, "tokens": tokens})
+        if claims:
+            self._save_cache(cache_key, {"claims": claims, "tokens": tokens})
         return claims, tokens
+
+    def _call_extraction_api_with_retry(
+        self,
+        transcript_text: str,
+        speaker: str,
+        date_str: str,
+        system_prompt: str,
+        user_template: str,
+        max_retries: int = 2,
+    ) -> tuple[list[dict], int]:
+        """Retry on JSON parse errors or empty results. API errors propagate immediately."""
+        for attempt in range(max_retries + 1):
+            try:
+                claims, tokens = self._call_extraction_api(
+                    transcript_text, speaker, date_str, system_prompt, user_template
+                )
+                if claims:  # non-empty result
+                    return claims, tokens
+                if attempt < max_retries:
+                    logger.warning(
+                        "Extraction returned empty claims (attempt %d/%d), retrying...",
+                        attempt + 1, max_retries + 1,
+                    )
+            except json.JSONDecodeError as e:
+                if attempt < max_retries:
+                    logger.warning(
+                        "JSON parse error in extraction (attempt %d/%d): %s -- retrying",
+                        attempt + 1, max_retries + 1, e,
+                    )
+                else:
+                    logger.error("JSON parse error after %d attempts: %s", max_retries + 1, e)
+                    return [], 0
+        return [], 0
 
     def _call_extraction_api(
         self,
@@ -228,39 +262,58 @@ class CachedRunner:
 
             user_msg = f"Claim: {claim_text}\n\nEvidence:\n{evidence_text}"
 
-            try:
-                response = client.messages.create(
-                    model=self._synthesis_model,
-                    max_tokens=512,
-                    system=system_prompt,
-                    messages=[{"role": "user", "content": user_msg}],
-                )
-                total_tokens += response.usage.input_tokens + response.usage.output_tokens
-                raw = response.content[0].text.strip()
+            # Retry on JSON parse error (1 retry max for synthesis)
+            verdict_result = None
+            for syn_attempt in range(2):
+                try:
+                    response = client.messages.create(
+                        model=self._synthesis_model,
+                        max_tokens=512,
+                        system=system_prompt,
+                        messages=[{"role": "user", "content": user_msg}],
+                    )
+                    total_tokens += response.usage.input_tokens + response.usage.output_tokens
+                    raw = response.content[0].text.strip()
 
-                # Strip markdown fences
-                if raw.startswith("```"):
-                    raw = re.sub(r"```(?:json)?\s*", "", raw).strip().rstrip("```").strip()
+                    # Strip markdown fences
+                    if raw.startswith("```"):
+                        raw = re.sub(r"```(?:json)?\s*", "", raw).strip().rstrip("```").strip()
 
-                parsed = json.loads(raw)
-                verdicts.append({
-                    "claim_text": claim_text,
-                    "label": parsed.get("label", "Unverifiable"),
-                    "confidence": parsed.get("confidence", "Low"),
-                    "explanation": parsed.get("explanation", ""),
-                    "support_count": parsed.get("support_count", 0),
-                    "contradict_count": parsed.get("contradict_count", 0),
-                })
-            except (json.JSONDecodeError, Exception) as e:
-                logger.warning("Synthesis failed for claim '%s': %s", claim_text[:60], e)
-                verdicts.append({
+                    parsed = json.loads(raw)
+                    verdict_result = {
+                        "claim_text": claim_text,
+                        "label": parsed.get("label", "Unverifiable"),
+                        "confidence": parsed.get("confidence", "Low"),
+                        "explanation": parsed.get("explanation", ""),
+                        "support_count": parsed.get("support_count", 0),
+                        "contradict_count": parsed.get("contradict_count", 0),
+                    }
+                    break  # success
+                except json.JSONDecodeError as e:
+                    if syn_attempt == 0:
+                        logger.warning(
+                            "JSON parse error in synthesis for '%s': %s -- retrying",
+                            claim_text[:60], e,
+                        )
+                    else:
+                        logger.error(
+                            "JSON parse error in synthesis after 2 attempts for '%s': %s",
+                            claim_text[:60], e,
+                        )
+                except Exception as e:
+                    logger.warning("Synthesis failed for claim '%s': %s", claim_text[:60], e)
+                    break  # non-JSON errors don't benefit from retry
+
+            if verdict_result is None:
+                verdict_result = {
                     "claim_text": claim_text,
                     "label": "Unverifiable",
                     "confidence": "Low",
                     "explanation": "Parse error or API failure.",
                     "support_count": 0,
                     "contradict_count": 0,
-                })
+                }
+            verdicts.append(verdict_result)
 
             time.sleep(0.3)  # Rate limit buffer
 
