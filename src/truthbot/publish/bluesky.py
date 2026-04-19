@@ -77,20 +77,10 @@ class BlueskyPublisher:
             URL of the root post on Bluesky, or None if not configured
             or posting failed.
         """
-        if not self.is_configured():
-            logger.info("Bluesky not configured — skipping post.")
-            return None
-
-        try:
-            session = self._authenticate()
-            root_ref = self._post_summary(session, report)
-            self._post_verdicts(session, report, root_ref)
-            url = self._post_url(root_ref, self._handle)
-            logger.info("Bluesky thread posted: %s", url)
-            return url
-        except Exception as exc:
-            logger.error("Bluesky posting failed: %s", exc)
-            return None
+        raise NotImplementedError(
+            "Bluesky publishing is scheduled for v2. "
+            "Configure BLUESKY_HANDLE and BLUESKY_APP_PASSWORD and re-implement."
+        )
 
     def format_summary_post(self, report: Report) -> str:
         """

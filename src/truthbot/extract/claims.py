@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from typing import TYPE_CHECKING, Optional
 
 from truthbot.models import Claim, Transcript
@@ -61,7 +62,7 @@ class ClaimExtractor:
     api_key:
         Anthropic API key. Defaults to settings.anthropic_api_key.
     model:
-        Claude model to use. Defaults to settings.llm_model.
+        Claude model to use. Defaults to claude-opus-4-5.
     max_claims:
         Maximum number of claims to extract. Defaults to settings.max_claims.
     """
@@ -75,7 +76,7 @@ class ClaimExtractor:
         from truthbot.config import settings
 
         self._api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
-        self._model = model or settings.llm_model
+        self._model = model or "claude-opus-4-5"
         self._max_claims = max_claims or settings.max_claims
 
     def extract(self, transcript: Transcript) -> list[Claim]:
@@ -164,5 +165,3 @@ class ClaimExtractor:
         ]
 
 
-# Fix missing import
-import os  # noqa: E402

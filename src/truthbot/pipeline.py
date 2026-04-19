@@ -16,7 +16,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from truthbot.models import Report
+from truthbot.models import Report, Verdict
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +134,7 @@ class Pipeline:
             # Check cache first
             cached = self.cache.get(claim.text)
             if cached:
-                from truthbot.models import Confidence, Verdict, VerdictLabel
+                from truthbot.models import Confidence, VerdictLabel
                 verdict = Verdict(
                     claim_id=claim.id,
                     label=VerdictLabel(cached.verdict_label),
@@ -145,8 +145,17 @@ class Pipeline:
                 continue
 
             # Verify
-            evidence, verdict = self.engine.verify(claim)
+            evidence, consensus = self.engine.verify(claim)
             all_evidence.extend(evidence)
+            # Build backward-compat Verdict from consensus
+            verdict = Verdict(
+                claim_id=claim.id,
+                label=consensus.consensus_label,
+                confidence=consensus.confidence,
+                explanation=consensus.explanation,
+                model_id="consensus",
+                evidence_ids=[e.id for e in evidence],
+            )
             all_verdicts.append(verdict)
 
             # Cache the result
@@ -202,6 +211,77 @@ class Pipeline:
         report.published_at = datetime.now(timezone.utc)
 
 
+def _print_metrics_summary(jsonl_path: str | None = None) -> None:
+    """Read adapter_calls.jsonl and print a per-adapter summary table."""
+    import json
+    from collections import defaultdict
+    from pathlib import Path
+
+    if jsonl_path:
+        path = Path(jsonl_path)
+    else:
+        from truthbot.config import settings
+        path = settings.metrics_dir / "adapter_calls.jsonl"
+
+    if not path.exists():
+        print("No telemetry data found.")
+        return
+
+    # Aggregate per adapter
+    stats: dict[str, dict] = defaultdict(lambda: {
+        "calls": 0, "ok": 0, "errors": 0,
+        "input_tokens": 0, "output_tokens": 0,
+        "tool_calls": 0, "urls": 0,
+        "total_cost": 0.0, "total_ms": 0,
+    })
+
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            name = rec.get("adapter_name", "unknown")
+            s = stats[name]
+            s["calls"] += 1
+            if rec.get("status") == "ok":
+                s["ok"] += 1
+            else:
+                s["errors"] += 1
+            s["input_tokens"] += rec.get("input_tokens", 0)
+            s["output_tokens"] += rec.get("output_tokens", 0)
+            s["tool_calls"] += rec.get("tool_call_count", 0)
+            s["urls"] += rec.get("retrieved_url_count", 0)
+            s["total_cost"] += rec.get("estimated_cost_usd", 0.0)
+            s["total_ms"] += rec.get("wall_clock_ms", 0)
+
+    if not stats:
+        print("No telemetry records found in file.")
+        return
+
+    print(f"\n{'Adapter':<14} {'Calls':>6} {'OK':>6} {'Errors':>7} "
+          f"{'In Tok':>8} {'Out Tok':>8} {'Tools':>6} {'URLs':>6} "
+          f"{'Cost $':>9} {'Avg ms':>8}")
+    print("-" * 90)
+
+    for name, s in sorted(stats.items()):
+        avg_ms = s["total_ms"] // max(s["calls"], 1)
+        print(
+            f"{name:<14} {s['calls']:>6} {s['ok']:>6} {s['errors']:>7} "
+            f"{s['input_tokens']:>8} {s['output_tokens']:>8} {s['tool_calls']:>6} {s['urls']:>6} "
+            f"{s['total_cost']:>9.6f} {avg_ms:>8}"
+        )
+
+    total_cost = sum(s["total_cost"] for s in stats.values())
+    total_calls = sum(s["calls"] for s in stats.values())
+    print("-" * 90)
+    print(f"{'TOTAL':<14} {total_calls:>6}{'':>24}{'':>8}{'':>8}{'':>6}{'':>6} {total_cost:>9.6f}")
+
+
+
 def main() -> None:
     """CLI entry point."""
     logging.basicConfig(
@@ -227,10 +307,30 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true", help="Dry run (no external calls)")
     parser.add_argument("--verbose", action="store_true", help="Debug logging")
 
+    subparsers = parser.add_subparsers(dest="subcommand")
+
+    # metrics subcommand
+    metrics_parser = subparsers.add_parser("metrics", help="Metrics and telemetry commands")
+    metrics_sub = metrics_parser.add_subparsers(dest="metrics_cmd")
+    summary_parser = metrics_sub.add_parser("summary", help="Print per-adapter summary table")
+    summary_parser.add_argument(
+        "--jsonl",
+        help="Path to adapter_calls.jsonl (default: settings.metrics_dir/adapter_calls.jsonl)",
+    )
+
     args = parser.parse_args()
 
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
+
+    # Handle metrics subcommand
+    if getattr(args, "subcommand", None) == "metrics":
+        if getattr(args, "metrics_cmd", None) == "summary":
+            _print_metrics_summary(getattr(args, "jsonl", None))
+            return
+        else:
+            parser.print_help()
+            return
 
     # Read from stdin if requested
     source = args.transcript or ""

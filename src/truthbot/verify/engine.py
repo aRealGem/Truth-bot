@@ -1,75 +1,66 @@
 """
-Verification engine — orchestrates evidence gathering and verdict synthesis.
+Verification engine — orchestrates evidence gathering and multi-model verdict synthesis.
 
 For each claim:
   1. Query all configured source connectors in parallel (thread pool)
   2. Collect and deduplicate evidence
-  3. Send evidence + claim to LLM for verdict synthesis
-  4. Return a Verdict with label, confidence, and explanation
-
-This module is a stub — the orchestration logic is defined, but the LLM
-synthesis call returns a placeholder verdict until an API key is set.
+  3. Fan out claim + evidence to all active LLM adapters in parallel
+  4. Build a consensus verdict from the individual model verdicts
+  5. Return ConsensusVerdict
 """
 
 from __future__ import annotations
 
 import logging
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional
 
-from truthbot.models import Claim, Confidence, Evidence, SourceTier, Verdict, VerdictLabel
+from truthbot.models import (
+    Claim,
+    Confidence,
+    ConsensusVerdict,
+    Evidence,
+    ModelVerdict,
+    SourceTier,
+    Verdict,
+    VerdictLabel,
+)
 from truthbot.verify.sources.base import SourceConnector
 
 logger = logging.getLogger(__name__)
 
-_SYNTHESIS_SYSTEM = """You are an expert fact-checker. Given a claim and a set of evidence snippets,
-determine the verdict according to this taxonomy:
-
-  - True: Accurate and supported by primary sources
-  - Mostly True: Accurate but missing nuance
-  - Misleading: Technically accurate framing that implies something false
-  - Exaggerated: Directionally correct but overstated
-  - False: Contradicted by credible evidence
-  - Unverifiable: Insufficient evidence
-
-Respond with a JSON object:
-{
-  "label": "<verdict>",
-  "confidence": "High|Medium|Low",
-  "explanation": "<one paragraph explanation>",
-  "support_count": <int>,
-  "contradict_count": <int>
-}"""
+# Tie-breaking order: most conservative wins (lowest index = most conservative)
+_TIE_BREAK_ORDER = [
+    VerdictLabel.FALSE,
+    VerdictLabel.MISLEADING,
+    VerdictLabel.EXAGGERATED,
+    VerdictLabel.MOSTLY_TRUE,
+    VerdictLabel.UNVERIFIABLE,
+    VerdictLabel.TRUE,
+]
 
 
 class VerificationEngine:
     """
-    Orchestrates multi-source evidence gathering and LLM verdict synthesis.
+    Orchestrates multi-source evidence gathering and multi-model verdict synthesis.
 
     Parameters
     ----------
     connectors:
         List of SourceConnector instances to query. If empty, uses defaults.
-    api_key:
-        Anthropic API key for verdict synthesis.
-    model:
-        LLM model identifier.
     max_workers:
-        Thread pool size for parallel source queries.
+        Thread pool size for parallel source queries and adapter calls.
     """
 
     def __init__(
         self,
         connectors: Optional[list[SourceConnector]] = None,
+        max_workers: int = 4,
+        # Legacy params accepted but ignored
         api_key: Optional[str] = None,
         model: Optional[str] = None,
-        max_workers: int = 4,
     ) -> None:
-        import os
-        from truthbot.config import settings
-
-        self._api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
-        self._model = model or settings.llm_model
         self._max_workers = max_workers
 
         if connectors is not None:
@@ -77,9 +68,41 @@ class VerificationEngine:
         else:
             self._connectors = self._default_connectors()
 
-    def verify(self, claim: Claim) -> tuple[list[Evidence], Verdict]:
+        self._adapters = self._build_adapters()
+
+    def _build_adapters(self):
+        """Instantiate all available adapters, skipping those without API keys."""
+        from truthbot.verify.adapters.anthropic import AnthropicAdapter
+        from truthbot.verify.adapters.gemini import GeminiAdapter
+        from truthbot.verify.adapters.grok import GrokAdapter
+        from truthbot.verify.adapters.openai import OpenAIAdapter
+        from truthbot.verify.adapters.base import AdapterUnavailable
+
+        adapter_classes = [AnthropicAdapter, OpenAIAdapter, GeminiAdapter, GrokAdapter]
+        active = []
+        skipped = []
+
+        for cls in adapter_classes:
+            try:
+                adapter = cls()
+                active.append(adapter)
+            except AdapterUnavailable as exc:
+                skipped.append(f"{cls.adapter_name} ({exc})")
+            except Exception as exc:
+                skipped.append(f"{cls.adapter_name} (init error: {exc})")
+
+        active_names = [a.adapter_name for a in active]
+        logger.info(
+            "Active adapters: %s. Skipped: %s",
+            active_names if active_names else "none",
+            skipped if skipped else "none",
+        )
+
+        return active
+
+    def verify(self, claim: Claim) -> tuple[list[Evidence], ConsensusVerdict]:
         """
-        Gather evidence and synthesize a verdict for a single claim.
+        Gather evidence and synthesize a consensus verdict for a single claim.
 
         Parameters
         ----------
@@ -88,16 +111,63 @@ class VerificationEngine:
 
         Returns
         -------
-        tuple[list[Evidence], Verdict]
-            All evidence gathered and the synthesized verdict.
+        tuple[list[Evidence], ConsensusVerdict]
+            All evidence gathered and the consensus verdict.
         """
         evidence = self._gather_evidence(claim)
-        verdict = self._synthesize_verdict(claim, evidence)
-        return evidence, verdict
+
+        if not self._adapters:
+            logger.warning(
+                "No LLM adapters active — returning stub verdict for claim %s", claim.id
+            )
+            stub = self._stub_verdict(claim, evidence)
+            # Wrap stub in ConsensusVerdict
+            return evidence, ConsensusVerdict(
+                claim_id=claim.id,
+                model_verdicts=[],
+                consensus_label=stub.label,
+                confidence=stub.confidence,
+                agreement=True,
+                explanation=stub.explanation,
+            )
+
+        # Fan out to all adapters in parallel
+        model_verdicts: list[ModelVerdict] = []
+        with ThreadPoolExecutor(max_workers=min(self._max_workers, len(self._adapters))) as pool:
+            futures = {
+                pool.submit(adapter.call, claim, evidence): adapter
+                for adapter in self._adapters
+            }
+            for future in as_completed(futures):
+                adapter = futures[future]
+                try:
+                    mv = future.result()
+                    model_verdicts.append(mv)
+                except Exception as exc:
+                    logger.error(
+                        "Adapter %s raised an exception for claim %s: %s",
+                        adapter.adapter_name,
+                        claim.id,
+                        exc,
+                    )
+
+        if not model_verdicts:
+            stub = self._stub_verdict(claim, evidence)
+            return evidence, ConsensusVerdict(
+                claim_id=claim.id,
+                model_verdicts=[],
+                consensus_label=stub.label,
+                confidence=stub.confidence,
+                agreement=True,
+                explanation=stub.explanation,
+            )
+
+        consensus = _build_consensus(claim.id, model_verdicts)
+        return evidence, consensus
 
     def verify_many(
         self, claims: list[Claim]
-    ) -> list[tuple[Claim, list[Evidence], Verdict]]:
+    ) -> list[tuple[Claim, list[Evidence], ConsensusVerdict]]:
         """
         Verify a list of claims, returning results in input order.
 
@@ -108,17 +178,28 @@ class VerificationEngine:
 
         Returns
         -------
-        list[tuple[Claim, list[Evidence], Verdict]]
+        list[tuple[Claim, list[Evidence], ConsensusVerdict]]
             Results for each claim.
         """
         results = []
         for claim in claims:
             if not claim.is_checkable:
-                verdict = self._unverifiable_verdict(claim, "Opinion or value judgment — not checkable.")
-                results.append((claim, [], verdict))
+                verdict = self._unverifiable_verdict(
+                    claim, "Opinion or value judgment — not checkable."
+                )
+                # Wrap in ConsensusVerdict
+                consensus = ConsensusVerdict(
+                    claim_id=claim.id,
+                    model_verdicts=[],
+                    consensus_label=verdict.label,
+                    confidence=verdict.confidence,
+                    agreement=True,
+                    explanation=verdict.explanation,
+                )
+                results.append((claim, [], consensus))
                 continue
-            evidence, verdict = self.verify(claim)
-            results.append((claim, evidence, verdict))
+            evidence, consensus = self.verify(claim)
+            results.append((claim, evidence, consensus))
         return results
 
     # ── Private helpers ───────────────────────────────────────────────────────
@@ -154,68 +235,8 @@ class VerificationEngine:
 
         return all_evidence
 
-    def _synthesize_verdict(self, claim: Claim, evidence: list[Evidence]) -> Verdict:
-        """
-        Use LLM to synthesize a verdict from collected evidence.
-
-        Falls back to a stub verdict if no API key is set.
-        """
-        if not self._api_key or not evidence:
-            return self._stub_verdict(claim, evidence)
-
-        try:
-            return self._call_llm_for_verdict(claim, evidence)
-        except Exception as exc:
-            logger.error("Verdict synthesis failed for claim %s: %s", claim.id, exc)
-            return self._stub_verdict(claim, evidence)
-
-    def _call_llm_for_verdict(self, claim: Claim, evidence: list[Evidence]) -> Verdict:
-        """Make the Anthropic API call to synthesize a verdict."""
-        import json
-        import anthropic
-
-        client = anthropic.Anthropic(api_key=self._api_key)
-
-        evidence_text = "\n\n".join(
-            f"[{i+1}] {e.source_name} ({e.source_tier.value})\n{e.snippet}"
-            for i, e in enumerate(evidence[:10])
-        )
-        user_msg = (
-            f"Claim: {claim.text}\n\n"
-            f"Evidence:\n{evidence_text}"
-        )
-
-        message = client.messages.create(
-            model=self._model,
-            max_tokens=1024,
-            system=_SYNTHESIS_SYSTEM,
-            messages=[{"role": "user", "content": user_msg}],
-        )
-
-        raw = json.loads(message.content[0].text)
-        label = VerdictLabel(raw["label"])
-        confidence = Confidence(raw["confidence"])
-
-        # Determine best source tier
-        best_tier = max(
-            (e.source_tier for e in evidence),
-            key=lambda t: list(SourceTier).index(t),
-            default=None,
-        )
-
-        return Verdict(
-            claim_id=claim.id,
-            label=label,
-            confidence=confidence,
-            explanation=raw["explanation"],
-            evidence_ids=[e.id for e in evidence],
-            support_count=raw.get("support_count", 0),
-            contradict_count=raw.get("contradict_count", 0),
-            primary_source_tier=best_tier,
-        )
-
     def _stub_verdict(self, claim: Claim, evidence: list[Evidence]) -> Verdict:
-        """Return a placeholder verdict (no API key or no evidence)."""
+        """Return a placeholder verdict (no adapters active or no evidence)."""
         return Verdict(
             claim_id=claim.id,
             label=VerdictLabel.UNVERIFIABLE,
@@ -247,3 +268,56 @@ class VerificationEngine:
             FactCheckConnector(),
             BraveSearchConnector(),
         ]
+
+
+def _build_consensus(claim_id: str, model_verdicts: list[ModelVerdict]) -> ConsensusVerdict:
+    """
+    Build a ConsensusVerdict from a list of ModelVerdicts.
+
+    Uses majority vote with tie-breaking (most conservative wins).
+    """
+    label_counts = Counter(mv.label for mv in model_verdicts)
+    max_count = max(label_counts.values())
+    tied = [label for label, count in label_counts.items() if count == max_count]
+
+    if len(tied) == 1:
+        consensus_label = tied[0]
+    else:
+        # Most conservative wins
+        consensus_label = min(tied, key=lambda l: _TIE_BREAK_ORDER.index(l))
+
+    total = len(model_verdicts)
+    all_agree = len(label_counts) == 1
+    majority_agree = max_count > total / 2
+
+    if total == 1:
+        confidence = model_verdicts[0].confidence
+    elif all_agree:
+        confidence = Confidence.HIGH
+    elif majority_agree:
+        confidence = Confidence.MEDIUM
+    else:
+        confidence = Confidence.LOW
+
+    agreement = all_agree
+
+    parts = ", ".join(f"{mv.adapter_name}({mv.label.value})" for mv in model_verdicts)
+    if all_agree:
+        suffix = "unanimous"
+    elif majority_agree:
+        suffix = "majority"
+    else:
+        suffix = "split"
+
+    explanation = (
+        f"Model verdicts: {parts}. Consensus: {consensus_label.value} [{suffix}]."
+    )
+
+    return ConsensusVerdict(
+        claim_id=claim_id,
+        model_verdicts=model_verdicts,
+        consensus_label=consensus_label,
+        confidence=confidence,
+        agreement=agreement,
+        explanation=explanation,
+    )

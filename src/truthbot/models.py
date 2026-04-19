@@ -142,6 +142,7 @@ class Verdict(BaseModel):
     confidence: Confidence = Field(...)
     explanation: str = Field(..., description="Human-readable explanation of the verdict")
     evidence_ids: list[str] = Field(default_factory=list)
+    model_id: Optional[str] = None
     scored_at: datetime = Field(default_factory=datetime.utcnow)
     # Raw scores used internally by the rubric
     support_count: int = Field(default=0, description="Number of supporting evidence items")
@@ -194,3 +195,30 @@ class Report(BaseModel):
             if v.claim_id == claim_id:
                 return v
         return None
+
+
+class ModelVerdict(BaseModel):
+    """Verdict produced by a single LLM adapter."""
+    adapter_name: str
+    model_id: str
+    claim_id: str
+    label: VerdictLabel
+    confidence: Confidence
+    explanation: str
+    web_sources: list[str] = Field(default_factory=list)
+    scored_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class ConsensusVerdict(BaseModel):
+    """Aggregated verdict across all active adapters."""
+    claim_id: str
+    model_verdicts: list[ModelVerdict]
+    consensus_label: VerdictLabel
+    confidence: Confidence
+    agreement: bool
+    explanation: str
+    scored_at: datetime = Field(default_factory=datetime.utcnow)
+
+    @property
+    def dissenting_models(self) -> list[str]:
+        return [mv.adapter_name for mv in self.model_verdicts if mv.label != self.consensus_label]

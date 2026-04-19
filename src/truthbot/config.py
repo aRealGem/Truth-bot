@@ -40,10 +40,6 @@ class Settings:
         return _require("ANTHROPIC_API_KEY")
 
     @property
-    def llm_model(self) -> str:
-        return _optional("TRUTHBOT_LLM_MODEL", "claude-opus-4-5")
-
-    @property
     def max_claims(self) -> int:
         return int(_optional("TRUTHBOT_MAX_CLAIMS", "30"))
 
@@ -78,6 +74,26 @@ class Settings:
     @property
     def report_dir(self) -> Path:
         return Path(_optional("TRUTHBOT_REPORT_DIR", "./reports"))
+
+    @property
+    def metrics_dir(self) -> Path:
+        return Path(_optional("TRUTHBOT_METRICS_DIR", "./metrics"))
+
+    @property
+    def site_root(self) -> Path:
+        return Path(_optional("TRUTHBOT_SITE_ROOT", "/var/www/truthbot"))
+
+    @property
+    def openai_api_key(self) -> str:
+        return _optional("OPENAI_API_KEY", "")
+
+    @property
+    def gemini_api_key(self) -> str:
+        return _optional("GEMINI_API_KEY", "")
+
+    @property
+    def xai_api_key(self) -> str:
+        return _optional("XAI_API_KEY", "")
 
     # ── Similarity / cache ────────────────────────────────────────────────────
     @property
