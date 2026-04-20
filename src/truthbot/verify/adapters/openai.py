@@ -40,7 +40,7 @@ class OpenAIAdapter(LLMAdapter):
     """OpenAI GPT adapter using Responses API with web search preview."""
 
     adapter_name = "openai"
-    model_id = "gpt-5.4-pro"
+    model_id = "gpt-4.1"
     required_env_key = "OPENAI_API_KEY"
 
     def __init__(self) -> None:
@@ -122,6 +122,8 @@ class OpenAIAdapter(LLMAdapter):
 
             for model in [self.model_id, _FALLBACK_MODEL]:
                 self._active_model = model
+                # Use a higher token budget for the fallback model
+                max_out = 4096 if model == _FALLBACK_MODEL else 2500
                 system_text = (
                     SYNTHESIS_SYSTEM
                     + "\n\nOperational constraints (OpenAI): Use at most 3 web searches. "
@@ -147,7 +149,7 @@ class OpenAIAdapter(LLMAdapter):
                         tools=[{"type": "web_search_preview"}],
                         input=input_blocks,
                         max_tool_calls=2,
-                        max_output_tokens=2500,
+                        max_output_tokens=max_out,
                     )
                     try:
                         response = client.responses.create(
@@ -157,10 +159,20 @@ class OpenAIAdapter(LLMAdapter):
                     except TypeError:
                         logger.warning("OpenAIAdapter: response_format not supported by SDK; falling back to text output")
                         response = client.responses.create(**kwargs)
+
                     status = getattr(response, "status", "completed")
                     if status != "completed":
                         details = getattr(response, "incomplete_details", None)
+                        reason = getattr(details, "reason", str(details)) if details else "unknown"
+                        if reason == "max_output_tokens" and model != _FALLBACK_MODEL:
+                            logger.warning(
+                                "OpenAIAdapter: model %s hit max_output_tokens, retrying on fallback %s",
+                                model,
+                                _FALLBACK_MODEL,
+                            )
+                            continue  # retry with fallback model + higher token budget
                         raise RuntimeError(f"OpenAI Responses status={status}: {details}")
+
                     text = ""
                     urls: list[str] = []
                     tool_count = 0
@@ -179,8 +191,13 @@ class OpenAIAdapter(LLMAdapter):
                                         urls.append(url)
                     usage = getattr(response, "usage", None)
                     return text, urls, tool_count, usage
-                except openai.NotFoundError:
-                    logger.warning("OpenAIAdapter: model %s not found, trying fallback", model)
+
+                except (openai.NotFoundError, openai.BadRequestError) as exc:
+                    logger.warning(
+                        "OpenAIAdapter: model %s unavailable (%s), trying fallback",
+                        model,
+                        exc,
+                    )
                     if model == _FALLBACK_MODEL:
                         raise
 

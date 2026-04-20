@@ -1,5 +1,5 @@
 """
-xAI Grok adapter (OpenAI-compatible API) with live web search.
+xAI Grok adapter using the Agent Tools API (Responses endpoint) for live web search.
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ def _parse_verdict_json(text: str) -> dict:
 
 
 class GrokAdapter(LLMAdapter):
-    """xAI Grok adapter using OpenAI-compatible API with live search."""
+    """xAI Grok adapter using the Agent Tools Responses API with live web search."""
 
     adapter_name = "xai"
     model_id = "grok-4"
@@ -49,7 +49,7 @@ class GrokAdapter(LLMAdapter):
         self._active_model = self.model_id
 
     def call(self, claim: Claim, evidence: list[Evidence]) -> ModelVerdict:
-        """Call Grok with live search and return a ModelVerdict."""
+        """Call Grok via the Agent Tools Responses API and return a ModelVerdict."""
         import openai
 
         telemetry = get_telemetry()
@@ -58,11 +58,18 @@ class GrokAdapter(LLMAdapter):
         with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
             try:
                 client = openai.OpenAI(api_key=self._api_key, base_url=_XAI_BASE_URL)
-                verdict_text, urls, usage = self._call_with_search(client, user_msg)
+                verdict_text, urls, tool_count, usage = self._call_with_search(client, user_msg)
 
                 if usage:
-                    td["input_tokens"] = getattr(usage, "prompt_tokens", 0)
-                    td["output_tokens"] = getattr(usage, "completion_tokens", 0)
+                    td["input_tokens"] = (
+                        getattr(usage, "input_tokens", 0)
+                        or getattr(usage, "prompt_tokens", 0)
+                    )
+                    td["output_tokens"] = (
+                        getattr(usage, "output_tokens", 0)
+                        or getattr(usage, "completion_tokens", 0)
+                    )
+                td["tool_call_count"] = tool_count
                 td["retrieved_url_count"] = len(urls)
                 td["status"] = "ok"
 
@@ -108,28 +115,70 @@ class GrokAdapter(LLMAdapter):
                 )
 
     def _call_with_search(self, client, user_msg: str):
-        """Try with live search first, fall back to plain completion."""
-        # Try with search_parameters
+        """Call via the Agent Tools Responses API; fall back to plain Chat Completions."""
+        # Prefer the Responses API with web_search tool (Agent Tools API)
         try:
-            resp = client.chat.completions.create(
+            if not hasattr(client, "responses"):
+                raise AttributeError("Responses API not available in SDK")
+
+            response = client.responses.create(
                 model=self._active_model,
-                messages=[
+                input=[
                     {"role": "system", "content": SYNTHESIS_SYSTEM},
                     {"role": "user", "content": user_msg},
                 ],
-                max_tokens=2048,
-                extra_body={"search_parameters": {"mode": "auto"}},
+                tools=[{"type": "web_search"}],
+                max_output_tokens=2048,
             )
-            text = resp.choices[0].message.content or ""
-            urls = self._extract_citations(resp)
-            return text, urls, resp.usage
+
+            text = ""
+            urls: list[str] = []
+            tool_count = 0
+
+            for item in getattr(response, "output", []):
+                itype = getattr(item, "type", "")
+                if itype == "web_search_call":
+                    tool_count += 1
+                elif itype == "message":
+                    for block in getattr(item, "content", []):
+                        if getattr(block, "type", "") == "output_text":
+                            text += getattr(block, "text", "")
+                        for ann in getattr(block, "annotations", []):
+                            url = getattr(ann, "url", None)
+                            if url:
+                                urls.append(url)
+
+            # Some SDK versions surface citations at the top level
+            for c in getattr(response, "citations", []) or []:
+                if isinstance(c, str):
+                    urls.append(c)
+                elif hasattr(c, "url"):
+                    urls.append(c.url)
+
+            usage = getattr(response, "usage", None)
+            return text, urls, tool_count, usage
+
+        except AttributeError:
+            logger.warning(
+                "GrokAdapter: Responses API not available in installed SDK; "
+                "falling back to plain Chat Completions without web search."
+            )
         except Exception as exc:
-            if "search_parameters" in str(exc).lower() or "unknown" in str(exc).lower():
-                logger.info("GrokAdapter: live search not available, falling back to plain completion")
+            # Surface errors that aren't about tool/API availability
+            exc_lower = str(exc).lower()
+            if any(kw in exc_lower for kw in ("responses", "not found", "404", "unknown endpoint")):
+                logger.warning(
+                    "GrokAdapter: Responses endpoint unavailable (%s); "
+                    "falling back to plain Chat Completions.",
+                    exc,
+                )
             else:
                 raise
 
-        # Fall back to plain completion
+        # Fallback: plain Chat Completions (no live search)
+        logger.warning(
+            "GrokAdapter: running without live web search — verdict from training knowledge only."
+        )
         resp = client.chat.completions.create(
             model=self._active_model,
             messages=[
@@ -139,19 +188,4 @@ class GrokAdapter(LLMAdapter):
             max_tokens=2048,
         )
         text = resp.choices[0].message.content or ""
-        return text, [], resp.usage
-
-    def _extract_citations(self, response) -> list[str]:
-        """Extract citation URLs from a Grok response if present."""
-        urls: list[str] = []
-        # Try message-level citations
-        for choice in getattr(response, "choices", []):
-            msg = getattr(choice, "message", None)
-            if msg:
-                citations = getattr(msg, "citations", None) or []
-                for c in citations:
-                    if isinstance(c, str):
-                        urls.append(c)
-                    elif hasattr(c, "url"):
-                        urls.append(c.url)
-        return urls
+        return text, [], 0, resp.usage
