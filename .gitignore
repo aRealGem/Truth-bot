@@ -40,7 +40,7 @@ truthbot_cache/
 *.cache
 
 # Reports (generated)
-reports/
+/reports/
 output/
 
 # Misc
