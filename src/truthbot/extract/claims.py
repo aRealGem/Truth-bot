@@ -1,14 +1,9 @@
 """
-LLM-powered claim extraction.
+LLM-powered claim extraction using Claude Sonnet 4.6.
 
-Decomposes a transcript into atomic, checkable factual claims.
-Each claim should be:
-  - A single specific assertion
-  - Independently verifiable (not an opinion)
-  - Self-contained (makes sense without the surrounding context)
-
-This module is a stub. The LLM call is defined but returns placeholder data
-until an Anthropic API key is configured.
+Decomposes a transcript into atomic, individually verifiable claims.
+Each claim must stand alone — self-contained with context inlined,
+ready to be fact-checked in isolation.
 """
 
 from __future__ import annotations
@@ -16,55 +11,73 @@ from __future__ import annotations
 import json
 import logging
 import os
-from typing import TYPE_CHECKING, Optional
+import re
+from typing import Optional
 
 from truthbot.models import Claim, Transcript
 
-if TYPE_CHECKING:
-    pass
-
 logger = logging.getLogger(__name__)
 
-# System prompt sent to Claude for claim extraction
-_SYSTEM_PROMPT = """You are a professional fact-checker. Your job is to extract verifiable factual claims from political speech transcripts.
+# ── Extractor prompt ──────────────────────────────────────────────────────────
 
-For each claim, output a JSON object with these fields:
-  - "text": The claim restated as a clear, standalone declarative sentence
-  - "context": The surrounding quote from the original transcript (max 200 chars)
-  - "category": Subject category (economy, immigration, healthcare, crime, foreign_policy, environment, education, other)
-  - "is_checkable": true if this is a factual assertion, false if it's an opinion or value judgment
+_EXTRACTOR_SYSTEM = """You are decomposing a political transcript into atomic, individually verifiable claims. \
+Your output will be fact-checked one claim at a time, so each claim must stand alone."""
 
-Rules:
-1. Extract only atomic claims — one specific assertion per item
-2. Exclude opinions, predictions, and value judgments
-3. Normalize claims to third-person ("The speaker claimed X" → just "X")
-4. Include statistical claims, policy claims, historical claims, comparative claims
-5. Exclude rhetorical questions and vague platitudes
-
-Return a JSON array of claim objects. Nothing else."""
-
-_USER_PROMPT_TEMPLATE = """Extract all verifiable factual claims from the following transcript.
+_EXTRACTOR_USER_TEMPLATE = """TRANSCRIPT METADATA
 Speaker: {speaker}
+Role: {role}
 Date: {date}
+Venue: {venue}
 
-Transcript:
-{text}
+TRANSCRIPT
+{transcript_text}
 
-Return a JSON array of claim objects."""
+INSTRUCTIONS
+1. Extract every factual assertion — statistics, historical events, claims about what someone did or said, \
+quantitative comparisons, causal attributions.
+2. Skip pure opinion, rhetorical framing, value judgments, and predictions about the future.
+3. Each claim should be a single assertion, self-contained, with any necessary context inlined. \
+"We created more jobs than any president" needs the speaker and timeframe inlined: \
+"Speaker claims his administration created more jobs than any previous president."
+4. Preserve the original phrasing where possible but resolve pronouns and deictic references.
+5. For each claim, capture a context_window of ±2 sentences from the transcript so the \
+fact-checker can see the surrounding framing.
+
+OUTPUT FORMAT
+Return valid JSON:
+{{
+  "claims": [
+    {{
+      "id": "c001",
+      "text": "atomic claim statement",
+      "context_window": "2-3 sentences of surrounding text",
+      "is_checkable": true,
+      "claim_type": "statistical" | "historical" | "attribution" | "comparison" | "other"
+    }}
+  ]
+}}
+
+Return JSON only. No preamble, no commentary."""
+
+# ── Extractor model ───────────────────────────────────────────────────────────
+
+_EXTRACTOR_MODEL = "claude-sonnet-4-6"
+_TOKEN_BUDGET = 14_000   # ~10k words; covers most speeches without runaway cost
+_MAX_OUTPUT_TOKENS = 8_192
 
 
 class ClaimExtractor:
     """
-    Extracts atomic factual claims from a Transcript using an LLM.
+    Extract atomic factual claims from a Transcript using Claude Sonnet 4.6.
 
     Parameters
     ----------
     api_key:
-        Anthropic API key. Defaults to settings.anthropic_api_key.
+        Anthropic API key. Falls back to ANTHROPIC_API_KEY env var.
     model:
-        Claude model to use. Defaults to claude-opus-4-5.
+        Claude model identifier. Defaults to claude-sonnet-4-6.
     max_claims:
-        Maximum number of claims to extract. Defaults to settings.max_claims.
+        Hard cap on returned claims. Defaults to TRUTHBOT_MAX_CLAIMS env var or 30.
     """
 
     def __init__(
@@ -74,28 +87,18 @@ class ClaimExtractor:
         max_claims: Optional[int] = None,
     ) -> None:
         from truthbot.config import settings
-
         self._api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
-        self._model = model or "claude-opus-4-5"
+        self._model = model or _EXTRACTOR_MODEL
         self._max_claims = max_claims or settings.max_claims
+
+    # ── Public interface ──────────────────────────────────────────────────────
 
     def extract(self, transcript: Transcript) -> list[Claim]:
         """
         Extract verifiable claims from a transcript.
 
-        Calls the Anthropic API with a structured prompt. Returns a list of
-        Claim objects, each representing one atomic factual assertion.
-
-        Parameters
-        ----------
-        transcript:
-            The normalized Transcript to extract claims from.
-
-        Returns
-        -------
-        list[Claim]
-            Extracted claims, at most self._max_claims items.
-            Returns an empty list if the API call fails.
+        Returns an empty list (with a logged warning) if no API key is set.
+        Returns an empty list (with a logged error) if the API call or parse fails.
         """
         if not self._api_key:
             logger.warning("No ANTHROPIC_API_KEY set — returning stub claims.")
@@ -107,61 +110,89 @@ class ClaimExtractor:
             logger.error("Claim extraction failed: %s", exc)
             return []
 
+    # ── Private helpers ───────────────────────────────────────────────────────
+
     def _call_llm(self, transcript: Transcript) -> list[Claim]:
-        """Make the actual Anthropic API call and parse the response."""
+        """Call Claude Sonnet and parse the structured claim list."""
         import anthropic
 
         client = anthropic.Anthropic(api_key=self._api_key)
 
-        date_str = transcript.date.strftime("%Y-%m-%d") if transcript.date else "Unknown"
-        user_msg = _USER_PROMPT_TEMPLATE.format(
-            speaker=transcript.speaker,
-            date=date_str,
-            text=transcript.text[:12000],  # token budget guard
+        user_msg = _EXTRACTOR_USER_TEMPLATE.format(
+            speaker=transcript.speaker or "Unknown",
+            role=transcript.metadata.get("role", "Unknown"),
+            date=transcript.date.strftime("%B %d, %Y") if transcript.date else "Unknown",
+            venue=transcript.venue or "Unknown",
+            transcript_text=transcript.text[:_TOKEN_BUDGET],
         )
 
-        message = client.messages.create(
+        response = client.messages.create(
             model=self._model,
-            max_tokens=4096,
-            system=_SYSTEM_PROMPT,
+            max_tokens=_MAX_OUTPUT_TOKENS,
+            system=_EXTRACTOR_SYSTEM,
             messages=[{"role": "user", "content": user_msg}],
         )
 
-        raw = message.content[0].text
-        data = json.loads(raw)
+        raw_text = response.content[0].text.strip()
+        data = self._parse_response(raw_text)
 
-        claims = []
-        for item in data[: self._max_claims]:
+        claims: list[Claim] = []
+        for i, item in enumerate(data.get("claims", [])[: self._max_claims]):
             claim = Claim(
                 transcript_id=transcript.id,
                 text=item["text"],
                 speaker=transcript.speaker,
-                context=item.get("context"),
-                category=item.get("category"),
-                is_checkable=item.get("is_checkable", True),
+                context=item.get("context_window", ""),
+                category=item.get("claim_type", "other"),
+                is_checkable=bool(item.get("is_checkable", True)),
             )
             claims.append(claim)
 
-        logger.info("Extracted %d claims from transcript %s", len(claims), transcript.id)
+        logger.info(
+            "Extracted %d claims from transcript %s (model: %s)",
+            len(claims),
+            transcript.id,
+            self._model,
+        )
         return claims
+
+    def _parse_response(self, text: str) -> dict:
+        """Parse the JSON response, handling markdown fences if present."""
+        # Direct parse
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            pass
+
+        # Strip markdown fences
+        match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
+        if match:
+            try:
+                return json.loads(match.group(1))
+            except json.JSONDecodeError:
+                pass
+
+        # Extract first {...} block
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        if match:
+            return json.loads(match.group(0))
+
+        raise ValueError(f"Could not parse JSON from extractor response: {text[:300]}")
 
     def _stub_claims(self, transcript: Transcript) -> list[Claim]:
         """
-        Return placeholder claims when no API key is available.
-
-        Used in tests and dry-run mode.
+        Return minimal placeholder claims when no API key is available.
+        Used in dry-run mode and tests.
         """
         sentences = [s.strip() for s in transcript.text.split(".") if len(s.strip()) > 20]
         return [
             Claim(
                 transcript_id=transcript.id,
-                text=sentence + ".",
+                text=sentence.strip() + ".",
                 speaker=transcript.speaker,
-                context=sentence[:100],
+                context=sentence[:120],
                 category="other",
                 is_checkable=True,
             )
             for sentence in sentences[:3]
         ]
-
-

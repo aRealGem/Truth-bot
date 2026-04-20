@@ -212,7 +212,7 @@ class Pipeline:
 
 
 def _print_metrics_summary(jsonl_path: str | None = None) -> None:
-    """Read adapter_calls.jsonl and print a per-adapter summary table."""
+    """Read adapter_calls.jsonl and print per-adapter summary tables."""
     import json
     from collections import defaultdict
     from pathlib import Path
@@ -227,9 +227,8 @@ def _print_metrics_summary(jsonl_path: str | None = None) -> None:
         print("No telemetry data found.")
         return
 
-    # Aggregate per adapter
     stats: dict[str, dict] = defaultdict(lambda: {
-        "calls": 0, "ok": 0, "errors": 0,
+        "calls": 0, "ok": 0, "errors": 0, "parse_errors": 0,
         "input_tokens": 0, "output_tokens": 0,
         "tool_calls": 0, "urls": 0,
         "total_cost": 0.0, "total_ms": 0,
@@ -247,8 +246,12 @@ def _print_metrics_summary(jsonl_path: str | None = None) -> None:
             name = rec.get("adapter_name", "unknown")
             s = stats[name]
             s["calls"] += 1
-            if rec.get("status") == "ok":
+            status = rec.get("status", "")
+            if status == "ok":
                 s["ok"] += 1
+            elif status == "parse_error":
+                s["errors"] += 1
+                s["parse_errors"] += 1
             else:
                 s["errors"] += 1
             s["input_tokens"] += rec.get("input_tokens", 0)
@@ -262,23 +265,53 @@ def _print_metrics_summary(jsonl_path: str | None = None) -> None:
         print("No telemetry records found in file.")
         return
 
-    print(f"\n{'Adapter':<14} {'Calls':>6} {'OK':>6} {'Errors':>7} "
-          f"{'In Tok':>8} {'Out Tok':>8} {'Tools':>6} {'URLs':>6} "
-          f"{'Cost $':>9} {'Avg ms':>8}")
-    print("-" * 90)
+    # ---- Table 1: full call detail ------------------------------------------
+    fmt1 = "{:<14} {:>6} {:>4} {:>5} {:>8} {:>8} {:>6} {:>6} {:>10} {:>8}"
+    print()
+    print(fmt1.format("Adapter","Calls","OK","Errs","In Tok","Out Tok","Tools","URLs","Cost $","Avg ms"))
+    print("-" * 83)
+
+    total_calls = total_ok = total_errors = 0
+    total_in = total_out = total_tools = total_urls = 0
+    total_cost = total_ms_all = 0
 
     for name, s in sorted(stats.items()):
         avg_ms = s["total_ms"] // max(s["calls"], 1)
-        print(
-            f"{name:<14} {s['calls']:>6} {s['ok']:>6} {s['errors']:>7} "
-            f"{s['input_tokens']:>8} {s['output_tokens']:>8} {s['tool_calls']:>6} {s['urls']:>6} "
-            f"{s['total_cost']:>9.6f} {avg_ms:>8}"
-        )
+        print(fmt1.format(
+            name, s["calls"], s["ok"], s["errors"],
+            s["input_tokens"], s["output_tokens"],
+            s["tool_calls"], s["urls"],
+            f"{s['total_cost']:.6f}", avg_ms,
+        ))
+        total_calls += s["calls"];  total_ok += s["ok"];  total_errors += s["errors"]
+        total_in += s["input_tokens"];  total_out += s["output_tokens"]
+        total_tools += s["tool_calls"];  total_urls += s["urls"]
+        total_cost += s["total_cost"];  total_ms_all += s["total_ms"]
 
-    total_cost = sum(s["total_cost"] for s in stats.values())
-    total_calls = sum(s["calls"] for s in stats.values())
-    print("-" * 90)
-    print(f"{'TOTAL':<14} {total_calls:>6}{'':>24}{'':>8}{'':>8}{'':>6}{'':>6} {total_cost:>9.6f}")
+    print("-" * 83)
+    grand_avg = total_ms_all // max(total_calls, 1)
+    print(fmt1.format(
+        "TOTAL", total_calls, total_ok, total_errors,
+        total_in, total_out, total_tools, total_urls,
+        f"{total_cost:.6f}", grand_avg,
+    ))
+
+    # ---- Table 2: cost optimisation breakdown --------------------------------
+    fmt2 = "{:<14} {:>12} {:>13} {:>11} {:>13} {:>12}"
+    print()
+    print(fmt2.format("Adapter","Total Calls","Total Cost $","Avg $/call","Avg sec/call","Parse Err %"))
+    print("-" * 78)
+
+    for name, s in sorted(stats.items()):
+        n = max(s["calls"], 1)
+        avg_cost = s["total_cost"] / n
+        avg_sec  = s["total_ms"] / n / 1000.0
+        pct      = s["parse_errors"] / n * 100
+        print(fmt2.format(
+            name, s["calls"], f"{s['total_cost']:.6f}",
+            f"{avg_cost:.6f}", f"{avg_sec:.2f}", f"{pct:.1f}%",
+        ))
+    print()
 
 
 

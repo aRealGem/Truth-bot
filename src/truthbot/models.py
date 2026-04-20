@@ -205,6 +205,7 @@ class ModelVerdict(BaseModel):
     label: VerdictLabel
     confidence: Confidence
     explanation: str
+    caveats: str = Field(default="", description="Source-quality notes from the adapter")
     web_sources: list[str] = Field(default_factory=list)
     scored_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -214,11 +215,45 @@ class ConsensusVerdict(BaseModel):
     claim_id: str
     model_verdicts: list[ModelVerdict]
     consensus_label: VerdictLabel
+    consensus_verdict: str = Field(
+        default="",
+        description="Consensus verdict text; for split cases may be 'Models split'",
+    )
     confidence: Confidence
     agreement: bool
+    consensus_strength: str = Field(
+        default="none",
+        description="strong (≥3 agree) | weak (exactly 2 agree) | none (split) | single (1 model)",
+    )
     explanation: str
     scored_at: datetime = Field(default_factory=datetime.utcnow)
 
     @property
     def dissenting_models(self) -> list[str]:
         return [mv.adapter_name for mv in self.model_verdicts if mv.label != self.consensus_label]
+
+class VerdictBundle(BaseModel):
+    """
+    Complete fact-check bundle for a single claim: all per-model verdicts,
+    consensus output, and cache metadata.
+
+    This is the primary output unit of the VerificationEngine.
+    """
+    bundle_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    claim: Claim
+    speaker: str = Field(default="", description="Speaker name, used in cache key")
+    date_str: str = Field(default="", description="Speech date YYYY-MM-DD, used in cache key")
+    model_verdicts: list[ModelVerdict]
+    consensus: ConsensusVerdict
+    evidence_count: int = Field(default=0)
+    cache_hit: bool = Field(default=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    @property
+    def agreeing_models(self) -> list[str]:
+        return [mv.adapter_name for mv in self.model_verdicts
+                if mv.label == self.consensus.consensus_label]
+
+    @property
+    def dissenting_models(self) -> list[str]:
+        return self.consensus.dissenting_models

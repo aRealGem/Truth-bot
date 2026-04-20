@@ -57,7 +57,7 @@ class OpenAIAdapter(LLMAdapter):
 
         with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
             try:
-                client = openai.OpenAI(api_key=self._api_key)
+                client = openai.OpenAI(api_key=self._api_key, timeout=30.0)
                 verdict_text, urls, tool_count, usage = self._call_with_search(
                     client, user_msg
                 )
@@ -152,27 +152,10 @@ class OpenAIAdapter(LLMAdapter):
                         raise
 
         except AttributeError:
-            logger.info("OpenAIAdapter: Responses API unavailable, falling back to Chat Completions")
-
-        # Fall back to Chat Completions
-        for model in [self.model_id, _FALLBACK_MODEL]:
-            self._active_model = model
-            try:
-                resp = client.chat.completions.create(
-                    model=model,
-                    messages=[
-                        {"role": "system", "content": SYNTHESIS_SYSTEM},
-                        {"role": "user", "content": user_msg},
-                    ],
-                    max_tokens=2048,
-                )
-                text = resp.choices[0].message.content or ""
-                usage = resp.usage
-                return text, [], 0, usage
-            except Exception as exc:
-                if "model" in str(exc).lower() and model != _FALLBACK_MODEL:
-                    logger.warning("OpenAIAdapter: model %s not found, trying gpt-4o", model)
-                    continue
-                raise
-
-        raise RuntimeError("All OpenAI model fallbacks exhausted")
+            raise RuntimeError(
+                "OpenAI Responses API is unavailable in the installed SDK version. "
+                "Web search requires the Responses API (openai>=1.66.0). "
+                "Upgrade the SDK or remove the OpenAI adapter. "
+                "Falling back to training-data-only Chat Completions is not permitted — "
+                "verdicts must be grounded in live web search."
+            )

@@ -113,6 +113,7 @@ class AnthropicAdapter(LLMAdapter):
                     label=label,
                     confidence=confidence,
                     explanation=raw.get("explanation", ""),
+                    caveats=raw.get("caveats", ""),
                     web_sources=raw.get("web_sources", retrieved_urls[:10]),
                 )
 
