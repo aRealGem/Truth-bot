@@ -1,24 +1,6 @@
 [
   {
-    "id": "f281a740-3e5d-49c9-859b-155331211747",
-    "date": "2026-03-04",
-    "speaker": "Donald Trump",
-    "role": "President",
-    "venue": "U.S. Capitol, State of the Union",
-    "claim_count": 5,
-    "verdict_distribution": {
-      "True": 0,
-      "Mostly True": 2,
-      "Misleading": 1,
-      "Exaggerated": 0,
-      "False": 2,
-      "Unverifiable": 0
-    },
-    "model_agreement_rate": 0.0,
-    "url": "reports/2026-03-04-donald-trump.html"
-  },
-  {
-    "id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "id": "7cbf43b2-ea41-4114-9868-b221245e50fb",
     "date": "2026-03-04",
     "speaker": "Donald Trump",
     "role": "President",
@@ -32,99 +14,25 @@
       "False": 2,
       "Unverifiable": 1
     },
-    "model_agreement_rate": 0.0,
+    "model_agreement_rate": 0.2,
     "url": "reports/2026-03-04-donald-trump.html"
   },
   {
-    "id": "2830768a-2ba0-4613-a559-401acf921828",
-    "date": "2025-03-04",
+    "id": "47475633-f284-4ffa-8a69-5d8f759bf4e3",
+    "date": "2026-03-04",
     "speaker": "Donald Trump",
-    "role": "President of the United States",
-    "venue": "Joint Session of Congress",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
     "claim_count": 5,
     "verdict_distribution": {
-      "True": 0,
-      "Mostly True": 1,
-      "Misleading": 2,
-      "Exaggerated": 0,
-      "False": 2,
-      "Unverifiable": 0
-    },
-    "model_agreement_rate": 1.0,
-    "url": "reports/2025-03-04-donald-trump.html",
-    "truthy_verdict": {
-      "score": -0.5,
-      "mood": "sad",
-      "claim_count": 5,
-      "pants_on_fire_count": 0,
-      "tallies": {
-        "true": 0,
-        "mostly_true": 1,
-        "half_true": 0,
-        "mostly_false": 2,
-        "false": 2,
-        "pants_on_fire": 0
-      },
-      "reasoning": "Aggregate score -0.50 at or below sad threshold (-0.30)."
-    }
-  },
-  {
-    "id": "e35ed155-41e0-44f0-9ecc-34cba13967eb",
-    "date": "2025-03-04",
-    "speaker": "Donald Trump",
-    "role": "President of the United States",
-    "venue": "Joint Session of Congress",
-    "claim_count": 0,
-    "verdict_distribution": {
-      "True": 0,
+      "True": 1,
       "Mostly True": 0,
       "Misleading": 0,
-      "Exaggerated": 0,
-      "False": 0,
+      "Exaggerated": 1,
+      "False": 3,
       "Unverifiable": 0
     },
-    "model_agreement_rate": 0.0,
-    "url": "reports/2025-03-04-donald-trump.html",
-    "truthy_verdict": {
-      "score": 0.0,
-      "mood": "iffy",
-      "claim_count": 0,
-      "pants_on_fire_count": 0,
-      "tallies": {},
-      "reasoning": "No claims evaluated — Truthy has nothing to judge."
-    }
-  },
-  {
-    "id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
-    "date": "2025-03-04",
-    "speaker": "Donald Trump",
-    "role": "President of the United States",
-    "venue": "Joint Session of Congress",
-    "claim_count": 5,
-    "verdict_distribution": {
-      "True": 0,
-      "Mostly True": 1,
-      "Misleading": 2,
-      "Exaggerated": 0,
-      "False": 2,
-      "Unverifiable": 0
-    },
-    "model_agreement_rate": 1.0,
-    "url": "reports/2025-03-04-donald-trump.html",
-    "truthy_verdict": {
-      "score": -0.5,
-      "mood": "sad",
-      "claim_count": 5,
-      "pants_on_fire_count": 0,
-      "tallies": {
-        "true": 0,
-        "mostly_true": 1,
-        "half_true": 0,
-        "mostly_false": 2,
-        "false": 2,
-        "pants_on_fire": 0
-      },
-      "reasoning": "Aggregate score -0.50 at or below sad threshold (-0.30)."
-    }
+    "model_agreement_rate": 0.8,
+    "url": "reports/2026-03-04-donald-trump.html"
   }
 ]

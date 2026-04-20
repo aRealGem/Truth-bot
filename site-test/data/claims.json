@@ -1,160 +1,120 @@
 [
   {
-    "id": "ad388cf9-de85-4528-9007-404e4969ae4c",
-    "report_id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
-    "claim_text": "The 250th anniversary of American independence will occur less than five months from March 4, 2025 (i.e., on July 4, 2025).",
+    "id": "7b541b3a-8143-4834-98ca-6f40f49f264d",
+    "report_id": "47475633-f284-4ffa-8a69-5d8f759bf4e3",
+    "claim_text": "Gasoline reached a peak of over $6 a gallon in some states under President Trump's predecessor (Biden administration).",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/7b541b3a-8143-4834-98ca-6f40f49f264d.html"
+  },
+  {
+    "id": "ccddc461-f244-481b-b566-48cdcad1cb52",
+    "report_id": "47475633-f284-4ffa-8a69-5d8f759bf4e3",
+    "claim_text": "As of March 4, 2026, gasoline is below $2.30 a gallon in most states.",
     "consensus_verdict": "False",
-    "consensus_strength": "single",
+    "consensus_strength": "weak",
     "model_verdicts_summary": [
       {
         "adapter": "anthropic",
         "label": "False",
         "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
       }
     ],
-    "url": "claims/ad388cf9-de85-4528-9007-404e4969ae4c.html"
+    "url": "claims/ccddc461-f244-481b-b566-48cdcad1cb52.html"
   },
   {
-    "id": "10b1f2a4-1b12-4069-a19e-1363b941d51e",
-    "report_id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
-    "claim_text": "Trump claims that when he last spoke in the chamber 12 months before March 4, 2025, the nation had inflation at record levels.",
+    "id": "3a811fb6-6685-454b-9e01-db672dc24445",
+    "report_id": "47475633-f284-4ffa-8a69-5d8f759bf4e3",
+    "claim_text": "As of March 4, 2026, gasoline is as low as $1.99 a gallon in some places.",
     "consensus_verdict": "False",
-    "consensus_strength": "single",
+    "consensus_strength": "strong",
     "model_verdicts_summary": [
       {
         "adapter": "anthropic",
         "label": "False",
         "confidence": "High"
-      }
-    ],
-    "url": "claims/10b1f2a4-1b12-4069-a19e-1363b941d51e.html"
-  },
-  {
-    "id": "6000410b-3712-4961-97f0-c9c17037b1fb",
-    "report_id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
-    "claim_text": "Trump claims the U.S. now has the strongest and most secure border in American history after four years in which millions of illegal aliens crossed the border.",
-    "consensus_verdict": "Mostly True",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
+      },
       {
-        "adapter": "anthropic",
-        "label": "Mostly True",
+        "adapter": "gemini",
+        "label": "False",
         "confidence": "High"
-      }
-    ],
-    "url": "claims/6000410b-3712-4961-97f0-c9c17037b1fb.html"
-  },
-  {
-    "id": "053c3d2a-fe6d-4e5e-834b-c15e760f9d17",
-    "report_id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
-    "claim_text": "Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.",
-    "consensus_verdict": "Misleading",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
+      },
       {
-        "adapter": "anthropic",
-        "label": "Misleading",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/053c3d2a-fe6d-4e5e-834b-c15e760f9d17.html"
-  },
-  {
-    "id": "5ebbe669-8eae-4d77-a23a-5437d4a14338",
-    "report_id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
-    "claim_text": "Trump claims the flow of deadly fentanyl across the U.S. border is down by a record 56 percent in one year.",
-    "consensus_verdict": "Misleading",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Misleading",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/5ebbe669-8eae-4d77-a23a-5437d4a14338.html"
-  },
-  {
-    "id": "ad388cf9-de85-4528-9007-404e4969ae4c",
-    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
-    "claim_text": "The 250th anniversary of American independence will occur less than five months from March 4, 2025 (i.e., on July 4, 2025).",
-    "consensus_verdict": "False",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
+        "adapter": "xai",
         "label": "False",
         "confidence": "High"
       }
     ],
-    "url": "claims/ad388cf9-de85-4528-9007-404e4969ae4c.html"
+    "url": "claims/3a811fb6-6685-454b-9e01-db672dc24445.html"
   },
   {
-    "id": "c5d66ca4-f0bf-40e0-8d95-acc3abf88033",
-    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
-    "claim_text": "Trump claims that when he last spoke in the chamber 12 months prior (approximately March 2024), he had inherited a nation with inflation at record levels.",
-    "consensus_verdict": "False",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "False",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/c5d66ca4-f0bf-40e0-8d95-acc3abf88033.html"
-  },
-  {
-    "id": "33005e7b-92a2-4ed0-86e6-aa6cb38142a2",
-    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
-    "claim_text": "Trump claims the U.S. now has the strongest and most secure border in American history.",
-    "consensus_verdict": "Mostly True",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Mostly True",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/33005e7b-92a2-4ed0-86e6-aa6cb38142a2.html"
-  },
-  {
-    "id": "053c3d2a-fe6d-4e5e-834b-c15e760f9d17",
-    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
-    "claim_text": "Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.",
-    "consensus_verdict": "Misleading",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Misleading",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/053c3d2a-fe6d-4e5e-834b-c15e760f9d17.html"
-  },
-  {
-    "id": "5ebbe669-8eae-4d77-a23a-5437d4a14338",
-    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
-    "claim_text": "Trump claims the flow of deadly fentanyl across the U.S. border is down by a record 56 percent in one year.",
-    "consensus_verdict": "Misleading",
-    "consensus_strength": "single",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Misleading",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/5ebbe669-8eae-4d77-a23a-5437d4a14338.html"
-  },
-  {
-    "id": "fb7f54a9-a7ed-4b56-ae16-6d3233d9e1c5",
-    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
-    "claim_text": "The murder rate in the United States saw its single largest decline in recorded history in the year prior to Trump's 2026 State of the Union address.",
+    "id": "99805218-b17a-4df9-8b8d-b67556549e66",
+    "report_id": "47475633-f284-4ffa-8a69-5d8f759bf4e3",
+    "claim_text": "As of March 4, 2026, mortgage rates are the lowest in four years.",
     "consensus_verdict": "Models split",
     "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/99805218-b17a-4df9-8b8d-b67556549e66.html"
+  },
+  {
+    "id": "a8673194-1771-4474-ad9a-cd718484af2a",
+    "report_id": "47475633-f284-4ffa-8a69-5d8f759bf4e3",
+    "claim_text": "As of March 4, 2026, mortgage rates are falling fast.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/a8673194-1771-4474-ad9a-cd718484af2a.html"
+  },
+  {
+    "id": "e0bbcb06-d300-4594-bede-20270e00b078",
+    "report_id": "7cbf43b2-ea41-4114-9868-b221245e50fb",
+    "claim_text": "The murder rate in the United States saw its single largest decline in recorded history in the year prior to Trump's March 2026 State of the Union address.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
     "model_verdicts_summary": [
       {
         "adapter": "anthropic",
@@ -168,40 +128,40 @@
       },
       {
         "adapter": "xai",
-        "label": "True",
-        "confidence": "High"
+        "label": "Mostly True",
+        "confidence": "Medium"
       }
     ],
-    "url": "claims/fb7f54a9-a7ed-4b56-ae16-6d3233d9e1c5.html"
+    "url": "claims/e0bbcb06-d300-4594-bede-20270e00b078.html"
   },
   {
-    "id": "b5b18a58-b932-4806-9e1d-56c30b8e8e51",
-    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
-    "claim_text": "The U.S. murder rate reached its lowest number in over 125 years, not seen since approximately the year 1900.",
-    "consensus_verdict": "Models split",
-    "consensus_strength": "none",
+    "id": "1ffdf732-398c-45b3-b214-25af36140ab3",
+    "report_id": "7cbf43b2-ea41-4114-9868-b221245e50fb",
+    "claim_text": "The U.S. murder rate reached its lowest number in over 125 years, returning to levels last seen around the year 1900.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "strong",
     "model_verdicts_summary": [
       {
         "adapter": "anthropic",
         "label": "Mostly True",
-        "confidence": "High"
+        "confidence": "Medium"
       },
       {
         "adapter": "gemini",
-        "label": "Unverifiable",
-        "confidence": "Low"
+        "label": "Mostly True",
+        "confidence": "High"
       },
       {
         "adapter": "xai",
-        "label": "True",
-        "confidence": "High"
+        "label": "Mostly True",
+        "confidence": "Medium"
       }
     ],
-    "url": "claims/b5b18a58-b932-4806-9e1d-56c30b8e8e51.html"
+    "url": "claims/1ffdf732-398c-45b3-b214-25af36140ab3.html"
   },
   {
     "id": "e98da1cd-2376-43ed-9562-60fdda180f68",
-    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "report_id": "7cbf43b2-ea41-4114-9868-b221245e50fb",
     "claim_text": "Trump claims the Biden administration and its allies in Congress produced the worst inflation in the history of the United States.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -226,7 +186,7 @@
   },
   {
     "id": "0e5b57e1-3558-4565-bc80-2e77b2985774",
-    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "report_id": "7cbf43b2-ea41-4114-9868-b221245e50fb",
     "claim_text": "Trump claims his administration drove core inflation down to its lowest level in more than five years within 12 months of taking office.",
     "consensus_verdict": "Models split",
     "consensus_strength": "none",
@@ -251,7 +211,7 @@
   },
   {
     "id": "c6049949-a6c2-40d5-bb67-e2800ec45323",
-    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "report_id": "7cbf43b2-ea41-4114-9868-b221245e50fb",
     "claim_text": "Core inflation in the last three months of 2025 was down to 1.7 percent.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -273,120 +233,5 @@
       }
     ],
     "url": "claims/c6049949-a6c2-40d5-bb67-e2800ec45323.html"
-  },
-  {
-    "id": "eaab8370-5bf9-441c-8bd4-27ce6a79b71c",
-    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
-    "claim_text": "The murder rate saw its single largest decline in recorded history in the year prior to Trump's 2026 State of the Union address.",
-    "consensus_verdict": "Models split",
-    "consensus_strength": "none",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Mostly True",
-        "confidence": "High"
-      },
-      {
-        "adapter": "gemini",
-        "label": "Unverifiable",
-        "confidence": "Low"
-      },
-      {
-        "adapter": "xai",
-        "label": "True",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/eaab8370-5bf9-441c-8bd4-27ce6a79b71c.html"
-  },
-  {
-    "id": "af14891c-79b9-4178-b04c-8165cb6ffa75",
-    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
-    "claim_text": "The murder rate reached its lowest number in over 125 years, going back to approximately the year 1900.",
-    "consensus_verdict": "Models split",
-    "consensus_strength": "none",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Mostly True",
-        "confidence": "High"
-      },
-      {
-        "adapter": "gemini",
-        "label": "Unverifiable",
-        "confidence": "Low"
-      }
-    ],
-    "url": "claims/af14891c-79b9-4178-b04c-8165cb6ffa75.html"
-  },
-  {
-    "id": "e98da1cd-2376-43ed-9562-60fdda180f68",
-    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
-    "claim_text": "Trump claims the Biden administration and its allies in Congress produced the worst inflation in the history of the United States.",
-    "consensus_verdict": "False",
-    "consensus_strength": "weak",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "False",
-        "confidence": "High"
-      },
-      {
-        "adapter": "gemini",
-        "label": "Unverifiable",
-        "confidence": "Low"
-      },
-      {
-        "adapter": "xai",
-        "label": "False",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/e98da1cd-2376-43ed-9562-60fdda180f68.html"
-  },
-  {
-    "id": "0e5b57e1-3558-4565-bc80-2e77b2985774",
-    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
-    "claim_text": "Trump claims his administration drove core inflation down to its lowest level in more than five years within 12 months of taking office.",
-    "consensus_verdict": "Models split",
-    "consensus_strength": "none",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Misleading",
-        "confidence": "High"
-      },
-      {
-        "adapter": "gemini",
-        "label": "Unverifiable",
-        "confidence": "Low"
-      },
-      {
-        "adapter": "xai",
-        "label": "False",
-        "confidence": "High"
-      }
-    ],
-    "url": "claims/0e5b57e1-3558-4565-bc80-2e77b2985774.html"
-  },
-  {
-    "id": "857c21b8-bd3d-42a5-876b-da69097661af",
-    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
-    "claim_text": "Core inflation was down to 1.7 percent in the last three months of 2025.",
-    "consensus_verdict": "Models split",
-    "consensus_strength": "none",
-    "model_verdicts_summary": [
-      {
-        "adapter": "anthropic",
-        "label": "Misleading",
-        "confidence": "High"
-      },
-      {
-        "adapter": "gemini",
-        "label": "Unverifiable",
-        "confidence": "Low"
-      }
-    ],
-    "url": "claims/857c21b8-bd3d-42a5-876b-da69097661af.html"
   }
 ]
