@@ -148,5 +148,245 @@
       }
     ],
     "url": "claims/5ebbe669-8eae-4d77-a23a-5437d4a14338.html"
+  },
+  {
+    "id": "fb7f54a9-a7ed-4b56-ae16-6d3233d9e1c5",
+    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "claim_text": "The murder rate in the United States saw its single largest decline in recorded history in the year prior to Trump's 2026 State of the Union address.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/fb7f54a9-a7ed-4b56-ae16-6d3233d9e1c5.html"
+  },
+  {
+    "id": "b5b18a58-b932-4806-9e1d-56c30b8e8e51",
+    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "claim_text": "The U.S. murder rate reached its lowest number in over 125 years, not seen since approximately the year 1900.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b5b18a58-b932-4806-9e1d-56c30b8e8e51.html"
+  },
+  {
+    "id": "e98da1cd-2376-43ed-9562-60fdda180f68",
+    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "claim_text": "Trump claims the Biden administration and its allies in Congress produced the worst inflation in the history of the United States.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e98da1cd-2376-43ed-9562-60fdda180f68.html"
+  },
+  {
+    "id": "0e5b57e1-3558-4565-bc80-2e77b2985774",
+    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "claim_text": "Trump claims his administration drove core inflation down to its lowest level in more than five years within 12 months of taking office.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/0e5b57e1-3558-4565-bc80-2e77b2985774.html"
+  },
+  {
+    "id": "c6049949-a6c2-40d5-bb67-e2800ec45323",
+    "report_id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "claim_text": "Core inflation in the last three months of 2025 was down to 1.7 percent.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "Misleading",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c6049949-a6c2-40d5-bb67-e2800ec45323.html"
+  },
+  {
+    "id": "eaab8370-5bf9-441c-8bd4-27ce6a79b71c",
+    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
+    "claim_text": "The murder rate saw its single largest decline in recorded history in the year prior to Trump's 2026 State of the Union address.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/eaab8370-5bf9-441c-8bd4-27ce6a79b71c.html"
+  },
+  {
+    "id": "af14891c-79b9-4178-b04c-8165cb6ffa75",
+    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
+    "claim_text": "The murder rate reached its lowest number in over 125 years, going back to approximately the year 1900.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      }
+    ],
+    "url": "claims/af14891c-79b9-4178-b04c-8165cb6ffa75.html"
+  },
+  {
+    "id": "e98da1cd-2376-43ed-9562-60fdda180f68",
+    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
+    "claim_text": "Trump claims the Biden administration and its allies in Congress produced the worst inflation in the history of the United States.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e98da1cd-2376-43ed-9562-60fdda180f68.html"
+  },
+  {
+    "id": "0e5b57e1-3558-4565-bc80-2e77b2985774",
+    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
+    "claim_text": "Trump claims his administration drove core inflation down to its lowest level in more than five years within 12 months of taking office.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/0e5b57e1-3558-4565-bc80-2e77b2985774.html"
+  },
+  {
+    "id": "857c21b8-bd3d-42a5-876b-da69097661af",
+    "report_id": "f281a740-3e5d-49c9-859b-155331211747",
+    "claim_text": "Core inflation was down to 1.7 percent in the last three months of 2025.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      }
+    ],
+    "url": "claims/857c21b8-bd3d-42a5-876b-da69097661af.html"
   }
 ]

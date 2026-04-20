@@ -349,7 +349,7 @@ def _run_publish(args) -> None:
             logger.warning("Ingest: %s", w)
 
     # Extract
-    print(f"Extracting claims from {len(text):,} chars…")
+    print(f"Extracting claims from {len(text):,} chars...")
     extractor = ClaimExtractor()
     claims = extractor.extract(transcript)
     checkable = [c for c in claims if c.is_checkable]
@@ -361,7 +361,7 @@ def _run_publish(args) -> None:
     engine = VerificationEngine()
     bundles = []
     for i, claim in enumerate(checkable, 1):
-        print(f"  Verifying claim {i}/{len(checkable)}: {claim.text[:60]}…")
+        print(f"  Verifying claim {i}/{len(checkable)}: {claim.text[:60]}...")
         try:
             bundle = engine.verify_bundle(
                 claim,
@@ -372,7 +372,7 @@ def _run_publish(args) -> None:
             label = bundle.consensus.consensus_label.value
             strength = bundle.consensus.consensus_strength
             cache = " [cached]" if bundle.cache_hit else ""
-            print(f"    → {label} ({strength}){cache}")
+            print(f"    -> {label} ({strength}){cache}")
         except Exception as exc:
             logger.error("Verify failed for claim %s: %s", claim.id, exc)
 
@@ -421,7 +421,7 @@ def _run_publish(args) -> None:
             json.loads(p.read_text(encoding="utf-8"))
             print(f"{fname}: valid JSON")
         except Exception as e:
-            print(f"{fname}: INVALID — {e}")
+            print(f"{fname}: INVALID - {e}")
 
 
 def main() -> None:
@@ -517,7 +517,7 @@ def main() -> None:
     )
 
     # Print summary to stdout
-    print(f"\n✓ Fact-check complete")
+    print(f"\nFact-check complete")
     print(f"  Report ID : {report.id}")
     print(f"  Speaker   : {report.transcript.speaker}")
     print(f"  Claims    : {report.total_claims} total, {report.checkable_claims} checkable")

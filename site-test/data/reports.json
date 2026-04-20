@@ -1,5 +1,41 @@
 [
   {
+    "id": "f281a740-3e5d-49c9-859b-155331211747",
+    "date": "2026-03-04",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 0,
+      "Mostly True": 2,
+      "Misleading": 1,
+      "Exaggerated": 0,
+      "False": 2,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.0,
+    "url": "reports/2026-03-04-donald-trump.html"
+  },
+  {
+    "id": "cd3ca166-2bef-4f53-a6df-47f7cd74d79a",
+    "date": "2026-03-04",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 0,
+      "Mostly True": 2,
+      "Misleading": 0,
+      "Exaggerated": 0,
+      "False": 2,
+      "Unverifiable": 1
+    },
+    "model_agreement_rate": 0.0,
+    "url": "reports/2026-03-04-donald-trump.html"
+  },
+  {
     "id": "2830768a-2ba0-4613-a559-401acf921828",
     "date": "2025-03-04",
     "speaker": "Donald Trump",
