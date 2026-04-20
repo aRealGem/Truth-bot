@@ -1,0 +1,20 @@
+[
+  {
+    "id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
+    "date": "2025-03-04",
+    "speaker": "Donald Trump",
+    "role": "President of the United States",
+    "venue": "Joint Session of Congress",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 0,
+      "Mostly True": 1,
+      "Misleading": 2,
+      "Exaggerated": 0,
+      "False": 2,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 1.0,
+    "url": "reports/2025-03-04-donald-trump.html"
+  }
+]

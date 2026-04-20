@@ -315,6 +315,113 @@ def _print_metrics_summary(jsonl_path: str | None = None) -> None:
 
 
 
+def _run_publish(args) -> None:
+    """Full pipeline: ingest → extract → verify → publish site."""
+    import os, uuid
+    from datetime import datetime
+    from truthbot.extract.claims import ClaimExtractor
+    from truthbot.ingest.transcript import TranscriptIngester
+    from truthbot.verify.engine import VerificationEngine
+    from truthbot.publish.site import SitePublisher, SiteReport
+
+    # Load transcript
+    src = args.transcript
+    if src == "-":
+        import sys
+        text = sys.stdin.read()
+    else:
+        text = Path(src).read_text(encoding="utf-8")
+
+    date = datetime.strptime(args.date, "%Y-%m-%d")
+    source_url = getattr(args, "source_url", "") or ""
+
+    # Ingest
+    ingester = TranscriptIngester()
+    result = ingester.ingest_text(
+        text,
+        speaker=args.speaker,
+        date=date,
+        venue=getattr(args, "venue", "") or "",
+    )
+    transcript = result.transcript
+    if result.warnings:
+        for w in result.warnings:
+            logger.warning("Ingest: %s", w)
+
+    # Extract
+    print(f"Extracting claims from {len(text):,} chars…")
+    extractor = ClaimExtractor()
+    claims = extractor.extract(transcript)
+    checkable = [c for c in claims if c.is_checkable]
+    print(f"  {len(claims)} claims extracted, {len(checkable)} checkable")
+
+    # Verify (sequential, background-safe — no blocking exec)
+    engine = VerificationEngine()
+    bundles = []
+    for i, claim in enumerate(checkable, 1):
+        print(f"  Verifying claim {i}/{len(checkable)}: {claim.text[:60]}…")
+        try:
+            bundle = engine.verify_bundle(
+                claim,
+                speaker=args.speaker,
+                date_str=args.date,
+            )
+            bundles.append(bundle)
+            label = bundle.consensus.consensus_label.value
+            strength = bundle.consensus.consensus_strength
+            cache = " [cached]" if bundle.cache_hit else ""
+            print(f"    → {label} ({strength}){cache}")
+        except Exception as exc:
+            logger.error("Verify failed for claim %s: %s", claim.id, exc)
+
+    # Build SiteReport
+    site_report = SiteReport(
+        report_id=str(uuid.uuid4()),
+        speaker=args.speaker,
+        role=getattr(args, "role", "") or "",
+        date=date,
+        venue=getattr(args, "venue", "") or "",
+        transcript_source_url=source_url,
+        bundles=bundles,
+    )
+
+    # Publish
+    site_root = getattr(args, "site_root", None)
+    publisher = SitePublisher(site_root=site_root)
+    report_path = publisher.publish(site_report)
+    site_url = publisher.site_url(site_report)
+    stats = publisher.summary()
+
+    print()
+    print(f"Site generated: {stats['root']}")
+    print(f"Report page:    {report_path}")
+    print(f"Served at:      {site_url}")
+    print(f"Summary:        {stats['reports']} report(s), {stats['claims']} claim(s), "
+          f"{stats['total_kb']} KB total")
+
+    # Verify internal links exist
+    report_rel = Path("reports") / f"{site_report.report_slug}.html"
+    issues = []
+    for b in bundles:
+        claim_rel = Path("claims") / f"{b.claim.id}.html"
+        if not (Path(stats['root']) / claim_rel).exists():
+            issues.append(str(claim_rel))
+    if issues:
+        print(f"WARNING: {len(issues)} claim page(s) missing")
+    else:
+        print(f"All internal links verified OK")
+
+    # Validate JSON data files
+    for fname in ("data/reports.json", "data/claims.json"):
+        p = Path(stats['root']) / fname
+        try:
+            import json
+            json.loads(p.read_text(encoding="utf-8"))
+            print(f"{fname}: valid JSON")
+        except Exception as e:
+            print(f"{fname}: INVALID — {e}")
+
+
 def main() -> None:
     """CLI entry point."""
     logging.basicConfig(
@@ -351,6 +458,16 @@ def main() -> None:
         help="Path to adapter_calls.jsonl (default: settings.metrics_dir/adapter_calls.jsonl)",
     )
 
+    # publish subcommand — full pipeline + site generation
+    pub_parser = subparsers.add_parser("publish", help="Run pipeline and generate static site")
+    pub_parser.add_argument("--transcript", required=True, help="Path to transcript file (or - for stdin)")
+    pub_parser.add_argument("--speaker",    required=True, help="Speaker name")
+    pub_parser.add_argument("--role",       default="",   help="Speaker role/title")
+    pub_parser.add_argument("--date",       required=True, help="Speech date YYYY-MM-DD")
+    pub_parser.add_argument("--venue",      default="",   help="Venue or event name")
+    pub_parser.add_argument("--source-url", default="",   help="Transcript source URL")
+    pub_parser.add_argument("--site-root",  default=None, help="Site output root (overrides TRUTHBOT_SITE_ROOT)")
+
     args = parser.parse_args()
 
     if args.verbose:
@@ -364,6 +481,11 @@ def main() -> None:
         else:
             parser.print_help()
             return
+
+    # Handle publish subcommand
+    if getattr(args, "subcommand", None) == "publish":
+        _run_publish(args)
+        return
 
     # Read from stdin if requested
     source = args.transcript or ""
