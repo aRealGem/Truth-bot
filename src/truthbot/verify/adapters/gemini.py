@@ -1,5 +1,6 @@
 """
 Google Gemini adapter with Google Search grounding.
+Migrated from google-generativeai (deprecated) to google-genai SDK.
 """
 
 from __future__ import annotations
@@ -35,7 +36,7 @@ def _parse_verdict_json(text: str) -> dict:
 
 
 class GeminiAdapter(LLMAdapter):
-    """Google Gemini adapter using Google Search grounding."""
+    """Google Gemini adapter using Google Search grounding (google-genai SDK)."""
 
     adapter_name = "gemini"
     model_id = "gemini-2.5-pro"
@@ -48,34 +49,36 @@ class GeminiAdapter(LLMAdapter):
 
     def call(self, claim: Claim, evidence: list[Evidence]) -> ModelVerdict:
         """Call Gemini with Google Search grounding and return a ModelVerdict."""
-        import google.generativeai as genai
+        from google import genai
+        from google.genai import types
 
         telemetry = get_telemetry()
         user_msg = self._build_user_message(claim, evidence)
 
         with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
             try:
-                genai.configure(api_key=self._api_key)
+                client = genai.Client(api_key=self._api_key)
 
-                model = genai.GenerativeModel(
-                    model_name=self._active_model,
-                    system_instruction=SYNTHESIS_SYSTEM,
-                    tools=["google_search_retrieval"],
+                response = client.models.generate_content(
+                    model=self._active_model,
+                    contents=user_msg,
+                    config=types.GenerateContentConfig(
+                        system_instruction=SYNTHESIS_SYSTEM,
+                        tools=[types.Tool(google_search=types.GoogleSearch())],
+                    ),
                 )
-
-                response = model.generate_content(user_msg)
 
                 # Extract grounding metadata
                 urls: list[str] = []
                 search_query_count = 0
 
-                candidates = getattr(response, "candidates", [])
+                candidates = response.candidates or []
                 for candidate in candidates:
                     gm = getattr(candidate, "grounding_metadata", None)
                     if gm:
-                        search_queries = getattr(gm, "search_queries", []) or getattr(gm, "web_search_queries", [])
+                        search_queries = getattr(gm, "web_search_queries", []) or []
                         search_query_count += len(search_queries)
-                        chunks = getattr(gm, "grounding_chunks", []) or getattr(gm, "grounding_support_chunks", [])
+                        chunks = getattr(gm, "grounding_chunks", []) or []
                         for chunk in chunks:
                             web = getattr(chunk, "web", None)
                             if web:
@@ -86,10 +89,11 @@ class GeminiAdapter(LLMAdapter):
                 # Extract text
                 verdict_text = ""
                 try:
-                    verdict_text = response.text
+                    verdict_text = response.text or ""
                 except Exception:
                     for candidate in candidates:
-                        for part in getattr(getattr(candidate, "content", None), "parts", []):
+                        content = getattr(candidate, "content", None)
+                        for part in getattr(content, "parts", []):
                             verdict_text += getattr(part, "text", "")
 
                 # Token usage
