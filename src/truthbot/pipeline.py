@@ -357,24 +357,39 @@ def _run_publish(args) -> None:
     checkable = checkable[:max_claims]
     print(f"  {len(claims)} claims extracted, {len(checkable)} checkable")
 
-    # Verify (sequential, background-safe — no blocking exec)
+    # Verify — parallel fan-out across claims (adapters already fan-out within each claim)
     engine = VerificationEngine()
-    bundles = []
-    for i, claim in enumerate(checkable, 1):
-        print(f"  Verifying claim {i}/{len(checkable)}: {claim.text[:60]}...")
+    bundles_map: dict[int, object] = {}
+
+    def _verify_one(idx_claim):
+        idx, claim = idx_claim
+        print(f"  Verifying claim {idx}/{len(checkable)}: {claim.text[:60]}...")
         try:
             bundle = engine.verify_bundle(
                 claim,
                 speaker=args.speaker,
                 date_str=args.date,
             )
-            bundles.append(bundle)
             label = bundle.consensus.consensus_label.value
             strength = bundle.consensus.consensus_strength
             cache = " [cached]" if bundle.cache_hit else ""
-            print(f"    -> {label} ({strength}){cache}")
+            print(f"    -> claim {idx}: {label} ({strength}){cache}")
+            return idx, bundle
         except Exception as exc:
             logger.error("Verify failed for claim %s: %s", claim.id, exc)
+            return idx, None
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    max_workers = min(len(checkable), 5)
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futs = {pool.submit(_verify_one, (i, c)): i for i, c in enumerate(checkable, 1)}
+        for fut in as_completed(futs):
+            idx, bundle = fut.result()
+            if bundle is not None:
+                bundles_map[idx] = bundle
+
+    # Restore original ordering
+    bundles = [bundles_map[i] for i in sorted(bundles_map)]
 
     # Build SiteReport
     site_report = SiteReport(

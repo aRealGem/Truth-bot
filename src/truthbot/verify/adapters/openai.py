@@ -16,6 +16,7 @@ from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter
 logger = logging.getLogger(__name__)
 
 _FALLBACK_MODEL = "gpt-4o"
+_PRIMARY_MODEL  = "gpt-4.1"   # gpt-5.4-pro returns 500s; gpt-4.1 is stable + fast
 
 
 def _parse_verdict_json(text: str) -> dict:
@@ -40,7 +41,7 @@ class OpenAIAdapter(LLMAdapter):
     """OpenAI GPT adapter using Responses API with web search preview."""
 
     adapter_name = "openai"
-    model_id = "gpt-5.4-pro"
+    model_id = _PRIMARY_MODEL
     required_env_key = "OPENAI_API_KEY"
 
     def __init__(self) -> None:
@@ -57,7 +58,7 @@ class OpenAIAdapter(LLMAdapter):
 
         with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
             try:
-                client = openai.OpenAI(api_key=self._api_key, timeout=180.0)
+                client = openai.OpenAI(api_key=self._api_key, timeout=60.0)
                 verdict_text, urls, tool_count, usage = self._call_with_search(
                     client, user_msg
                 )
