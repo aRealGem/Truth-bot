@@ -73,5 +73,80 @@
       }
     ],
     "url": "claims/5ebbe669-8eae-4d77-a23a-5437d4a14338.html"
+  },
+  {
+    "id": "ad388cf9-de85-4528-9007-404e4969ae4c",
+    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
+    "claim_text": "The 250th anniversary of American independence will occur less than five months from March 4, 2025 (i.e., on July 4, 2025).",
+    "consensus_verdict": "False",
+    "consensus_strength": "single",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ad388cf9-de85-4528-9007-404e4969ae4c.html"
+  },
+  {
+    "id": "c5d66ca4-f0bf-40e0-8d95-acc3abf88033",
+    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
+    "claim_text": "Trump claims that when he last spoke in the chamber 12 months prior (approximately March 2024), he had inherited a nation with inflation at record levels.",
+    "consensus_verdict": "False",
+    "consensus_strength": "single",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c5d66ca4-f0bf-40e0-8d95-acc3abf88033.html"
+  },
+  {
+    "id": "33005e7b-92a2-4ed0-86e6-aa6cb38142a2",
+    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
+    "claim_text": "Trump claims the U.S. now has the strongest and most secure border in American history.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "single",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/33005e7b-92a2-4ed0-86e6-aa6cb38142a2.html"
+  },
+  {
+    "id": "053c3d2a-fe6d-4e5e-834b-c15e760f9d17",
+    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
+    "claim_text": "Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.",
+    "consensus_verdict": "Misleading",
+    "consensus_strength": "single",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/053c3d2a-fe6d-4e5e-834b-c15e760f9d17.html"
+  },
+  {
+    "id": "5ebbe669-8eae-4d77-a23a-5437d4a14338",
+    "report_id": "2830768a-2ba0-4613-a559-401acf921828",
+    "claim_text": "Trump claims the flow of deadly fentanyl across the U.S. border is down by a record 56 percent in one year.",
+    "consensus_verdict": "Misleading",
+    "consensus_strength": "single",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/5ebbe669-8eae-4d77-a23a-5437d4a14338.html"
   }
 ]

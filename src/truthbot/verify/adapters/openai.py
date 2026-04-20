@@ -57,7 +57,7 @@ class OpenAIAdapter(LLMAdapter):
 
         with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
             try:
-                client = openai.OpenAI(api_key=self._api_key, timeout=30.0)
+                client = openai.OpenAI(api_key=self._api_key, timeout=180.0)
                 verdict_text, urls, tool_count, usage = self._call_with_search(
                     client, user_msg
                 )
@@ -81,6 +81,7 @@ class OpenAIAdapter(LLMAdapter):
                     confidence=confidence,
                     explanation=raw.get("explanation", ""),
                     web_sources=raw.get("web_sources", urls[:10]),
+                    caveats=raw.get("caveats", ""),
                 )
 
             except json.JSONDecodeError as exc:
@@ -121,13 +122,45 @@ class OpenAIAdapter(LLMAdapter):
 
             for model in [self.model_id, _FALLBACK_MODEL]:
                 self._active_model = model
+                system_text = (
+                    SYNTHESIS_SYSTEM
+                    + "\n\nOperational constraints (OpenAI): Use at most 3 web searches. "
+                    + "Keep reasoning brief. Return ONLY the JSON object."
+                )
+                input_blocks = [
+                    {
+                        "role": "system",
+                        "content": [
+                            {"type": "input_text", "text": system_text},
+                        ],
+                    },
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "input_text", "text": user_msg},
+                        ],
+                    },
+                ]
                 try:
-                    response = client.responses.create(
+                    kwargs = dict(
                         model=model,
                         tools=[{"type": "web_search_preview"}],
-                        input=user_msg,
-                        instructions=SYNTHESIS_SYSTEM,
+                        input=input_blocks,
+                        max_tool_calls=2,
+                        max_output_tokens=2500,
                     )
+                    try:
+                        response = client.responses.create(
+                            response_format={"type": "json_object"},
+                            **kwargs,
+                        )
+                    except TypeError:
+                        logger.warning("OpenAIAdapter: response_format not supported by SDK; falling back to text output")
+                        response = client.responses.create(**kwargs)
+                    status = getattr(response, "status", "completed")
+                    if status != "completed":
+                        details = getattr(response, "incomplete_details", None)
+                        raise RuntimeError(f"OpenAI Responses status={status}: {details}")
                     text = ""
                     urls: list[str] = []
                     tool_count = 0

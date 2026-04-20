@@ -353,6 +353,8 @@ def _run_publish(args) -> None:
     extractor = ClaimExtractor()
     claims = extractor.extract(transcript)
     checkable = [c for c in claims if c.is_checkable]
+    max_claims = getattr(args, 'max_claims', 5) or 5
+    checkable = checkable[:max_claims]
     print(f"  {len(claims)} claims extracted, {len(checkable)} checkable")
 
     # Verify (sequential, background-safe — no blocking exec)
@@ -467,6 +469,7 @@ def main() -> None:
     pub_parser.add_argument("--venue",      default="",   help="Venue or event name")
     pub_parser.add_argument("--source-url", default="",   help="Transcript source URL")
     pub_parser.add_argument("--site-root",  default=None, help="Site output root (overrides TRUTHBOT_SITE_ROOT)")
+    pub_parser.add_argument("--max-claims",  type=int, default=5, help="Max checkable claims to verify (default 5)")
 
     args = parser.parse_args()
 
