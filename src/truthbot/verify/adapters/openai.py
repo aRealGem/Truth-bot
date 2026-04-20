@@ -40,7 +40,7 @@ class OpenAIAdapter(LLMAdapter):
     """OpenAI GPT adapter using Responses API with web search preview."""
 
     adapter_name = "openai"
-    model_id = "gpt-4.1"
+    model_id = "gpt-5.4-pro"
     required_env_key = "OPENAI_API_KEY"
 
     def __init__(self) -> None:
@@ -123,7 +123,7 @@ class OpenAIAdapter(LLMAdapter):
             for model in [self.model_id, _FALLBACK_MODEL]:
                 self._active_model = model
                 # Use a higher token budget for the fallback model
-                max_out = 4096 if model == _FALLBACK_MODEL else 2500
+                max_out = 4096 if model == _FALLBACK_MODEL else 8192
                 system_text = (
                     SYNTHESIS_SYSTEM
                     + "\n\nOperational constraints (OpenAI): Use at most 3 web searches. "
