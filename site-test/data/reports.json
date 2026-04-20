@@ -15,7 +15,22 @@
       "Unverifiable": 0
     },
     "model_agreement_rate": 1.0,
-    "url": "reports/2025-03-04-donald-trump.html"
+    "url": "reports/2025-03-04-donald-trump.html",
+    "truthy_verdict": {
+      "score": -0.5,
+      "mood": "sad",
+      "claim_count": 5,
+      "pants_on_fire_count": 0,
+      "tallies": {
+        "true": 0,
+        "mostly_true": 1,
+        "half_true": 0,
+        "mostly_false": 2,
+        "false": 2,
+        "pants_on_fire": 0
+      },
+      "reasoning": "Aggregate score -0.50 at or below sad threshold (-0.30)."
+    }
   },
   {
     "id": "e35ed155-41e0-44f0-9ecc-34cba13967eb",
@@ -33,7 +48,15 @@
       "Unverifiable": 0
     },
     "model_agreement_rate": 0.0,
-    "url": "reports/2025-03-04-donald-trump.html"
+    "url": "reports/2025-03-04-donald-trump.html",
+    "truthy_verdict": {
+      "score": 0.0,
+      "mood": "iffy",
+      "claim_count": 0,
+      "pants_on_fire_count": 0,
+      "tallies": {},
+      "reasoning": "No claims evaluated — Truthy has nothing to judge."
+    }
   },
   {
     "id": "9036fea1-b1eb-4c40-bbae-e82f7f6add9e",
@@ -51,6 +74,21 @@
       "Unverifiable": 0
     },
     "model_agreement_rate": 1.0,
-    "url": "reports/2025-03-04-donald-trump.html"
+    "url": "reports/2025-03-04-donald-trump.html",
+    "truthy_verdict": {
+      "score": -0.5,
+      "mood": "sad",
+      "claim_count": 5,
+      "pants_on_fire_count": 0,
+      "tallies": {
+        "true": 0,
+        "mostly_true": 1,
+        "half_true": 0,
+        "mostly_false": 2,
+        "false": 2,
+        "pants_on_fire": 0
+      },
+      "reasoning": "Aggregate score -0.50 at or below sad threshold (-0.30)."
+    }
   }
 ]
