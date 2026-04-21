@@ -1,7 +1,7 @@
 # Aggregation Pages — Scope & Design Document
 
 > **Status:** Design/scoping only. No implementation code included.  
-> **Audience:** Pat (product decisions required throughout).  
+> This document surfaces open design decisions that require product judgment.  
 > **Produced by:** truth-bot pipeline round 6.
 
 ---
@@ -118,7 +118,7 @@ For names with edge cases:
 | `Martin Luther King Jr.` | `martin-luther-king-jr` | Keep "jr" (strip period); avoids collision with MLK Sr. |
 | `William Bradford Jr.` vs `William Bradford Sr.` | `william-bradford-jr` / `william-bradford-sr` | Suffix must be preserved |
 
-**Decisions for Pat:**
+**Open decisions:**
 - Should middle initials be stripped or kept? (Affects collision between e.g. "John F. Kennedy" and a hypothetical "John Kennedy" in the corpus.)
 - How to handle the "Unknown" speaker (current pipeline default)? Suppress aggregation page, or create a `/speakers/unknown.html` catch-all?
 
@@ -149,7 +149,7 @@ For speech types (if using slugs):
 
 - Tradeoff: highest discoverability. Requires nav + report card link + the aggregation index page (a listing of all speakers). Most UI surface area to maintain.
 
-**Decision for Pat:** Which discovery model matches the audience's browsing behavior? Are users arriving via direct links to reports (social media) or browsing the site organically?
+**Open decision:** Which discovery model matches the audience's browsing behavior? Are users arriving via direct links to reports (social media) or browsing the site organically?
 
 ---
 
@@ -172,7 +172,7 @@ The Truthy widget reads `data-claim-count` to decide singular vs. plural phrasin
 - Truthy is designed for a single-speech verdict. Aggregating across speeches strains the metaphor. Could omit Truthy and show just the verdict bar + stats panel.
 - Tradeoff: simpler, avoids semantic confusion, but loses visual consistency.
 
-**Decision for Pat:** Does Truthy belong on aggregation pages? If yes, should the mood reflect the speaker's overall truthfulness across all speeches (Option A) or the most recent speech only?
+**Open decision:** Does Truthy belong on aggregation pages? If yes, should the mood reflect the speaker's overall truthfulness across all speeches (Option A) or the most recent speech only?
 
 ---
 
@@ -197,7 +197,7 @@ All speeches  [################]  22 True / 8 False / 5 Misleading
 
 - Tradeoff: compact, scannable at a glance. Loses temporal information. Two outlier speeches can wash out trend data.
 
-Both options are not mutually exclusive — could show the cumulative bar at the top and per-report breakdown below. **Decision for Pat:** Which is the primary unit of information on a speaker page?
+Both options are not mutually exclusive — could show the cumulative bar at the top and per-report breakdown below. **Open decision:** Which is the primary unit of information on a speaker page?
 
 ---
 
@@ -217,7 +217,7 @@ A single stacked bar where each segment is colored by both verdict and speaker. 
 
 JS-dependent. Adds interactivity but breaks the current "no JS for content" assumption (Truthy already requires JS for audio/animations, but adding tab logic is a new category of JS dependency for core content navigation).
 
-**Decision for Pat:** Should speech-type pages primarily answer "how truthful is this speech form across speakers?" (Option B) or "how does each speaker do in this speech form?" (Option A)?
+**Open decision:** Should speech-type pages primarily answer "how truthful is this speech form across speakers?" (Option B) or "how does each speaker do in this speech form?" (Option A)?
 
 ---
 
@@ -269,7 +269,7 @@ JS-dependent. Adds interactivity but breaks the current "no JS for content" assu
 
 ---
 
-## Open Questions for Pat
+## Open Questions
 
 1. **Speaker normalization strategy** (Options A/B/C above) — which approach matches your operational workflow? Are you comfortable maintaining a speaker registry (`data/speakers.json`), or would slug-based deduplication suffice for the current corpus size?
 
