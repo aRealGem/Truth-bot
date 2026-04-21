@@ -181,20 +181,42 @@ def _verdict_css(label_str: str) -> str:
     return VERDICT_CSS.get(label_str, "unverifiable")
 
 
+# Categories whose display labels already contain a qualifier word.
+# Never prepend "Mostly" or "Largely" to these — it reads as double-qualified.
+_ALREADY_QUALIFIED: frozenset[str] = frozenset({"Mostly True"})
+
+
 def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
     """
     Compute the headline verdict label and CSS class for a report.
     Returns (label_text, css_class).
-    ≥ 60% single verdict → 'Largely {Verdict}' with 'vt-{slug}'
-    ≥ 40% single verdict → 'Mostly {Verdict}' with 'vt-{slug}'
-    otherwise            → 'Mixed verdict' with 'neutral'
+
+    Rules (applied in order):
+      - 0 claims                    → 'No claims evaluated' / neutral
+      - 2+ categories tie for max   → 'Mixed verdict' / neutral
+      - dominant ≥ 60%              → 'Largely {label}' / vt-{slug}
+      - dominant ≥ 40%              → label (if already qualified) or 'Mostly {label}'
+      - otherwise                   → 'Mixed verdict' / neutral
+
+    The tie check prevents max() from silently picking a winner when the data
+    is genuinely split (e.g. 2 True + 2 False).  The ALREADY_QUALIFIED guard
+    prevents double-prefixing labels like "Mostly True" into "Mostly Mostly True".
     """
     total = sum(dist.values())
     if total == 0:
         return "No claims evaluated", "neutral"
+    max_count = max(dist.values())
+    # Tie: two or more categories share the top count → always Mixed
+    if sum(1 for v in dist.values() if v == max_count) > 1:
+        return "Mixed verdict", "neutral"
     max_label = max(dist, key=lambda k: dist[k])
-    max_pct = dist[max_label] / total
+    max_pct = max_count / total
     css = _verdict_css(max_label)
+    if max_label in _ALREADY_QUALIFIED:
+        # Label is self-descriptive; only apply it if it genuinely dominates
+        if max_pct >= 0.40:
+            return max_label, f"vt-{css}"
+        return "Mixed verdict", "neutral"
     if max_pct >= 0.60:
         return f"Largely {max_label}", f"vt-{css}"
     elif max_pct >= 0.40:
@@ -1932,6 +1954,31 @@ footer.foot a {
 }
 
 
+/* [18b] HR dividers & dim helper ────────────────────────────────────── */
+hr.rule {
+  border: none;
+  border-top: 1px solid var(--border-strong);
+  margin: 2rem 0;
+}
+hr.rule-light {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+/* Muted body copy — used for footnotes, about-page prose, empty states */
+.dim {
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.dim a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+.dim a:hover { border-bottom-color: var(--ink); }
+
+
 /* [19] Verdict color utilities ───────────────────────────────────────── */
 /* Background paint */
 .v-true         { background: var(--v-true); }
@@ -2389,8 +2436,43 @@ JS = """\
 """
 
 # ── Page renderers ──────────────────────────────────────────────────────────
+from collections import defaultdict as _defaultdict
+
+
+def _disambiguate_report_urls(reports: list[dict]) -> list[dict]:
+    """
+    Ensure every report card in the index links to a unique URL.
+
+    Old entries in reports.json may have been stored without the 6-char
+    run-id suffix (before the slug was updated).  Group by base slug
+    (stripping any trailing -[0-9a-f]{6}); if a group has >1 member,
+    EVERY member gets its url rewritten to include the first 6 chars of
+    its stored report id.  Single-member groups are left untouched so
+    existing links keep working.
+
+    The hash is derived from the report's id (stable across re-runs).
+    """
+    def _base(r: dict) -> str:
+        name = r.get("url", "").split("/")[-1].removesuffix(".html")
+        return re.sub(r"-[0-9a-f]{6}$", "", name)
+
+    groups: dict[str, list] = _defaultdict(list)
+    for r in reports:
+        groups[_base(r)].append(r)
+
+    result: list[dict] = []
+    for r in reports:
+        base = _base(r)
+        if len(groups[base]) > 1:
+            short = r.get("id", "")[:6]
+            r = {**r, "url": f"reports/{base}-{short}.html"}
+        result.append(r)
+    return result
+
+
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
+    reports = _disambiguate_report_urls(reports)
     total_claims   = stats.get("total_claims", 0)
     total_speeches = stats.get("total_speeches", 0)
     agree_rate     = stats.get("model_agreement_rate", 0)
@@ -2421,9 +2503,6 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         stats_html
         + '<hr class="rule">'
         + cards_html
-        + '<hr class="rule-light">'
-        + '<p class="dim"><a href="about.html">About this project</a> · '
-        + '<a href="' + GITHUB_URL + '" target="_blank">GitHub</a></p>'
     )
     footer = (
         '<span>Last updated: ' + now + '</span>'

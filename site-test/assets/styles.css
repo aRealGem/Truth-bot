@@ -1023,6 +1023,31 @@ footer.foot a {
 }
 
 
+/* [18b] HR dividers & dim helper ────────────────────────────────────── */
+hr.rule {
+  border: none;
+  border-top: 1px solid var(--border-strong);
+  margin: 2rem 0;
+}
+hr.rule-light {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+/* Muted body copy — used for footnotes, about-page prose, empty states */
+.dim {
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.dim a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+.dim a:hover { border-bottom-color: var(--ink); }
+
+
 /* [19] Verdict color utilities ───────────────────────────────────────── */
 /* Background paint */
 .v-true         { background: var(--v-true); }
