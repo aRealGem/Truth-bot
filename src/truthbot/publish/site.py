@@ -506,7 +506,64 @@ def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
     }
     caps = captions_single if claim_count == 1 else captions_multi
     return caps.get(state, ""), bubble_class_map.get(state, "is-iffy")
-# ── Page chrome helpers ──────────────────────────────────────────────────────
+def _verdict_panel(site_report) -> str:
+    """Build the full .verdict-panel section for a report page."""
+    tv = site_report.truthy_verdict
+    mood = tv.mood
+    state_map = {"happy": "true", "iffy": "iffy", "sad": "lie"}
+    svg_state = "state-" + state_map.get(mood, "iffy")
+
+    claim_count = len(site_report.checkable_bundles)
+    model_count = len({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
+    agree_rate  = site_report.model_agreement_rate
+    dist        = site_report.verdict_distribution
+    headline, h_cls = _headline_verdict(dist)
+
+    total   = sum(dist.values()) or 1
+    max_lbl = max(dist, key=lambda k: dist[k]) if dist else ""
+    ratio_text = str(dist.get(max_lbl, 0)) + " of " + str(total) + " claims rated " + max_lbl.lower() if max_lbl else str(total) + " claims checked"
+
+    bubble_text, bubble_cls = _initial_bubble(mood, claim_count)
+
+    svg_html = _TRUTHY_SVG.replace('class="state-true"', 'class="' + svg_state + '"')
+    aria_mood = {"happy": "happy", "iffy": "uncertain", "sad": "sad"}.get(mood, "uncertain")
+
+    widget = (
+        '<div class="vp-truthy-col">'
+        + '<div class="truthy-frame" id="truthy-mascot-widget"'
+        + ' data-mood="' + mood + '" data-claim-count="' + str(claim_count) + '"'
+        + ' role="button" tabindex="0"'
+        + ' aria-label="Truthy McTruthface, the truth-bot mascot. Currently ' + aria_mood + '. Click to hear.">'
+        + svg_html
+        + _TRUTHY_TAP_HINT
+        + '</div>'
+        + '<div class="truthy-bubble ' + bubble_cls + '" id="truthy-bubble">' + _esc(bubble_text) + '</div>'
+        + '</div>'
+    )
+
+    text_col = (
+        '<div class="vp-text-col">'
+        + '<div>'
+        + '<div class="vp-verdict ' + h_cls + '">' + _esc(headline) + '</div>'
+        + '<div class="vp-ratio">' + _esc(ratio_text) + '</div>'
+        + '</div>'
+        + '<div class="vp-stats">'
+        + '<div><div class="vp-stat-num">' + str(claim_count) + '</div><div class="vp-stat-lbl">Claims checked</div></div>'
+        + '<div><div class="vp-stat-num">' + str(model_count) + '</div><div class="vp-stat-lbl">Models</div></div>'
+        + '<div><div class="vp-stat-num">' + format(agree_rate, '.0%') + '</div><div class="vp-stat-lbl">Inter-model agreement</div></div>'
+        + '</div>'
+        + '</div>'
+    )
+
+    bar_html = _verdict_bar_html(dist)
+
+    return (
+        '<section class="verdict-panel">\n'
+        + '  <div class="vp-headline">' + text_col + widget + '</div>\n'
+        + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
+        + '</section>\n'
+    )
+
 
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -2374,59 +2431,54 @@ def _render_index(reports: list[dict], stats: dict) -> str:
 
 def _render_report(site_report: SiteReport) -> str:
     """Render a full per-speech report page."""
-    dist = site_report.verdict_distribution
-    bar = _verdict_bar_html(dist)
-    chips = " ".join(f'<span class="v-pill v-{_verdict_css(k)}">{k}</span> <small>{v}</small>'
-                     for k, v in dist.items() if v > 0)
-    agree_rate = site_report.model_agreement_rate
-    checkable = len(site_report.checkable_bundles)
-    total = len(site_report.bundles)
-
-    summary_card = (
-        f'<div class="stats-grid">'
-        f'<div class="stat-box"><div class="num">{total}</div>'
-        f'<div class="lbl">Claims</div></div>'
-        f'<div class="stat-box"><div class="num">{checkable}</div>'
-        f'<div class="lbl">Checkable</div></div>'
-        f'<div class="stat-box"><div class="num">{agree_rate:.0%}</div>'
-        f'<div class="lbl">Model agreement</div></div>'
-        f'</div>'
-        f'<div class="chip-row">{chips}</div>'
-        f'{bar}'
-    )
-
     src_link = ""
     if site_report.transcript_source_url:
-        src_link = (f' · <a href="{_esc(site_report.transcript_source_url)}" '
-                    f'target="_blank" rel="noopener">Transcript source</a>')
+        src_link = (
+            ' · <a href="' + _esc(site_report.transcript_source_url) +
+            '" target="_blank" rel="noopener">Transcript source</a>'
+        )
+
+    toc_html = _toc(site_report.checkable_bundles) if len(site_report.checkable_bundles) > 2 else ""
 
     claim_blocks = "\n".join(
-        _claim_card(b, i, len(site_report.checkable_bundles), rel="../") for i, b in enumerate(site_report.checkable_bundles, 1)
+        _claim_card(b, i, len(site_report.checkable_bundles), rel="../")
+        for i, b in enumerate(site_report.checkable_bundles, 1)
     )
 
     phash = _prompt_hash()
     gen_ts = site_report.generated_at.strftime("%Y-%m-%d %H:%M UTC")
+
+    venue_role = ""
+    if site_report.venue:
+        venue_role += " · " + _esc(site_report.venue)
+    if site_report.role:
+        venue_role += " · " + _esc(site_report.role)
+
     body = (
-        f'<div class="breadcrumb"><a href="../index.html">Reports</a> › '
-        f'{_esc(site_report.speaker)}</div>'
-        f'<h2>{_esc(site_report.speaker)}</h2>'
-        f'<p class="dim">{_esc(site_report.display_date)}'
-        f'{" · " + _esc(site_report.venue) if site_report.venue else ""}'
-        f'{" · " + _esc(site_report.role) if site_report.role else ""}'
-        f'{src_link}</p>'
-        f'<hr class="rule">'
-        f'{summary_card}'
-        f'<hr class="rule">'
-        f'<h3 style="margin-bottom:1rem">Claims</h3>'
-        f'{claim_blocks}'
+        '<div class="breadcrumb"><a href="../index.html">Reports</a> › '
+        + _esc(site_report.speaker) + '</div>'
+        + '<div class="hero">'
+        + '<div class="speaker-line">' + _esc(site_report.speaker) + '</div>'
+        + '<h1 class="speech-title">' + _esc(site_report.display_date) + '</h1>'
+        + '<p class="speech-meta dim">' + venue_role.lstrip(' · ') + src_link + '</p>'
+        + '</div>'
+        + _verdict_panel(site_report)
+        + toc_html
+        + '<div class="claims-section">'
+        + '<h2 class="claims-heading">Claims</h2>'
+        + claim_blocks
+        + '</div>'
     )
     footer = (
-        f'<span>Generated: {gen_ts} · Pipeline v{PIPELINE_VERSION} · '
-        f'Prompt hash: {phash}</span>'
-        f'<span><a href="../index.html">All reports</a> · '
-        f'<a href="{GITHUB_URL}" target="_blank">GitHub</a></span>'
+        '<span>Generated: ' + gen_ts + ' · Pipeline v' + PIPELINE_VERSION
+        + ' · Prompt hash: ' + phash + '</span>'
+        + '<span><a href="../index.html">All reports</a> · '
+        + '<a href="' + GITHUB_URL + '" target="_blank">GitHub</a></span>'
     )
-    return _page_report(f"{site_report.speaker} — {site_report.display_date} — truth-bot", body + f'</div><footer class="wrap">{footer}')
+    return _page_report(
+        _esc(site_report.speaker) + " — " + _esc(site_report.display_date) + " — truth-bot",
+        body + '</div><footer class="wrap">' + footer + '</footer>'
+    )
 
 
 def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
