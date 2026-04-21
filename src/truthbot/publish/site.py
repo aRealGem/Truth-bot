@@ -75,6 +75,16 @@ TIER_TABLE = [
     ("Other",       "Blogs, opinion sites, social media, unverified sources",   "Low"),
 ]
 
+def _url_display_host(url: str) -> str:
+    """Return a display-friendly hostname from a URL."""
+    try:
+        from urllib.parse import urlparse
+        host = urlparse(url).netloc or url
+        return host.removeprefix("www.")
+    except Exception:
+        return url
+
+
 GITHUB_URL = "https://github.com/aRealGem/Truth-bot"
 PIPELINE_VERSION = "0.2.0"
 
@@ -98,6 +108,7 @@ class SiteReport:
     venue: str
     transcript_source_url: str
     bundles: list[VerdictBundle]
+    video_source_url: str = ""
     generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     @property
@@ -590,10 +601,18 @@ def _verdict_panel(site_report) -> str:
     model_str = ' · '.join(model_names) if model_names else 'Multi-model'
     src_row_parts: list[str] = []
     if site_report.transcript_source_url:
+        t_host = _url_display_host(site_report.transcript_source_url)
         src_row_parts.append(
             '<span><span class="lab">Transcript:</span>'
             + '<a href="' + _esc(site_report.transcript_source_url)
-            + '" target="_blank" rel="noopener">Source &#x2197;</a></span>'
+            + '" target="_blank" rel="noopener">' + _esc(t_host) + ' &#x2197;</a></span>'
+        )
+    if getattr(site_report, 'video_source_url', ''):
+        v_host = _url_display_host(site_report.video_source_url)
+        src_row_parts.append(
+            '<span><span class="lab">Video:</span>'
+            + '<a href="' + _esc(site_report.video_source_url)
+            + '" target="_blank" rel="noopener">' + _esc(v_host) + ' &#x2197;</a></span>'
         )
     src_row_parts.append('<span><span class="lab">Models:</span>' + _esc(model_str) + '</span>')
     source_row_html = '<div class="source-row">' + ''.join(src_row_parts) + '</div>\n'
@@ -2566,11 +2585,13 @@ def _render_report(site_report: SiteReport) -> str:
             + '</div>'
         )
 
+    _model_count = len({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
+    _model_word = str(_model_count) + ' frontier language model' + ('s' if _model_count != 1 else '')
     methodology_html = (
         '<aside class="methodology">'
         '<strong>How this report was generated.</strong> truth-bot extracts factual claims '
-        'from the source transcript, submits each independently to multiple frontier language '
-        'models with the instruction to verify against publicly cited sources, and aggregates '
+        'from the source transcript, submits each independently to ' + _model_word + ' '
+        'with the instruction to verify against publicly cited sources, and aggregates '
         'verdicts using a simple majority rule. Caveats are surfaced when models flag '
         'ambiguity or framing concerns. Truthy McTruthface\u2019s mood reflects the aggregate '
         'score across all claims. '
@@ -2595,10 +2616,9 @@ def _render_report(site_report: SiteReport) -> str:
         + methodology_html
     )
     footer = (
-        '<span>Generated: ' + gen_ts + ' · Pipeline v' + PIPELINE_VERSION
-        + ' · Prompt hash: ' + phash + '</span>'
-        + '<span><a href="../index.html">All reports</a> · '
-        + '<a href="' + GITHUB_URL + '" target="_blank">GitHub</a></span>'
+        '<span>truth-bot · pipeline v' + PIPELINE_VERSION + '</span>'
+        + '<span>Source: <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">'
+        + 'github.com/aRealGem/Truth-bot</a></span>'
     )
     return _page_report(
         _esc(site_report.speaker) + " — " + _esc(site_report.display_date),
@@ -2620,10 +2640,9 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
     phash = _prompt_hash()
     gen_ts = site_report.generated_at.strftime("%Y-%m-%d %H:%M UTC")
     footer = (
-        f'<span>Generated: {gen_ts} · Pipeline v{PIPELINE_VERSION} · '
-        f'Prompt hash: {phash}</span>'
-        f'<span><a href="{report_url}">Back to report</a> · '
-        f'<a href="{GITHUB_URL}" target="_blank">GitHub</a></span>'
+        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}</span>'
+        f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
+        f'github.com/aRealGem/Truth-bot</a></span>'
     )
     return _page_report(f"Claim: {bundle.claim.text[:60]}", body, footer=footer)
 
@@ -2704,8 +2723,9 @@ def _render_about() -> str:
         f'Pipeline v{PIPELINE_VERSION}</p>'
     )
     footer = (
-        f'<span>Pipeline v{PIPELINE_VERSION} · Prompt hash: {phash}</span>'
-        f'<span><a href="{GITHUB_URL}" target="_blank">GitHub</a></span>'
+        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}</span>'
+        f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
+        f'github.com/aRealGem/Truth-bot</a></span>'
     )
     return _page_about("About", body, footer=footer)
 
