@@ -1,5 +1,23 @@
 [
   {
+    "id": "2d8adc4f-02c6-4f12-8bf0-1c5e97d1bcd8",
+    "date": "2026-03-04",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 1,
+      "Mostly True": 1,
+      "Misleading": 0,
+      "Exaggerated": 0,
+      "False": 3,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.4,
+    "url": "reports/2026-03-04-donald-trump.html"
+  },
+  {
     "id": "7cbf43b2-ea41-4114-9868-b221245e50fb",
     "date": "2026-03-04",
     "speaker": "Donald Trump",

@@ -233,5 +233,130 @@
       }
     ],
     "url": "claims/c6049949-a6c2-40d5-bb67-e2800ec45323.html"
+  },
+  {
+    "id": "2f04cd83-ae14-4e4f-90e7-4211466572c6",
+    "report_id": "2d8adc4f-02c6-4f12-8bf0-1c5e97d1bcd8",
+    "claim_text": "Gasoline reached a peak of over $6 a gallon in some U.S. states under President Biden (Trump's predecessor).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/2f04cd83-ae14-4e4f-90e7-4211466572c6.html"
+  },
+  {
+    "id": "478f8ab5-7c35-4dc4-b71a-7e8230e0c1cb",
+    "report_id": "2d8adc4f-02c6-4f12-8bf0-1c5e97d1bcd8",
+    "claim_text": "As of the time of Trump's March 4, 2026 State of the Union address, gasoline prices are below $2.30 a gallon in most U.S. states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/478f8ab5-7c35-4dc4-b71a-7e8230e0c1cb.html"
+  },
+  {
+    "id": "054a5b9a-2cc6-4b9d-a293-68541666d14c",
+    "report_id": "2d8adc4f-02c6-4f12-8bf0-1c5e97d1bcd8",
+    "claim_text": "As of the time of Trump's March 4, 2026 State of the Union address, gasoline prices are as low as $1.99 a gallon in some U.S. states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/054a5b9a-2cc6-4b9d-a293-68541666d14c.html"
+  },
+  {
+    "id": "09372c0e-6600-4861-aa13-97a1b345b5d4",
+    "report_id": "2d8adc4f-02c6-4f12-8bf0-1c5e97d1bcd8",
+    "claim_text": "As of the time of Trump's March 4, 2026 State of the Union address, mortgage rates are the lowest they have been in four years.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/09372c0e-6600-4861-aa13-97a1b345b5d4.html"
+  },
+  {
+    "id": "6778f612-0568-4221-8ba2-88999cd7380e",
+    "report_id": "2d8adc4f-02c6-4f12-8bf0-1c5e97d1bcd8",
+    "claim_text": "As of the time of Trump's March 4, 2026 State of the Union address, mortgage rates are falling.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/6778f612-0568-4221-8ba2-88999cd7380e.html"
   }
 ]

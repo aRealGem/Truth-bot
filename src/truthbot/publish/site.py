@@ -139,6 +139,27 @@ class SiteReport:
     def report_url(self) -> str:
         return f"reports/{self.report_slug}.html"
 
+    @property
+    def truthy_verdict(self):
+        """Compute Truthy M. McTruthface aggregate mood from all checkable claims."""
+        from truthbot.truthy import evaluate_truthy
+        from truthbot.truthy.truthy_score import Rating
+
+        _LABEL_TO_RATING: dict[str, Rating] = {
+            "True":          Rating.TRUE,
+            "Mostly True":   Rating.MOSTLY_TRUE,
+            "Misleading":    Rating.HALF_TRUE,
+            "Exaggerated":   Rating.MOSTLY_FALSE,
+            "False":         Rating.FALSE,
+            "Unverifiable":  Rating.HALF_TRUE,
+        }
+
+        ratings = [
+            _LABEL_TO_RATING.get(b.consensus.consensus_label.value, Rating.HALF_TRUE)
+            for b in self.checkable_bundles
+        ]
+        return evaluate_truthy(ratings)
+
 
 # ── Helper functions ──────────────────────────────────────────────────────────
 
@@ -525,6 +546,346 @@ def _claim_block(bundle: VerdictBundle, rel: str = "../", standalone: bool = Fal
     )
 
 
+# ── Truthy mascot widget ─────────────────────────────────────────────────────
+
+_TRUTHY_WIDGET_CSS = """
+.truthy-widget{max-width:220px;margin:2rem auto 1rem;text-align:center}
+.truthy-score-line{font-family:system-ui,sans-serif;font-size:0.85rem;color:#555;margin-top:0.5rem;font-style:italic}
+.truthy-mood-label{font-weight:700;font-family:system-ui,sans-serif;font-size:1rem;margin-top:0.25rem}
+.truthy-mood-happy{color:#2e7d32}.truthy-mood-iffy{color:#f57c00}.truthy-mood-sad{color:#b71c1c}
+#truthy-caption{font-family:system-ui,sans-serif;font-size:0.88rem;color:#666;text-align:center;margin-top:0.4rem;font-style:italic;min-height:1.2em}
+@keyframes idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+#character{animation:idle 4s ease-in-out infinite;transform-origin:center bottom}
+@keyframes antenna-sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+#antenna{animation:antenna-sway 3s ease-in-out infinite;transform-origin:150px 62px;transform-box:fill-box}
+.eye-led{opacity:0;transition:opacity 0.35s ease}
+@keyframes true-happy-cycle{0%,70%{opacity:1}78%,88%{opacity:0}96%,100%{opacity:1}}
+@keyframes true-neutral-cycle{0%,70%{opacity:0}78%,88%{opacity:1}96%,100%{opacity:0}}
+@keyframes happy-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.state-true .eye-happy{animation:true-happy-cycle 4s ease-in-out infinite,happy-pulse 2.2s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+.state-true .eye-neutral{animation:true-neutral-cycle 4s ease-in-out infinite}
+.state-iffy .eye-iffy{opacity:1}
+@keyframes sad-wander{0%{transform:translate(-4px,.5px)}25%{transform:translate(-3px,2px)}50%{transform:translate(4px,2.5px)}75%{transform:translate(3px,1.2px)}100%{transform:translate(-4px,.5px)}}
+.state-lie .eye-sad{opacity:1;animation:sad-wander 4.2s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+.state-lie #eyeRightGroup .eye-sad{animation-delay:-1.3s}
+.eye-shape{transform-origin:center;transform-box:fill-box;transition:transform 0.09s ease-out}
+#mascot.blinking .eye-shape{transform:scaleY(0.06)}
+@keyframes tear-fall{0%{transform:translateY(-4px);opacity:0}18%{opacity:1}100%{transform:translateY(38px);opacity:0}}
+.state-lie #tearLeft,.state-lie #tearRight{animation:tear-fall 2.2s ease-in infinite;transform-origin:center;transform-box:fill-box}
+.state-lie #tearRight{animation-delay:0.7s}
+#tearLeft,#tearRight{opacity:0}
+#armLeftSwing,#armRightSwing,#eyeLeftGroup,#eyeRightGroup,#headGroup,#bodyGroup,#clipboard{transition:transform 0.55s cubic-bezier(.34,1.56,.64,1)}
+#led,#ledHalo{transition:fill 0.3s}
+"""
+
+_TRUTHY_WIDGET_JS = """
+(function(){
+  var mascot=document.getElementById('mascot');
+  var led=document.getElementById('led');
+  var ledHalo=document.getElementById('ledHalo');
+  var eyeLeftGroup=document.getElementById('eyeLeftGroup');
+  var eyeRightGroup=document.getElementById('eyeRightGroup');
+  var headGroup=document.getElementById('headGroup');
+  var bodyGroup=document.getElementById('bodyGroup');
+  var armLeftSwing=document.getElementById('armLeftSwing');
+  var armRightSwing=document.getElementById('armRightSwing');
+  var clipboard=document.getElementById('clipboard');
+  var caption=document.getElementById('truthy-caption');
+  var captions={true:'"That checks out. Sources match! 🎉"',iffy:'"Hmm… let me double-check my sources."',lie:'"Oh no… that isn’t true."'};
+  function setState(state){
+    mascot.classList.remove('state-true','state-iffy','state-lie');
+    mascot.classList.add('state-'+state);
+    if(caption)caption.textContent=captions[state];
+    if(state==='true'){
+      led.setAttribute('fill','url(#ledGradTrue)');
+      ledHalo.setAttribute('fill','#5ac075');
+      eyeLeftGroup.setAttribute('transform','translate(115 154) rotate(0)');
+      eyeRightGroup.setAttribute('transform','translate(185 154) rotate(0)');
+      headGroup.setAttribute('transform','translate(0,0)');
+      bodyGroup.setAttribute('transform','translate(0,0)');
+      armLeftSwing.setAttribute('transform','rotate(135 88 253)');
+      armRightSwing.setAttribute('transform','rotate(-135 212 253)');
+      clipboard.setAttribute('transform','translate(228 218) rotate(-8)');
+    }else if(state==='iffy'){
+      led.setAttribute('fill','url(#ledGradIffy)');
+      ledHalo.setAttribute('fill','#e8b850');
+      eyeLeftGroup.setAttribute('transform','translate(115 156) rotate(-10)');
+      eyeRightGroup.setAttribute('transform','translate(185 156) rotate(10)');
+      headGroup.setAttribute('transform','rotate(-7 150 170)');
+      bodyGroup.setAttribute('transform','translate(0,0)');
+      armLeftSwing.setAttribute('transform','rotate(0 88 253)');
+      armRightSwing.setAttribute('transform','rotate(-110 212 253)');
+      clipboard.setAttribute('transform','translate(238 224) rotate(-3)');
+    }else if(state==='lie'){
+      led.setAttribute('fill','url(#ledGradLie)');
+      ledHalo.setAttribute('fill','#5a8ec0');
+      eyeLeftGroup.setAttribute('transform','translate(115 170) rotate(0)');
+      eyeRightGroup.setAttribute('transform','translate(185 170) rotate(0)');
+      headGroup.setAttribute('transform','translate(0,7)');
+      bodyGroup.setAttribute('transform','translate(0,3)');
+      armLeftSwing.setAttribute('transform','rotate(8 88 253)');
+      armRightSwing.setAttribute('transform','rotate(35 212 253)');
+      clipboard.setAttribute('transform','translate(174 298) rotate(40)');
+    }
+  }
+  function doBlink(){mascot.classList.add('blinking');setTimeout(function(){mascot.classList.remove('blinking')},110)}
+  function scheduleBlink(){var d=2500+Math.random()*4500;setTimeout(function(){doBlink();if(Math.random()<0.2)setTimeout(doBlink,280);scheduleBlink()},d)}
+  scheduleBlink();
+  var widget=document.getElementById('truthy-mascot-widget');
+  if(widget){
+    var mood=widget.getAttribute('data-mood')||'iffy';
+    var reasoning=widget.getAttribute('data-reasoning')||'';
+    var stateMap={happy:'true',iffy:'iffy',sad:'lie'};
+    setState(stateMap[mood]||'iffy');
+    var scoreEl=document.getElementById('truthy-score-line');
+    var moodEl=document.getElementById('truthy-mood-label');
+    if(scoreEl)scoreEl.textContent=reasoning;
+    if(moodEl){
+      moodEl.textContent=mood==='happy'?'😊 Mostly True':mood==='sad'?'😢 Mostly False':'🤔 Mixed';
+      moodEl.className='truthy-mood-label truthy-mood-'+mood;
+    }
+  }
+})();
+"""
+
+
+def _truthy_widget_html(mood: str, reasoning: str) -> str:
+    """Return inline style + widget div + init script for Truthy mascot."""
+    esc_mood = _esc(mood)
+    esc_reasoning = _esc(reasoning)
+    svg = (
+        '<svg id="mascot" width="200" height="240" viewBox="0 0 300 360" class="state-true">'
+        '<defs>'
+        '<radialGradient id="headShade" cx="35%" cy="28%" r="75%">'
+        '<stop offset="0%" stop-color="#fff8e0"/><stop offset="45%" stop-color="#f2e3c4"/>'
+        '<stop offset="85%" stop-color="#c9a876"/><stop offset="100%" stop-color="#a58654"/>'
+        '</radialGradient>'
+        '<radialGradient id="bodyShade" cx="35%" cy="25%" r="80%">'
+        '<stop offset="0%" stop-color="#fff2d5"/><stop offset="50%" stop-color="#ebdfc5"/>'
+        '<stop offset="100%" stop-color="#b89968"/>'
+        '</radialGradient>'
+        '<linearGradient id="rimLight" x1="0%" y1="0%" x2="100%" y2="0%">'
+        '<stop offset="0%" stop-color="#fff8e0" stop-opacity="0"/>'
+        '<stop offset="85%" stop-color="#fff8e0" stop-opacity="0"/>'
+        '<stop offset="100%" stop-color="#fff4d0" stop-opacity="0.95"/>'
+        '</linearGradient>'
+        '<radialGradient id="visorShade" cx="50%" cy="35%" r="70%">'
+        '<stop offset="0%" stop-color="#3a2e24"/><stop offset="70%" stop-color="#1a1410"/>'
+        '<stop offset="100%" stop-color="#0a0604"/>'
+        '</radialGradient>'
+        '<radialGradient id="brassShade" cx="35%" cy="30%">'
+        '<stop offset="0%" stop-color="#f4d98a"/><stop offset="50%" stop-color="#c9a158"/>'
+        '<stop offset="100%" stop-color="#7a5e2e"/>'
+        '</radialGradient>'
+        '<radialGradient id="eyeLedTrue" cx="38%" cy="32%" r="75%">'
+        '<stop offset="0%" stop-color="#f0fff8"/><stop offset="40%" stop-color="#a0ffe0"/>'
+        '<stop offset="75%" stop-color="#50d8b0"/><stop offset="100%" stop-color="#1e8060"/>'
+        '</radialGradient>'
+        '<radialGradient id="eyeLedIffy" cx="38%" cy="32%" r="75%">'
+        '<stop offset="0%" stop-color="#fffae0"/><stop offset="40%" stop-color="#ffe088"/>'
+        '<stop offset="75%" stop-color="#e8a830"/><stop offset="100%" stop-color="#805818"/>'
+        '</radialGradient>'
+        '<radialGradient id="eyeLedLie" cx="38%" cy="32%" r="80%">'
+        '<stop offset="0%" stop-color="#e8f4ff"/><stop offset="40%" stop-color="#9cc0e8"/>'
+        '<stop offset="75%" stop-color="#5a82b8"/><stop offset="100%" stop-color="#2a5890"/>'
+        '</radialGradient>'
+        '<radialGradient id="ledGradTrue" cx="40%" cy="35%">'
+        '<stop offset="0%" stop-color="#b8f5c8"/><stop offset="50%" stop-color="#5ac075"/>'
+        '<stop offset="100%" stop-color="#2a7840"/>'
+        '</radialGradient>'
+        '<radialGradient id="ledGradIffy" cx="40%" cy="35%">'
+        '<stop offset="0%" stop-color="#fff0a8"/><stop offset="50%" stop-color="#e8b850"/>'
+        '<stop offset="100%" stop-color="#8a6520"/>'
+        '</radialGradient>'
+        '<radialGradient id="ledGradLie" cx="40%" cy="35%">'
+        '<stop offset="0%" stop-color="#cce4ff"/><stop offset="50%" stop-color="#5a8ec0"/>'
+        '<stop offset="100%" stop-color="#2a4a78"/>'
+        '</radialGradient>'
+        '<filter id="eyeGlow" x="-50%" y="-50%" width="200%" height="200%">'
+        '<feGaussianBlur stdDeviation="2" result="blur"/>'
+        '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>'
+        '</filter>'
+        '<filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>'
+        '<filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%">'
+        '<feGaussianBlur stdDeviation="8" result="blur"/>'
+        '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>'
+        '</filter>'
+        '<radialGradient id="floorShadowGrad">'
+        '<stop offset="0%" stop-color="rgba(0,0,0,0.5)"/>'
+        '<stop offset="60%" stop-color="rgba(0,0,0,0.15)"/>'
+        '<stop offset="100%" stop-color="rgba(0,0,0,0)"/>'
+        '</radialGradient>'
+        '<pattern id="scanlines" width="2" height="3" patternUnits="userSpaceOnUse">'
+        '<rect width="2" height="3" fill="transparent"/>'
+        '<line x1="0" y1="1.5" x2="2" y2="1.5" stroke="#000000" stroke-width="0.4" opacity="0.25"/>'
+        '</pattern>'
+        '</defs>'
+        '<ellipse cx="150" cy="340" rx="95" ry="10" fill="url(#floorShadowGrad)"/>'
+        '<ellipse cx="150" cy="342" rx="70" ry="6" fill="rgba(0,0,0,0.25)"/>'
+        '<g id="character">'
+        '<ellipse cx="115" cy="325" rx="26" ry="10" fill="#4a3a28" opacity="0.25"/>'
+        '<rect x="92" y="312" width="48" height="20" rx="9" fill="url(#brassShade)"/>'
+        '<rect x="92" y="310" width="48" height="5" rx="2" fill="#f4d98a"/>'
+        '<circle cx="100" cy="322" r="1.8" fill="#4a3a28"/>'
+        '<circle cx="132" cy="322" r="1.8" fill="#4a3a28"/>'
+        '<ellipse cx="185" cy="325" rx="26" ry="10" fill="#4a3a28" opacity="0.25"/>'
+        '<rect x="160" y="312" width="48" height="20" rx="9" fill="url(#brassShade)"/>'
+        '<rect x="160" y="310" width="48" height="5" rx="2" fill="#f4d98a"/>'
+        '<circle cx="168" cy="322" r="1.8" fill="#4a3a28"/>'
+        '<circle cx="200" cy="322" r="1.8" fill="#4a3a28"/>'
+        '<g id="armLeft"><g id="armLeftSwing" transform="rotate(0 88 253)">'
+        '<rect x="81" y="253" width="14" height="48" rx="7" fill="url(#bodyShade)" stroke="#8a7550" stroke-width="1.5"/>'
+        '<rect x="81" y="253" width="3" height="48" rx="1.5" fill="#fff2d5" opacity="0.5"/>'
+        '<circle cx="88" cy="301" r="8" fill="url(#brassShade)"/>'
+        '<circle cx="86" cy="298" r="2.5" fill="#f4d98a" opacity="0.8"/>'
+        '</g><circle cx="88" cy="253" r="9" fill="url(#brassShade)"/></g>'
+        '<g id="bodyGroup">'
+        '<rect x="86" y="244" width="128" height="80" rx="16" fill="#5a4028" opacity="0.3" filter="url(#softGlow)"/>'
+        '<rect x="88" y="240" width="124" height="80" rx="14" fill="url(#bodyShade)" stroke="#8a7550" stroke-width="2"/>'
+        '<rect x="88" y="240" width="124" height="80" rx="14" fill="url(#rimLight)" opacity="0.8"/>'
+        '<rect x="94" y="245" width="112" height="10" rx="5" fill="#fff2d5" opacity="0.4"/>'
+        '<line x1="94" y1="262" x2="206" y2="262" stroke="#8a7550" stroke-width="1.5" opacity="0.55"/>'
+        '<line x1="94" y1="300" x2="206" y2="300" stroke="#8a7550" stroke-width="1.5" opacity="0.55"/>'
+        '<circle cx="98" cy="262" r="2" fill="#8a7550"/>'
+        '<circle cx="202" cy="262" r="2" fill="#8a7550"/>'
+        '<circle cx="98" cy="300" r="2" fill="#8a7550"/>'
+        '<circle cx="202" cy="300" r="2" fill="#8a7550"/>'
+        '<g transform="translate(125 252)">'
+        '<rect x="-35" y="-7" width="70" height="14" rx="2.5" fill="#8a7550"/>'
+        '<rect x="-34" y="-6" width="68" height="12" rx="2" fill="url(#brassShade)" stroke="#5a4028" stroke-width="0.6"/>'
+        '<rect x="-33" y="-5.5" width="66" height="2" rx="1" fill="#f4d98a" opacity="0.8"/>'
+        '<text x="0" y="3.5" text-anchor="middle" font-family="Georgia,serif"'
+        ' font-size="10" font-weight="700" font-style="italic" fill="#3a2e1f" letter-spacing="0.5">Truthy M.</text>'
+        '<circle cx="-31" cy="0" r="0.8" fill="#3a2e1f"/>'
+        '<circle cx="31" cy="0" r="0.8" fill="#3a2e1f"/>'
+        '</g>'
+        '<g transform="translate(100, 272)">'
+        '<rect x="0" y="0" width="24" height="15" rx="1.5" fill="#f0e8d0" stroke="#8a7550" stroke-width="0.8"/>'
+        '<rect x="9" y="1" width="14" height="1.4" fill="#c44545"/>'
+        '<rect x="9" y="3.7" width="14" height="1.4" fill="#c44545"/>'
+        '<rect x="1" y="6.5" width="22" height="1.4" fill="#c44545"/>'
+        '<rect x="1" y="9.3" width="22" height="1.4" fill="#c44545"/>'
+        '<rect x="1" y="12.1" width="22" height="1.4" fill="#c44545"/>'
+        '<rect x="1" y="1" width="8" height="6" fill="#3a4a78"/>'
+        '<circle cx="2.5" cy="2.5" r="0.35" fill="#fff4d0"/>'
+        '<circle cx="5" cy="2.5" r="0.35" fill="#fff4d0"/>'
+        '<circle cx="7.5" cy="2.5" r="0.35" fill="#fff4d0"/>'
+        '<circle cx="3.7" cy="4" r="0.35" fill="#fff4d0"/>'
+        '<circle cx="6.2" cy="4" r="0.35" fill="#fff4d0"/>'
+        '<circle cx="2.5" cy="5.5" r="0.35" fill="#fff4d0"/>'
+        '<circle cx="5" cy="5.5" r="0.35" fill="#fff4d0"/>'
+        '<circle cx="7.5" cy="5.5" r="0.35" fill="#fff4d0"/>'
+        '<rect x="0" y="0" width="24" height="15" rx="1.5" fill="#5a4028" opacity="0.1"/>'
+        '</g>'
+        '<circle cx="170" cy="283" r="11" fill="#5a4028"/>'
+        '<circle cx="170" cy="283" r="10" fill="url(#brassShade)"/>'
+        '<circle id="ledHalo" cx="170" cy="283" r="16" fill="#5ac075" opacity="0.35" filter="url(#strongGlow)"/>'
+        '<circle id="led" cx="170" cy="283" r="7" fill="url(#ledGradTrue)"/>'
+        '<circle cx="168" cy="281" r="2.5" fill="#ffffff" opacity="0.85"/>'
+        '<circle cx="171" cy="285" r="0.8" fill="#ffffff" opacity="0.6"/>'
+        '<path d="M 195 252 Q 204 260 198 270" stroke="#5a4028" stroke-width="1.8" fill="none" opacity="0.55"/>'
+        '</g>'
+        '<g id="headGroup">'
+        '<ellipse cx="150" cy="245" rx="90" ry="8" fill="#3a2e1f" opacity="0.4" filter="url(#softGlow)"/>'
+        '<ellipse cx="53" cy="148" rx="11" ry="20" fill="url(#brassShade)"/>'
+        '<ellipse cx="50" cy="148" rx="6" ry="15" fill="#5a4028"/>'
+        '<ellipse cx="48" cy="144" rx="2" ry="6" fill="#2a1e10" opacity="0.8"/>'
+        '<ellipse cx="247" cy="148" rx="11" ry="20" fill="url(#brassShade)"/>'
+        '<ellipse cx="250" cy="148" rx="6" ry="15" fill="#5a4028"/>'
+        '<ellipse cx="252" cy="144" rx="2" ry="6" fill="#2a1e10" opacity="0.8"/>'
+        '<ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#headShade)" stroke="#8a7550" stroke-width="2"/>'
+        '<ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#rimLight)" opacity="0.7"/>'
+        '<ellipse cx="108" cy="95" rx="26" ry="14" fill="#ffffff" opacity="0.55"/>'
+        '<ellipse cx="104" cy="92" rx="10" ry="5" fill="#ffffff" opacity="0.9"/>'
+        '<ellipse cx="140" cy="80" rx="8" ry="3" fill="#ffffff" opacity="0.4"/>'
+        '<path d="M 210 110 L 218 118" stroke="#8a7550" stroke-width="1" opacity="0.5"/>'
+        '<circle cx="72" cy="180" r="3" fill="#8a7550"/>'
+        '<circle cx="72" cy="180" r="2" fill="url(#brassShade)"/>'
+        '<circle cx="228" cy="180" r="3" fill="#8a7550"/>'
+        '<circle cx="228" cy="180" r="2" fill="url(#brassShade)"/>'
+        '<rect x="60" y="118" width="180" height="72" rx="36" fill="url(#visorShade)"/>'
+        '<rect x="62" y="120" width="176" height="3" rx="1.5" fill="#6a5442" opacity="0.7"/>'
+        '<rect x="62" y="186" width="176" height="2" rx="1" fill="#000000" opacity="0.5"/>'
+        '<ellipse cx="100" cy="135" rx="30" ry="6" fill="#ffffff" opacity="0.08"/>'
+        '<g id="eyeLeftGroup" transform="translate(115 154) rotate(0)">'
+        '<g class="eye-shape">'
+        '<rect class="eye-neutral eye-led" x="-14" y="-16" width="28" height="32" rx="8" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/>'
+        '<path class="eye-happy eye-led" d="M -16 4 L -16 -1 Q 0 -16 16 -1 L 16 4 Q 0 -4 -16 4 Z" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/>'
+        '<rect class="eye-iffy eye-led" x="-16" y="-6" width="32" height="12" rx="5" fill="url(#eyeLedIffy)" filter="url(#eyeGlow)"/>'
+        '<rect class="eye-sad eye-led" x="-17" y="-17" width="34" height="34" rx="8" fill="url(#eyeLedLie)" filter="url(#eyeGlow)"/>'
+        '<rect x="-19" y="-20" width="38" height="40" fill="url(#scanlines)" pointer-events="none" opacity="0.7"/>'
+        '</g></g>'
+        '<g id="eyeRightGroup" transform="translate(185 154) rotate(0)">'
+        '<g class="eye-shape">'
+        '<rect class="eye-neutral eye-led" x="-14" y="-16" width="28" height="32" rx="8" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/>'
+        '<path class="eye-happy eye-led" d="M -16 4 L -16 -1 Q 0 -16 16 -1 L 16 4 Q 0 -4 -16 4 Z" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/>'
+        '<rect class="eye-iffy eye-led" x="-16" y="-6" width="32" height="12" rx="5" fill="url(#eyeLedIffy)" filter="url(#eyeGlow)"/>'
+        '<rect class="eye-sad eye-led" x="-17" y="-17" width="34" height="34" rx="8" fill="url(#eyeLedLie)" filter="url(#eyeGlow)"/>'
+        '<rect x="-19" y="-20" width="38" height="40" fill="url(#scanlines)" pointer-events="none" opacity="0.7"/>'
+        '</g></g>'
+        '<g transform="translate(102 193)"><g id="tearLeft">'
+        '<rect x="-1.5" y="0" width="3" height="3" rx="0.4" fill="#9cc8e8"/>'
+        '<rect x="-3" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
+        '<rect x="0" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
+        '<rect x="-3" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
+        '<rect x="0" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
+        '<rect x="-1.5" y="9" width="3" height="3" rx="0.4" fill="#4a86b8"/>'
+        '</g></g>'
+        '<g transform="translate(198 193)"><g id="tearRight">'
+        '<rect x="-1.5" y="0" width="3" height="3" rx="0.4" fill="#9cc8e8"/>'
+        '<rect x="-3" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
+        '<rect x="0" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
+        '<rect x="-3" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
+        '<rect x="0" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
+        '<rect x="-1.5" y="9" width="3" height="3" rx="0.4" fill="#4a86b8"/>'
+        '</g></g>'
+        '<g id="antenna">'
+        '<path d="M 150 62 Q 148 50 152 38" stroke="url(#brassShade)" stroke-width="3" fill="none" stroke-linecap="round"/>'
+        '<circle cx="152" cy="36" r="5.5" fill="#f4c86a" filter="url(#softGlow)" opacity="0.6"/>'
+        '<circle cx="152" cy="36" r="4" fill="#ffd870"/>'
+        '<circle cx="151" cy="35" r="1.5" fill="#fff8d0"/>'
+        '</g>'
+        '</g>'
+        '<g id="armRight">'
+        '<g id="armRightSwing" transform="rotate(-110 212 253)">'
+        '<rect x="205" y="253" width="14" height="46" rx="7" fill="url(#bodyShade)" stroke="#8a7550" stroke-width="1.5"/>'
+        '<rect x="205" y="253" width="3" height="46" rx="1.5" fill="#fff2d5" opacity="0.5"/>'
+        '<circle cx="212" cy="299" r="8" fill="url(#brassShade)"/>'
+        '<circle cx="210" cy="296" r="2.5" fill="#f4d98a" opacity="0.8"/>'
+        '</g><circle cx="212" cy="253" r="9" fill="url(#brassShade)"/></g>'
+        '<g id="clipboard" transform="translate(238 224) rotate(0)">'
+        '<rect x="1" y="2" width="38" height="50" rx="3" fill="#3a2e1f" opacity="0.35"/>'
+        '<rect x="0" y="0" width="38" height="50" rx="3" fill="#d4b585" stroke="#5a4028" stroke-width="1.5"/>'
+        '<rect x="0" y="0" width="38" height="4" rx="1.5" fill="#e8c89a"/>'
+        '<rect x="12" y="-3" width="14" height="7" rx="1.5" fill="#5a4028"/>'
+        '<rect x="15" y="-5" width="8" height="5" rx="1" fill="#8a7550"/>'
+        '<rect x="3" y="6" width="32" height="42" rx="1" fill="#fff8e8"/>'
+        '<line x1="6" y1="14" x2="26" y2="14" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
+        '<path d="M 29 12 L 31 15 L 34 10" stroke="#3a8a50" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+        '<line x1="6" y1="22" x2="26" y2="22" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
+        '<path d="M 29 19 L 34 24 M 34 19 L 29 24" stroke="#c44545" stroke-width="1.2" stroke-linecap="round"/>'
+        '<line x1="6" y1="30" x2="26" y2="30" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
+        '<path d="M 29 28 L 31 31 L 34 26" stroke="#3a8a50" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+        '<line x1="6" y1="38" x2="22" y2="38" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
+        '</g>'
+        '</g>'
+        '</svg>'
+    )
+    return (
+        f'<style>{_TRUTHY_WIDGET_CSS}</style>'
+        f'<div style="text-align:center;margin:1.5rem 0">'
+        f'<div class="truthy-widget" id="truthy-mascot-widget"'
+        f' data-mood="{esc_mood}" data-reasoning="{esc_reasoning}">'
+        f'{svg}'
+        f'<div class="truthy-score-line" id="truthy-score-line"></div>'
+        f'<div class="truthy-mood-label" id="truthy-mood-label"></div>'
+        f'<div id="truthy-caption"></div>'
+        f'</div>'
+        f'</div>'
+        f'<script>{_TRUTHY_WIDGET_JS}</script>'
+    )
+
+
 # ── Page renderers ────────────────────────────────────────────────────────────
 
 def _render_index(reports: list[dict], stats: dict) -> str:
@@ -619,6 +980,9 @@ def _render_report(site_report: SiteReport) -> str:
 
     phash = _prompt_hash()
     gen_ts = site_report.generated_at.strftime("%Y-%m-%d %H:%M UTC")
+    verdict = site_report.truthy_verdict
+    widget_html = _truthy_widget_html(verdict.mood, verdict.reasoning)
+
     body = (
         f'<div class="breadcrumb"><a href="../index.html">Reports</a> › '
         f'{_esc(site_report.speaker)}</div>'
@@ -630,6 +994,7 @@ def _render_report(site_report: SiteReport) -> str:
         f'<hr class="rule">'
         f'{summary_card}'
         f'<hr class="rule">'
+        f'{widget_html}'
         f'<h3 style="margin-bottom:1rem">Claims</h3>'
         f'{claim_blocks}'
     )
