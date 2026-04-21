@@ -130,7 +130,8 @@ class SiteReport:
 
     @property
     def report_slug(self) -> str:
-        return f"{self.date_str}-{_slug(self.speaker)}"
+        short = self.report_id[:6]  # first 6 chars of UUID — unique per run
+        return f"{self.date_str}-{_slug(self.speaker)}-{short}"
 
     @property
     def report_url(self) -> str:
@@ -612,7 +613,11 @@ def _masthead_compact(rel: str = "../") -> str:
     )
 
 
-def _page_index(title: str, body: str, model_count: int = 0) -> str:
+def _page_index(title: str, body: str, footer: str = "", model_count: int = 0) -> str:
+    foot_html = (
+        '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
+        if footer else ''
+    )
     return (
         '<!DOCTYPE html>\n'
         '<html lang="en">\n'
@@ -620,7 +625,7 @@ def _page_index(title: str, body: str, model_count: int = 0) -> str:
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
-        f'  <title>{_esc(title)} — truth-bot</title>\n'
+        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
         '</head>\n'
@@ -629,15 +634,20 @@ def _page_index(title: str, body: str, model_count: int = 0) -> str:
         + _masthead_full(rel="./")
         + '<main class="wrap">\n'
         + body
-        + '</main>\n'
-        '<script src="./assets/truthbot.js"></script>\n'
+        + '\n</main>\n'
+        + foot_html
+        + '<script src="./assets/truthbot.js"></script>\n'
         '</body>\n'
         '</html>'
     )
 
 
-def _page_report(title: str, body: str, model_count: int = 0, analyzed_at: Optional[str] = None) -> str:
+def _page_report(title: str, body: str, footer: str = "", model_count: int = 0, analyzed_at: Optional[str] = None) -> str:
     stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    foot_html = (
+        '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
+        if footer else ''
+    )
     return (
         '<!DOCTYPE html>\n'
         '<html lang="en">\n'
@@ -645,7 +655,7 @@ def _page_report(title: str, body: str, model_count: int = 0, analyzed_at: Optio
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
-        f'  <title>{_esc(title)} — truth-bot</title>\n'
+        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="../assets/styles.css">\n'
         '</head>\n'
@@ -654,14 +664,19 @@ def _page_report(title: str, body: str, model_count: int = 0, analyzed_at: Optio
         + _masthead_compact(rel="../")
         + '<main class="wrap">\n'
         + body
-        + '</main>\n'
-        '<script src="../assets/truthbot.js"></script>\n'
+        + '\n</main>\n'
+        + foot_html
+        + '<script src="../assets/truthbot.js"></script>\n'
         '</body>\n'
         '</html>'
     )
 
 
-def _page_about(title: str, body: str) -> str:
+def _page_about(title: str, body: str, footer: str = "") -> str:
+    foot_html = (
+        '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
+        if footer else ''
+    )
     return (
         '<!DOCTYPE html>\n'
         '<html lang="en">\n'
@@ -669,7 +684,7 @@ def _page_about(title: str, body: str) -> str:
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
-        f'  <title>{_esc(title)} — truth-bot</title>\n'
+        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
         '</head>\n'
@@ -678,8 +693,9 @@ def _page_about(title: str, body: str) -> str:
         + _masthead_full(rel="./")
         + '<main class="wrap">\n'
         + body
-        + '</main>\n'
-        '<script src="./assets/truthbot.js"></script>\n'
+        + '\n</main>\n'
+        + foot_html
+        + '<script src="./assets/truthbot.js"></script>\n'
         '</body>\n'
         '</html>'
     )
@@ -2375,58 +2391,46 @@ JS = """\
 # ── Page renderers ──────────────────────────────────────────────────────────
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
-    cards = []
-    for r in reports[:10]:
-        dist = r.get("verdict_distribution", {})
-        bar = _verdict_bar_html(dist)
-        chips = " ".join(f'<span class="v-pill v-{_verdict_css(k)}">{k}</span> <small>{v}</small>'
-                         for k, v in dist.items() if v > 0)
-        cards.append(
-            f'<div class="report-card">'
-            f'<h3><a href="{_esc(r["url"])}">{_esc(r["speaker"])}</a></h3>'
-            f'<p class="meta">{_esc(r["date"])} · {_esc(r.get("venue",""))} · '
-            f'{r.get("claim_count",0)} claims</p>'
-            f'{bar}'
-            f'<div class="chip-row">{chips}</div>'
-            f'</div>'
-        )
-
-    total_claims = stats.get("total_claims", 0)
+    total_claims   = stats.get("total_claims", 0)
     total_speeches = stats.get("total_speeches", 0)
-    agree_rate = stats.get("model_agreement_rate", 0)
+    agree_rate     = stats.get("model_agreement_rate", 0)
+    verdict_totals = stats.get("verdict_totals", {})
 
-    stat_boxes = (
-        f'<div class="stat-box"><div class="num">{total_speeches}</div>'
-        f'<div class="lbl">Speeches</div></div>'
-        f'<div class="stat-box"><div class="num">{total_claims}</div>'
-        f'<div class="lbl">Claims checked</div></div>'
-        f'<div class="stat-box"><div class="num">{agree_rate:.0%}</div>'
-        f'<div class="lbl">Model agreement rate</div></div>'
+    agree_pct = str(round(agree_rate * 100))
+
+    stats_html = (
+        '<div class="section-head"><span>Aggregate findings</span><span class="sub">All time</span></div>'
+        '<div class="stats">'
+        + '<div class="stat"><div class="num">' + str(total_claims) + '</div><div class="lbl">Claims evaluated</div></div>'
+        + '<div class="stat"><div class="num">' + str(total_speeches) + '</div><div class="lbl">Speeches analyzed</div></div>'
+        + '<div class="stat"><div class="num">' + agree_pct + '<span class="unit">%</span></div><div class="lbl">Model consensus rate</div></div>'
+        + '</div>'
+        + _agg_bar(verdict_totals)
     )
-    for label, count in stats.get("verdict_totals", {}).items():
-        if count:
-            emoji = VERDICT_EMOJI.get(label, "")
-            stat_boxes += (
-                f'<div class="stat-box"><div class="num">{count}</div>'
-                f'<div class="lbl">{emoji} {_esc(label)}</div></div>'
-            )
+
+    cards_html = '<div class="reports">'
+    if reports:
+        for r in reports[:20]:
+            cards_html += _report_card(r)
+    else:
+        cards_html += '<p class="dim">No reports yet.</p>'
+    cards_html += '</div>'
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     body = (
-        f'<h2 style="margin-bottom:1rem">Latest Reports</h2>'
-        f'<div class="stats-grid">{stat_boxes}</div>'
-        f'<hr class="rule">'
-        f'{"".join(cards) if cards else "<p class=dim>No reports yet.</p>"}'
-        f'<hr class="rule-light">'
-        f'<p class="dim"><a href="about.html">About this project</a> · '
-        f'<a href="{GITHUB_URL}" target="_blank">GitHub</a></p>'
+        stats_html
+        + '<hr class="rule">'
+        + cards_html
+        + '<hr class="rule-light">'
+        + '<p class="dim"><a href="about.html">About this project</a> · '
+        + '<a href="' + GITHUB_URL + '" target="_blank">GitHub</a></p>'
     )
     footer = (
-        f'<span>Last updated: {now}</span>'
-        f'<span>Pipeline v{PIPELINE_VERSION} · '
-        f'<a href="{GITHUB_URL}" target="_blank">GitHub</a></span>'
+        '<span>Last updated: ' + now + '</span>'
+        + '<span>Pipeline v' + PIPELINE_VERSION
+        + ' · <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">GitHub</a></span>'
     )
-    return _page_index("Latest Reports — truth-bot", body + f'</div><footer class="wrap">{footer}')
+    return _page_index("Latest Reports", body, footer)
 
 
 def _render_report(site_report: SiteReport) -> str:
@@ -2476,8 +2480,9 @@ def _render_report(site_report: SiteReport) -> str:
         + '<a href="' + GITHUB_URL + '" target="_blank">GitHub</a></span>'
     )
     return _page_report(
-        _esc(site_report.speaker) + " — " + _esc(site_report.display_date) + " — truth-bot",
-        body + '</div><footer class="wrap">' + footer + '</footer>'
+        _esc(site_report.speaker) + " — " + _esc(site_report.display_date),
+        body,
+        footer=footer,
     )
 
 
@@ -2499,7 +2504,7 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
         f'<span><a href="{report_url}">Back to report</a> · '
         f'<a href="{GITHUB_URL}" target="_blank">GitHub</a></span>'
     )
-    return _page_report(f"Claim: {bundle.claim.text[:60]} — truth-bot", body + f'</div><footer class="wrap">{footer}')
+    return _page_report(f"Claim: {bundle.claim.text[:60]}", body, footer=footer)
 
 
 def _render_about() -> str:
@@ -2581,7 +2586,7 @@ def _render_about() -> str:
         f'<span>Pipeline v{PIPELINE_VERSION} · Prompt hash: {phash}</span>'
         f'<span><a href="{GITHUB_URL}" target="_blank">GitHub</a></span>'
     )
-    return _page_about("About — truth-bot", body + f'</div><footer class="wrap">{footer}')
+    return _page_about("About", body, footer=footer)
 
 
 def _render_404() -> str:
@@ -2590,7 +2595,7 @@ def _render_404() -> str:
         '<p class="dim">The page you requested does not exist.</p>'
         '<p><a href="index.html">Return to reports</a></p>'
     )
-    return _page_about("404 Not Found — truth-bot", body)
+    return _page_about("404 Not Found", body)
 
 
 # ── SitePublisher ─────────────────────────────────────────────────────────────
