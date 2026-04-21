@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>truth-bot — Latest Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+  <style>
+    /* truth-bot — accountability dashboard
+       Design principles:
+       1. Verdict colors are sacred. Nothing else gets chroma.
+       2. One viz per data point — no redundant chips below bars.
+       3. Every report card has a one-glance headline verdict.
+       4. Mono terminal-style chrome signals "monitoring tool" trust.
+       5. Newsreader serif for editorial gravitas; Geist sans for modern tooling. */
+
+    :root {
+      --bg: #fafaf9;
+      --surface: #ffffff;
+      --surface-hover: #fdfcfa;
+      --ink: #0c0a09;
+      --ink-muted: #57534e;
+      --ink-faint: #a8a29e;
+      --border: #e7e5e4;
+      --border-strong: #d6d3d1;
+
+      /* Verdict palette — ONLY chromatic colors in the design */
+      --v-true:         #15803d;
+      --v-mostly-true:  #65a30d;
+      --v-exaggerated:  #ca8a04;
+      --v-misleading:   #c2410c;
+      --v-false:        #991b1b;
+      --v-unverifiable: #44403c;
+
+      --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+      --max-w: 960px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── Status bar ─── thin terminal-style strip at the top */
+    .status-bar {
+      background: var(--ink);
+      color: #d6d3d1;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.25rem;
+    }
+    .status-bar .row {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .status-bar .live::before {
+      content: "●";
+      color: #4ade80;
+      margin-right: 0.45rem;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    .status-bar .stamp { margin-left: auto; color: #a8a29e; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    /* ─── Container ─── */
+    .wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* ─── Masthead ─── */
+    header.masthead {
+      padding: 3.25rem 0 2.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .masthead-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .wordmark {
+      font-family: var(--serif);
+      font-size: 2.6rem;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .wordmark .dot { color: var(--v-false); } /* the only chrome accent: a red period */
+    .tagline {
+      margin-top: 0.65rem;
+      color: var(--ink-muted);
+      font-size: 0.95rem;
+      max-width: 42ch;
+    }
+    nav.top-nav {
+      display: flex;
+      gap: 1.4rem;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-top: 0.85rem;
+    }
+    nav.top-nav a {
+      color: var(--ink-muted);
+      transition: color 120ms ease;
+      padding: 0.25rem 0;
+      border-bottom: 1px solid transparent;
+    }
+    nav.top-nav a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    /* ─── Section labels ─── */
+    .section-head {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin: 2.75rem 0 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .section-head .sub { color: var(--ink-faint); }
+
+    /* ─── Aggregate stats grid ─── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      margin-bottom: 1rem;
+    }
+    .stat {
+      padding: 1.4rem 1.6rem;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat .num {
+      font-family: var(--serif);
+      font-size: 2.9rem;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.025em;
+    }
+    .stat .num .unit {
+      font-size: 1.5rem;
+      color: var(--ink-muted);
+      margin-left: 0.05rem;
+    }
+    .stat .lbl {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--ink-muted);
+      margin-top: 0.6rem;
+    }
+
+    /* ─── Aggregate verdict bar ─── */
+    .agg {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+    }
+    .agg-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--ink-muted);
+      margin-bottom: 0.85rem;
+    }
+    .agg-bar {
+      display: flex;
+      height: 34px;
+      overflow: hidden;
+    }
+    .agg-bar .seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      transition: filter 200ms ease;
+    }
+    .agg-bar .seg:hover { filter: brightness(1.12); }
+
+    .agg-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1.4rem;
+      margin-top: 1rem;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .swatch {
+      width: 8px;
+      height: 8px;
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+    .legend-item .ct {
+      color: var(--ink);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .legend-item.zero .ct,
+    .legend-item.zero { color: var(--ink-faint); }
+
+    /* ─── Report list ─── */
+    .reports { display: flex; flex-direction: column; }
+    .report {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      padding: 1.6rem;
+      transition: background 150ms ease;
+      display: block;
+      color: inherit;
+    }
+    .report:last-child { border-bottom: 1px solid var(--border); }
+    .report:hover { background: var(--surface-hover); }
+
+    .report-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 1.1rem;
+      flex-wrap: wrap;
+    }
+    .report-headline {
+      font-family: var(--serif);
+      font-size: 1.7rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--ink);
+    }
+    .report-meta {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-muted);
+      margin-top: 0.5rem;
+    }
+    .report-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+    .verdict-pill {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .verdict-pill .label {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      line-height: 1.1;
+      display: block;
+    }
+    .verdict-pill .label.neutral { color: var(--ink); }
+    .verdict-pill .ratio {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-top: 0.35rem;
+    }
+
+    .report-bar {
+      display: flex;
+      height: 6px;
+      overflow: hidden;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .report-counts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.4rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+    .report-counts .ct {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .report-counts .ct .n {
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .report-cta {
+      margin-top: 1.1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .report-cta .src { color: var(--ink-faint); }
+    .report-cta .read {
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 200ms ease;
+    }
+    .report:hover .report-cta .read { gap: 0.7rem; }
+
+    /* ─── Footer ─── */
+    footer.foot {
+      margin-top: 4rem;
+      padding: 1.5rem 0 2.5rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer.foot a {
+      color: var(--ink);
+      border-bottom: 1px solid var(--border-strong);
+      padding-bottom: 1px;
+    }
+
+    /* ─── Verdict color utilities ─── */
+    .v-true         { background: var(--v-true); }
+    .v-mostly-true  { background: var(--v-mostly-true); }
+    .v-exaggerated  { background: var(--v-exaggerated); }
+    .v-misleading   { background: var(--v-misleading); }
+    .v-false        { background: var(--v-false); }
+    .v-unverifiable { background: var(--v-unverifiable); }
+
+    .vt-true         { color: var(--v-true); }
+    .vt-mostly-true  { color: var(--v-mostly-true); }
+    .vt-exaggerated  { color: var(--v-exaggerated); }
+    .vt-misleading   { color: var(--v-misleading); }
+    .vt-false        { color: var(--v-false); }
+    .vt-unverifiable { color: var(--v-unverifiable); }
+
+    /* ─── Page-load choreography ─── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .stats, .agg, .report {
+      animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    }
+    .stats   { animation-delay: 50ms; }
+    .agg     { animation-delay: 130ms; }
+    .report:nth-of-type(1) { animation-delay: 240ms; }
+    .report:nth-of-type(2) { animation-delay: 320ms; }
+    .report:nth-of-type(3) { animation-delay: 400ms; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 700px) {
+      .wordmark { font-size: 2rem; }
+      .stats { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 1.1rem 1.3rem; }
+      .stat:last-child { border-bottom: none; }
+      .stat .num { font-size: 2.4rem; }
+      .report-top { flex-direction: column; gap: 0.85rem; }
+      .verdict-pill { text-align: left; }
+      header.masthead { padding: 2.25rem 0 1.5rem; }
+      .masthead-row { flex-direction: column; gap: 0.5rem; }
+      nav.top-nav { padding-top: 0.5rem; }
+      .status-bar .stamp { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Status bar: signals "monitoring tool", builds trust through transparency -->
+<div class="status-bar">
+  <div class="row">
+    <span class="live">Operational</span>
+    <span>Pipeline v0.2.0</span>
+    <span>4 Models</span>
+    <span class="stamp">Updated 2026-04-20 22:38 UTC</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap masthead-row">
+    <div>
+      <div class="wordmark">truth-bot<span class="dot">.</span></div>
+      <p class="tagline">Automated political fact-checking with multi-model consensus analysis.</p>
+    </div>
+    <nav class="top-nav">
+      <a href="./index.html">Reports</a>
+      <a href="./about.html">About</a>
+      <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Aggregate findings -->
+  <div class="section-head">
+    <span>Aggregate findings</span>
+    <span class="sub">All time</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="num">10</div>
+      <div class="lbl">Claims evaluated</div>
+    </div>
+    <div class="stat">
+      <div class="num">2</div>
+      <div class="lbl">Speeches analyzed</div>
+    </div>
+    <div class="stat">
+      <div class="num">50<span class="unit">%</span></div>
+      <div class="lbl">Model consensus rate</div>
+    </div>
+  </div>
+
+  <div class="agg">
+    <div class="agg-label">Verdict distribution</div>
+    <div class="agg-bar" role="img" aria-label="Verdict distribution: 1 True, 2 Mostly True, 1 Exaggerated, 5 False, 1 Unverifiable">
+      <div class="seg v-true"         style="width:10%" title="True: 1">1</div>
+      <div class="seg v-mostly-true"  style="width:20%" title="Mostly True: 2">2</div>
+      <div class="seg v-exaggerated"  style="width:10%" title="Exaggerated: 1">1</div>
+      <div class="seg v-false"        style="width:50%" title="False: 5">5</div>
+      <div class="seg v-unverifiable" style="width:10%" title="Unverifiable: 1">1</div>
+    </div>
+    <div class="agg-legend">
+      <div class="legend-item"><span class="swatch v-true"></span>True <span class="ct">1</span></div>
+      <div class="legend-item"><span class="swatch v-mostly-true"></span>Mostly True <span class="ct">2</span></div>
+      <div class="legend-item"><span class="swatch v-exaggerated"></span>Exaggerated <span class="ct">1</span></div>
+      <div class="legend-item zero"><span class="swatch v-misleading"></span>Misleading <span class="ct">0</span></div>
+      <div class="legend-item"><span class="swatch v-false"></span>False <span class="ct">5</span></div>
+      <div class="legend-item"><span class="swatch v-unverifiable"></span>Unverifiable <span class="ct">1</span></div>
+    </div>
+  </div>
+
+  <!-- Recent reports -->
+  <div class="section-head">
+    <span>Recent reports</span>
+    <span class="sub">Newest first</span>
+  </div>
+
+  <div class="reports">
+
+    <a href="reports/2026-03-04-donald-trump.html" class="report">
+      <div class="report-top">
+        <div>
+          <div class="report-headline">Donald Trump</div>
+          <div class="report-meta">
+            <span>2026-03-04</span><span class="sep">·</span>
+            <span>State of the Union</span><span class="sep">·</span>
+            <span>U.S. Capitol</span>
+          </div>
+        </div>
+        <div class="verdict-pill">
+          <span class="label vt-false">Largely False</span>
+          <span class="ratio">3 of 5 claims</span>
+        </div>
+      </div>
+      <div class="report-bar">
+        <div class="seg v-true"        style="width:20%"></div>
+        <div class="seg v-exaggerated" style="width:20%"></div>
+        <div class="seg v-false"       style="width:60%"></div>
+      </div>
+      <div class="report-counts">
+        <div class="ct"><span class="swatch v-true"></span>True <span class="n">1</span></div>
+        <div class="ct"><span class="swatch v-exaggerated"></span>Exaggerated <span class="n">1</span></div>
+        <div class="ct"><span class="swatch v-false"></span>False <span class="n">3</span></div>
+      </div>
+      <div class="report-cta">
+        <span class="src">5 claims · 4 models</span>
+        <span class="read">Read full report →</span>
+      </div>
+    </a>
+
+    <a href="reports/2026-03-04-donald-trump.html" class="report">
+      <div class="report-top">
+        <div>
+          <div class="report-headline">Donald Trump</div>
+          <div class="report-meta">
+            <span>2026-03-04</span><span class="sep">·</span>
+            <span>State of the Union</span><span class="sep">·</span>
+            <span>U.S. Capitol</span>
+          </div>
+        </div>
+        <div class="verdict-pill">
+          <span class="label neutral">Mixed</span>
+          <span class="ratio">No majority verdict</span>
+        </div>
+      </div>
+      <div class="report-bar">
+        <div class="seg v-mostly-true"  style="width:40%"></div>
+        <div class="seg v-false"        style="width:40%"></div>
+        <div class="seg v-unverifiable" style="width:20%"></div>
+      </div>
+      <div class="report-counts">
+        <div class="ct"><span class="swatch v-mostly-true"></span>Mostly True <span class="n">2</span></div>
+        <div class="ct"><span class="swatch v-false"></span>False <span class="n">2</span></div>
+        <div class="ct"><span class="swatch v-unverifiable"></span>Unverifiable <span class="n">1</span></div>
+      </div>
+      <div class="report-cta">
+        <span class="src">5 claims · 4 models</span>
+        <span class="read">Read full report →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer class="foot">
+    <span>truth-bot · pipeline v0.2.0</span>
+    <span>Source: <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">github.com/aRealGem/Truth-bot</a></span>
+  </footer>
+
+</main>
+
+</body>
+</html>

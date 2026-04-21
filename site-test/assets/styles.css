@@ -1,150 +1,1254 @@
-/* truth-bot static site — newspaper/editorial aesthetic */
+/* ─────────────────────────────────────────────────────────────────────
+   truth-bot — consolidated stylesheet
+   Accountability dashboard aesthetic. Verdict colors are sacred —
+   they are the ONLY chromatic colors in the design.
+
+   Sections:
+     [00] Design tokens
+     [01] Reset & base
+     [02] Status bar
+     [03] Layout primitives
+     [04] Masthead (full + compact variants)
+     [05] Section heads
+     [06] Index page — aggregate stats & verdict bar
+     [07] Index page — report cards
+     [08] Report page — speech hero
+     [09] Report page — verdict panel
+     [10] Report page — Truthy column & speech bubble
+     [11] Report page — TOC
+     [12] Report page — claim cards
+     [13] Report page — caveat callout
+     [14] Report page — model verdict matrix
+     [15] Report page — expandable reasoning
+     [16] Report page — evidence list
+     [17] Report page — claim footer & methodology
+     [18] Footer
+     [19] Verdict color utilities
+     [20] Truthy SVG internal animations
+     [21] Page-load choreography
+     [22] Responsive
+   ───────────────────────────────────────────────────────────────────── */
+
+
+/* [00] Design tokens ─────────────────────────────────────────────────── */
 :root {
-  --paper: #f8f6f0;
-  --ink: #1a1a1a;
-  --ink-light: #555;
-  --rule: #c8c0b0;
-  --accent: #8b0000;
-  --link: #1a4a8a;
-  --chip-r: 3px;
-  --max-w: 900px;
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-hover: #fdfcfa;
+  --surface-warm: #faf8f3;
+  --ink: #0c0a09;
+  --ink-muted: #57534e;
+  --ink-faint: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+
+  /* Verdict palette — the ONLY chromatic colors in the design.
+     Change one variable, every bar / pill / swatch / dissent flag /
+     Truthy bubble tint updates. Never hardcode these hex values
+     anywhere else in the codebase. */
+  --v-true:         #15803d;
+  --v-mostly-true:  #65a30d;
+  --v-exaggerated:  #ca8a04;
+  --v-misleading:   #c2410c;
+  --v-false:        #991b1b;
+  --v-unverifiable: #44403c;
+
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono:  'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --max-w: 960px;
 }
+
+
+/* [01] Reset & base ──────────────────────────────────────────────────── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; }
-body { background: var(--paper); color: var(--ink);
-       font-family: Georgia, "Times New Roman", serif;
-       line-height: 1.65; padding: 0 1rem; }
-a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
-h1,h2,h3,h4 { font-family: Georgia, serif; font-weight: 700; line-height: 1.25; }
-code, pre { font-family: "Courier New", monospace; font-size: 0.85rem; }
-pre { background: #f0ede6; border: 1px solid var(--rule); padding: 1rem;
-      overflow-x: auto; white-space: pre-wrap; border-radius: 4px; }
+html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: 1.5rem; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { color: inherit; text-decoration: none; }
 
-/* Layout */
-.wrap { max-width: var(--max-w); margin: 0 auto; padding: 1.5rem 0; }
-.rule { border: none; border-top: 2px solid var(--ink); margin: 1.5rem 0; }
-.rule-light { border: none; border-top: 1px solid var(--rule); margin: 1rem 0; }
 
-/* Masthead */
-header.masthead { text-align: center; padding: 2rem 0 1.5rem;
-                   border-bottom: 3px double var(--ink); margin-bottom: 2rem; }
-header.masthead h1 { font-size: 2.8rem; letter-spacing: -0.02em; color: var(--accent); }
-header.masthead .tagline { color: var(--ink-light); font-style: italic; margin-top: 0.3rem; }
-nav.top-nav { margin-top: 0.75rem; font-family: system-ui, sans-serif; font-size: 0.85rem; }
-nav.top-nav a { margin: 0 0.6rem; color: var(--ink-light); }
+/* [02] Status bar ────────────────────────────────────────────────────── */
+/* Thin terminal-style strip at the top. Signals "monitoring tool". */
+.status-bar {
+  background: var(--ink);
+  color: #d6d3d1;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.25rem;
+}
+.status-bar .row {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.status-bar .live::before {
+  content: "●";
+  color: #4ade80;
+  margin-right: 0.45rem;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.status-bar .stamp { margin-left: auto; color: #a8a29e; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
 
-/* Verdict chips */
-.chip { display: inline-block; padding: 0.2rem 0.55rem; border-radius: var(--chip-r);
-         font-family: system-ui, sans-serif; font-weight: 600; white-space: nowrap; }
-.verdict-chip { font-size: 0.85rem; }
 
-/* Stacked bar */
-.stacked-bar { display: flex; height: 24px; border-radius: 3px; overflow: hidden;
-                border: 1px solid var(--rule); margin: 0.5rem 0; }
-.bar-seg { display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 0.7rem; font-weight: 700;
-            font-family: system-ui, sans-serif; overflow: hidden; min-width: 0; }
-.bar-seg span { padding: 0 2px; }
+/* [03] Layout primitives ─────────────────────────────────────────────── */
+.wrap {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
 
-/* Stats grid */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-               gap: 1rem; margin: 1rem 0; }
-.stat-box { background: #fff; border: 1px solid var(--rule); border-radius: 4px;
-             padding: 0.75rem 1rem; text-align: center; }
-.stat-box .num { font-size: 2rem; font-weight: 700; color: var(--accent);
-                  font-family: system-ui, sans-serif; line-height: 1; }
-.stat-box .lbl { font-size: 0.75rem; color: var(--ink-light);
-                  font-family: system-ui, sans-serif; margin-top: 0.2rem; }
 
-/* Report card (index) */
-.report-card { background: #fff; border: 1px solid var(--rule); border-radius: 4px;
-                padding: 1rem 1.25rem; margin-bottom: 1rem; }
-.report-card h3 { font-size: 1.05rem; margin-bottom: 0.2rem; }
-.report-card .meta { font-size: 0.8rem; color: var(--ink-light);
-                      font-family: system-ui, sans-serif; margin-bottom: 0.5rem; }
-.chip-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+/* [04] Masthead ──────────────────────────────────────────────────────── */
+/* Two variants: .masthead (full, used on index) and the compact form
+   inside report pages with .wordmark-sm + .breadcrumb. */
+header.masthead {
+  padding: 3.25rem 0 2.25rem;
+  border-bottom: 1px solid var(--border);
+}
 
-/* Claim block */
-.claim-block { background: #fff; border: 1px solid var(--rule); border-radius: 4px;
-                padding: 1.25rem; margin-bottom: 1.5rem; }
-.claim-text { font-size: 1.08rem; font-weight: 600; margin-bottom: 0.75rem;
-               line-height: 1.5; }
-.claim-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
-               margin-bottom: 0.75rem; }
-.claim-context { font-size: 0.85rem; color: var(--ink-light); font-style: italic;
-                  border-left: 3px solid var(--rule); padding-left: 0.75rem;
-                  margin: 0.5rem 0 0.75rem; }
+/* Full masthead (index page) */
+.masthead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.wordmark {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--ink);
+}
+/* The lone chrome accent: a red period after "truth-bot". */
+.wordmark .dot { color: var(--v-false); }
+.tagline {
+  margin-top: 0.65rem;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+  max-width: 42ch;
+}
 
-/* Caveats — PROMINENT, never hidden */
-.caveats { background: #fffde7; border: 1px solid #f9a825; border-radius: 4px;
-             padding: 0.6rem 0.9rem; margin: 0.6rem 0; font-size: 0.88rem; }
-.caveats .cav-label { font-weight: 700; font-family: system-ui, sans-serif;
-                        color: #e65100; margin-bottom: 0.25rem; font-size: 0.78rem;
-                        text-transform: uppercase; letter-spacing: 0.04em; }
+/* Top nav (index page) */
+nav.top-nav {
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-top: 0.85rem;
+}
+nav.top-nav a {
+  color: var(--ink-muted);
+  transition: color 120ms ease;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+nav.top-nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
 
-/* Model verdict row */
-.model-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-              gap: 0.5rem; margin: 0.75rem 0; }
-.model-card { border: 1px solid var(--rule); border-radius: 4px; padding: 0.6rem 0.75rem;
-               font-family: system-ui, sans-serif; font-size: 0.82rem; }
-.model-card .model-name { font-weight: 700; color: var(--ink-light); font-size: 0.75rem;
-                            text-transform: uppercase; letter-spacing: 0.03em;
-                            margin-bottom: 0.3rem; }
-.model-card .model-verdict { margin-bottom: 0.25rem; }
+/* Compact masthead override (report pages add .compact OR set padding inline).
+   When a report page uses the smaller wordmark + breadcrumb pattern,
+   reduce the masthead padding via the .mast-row container. */
+.mast-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+header.masthead:has(.mast-row) {
+  padding: 1.5rem 0 1.25rem;
+}
+.wordmark-sm {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.wordmark-sm .dot { color: var(--v-false); }
+.breadcrumb {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+.breadcrumb a { color: var(--ink-muted); transition: color 120ms ease; }
+.breadcrumb a:hover { color: var(--ink); }
+.breadcrumb .arrow { margin-right: 0.4rem; }
 
-/* Expandable sections */
-.expandable { margin-top: 0.5rem; }
-.expand-btn { background: none; border: 1px solid var(--rule); border-radius: 3px;
-               cursor: pointer; font-family: system-ui, sans-serif; font-size: 0.78rem;
-               color: var(--link); padding: 0.2rem 0.6rem; }
-.expand-btn:hover { background: #f0ede6; }
-.expand-content { display: none; margin-top: 0.5rem; }
-.expand-content.open { display: block; }
 
-/* Model reasoning expandable */
-.model-reasoning { margin-top: 0.75rem; }
-.reasoning-block { border: 1px solid var(--rule); border-radius: 4px;
-                    padding: 0.75rem; margin-bottom: 0.5rem;
-                    font-size: 0.87rem; background: #faf9f6; }
-.reasoning-block .r-model { font-weight: 700; font-family: system-ui, sans-serif;
-                              font-size: 0.75rem; text-transform: uppercase;
-                              color: var(--ink-light); margin-bottom: 0.4rem; }
-.reasoning-block .r-text { margin-bottom: 0.5rem; }
+/* [05] Section heads ─────────────────────────────────────────────────── */
+.section-head {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin: 2.75rem 0 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.section-head .sub { color: var(--ink-faint); }
 
-/* Evidence list */
-.evidence-list { list-style: none; margin: 0.3rem 0; padding: 0; }
-.evidence-list li { margin: 0.2rem 0; font-size: 0.82rem;
-                     font-family: system-ui, sans-serif; display: flex;
-                     align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 
-/* About page */
-.tier-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
-.tier-table th { background: var(--ink); color: #fff; padding: 0.4rem 0.6rem;
-                  text-align: left; font-family: system-ui, sans-serif; }
-.tier-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rule); }
-.tier-table tr:nth-child(even) td { background: #f0ede6; }
+/* [06] Index page — aggregate stats & verdict bar ────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  margin-bottom: 1rem;
+}
+.stat {
+  padding: 1.4rem 1.6rem;
+  border-right: 1px solid var(--border);
+}
+.stat:last-child { border-right: none; }
+.stat .num {
+  font-family: var(--serif);
+  font-size: 2.9rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+}
+.stat .num .unit {
+  font-size: 1.5rem;
+  color: var(--ink-muted);
+  margin-left: 0.05rem;
+}
+.stat .lbl {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  margin-top: 0.6rem;
+}
 
-/* Footer */
-footer { border-top: 2px solid var(--ink); margin-top: 3rem; padding: 1rem 0;
-          font-size: 0.78rem; color: var(--ink-light); font-family: system-ui, sans-serif;
-          display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
+/* Aggregate verdict bar (index page hero) */
+.agg {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.4rem 1.6rem;
+}
+.agg-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  margin-bottom: 0.85rem;
+}
+.agg-bar {
+  display: flex;
+  height: 34px;
+  overflow: hidden;
+}
+.agg-bar .seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: filter 200ms ease;
+}
+.agg-bar .seg:hover { filter: brightness(1.12); }
 
-/* Breadcrumb */
-.breadcrumb { font-family: system-ui, sans-serif; font-size: 0.82rem;
-               color: var(--ink-light); margin-bottom: 1rem; }
-.breadcrumb a { color: var(--link); }
+.agg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.4rem;
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.legend-item.zero { color: var(--ink-faint); }
+.swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+.legend-item .ct {
+  color: var(--ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.legend-item.zero .ct { color: var(--ink-faint); }
 
-/* Permalink */
-.permalink { font-family: system-ui, sans-serif; font-size: 0.75rem;
-              color: var(--ink-light); margin-top: 0.5rem; }
 
-/* dim text */
-.dim { color: var(--ink-light); font-size: 0.85rem; font-family: system-ui, sans-serif; }
+/* [07] Index page — report cards ─────────────────────────────────────── */
+.reports { display: flex; flex-direction: column; }
+.report {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  padding: 1.6rem;
+  transition: background 150ms ease;
+  display: block;
+  color: inherit;
+}
+.report:last-child { border-bottom: 1px solid var(--border); }
+.report:hover { background: var(--surface-hover); }
 
-/* Responsive */
-@media (max-width: 600px) {
-  header.masthead h1 { font-size: 1.9rem; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .model-row { grid-template-columns: 1fr 1fr; }
+.report-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+.report-headline {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.report-meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  margin-top: 0.5rem;
+}
+.report-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+.verdict-pill {
+  text-align: right;
+  flex-shrink: 0;
+}
+.verdict-pill .label {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  display: block;
+}
+.verdict-pill .label.neutral { color: var(--ink); }
+.verdict-pill .ratio {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-top: 0.35rem;
+}
+
+/* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
+.report-bar {
+  display: flex;
+  height: 6px;
+  overflow: hidden;
+  margin: 0.5rem 0 1rem;
+}
+.report-bar .seg { transition: filter 200ms ease; }
+
+.report-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+}
+.report-counts .ct {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.report-counts .ct .n {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.report-cta {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.report-cta .src { color: var(--ink-faint); }
+.report-cta .read {
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: gap 200ms ease;
+}
+.report:hover .report-cta .read { gap: 0.7rem; }
+
+
+/* [08] Report page — speech hero ─────────────────────────────────────── */
+.hero { padding: 2.5rem 0 1rem; }
+.speaker-line {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 0.75rem;
+}
+.speech-title {
+  font-family: var(--serif);
+  font-size: 3rem;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.speech-meta {
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+}
+.speech-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+
+/* [09] Report page — verdict panel ───────────────────────────────────── */
+.verdict-panel {
+  margin-top: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.vp-headline {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  align-items: stretch;
+}
+.vp-text-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+  min-width: 0;
+}
+.vp-verdict {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+.vp-verdict.neutral { color: var(--ink); }
+.vp-ratio {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-top: 0.5rem;
+}
+.vp-stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.vp-stat-num {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.vp-stat-lbl {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  margin-top: 0.4rem;
+}
+
+/* Big verdict bar inside the panel */
+.vp-bar-wrap { padding: 1.5rem 1.75rem; }
+.vp-bar {
+  display: flex;
+  height: 38px;
+  overflow: hidden;
+}
+.vp-bar .seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: filter 200ms ease;
+}
+.vp-bar .seg:hover { filter: brightness(1.12); }
+.vp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin-top: 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+
+/* Source row at the bottom of the verdict panel */
+.source-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.75rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.source-row a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+  transition: border-color 150ms ease;
+}
+.source-row a:hover { border-bottom-color: var(--ink); }
+.source-row .lab { color: var(--ink-faint); margin-right: 0.5rem; }
+
+
+/* [10] Report page — Truthy column & speech bubble ───────────────────── */
+.vp-truthy-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px;
+}
+.truthy-frame {
+  position: relative;
+  cursor: pointer;
+  transition: transform 200ms ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.truthy-frame:hover { transform: translateY(-2px); }
+.truthy-frame:active { transform: translateY(0); }
+.truthy-tap-hint {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.45rem;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.truthy-frame:hover .truthy-tap-hint { opacity: 1; }
+.truthy-tap-hint .icon { width: 8px; height: 8px; }
+
+/* Editorial speech bubble — Truthy's voice in Newsreader italic.
+   Tail points up at Truthy. Border tints to match mood. */
+.truthy-bubble {
+  position: relative;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  padding: 0.7rem 1rem;
+  max-width: 240px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--ink);
+  text-align: center;
+}
+.truthy-bubble::before,
+.truthy-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+.truthy-bubble::before {
+  top: -9px;
+  border-bottom: 8px solid var(--border);
+}
+.truthy-bubble::after {
+  top: -7px;
+  border-bottom: 8px solid var(--surface-warm);
+}
+.truthy-bubble.is-true { border-color: rgba(21, 128, 61, 0.3); }
+.truthy-bubble.is-true::before { border-bottom-color: rgba(21, 128, 61, 0.3); }
+.truthy-bubble.is-iffy { border-color: rgba(202, 138, 4, 0.4); }
+.truthy-bubble.is-iffy::before { border-bottom-color: rgba(202, 138, 4, 0.4); }
+.truthy-bubble.is-lie { border-color: rgba(153, 27, 27, 0.3); }
+.truthy-bubble.is-lie::before { border-bottom-color: rgba(153, 27, 27, 0.3); }
+
+
+/* [11] Report page — TOC ─────────────────────────────────────────────── */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0;
+}
+.toc-item {
+  display: grid;
+  grid-template-columns: 2.5rem auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 120ms ease;
+  color: inherit;
+}
+.toc-item:last-child { border-bottom: none; }
+.toc-item:hover { background: var(--surface-warm); }
+.toc-num {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.toc-pill {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.toc-text {
+  font-size: 0.92rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.toc-jump {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+
+
+/* [12] Report page — claim cards ─────────────────────────────────────── */
+.claim {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+  scroll-margin-top: 1rem;
+}
+.claim-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-warm);
+}
+.claim-num {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.claim-pill {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  padding: 0.25rem 0.7rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+.claim-body { padding: 1.75rem 1.75rem 1.5rem; }
+.claim-quote {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--border-strong);
+}
+.claim-context {
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+}
+.claim-context .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+
+/* [13] Report page — caveat callout ──────────────────────────────────── */
+/* Always visible, never collapsible. Editorial annotation style. */
+.caveat {
+  margin: 1.5rem 0 0;
+  background: #fefbf3;
+  border-left: 3px solid var(--v-exaggerated);
+  padding: 0.9rem 1.1rem;
+}
+.caveat-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--v-exaggerated);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.caveat-text {
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+
+/* [14] Report page — model verdict matrix ────────────────────────────── */
+.models { margin-top: 1.75rem; }
+.models-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.65rem;
+}
+.models-label,
+.models-agreement {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+}
+.models-agreement .num {
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+}
+.model {
+  padding: 0.75rem 0.85rem;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--surface);
+  position: relative;
+}
+.model:last-child { border-right: none; }
+/* Dissenting model: warm bg + small DISSENT tag in the corner */
+.model.dissent { background: #fefbf3; }
+.model.dissent::after {
+  content: "DISSENT";
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--v-exaggerated);
+  font-weight: 600;
+}
+.model-name {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.model-verdict {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+
+/* [15] Report page — expandable reasoning (native <details>) ─────────── */
+details.reasoning {
+  margin-top: 1rem;
+  border: 1px solid var(--border);
+}
+details.reasoning > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.7rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 120ms ease;
+}
+details.reasoning > summary::-webkit-details-marker { display: none; }
+details.reasoning > summary:hover { background: var(--surface-warm); }
+details.reasoning > summary::before {
+  content: "▸";
+  transition: transform 200ms ease;
+  color: var(--ink-faint);
+  display: inline-block;
+}
+details.reasoning[open] > summary::before { transform: rotate(90deg); }
+.reasoning-body { padding: 0 1rem 1rem; }
+.r-block {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+.r-block:first-child { border-top: none; padding-top: 0.5rem; }
+.r-model {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+}
+.r-model .v {
+  padding: 0.1rem 0.45rem;
+  border-radius: 2px;
+  color: #fff;
+  letter-spacing: 0.06em;
+}
+.r-text { color: var(--ink); }
+
+
+/* [16] Report page — evidence list ───────────────────────────────────── */
+.evidence { margin-top: 1.5rem; }
+.evidence-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 0.55rem;
+}
+.evidence-list { list-style: none; }
+.evidence-list li {
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+.evidence-list li:first-child { border-top: none; }
+.evidence-list .ev-mark {
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  font-size: 0.75rem;
+}
+.evidence-list a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+.evidence-list a:hover { border-bottom-color: var(--ink); }
+.evidence-list .ev-src {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-left: 0.5rem;
+}
+/* Source-tier badges (preserved from existing schema) */
+.evidence-tier {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.35rem;
+  color: #fff;
+  border-radius: 1px;
+  font-weight: 600;
+  margin-right: 0.4rem;
+}
+.tier-gov   { background: #1565c0; }
+.tier-news  { background: #4a148c; }
+.tier-fc    { background: #e65100; }
+.tier-other { background: #546e7a; }
+
+
+/* [17] Report page — claim footer & methodology ──────────────────────── */
+.claim-foot {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.permalink {
+  color: var(--ink-faint);
+  transition: color 120ms ease;
+}
+.permalink:hover { color: var(--ink); }
+.permalink::before {
+  content: "#";
+  margin-right: 0.15rem;
+  color: var(--ink-faint);
+}
+
+.methodology {
+  margin-top: 3rem;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+.methodology strong { color: var(--ink); font-weight: 600; }
+.methodology a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+
+/* [18] Footer ────────────────────────────────────────────────────────── */
+footer.foot {
+  margin-top: 4rem;
+  padding: 1.5rem 0 2.5rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+footer.foot a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+
+
+/* [19] Verdict color utilities ───────────────────────────────────────── */
+/* Background paint */
+.v-true         { background: var(--v-true); }
+.v-mostly-true  { background: var(--v-mostly-true); }
+.v-exaggerated  { background: var(--v-exaggerated); }
+.v-misleading   { background: var(--v-misleading); }
+.v-false        { background: var(--v-false); }
+.v-unverifiable { background: var(--v-unverifiable); }
+/* Text paint */
+.vt-true         { color: var(--v-true); }
+.vt-mostly-true  { color: var(--v-mostly-true); }
+.vt-exaggerated  { color: var(--v-exaggerated); }
+.vt-misleading   { color: var(--v-misleading); }
+.vt-false        { color: var(--v-false); }
+.vt-unverifiable { color: var(--v-unverifiable); }
+
+
+/* [20] Truthy SVG internal animations ────────────────────────────────── */
+/* These drive Truthy's idle behavior, eye states, and pose changes.
+   The state classes (.state-true, .state-iffy, .state-lie) are toggled
+   on the #mascot SVG by truthbot.js based on the data-mood attribute. */
+
+@keyframes idle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2.5px); }
+}
+#character {
+  animation: idle 4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes antenna-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50%      { transform: rotate(2deg); }
+}
+#antenna {
+  animation: antenna-sway 3s ease-in-out infinite;
+  transform-origin: 150px 62px;
+  transform-box: fill-box;
+}
+
+.eye-led { opacity: 0; transition: opacity 0.35s ease; }
+
+@keyframes true-happy-cycle {
+  0%, 70% { opacity: 1; }
+  78%, 88% { opacity: 0; }
+  96%, 100% { opacity: 1; }
+}
+@keyframes true-neutral-cycle {
+  0%, 70% { opacity: 0; }
+  78%, 88% { opacity: 1; }
+  96%, 100% { opacity: 0; }
+}
+@keyframes happy-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+.state-true .eye-happy {
+  animation:
+    true-happy-cycle 4s ease-in-out infinite,
+    happy-pulse 2.2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.state-true .eye-neutral { animation: true-neutral-cycle 4s ease-in-out infinite; }
+.state-iffy .eye-iffy { opacity: 1; }
+
+@keyframes sad-wander {
+  0%   { transform: translate(-4px, 0.5px); }
+  25%  { transform: translate(-3px, 2px); }
+  50%  { transform: translate( 4px, 2.5px); }
+  75%  { transform: translate( 3px, 1.2px); }
+  100% { transform: translate(-4px, 0.5px); }
+}
+.state-lie .eye-sad {
+  opacity: 1;
+  animation: sad-wander 4.2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.state-lie #eyeRightGroup .eye-sad { animation-delay: -1.3s; }
+
+.eye-shape {
+  transform-origin: center;
+  transform-box: fill-box;
+  transition: transform 0.09s ease-out;
+}
+#mascot.blinking .eye-shape { transform: scaleY(0.06); }
+
+@keyframes tear-fall {
+  0%   { transform: translateY(-4px); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateY(38px); opacity: 0; }
+}
+.state-lie #tearLeft,
+.state-lie #tearRight {
+  animation: tear-fall 2.2s ease-in infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.state-lie #tearRight { animation-delay: 0.7s; }
+#tearLeft, #tearRight { opacity: 0; }
+
+#armLeftSwing,
+#armRightSwing,
+#eyeLeftGroup,
+#eyeRightGroup,
+#headGroup,
+#bodyGroup,
+#clipboard {
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#led, #ledHalo { transition: fill 0.3s; }
+
+/* Triggered by JS when user clicks Truthy: brief LED flash */
+@keyframes ledFlash {
+  0%   { filter: brightness(1); }
+  30%  { filter: brightness(1.6) saturate(1.3); }
+  100% { filter: brightness(1); }
+}
+#mascot.speaking #led,
+#mascot.speaking #ledHalo {
+  animation: ledFlash 0.7s ease-out;
+}
+
+
+/* [21] Page-load choreography ────────────────────────────────────────── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Staggered reveal of major content blocks */
+.stats, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
+  animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+/* Index page stagger */
+.stats { animation-delay: 50ms; }
+.agg   { animation-delay: 130ms; }
+.reports .report:nth-of-type(1) { animation-delay: 240ms; }
+.reports .report:nth-of-type(2) { animation-delay: 320ms; }
+.reports .report:nth-of-type(3) { animation-delay: 400ms; }
+/* Report page stagger */
+.hero          { animation-delay: 60ms; }
+.verdict-panel { animation-delay: 140ms; }
+.toc           { animation-delay: 220ms; }
+
+
+/* [22] Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 740px) {
+  /* Masthead variants */
+  .wordmark { font-size: 2rem; }
+  header.masthead { padding: 2.25rem 0 1.5rem; }
+  .masthead-row { flex-direction: column; gap: 0.5rem; }
+  nav.top-nav { padding-top: 0.5rem; }
+
+  /* Status bar */
+  .status-bar .stamp { margin-left: 0; }
+
+  /* Index aggregate stats — single column */
+  .stats { grid-template-columns: 1fr; }
+  .stat {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 1.3rem;
+  }
+  .stat:last-child { border-bottom: none; }
+  .stat .num { font-size: 2.4rem; }
+
+  /* Report card layout collapses verdict pill below headline */
+  .report-top { flex-direction: column; gap: 0.85rem; }
+  .verdict-pill { text-align: left; }
+
+  /* Speech hero */
+  .speech-title { font-size: 2.1rem; }
+
+  /* Verdict panel: Truthy goes inline next to bubble (bubble tail re-points) */
+  .vp-headline {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+  .vp-truthy-col {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    min-width: 0;
+  }
+  .vp-truthy-col .truthy-frame svg { width: 110px; height: 132px; }
+  .truthy-bubble {
+    max-width: none;
+    flex: 1;
+    text-align: left;
+  }
+  /* Re-point the bubble tail leftward toward Truthy */
+  .truthy-bubble::before,
+  .truthy-bubble::after {
+    left: -8px;
+    top: 1rem;
+    transform: none;
+    border-left: none;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+  .truthy-bubble::before { border-right: 8px solid var(--border); }
+  .truthy-bubble::after  { border-right: 8px solid var(--surface-warm); left: -7px; }
+  .truthy-bubble.is-true::before { border-right-color: rgba(21, 128, 61, 0.3); border-bottom-color: transparent; }
+  .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
+  .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
+
+  .vp-stats { gap: 1.25rem; }
+  .vp-bar-wrap, .source-row { padding-left: 1.25rem; padding-right: 1.25rem; }
+
+  /* Model grid stacks */
+  .model-grid { grid-template-columns: 1fr; }
+  .model {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .model:last-child { border-bottom: none; }
+
+  /* TOC compresses */
+  .toc-item { grid-template-columns: 2rem auto 1fr; }
+  .toc-jump { display: none; }
+  .toc-text { white-space: normal; }
+
+  /* Claim cards */
+  .claim-body { padding: 1.25rem; }
+  .claim-quote { font-size: 1.15rem; padding-left: 1rem; }
 }

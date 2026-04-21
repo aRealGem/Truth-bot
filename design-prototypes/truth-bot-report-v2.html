@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donald Trump · 2026 State of the Union — truth-bot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400;6..72,1,500&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+  <style>
+    /* truth-bot — individual report v2
+       Adds: Truthy McTruthface integrated as aggregate-avatar,
+             with editorial speech bubble + Web Audio droid sounds.
+       Preserves: all v1 design tokens, claim card pattern, TOC. */
+
+    :root {
+      --bg: #fafaf9;
+      --surface: #ffffff;
+      --surface-hover: #fdfcfa;
+      --surface-warm: #faf8f3;
+      --ink: #0c0a09;
+      --ink-muted: #57534e;
+      --ink-faint: #a8a29e;
+      --border: #e7e5e4;
+      --border-strong: #d6d3d1;
+
+      --v-true:         #15803d;
+      --v-mostly-true:  #65a30d;
+      --v-exaggerated:  #ca8a04;
+      --v-misleading:   #c2410c;
+      --v-false:        #991b1b;
+      --v-unverifiable: #44403c;
+
+      --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+      --max-w: 960px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: 1.5rem; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── Status bar ─── */
+    .status-bar {
+      background: var(--ink); color: #d6d3d1;
+      font-family: var(--mono); font-size: 0.7rem;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 0.55rem 1.25rem;
+    }
+    .status-bar .row {
+      max-width: var(--max-w); margin: 0 auto;
+      display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center;
+    }
+    .status-bar .live::before {
+      content: "●"; color: #4ade80; margin-right: 0.45rem;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    .status-bar .stamp { margin-left: auto; color: #a8a29e; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+    .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 1.25rem; }
+
+    header.masthead {
+      padding: 1.5rem 0 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .mast-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .wordmark-sm {
+      font-family: var(--serif); font-size: 1.4rem; font-weight: 500;
+      letter-spacing: -0.02em; color: var(--ink);
+    }
+    .wordmark-sm .dot { color: var(--v-false); }
+    .breadcrumb {
+      font-family: var(--mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted);
+    }
+    .breadcrumb a { color: var(--ink-muted); transition: color 120ms ease; }
+    .breadcrumb a:hover { color: var(--ink); }
+    .breadcrumb .arrow { margin-right: 0.4rem; }
+
+    /* ─── Hero ─── */
+    .hero { padding: 2.5rem 0 1rem; }
+    .speaker-line {
+      font-family: var(--mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--ink-muted); margin-bottom: 0.75rem;
+    }
+    .speech-title {
+      font-family: var(--serif); font-size: 3rem; font-weight: 500;
+      line-height: 1.05; letter-spacing: -0.03em; color: var(--ink);
+    }
+    .speech-meta {
+      margin-top: 1rem; font-family: var(--mono); font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-muted);
+    }
+    .speech-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+    /* ─── Verdict panel — now contains Truthy ─── */
+    .verdict-panel {
+      margin-top: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .vp-headline {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      padding: 1.75rem 1.75rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      align-items: stretch;
+    }
+    .vp-text-col { display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; min-width: 0; }
+    .vp-verdict {
+      font-family: var(--serif); font-size: 2.4rem; font-weight: 500;
+      letter-spacing: -0.025em; line-height: 1.05;
+    }
+    .vp-verdict.neutral { color: var(--ink); }
+    .vp-ratio {
+      font-family: var(--mono); font-size: 0.74rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--ink-muted); margin-top: 0.5rem;
+    }
+    .vp-stats {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      padding-top: 1rem; border-top: 1px solid var(--border);
+    }
+    .vp-stat-num {
+      font-family: var(--serif); font-size: 1.6rem; font-weight: 500;
+      letter-spacing: -0.02em; line-height: 1; color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+    .vp-stat-lbl {
+      font-family: var(--mono); font-size: 0.66rem;
+      text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--ink-muted); margin-top: 0.4rem;
+    }
+
+    /* ─── Truthy column (the personality slot) ─── */
+    .vp-truthy-col {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.75rem; min-width: 200px;
+    }
+    .truthy-frame {
+      position: relative;
+      cursor: pointer;
+      transition: transform 200ms ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .truthy-frame:hover { transform: translateY(-2px); }
+    .truthy-frame:active { transform: translateY(0); }
+    .truthy-tap-hint {
+      position: absolute;
+      bottom: -4px; right: -4px;
+      background: var(--ink); color: var(--bg);
+      font-family: var(--mono); font-size: 0.55rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.25rem 0.45rem; border-radius: 2px;
+      display: flex; align-items: center; gap: 0.3rem;
+      pointer-events: none;
+      opacity: 0; transition: opacity 200ms ease;
+    }
+    .truthy-frame:hover .truthy-tap-hint { opacity: 1; }
+    .truthy-tap-hint .icon { width: 8px; height: 8px; }
+
+    /* ─── Editorial speech bubble — Truthy's voice ─── */
+    .truthy-bubble {
+      position: relative;
+      background: var(--surface-warm);
+      border: 1px solid var(--border);
+      padding: 0.7rem 1rem;
+      max-width: 240px;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--ink);
+      text-align: center;
+    }
+    /* speech bubble tail pointing up at Truthy */
+    .truthy-bubble::before, .truthy-bubble::after {
+      content: ""; position: absolute;
+      left: 50%; transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+    }
+    .truthy-bubble::before {
+      top: -9px;
+      border-bottom: 8px solid var(--border);
+    }
+    .truthy-bubble::after {
+      top: -7px;
+      border-bottom: 8px solid var(--surface-warm);
+    }
+    .truthy-bubble.is-true { border-color: rgba(21, 128, 61, 0.3); }
+    .truthy-bubble.is-true::before { border-bottom-color: rgba(21, 128, 61, 0.3); }
+    .truthy-bubble.is-iffy { border-color: rgba(202, 138, 4, 0.4); }
+    .truthy-bubble.is-iffy::before { border-bottom-color: rgba(202, 138, 4, 0.4); }
+    .truthy-bubble.is-lie { border-color: rgba(153, 27, 27, 0.3); }
+    .truthy-bubble.is-lie::before { border-bottom-color: rgba(153, 27, 27, 0.3); }
+
+    /* ─── Verdict bar ─── */
+    .vp-bar-wrap { padding: 1.5rem 1.75rem; }
+    .vp-bar { display: flex; height: 38px; overflow: hidden; }
+    .vp-bar .seg {
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-family: var(--mono); font-size: 0.82rem;
+      font-weight: 500; transition: filter 200ms ease;
+    }
+    .vp-bar .seg:hover { filter: brightness(1.12); }
+    .vp-legend {
+      display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem;
+      margin-top: 1.1rem; font-family: var(--mono);
+      font-size: 0.74rem; color: var(--ink-muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.45rem; }
+    .legend-item.zero { color: var(--ink-faint); }
+    .swatch { width: 8px; height: 8px; border-radius: 1px; flex-shrink: 0; }
+    .legend-item .ct { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+    .legend-item.zero .ct { color: var(--ink-faint); }
+
+    .source-row {
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      padding: 1rem 1.75rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface-warm);
+      font-family: var(--mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .source-row a {
+      color: var(--ink); border-bottom: 1px solid var(--border-strong);
+      padding-bottom: 1px; transition: border-color 150ms ease;
+    }
+    .source-row a:hover { border-bottom-color: var(--ink); }
+    .source-row .lab { color: var(--ink-faint); margin-right: 0.5rem; }
+
+    /* ─── Section heads ─── */
+    .section-head {
+      font-family: var(--mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ink-muted); margin: 3rem 0 1rem;
+      padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .section-head .sub { color: var(--ink-faint); }
+
+    /* ─── TOC ─── */
+    .toc { background: var(--surface); border: 1px solid var(--border); padding: 0.5rem 0; }
+    .toc-item {
+      display: grid;
+      grid-template-columns: 2.5rem auto 1fr auto;
+      gap: 1rem; align-items: center;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 120ms ease;
+      color: inherit;
+    }
+    .toc-item:last-child { border-bottom: none; }
+    .toc-item:hover { background: var(--surface-warm); }
+    .toc-num {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--ink-faint); letter-spacing: 0.06em;
+      font-variant-numeric: tabular-nums;
+    }
+    .toc-pill {
+      font-family: var(--mono); font-size: 0.66rem;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: #fff; padding: 0.2rem 0.55rem;
+      border-radius: 2px; font-weight: 500; white-space: nowrap;
+    }
+    .toc-text {
+      font-size: 0.92rem; color: var(--ink);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .toc-jump { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); }
+
+    /* ─── Claim card ─── */
+    .claim {
+      background: var(--surface); border: 1px solid var(--border);
+      margin-bottom: 1.25rem; scroll-margin-top: 1rem;
+    }
+    .claim-head {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-warm);
+    }
+    .claim-num {
+      font-family: var(--mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--ink-muted); font-variant-numeric: tabular-nums;
+    }
+    .claim-pill {
+      font-family: var(--mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #fff; padding: 0.25rem 0.7rem;
+      border-radius: 2px; font-weight: 500;
+    }
+    .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
+    .claim-quote {
+      font-family: var(--serif); font-size: 1.4rem; font-weight: 400;
+      line-height: 1.4; letter-spacing: -0.012em; color: var(--ink);
+      padding-left: 1.25rem; border-left: 3px solid var(--border-strong);
+    }
+    .claim-context {
+      margin-top: 1rem; font-family: var(--mono); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-muted);
+    }
+    .claim-context .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+    .caveat {
+      margin: 1.5rem 0 0;
+      background: #fefbf3;
+      border-left: 3px solid var(--v-exaggerated);
+      padding: 0.9rem 1.1rem;
+    }
+    .caveat-label {
+      font-family: var(--mono); font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--v-exaggerated); font-weight: 600; margin-bottom: 0.35rem;
+    }
+    .caveat-text { font-size: 0.92rem; color: var(--ink); line-height: 1.55; }
+
+    /* ─── Models ─── */
+    .models { margin-top: 1.75rem; }
+    .models-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 0.65rem;
+    }
+    .models-label, .models-agreement {
+      font-family: var(--mono); font-size: 0.68rem;
+      text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-muted);
+    }
+    .models-agreement .num { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .model-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+    }
+    .model {
+      padding: 0.75rem 0.85rem; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 0.35rem;
+      background: var(--surface); position: relative;
+    }
+    .model:last-child { border-right: none; }
+    .model.dissent { background: #fefbf3; }
+    .model.dissent::after {
+      content: "DISSENT"; position: absolute; top: 0.5rem; right: 0.5rem;
+      font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.08em;
+      color: var(--v-exaggerated); font-weight: 600;
+    }
+    .model-name {
+      font-family: var(--mono); font-size: 0.66rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--ink-muted); font-weight: 500;
+    }
+    .model-verdict { font-size: 0.85rem; font-weight: 500; }
+
+    details.reasoning { margin-top: 1rem; border: 1px solid var(--border); }
+    details.reasoning > summary {
+      list-style: none; cursor: pointer; padding: 0.7rem 1rem;
+      font-family: var(--mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      display: flex; align-items: center; gap: 0.5rem;
+      transition: background 120ms ease;
+    }
+    details.reasoning > summary::-webkit-details-marker { display: none; }
+    details.reasoning > summary:hover { background: var(--surface-warm); }
+    details.reasoning > summary::before {
+      content: "▸"; transition: transform 200ms ease;
+      color: var(--ink-faint); display: inline-block;
+    }
+    details.reasoning[open] > summary::before { transform: rotate(90deg); }
+    .reasoning-body { padding: 0 1rem 1rem; }
+    .r-block {
+      padding: 0.85rem 0; border-top: 1px solid var(--border);
+      font-size: 0.88rem; line-height: 1.65;
+    }
+    .r-block:first-child { border-top: none; padding-top: 0.5rem; }
+    .r-model {
+      font-family: var(--mono); font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--ink-muted); font-weight: 600;
+      margin-bottom: 0.4rem;
+      display: flex; gap: 0.65rem; align-items: center;
+    }
+    .r-model .v {
+      padding: 0.1rem 0.45rem; border-radius: 2px;
+      color: #fff; letter-spacing: 0.06em;
+    }
+    .r-text { color: var(--ink); }
+
+    /* ─── Evidence ─── */
+    .evidence { margin-top: 1.5rem; }
+    .evidence-label {
+      font-family: var(--mono); font-size: 0.68rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--ink-muted); margin-bottom: 0.55rem;
+    }
+    .evidence-list { list-style: none; }
+    .evidence-list li {
+      padding: 0.55rem 0; border-top: 1px solid var(--border);
+      display: flex; gap: 0.65rem; align-items: baseline;
+      font-size: 0.88rem; line-height: 1.4;
+    }
+    .evidence-list li:first-child { border-top: none; }
+    .evidence-list .ev-mark { font-family: var(--mono); color: var(--ink-faint); font-size: 0.75rem; }
+    .evidence-list a {
+      color: var(--ink); border-bottom: 1px solid var(--border-strong); padding-bottom: 1px;
+    }
+    .evidence-list a:hover { border-bottom-color: var(--ink); }
+    .evidence-list .ev-src {
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--ink-faint); text-transform: uppercase;
+      letter-spacing: 0.06em; margin-left: 0.5rem;
+    }
+    .evidence-tier {
+      font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.05em; padding: 0.1rem 0.35rem;
+      color: #fff; border-radius: 1px; font-weight: 600;
+      margin-right: 0.4rem;
+    }
+    .tier-gov { background: #1565c0; }
+    .tier-news { background: #4a148c; }
+    .tier-fc { background: #e65100; }
+    .tier-other { background: #546e7a; }
+
+    .claim-foot {
+      margin-top: 1.5rem; padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--ink-muted); flex-wrap: wrap; gap: 0.5rem;
+    }
+    .permalink { color: var(--ink-faint); transition: color 120ms ease; }
+    .permalink:hover { color: var(--ink); }
+    .permalink::before { content: "#"; margin-right: 0.15rem; color: var(--ink-faint); }
+
+    .methodology {
+      margin-top: 3rem;
+      background: var(--surface-warm);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      font-size: 0.88rem; color: var(--ink-muted); line-height: 1.6;
+    }
+    .methodology strong { color: var(--ink); font-weight: 600; }
+    .methodology a { color: var(--ink); border-bottom: 1px solid var(--border-strong); }
+
+    footer.foot {
+      margin-top: 4rem;
+      padding: 1.5rem 0 2.5rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--ink-muted);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    footer.foot a { color: var(--ink); border-bottom: 1px solid var(--border-strong); padding-bottom: 1px; }
+
+    .v-true         { background: var(--v-true); }
+    .v-mostly-true  { background: var(--v-mostly-true); }
+    .v-exaggerated  { background: var(--v-exaggerated); }
+    .v-misleading   { background: var(--v-misleading); }
+    .v-false        { background: var(--v-false); }
+    .v-unverifiable { background: var(--v-unverifiable); }
+    .vt-true         { color: var(--v-true); }
+    .vt-mostly-true  { color: var(--v-mostly-true); }
+    .vt-exaggerated  { color: var(--v-exaggerated); }
+    .vt-misleading   { color: var(--v-misleading); }
+    .vt-false        { color: var(--v-false); }
+    .vt-unverifiable { color: var(--v-unverifiable); }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero, .verdict-panel, .toc, .claim {
+      animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    }
+    .hero          { animation-delay: 60ms; }
+    .verdict-panel { animation-delay: 140ms; }
+    .toc           { animation-delay: 220ms; }
+
+    /* ─── Truthy's own internal styles (preserved from original) ─── */
+    @keyframes idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+    #character{animation:idle 4s ease-in-out infinite;transform-origin:center bottom}
+    @keyframes antenna-sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+    #antenna{animation:antenna-sway 3s ease-in-out infinite;transform-origin:150px 62px;transform-box:fill-box}
+    .eye-led{opacity:0;transition:opacity 0.35s ease}
+    @keyframes true-happy-cycle{0%,70%{opacity:1}78%,88%{opacity:0}96%,100%{opacity:1}}
+    @keyframes true-neutral-cycle{0%,70%{opacity:0}78%,88%{opacity:1}96%,100%{opacity:0}}
+    @keyframes happy-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+    .state-true .eye-happy{animation:true-happy-cycle 4s ease-in-out infinite,happy-pulse 2.2s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .state-true .eye-neutral{animation:true-neutral-cycle 4s ease-in-out infinite}
+    .state-iffy .eye-iffy{opacity:1}
+    @keyframes sad-wander{0%{transform:translate(-4px,.5px)}25%{transform:translate(-3px,2px)}50%{transform:translate(4px,2.5px)}75%{transform:translate(3px,1.2px)}100%{transform:translate(-4px,.5px)}}
+    .state-lie .eye-sad{opacity:1;animation:sad-wander 4.2s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .state-lie #eyeRightGroup .eye-sad{animation-delay:-1.3s}
+    .eye-shape{transform-origin:center;transform-box:fill-box;transition:transform 0.09s ease-out}
+    #mascot.blinking .eye-shape{transform:scaleY(0.06)}
+    @keyframes tear-fall{0%{transform:translateY(-4px);opacity:0}18%{opacity:1}100%{transform:translateY(38px);opacity:0}}
+    .state-lie #tearLeft,.state-lie #tearRight{animation:tear-fall 2.2s ease-in infinite;transform-origin:center;transform-box:fill-box}
+    .state-lie #tearRight{animation-delay:0.7s}
+    #tearLeft,#tearRight{opacity:0}
+    #armLeftSwing,#armRightSwing,#eyeLeftGroup,#eyeRightGroup,#headGroup,#bodyGroup,#clipboard{transition:transform 0.55s cubic-bezier(.34,1.56,.64,1)}
+    #led,#ledHalo{transition:fill 0.3s}
+
+    /* ─── Speak feedback (when user clicks Truthy) ─── */
+    @keyframes ledFlash {
+      0% { filter: brightness(1); }
+      30% { filter: brightness(1.6) saturate(1.3); }
+      100% { filter: brightness(1); }
+    }
+    #mascot.speaking #led, #mascot.speaking #ledHalo { animation: ledFlash 0.7s ease-out; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 740px) {
+      .speech-title { font-size: 2.1rem; }
+      .vp-headline {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem 1.25rem 1.25rem;
+      }
+      .vp-truthy-col {
+        flex-direction: row; align-items: flex-start; gap: 1rem;
+        min-width: 0;
+      }
+      .vp-truthy-col .truthy-frame svg { width: 110px; height: 132px; }
+      .truthy-bubble { max-width: none; flex: 1; text-align: left; }
+      .truthy-bubble::before, .truthy-bubble::after {
+        left: -8px; top: 1rem;
+        transform: none;
+        border-left: none;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+      }
+      .truthy-bubble::before { border-right: 8px solid var(--border); }
+      .truthy-bubble::after  { border-right: 8px solid var(--surface-warm); left: -7px; }
+      .truthy-bubble.is-true::before { border-right-color: rgba(21, 128, 61, 0.3); border-bottom-color: transparent; }
+      .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
+      .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
+
+      .vp-stats { gap: 1.25rem; }
+      .model-grid { grid-template-columns: 1fr; }
+      .model { border-right: none; border-bottom: 1px solid var(--border); }
+      .model:last-child { border-bottom: none; }
+      .toc-item { grid-template-columns: 2rem auto 1fr; }
+      .toc-jump { display: none; }
+      .toc-text { white-space: normal; }
+      .claim-body { padding: 1.25rem; }
+      .claim-quote { font-size: 1.15rem; padding-left: 1rem; }
+      .vp-bar-wrap, .source-row { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .status-bar .stamp { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="status-bar">
+  <div class="row">
+    <span class="live">Operational</span>
+    <span>Pipeline v0.2.0</span>
+    <span>3 Models</span>
+    <span class="stamp">Analyzed 2026-04-21 00:20 UTC</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap mast-row">
+    <a href="../index.html" class="wordmark-sm">truth-bot<span class="dot">.</span></a>
+    <nav class="breadcrumb">
+      <a href="../index.html"><span class="arrow">←</span>All reports</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="speaker-line">Donald Trump · 47th President</div>
+    <h1 class="speech-title">2026 State of the Union</h1>
+    <div class="speech-meta">
+      <span>2026-03-04</span><span class="sep">·</span>
+      <span>Joint Session of Congress</span><span class="sep">·</span>
+      <span>U.S. Capitol</span>
+    </div>
+  </section>
+
+  <section class="verdict-panel">
+    <div class="vp-headline">
+      <div class="vp-text-col">
+        <div>
+          <div class="vp-verdict vt-false">Largely False</div>
+          <div class="vp-ratio">3 of 5 claims rated false or worse</div>
+        </div>
+        <div class="vp-stats">
+          <div>
+            <div class="vp-stat-num">5</div>
+            <div class="vp-stat-lbl">Claims checked</div>
+          </div>
+          <div>
+            <div class="vp-stat-num">3</div>
+            <div class="vp-stat-lbl">Models</div>
+          </div>
+          <div>
+            <div class="vp-stat-num">87<span style="font-size:1rem;color:var(--ink-muted)">%</span></div>
+            <div class="vp-stat-lbl">Inter-model agreement</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Truthy: aggregate avatar ─── -->
+      <div class="vp-truthy-col">
+        <div class="truthy-frame" id="truthy-mascot-widget" data-mood="sad" data-claim-count="5" role="button" tabindex="0" aria-label="Truthy McTruthface, the truth-bot mascot. Currently sad. Click to hear.">
+          <svg id="mascot" width="170" height="204" viewBox="0 0 300 360" class="state-true"><defs><radialGradient id="headShade" cx="35%" cy="28%" r="75%"><stop offset="0%" stop-color="#fff8e0"/><stop offset="45%" stop-color="#f2e3c4"/><stop offset="85%" stop-color="#c9a876"/><stop offset="100%" stop-color="#a58654"/></radialGradient><radialGradient id="bodyShade" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#fff2d5"/><stop offset="50%" stop-color="#ebdfc5"/><stop offset="100%" stop-color="#b89968"/></radialGradient><linearGradient id="rimLight" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#fff8e0" stop-opacity="0"/><stop offset="85%" stop-color="#fff8e0" stop-opacity="0"/><stop offset="100%" stop-color="#fff4d0" stop-opacity="0.95"/></linearGradient><radialGradient id="visorShade" cx="50%" cy="35%" r="70%"><stop offset="0%" stop-color="#3a2e24"/><stop offset="70%" stop-color="#1a1410"/><stop offset="100%" stop-color="#0a0604"/></radialGradient><radialGradient id="brassShade" cx="35%" cy="30%"><stop offset="0%" stop-color="#f4d98a"/><stop offset="50%" stop-color="#c9a158"/><stop offset="100%" stop-color="#7a5e2e"/></radialGradient><radialGradient id="eyeLedTrue" cx="38%" cy="32%" r="75%"><stop offset="0%" stop-color="#f0fff8"/><stop offset="40%" stop-color="#a0ffe0"/><stop offset="75%" stop-color="#50d8b0"/><stop offset="100%" stop-color="#1e8060"/></radialGradient><radialGradient id="eyeLedIffy" cx="38%" cy="32%" r="75%"><stop offset="0%" stop-color="#fffae0"/><stop offset="40%" stop-color="#ffe088"/><stop offset="75%" stop-color="#e8a830"/><stop offset="100%" stop-color="#805818"/></radialGradient><radialGradient id="eyeLedLie" cx="38%" cy="32%" r="80%"><stop offset="0%" stop-color="#e8f4ff"/><stop offset="40%" stop-color="#9cc0e8"/><stop offset="75%" stop-color="#5a82b8"/><stop offset="100%" stop-color="#2a5890"/></radialGradient><radialGradient id="ledGradTrue" cx="40%" cy="35%"><stop offset="0%" stop-color="#b8f5c8"/><stop offset="50%" stop-color="#5ac075"/><stop offset="100%" stop-color="#2a7840"/></radialGradient><radialGradient id="ledGradIffy" cx="40%" cy="35%"><stop offset="0%" stop-color="#fff0a8"/><stop offset="50%" stop-color="#e8b850"/><stop offset="100%" stop-color="#8a6520"/></radialGradient><radialGradient id="ledGradLie" cx="40%" cy="35%"><stop offset="0%" stop-color="#cce4ff"/><stop offset="50%" stop-color="#5a8ec0"/><stop offset="100%" stop-color="#2a4a78"/></radialGradient><filter id="eyeGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4"/></filter><filter id="strongGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="floorShadowGrad"><stop offset="0%" stop-color="rgba(0,0,0,0.5)"/><stop offset="60%" stop-color="rgba(0,0,0,0.15)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient><pattern id="scanlines" width="2" height="3" patternUnits="userSpaceOnUse"><rect width="2" height="3" fill="transparent"/><line x1="0" y1="1.5" x2="2" y2="1.5" stroke="#000000" stroke-width="0.4" opacity="0.25"/></pattern></defs><ellipse cx="150" cy="340" rx="95" ry="10" fill="url(#floorShadowGrad)"/><ellipse cx="150" cy="342" rx="70" ry="6" fill="rgba(0,0,0,0.25)"/><g id="character"><ellipse cx="115" cy="325" rx="26" ry="10" fill="#4a3a28" opacity="0.25"/><rect x="92" y="312" width="48" height="20" rx="9" fill="url(#brassShade)"/><rect x="92" y="310" width="48" height="5" rx="2" fill="#f4d98a"/><circle cx="100" cy="322" r="1.8" fill="#4a3a28"/><circle cx="132" cy="322" r="1.8" fill="#4a3a28"/><ellipse cx="185" cy="325" rx="26" ry="10" fill="#4a3a28" opacity="0.25"/><rect x="160" y="312" width="48" height="20" rx="9" fill="url(#brassShade)"/><rect x="160" y="310" width="48" height="5" rx="2" fill="#f4d98a"/><circle cx="168" cy="322" r="1.8" fill="#4a3a28"/><circle cx="200" cy="322" r="1.8" fill="#4a3a28"/><g id="armLeft"><g id="armLeftSwing" transform="rotate(0 88 253)"><rect x="81" y="253" width="14" height="48" rx="7" fill="url(#bodyShade)" stroke="#8a7550" stroke-width="1.5"/><rect x="81" y="253" width="3" height="48" rx="1.5" fill="#fff2d5" opacity="0.5"/><circle cx="88" cy="301" r="8" fill="url(#brassShade)"/><circle cx="86" cy="298" r="2.5" fill="#f4d98a" opacity="0.8"/></g><circle cx="88" cy="253" r="9" fill="url(#brassShade)"/></g><g id="bodyGroup"><rect x="86" y="244" width="128" height="80" rx="16" fill="#5a4028" opacity="0.3" filter="url(#softGlow)"/><rect x="88" y="240" width="124" height="80" rx="14" fill="url(#bodyShade)" stroke="#8a7550" stroke-width="2"/><rect x="88" y="240" width="124" height="80" rx="14" fill="url(#rimLight)" opacity="0.8"/><rect x="94" y="245" width="112" height="10" rx="5" fill="#fff2d5" opacity="0.4"/><line x1="94" y1="262" x2="206" y2="262" stroke="#8a7550" stroke-width="1.5" opacity="0.55"/><line x1="94" y1="300" x2="206" y2="300" stroke="#8a7550" stroke-width="1.5" opacity="0.55"/><circle cx="98" cy="262" r="2" fill="#8a7550"/><circle cx="202" cy="262" r="2" fill="#8a7550"/><circle cx="98" cy="300" r="2" fill="#8a7550"/><circle cx="202" cy="300" r="2" fill="#8a7550"/><g transform="translate(125 252)"><rect x="-35" y="-7" width="70" height="14" rx="2.5" fill="#8a7550"/><rect x="-34" y="-6" width="68" height="12" rx="2" fill="url(#brassShade)" stroke="#5a4028" stroke-width="0.6"/><rect x="-33" y="-5.5" width="66" height="2" rx="1" fill="#f4d98a" opacity="0.8"/><text x="0" y="3.5" text-anchor="middle" font-family="Georgia,serif" font-size="10" font-weight="700" font-style="italic" fill="#3a2e1f" letter-spacing="0.5">Truthy M.</text><circle cx="-31" cy="0" r="0.8" fill="#3a2e1f"/><circle cx="31" cy="0" r="0.8" fill="#3a2e1f"/></g><g transform="translate(100, 272)"><rect x="0" y="0" width="24" height="15" rx="1.5" fill="#f0e8d0" stroke="#8a7550" stroke-width="0.8"/><rect x="9" y="1" width="14" height="1.4" fill="#c44545"/><rect x="9" y="3.7" width="14" height="1.4" fill="#c44545"/><rect x="1" y="6.5" width="22" height="1.4" fill="#c44545"/><rect x="1" y="9.3" width="22" height="1.4" fill="#c44545"/><rect x="1" y="12.1" width="22" height="1.4" fill="#c44545"/><rect x="1" y="1" width="8" height="6" fill="#3a4a78"/><circle cx="2.5" cy="2.5" r="0.35" fill="#fff4d0"/><circle cx="5" cy="2.5" r="0.35" fill="#fff4d0"/><circle cx="7.5" cy="2.5" r="0.35" fill="#fff4d0"/><circle cx="3.7" cy="4" r="0.35" fill="#fff4d0"/><circle cx="6.2" cy="4" r="0.35" fill="#fff4d0"/><circle cx="2.5" cy="5.5" r="0.35" fill="#fff4d0"/><circle cx="5" cy="5.5" r="0.35" fill="#fff4d0"/><circle cx="7.5" cy="5.5" r="0.35" fill="#fff4d0"/><rect x="0" y="0" width="24" height="15" rx="1.5" fill="#5a4028" opacity="0.1"/></g><circle cx="170" cy="283" r="11" fill="#5a4028"/><circle cx="170" cy="283" r="10" fill="url(#brassShade)"/><circle id="ledHalo" cx="170" cy="283" r="16" fill="#5ac075" opacity="0.35" filter="url(#strongGlow)"/><circle id="led" cx="170" cy="283" r="7" fill="url(#ledGradTrue)"/><circle cx="168" cy="281" r="2.5" fill="#ffffff" opacity="0.85"/><circle cx="171" cy="285" r="0.8" fill="#ffffff" opacity="0.6"/><path d="M 195 252 Q 204 260 198 270" stroke="#5a4028" stroke-width="1.8" fill="none" opacity="0.55"/></g><g id="headGroup"><ellipse cx="150" cy="245" rx="90" ry="8" fill="#3a2e1f" opacity="0.4" filter="url(#softGlow)"/><ellipse cx="53" cy="148" rx="11" ry="20" fill="url(#brassShade)"/><ellipse cx="50" cy="148" rx="6" ry="15" fill="#5a4028"/><ellipse cx="48" cy="144" rx="2" ry="6" fill="#2a1e10" opacity="0.8"/><ellipse cx="247" cy="148" rx="11" ry="20" fill="url(#brassShade)"/><ellipse cx="250" cy="148" rx="6" ry="15" fill="#5a4028"/><ellipse cx="252" cy="144" rx="2" ry="6" fill="#2a1e10" opacity="0.8"/><ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#headShade)" stroke="#8a7550" stroke-width="2"/><ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#rimLight)" opacity="0.7"/><ellipse cx="108" cy="95" rx="26" ry="14" fill="#ffffff" opacity="0.55"/><ellipse cx="104" cy="92" rx="10" ry="5" fill="#ffffff" opacity="0.9"/><ellipse cx="140" cy="80" rx="8" ry="3" fill="#ffffff" opacity="0.4"/><path d="M 210 110 L 218 118" stroke="#8a7550" stroke-width="1" opacity="0.5"/><circle cx="72" cy="180" r="3" fill="#8a7550"/><circle cx="72" cy="180" r="2" fill="url(#brassShade)"/><circle cx="228" cy="180" r="3" fill="#8a7550"/><circle cx="228" cy="180" r="2" fill="url(#brassShade)"/><rect x="60" y="118" width="180" height="72" rx="36" fill="url(#visorShade)"/><rect x="62" y="120" width="176" height="3" rx="1.5" fill="#6a5442" opacity="0.7"/><rect x="62" y="186" width="176" height="2" rx="1" fill="#000000" opacity="0.5"/><ellipse cx="100" cy="135" rx="30" ry="6" fill="#ffffff" opacity="0.08"/><g id="eyeLeftGroup" transform="translate(115 154) rotate(0)"><g class="eye-shape"><rect class="eye-neutral eye-led" x="-14" y="-16" width="28" height="32" rx="8" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/><path class="eye-happy eye-led" d="M -16 4 L -16 -1 Q 0 -16 16 -1 L 16 4 Q 0 -4 -16 4 Z" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/><rect class="eye-iffy eye-led" x="-16" y="-6" width="32" height="12" rx="5" fill="url(#eyeLedIffy)" filter="url(#eyeGlow)"/><rect class="eye-sad eye-led" x="-17" y="-17" width="34" height="34" rx="8" fill="url(#eyeLedLie)" filter="url(#eyeGlow)"/><rect x="-19" y="-20" width="38" height="40" fill="url(#scanlines)" pointer-events="none" opacity="0.7"/></g></g><g id="eyeRightGroup" transform="translate(185 154) rotate(0)"><g class="eye-shape"><rect class="eye-neutral eye-led" x="-14" y="-16" width="28" height="32" rx="8" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/><path class="eye-happy eye-led" d="M -16 4 L -16 -1 Q 0 -16 16 -1 L 16 4 Q 0 -4 -16 4 Z" fill="url(#eyeLedTrue)" filter="url(#eyeGlow)"/><rect class="eye-iffy eye-led" x="-16" y="-6" width="32" height="12" rx="5" fill="url(#eyeLedIffy)" filter="url(#eyeGlow)"/><rect class="eye-sad eye-led" x="-17" y="-17" width="34" height="34" rx="8" fill="url(#eyeLedLie)" filter="url(#eyeGlow)"/><rect x="-19" y="-20" width="38" height="40" fill="url(#scanlines)" pointer-events="none" opacity="0.7"/></g></g><g transform="translate(102 193)"><g id="tearLeft"><rect x="-1.5" y="0" width="3" height="3" rx="0.4" fill="#9cc8e8"/><rect x="-3" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/><rect x="0" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/><rect x="-3" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/><rect x="0" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/><rect x="-1.5" y="9" width="3" height="3" rx="0.4" fill="#4a86b8"/></g></g><g transform="translate(198 193)"><g id="tearRight"><rect x="-1.5" y="0" width="3" height="3" rx="0.4" fill="#9cc8e8"/><rect x="-3" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/><rect x="0" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/><rect x="-3" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/><rect x="0" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/><rect x="-1.5" y="9" width="3" height="3" rx="0.4" fill="#4a86b8"/></g></g><g id="antenna"><path d="M 150 62 Q 148 50 152 38" stroke="url(#brassShade)" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="152" cy="36" r="5.5" fill="#f4c86a" filter="url(#softGlow)" opacity="0.6"/><circle cx="152" cy="36" r="4" fill="#ffd870"/><circle cx="151" cy="35" r="1.5" fill="#fff8d0"/></g></g><g id="armRight"><g id="armRightSwing" transform="rotate(-110 212 253)"><rect x="205" y="253" width="14" height="46" rx="7" fill="url(#bodyShade)" stroke="#8a7550" stroke-width="1.5"/><rect x="205" y="253" width="3" height="46" rx="1.5" fill="#fff2d5" opacity="0.5"/><circle cx="212" cy="299" r="8" fill="url(#brassShade)"/><circle cx="210" cy="296" r="2.5" fill="#f4d98a" opacity="0.8"/></g><circle cx="212" cy="253" r="9" fill="url(#brassShade)"/></g><g id="clipboard" transform="translate(238 224) rotate(0)"><rect x="1" y="2" width="38" height="50" rx="3" fill="#3a2e1f" opacity="0.35"/><rect x="0" y="0" width="38" height="50" rx="3" fill="#d4b585" stroke="#5a4028" stroke-width="1.5"/><rect x="0" y="0" width="38" height="4" rx="1.5" fill="#e8c89a"/><rect x="12" y="-3" width="14" height="7" rx="1.5" fill="#5a4028"/><rect x="15" y="-5" width="8" height="5" rx="1" fill="#8a7550"/><rect x="3" y="6" width="32" height="42" rx="1" fill="#fff8e8"/><line x1="6" y1="14" x2="26" y2="14" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/><path d="M 29 12 L 31 15 L 34 10" stroke="#3a8a50" stroke-width="1.2" fill="none" stroke-linecap="round"/><line x1="6" y1="22" x2="26" y2="22" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/><path d="M 29 19 L 34 24 M 34 19 L 29 24" stroke="#c44545" stroke-width="1.2" stroke-linecap="round"/><line x1="6" y1="30" x2="26" y2="30" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/><path d="M 29 28 L 31 31 L 34 26" stroke="#3a8a50" stroke-width="1.2" fill="none" stroke-linecap="round"/><line x1="6" y1="38" x2="22" y2="38" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/></g></g></svg>
+          <div class="truthy-tap-hint">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4.03v8.05a4.5 4.5 0 002.5-4.02zM14 3.23v2.06a7 7 0 010 13.42v2.06a9 9 0 000-17.54z"/></svg>
+            Tap
+          </div>
+        </div>
+        <div class="truthy-bubble is-lie" id="truthy-bubble">
+          Oh no… most of this doesn't check out.
+        </div>
+      </div>
+    </div>
+
+    <div class="vp-bar-wrap">
+      <div class="vp-bar" role="img" aria-label="Verdict distribution: 1 True, 1 Mostly True, 3 False">
+        <div class="seg v-true"        style="width:20%" title="True: 1">1</div>
+        <div class="seg v-mostly-true" style="width:20%" title="Mostly True: 1">1</div>
+        <div class="seg v-false"       style="width:60%" title="False: 3">3</div>
+      </div>
+      <div class="vp-legend">
+        <div class="legend-item"><span class="swatch v-true"></span>True <span class="ct">1</span></div>
+        <div class="legend-item"><span class="swatch v-mostly-true"></span>Mostly True <span class="ct">1</span></div>
+        <div class="legend-item zero"><span class="swatch v-exaggerated"></span>Exaggerated <span class="ct">0</span></div>
+        <div class="legend-item zero"><span class="swatch v-misleading"></span>Misleading <span class="ct">0</span></div>
+        <div class="legend-item"><span class="swatch v-false"></span>False <span class="ct">3</span></div>
+        <div class="legend-item zero"><span class="swatch v-unverifiable"></span>Unverifiable <span class="ct">0</span></div>
+      </div>
+    </div>
+    <div class="source-row">
+      <span><span class="lab">Transcript:</span><a href="#" target="_blank" rel="noopener">whitehouse.gov ↗</a></span>
+      <span><span class="lab">Video:</span><a href="#" target="_blank" rel="noopener">C-SPAN ↗</a></span>
+      <span><span class="lab">Models:</span>Claude Opus 4.7 · Gemini 2.5 Pro · Grok 4</span>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <span>Jump to claim</span>
+    <span class="sub">5 claims evaluated</span>
+  </div>
+
+  <nav class="toc">
+    <a class="toc-item" href="#claim-1">
+      <span class="toc-num">01</span>
+      <span class="toc-pill v-true">True</span>
+      <span class="toc-text">"Gasoline reached a peak of over $6 a gallon in some U.S. states under President Biden."</span>
+      <span class="toc-jump">↓</span>
+    </a>
+    <a class="toc-item" href="#claim-2">
+      <span class="toc-num">02</span>
+      <span class="toc-pill v-false">False</span>
+      <span class="toc-text">"Gasoline is now below $2.30 a gallon in most states."</span>
+      <span class="toc-jump">↓</span>
+    </a>
+    <a class="toc-item" href="#claim-3">
+      <span class="toc-num">03</span>
+      <span class="toc-pill v-false">False</span>
+      <span class="toc-text">"And in some places, $1.99 a gallon."</span>
+      <span class="toc-jump">↓</span>
+    </a>
+    <a class="toc-item" href="#claim-4">
+      <span class="toc-num">04</span>
+      <span class="toc-pill v-false">False</span>
+      <span class="toc-text">"Mortgage rates are the lowest they have been in four years."</span>
+      <span class="toc-jump">↓</span>
+    </a>
+    <a class="toc-item" href="#claim-5">
+      <span class="toc-num">05</span>
+      <span class="toc-pill v-mostly-true">Mostly True</span>
+      <span class="toc-text">"Mortgage rates are falling."</span>
+      <span class="toc-jump">↓</span>
+    </a>
+  </nav>
+
+  <div class="section-head">
+    <span>Claims, in order spoken</span>
+    <span class="sub">Anchor links shareable</span>
+  </div>
+
+  <article class="claim" id="claim-1">
+    <div class="claim-head">
+      <span class="claim-num">Claim 01 / 05</span>
+      <span class="claim-pill v-true">True</span>
+    </div>
+    <div class="claim-body">
+      <blockquote class="claim-quote">"Gasoline reached a peak of over $6 a gallon in some U.S. states under my predecessor."</blockquote>
+      <div class="claim-context">
+        <span>Topic: Economy</span><span class="sep">·</span>
+        <span>Historical comparison</span>
+      </div>
+      <div class="caveat">
+        <div class="caveat-label">Caveat</div>
+        <div class="caveat-text">Trump's claim focuses on the peak but omits context: the price spike was driven largely by global factors including Russia's invasion of Ukraine, OPEC+ production cuts, and post-pandemic refinery constraints — not direct presidential policy. The $6+ figure applies to statewide averages in California (and briefly a few other West Coast states), not most states.</div>
+      </div>
+      <div class="models">
+        <div class="models-head">
+          <span class="models-label">Model consensus</span>
+          <span class="models-agreement"><span class="num">3 of 3</span> agree</span>
+        </div>
+        <div class="model-grid">
+          <div class="model"><div class="model-name">Claude Opus 4.7</div><div class="model-verdict vt-true">✅ True</div></div>
+          <div class="model"><div class="model-name">Gemini 2.5 Pro</div><div class="model-verdict vt-true">✅ True</div></div>
+          <div class="model"><div class="model-name">Grok 4</div><div class="model-verdict vt-true">✅ True</div></div>
+        </div>
+      </div>
+      <div class="evidence">
+        <div class="evidence-label">Evidence</div>
+        <ul class="evidence-list">
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-gov">T1·Gov</span><a href="#" target="_blank" rel="noopener">EIA: Today in Energy</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-fc">T5·FC</span><a href="#" target="_blank" rel="noopener">Snopes: U.S. Gas Price 2022</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-fc">T5·FC</span><a href="#" target="_blank" rel="noopener">PolitiFact verification</a></li>
+        </ul>
+      </div>
+      <div class="claim-foot">
+        <a href="#claim-1" class="permalink">claim-1</a>
+        <span>Last verified 2026-04-21 00:20 UTC</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="claim" id="claim-2">
+    <div class="claim-head">
+      <span class="claim-num">Claim 02 / 05</span>
+      <span class="claim-pill v-false">False</span>
+    </div>
+    <div class="claim-body">
+      <blockquote class="claim-quote">"Gasoline is now below $2.30 a gallon in most states."</blockquote>
+      <div class="claim-context">
+        <span>Topic: Economy</span><span class="sep">·</span>
+        <span>Self-praise</span>
+      </div>
+      <div class="caveat">
+        <div class="caveat-label">Caveat</div>
+        <div class="caveat-text">According to AAA data on the day of the speech, no U.S. state had an average price below $2.30. Oklahoma was the closest at $2.37. EIA confirms 2025 retail averages of $3.10/gal nationally with regional lows of $2.39/gal on the Gulf Coast. Individual stations may have posted prices below $2.30, but no state average approached the claim.</div>
+      </div>
+      <div class="models">
+        <div class="models-head">
+          <span class="models-label">Model consensus</span>
+          <span class="models-agreement"><span class="num">3 of 3</span> agree</span>
+        </div>
+        <div class="model-grid">
+          <div class="model"><div class="model-name">Claude Opus 4.7</div><div class="model-verdict vt-false">❌ False</div></div>
+          <div class="model"><div class="model-name">Gemini 2.5 Pro</div><div class="model-verdict vt-false">❌ False</div></div>
+          <div class="model"><div class="model-name">Grok 4</div><div class="model-verdict vt-false">❌ False</div></div>
+        </div>
+      </div>
+      <div class="evidence">
+        <div class="evidence-label">Evidence</div>
+        <ul class="evidence-list">
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-gov">T1·Gov</span><a href="#" target="_blank" rel="noopener">EIA: Petroleum &amp; Other Liquids</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-other">T6</span><a href="#" target="_blank" rel="noopener">AAA State Gas Price Averages</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-fc">T5·FC</span><a href="#" target="_blank" rel="noopener">FactCheck.org analysis</a></li>
+        </ul>
+      </div>
+      <div class="claim-foot">
+        <a href="#claim-2" class="permalink">claim-2</a>
+        <span>Last verified 2026-04-21 00:20 UTC</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="claim" id="claim-3">
+    <div class="claim-head">
+      <span class="claim-num">Claim 03 / 05</span>
+      <span class="claim-pill v-false">False</span>
+    </div>
+    <div class="claim-body">
+      <blockquote class="claim-quote">"And in some places, $1.99 a gallon."</blockquote>
+      <div class="claim-context">
+        <span>Topic: Economy</span><span class="sep">·</span>
+        <span>Self-praise</span>
+      </div>
+      <div class="caveat">
+        <div class="caveat-label">Caveat</div>
+        <div class="caveat-text">GasBuddy found no stations charging $1.99/gal at the time. EIA monthly averages were $2.81 (Jan) and $2.91 (Feb) 2026. PBS NewsHour reported the cheapest state averages — Arkansas, Kansas, Mississippi — were at or below $2.50/gal, still well above $1.99.</div>
+      </div>
+      <div class="models">
+        <div class="models-head">
+          <span class="models-label">Model consensus</span>
+          <span class="models-agreement"><span class="num">2 of 3</span> agree · 1 dissent</span>
+        </div>
+        <div class="model-grid">
+          <div class="model"><div class="model-name">Claude Opus 4.7</div><div class="model-verdict vt-false">❌ False</div></div>
+          <div class="model dissent"><div class="model-name">Gemini 2.5 Pro</div><div class="model-verdict vt-misleading">⚠️ Misleading</div></div>
+          <div class="model"><div class="model-name">Grok 4</div><div class="model-verdict vt-false">❌ False</div></div>
+        </div>
+      </div>
+      <div class="evidence">
+        <div class="evidence-label">Evidence</div>
+        <ul class="evidence-list">
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-gov">T1·Gov</span><a href="#" target="_blank" rel="noopener">EIA: Today in Energy 67424</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-fc">T5·FC</span><a href="#" target="_blank" rel="noopener">PolitiFact: gas station check</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-other">T6</span><a href="#" target="_blank" rel="noopener">AAA March 2026 averages</a></li>
+        </ul>
+      </div>
+      <div class="claim-foot">
+        <a href="#claim-3" class="permalink">claim-3</a>
+        <span>Last verified 2026-04-21 00:20 UTC</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="claim" id="claim-4">
+    <div class="claim-head">
+      <span class="claim-num">Claim 04 / 05</span>
+      <span class="claim-pill v-false">False</span>
+    </div>
+    <div class="claim-body">
+      <blockquote class="claim-quote">"Mortgage rates are the lowest in four years and falling fast."</blockquote>
+      <div class="claim-context">
+        <span>Topic: Housing</span><span class="sep">·</span>
+        <span>Self-praise</span>
+      </div>
+      <div class="caveat">
+        <div class="caveat-label">Caveat</div>
+        <div class="caveat-text">Freddie Mac PMMS shows the 30-year fixed averaged 6.00% as of March 5, 2026, characterized by Freddie Mac itself as "near their lowest level since 2022" — roughly a 3-year low, not 4-year. Four years before March 2026, rates were in the 3–4% range, well below the 6.00% reading at the time of the speech.</div>
+      </div>
+      <div class="models">
+        <div class="models-head">
+          <span class="models-label">Model consensus</span>
+          <span class="models-agreement"><span class="num">2 of 3</span> agree · 1 unverified</span>
+        </div>
+        <div class="model-grid">
+          <div class="model"><div class="model-name">Claude Opus 4.7</div><div class="model-verdict vt-false">❌ False</div></div>
+          <div class="model dissent"><div class="model-name">Gemini 2.5 Pro</div><div class="model-verdict vt-unverifiable">❓ Unverifiable</div></div>
+          <div class="model"><div class="model-name">Grok 4</div><div class="model-verdict vt-false">❌ False</div></div>
+        </div>
+      </div>
+      <div class="evidence">
+        <div class="evidence-label">Evidence</div>
+        <ul class="evidence-list">
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-other">T6</span><a href="#" target="_blank" rel="noopener">Freddie Mac PMMS</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-other">T6</span><a href="#" target="_blank" rel="noopener">FRED: MORTGAGE30US</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-news">T3·News</span><a href="#" target="_blank" rel="noopener">CBS News mortgage rates</a></li>
+        </ul>
+      </div>
+      <div class="claim-foot">
+        <a href="#claim-4" class="permalink">claim-4</a>
+        <span>Last verified 2026-04-21 00:20 UTC</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="claim" id="claim-5">
+    <div class="claim-head">
+      <span class="claim-num">Claim 05 / 05</span>
+      <span class="claim-pill v-mostly-true">Mostly True</span>
+    </div>
+    <div class="claim-body">
+      <blockquote class="claim-quote">"Mortgage rates are falling."</blockquote>
+      <div class="claim-context">
+        <span>Topic: Housing</span><span class="sep">·</span>
+        <span>Self-praise</span>
+      </div>
+      <div class="caveat">
+        <div class="caveat-label">Caveat</div>
+        <div class="caveat-text">Rates were falling at the time of the speech (Freddie Mac 30-yr declining from 6.11% on Feb 5 to 5.98% on Feb 26) but began rising again within weeks — by March 19, the 30-yr fixed jumped to 6.22%, and to 6.38% by March 26. The "falling" characterization was accurate at the moment of the speech; the trend reversed shortly after.</div>
+      </div>
+      <div class="models">
+        <div class="models-head">
+          <span class="models-label">Model consensus</span>
+          <span class="models-agreement"><span class="num">2 of 3</span> agree · 1 dissent</span>
+        </div>
+        <div class="model-grid">
+          <div class="model"><div class="model-name">Claude Opus 4.7</div><div class="model-verdict vt-mostly-true">🟢 Mostly True</div></div>
+          <div class="model dissent"><div class="model-name">Gemini 2.5 Pro</div><div class="model-verdict vt-misleading">⚠️ Misleading</div></div>
+          <div class="model"><div class="model-name">Grok 4</div><div class="model-verdict vt-mostly-true">🟢 Mostly True</div></div>
+        </div>
+      </div>
+      <div class="evidence">
+        <div class="evidence-label">Evidence</div>
+        <ul class="evidence-list">
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-other">T6</span><a href="#" target="_blank" rel="noopener">Freddie Mac PMMS</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-gov">T1·Gov</span><a href="#" target="_blank" rel="noopener">whitehouse.gov release</a></li>
+          <li><span class="ev-mark">→</span><span class="evidence-tier tier-other">T6</span><a href="#" target="_blank" rel="noopener">NerdWallet outlook</a></li>
+        </ul>
+      </div>
+      <div class="claim-foot">
+        <a href="#claim-5" class="permalink">claim-5</a>
+        <span>Last verified 2026-04-21 00:20 UTC</span>
+      </div>
+    </div>
+  </article>
+
+  <aside class="methodology">
+    <strong>How this report was generated.</strong> truth-bot extracts factual claims from the source transcript, submits each independently to three frontier language models with the instruction to verify against publicly cited sources, and aggregates verdicts using a simple majority rule. Caveats are surfaced when models flag ambiguity or framing concerns. Truthy McTruthface's mood reflects the aggregate score across all claims. <a href="../about.html">Read the full methodology →</a>
+  </aside>
+
+  <footer class="foot">
+    <span>truth-bot · pipeline v0.2.0</span>
+    <span>Source: <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">github.com/aRealGem/Truth-bot</a></span>
+  </footer>
+
+</main>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────
+   Truthy McTruthface — state machine + Web Audio droid sounds
+   ─────────────────────────────────────────────────────────────── */
+(function(){
+  var mascot = document.getElementById('mascot');
+  var led = document.getElementById('led');
+  var ledHalo = document.getElementById('ledHalo');
+  var eyeLeftGroup = document.getElementById('eyeLeftGroup');
+  var eyeRightGroup = document.getElementById('eyeRightGroup');
+  var headGroup = document.getElementById('headGroup');
+  var bodyGroup = document.getElementById('bodyGroup');
+  var armLeftSwing = document.getElementById('armLeftSwing');
+  var armRightSwing = document.getElementById('armRightSwing');
+  var clipboard = document.getElementById('clipboard');
+  var bubble = document.getElementById('truthy-bubble');
+  var widget = document.getElementById('truthy-mascot-widget');
+
+  var captionsSingle = {
+    true: "That checks out. Sources match!",
+    iffy: "Hmm… let me double-check my sources.",
+    lie:  "Oh no… that isn't true."
+  };
+  var captionsMulti = {
+    true: "All sources check out. Looking good!",
+    iffy: "Mixed signals — some hold up, some don't.",
+    lie:  "Oh no… most of this doesn't check out."
+  };
+  function getCaption(state, count){
+    return (count === 1 ? captionsSingle : captionsMulti)[state] || "";
+  }
+  var bubbleClassMap = { true: 'is-true', iffy: 'is-iffy', lie: 'is-lie' };
+
+  // Read claim count from widget; default to multi-claim phrasing if not set
+  var claimCount = parseInt(
+    (document.getElementById('truthy-mascot-widget') || {}).getAttribute &&
+    document.getElementById('truthy-mascot-widget').getAttribute('data-claim-count'),
+    10
+  );
+  if (isNaN(claimCount)) claimCount = 0;
+
+  function setState(state){
+    mascot.classList.remove('state-true','state-iffy','state-lie');
+    mascot.classList.add('state-'+state);
+    if (bubble) {
+      bubble.textContent = getCaption(state, claimCount);
+      bubble.classList.remove('is-true','is-iffy','is-lie');
+      bubble.classList.add(bubbleClassMap[state]);
+    }
+    if(state==='true'){
+      led.setAttribute('fill','url(#ledGradTrue)');
+      ledHalo.setAttribute('fill','#5ac075');
+      eyeLeftGroup.setAttribute('transform','translate(115 154) rotate(0)');
+      eyeRightGroup.setAttribute('transform','translate(185 154) rotate(0)');
+      headGroup.setAttribute('transform','translate(0,0)');
+      bodyGroup.setAttribute('transform','translate(0,0)');
+      armLeftSwing.setAttribute('transform','rotate(135 88 253)');
+      armRightSwing.setAttribute('transform','rotate(-135 212 253)');
+      clipboard.setAttribute('transform','translate(228 218) rotate(-8)');
+    } else if(state==='iffy'){
+      led.setAttribute('fill','url(#ledGradIffy)');
+      ledHalo.setAttribute('fill','#e8b850');
+      eyeLeftGroup.setAttribute('transform','translate(115 156) rotate(-10)');
+      eyeRightGroup.setAttribute('transform','translate(185 156) rotate(10)');
+      headGroup.setAttribute('transform','rotate(-7 150 170)');
+      bodyGroup.setAttribute('transform','translate(0,0)');
+      armLeftSwing.setAttribute('transform','rotate(0 88 253)');
+      armRightSwing.setAttribute('transform','rotate(-110 212 253)');
+      clipboard.setAttribute('transform','translate(238 224) rotate(-3)');
+    } else if(state==='lie'){
+      led.setAttribute('fill','url(#ledGradLie)');
+      ledHalo.setAttribute('fill','#5a8ec0');
+      eyeLeftGroup.setAttribute('transform','translate(115 170) rotate(0)');
+      eyeRightGroup.setAttribute('transform','translate(185 170) rotate(0)');
+      headGroup.setAttribute('transform','translate(0,7)');
+      bodyGroup.setAttribute('transform','translate(0,3)');
+      armLeftSwing.setAttribute('transform','rotate(8 88 253)');
+      armRightSwing.setAttribute('transform','rotate(35 212 253)');
+      clipboard.setAttribute('transform','translate(174 298) rotate(40)');
+    }
+  }
+
+  function doBlink(){
+    mascot.classList.add('blinking');
+    setTimeout(function(){ mascot.classList.remove('blinking') }, 110);
+  }
+  function scheduleBlink(){
+    var d = 2500 + Math.random()*4500;
+    setTimeout(function(){
+      doBlink();
+      if(Math.random() < 0.2) setTimeout(doBlink, 280);
+      scheduleBlink();
+    }, d);
+  }
+  scheduleBlink();
+
+  /* ─── Web Audio droid sounds ─── */
+  var audioCtx = null;
+  function getCtx(){
+    if(!audioCtx){
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch(e) { return null; }
+    }
+    if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  // Happy: bright rising arpeggio with square wave (8-bit feel)
+  function playHappy(){
+    var ctx = getCtx(); if(!ctx) return;
+    var notes = [523.25, 659.25, 783.99, 1046.50]; // C5 E5 G5 C6
+    notes.forEach(function(freq, i){
+      var t0 = ctx.currentTime + i * 0.07;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, t0);
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(0.12, t0 + 0.01);
+      gain.gain.linearRampToValueAtTime(0, t0 + 0.10);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + 0.12);
+    });
+  }
+
+  // Confused: wobble — bend up then down, triangle wave for softer feel
+  function playConfused(){
+    var ctx = getCtx(); if(!ctx) return;
+    var t0 = ctx.currentTime;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(440, t0);
+    osc.frequency.exponentialRampToValueAtTime(620, t0 + 0.18);
+    osc.frequency.exponentialRampToValueAtTime(330, t0 + 0.42);
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(0.14, t0 + 0.02);
+    gain.gain.linearRampToValueAtTime(0, t0 + 0.45);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.5);
+  }
+
+  // Sad: descending two-note minor with sine wave
+  function playSad(){
+    var ctx = getCtx(); if(!ctx) return;
+    var notes = [392.00, 311.13]; // G4, Eb4 — minor third descent
+    notes.forEach(function(freq, i){
+      var t0 = ctx.currentTime + i * 0.20;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t0);
+      // small downward bend on each note for sad inflection
+      osc.frequency.linearRampToValueAtTime(freq * 0.93, t0 + 0.25);
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(0.15, t0 + 0.03);
+      gain.gain.linearRampToValueAtTime(0, t0 + 0.28);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + 0.32);
+    });
+  }
+
+  var soundMap = { true: playHappy, iffy: playConfused, lie: playSad };
+
+  function speak(){
+    var state = (mascot.className.match(/state-(true|iffy|lie)/) || [])[1];
+    if(!state) return;
+    var fn = soundMap[state];
+    if(fn) fn();
+    mascot.classList.add('speaking');
+    setTimeout(function(){ mascot.classList.remove('speaking'); }, 700);
+  }
+
+  if(widget){
+    var mood = widget.getAttribute('data-mood') || 'iffy';
+    var stateMap = { happy: 'true', iffy: 'iffy', sad: 'lie' };
+    setState(stateMap[mood] || 'iffy');
+
+    widget.addEventListener('click', speak);
+    widget.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        speak();
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
