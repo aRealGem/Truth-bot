@@ -500,6 +500,12 @@ _TRUTHY_SVG = (
     '<rect x="205" y="253" width="14" height="46" rx="7" fill="url(#bodyShade)" stroke="#8a7550" stroke-width="1.5"/>'
     '<rect x="205" y="253" width="3" height="46" rx="1.5" fill="#fff2d5" opacity="0.5"/>'
     '<circle cx="212" cy="299" r="8" fill="url(#brassShade)"/>'
+    '<circle cx="210" cy="297" r="2.5" fill="#f4d98a" opacity="0.8"/>'
+    '</g>'
+    '<circle cx="212" cy="253" r="9" fill="url(#brassShade)"/>'
+    '</g>'
+    '</g>'
+    '</svg>'
 )
 
 _TRUTHY_TAP_HINT = (
@@ -580,10 +586,23 @@ def _verdict_panel(site_report) -> str:
 
     bar_html = _verdict_bar_html(dist)
 
+    model_names = sorted({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
+    model_str = ' · '.join(model_names) if model_names else 'Multi-model'
+    src_row_parts: list[str] = []
+    if site_report.transcript_source_url:
+        src_row_parts.append(
+            '<span><span class="lab">Transcript:</span>'
+            + '<a href="' + _esc(site_report.transcript_source_url)
+            + '" target="_blank" rel="noopener">Source &#x2197;</a></span>'
+        )
+    src_row_parts.append('<span><span class="lab">Models:</span>' + _esc(model_str) + '</span>')
+    source_row_html = '<div class="source-row">' + ''.join(src_row_parts) + '</div>\n'
+
     return (
         '<section class="verdict-panel">\n'
         + '  <div class="vp-headline">' + text_col + widget + '</div>\n'
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
+        + source_row_html
         + '</section>\n'
     )
 
@@ -2537,20 +2556,43 @@ def _render_report(site_report: SiteReport) -> str:
     if site_report.role:
         venue_role += " · " + _esc(site_report.role)
 
+    claim_count = len(site_report.checkable_bundles)
+    toc_section_head = ''
+    if toc_html:
+        toc_section_head = (
+            '<div class="section-head">'
+            + '<span>Jump to claim</span>'
+            + '<span class="sub">' + str(claim_count) + ' claim' + ('s' if claim_count != 1 else '') + ' evaluated</span>'
+            + '</div>'
+        )
+
+    methodology_html = (
+        '<aside class="methodology">'
+        '<strong>How this report was generated.</strong> truth-bot extracts factual claims '
+        'from the source transcript, submits each independently to multiple frontier language '
+        'models with the instruction to verify against publicly cited sources, and aggregates '
+        'verdicts using a simple majority rule. Caveats are surfaced when models flag '
+        'ambiguity or framing concerns. Truthy McTruthface\u2019s mood reflects the aggregate '
+        'score across all claims. '
+        '<a href="../about.html">Read the full methodology \u2192</a>'
+        '</aside>'
+    )
+
     body = (
-        '<div class="breadcrumb"><a href="../index.html">Reports</a> › '
-        + _esc(site_report.speaker) + '</div>'
-        + '<div class="hero">'
+        '<div class="hero">'
         + '<div class="speaker-line">' + _esc(site_report.speaker) + '</div>'
         + '<h1 class="speech-title">' + _esc(site_report.display_date) + '</h1>'
-        + '<p class="speech-meta dim">' + venue_role.lstrip(' · ') + src_link + '</p>'
+        + '<p class="speech-meta">' + venue_role.lstrip(' · ') + src_link + '</p>'
         + '</div>'
         + _verdict_panel(site_report)
+        + toc_section_head
         + toc_html
-        + '<div class="claims-section">'
-        + '<h2 class="claims-heading">Claims</h2>'
-        + claim_blocks
+        + '<div class="section-head">'
+        + '<span>Claims, in order spoken</span>'
+        + '<span class="sub">Anchor links shareable</span>'
         + '</div>'
+        + claim_blocks
+        + methodology_html
     )
     footer = (
         '<span>Generated: ' + gen_ts + ' · Pipeline v' + PIPELINE_VERSION
