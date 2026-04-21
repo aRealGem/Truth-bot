@@ -1,5 +1,77 @@
 [
   {
+    "id": "eef1e194-3190-47e7-9aff-9204f4e2cbfc",
+    "date": "2026-03-04",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 0,
+      "Misleading": 0,
+      "Exaggerated": 0,
+      "False": 3,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.4,
+    "url": "reports/2026-03-04-donald-trump.html"
+  },
+  {
+    "id": "ce317437-a366-461d-875f-4e161bf53a99",
+    "date": "2026-03-04",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 0,
+      "Misleading": 0,
+      "Exaggerated": 0,
+      "False": 3,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.6,
+    "url": "reports/2026-03-04-donald-trump.html"
+  },
+  {
+    "id": "13e016ca-6131-4251-abbc-4adbfbcb0efa",
+    "date": "2026-03-04",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 0,
+      "Misleading": 0,
+      "Exaggerated": 0,
+      "False": 3,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.6,
+    "url": "reports/2026-03-04-donald-trump.html"
+  },
+  {
+    "id": "0c6c76e0-d2f5-45b1-b880-af29d20a927c",
+    "date": "2026-03-04",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol, State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 1,
+      "Misleading": 0,
+      "Exaggerated": 0,
+      "False": 2,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.4,
+    "url": "reports/2026-03-04-donald-trump.html"
+  },
+  {
     "id": "2d8adc4f-02c6-4f12-8bf0-1c5e97d1bcd8",
     "date": "2026-03-04",
     "speaker": "Donald Trump",

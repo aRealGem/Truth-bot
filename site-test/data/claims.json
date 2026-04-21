@@ -358,5 +358,495 @@
       }
     ],
     "url": "claims/6778f612-0568-4221-8ba2-88999cd7380e.html"
+  },
+  {
+    "id": "2f04cd83-ae14-4e4f-90e7-4211466572c6",
+    "report_id": "0c6c76e0-d2f5-45b1-b880-af29d20a927c",
+    "claim_text": "Gasoline reached a peak of over $6 a gallon in some U.S. states under President Biden (Trump's predecessor).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/2f04cd83-ae14-4e4f-90e7-4211466572c6.html"
+  },
+  {
+    "id": "dba53753-9b01-4ebc-bf5b-5bf6bb9f3669",
+    "report_id": "0c6c76e0-d2f5-45b1-b880-af29d20a927c",
+    "claim_text": "As of the date of the speech (March 4, 2026), gasoline is below $2.30 a gallon in most U.S. states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/dba53753-9b01-4ebc-bf5b-5bf6bb9f3669.html"
+  },
+  {
+    "id": "de1b439a-5815-4631-ac91-ce541e7348fe",
+    "report_id": "0c6c76e0-d2f5-45b1-b880-af29d20a927c",
+    "claim_text": "As of the date of the speech (March 4, 2026), gasoline is as low as $1.99 a gallon in some U.S. places.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/de1b439a-5815-4631-ac91-ce541e7348fe.html"
+  },
+  {
+    "id": "35a1755b-5179-420a-8c10-a3a2b46c2a47",
+    "report_id": "0c6c76e0-d2f5-45b1-b880-af29d20a927c",
+    "claim_text": "As of the date of the speech (March 4, 2026), mortgage rates are the lowest they have been in four years.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/35a1755b-5179-420a-8c10-a3a2b46c2a47.html"
+  },
+  {
+    "id": "93c16eb1-0e97-4073-9787-14e16cf3eb9f",
+    "report_id": "0c6c76e0-d2f5-45b1-b880-af29d20a927c",
+    "claim_text": "As of the date of the speech (March 4, 2026), mortgage rates are falling.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/93c16eb1-0e97-4073-9787-14e16cf3eb9f.html"
+  },
+  {
+    "id": "2f04cd83-ae14-4e4f-90e7-4211466572c6",
+    "report_id": "13e016ca-6131-4251-abbc-4adbfbcb0efa",
+    "claim_text": "Gasoline reached a peak of over $6 a gallon in some U.S. states under President Biden (Trump's predecessor).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/2f04cd83-ae14-4e4f-90e7-4211466572c6.html"
+  },
+  {
+    "id": "0d185062-5a78-4ef3-ab2c-196642ffd4f9",
+    "report_id": "13e016ca-6131-4251-abbc-4adbfbcb0efa",
+    "claim_text": "As of March 4, 2026, gasoline is below $2.30 a gallon in most U.S. states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/0d185062-5a78-4ef3-ab2c-196642ffd4f9.html"
+  },
+  {
+    "id": "7a755b2f-9efb-4ef0-b328-cae2a03ebb27",
+    "report_id": "13e016ca-6131-4251-abbc-4adbfbcb0efa",
+    "claim_text": "As of March 4, 2026, gasoline is as low as $1.99 a gallon in some U.S. states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/7a755b2f-9efb-4ef0-b328-cae2a03ebb27.html"
+  },
+  {
+    "id": "38b4bd12-dfea-4de5-b429-2d2e85faabdf",
+    "report_id": "13e016ca-6131-4251-abbc-4adbfbcb0efa",
+    "claim_text": "As of March 4, 2026, mortgage rates are the lowest they have been in four years.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/38b4bd12-dfea-4de5-b429-2d2e85faabdf.html"
+  },
+  {
+    "id": "3172d245-5e65-4fc4-9e15-c4f9214a9b54",
+    "report_id": "13e016ca-6131-4251-abbc-4adbfbcb0efa",
+    "claim_text": "As of March 4, 2026, mortgage rates are falling.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/3172d245-5e65-4fc4-9e15-c4f9214a9b54.html"
+  },
+  {
+    "id": "2f04cd83-ae14-4e4f-90e7-4211466572c6",
+    "report_id": "ce317437-a366-461d-875f-4e161bf53a99",
+    "claim_text": "Gasoline reached a peak of over $6 a gallon in some U.S. states under President Biden (Trump's predecessor).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/2f04cd83-ae14-4e4f-90e7-4211466572c6.html"
+  },
+  {
+    "id": "0d185062-5a78-4ef3-ab2c-196642ffd4f9",
+    "report_id": "ce317437-a366-461d-875f-4e161bf53a99",
+    "claim_text": "As of March 4, 2026, gasoline is below $2.30 a gallon in most U.S. states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/0d185062-5a78-4ef3-ab2c-196642ffd4f9.html"
+  },
+  {
+    "id": "7a755b2f-9efb-4ef0-b328-cae2a03ebb27",
+    "report_id": "ce317437-a366-461d-875f-4e161bf53a99",
+    "claim_text": "As of March 4, 2026, gasoline is as low as $1.99 a gallon in some U.S. states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/7a755b2f-9efb-4ef0-b328-cae2a03ebb27.html"
+  },
+  {
+    "id": "b3e15239-fafe-4152-bb98-ea2cd9cfa5ea",
+    "report_id": "ce317437-a366-461d-875f-4e161bf53a99",
+    "claim_text": "As of March 4, 2026, mortgage rates are at their lowest level in four years.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b3e15239-fafe-4152-bb98-ea2cd9cfa5ea.html"
+  },
+  {
+    "id": "3172d245-5e65-4fc4-9e15-c4f9214a9b54",
+    "report_id": "ce317437-a366-461d-875f-4e161bf53a99",
+    "claim_text": "As of March 4, 2026, mortgage rates are falling.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/3172d245-5e65-4fc4-9e15-c4f9214a9b54.html"
+  },
+  {
+    "id": "ece4a364-a25a-4ae3-93c1-c1a960cceb1a",
+    "report_id": "eef1e194-3190-47e7-9aff-9204f4e2cbfc",
+    "claim_text": "Gasoline reached a peak of over $6 a gallon in some states under President Biden (Trump's predecessor).",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ece4a364-a25a-4ae3-93c1-c1a960cceb1a.html"
+  },
+  {
+    "id": "ccddc461-f244-481b-b566-48cdcad1cb52",
+    "report_id": "eef1e194-3190-47e7-9aff-9204f4e2cbfc",
+    "claim_text": "As of March 4, 2026, gasoline is below $2.30 a gallon in most states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ccddc461-f244-481b-b566-48cdcad1cb52.html"
+  },
+  {
+    "id": "3a811fb6-6685-454b-9e01-db672dc24445",
+    "report_id": "eef1e194-3190-47e7-9aff-9204f4e2cbfc",
+    "claim_text": "As of March 4, 2026, gasoline is as low as $1.99 a gallon in some places.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/3a811fb6-6685-454b-9e01-db672dc24445.html"
+  },
+  {
+    "id": "b3e15239-fafe-4152-bb98-ea2cd9cfa5ea",
+    "report_id": "eef1e194-3190-47e7-9aff-9204f4e2cbfc",
+    "claim_text": "As of March 4, 2026, mortgage rates are at their lowest level in four years.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b3e15239-fafe-4152-bb98-ea2cd9cfa5ea.html"
+  },
+  {
+    "id": "3172d245-5e65-4fc4-9e15-c4f9214a9b54",
+    "report_id": "eef1e194-3190-47e7-9aff-9204f4e2cbfc",
+    "claim_text": "As of March 4, 2026, mortgage rates are falling.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/3172d245-5e65-4fc4-9e15-c4f9214a9b54.html"
   }
 ]
