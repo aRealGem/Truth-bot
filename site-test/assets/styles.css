@@ -898,62 +898,43 @@ header.masthead:has(.mast-row) {
 }
 
 
-/* [15] Report page — expandable reasoning (native <details>) ─────────── */
-details.reasoning {
-  margin-top: 1rem;
+
+/* [15] Report page — per-model reasoning (native <details>) ─────────── */
+details.model-reasoning {
+  margin-top: 0.65rem;
   border: 1px solid var(--border);
 }
-details.reasoning > summary {
+details.model-reasoning > summary {
   list-style: none;
   cursor: pointer;
-  padding: 0.7rem 1rem;
+  padding: 0.6rem 0.85rem;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   transition: background 120ms ease;
 }
-details.reasoning > summary::-webkit-details-marker { display: none; }
-details.reasoning > summary:hover { background: var(--surface-warm); }
-details.reasoning > summary::before {
+details.model-reasoning > summary::-webkit-details-marker { display: none; }
+details.model-reasoning > summary::before {
   content: "▸";
   transition: transform 200ms ease;
   color: var(--ink-faint);
   display: inline-block;
 }
-details.reasoning[open] > summary::before { transform: rotate(90deg); }
-.reasoning-body { padding: 0 1rem 1rem; }
-.r-block {
-  padding: 0.85rem 0;
-  border-top: 1px solid var(--border);
+details.model-reasoning[open] > summary::before { transform: rotate(90deg); }
+details.model-reasoning > summary:hover { background: var(--surface-warm); }
+.model-reasoning-body {
+  padding: 0 0.85rem 0.85rem;
   font-size: 0.88rem;
-  line-height: 1.65;
+  line-height: 1.6;
+  color: var(--ink);
 }
-.r-block:first-child { border-top: none; padding-top: 0.5rem; }
-.r-model {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--ink-muted);
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  display: flex;
-  gap: 0.65rem;
-  align-items: center;
-}
-.r-model .v {
-  padding: 0.1rem 0.45rem;
-  border-radius: 2px;
-  color: #fff;
-  letter-spacing: 0.06em;
-}
-.r-text { color: var(--ink); }
-
+.model-reasoning-body p { margin: 0.4rem 0 0; }
+.model-reasoning-body p:first-child { margin-top: 0.2rem; }
 
 /* [16] Report page — evidence list ───────────────────────────────────── */
 .evidence { margin-top: 1.5rem; }

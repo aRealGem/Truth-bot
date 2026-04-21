@@ -766,6 +766,7 @@ def _page_about(title: str, body: str, footer: str = "") -> str:
     )
 # ── Claim + report building blocks ───────────────────────────────────────────
 
+
 def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", standalone: bool = False) -> str:
     claim = bundle.claim
     consensus = bundle.consensus
@@ -794,8 +795,19 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         )
 
     majority_label = label
+
+    def _reasoning_paragraphs(text: str) -> str:
+        if not text:
+            return ""
+        parts = [seg.strip() for seg in re.split(r"\n\s*\n", text.strip()) if seg.strip()]
+        if not parts:
+            return ""
+        return "".join(f'<p>{_esc(seg)}</p>' for seg in parts)
+
     model_cards = []
     agreeing = 0
+    all_urls: list[str] = []
+    seen_urls: set[str] = set()
     for mv in bundle.model_verdicts:
         mv_label = mv.label.value
         mv_css = _verdict_css(mv_label)
@@ -811,39 +823,34 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
             dissent = " dissent" if mv_label != majority_label else ""
             if not dissent:
                 agreeing += 1
+            reasoning_html = ""
+            reasoning_text = _reasoning_paragraphs(getattr(mv, 'explanation', '').strip())
+            if reasoning_text:
+                reasoning_html = (
+                    '<details class="model-reasoning">'
+                    '  <summary>Model reasoning</summary>'
+                    f'  <div class="model-reasoning-body">{reasoning_text}</div>'
+                    '</details>'
+                )
             model_cards.append(
                 f'<div class="model{dissent}">'
                 f'  <div class="model-name">{_esc(mv.adapter_name)}</div>'
                 f'  <div class="model-verdict vt-{mv_css}">{VERDICT_EMOJI.get(mv_label, "")} {_esc(mv_label)}</div>'
+                f'  {reasoning_html}'
                 '</div>'
             )
-    total_models = len(bundle.model_verdicts)
-    dissenting = total_models - agreeing
-    dissent_note = f" · {dissenting} dissent{'s' if dissenting > 1 else ''}" if dissenting else ""
-
-    reasoning_blocks = []
-    all_urls: list[str] = []
-    seen_urls: set[str] = set()
-    for mv in bundle.model_verdicts:
-        mv_label = mv.label.value
-        mv_css = _verdict_css(mv_label)
-        ev_html = _evidence_list_html(mv.web_sources)
-        reasoning_blocks.append(
-            '<div class="r-block">'
-            f'  <div class="r-model">{_esc(mv.adapter_name)} / {_esc(mv.model_id)} '
-            f'<span class="v v-{mv_css}">{VERDICT_EMOJI.get(mv_label, "")} {_esc(mv_label)}</span></div>'
-            f'  <p class="r-text">{_esc(mv.explanation)}</p>'
-            f'{ev_html}'
-            '</div>'
-        )
         for url in mv.web_sources:
             if url not in seen_urls:
                 seen_urls.add(url)
                 all_urls.append(url)
 
+    total_models = len(bundle.model_verdicts)
+    dissenting = total_models - agreeing
+    dissent_note = f" · {dissenting} dissent{'s' if dissenting > 1 else ''}" if dissenting else ""
+
     evidence_html = (
         '<details class="evidence-details">'
-        '  <summary class="evidence-summary">Evidence / Sources</summary>'
+        '  <summary class="evidence-summary">Combined evidence / sources list</summary>'
         '  <div class="evidence">'
         f'{_evidence_list_html(all_urls[:10])}'
         '  </div>'
@@ -870,10 +877,6 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         '    </div>'
         f'    <div class="model-grid">{"".join(model_cards)}</div>'
         '  </div>'
-        '  <details class="reasoning">'
-        '    <summary>Model reasoning</summary>'
-        f'    <div class="reasoning-body">{"".join(reasoning_blocks)}</div>'
-        '  </details>'
         f'  {evidence_html}'
         '  <div class="claim-foot">'
         f'    <a href="#claim-{idx}" class="permalink">claim-{idx}</a>'
@@ -882,7 +885,6 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         '</div>'
         '</article>'
     )
-
 
 def _toc(bundles: list[VerdictBundle]) -> str:
     items = []
@@ -1883,62 +1885,43 @@ header.masthead:has(.mast-row) {
 }
 
 
-/* [15] Report page — expandable reasoning (native <details>) ─────────── */
-details.reasoning {
-  margin-top: 1rem;
+
+/* [15] Report page — per-model reasoning (native <details>) ─────────── */
+details.model-reasoning {
+  margin-top: 0.65rem;
   border: 1px solid var(--border);
 }
-details.reasoning > summary {
+details.model-reasoning > summary {
   list-style: none;
   cursor: pointer;
-  padding: 0.7rem 1rem;
+  padding: 0.6rem 0.85rem;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   transition: background 120ms ease;
 }
-details.reasoning > summary::-webkit-details-marker { display: none; }
-details.reasoning > summary:hover { background: var(--surface-warm); }
-details.reasoning > summary::before {
+details.model-reasoning > summary::-webkit-details-marker { display: none; }
+details.model-reasoning > summary::before {
   content: "▸";
   transition: transform 200ms ease;
   color: var(--ink-faint);
   display: inline-block;
 }
-details.reasoning[open] > summary::before { transform: rotate(90deg); }
-.reasoning-body { padding: 0 1rem 1rem; }
-.r-block {
-  padding: 0.85rem 0;
-  border-top: 1px solid var(--border);
+details.model-reasoning[open] > summary::before { transform: rotate(90deg); }
+details.model-reasoning > summary:hover { background: var(--surface-warm); }
+.model-reasoning-body {
+  padding: 0 0.85rem 0.85rem;
   font-size: 0.88rem;
-  line-height: 1.65;
+  line-height: 1.6;
+  color: var(--ink);
 }
-.r-block:first-child { border-top: none; padding-top: 0.5rem; }
-.r-model {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--ink-muted);
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  display: flex;
-  gap: 0.65rem;
-  align-items: center;
-}
-.r-model .v {
-  padding: 0.1rem 0.45rem;
-  border-radius: 2px;
-  color: #fff;
-  letter-spacing: 0.06em;
-}
-.r-text { color: var(--ink); }
-
+.model-reasoning-body p { margin: 0.4rem 0 0; }
+.model-reasoning-body p:first-child { margin-top: 0.2rem; }
 
 /* [16] Report page — evidence list ───────────────────────────────────── */
 .evidence { margin-top: 1.5rem; }
@@ -2618,78 +2601,90 @@ def _disambiguate_report_urls(reports: list[dict]) -> list[dict]:
 
 # ── Index page hero animation script ────────────────────────────────────────
 
-_HERO_SCRIPT = (
-    '<script>\n'
-    '(function() {\n'
-    '  var mascot = document.getElementById("mascot");\n'
-    '  var bubble = document.getElementById("hero-bubble");\n'
-    '  if (!mascot || !bubble) return;\n'
-    '  var steps = [\n'
-    '    { state: "true", cls: "is-true", text: "Hi, I\u2019m Truthy and truth makes me happy." },\n'
-    '    { state: "lie",  cls: "is-lie",  text: "\u2026and lies make me sad." },\n'
-    '    { state: "iffy", cls: "is-iffy", text: "I\u2019m here to help you find the truth." }\n'
-    '  ];\n'
-    '  var led = document.getElementById("led");\n'
-    '  var ledHalo = document.getElementById("ledHalo");\n'
-    '  var eyeL = document.getElementById("eyeLeftGroup");\n'
-    '  var eyeR = document.getElementById("eyeRightGroup");\n'
-    '  var head = document.getElementById("headGroup");\n'
-    '  var body = document.getElementById("bodyGroup");\n'
-    '  var armL = document.getElementById("armLeftSwing");\n'
-    '  var armR = document.getElementById("armRightSwing");\n'
-    '  function sa(el, v) { if (el) el.setAttribute("transform", v); }\n'
-    '  function setState(s) {\n'
-    '    mascot.className = mascot.className.replace(/state-\\w+/g, "").trim() + " state-" + s;\n'
-    '    if (s === "true") {\n'
-    '      if (led) led.setAttribute("fill", "url(#ledGradTrue)");\n'
-    '      if (ledHalo) ledHalo.setAttribute("fill", "#5ac075");\n'
-    '      sa(eyeL, "translate(115 154) rotate(0)"); sa(eyeR, "translate(185 154) rotate(0)");\n'
-    '      sa(head, "translate(0,0)"); sa(body, "translate(0,0)");\n'
-    '      sa(armL, "rotate(135 88 253)"); sa(armR, "rotate(-135 212 253)");\n'
-    '    } else if (s === "iffy") {\n'
-    '      if (led) led.setAttribute("fill", "url(#ledGradIffy)");\n'
-    '      if (ledHalo) ledHalo.setAttribute("fill", "#e8b850");\n'
-    '      sa(eyeL, "translate(115 156) rotate(-10)"); sa(eyeR, "translate(185 156) rotate(10)");\n'
-    '      sa(head, "rotate(-7 150 170)"); sa(body, "translate(0,0)");\n'
-    '      sa(armL, "rotate(0 88 253)"); sa(armR, "rotate(-110 212 253)");\n'
-    '    } else {\n'
-    '      if (led) led.setAttribute("fill", "url(#ledGradLie)");\n'
-    '      if (ledHalo) ledHalo.setAttribute("fill", "#5a8ec0");\n'
-    '      sa(eyeL, "translate(115 170) rotate(0)"); sa(eyeR, "translate(185 170) rotate(0)");\n'
-    '      sa(head, "translate(0,7)"); sa(body, "translate(0,3)");\n'
-    '      sa(armL, "rotate(8 88 253)"); sa(armR, "rotate(35 212 253)");\n'
-    '    }\n'
-    '  }\n'
-    '  function showBubble(text, cls) {\n'
-    '    bubble.classList.remove("is-true", "is-iffy", "is-lie");\n'
-    '    bubble.classList.add(cls); bubble.textContent = text;\n'
-    '    bubble.style.opacity = "0"; bubble.style.transform = "translateY(4px)";\n'
-    '    requestAnimationFrame(function() {\n'
-    '      bubble.style.transition = "opacity 100ms ease, transform 100ms ease";\n'
-    '      bubble.style.opacity = "1"; bubble.style.transform = "translateY(0)";\n'
-    '    });\n'
-    '  }\n'
-    '  function showStep(idx) {\n'
-    '    var step = steps[idx];\n'
-    '    setState(step.state); showBubble(step.text, step.cls);\n'
-    '    if (idx < steps.length - 1) setTimeout(function() { showStep(idx + 1); }, 2500);\n'
-    '    else scheduleBlink();\n'
-    '  }\n'
-    '  function doBlink() {\n'
-    '    mascot.classList.add("blinking");\n'
-    '    setTimeout(function() { mascot.classList.remove("blinking"); }, 110);\n'
-    '  }\n'
-    '  function scheduleBlink() {\n'
-    '    setTimeout(function() {\n'
-    '      doBlink();\n'
-    '      if (Math.random() < 0.2) setTimeout(doBlink, 280);\n'
-    '      scheduleBlink();\n'
-    '    }, 2500 + Math.random() * 4500);\n'
-    '  }\n'
-    '  setTimeout(function() { showStep(0); }, 400);\n'
-    '})();\n'
-    '</script>\n'
-)
+
+_HERO_SCRIPT = r"""<script>
+(function(){
+  var mascot = document.getElementById('mascot');
+  var bubble = document.getElementById('hero-bubble');
+  if (!mascot || !bubble) return;
+  var led = document.getElementById('led');
+  var ledHalo = document.getElementById('ledHalo');
+  var eyeL = document.getElementById('eyeLeftGroup');
+  var eyeR = document.getElementById('eyeRightGroup');
+  var head = document.getElementById('headGroup');
+  var body = document.getElementById('bodyGroup');
+  var armL = document.getElementById('armLeftSwing');
+  var armR = document.getElementById('armRightSwing');
+  var STEP_MS = 2500;
+  var steps = [
+    { state: 'true', cls: 'is-true', text: "Hi, I'm Truthy and truth makes me happy.", dur: STEP_MS },
+    { state: 'lie',  cls: 'is-lie',  text: "...and lies make me sad.", dur: STEP_MS },
+    { state: 'iffy', cls: 'is-iffy', text: "I'm here to help you find the truth.", dur: STEP_MS }
+  ];
+  function pose(state) {
+    mascot.className = mascot.className.replace(/state-\w+/g, '').trim();
+    mascot.classList.add('state-' + state);
+    if (state === 'true') {
+      if (led) led.setAttribute('fill', 'url(#ledGradTrue)');
+      if (ledHalo) ledHalo.setAttribute('fill', '#5ac075');
+      if (eyeL) eyeL.setAttribute('transform', 'translate(115 154) rotate(0)');
+      if (eyeR) eyeR.setAttribute('transform', 'translate(185 154) rotate(0)');
+      if (head) head.setAttribute('transform', 'translate(0,0)');
+      if (body) body.setAttribute('transform', 'translate(0,0)');
+      if (armL) armL.setAttribute('transform', 'rotate(135 88 253)');
+      if (armR) armR.setAttribute('transform', 'rotate(-135 212 253)');
+    } else if (state === 'iffy') {
+      if (led) led.setAttribute('fill', 'url(#ledGradIffy)');
+      if (ledHalo) ledHalo.setAttribute('fill', '#e8b850');
+      if (eyeL) eyeL.setAttribute('transform', 'translate(115 156) rotate(-10)');
+      if (eyeR) eyeR.setAttribute('transform', 'translate(185 156) rotate(10)');
+      if (head) head.setAttribute('transform', 'rotate(-7 150 170)');
+      if (body) body.setAttribute('transform', 'translate(0,0)');
+      if (armL) armL.setAttribute('transform', 'rotate(0 88 253)');
+      if (armR) armR.setAttribute('transform', 'rotate(-110 212 253)');
+    } else {
+      if (led) led.setAttribute('fill', 'url(#ledGradLie)');
+      if (ledHalo) ledHalo.setAttribute('fill', '#5a8ec0');
+      if (eyeL) eyeL.setAttribute('transform', 'translate(115 170) rotate(0)');
+      if (eyeR) eyeR.setAttribute('transform', 'translate(185 170) rotate(0)');
+      if (head) head.setAttribute('transform', 'translate(0,7)');
+      if (body) body.setAttribute('transform', 'translate(0,3)');
+      if (armL) armL.setAttribute('transform', 'rotate(8 88 253)');
+      if (armR) armR.setAttribute('transform', 'rotate(35 212 253)');
+    }
+  }
+  function showStep(step) {
+    pose(step.state);
+    bubble.classList.remove('is-true', 'is-iffy', 'is-lie');
+    bubble.classList.add(step.cls);
+    bubble.textContent = step.text;
+    bubble.style.opacity = '1';
+    bubble.style.transform = 'translateY(0)';
+    if (step.state === 'iffy') {
+      setTimeout(blinkOnce, 600);
+    }
+  }
+  function cycle(idx) {
+    showStep(steps[idx]);
+    var dur = steps[idx].dur || STEP_MS;
+    var next = (idx + 1) % steps.length;
+    setTimeout(function(){ cycle(next); }, dur);
+  }
+  function blinkOnce() {
+    mascot.classList.add('blinking');
+    setTimeout(function() { mascot.classList.remove('blinking'); }, 110);
+  }
+  (function scheduleBlink() {
+    setTimeout(function() {
+      blinkOnce();
+      if (Math.random() < 0.2) setTimeout(blinkOnce, 280);
+      scheduleBlink();
+    }, 2500 + Math.random() * 4500);
+  })();
+  setTimeout(function() { cycle(0); }, 400);
+})();
+</script>
+"""
 
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
@@ -2697,13 +2692,8 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     total_claims    = stats.get("total_claims", 0)
     total_leaders   = stats.get("total_leaders", len({r.get("source_of_claims") or r.get("speaker", "") for r in reports}))
     avg_consensus   = stats.get("avg_consensus", stats.get("model_agreement_rate", 0))
-    verdict_totals  = stats.get("verdict_totals", {})
-    models_above    = stats.get("models_above_mean", [])
-    model_lowest    = stats.get("model_lowest", None)
 
     avg_pct = str(round(avg_consensus * 100))
-    above_str = ", ".join(models_above) if models_above else "None"
-    lowest_str = model_lowest or "None"
 
     # Truthy hero — full SVG, state-true by default; inline script drives animation
     hero_html = (
@@ -2718,21 +2708,15 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     )
 
     stats_html = (
-        '<div class="section-head"><span>Aggregate findings</span><span class="sub">All time</span></div>'
-        '<div class="stats stats-4">'
+        '<div class="section-head"><span>Program stats</span><span class="sub">All time</span></div>'
+        '<div class="stats">'
         + '<div class="stat"><div class="num">' + str(total_leaders) + '</div>'
-        + '<div class="lbl">Leaders reviewed</div></div>'
+        + '<div class="lbl">Total Leaders Reviewed</div></div>'
         + '<div class="stat"><div class="num">' + str(total_claims) + '</div>'
-        + '<div class="lbl">Claims reviewed</div></div>'
+        + '<div class="lbl">Total Claims Reviewed</div></div>'
         + '<div class="stat"><div class="num">' + avg_pct + '<span class="unit">%</span></div>'
-        + '<div class="lbl">Avg. model consensus</div></div>'
-        + '<div class="stat stat-wide">'
-        + '<div class="lbl" style="margin-bottom:0.4rem">Model agreement breakdown</div>'
-        + '<div class="stat-breakdown">Models that mostly agree: <strong>' + _esc(above_str) + '</strong></div>'
-        + '<div class="stat-breakdown">Model most often diverging: <strong>' + _esc(lowest_str) + '</strong></div>'
+        + '<div class="lbl">Average Model Consensus</div></div>'
         + '</div>'
-        + '</div>'
-        + _agg_bar(verdict_totals)
     )
 
     cards_html = '<div class="reports">'
