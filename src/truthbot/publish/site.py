@@ -1399,21 +1399,31 @@ header.masthead:has(.mast-row) {
 
 /* [08] Report page — speech hero ─────────────────────────────────────── */
 .hero { padding: 2.5rem 0 1rem; }
-.speaker-line {
+.hero-overline {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
   margin-bottom: 0.75rem;
 }
-.speech-title {
+.speaker-name {
   font-family: var(--serif);
-  font-size: 3rem;
+  font-size: 3.2rem;
   font-weight: 500;
-  line-height: 1.05;
+  line-height: 1.02;
   letter-spacing: -0.03em;
   color: var(--ink);
+}
+.speech-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink-muted);
+  margin-top: 0.4rem;
 }
 .speech-meta {
   margin-top: 1rem;
@@ -2190,7 +2200,8 @@ hr.rule-light {
   .verdict-pill { text-align: left; }
 
   /* Speech hero */
-  .speech-title { font-size: 2.1rem; }
+  .speaker-name { font-size: 2.2rem; }
+  .speech-title { font-size: 1.3rem; }
 
   /* Verdict panel: Truthy goes inline next to bubble (bubble tail re-points) */
   .vp-headline {
@@ -2569,12 +2580,6 @@ def _render_report(site_report: SiteReport) -> str:
     phash = _prompt_hash()
     gen_ts = site_report.generated_at.strftime("%Y-%m-%d %H:%M UTC")
 
-    venue_role = ""
-    if site_report.venue:
-        venue_role += " · " + _esc(site_report.venue)
-    if site_report.role:
-        venue_role += " · " + _esc(site_report.role)
-
     claim_count = len(site_report.checkable_bundles)
     toc_section_head = ''
     if toc_html:
@@ -2599,12 +2604,23 @@ def _render_report(site_report: SiteReport) -> str:
         '</aside>'
     )
 
+    # Build hero elements conditionally (omit empty fields per spec)
+    _hero_parts = ['<section class="hero">']
+    if site_report.role:
+        _hero_parts.append('<div class="hero-overline">' + _esc(site_report.role) + '</div>')
+    _hero_parts.append('<h1 class="speaker-name">' + _esc(site_report.speaker) + '</h1>')
+    if site_report.venue:
+        _hero_parts.append('<div class="speech-title">' + _esc(site_report.venue) + '</div>')
+    _meta_spans: list[str] = []
+    if site_report.date:
+        _meta_spans.append('<span>' + _esc(site_report.display_date) + '</span>')
+    if _meta_spans:
+        _hero_parts.append('<div class="speech-meta">' + '<span class="sep">&middot;</span>'.join(_meta_spans) + '</div>')
+    _hero_parts.append('</section>')
+    hero_html = '\n'.join(_hero_parts)
+
     body = (
-        '<div class="hero">'
-        + '<div class="speaker-line">' + _esc(site_report.speaker) + '</div>'
-        + '<h1 class="speech-title">' + _esc(site_report.display_date) + '</h1>'
-        + '<p class="speech-meta">' + venue_role.lstrip(' · ') + src_link + '</p>'
-        + '</div>'
+        hero_html
         + _verdict_panel(site_report)
         + toc_section_head
         + toc_html
