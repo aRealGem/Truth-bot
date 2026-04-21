@@ -316,6 +316,37 @@ header.masthead:has(.mast-row) {
 .legend-item.zero .ct { color: var(--ink-faint); }
 
 
+/* Index page — hero Truthy layout */
+.index-hero {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 0 1rem;
+  flex-wrap: wrap;
+}
+.hero-truthy-wrap {
+  flex-shrink: 0;
+}
+.hero-truthy-col {
+  flex: 1;
+  min-width: 200px;
+}
+/* 4-column stats grid (index page) */
+.stats-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat-wide {
+  border-right: none;
+}
+.stat-breakdown {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+  line-height: 1.45;
+}
+.stat-breakdown strong { color: var(--ink); font-weight: 600; }
+
+
 /* [07] Index page — report cards ─────────────────────────────────────── */
 .reports { display: flex; flex-direction: column; }
 .report {
@@ -981,6 +1012,39 @@ details.reasoning[open] > summary::before { transform: rotate(90deg); }
 .tier-other { background: #546e7a; }
 
 
+/* Collapsible evidence/sources (native <details>) */
+details.evidence-details {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border);
+}
+details.evidence-details > summary.evidence-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 120ms ease;
+  user-select: none;
+}
+details.evidence-details > summary.evidence-summary::-webkit-details-marker { display: none; }
+details.evidence-details > summary.evidence-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  transition: transform 200ms ease;
+  display: inline-block;
+}
+details.evidence-details[open] > summary.evidence-summary::before { transform: rotate(90deg); }
+details.evidence-details > summary.evidence-summary:hover { background: var(--surface-warm); }
+details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
+
+
 /* [17] Report page — claim footer & methodology ──────────────────────── */
 .claim-foot {
   margin-top: 1.5rem;
@@ -1230,7 +1294,7 @@ hr.rule-light {
   .status-bar .stamp { margin-left: 0; }
 
   /* Index aggregate stats — single column */
-  .stats { grid-template-columns: 1fr; }
+  .stats, .stats-4 { grid-template-columns: 1fr; }
   .stat {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -1238,6 +1302,9 @@ hr.rule-light {
   }
   .stat:last-child { border-bottom: none; }
   .stat .num { font-size: 2.4rem; }
+  /* Index hero stacks on mobile */
+  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; }
+  .hero-truthy-wrap svg { width: 120px; height: 144px; }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }

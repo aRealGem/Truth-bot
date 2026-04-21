@@ -842,10 +842,12 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
                 all_urls.append(url)
 
     evidence_html = (
-        '<div class="evidence">'
-        '  <div class="evidence-label">Evidence</div>'
+        '<details class="evidence-details">'
+        '  <summary class="evidence-summary">Evidence / Sources</summary>'
+        '  <div class="evidence">'
         f'{_evidence_list_html(all_urls[:10])}'
-        '</div>'
+        '  </div>'
+        '</details>'
     )
 
     gen_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -1297,6 +1299,37 @@ header.masthead:has(.mast-row) {
   font-variant-numeric: tabular-nums;
 }
 .legend-item.zero .ct { color: var(--ink-faint); }
+
+
+/* Index page — hero Truthy layout */
+.index-hero {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 0 1rem;
+  flex-wrap: wrap;
+}
+.hero-truthy-wrap {
+  flex-shrink: 0;
+}
+.hero-truthy-col {
+  flex: 1;
+  min-width: 200px;
+}
+/* 4-column stats grid (index page) */
+.stats-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat-wide {
+  border-right: none;
+}
+.stat-breakdown {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+  line-height: 1.45;
+}
+.stat-breakdown strong { color: var(--ink); font-weight: 600; }
 
 
 /* [07] Index page — report cards ─────────────────────────────────────── */
@@ -1964,6 +1997,39 @@ details.reasoning[open] > summary::before { transform: rotate(90deg); }
 .tier-other { background: #546e7a; }
 
 
+/* Collapsible evidence/sources (native <details>) */
+details.evidence-details {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border);
+}
+details.evidence-details > summary.evidence-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 120ms ease;
+  user-select: none;
+}
+details.evidence-details > summary.evidence-summary::-webkit-details-marker { display: none; }
+details.evidence-details > summary.evidence-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  transition: transform 200ms ease;
+  display: inline-block;
+}
+details.evidence-details[open] > summary.evidence-summary::before { transform: rotate(90deg); }
+details.evidence-details > summary.evidence-summary:hover { background: var(--surface-warm); }
+details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
+
+
 /* [17] Report page — claim footer & methodology ──────────────────────── */
 .claim-foot {
   margin-top: 1.5rem;
@@ -2213,7 +2279,7 @@ hr.rule-light {
   .status-bar .stamp { margin-left: 0; }
 
   /* Index aggregate stats — single column */
-  .stats { grid-template-columns: 1fr; }
+  .stats, .stats-4 { grid-template-columns: 1fr; }
   .stat {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -2221,6 +2287,9 @@ hr.rule-light {
   }
   .stat:last-child { border-bottom: none; }
   .stat .num { font-size: 2.4rem; }
+  /* Index hero stacks on mobile */
+  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; }
+  .hero-truthy-wrap svg { width: 120px; height: 144px; }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }
@@ -2546,22 +2615,122 @@ def _disambiguate_report_urls(reports: list[dict]) -> list[dict]:
     return result
 
 
+
+# ── Index page hero animation script ────────────────────────────────────────
+
+_HERO_SCRIPT = (
+    '<script>\n'
+    '(function() {\n'
+    '  var mascot = document.getElementById("mascot");\n'
+    '  var bubble = document.getElementById("hero-bubble");\n'
+    '  if (!mascot || !bubble) return;\n'
+    '  var steps = [\n'
+    '    { state: "true", cls: "is-true", text: "Hi, I\u2019m Truthy and truth makes me happy." },\n'
+    '    { state: "lie",  cls: "is-lie",  text: "\u2026and lies make me sad." },\n'
+    '    { state: "iffy", cls: "is-iffy", text: "I\u2019m here to help you find the truth." }\n'
+    '  ];\n'
+    '  var led = document.getElementById("led");\n'
+    '  var ledHalo = document.getElementById("ledHalo");\n'
+    '  var eyeL = document.getElementById("eyeLeftGroup");\n'
+    '  var eyeR = document.getElementById("eyeRightGroup");\n'
+    '  var head = document.getElementById("headGroup");\n'
+    '  var body = document.getElementById("bodyGroup");\n'
+    '  var armL = document.getElementById("armLeftSwing");\n'
+    '  var armR = document.getElementById("armRightSwing");\n'
+    '  function sa(el, v) { if (el) el.setAttribute("transform", v); }\n'
+    '  function setState(s) {\n'
+    '    mascot.className = mascot.className.replace(/state-\\w+/g, "").trim() + " state-" + s;\n'
+    '    if (s === "true") {\n'
+    '      if (led) led.setAttribute("fill", "url(#ledGradTrue)");\n'
+    '      if (ledHalo) ledHalo.setAttribute("fill", "#5ac075");\n'
+    '      sa(eyeL, "translate(115 154) rotate(0)"); sa(eyeR, "translate(185 154) rotate(0)");\n'
+    '      sa(head, "translate(0,0)"); sa(body, "translate(0,0)");\n'
+    '      sa(armL, "rotate(135 88 253)"); sa(armR, "rotate(-135 212 253)");\n'
+    '    } else if (s === "iffy") {\n'
+    '      if (led) led.setAttribute("fill", "url(#ledGradIffy)");\n'
+    '      if (ledHalo) ledHalo.setAttribute("fill", "#e8b850");\n'
+    '      sa(eyeL, "translate(115 156) rotate(-10)"); sa(eyeR, "translate(185 156) rotate(10)");\n'
+    '      sa(head, "rotate(-7 150 170)"); sa(body, "translate(0,0)");\n'
+    '      sa(armL, "rotate(0 88 253)"); sa(armR, "rotate(-110 212 253)");\n'
+    '    } else {\n'
+    '      if (led) led.setAttribute("fill", "url(#ledGradLie)");\n'
+    '      if (ledHalo) ledHalo.setAttribute("fill", "#5a8ec0");\n'
+    '      sa(eyeL, "translate(115 170) rotate(0)"); sa(eyeR, "translate(185 170) rotate(0)");\n'
+    '      sa(head, "translate(0,7)"); sa(body, "translate(0,3)");\n'
+    '      sa(armL, "rotate(8 88 253)"); sa(armR, "rotate(35 212 253)");\n'
+    '    }\n'
+    '  }\n'
+    '  function showBubble(text, cls) {\n'
+    '    bubble.classList.remove("is-true", "is-iffy", "is-lie");\n'
+    '    bubble.classList.add(cls); bubble.textContent = text;\n'
+    '    bubble.style.opacity = "0"; bubble.style.transform = "translateY(4px)";\n'
+    '    requestAnimationFrame(function() {\n'
+    '      bubble.style.transition = "opacity 100ms ease, transform 100ms ease";\n'
+    '      bubble.style.opacity = "1"; bubble.style.transform = "translateY(0)";\n'
+    '    });\n'
+    '  }\n'
+    '  function showStep(idx) {\n'
+    '    var step = steps[idx];\n'
+    '    setState(step.state); showBubble(step.text, step.cls);\n'
+    '    if (idx < steps.length - 1) setTimeout(function() { showStep(idx + 1); }, 2500);\n'
+    '    else scheduleBlink();\n'
+    '  }\n'
+    '  function doBlink() {\n'
+    '    mascot.classList.add("blinking");\n'
+    '    setTimeout(function() { mascot.classList.remove("blinking"); }, 110);\n'
+    '  }\n'
+    '  function scheduleBlink() {\n'
+    '    setTimeout(function() {\n'
+    '      doBlink();\n'
+    '      if (Math.random() < 0.2) setTimeout(doBlink, 280);\n'
+    '      scheduleBlink();\n'
+    '    }, 2500 + Math.random() * 4500);\n'
+    '  }\n'
+    '  setTimeout(function() { showStep(0); }, 400);\n'
+    '})();\n'
+    '</script>\n'
+)
+
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
     reports = _disambiguate_report_urls(reports)
-    total_claims   = stats.get("total_claims", 0)
-    total_speeches = stats.get("total_speeches", 0)
-    agree_rate     = stats.get("model_agreement_rate", 0)
-    verdict_totals = stats.get("verdict_totals", {})
+    total_claims    = stats.get("total_claims", 0)
+    total_leaders   = stats.get("total_leaders", len({r.get("source_of_claims") or r.get("speaker", "") for r in reports}))
+    avg_consensus   = stats.get("avg_consensus", stats.get("model_agreement_rate", 0))
+    verdict_totals  = stats.get("verdict_totals", {})
+    models_above    = stats.get("models_above_mean", [])
+    model_lowest    = stats.get("model_lowest", None)
 
-    agree_pct = str(round(agree_rate * 100))
+    avg_pct = str(round(avg_consensus * 100))
+    above_str = ", ".join(models_above) if models_above else "None"
+    lowest_str = model_lowest or "None"
+
+    # Truthy hero — full SVG, state-true by default; inline script drives animation
+    hero_html = (
+        '<div class="index-hero">'
+        '<div class="hero-truthy-wrap">'
+        + _TRUTHY_SVG
+        + '</div>'
+        '<div class="hero-truthy-col">'
+        '<div class="truthy-bubble is-true" id="hero-bubble" style="opacity:0;transition:opacity 100ms ease,transform 100ms ease"></div>'
+        '</div>'
+        '</div>'
+    )
 
     stats_html = (
         '<div class="section-head"><span>Aggregate findings</span><span class="sub">All time</span></div>'
-        '<div class="stats">'
-        + '<div class="stat"><div class="num">' + str(total_claims) + '</div><div class="lbl">Claims evaluated</div></div>'
-        + '<div class="stat"><div class="num">' + str(total_speeches) + '</div><div class="lbl">Speeches analyzed</div></div>'
-        + '<div class="stat"><div class="num">' + agree_pct + '<span class="unit">%</span></div><div class="lbl">Model consensus rate</div></div>'
+        '<div class="stats stats-4">'
+        + '<div class="stat"><div class="num">' + str(total_leaders) + '</div>'
+        + '<div class="lbl">Leaders reviewed</div></div>'
+        + '<div class="stat"><div class="num">' + str(total_claims) + '</div>'
+        + '<div class="lbl">Claims reviewed</div></div>'
+        + '<div class="stat"><div class="num">' + avg_pct + '<span class="unit">%</span></div>'
+        + '<div class="lbl">Avg. model consensus</div></div>'
+        + '<div class="stat stat-wide">'
+        + '<div class="lbl" style="margin-bottom:0.4rem">Model agreement breakdown</div>'
+        + '<div class="stat-breakdown">Models that mostly agree: <strong>' + _esc(above_str) + '</strong></div>'
+        + '<div class="stat-breakdown">Model most often diverging: <strong>' + _esc(lowest_str) + '</strong></div>'
+        + '</div>'
         + '</div>'
         + _agg_bar(verdict_totals)
     )
@@ -2576,9 +2745,11 @@ def _render_index(reports: list[dict], stats: dict) -> str:
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     body = (
-        stats_html
+        hero_html
+        + stats_html
         + '<hr class="rule">'
         + cards_html
+        + _HERO_SCRIPT
     )
     footer = (
         '<span>Last updated: ' + now + '</span>'
@@ -2851,7 +3022,7 @@ class SitePublisher:
         self._write_claims_index(claims_index)
 
         # Regenerate index
-        stats = self._compute_stats(reports_index)
+        stats = self._compute_stats(reports_index, claims_index)
         index_html = _render_index(reports_index, stats)
         self._write(self._root / "index.html", index_html)
 
@@ -2937,7 +3108,7 @@ class SitePublisher:
             "url": f"claims/{bundle.claim.id}.html",
         }
 
-    def _compute_stats(self, reports: list[dict]) -> dict:
+    def _compute_stats(self, reports: list[dict], claims: list[dict] | None = None) -> dict:
         total_claims = sum(r.get("claim_count", 0) for r in reports)
         if reports:
             agree_rate = sum(r.get("model_agreement_rate", 0) for r in reports) / len(reports)
@@ -2947,11 +3118,48 @@ class SitePublisher:
         for r in reports:
             for label, cnt in r.get("verdict_distribution", {}).items():
                 verdict_totals[label] = verdict_totals.get(label, 0) + cnt
+
+        # Distinct leaders reviewed
+        distinct_leaders = len({
+            r.get("source_of_claims") or r.get("speaker", "")
+            for r in reports
+            if r.get("source_of_claims") or r.get("speaker")
+        })
+
+        # Per-model agreement stats computed from claims index
+        model_agree: dict[str, list[bool]] = {}
+        per_claim_agree: list[float] = []
+        if claims:
+            for c in claims:
+                consensus = c.get("consensus_verdict", "")
+                mvs = c.get("model_verdicts_summary", [])
+                if mvs:
+                    n_agree = sum(1 for mv in mvs if mv.get("label") == consensus)
+                    per_claim_agree.append(n_agree / len(mvs))
+                    for mv in mvs:
+                        adapter = mv.get("adapter", "")
+                        model_agree.setdefault(adapter, []).append(mv.get("label") == consensus)
+
+        avg_consensus = (sum(per_claim_agree) / len(per_claim_agree)
+                         if per_claim_agree else agree_rate)
+
+        model_rates = {a: sum(v) / len(v) for a, v in model_agree.items() if v}
+        mean_rate = sum(model_rates.values()) / len(model_rates) if model_rates else 0.0
+        models_above = sorted(a for a, r in model_rates.items() if r > mean_rate)
+        model_lowest = min(model_rates, key=lambda a: model_rates[a]) if model_rates else None
+        # If all rates are equal, "most often diverging" is not meaningful
+        if model_rates and len(set(round(v, 4) for v in model_rates.values())) == 1:
+            model_lowest = None
+
         return {
             "total_speeches": len(reports),
+            "total_leaders": distinct_leaders,
             "total_claims": total_claims,
             "model_agreement_rate": agree_rate,
+            "avg_consensus": avg_consensus,
             "verdict_totals": verdict_totals,
+            "models_above_mean": models_above,
+            "model_lowest": model_lowest,
         }
 
     def summary(self) -> dict:
