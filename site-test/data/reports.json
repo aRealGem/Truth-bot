@@ -4,7 +4,7 @@
     "date": "2026-03-04",
     "speaker": "Donald Trump",
     "role": "President",
-    "venue": "U.S. Capitol, State of the Union",
+    "venue": "U.S. Capitol, Joint Session of Congress",
     "claim_count": 5,
     "verdict_distribution": {
       "True": 1,
@@ -15,6 +15,10 @@
       "Unverifiable": 0
     },
     "model_agreement_rate": 0.8,
-    "url": "reports/2026-03-04-donald-trump-165937.html"
+    "url": "reports/2026-03-04-donald-trump-165937.html",
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "47th President of the United States",
+    "event": "State of the Union Address",
+    "channel": ""
   }
 ]

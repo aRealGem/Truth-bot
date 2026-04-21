@@ -840,6 +840,19 @@ header.masthead:has(.mast-row) {
   color: var(--v-exaggerated);
   font-weight: 600;
 }
+/* No-response model: muted bg + FAILED tag in the corner */
+.model.no-response { background: #f9f8f7; }
+.model.no-response::after {
+  content: "FAILED";
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
 .model-name {
   font-family: var(--mono);
   font-size: 0.66rem;

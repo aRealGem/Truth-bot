@@ -208,6 +208,7 @@ class ModelVerdict(BaseModel):
     caveats: str = Field(default="", description="Source-quality notes from the adapter")
     web_sources: list[str] = Field(default_factory=list)
     scored_at: datetime = Field(default_factory=datetime.utcnow)
+    no_response: bool = Field(default=False, description="True when the adapter failed/timed out and returned no verdict")
 
 
 class ConsensusVerdict(BaseModel):

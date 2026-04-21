@@ -68,6 +68,11 @@ def main():
             transcript_source_url="",  # not stored in reports.json; will read from bundle
             bundles=bundles,
             generated_at=datetime.now(timezone.utc),
+            # New decomposed speaker/speech fields
+            source_of_claims=r.get("source_of_claims", ""),
+            source_of_claims_professional_public_title=r.get("source_of_claims_professional_public_title", ""),
+            event=r.get("event", ""),
+            channel=r.get("channel", ""),
         )
         
         # Try to get transcript URL from the existing rendered HTML

@@ -102,14 +102,19 @@ _GOOGLE_FONTS = """\
 class SiteReport:
     """All data needed to render a full report page."""
     report_id: str
-    speaker: str
-    role: str
+    speaker: str        # legacy alias for source_of_claims
+    role: str           # legacy alias for source_of_claims_professional_public_title
     date: Optional[datetime]
-    venue: str
+    venue: str          # physical location (e.g. "U.S. Capitol")
     transcript_source_url: str
     bundles: list[VerdictBundle]
     video_source_url: str = ""
     generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    # Richer speaker/speech identity fields (Change 2)
+    source_of_claims: str = ""
+    source_of_claims_professional_public_title: str = ""
+    event: str = ""    # event name (e.g. "State of the Union Address")
+    channel: str = ""  # medium (e.g. "Twitter/X", "Press Release")
 
     @property
     def date_str(self) -> str:
@@ -794,15 +799,24 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     for mv in bundle.model_verdicts:
         mv_label = mv.label.value
         mv_css = _verdict_css(mv_label)
-        dissent = " dissent" if mv_label != majority_label else ""
-        if not dissent:
-            agreeing += 1
-        model_cards.append(
-            f'<div class="model{dissent}">'
-            f'  <div class="model-name">{_esc(mv.adapter_name)}</div>'
-            f'  <div class="model-verdict vt-{mv_css}">{VERDICT_EMOJI.get(mv_label, "")} {_esc(mv_label)}</div>'
-            '</div>'
-        )
+        if getattr(mv, 'no_response', False):
+            # Model failed to respond
+            model_cards.append(
+                '<div class="model no-response">'
+                f'  <div class="model-name">{_esc(mv.adapter_name)}</div>'
+                '  <div class="model-verdict" style="color:var(--ink-faint)">Requested / Failed</div>'
+                '</div>'
+            )
+        else:
+            dissent = " dissent" if mv_label != majority_label else ""
+            if not dissent:
+                agreeing += 1
+            model_cards.append(
+                f'<div class="model{dissent}">'
+                f'  <div class="model-name">{_esc(mv.adapter_name)}</div>'
+                f'  <div class="model-verdict vt-{mv_css}">{VERDICT_EMOJI.get(mv_label, "")} {_esc(mv_label)}</div>'
+                '</div>'
+            )
     total_models = len(bundle.model_verdicts)
     dissenting = total_models - agreeing
     dissent_note = f" · {dissenting} dissent{'s' if dissenting > 1 else ''}" if dissenting else ""
@@ -1809,6 +1823,19 @@ header.masthead:has(.mast-row) {
   color: var(--v-exaggerated);
   font-weight: 600;
 }
+/* No-response model: muted bg + FAILED tag in the corner */
+.model.no-response { background: #f9f8f7; }
+.model.no-response::after {
+  content: "FAILED";
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
 .model-name {
   font-family: var(--mono);
   font-size: 0.66rem;
@@ -2605,15 +2632,26 @@ def _render_report(site_report: SiteReport) -> str:
     )
 
     # Build hero elements conditionally (omit empty fields per spec)
+    # Prefer new decomposed fields; fall back to legacy fields for backward compat.
+    _overline = site_report.source_of_claims_professional_public_title or site_report.role
+    _name = site_report.source_of_claims or site_report.speaker
+    _event = site_report.event  # event name -> speech-title
+    _venue = site_report.venue
+    _channel = site_report.channel
+
     _hero_parts = ['<section class="hero">']
-    if site_report.role:
-        _hero_parts.append('<div class="hero-overline">' + _esc(site_report.role) + '</div>')
-    _hero_parts.append('<h1 class="speaker-name">' + _esc(site_report.speaker) + '</h1>')
-    if site_report.venue:
-        _hero_parts.append('<div class="speech-title">' + _esc(site_report.venue) + '</div>')
+    if _overline:
+        _hero_parts.append('<div class="hero-overline">' + _esc(_overline) + '</div>')
+    _hero_parts.append('<h1 class="speaker-name">' + _esc(_name) + '</h1>')
+    if _event:
+        _hero_parts.append('<div class="speech-title">' + _esc(_event) + '</div>')
     _meta_spans: list[str] = []
     if site_report.date:
         _meta_spans.append('<span>' + _esc(site_report.display_date) + '</span>')
+    if _venue:
+        _meta_spans.append('<span>' + _esc(_venue) + '</span>')
+    if _channel:
+        _meta_spans.append('<span>' + _esc(_channel) + '</span>')
     if _meta_spans:
         _hero_parts.append('<div class="speech-meta">' + '<span class="sep">&middot;</span>'.join(_meta_spans) + '</div>')
     _hero_parts.append('</section>')
@@ -2877,6 +2915,11 @@ class SitePublisher:
             "verdict_distribution": sr.verdict_distribution,
             "model_agreement_rate": round(sr.model_agreement_rate, 3),
             "url":                 sr.report_url,
+            # New decomposed speaker/speech fields
+            "source_of_claims":                          sr.source_of_claims or sr.speaker,
+            "source_of_claims_professional_public_title": sr.source_of_claims_professional_public_title or sr.role,
+            "event":               sr.event,
+            "channel":             sr.channel,
         }
 
     def _claim_meta(self, bundle: VerdictBundle, sr: SiteReport) -> dict:
