@@ -361,7 +361,8 @@ header.masthead:has(.mast-row) {
 }
 /* Counter-animate the floor shadow so it stays put in the viewport
    while Truthy bobs, and subtly breathes (a touch smaller when he's up). */
-.index-hero #floorShadow {
+.index-hero #floorShadow,
+.truthy-frame #floorShadow {
   transform-box: fill-box;
   transform-origin: 150px 353px;
   animation: hero-shadow-breathe 3.2s ease-in-out infinite;
@@ -678,12 +679,14 @@ header.masthead:has(.mast-row) {
 .truthy-frame {
   position: relative;
   cursor: pointer;
-  transition: transform 200ms ease;
+  transition: filter 200ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  /* Match index-hero bob; shadow counter-animates inside the SVG (#floorShadow). */
+  animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
-.truthy-frame:hover { transform: translateY(-2px); }
-.truthy-frame:active { transform: translateY(0); }
+.truthy-frame:hover { filter: brightness(1.04); }
+.truthy-frame:active { filter: brightness(0.98); }
 .truthy-tap-hint {
   position: absolute;
   bottom: -4px;
@@ -1269,9 +1272,9 @@ hr.rule-light {
 #mascot.blinking .eye-shape { transform: scaleY(0.06); }
 
 @keyframes tear-fall {
-  0%   { transform: translateY(-6px); opacity: 0; }
+  0%   { transform: translateY(-4px); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(56px); opacity: 0; }
+  100% { transform: translateY(72px); opacity: 0; }
 }
 .state-lie #tearLeft,
 .state-lie #tearRight {
@@ -1283,8 +1286,8 @@ hr.rule-light {
 #tearLeft, #tearRight { opacity: 0; }
 
 /* Report Truthy is rendered smaller than index-hero (170px vs 280px wide SVG).
-   Scale tears in .truthy-frame so they stay as visually prominent vs. the sad
-   eyes as on the landing hero (extra scale on narrow layouts with 110px SVG). */
+   Scale tears in .truthy-frame so on-screen tear mass tracks the hero (~280/170
+   ≈ 1.65); extra lift on <=740px when the SVG is only 110px wide. */
 .truthy-frame #mascot.state-lie #tearLeft,
 .truthy-frame #mascot.state-lie #tearRight {
   transform-box: fill-box;
@@ -1294,15 +1297,15 @@ hr.rule-light {
 .truthy-frame #mascot.state-lie #tearRight { animation-delay: 0.7s; }
 
 @keyframes tear-fall-report {
-  0%   { transform: translateY(-6px) scale(1.58); opacity: 0; }
+  0%   { transform: translateY(-4px) scale(1.82); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(58px) scale(1.58); opacity: 0; }
+  100% { transform: translateY(76px) scale(1.82); opacity: 0; }
 }
 
 @keyframes tear-fall-report-sm {
-  0%   { transform: translateY(-6px) scale(2.28); opacity: 0; }
+  0%   { transform: translateY(-4px) scale(2.62); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(64px) scale(2.28); opacity: 0; }
+  100% { transform: translateY(82px) scale(2.62); opacity: 0; }
 }
 
 #armLeftSwing,

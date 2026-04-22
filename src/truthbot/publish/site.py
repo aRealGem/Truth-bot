@@ -534,7 +534,8 @@ _TRUTHY_SVG = (
     '<rect class="eye-sad eye-led" x="-17" y="-17" width="34" height="34" rx="8" fill="url(#eyeLedLie)" filter="url(#eyeGlow)"/>'
     '<rect x="-19" y="-20" width="38" height="40" fill="url(#scanlines)" pointer-events="none" opacity="0.7"/>'
     '</g></g>'
-    '<g transform="translate(102 193)"><g id="tearLeft">'
+    # Tears: lower-inner sad-eye (lie pose: eye groups at y=170).
+    '<g transform="translate(119 172)"><g id="tearLeft">'
     '<rect x="-3" y="0" width="6" height="6" rx="0.8" fill="#9cc8e8"/>'
     '<rect x="-6" y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
     '<rect x="0"  y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
@@ -542,7 +543,7 @@ _TRUTHY_SVG = (
     '<rect x="0"  y="12" width="6" height="6" rx="0.8" fill="#7eb4d8"/>'
     '<rect x="-3" y="18" width="6" height="6" rx="0.8" fill="#4a86b8"/>'
     '</g></g>'
-    '<g transform="translate(198 193)"><g id="tearRight">'
+    '<g transform="translate(181 172)"><g id="tearRight">'
     '<rect x="-3" y="0" width="6" height="6" rx="0.8" fill="#9cc8e8"/>'
     '<rect x="-6" y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
     '<rect x="0"  y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
@@ -1418,7 +1419,8 @@ header.masthead:has(.mast-row) {
 }
 /* Counter-animate the floor shadow so it stays put in the viewport
    while Truthy bobs, and subtly breathes (a touch smaller when he's up). */
-.index-hero #floorShadow {
+.index-hero #floorShadow,
+.truthy-frame #floorShadow {
   transform-box: fill-box;
   transform-origin: 150px 353px;
   animation: hero-shadow-breathe 3.2s ease-in-out infinite;
@@ -1735,12 +1737,14 @@ header.masthead:has(.mast-row) {
 .truthy-frame {
   position: relative;
   cursor: pointer;
-  transition: transform 200ms ease;
+  transition: filter 200ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  /* Match index-hero bob; shadow counter-animates inside the SVG (#floorShadow). */
+  animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
-.truthy-frame:hover { transform: translateY(-2px); }
-.truthy-frame:active { transform: translateY(0); }
+.truthy-frame:hover { filter: brightness(1.04); }
+.truthy-frame:active { filter: brightness(0.98); }
 .truthy-tap-hint {
   position: absolute;
   bottom: -4px;
@@ -2326,9 +2330,9 @@ hr.rule-light {
 #mascot.blinking .eye-shape { transform: scaleY(0.06); }
 
 @keyframes tear-fall {
-  0%   { transform: translateY(-6px); opacity: 0; }
+  0%   { transform: translateY(-4px); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(56px); opacity: 0; }
+  100% { transform: translateY(72px); opacity: 0; }
 }
 .state-lie #tearLeft,
 .state-lie #tearRight {
@@ -2340,8 +2344,8 @@ hr.rule-light {
 #tearLeft, #tearRight { opacity: 0; }
 
 /* Report Truthy is rendered smaller than index-hero (170px vs 280px wide SVG).
-   Scale tears in .truthy-frame so they stay as visually prominent vs. the sad
-   eyes as on the landing hero (extra scale on narrow layouts with 110px SVG). */
+   Scale tears in .truthy-frame so on-screen tear mass tracks the hero (~280/170
+   ≈ 1.65); extra lift on <=740px when the SVG is only 110px wide. */
 .truthy-frame #mascot.state-lie #tearLeft,
 .truthy-frame #mascot.state-lie #tearRight {
   transform-box: fill-box;
@@ -2351,15 +2355,15 @@ hr.rule-light {
 .truthy-frame #mascot.state-lie #tearRight { animation-delay: 0.7s; }
 
 @keyframes tear-fall-report {
-  0%   { transform: translateY(-6px) scale(1.58); opacity: 0; }
+  0%   { transform: translateY(-4px) scale(1.82); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(58px) scale(1.58); opacity: 0; }
+  100% { transform: translateY(76px) scale(1.82); opacity: 0; }
 }
 
 @keyframes tear-fall-report-sm {
-  0%   { transform: translateY(-6px) scale(2.28); opacity: 0; }
+  0%   { transform: translateY(-4px) scale(2.62); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(64px) scale(2.28); opacity: 0; }
+  100% { transform: translateY(82px) scale(2.62); opacity: 0; }
 }
 
 #armLeftSwing,
