@@ -405,9 +405,25 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
   max-width: 40rem;
 }
-.truthy-fun-notes strong {
+.truthy-fun-notes-lead {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 500;
   color: var(--ink);
-  font-weight: 600;
+  line-height: 1.4;
+}
+.truthy-fun-notes-mascot {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.truthy-fun-notes-outro {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
 }
 /* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail).
    width: fit-content + column align-items:flex-start so the bubble hugs caption

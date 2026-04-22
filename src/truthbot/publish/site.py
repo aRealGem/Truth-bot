@@ -1544,9 +1544,25 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
   max-width: 40rem;
 }
-.truthy-fun-notes strong {
+.truthy-fun-notes-lead {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 500;
   color: var(--ink);
-  font-weight: 600;
+  line-height: 1.4;
+}
+.truthy-fun-notes-mascot {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.truthy-fun-notes-outro {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
 }
 /* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail).
    width: fit-content + column align-items:flex-start so the bubble hugs caption
@@ -3698,10 +3714,10 @@ def _render_truthy() -> str:
     )
     notes = (
         '<div class="truthy-fun-notes">'
-        '<strong>Truthy McTruthface</strong> &mdash; the <strong>M.</strong> stands for '
-        '<strong>McTruthface</strong>. Our citizen-funded fact-checking mascot.<br>'
-        'A fact-check for every citizen. Funded by We The People, powered by AI, made in the USA. '
-        'Because liberty and justice for all starts with the truth. &#x1F1FA;&#x1F1F8;'
+        '<p class="truthy-fun-notes-lead">Truthy M. -- The M. stands for McTruthface!</p>'
+        '<p class="truthy-fun-notes-mascot">Our citizen-funded fact-checking mascot.</p>'
+        '<p class="truthy-fun-notes-outro">A fact-check for every citizen. Funded by We The People, powered by AI, '
+        'made in the USA. Because liberty and justice for all starts with the truth. &#x1F1FA;&#x1F1F8;</p>'
         '</div>'
     )
     body = hero_block + notes + _TRUTHY_FUN_SCRIPT
