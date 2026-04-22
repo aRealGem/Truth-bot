@@ -32,13 +32,17 @@ def refresh_assets_and_index() -> None:
     (SITE / "assets" / "truthbot.js").write_text(JS, encoding="utf-8")
 
     pub = SitePublisher(site_root=str(SITE))
+    pub._copy_icons()
     reports_index = pub._load_reports_index()
     claims_index = pub._load_claims_index()
     stats = pub._compute_stats(reports_index, claims_index)
     (SITE / "index.html").write_text(_render_index(reports_index, stats), encoding="utf-8")
     (SITE / "about.html").write_text(_render_about(), encoding="utf-8")
     (SITE / "404.html").write_text(_render_404(), encoding="utf-8")
-    print("refreshed: index.html, about.html, 404.html, assets/styles.css, assets/truthbot.js")
+    print(
+        "refreshed: index.html, about.html, 404.html, "
+        "assets/styles.css, assets/truthbot.js, assets/icons/*.svg"
+    )
 
 
 # Match a single <div class="model"> block through its first Model-reasoning

@@ -752,6 +752,10 @@ def _page_index(title: str, body: str, footer: str = "", model_count: int = 0) -
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        # Tint mobile browser chrome to match the page background.
+        # Keep in sync with --bg in CSS.
+        '  <meta name="theme-color" content="#fafaf9">\n'
+        '  <meta name="color-scheme" content="light">\n'
         f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -782,6 +786,8 @@ def _page_report(title: str, body: str, footer: str = "", model_count: int = 0, 
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        '  <meta name="theme-color" content="#fafaf9">\n'
+        '  <meta name="color-scheme" content="light">\n'
         f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="../assets/styles.css">\n'
@@ -811,6 +817,8 @@ def _page_about(title: str, body: str, footer: str = "") -> str:
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        '  <meta name="theme-color" content="#fafaf9">\n'
+        '  <meta name="color-scheme" content="light">\n'
         f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -1054,6 +1062,11 @@ def _agg_bar(verdict_totals: dict[str, int]) -> str:
     )
 
 # ── CSS / JS assets ────────────────────────────────────────────────────────
+
+# Toggle: include .how-strip in the page-load rise animation cascade (80ms delay).
+# Flip to False if the staggered reveal ever feels too busy; this appends an
+# override at the bottom of CSS that neutralizes the animation.
+HOW_STRIP_RISE = True
 
 CSS = """\
 /* ─────────────────────────────────────────────────────────────────────
@@ -2395,12 +2408,13 @@ hr.rule-light {
   to   { opacity: 1; transform: translateY(0); }
 }
 /* Staggered reveal of major content blocks */
-.stats, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
+.stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
   animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 /* Index page stagger */
-.stats { animation-delay: 50ms; }
-.agg   { animation-delay: 130ms; }
+.stats     { animation-delay: 50ms; }
+.how-strip { animation-delay: 80ms; }
+.agg       { animation-delay: 130ms; }
 .reports .report:nth-of-type(1) { animation-delay: 240ms; }
 .reports .report:nth-of-type(2) { animation-delay: 320ms; }
 .reports .report:nth-of-type(3) { animation-delay: 400ms; }
@@ -2517,7 +2531,79 @@ hr.rule-light {
   .claim-quote { font-size: 1.15rem; padding-left: 1rem; }
 }
 
+
+/* [23] Stat icons (landing page) ─────────────────────────────────────── */
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+.stat-icon {
+  color: var(--ink-muted);
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+/* [24] How-it-works trust strip (landing page) ───────────────────────── */
+.how-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.how-step {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex: 1;
+}
+.how-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  background: var(--border);
+  width: 1.3rem;
+  height: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.how-text {
+  flex: 1;
+}
+.how-sep {
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+/* [25] Small-screen overrides for stat icons + how-strip ───────────── */
+@media (max-width: 600px) {
+  .stat { flex-direction: row; align-items: center; gap: 1rem; }
+  .stat-icon { flex-shrink: 0; margin-bottom: 0; }
+  .how-strip { flex-direction: column; gap: 0.5rem; }
+  .how-sep { display: none; }
+}
+
 """
+
+if not HOW_STRIP_RISE:
+    # Neutralize the rise animation so the how-strip appears immediately.
+    CSS += (
+        "\n/* how-strip rise override (HOW_STRIP_RISE=False) */\n"
+        ".how-strip { animation: none; }\n"
+    )
 
 JS = """\
 /* ─────────────────────────────────────────────────────────────────────
@@ -2872,6 +2958,43 @@ _HERO_SCRIPT = r"""<script>
 </script>
 """
 
+# ── Landing-page stat icons (inline SVG, monochrome, uses currentColor) ────
+# Kept in sync with src/truthbot/publish/assets/icons/*.svg.
+_STAT_ICON_LEADERS = (
+    '<svg class="stat-icon" width="28" height="28" viewBox="0 0 24 24" '
+    'fill="none" aria-hidden="true">'
+    '<circle cx="12" cy="5.5" r="3" fill="currentColor"/>'
+    '<path d="M8 10.5c0-1 1.2-2 4-2s4 1 4 2v1.5H8z" fill="currentColor"/>'
+    '<rect x="4" y="14" width="16" height="2" rx="0.5" fill="currentColor" opacity="0.7"/>'
+    '<rect x="6" y="17" width="12" height="5" rx="0.8" fill="currentColor" opacity="0.4"/>'
+    '<rect x="10" y="16" width="4" height="6.5" rx="0.5" fill="currentColor" opacity="0.55"/>'
+    '</svg>'
+)
+_STAT_ICON_CLAIMS = (
+    '<svg class="stat-icon" width="28" height="28" viewBox="0 0 24 24" '
+    'fill="none" aria-hidden="true">'
+    '<path d="M4 4h12a2 2 0 012 2v7a2 2 0 01-2 2h-3.5l-3 3v-3H4a2 2 0 01-2-2V6a2 2 0 012-2z" '
+    'fill="currentColor" opacity="0.35"/>'
+    '<line x1="5" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
+    '<line x1="5" y1="11" x2="10" y2="11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
+    '<circle cx="17" cy="15" r="4" stroke="currentColor" stroke-width="1.8" fill="none"/>'
+    '<line x1="20" y1="18" x2="22.5" y2="20.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+    '</svg>'
+)
+_STAT_ICON_CONSENSUS = (
+    '<svg class="stat-icon" width="28" height="28" viewBox="0 0 24 24" '
+    'fill="none" aria-hidden="true">'
+    '<circle cx="8" cy="10" r="5" fill="currentColor" opacity="0.18"/>'
+    '<circle cx="16" cy="10" r="5" fill="currentColor" opacity="0.18"/>'
+    '<circle cx="12" cy="16" r="5" fill="currentColor" opacity="0.18"/>'
+    '<circle cx="8" cy="10" r="5" stroke="currentColor" stroke-width="1.2" fill="none"/>'
+    '<circle cx="16" cy="10" r="5" stroke="currentColor" stroke-width="1.2" fill="none"/>'
+    '<circle cx="12" cy="16" r="5" stroke="currentColor" stroke-width="1.2" fill="none"/>'
+    '<path d="M10.5 12.5l1.2 1.5 2.3-2.8" stroke="currentColor" stroke-width="1.5" '
+    'stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    '</svg>'
+)
+
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
     reports = _disambiguate_report_urls(reports)
@@ -2899,13 +3022,39 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     stats_html = (
         '<div class="section-head"><span>Program stats</span><span class="sub">All time</span></div>'
         '<div class="stats">'
-        + '<div class="stat"><div class="num">' + str(total_leaders) + '</div>'
-        + '<div class="lbl">Total Leaders Reviewed</div></div>'
-        + '<div class="stat"><div class="num">' + str(total_claims) + '</div>'
-        + '<div class="lbl">Total Claims Reviewed</div></div>'
-        + '<div class="stat"><div class="num">' + avg_pct + '<span class="unit">%</span></div>'
-        + '<div class="lbl">Average Model Consensus</div></div>'
+        + '<div class="stat">'
+        + _STAT_ICON_LEADERS
+        + '<div class="num">' + str(total_leaders) + '</div>'
+        + '<div class="lbl">Leaders Reviewed</div></div>'
+        + '<div class="stat">'
+        + _STAT_ICON_CLAIMS
+        + '<div class="num">' + str(total_claims) + '</div>'
+        + '<div class="lbl">Claims Checked</div></div>'
+        + '<div class="stat">'
+        + _STAT_ICON_CONSENSUS
+        + '<div class="num">' + avg_pct + '<span class="unit">%</span></div>'
+        + '<div class="lbl">Model Consensus</div></div>'
         + '</div>'
+    )
+
+    # How-it-works trust strip: reassures readers about the pipeline in one glance.
+    how_strip_html = (
+        '<div class="how-strip">'
+        '<div class="how-step">'
+        '<span class="how-num">1</span>'
+        '<span class="how-text">Speech is decomposed into atomic, verifiable claims</span>'
+        '</div>'
+        '<div class="how-sep" aria-hidden="true">&rarr;</div>'
+        '<div class="how-step">'
+        '<span class="how-num">2</span>'
+        '<span class="how-text">Each claim is checked by multiple AI models using primary sources</span>'
+        '</div>'
+        '<div class="how-sep" aria-hidden="true">&rarr;</div>'
+        '<div class="how-step">'
+        '<span class="how-num">3</span>'
+        '<span class="how-text">Verdicts are aggregated into a transparent consensus score</span>'
+        '</div>'
+        '</div>'
     )
 
     cards_html = '<div class="reports">'
@@ -2920,6 +3069,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     body = (
         hero_html
         + stats_html
+        + how_strip_html
         + '<hr class="rule">'
         + cards_html
         + _HERO_SCRIPT
@@ -3211,12 +3361,25 @@ class SitePublisher:
     # ── Private helpers ───────────────────────────────────────────────────────
 
     def _ensure_structure(self) -> None:
-        for sub in ("reports", "claims", "assets", "data"):
+        for sub in ("reports", "claims", "assets", "data", "assets/icons"):
             (self._root / sub).mkdir(parents=True, exist_ok=True)
 
     def _copy_assets(self) -> None:
         self._write(self._root / "assets" / "styles.css", CSS)
         self._write(self._root / "assets" / "truthbot.js", JS)
+        self._copy_icons()
+
+    def _copy_icons(self) -> None:
+        """Copy package-shipped icon SVGs to the site's assets/icons/ folder."""
+        src_dir = Path(__file__).resolve().parent / "assets" / "icons"
+        dst_dir = self._root / "assets" / "icons"
+        dst_dir.mkdir(parents=True, exist_ok=True)
+        if not src_dir.exists():
+            return
+        for svg in src_dir.glob("*.svg"):
+            dst = dst_dir / svg.name
+            dst.write_bytes(svg.read_bytes())
+            logger.debug("Copied icon %s -> %s", svg.name, dst)
 
     def _write(self, path: Path, content: str) -> None:
         path.write_text(content, encoding="utf-8")

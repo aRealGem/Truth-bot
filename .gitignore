@@ -57,3 +57,6 @@ eval/sotu-2026/*/runner_cache*/
 # Telemetry data (runtime-generated, not source)
 metrics/adapter_calls.jsonl
 metrics/*.jsonl
+
+# UI reference drops (design specs, not site artifacts)
+ui-upgrade-ideas/*.zip
