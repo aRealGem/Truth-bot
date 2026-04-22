@@ -11,6 +11,7 @@ Output structure:
     {SITE_ROOT}/
         index.html
         about.html
+        truthy.html
         404.html
         reports/{YYYY-MM-DD}-{speaker-slug}.html
         claims/{claim_id}.html
@@ -851,6 +852,39 @@ def _page_about(title: str, body: str, footer: str = "") -> str:
         '</body>\n'
         '</html>'
     )
+
+
+def _page_truthy(title: str, body: str, footer: str = "") -> str:
+    """Fun / mascot page shell — same chrome as about, no truthbot.js (inline _TRUTHY_FUN_SCRIPT in body)."""
+    foot_html = (
+        '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
+        if footer else ''
+    )
+    return (
+        '<!DOCTYPE html>\n'
+        '<html lang="en">\n'
+        '<head>\n'
+        '  <meta charset="UTF-8">\n'
+        '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        '  <meta name="theme-color" content="#fafaf9">\n'
+        '  <meta name="color-scheme" content="light">\n'
+        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
+        + _GOOGLE_FONTS + '\n'
+        '  <link rel="stylesheet" href="./assets/styles.css">\n'
+        '</head>\n'
+        '<body>\n'
+        + _status_bar()
+        + _masthead_full(rel="./")
+        + '<main class="wrap">\n'
+        + body
+        + '\n</main>\n'
+        + foot_html
+        + '</body>\n'
+        '</html>'
+    )
+
+
 # ── Claim + report building blocks ───────────────────────────────────────────
 
 
@@ -1428,6 +1462,50 @@ header.masthead:has(.mast-row) {
   gap: 2rem;
   padding: 1.5rem 0 1rem;
   flex-wrap: nowrap;
+}
+a.hero-truthy-link {
+  color: inherit;
+  text-decoration: none;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  outline-offset: 3px;
+}
+a.hero-truthy-link:focus-visible {
+  outline: 2px solid var(--ink-muted);
+}
+a.hero-truthy-link:hover .hero-truthy-wrap {
+  filter: brightness(1.04);
+}
+.truthy-fun-h1 {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+  color: var(--ink);
+}
+.truthy-fun-hint {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin: 0 0 1.25rem;
+}
+.truthy-fun-notes {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  max-width: 40rem;
+}
+.truthy-fun-notes strong {
+  color: var(--ink);
+  font-weight: 600;
 }
 /* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail).
    width: fit-content + column align-items:flex-start so the bubble hugs caption
@@ -3046,6 +3124,178 @@ _HERO_SCRIPT = r"""<script>
 </script>
 """
 
+# Truthy fun page: same hero cycle as index + Web Audio (gesture-gated; mirrors truthbot.js).
+_TRUTHY_FUN_SCRIPT = r"""<script>
+(function(){
+  var mascot = document.getElementById('mascot');
+  var bubble = document.getElementById('hero-bubble');
+  if (!mascot || !bubble) return;
+  var led = document.getElementById('led');
+  var ledHalo = document.getElementById('ledHalo');
+  var eyeL = document.getElementById('eyeLeftGroup');
+  var eyeR = document.getElementById('eyeRightGroup');
+  var head = document.getElementById('headGroup');
+  var body = document.getElementById('bodyGroup');
+  var armL = document.getElementById('armLeftSwing');
+  var armR = document.getElementById('armRightSwing');
+  var clipboard = document.getElementById('clipboard');
+
+  var audioCtx = null;
+  function getCtx() {
+    if (!audioCtx) {
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) { return null; }
+    }
+    return audioCtx;
+  }
+  function playHappy() {
+    var ctx = getCtx(); if (!ctx) return;
+    var notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach(function(freq, i) {
+      var t0 = ctx.currentTime + i * 0.07;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, t0);
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(0.12, t0 + 0.01);
+      gain.gain.linearRampToValueAtTime(0, t0 + 0.10);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + 0.12);
+    });
+  }
+  function playConfused() {
+    var ctx = getCtx(); if (!ctx) return;
+    var t0 = ctx.currentTime;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(440, t0);
+    osc.frequency.exponentialRampToValueAtTime(620, t0 + 0.18);
+    osc.frequency.exponentialRampToValueAtTime(330, t0 + 0.42);
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(0.14, t0 + 0.02);
+    gain.gain.linearRampToValueAtTime(0, t0 + 0.45);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.5);
+  }
+  function playSad() {
+    var ctx = getCtx(); if (!ctx) return;
+    var notes = [392.00, 311.13];
+    notes.forEach(function(freq, i) {
+      var t0 = ctx.currentTime + i * 0.20;
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t0);
+      osc.frequency.linearRampToValueAtTime(freq * 0.93, t0 + 0.25);
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(0.15, t0 + 0.03);
+      gain.gain.linearRampToValueAtTime(0, t0 + 0.28);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + 0.32);
+    });
+  }
+  var soundMap = { true: playHappy, iffy: playConfused, lie: playSad };
+
+  var soundsArmed = false;
+  function armSounds() {
+    if (soundsArmed) return;
+    soundsArmed = true;
+    var c = getCtx();
+    if (c && c.state === 'suspended') c.resume();
+    document.body.removeEventListener('click', armSounds);
+    document.body.removeEventListener('touchstart', armSounds);
+    document.body.removeEventListener('keydown', armSounds);
+  }
+  document.body.addEventListener('click', armSounds);
+  document.body.addEventListener('touchstart', armSounds, { passive: true });
+  document.body.addEventListener('keydown', armSounds);
+
+  var STEP_MS = 3000;
+  var steps = [
+    { state: 'true', cls: 'is-true', text: "I'm Truthy and honesty makes me happy!", dur: STEP_MS },
+    { state: 'iffy', cls: 'is-iffy', text: "I'll evaluate all claims thoroughly.", dur: STEP_MS },
+    { state: 'lie',  cls: 'is-lie',  text: "Lies make me very sad.", dur: STEP_MS }
+  ];
+  function pose(state) {
+    mascot.classList.remove('state-true', 'state-iffy', 'state-lie');
+    mascot.classList.add('state-' + state);
+    mascot.classList.remove('hero-wave');
+    if (state === 'true') {
+      if (led) led.setAttribute('fill', 'url(#ledGradTrue)');
+      if (ledHalo) ledHalo.setAttribute('fill', '#5ac075');
+      if (eyeL) eyeL.setAttribute('transform', 'translate(115 154) rotate(0)');
+      if (eyeR) eyeR.setAttribute('transform', 'translate(185 154) rotate(0)');
+      if (head) head.setAttribute('transform', 'translate(0,0)');
+      if (body) body.setAttribute('transform', 'translate(0,0)');
+      mascot.classList.add('hero-wave');
+      if (armL) armL.setAttribute('transform', 'rotate(135 88 253)');
+      if (armR) armR.setAttribute('transform', 'rotate(-135 212 253)');
+      if (clipboard) clipboard.setAttribute('transform', 'translate(228 218) rotate(-8)');
+    } else if (state === 'iffy') {
+      if (led) led.setAttribute('fill', 'url(#ledGradIffy)');
+      if (ledHalo) ledHalo.setAttribute('fill', '#e8b850');
+      if (eyeL) eyeL.setAttribute('transform', 'translate(115 156) rotate(-10)');
+      if (eyeR) eyeR.setAttribute('transform', 'translate(185 156) rotate(10)');
+      if (head) head.setAttribute('transform', 'rotate(-7 150 170)');
+      if (body) body.setAttribute('transform', 'translate(0,0)');
+      if (armL) armL.setAttribute('transform', 'rotate(0 88 253)');
+      if (armR) armR.setAttribute('transform', 'rotate(-110 212 253)');
+      if (clipboard) clipboard.setAttribute('transform', 'translate(238 224) rotate(-3)');
+    } else {
+      if (led) led.setAttribute('fill', 'url(#ledGradLie)');
+      if (ledHalo) ledHalo.setAttribute('fill', '#5a8ec0');
+      if (eyeL) eyeL.setAttribute('transform', 'translate(115 170) rotate(0)');
+      if (eyeR) eyeR.setAttribute('transform', 'translate(185 170) rotate(0)');
+      if (head) head.setAttribute('transform', 'translate(0,7)');
+      if (body) body.setAttribute('transform', 'translate(0,3)');
+      if (armL) armL.setAttribute('transform', 'rotate(8 88 253)');
+      if (armR) armR.setAttribute('transform', 'rotate(35 212 253)');
+      if (clipboard) clipboard.setAttribute('transform', 'translate(174 298) rotate(40)');
+    }
+  }
+  function showStep(step) {
+    pose(step.state);
+    bubble.classList.remove('is-true', 'is-iffy', 'is-lie');
+    bubble.classList.add(step.cls);
+    bubble.textContent = step.text;
+    bubble.style.opacity = '1';
+    bubble.style.transform = 'translateY(0)';
+    if (soundsArmed) {
+      var fn = soundMap[step.state];
+      if (fn) fn();
+    }
+    if (step.state === 'iffy') {
+      setTimeout(blinkOnce, 600);
+    }
+  }
+  function cycle(idx) {
+    showStep(steps[idx]);
+    var dur = steps[idx].dur || STEP_MS;
+    var next = (idx + 1) % steps.length;
+    setTimeout(function(){ cycle(next); }, dur);
+  }
+  function blinkOnce() {
+    mascot.classList.add('blinking');
+    setTimeout(function() { mascot.classList.remove('blinking'); }, 110);
+  }
+  (function scheduleBlink() {
+    setTimeout(function() {
+      blinkOnce();
+      if (Math.random() < 0.2) setTimeout(blinkOnce, 280);
+      scheduleBlink();
+    }, 2500 + Math.random() * 4500);
+  })();
+  setTimeout(function() { cycle(0); }, 400);
+})();
+</script>
+"""
+
 # ── Shared icon bodies (monochrome, currentColor only) ────────────────────
 # Kept in sync with src/truthbot/publish/assets/icons/*.svg. Bodies only — no
 # outer <svg> wrapper — so they can be sized/classed per context via _icon_svg.
@@ -3143,9 +3393,11 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     # Truthy hero — full SVG, state-true by default; inline script drives animation
     hero_html = (
         '<div class="index-hero">'
+        '<a class="hero-truthy-link" href="./truthy.html" '
+        'aria-label="Meet Truthy McTruthface — fun page">'
         '<div class="hero-truthy-wrap">'
         + _TRUTHY_SVG
-        + '</div>'
+        + '</div></a>'
         '<div class="hero-truthy-col">'
         '<div class="truthy-bubble is-true" id="hero-bubble" '
         'style="opacity:1;transition:opacity 100ms ease,transform 100ms ease">'
@@ -3207,6 +3459,8 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + stats_html
         + how_strip_html
         + '<hr class="rule">'
+        + '<div class="section-head"><span>Latest truthiness reviews</span>'
+        + '<span class="sub">Feed</span></div>'
         + cards_html
         + _HERO_SCRIPT
     )
@@ -3333,6 +3587,40 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
         f'github.com/aRealGem/Truth-bot</a></span>'
     )
     return _page_report(f"Claim: {bundle.claim.text[:60]}", body, footer=footer)
+
+
+def _render_truthy() -> str:
+    """Fun Truthy page: shared SVG + index-style hero cycle, gesture-gated droid sounds, masthead chrome."""
+    hero_block = (
+        '<h1 class="truthy-fun-h1">Truthy</h1>'
+        '<p class="truthy-fun-hint">Tap anywhere once to enable droid sounds.</p>'
+        '<div class="index-hero">'
+        '<div class="hero-truthy-wrap">'
+        + _TRUTHY_SVG
+        + '</div>'
+        '<div class="hero-truthy-col">'
+        '<div class="truthy-bubble is-true" id="hero-bubble" '
+        'style="opacity:1;transition:opacity 100ms ease,transform 100ms ease">'
+        "I&rsquo;m Truthy and honesty makes me happy!"
+        '</div>'
+        '</div>'
+        '</div>'
+    )
+    notes = (
+        '<div class="truthy-fun-notes">'
+        '<strong>Truthy McTruthface</strong> &mdash; the <strong>M.</strong> stands for '
+        '<strong>McTruthface</strong>. Our citizen-funded fact-checking mascot.<br>'
+        'A fact-check for every citizen. Funded by We The People, powered by AI, made in the USA. '
+        'Because liberty and justice for all starts with the truth. &#x1F1FA;&#x1F1F8;'
+        '</div>'
+    )
+    body = hero_block + notes + _TRUTHY_FUN_SCRIPT
+    footer = (
+        '<span><a href="./index.html">Back to reports</a></span>'
+        f'<span>Pipeline v{PIPELINE_VERSION} &middot; '
+        f'<a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub</a></span>'
+    )
+    return _page_truthy("Meet Truthy", body, footer)
 
 
 def _render_about() -> str:
@@ -3491,6 +3779,7 @@ class SitePublisher:
 
         # About + 404 (regenerate on each publish for prompt-hash freshness)
         self._write(self._root / "about.html", _render_about())
+        self._write(self._root / "truthy.html", _render_truthy())
         self._write(self._root / "404.html",   _render_404())
 
         return report_path.resolve()

@@ -324,6 +324,50 @@ header.masthead:has(.mast-row) {
   padding: 1.5rem 0 1rem;
   flex-wrap: nowrap;
 }
+a.hero-truthy-link {
+  color: inherit;
+  text-decoration: none;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  outline-offset: 3px;
+}
+a.hero-truthy-link:focus-visible {
+  outline: 2px solid var(--ink-muted);
+}
+a.hero-truthy-link:hover .hero-truthy-wrap {
+  filter: brightness(1.04);
+}
+.truthy-fun-h1 {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+  color: var(--ink);
+}
+.truthy-fun-hint {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin: 0 0 1.25rem;
+}
+.truthy-fun-notes {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  max-width: 40rem;
+}
+.truthy-fun-notes strong {
+  color: var(--ink);
+  font-weight: 600;
+}
 /* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail).
    width: fit-content + column align-items:flex-start so the bubble hugs caption
    text instead of stretching to the full flex column width. */

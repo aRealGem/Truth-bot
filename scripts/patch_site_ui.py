@@ -39,6 +39,7 @@ from truthbot.publish.site import (  # noqa: E402
     _render_index,
     _render_about,
     _render_404,
+    _render_truthy,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -57,9 +58,10 @@ def refresh_assets_and_index() -> None:
     stats = pub._compute_stats(reports_index, claims_index)
     (SITE / "index.html").write_text(_render_index(reports_index, stats), encoding="utf-8")
     (SITE / "about.html").write_text(_render_about(), encoding="utf-8")
+    (SITE / "truthy.html").write_text(_render_truthy(), encoding="utf-8")
     (SITE / "404.html").write_text(_render_404(), encoding="utf-8")
     print(
-        "refreshed: index.html, about.html, 404.html, "
+        "refreshed: index.html, about.html, truthy.html, 404.html, "
         "assets/styles.css, assets/truthbot.js, assets/icons/*.svg"
     )
 
