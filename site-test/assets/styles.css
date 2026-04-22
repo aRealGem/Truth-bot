@@ -1517,11 +1517,98 @@ hr.rule-light {
   flex-shrink: 0;
 }
 
-/* [25] Small-screen overrides for stat icons + how-strip ───────────── */
+/* [25] Larger landing-page stat icons (hero scale) ───────────────────── */
+.stat-icon-lg {
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
+}
+
+/* [26] Report page: small icons inside .vp-stats ─────────────────────── */
+.vp-stat {
+  display: flex;
+  flex-direction: column;
+}
+.vp-stat-icon {
+  color: var(--ink-muted);
+  opacity: 0.7;
+  margin-bottom: 0.4rem;
+}
+/* Placeholder keeps the stat-num baseline-aligned across the three stats
+   while the "Models" bot icon is still in design. */
+.vp-stat-icon-placeholder {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-bottom: 0.4rem;
+}
+
+/* [27] Inline icons in section heads + claim cards ───────────────────── */
+.section-head-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-head-icon {
+  color: var(--ink-muted);
+  opacity: 0.75;
+  margin-bottom: 0; /* override default .stat-icon margin */
+  flex-shrink: 0;
+}
+.claim-head-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.claim-head-icon {
+  color: var(--ink-muted);
+  opacity: 0.7;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* [28] Per-claim back-links in .claim-foot ───────────────────────────── */
+.claim-back-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+}
+.claim-back-links .back-link {
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--border);
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.claim-back-links .back-link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-muted);
+}
+.claim-back-links .sep {
+  color: var(--ink-faint);
+  user-select: none;
+}
+
+/* [29] Small-screen overrides for stat icons + how-strip ─────────────── */
 @media (max-width: 600px) {
   .stat { flex-direction: row; align-items: center; gap: 1rem; }
   .stat-icon { flex-shrink: 0; margin-bottom: 0; }
+  /* Shrink the hero-scale icons so text still wraps nicely on phones */
+  .stat-icon-lg { width: 32px; height: 32px; }
   .how-strip { flex-direction: column; gap: 0.5rem; }
   .how-sep { display: none; }
+  /* .vp-stats can get tight — allow the claim-foot back-links to wrap below */
+  .claim-foot {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+  .claim-back-links {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 

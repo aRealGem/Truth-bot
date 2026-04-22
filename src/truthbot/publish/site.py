@@ -655,9 +655,22 @@ def _verdict_panel(site_report) -> str:
         + '<div class="vp-ratio">' + _esc(ratio_text) + '</div>'
         + '</div>'
         + '<div class="vp-stats">'
-        + '<div><div class="vp-stat-num">' + str(claim_count) + '</div><div class="vp-stat-lbl">Claims checked</div></div>'
-        + '<div><div class="vp-stat-num">' + str(model_count) + '</div><div class="vp-stat-lbl">Models</div></div>'
-        + '<div><div class="vp-stat-num">' + format(agree_rate, '.0%') + '</div><div class="vp-stat-lbl">Inter-model agreement</div></div>'
+        + '<div class="vp-stat">'
+        + _icon_svg(_ICON_BODY_CLAIMS, size=20, extra_class="vp-stat-icon")
+        + '<div class="vp-stat-num">' + str(claim_count) + '</div>'
+        + '<div class="vp-stat-lbl">Claims checked</div></div>'
+        # "Models" icon slot intentionally empty: user is designing small
+        # bot-silhouette icons that will populate this slot with one bot per
+        # model. Placeholder is a zero-height span so the flex column still
+        # aligns numerals across the three stats.
+        + '<div class="vp-stat">'
+        + '<span class="vp-stat-icon vp-stat-icon-placeholder" aria-hidden="true"></span>'
+        + '<div class="vp-stat-num">' + str(model_count) + '</div>'
+        + '<div class="vp-stat-lbl">Models</div></div>'
+        + '<div class="vp-stat">'
+        + _icon_svg(_ICON_BODY_CONSENSUS, size=20, extra_class="vp-stat-icon")
+        + '<div class="vp-stat-num">' + format(agree_rate, '.0%') + '</div>'
+        + '<div class="vp-stat-lbl">Inter-model agreement</div></div>'
         + '</div>'
         + '</div>'
     )
@@ -938,10 +951,26 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     gen_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     permalink = f"#{'claim-' + str(idx)}" if standalone else f"{rel}claims/{claim.id}.html"
 
+    # Back links only appear on the in-report claim cards (standalone=False),
+    # since standalone claim pages are their own scroll scope and "#claim-catalog"
+    # / "#top" anchors don't exist there.
+    back_links_html = ''
+    if not standalone:
+        back_links_html = (
+            '    <span class="claim-back-links">'
+            '      <a href="#claim-catalog" class="back-link">&uarr; Back to claim list</a>'
+            '      <span class="sep">&middot;</span>'
+            '      <a href="#top" class="back-link">&uarr; Top of page</a>'
+            '    </span>'
+        )
+
     return (
         f'<article class="claim" id="claim-{idx}">'
         '<div class="claim-head">'
-        f'  <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
+        '  <span class="claim-head-lead">'
+        + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="claim-head-icon")
+        + f'    <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
+        '  </span>'
         f'  <span class="claim-pill v-{css}">{_esc(label)}</span>'
         f'  {triage_badge}'
         '</div>'
@@ -959,7 +988,8 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         f'  {evidence_html}'
         '  <div class="claim-foot">'
         f'    <a href="#claim-{idx}" class="permalink">claim-{idx}</a>'
-        f'    <span>Last verified {gen_ts}</span>'
+        + back_links_html
+        + f'    <span>Last verified {gen_ts}</span>'
         '  </div>'
         '</div>'
         '</article>'
@@ -2588,12 +2618,99 @@ hr.rule-light {
   flex-shrink: 0;
 }
 
-/* [25] Small-screen overrides for stat icons + how-strip ───────────── */
+/* [25] Larger landing-page stat icons (hero scale) ───────────────────── */
+.stat-icon-lg {
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
+}
+
+/* [26] Report page: small icons inside .vp-stats ─────────────────────── */
+.vp-stat {
+  display: flex;
+  flex-direction: column;
+}
+.vp-stat-icon {
+  color: var(--ink-muted);
+  opacity: 0.7;
+  margin-bottom: 0.4rem;
+}
+/* Placeholder keeps the stat-num baseline-aligned across the three stats
+   while the "Models" bot icon is still in design. */
+.vp-stat-icon-placeholder {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-bottom: 0.4rem;
+}
+
+/* [27] Inline icons in section heads + claim cards ───────────────────── */
+.section-head-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-head-icon {
+  color: var(--ink-muted);
+  opacity: 0.75;
+  margin-bottom: 0; /* override default .stat-icon margin */
+  flex-shrink: 0;
+}
+.claim-head-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.claim-head-icon {
+  color: var(--ink-muted);
+  opacity: 0.7;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* [28] Per-claim back-links in .claim-foot ───────────────────────────── */
+.claim-back-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+}
+.claim-back-links .back-link {
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--border);
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.claim-back-links .back-link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-muted);
+}
+.claim-back-links .sep {
+  color: var(--ink-faint);
+  user-select: none;
+}
+
+/* [29] Small-screen overrides for stat icons + how-strip ─────────────── */
 @media (max-width: 600px) {
   .stat { flex-direction: row; align-items: center; gap: 1rem; }
   .stat-icon { flex-shrink: 0; margin-bottom: 0; }
+  /* Shrink the hero-scale icons so text still wraps nicely on phones */
+  .stat-icon-lg { width: 32px; height: 32px; }
   .how-strip { flex-direction: column; gap: 0.5rem; }
   .how-sep { display: none; }
+  /* .vp-stats can get tight — allow the claim-foot back-links to wrap below */
+  .claim-foot {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+  .claim-back-links {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 """
@@ -2958,32 +3075,25 @@ _HERO_SCRIPT = r"""<script>
 </script>
 """
 
-# ── Landing-page stat icons (inline SVG, monochrome, uses currentColor) ────
-# Kept in sync with src/truthbot/publish/assets/icons/*.svg.
-_STAT_ICON_LEADERS = (
-    '<svg class="stat-icon" width="28" height="28" viewBox="0 0 24 24" '
-    'fill="none" aria-hidden="true">'
+# ── Shared icon bodies (monochrome, currentColor only) ────────────────────
+# Kept in sync with src/truthbot/publish/assets/icons/*.svg. Bodies only — no
+# outer <svg> wrapper — so they can be sized/classed per context via _icon_svg.
+_ICON_BODY_LEADERS = (
     '<circle cx="12" cy="5.5" r="3" fill="currentColor"/>'
     '<path d="M8 10.5c0-1 1.2-2 4-2s4 1 4 2v1.5H8z" fill="currentColor"/>'
     '<rect x="4" y="14" width="16" height="2" rx="0.5" fill="currentColor" opacity="0.7"/>'
     '<rect x="6" y="17" width="12" height="5" rx="0.8" fill="currentColor" opacity="0.4"/>'
     '<rect x="10" y="16" width="4" height="6.5" rx="0.5" fill="currentColor" opacity="0.55"/>'
-    '</svg>'
 )
-_STAT_ICON_CLAIMS = (
-    '<svg class="stat-icon" width="28" height="28" viewBox="0 0 24 24" '
-    'fill="none" aria-hidden="true">'
+_ICON_BODY_CLAIMS = (
     '<path d="M4 4h12a2 2 0 012 2v7a2 2 0 01-2 2h-3.5l-3 3v-3H4a2 2 0 01-2-2V6a2 2 0 012-2z" '
     'fill="currentColor" opacity="0.35"/>'
     '<line x1="5" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
     '<line x1="5" y1="11" x2="10" y2="11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'
     '<circle cx="17" cy="15" r="4" stroke="currentColor" stroke-width="1.8" fill="none"/>'
     '<line x1="20" y1="18" x2="22.5" y2="20.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
-    '</svg>'
 )
-_STAT_ICON_CONSENSUS = (
-    '<svg class="stat-icon" width="28" height="28" viewBox="0 0 24 24" '
-    'fill="none" aria-hidden="true">'
+_ICON_BODY_CONSENSUS = (
     '<circle cx="8" cy="10" r="5" fill="currentColor" opacity="0.18"/>'
     '<circle cx="16" cy="10" r="5" fill="currentColor" opacity="0.18"/>'
     '<circle cx="12" cy="16" r="5" fill="currentColor" opacity="0.18"/>'
@@ -2992,8 +3102,20 @@ _STAT_ICON_CONSENSUS = (
     '<circle cx="12" cy="16" r="5" stroke="currentColor" stroke-width="1.2" fill="none"/>'
     '<path d="M10.5 12.5l1.2 1.5 2.3-2.8" stroke="currentColor" stroke-width="1.5" '
     'stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
-    '</svg>'
 )
+
+
+def _icon_svg(body: str, size: int = 28, extra_class: str = "") -> str:
+    """Render a monochrome stat-style icon at the requested pixel size.
+
+    The icon always uses the 24x24 viewBox and currentColor — size/class is
+    context-dependent (landing hero vs report .vp-stats vs inline badge).
+    """
+    cls = "stat-icon" + ((" " + extra_class.strip()) if extra_class else "")
+    return (
+        '<svg class="' + cls + '" width="' + str(size) + '" height="' + str(size) + '" '
+        'viewBox="0 0 24 24" fill="none" aria-hidden="true">' + body + '</svg>'
+    )
 
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
@@ -3023,15 +3145,15 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         '<div class="section-head"><span>Program stats</span><span class="sub">All time</span></div>'
         '<div class="stats">'
         + '<div class="stat">'
-        + _STAT_ICON_LEADERS
+        + _icon_svg(_ICON_BODY_LEADERS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + str(total_leaders) + '</div>'
         + '<div class="lbl">Leaders Reviewed</div></div>'
         + '<div class="stat">'
-        + _STAT_ICON_CLAIMS
+        + _icon_svg(_ICON_BODY_CLAIMS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + str(total_claims) + '</div>'
         + '<div class="lbl">Claims Checked</div></div>'
         + '<div class="stat">'
-        + _STAT_ICON_CONSENSUS
+        + _icon_svg(_ICON_BODY_CONSENSUS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + avg_pct + '<span class="unit">%</span></div>'
         + '<div class="lbl">Model Consensus</div></div>'
         + '</div>'
@@ -3104,9 +3226,13 @@ def _render_report(site_report: SiteReport) -> str:
     claim_count = len(site_report.checkable_bundles)
     toc_section_head = ''
     if toc_html:
+        # id="claim-catalog" is the anchor target for per-claim "Back to claim list" links.
         toc_section_head = (
-            '<div class="section-head">'
+            '<div class="section-head" id="claim-catalog">'
+            + '<span class="section-head-label">'
+            + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="section-head-icon")
             + '<span>Jump to claim</span>'
+            + '</span>'
             + '<span class="sub">' + str(claim_count) + ' claim' + ('s' if claim_count != 1 else '') + ' evaluated</span>'
             + '</div>'
         )
@@ -3133,7 +3259,7 @@ def _render_report(site_report: SiteReport) -> str:
     _venue = site_report.venue
     _channel = site_report.channel
 
-    _hero_parts = ['<section class="hero">']
+    _hero_parts = ['<section class="hero" id="top">']
     if _overline:
         _hero_parts.append('<div class="hero-overline">' + _esc(_overline) + '</div>')
     _hero_parts.append('<h1 class="speaker-name">' + _esc(_name) + '</h1>')
