@@ -345,28 +345,33 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0 0 0.35rem;
   color: var(--ink);
 }
-.truthy-fun-hint {
+.truthy-fun-unlock-hint {
   font-family: var(--mono);
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
-  margin: 0;
-  flex: 1;
-  min-width: 12rem;
+  margin: 0 0 0.65rem;
   line-height: 1.45;
 }
 .truthy-sound-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
   margin-bottom: 1.25rem;
 }
+.truthy-sound-label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  user-select: none;
+}
 .truthy-sound-toggle {
   flex-shrink: 0;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   padding: 0;
   display: inline-flex;
   align-items: center;

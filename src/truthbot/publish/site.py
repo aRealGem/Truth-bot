@@ -1484,28 +1484,33 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0 0 0.35rem;
   color: var(--ink);
 }
-.truthy-fun-hint {
+.truthy-fun-unlock-hint {
   font-family: var(--mono);
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
-  margin: 0;
-  flex: 1;
-  min-width: 12rem;
+  margin: 0 0 0.65rem;
   line-height: 1.45;
 }
 .truthy-sound-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
   margin-bottom: 1.25rem;
 }
+.truthy-sound-label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  user-select: none;
+}
 .truthy-sound-toggle {
   flex-shrink: 0;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -3257,11 +3262,11 @@ _TRUTHY_FUN_SCRIPT = r"""<script>
     btn.classList.toggle('is-muted', muted);
     btn.setAttribute('aria-pressed', (!muted).toString());
     if (!audioUnlocked) {
-      btn.setAttribute('aria-label', 'Turn on droid sounds (unlocks audio)');
+      btn.setAttribute('aria-label', 'Unmute: turn on droid sounds and unlock audio');
     } else if (soundsOn) {
-      btn.setAttribute('aria-label', 'Mute droid sounds');
+      btn.setAttribute('aria-label', 'Mute');
     } else {
-      btn.setAttribute('aria-label', 'Unmute droid sounds');
+      btn.setAttribute('aria-label', 'Unmute');
     }
   }
   function unlockAudio() {
@@ -3671,31 +3676,34 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
 
 def _render_truthy() -> str:
     """Fun Truthy page: shared SVG + index-style hero cycle, gesture-gated droid sounds, masthead chrome."""
+    # Standard volume / volume-mute (stroke icons, currentColor).
     _sound_icons = (
         '<span class="truthy-sound-toggle-icons" aria-hidden="true">'
-        '<svg class="icon-on" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">'
-        '<path d="M11 5L6 9H3v6h3l5 4V5z" stroke="currentColor" stroke-width="1.5" '
-        'fill="none" stroke-linejoin="round"/>'
-        '<path d="M15.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
-        '<path d="M17.5 6.5a8 8 0 010 11" stroke="currentColor" stroke-width="1.2" '
-        'stroke-linecap="round" opacity="0.55"/>'
+        '<svg class="icon-on" width="22" height="22" viewBox="0 0 24 24" fill="none" '
+        'xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round" stroke-linejoin="round">'
+        '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>'
+        '<path d="M15.54 8.46a5 5 0 010 7.07"/>'
+        '<path d="M19.07 4.93a10 10 0 010 14.14"/>'
         '</svg>'
-        '<svg class="icon-off" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">'
-        '<path d="M11 5L6 9H3v6h3l5 4V5z" stroke="currentColor" stroke-width="1.5" '
-        'fill="none" stroke-linejoin="round"/>'
-        '<path d="M16 9l5 5M21 9l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+        '<svg class="icon-off" width="22" height="22" viewBox="0 0 24 24" fill="none" '
+        'xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round" stroke-linejoin="round">'
+        '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>'
+        '<line x1="22" y1="9" x2="16" y2="15"/>'
+        '<line x1="16" y1="9" x2="22" y2="15"/>'
         '</svg>'
         '</span>'
     )
     hero_block = (
         '<h1 class="truthy-fun-h1">Truthy</h1>'
-        '<div class="truthy-sound-row">'
-        '<p class="truthy-fun-hint">Tap anywhere once to unlock audio, then use the speaker button '
-        'to toggle droid sounds.</p>'
+        '<p class="truthy-fun-unlock-hint">Tap anywhere once to unlock audio.</p>'
+        '<div class="truthy-sound-row" role="group" aria-labelledby="truthy-sound-label">'
         '<button type="button" class="truthy-sound-toggle is-muted" id="truthy-sound-toggle" '
-        'aria-pressed="false" aria-label="Turn on droid sounds (unlocks audio)">'
+        'aria-pressed="false" aria-label="Unmute: turn on droid sounds and unlock audio">'
         + _sound_icons
         + '</button>'
+        '<span class="truthy-sound-label" id="truthy-sound-label">droid sounds</span>'
         '</div>'
         '<div class="index-hero">'
         '<div class="hero-truthy-wrap">'
