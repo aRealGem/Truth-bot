@@ -345,15 +345,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0 0 0.35rem;
   color: var(--ink);
 }
-.truthy-fun-unlock-hint {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-muted);
-  margin: 0 0 0.65rem;
-  line-height: 1.45;
-}
 .truthy-sound-row {
   display: inline-flex;
   align-items: center;
