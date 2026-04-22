@@ -322,8 +322,27 @@ header.masthead:has(.mast-row) {
   align-items: center;
   gap: 2rem;
   padding: 1.5rem 0 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
+/* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail). */
+.index-hero .truthy-bubble {
+  max-width: none;
+  text-align: left;
+}
+.index-hero .truthy-bubble::before,
+.index-hero .truthy-bubble::after {
+  left: -8px;
+  top: 1rem;
+  transform: none;
+  border-left: none;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+.index-hero .truthy-bubble::before { border-right: 8px solid var(--border); border-bottom-color: transparent; }
+.index-hero .truthy-bubble::after  { border-right: 8px solid var(--surface-warm); left: -7px; border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-true::before { border-right-color: rgba(21, 128, 61, 0.3); border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
 .hero-truthy-wrap {
   flex-shrink: 0;
   animation: hero-truthy-float 3.2s ease-in-out infinite;
@@ -333,15 +352,15 @@ header.masthead:has(.mast-row) {
   50%      { transform: translateY(-6px); }
 }
 /* Counter-animate the floor shadow so it stays put in the viewport
-   while Truthy bobs, and subtly breathes (smaller when he's up, fuller when down). */
+   while Truthy bobs, and subtly breathes (a touch smaller when he's up). */
 .index-hero #floorShadow {
   transform-box: fill-box;
-  transform-origin: 150px 341px;
+  transform-origin: 150px 353px;
   animation: hero-shadow-breathe 3.2s ease-in-out infinite;
 }
 @keyframes hero-shadow-breathe {
-  0%, 100% { transform: translateY(0)   scale(1);        opacity: 1; }
-  50%      { transform: translateY(6px) scale(0.86, 0.78); opacity: 0.78; }
+  0%, 100% { transform: translateY(0)   scale(1);    opacity: 1; }
+  50%      { transform: translateY(6px) scale(0.95); opacity: 0.9; }
 }
 /* Index hero: wave left arm while happy (clipboard stays in right hand) */
 @keyframes index-hero-wave-arm {
@@ -1239,9 +1258,9 @@ hr.rule-light {
 #mascot.blinking .eye-shape { transform: scaleY(0.06); }
 
 @keyframes tear-fall {
-  0%   { transform: translateY(-4px); opacity: 0; }
+  0%   { transform: translateY(-6px); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(38px); opacity: 0; }
+  100% { transform: translateY(56px); opacity: 0; }
 }
 .state-lie #tearLeft,
 .state-lie #tearRight {
@@ -1317,8 +1336,23 @@ hr.rule-light {
   .stat:last-child { border-bottom: none; }
   .stat .num { font-size: 2.4rem; }
   /* Index hero stacks on mobile */
-  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; }
+  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
   .hero-truthy-wrap svg { width: 120px; height: 144px; }
+  /* Mobile hero stacks vertically; revert the bubble tail to point UP at Truthy. */
+  .index-hero .truthy-bubble::before,
+  .index-hero .truthy-bubble::after {
+    left: 50%;
+    top: -9px;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent !important;
+    border-top: none;
+    border-bottom: 8px solid var(--border);
+  }
+  .index-hero .truthy-bubble::after { top: -7px; border-bottom-color: var(--surface-warm); }
+  .index-hero .truthy-bubble.is-true::before { border-right-color: transparent !important; border-bottom-color: rgba(21, 128, 61, 0.3); }
+  .index-hero .truthy-bubble.is-iffy::before { border-right-color: transparent !important; border-bottom-color: rgba(202, 138, 4, 0.4); }
+  .index-hero .truthy-bubble.is-lie::before  { border-right-color: transparent !important; border-bottom-color: rgba(153, 27, 27, 0.3); }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }

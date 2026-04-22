@@ -7,7 +7,6 @@ cache is empty, so regen_site.py can't rebuild per-claim HTML from scratch.
 Safe to re-run: idempotent (won't double-label summaries).
 """
 from __future__ import annotations
-import json
 import re
 import sys
 from pathlib import Path
@@ -18,6 +17,7 @@ from truthbot.publish.site import (  # noqa: E402
     CSS,
     JS,
     SitePublisher,
+    _pretty_model_label,
     _render_index,
     _render_about,
     _render_404,
@@ -41,48 +41,40 @@ def refresh_assets_and_index() -> None:
     print("refreshed: index.html, about.html, 404.html, assets/styles.css, assets/truthbot.js")
 
 
-# Match a single <div class="model"> block up through its <summary>Model reasoning</summary>
-# and inject the adapter name. Non-greedy so it pairs each name with the nearest
-# following summary within the same model block.
+# Match a single <div class="model"> block through its first Model-reasoning
+# <summary>, whether the summary is still plain ("Model reasoning") or already
+# carries an older "— adapter" span. Non-greedy so each .model-name pairs with
+# its own model's summary.
 _MODEL_SUMMARY_RE = re.compile(
-    r'(<div class="model-name">)([^<]+)(</div>)(.*?)<summary>Model reasoning</summary>',
+    r'(<div class="model-name">)([^<]+)(</div>)'
+    r'(?P<middle>.*?)'
+    r'<summary>Model reasoning(?P<existing_span><span class="model-reasoning-model">[^<]*</span>)?</summary>',
     re.DOTALL,
 )
 
 
 def _inject_model_label(html: str) -> tuple[str, int]:
-    """Add ` — {adapter}` to each plain 'Model reasoning' summary. Idempotent."""
-    # Load claims.json so we can swap the adapter label for the model_id when present.
-    claims_data = []
-    claims_json = SITE / "data" / "claims.json"
-    if claims_json.exists():
-        try:
-            claims_data = json.loads(claims_json.read_text(encoding="utf-8"))
-        except Exception:
-            claims_data = []
+    """Label each 'Model reasoning' summary with the pretty provider+model name.
 
+    Rewrites the span every time so we can upgrade older ad-hoc labels
+    (e.g. '— anthropic') to the new pretty form ('— Anthropic Claude Opus 4.7').
+    """
     changes = 0
 
     def repl(m: re.Match) -> str:
         nonlocal changes
-        open_tag, adapter, close_tag, middle = m.group(1), m.group(2), m.group(3), m.group(4)
-        label = adapter.strip()
+        open_tag, adapter, close_tag = m.group(1), m.group(2), m.group(3)
+        middle = m.group("middle")
+        pretty = _pretty_model_label(adapter.strip())
         changes += 1
         return (
             f'{open_tag}{adapter}{close_tag}{middle}'
             f'<summary>Model reasoning'
-            f'<span class="model-reasoning-model"> \u2014 {label}</span>'
+            f'<span class="model-reasoning-model"> \u2014 {pretty}</span>'
             f'</summary>'
         )
 
-    # Only replace summaries that don't already carry a model-reasoning-model span.
-    # We do a two-pass: skip spans already present.
-    def guarded_repl(m: re.Match) -> str:
-        if 'class="model-reasoning-model"' in m.group(0):
-            return m.group(0)
-        return repl(m)
-
-    new_html = _MODEL_SUMMARY_RE.sub(guarded_repl, html)
+    new_html = _MODEL_SUMMARY_RE.sub(repl, html)
     return new_html, changes
 
 

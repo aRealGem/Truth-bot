@@ -197,6 +197,50 @@ def _verdict_css(label_str: str) -> str:
     return VERDICT_CSS.get(label_str, "unverifiable")
 
 
+# Provider brand names + the production default model for each adapter.
+# Used as fallback labels when a ModelVerdict lacks an explicit model_id
+# (e.g. older reports rehydrated after a schema migration).
+_ADAPTER_BRAND = {
+    "anthropic": "Anthropic",
+    "openai":    "OpenAI",
+    "gemini":    "Google",
+}
+_ADAPTER_DEFAULT_MODEL = {
+    "anthropic": "claude-opus-4-7",
+    "openai":    "gpt-5.4-pro",
+    "gemini":    "gemini-2.5-pro",
+}
+_MODEL_TOKEN_UPPER = {"gpt", "ai"}
+
+
+def _prettify_model_id(mid: str) -> str:
+    """Turn 'claude-opus-4-7' → 'Claude Opus 4.7', 'gpt-5.4-pro' → 'GPT 5.4 Pro'."""
+    if not mid:
+        return ""
+    parts = [p for p in mid.split("-") if p]
+    out: list[str] = []
+    for p in parts:
+        if p.isdigit() and out and out[-1][-1:].isdigit():
+            out[-1] = f"{out[-1]}.{p}"
+        elif p.lower() in _MODEL_TOKEN_UPPER:
+            out.append(p.upper())
+        else:
+            out.append(p[:1].upper() + p[1:])
+    return " ".join(out)
+
+
+def _pretty_model_label(adapter: str, model_id: str = "") -> str:
+    """Return a human-friendly provider + model label, e.g. 'Anthropic Claude Opus 4.7'."""
+    adapter_key = (adapter or "").strip().lower()
+    mid = (model_id or "").strip()
+    if not mid:
+        mid = _ADAPTER_DEFAULT_MODEL.get(adapter_key, "")
+    brand = _ADAPTER_BRAND.get(adapter_key, (adapter_key.capitalize() if adapter_key else ""))
+    pretty_mid = _prettify_model_id(mid) if mid else ""
+    pieces = [p for p in (brand, pretty_mid) if p]
+    return " ".join(pieces) or adapter or "model"
+
+
 # Categories whose display labels already contain a qualifier word.
 # Never prepend "Mostly" or "Largely" to these — it reads as double-qualified.
 _ALREADY_QUALIFIED: frozenset[str] = frozenset({"Mostly True"})
@@ -388,8 +432,8 @@ _TRUTHY_SVG = (
     '</pattern>'
     '</defs>'
     '<g id="floorShadow">'
-    '<ellipse cx="150" cy="340" rx="95" ry="10" fill="url(#floorShadowGrad)"/>'
-    '<ellipse cx="150" cy="342" rx="70" ry="6" fill="rgba(0,0,0,0.25)"/>'
+    '<ellipse cx="150" cy="352" rx="95" ry="8" fill="url(#floorShadowGrad)"/>'
+    '<ellipse cx="150" cy="354" rx="70" ry="5" fill="rgba(0,0,0,0.22)"/>'
     '</g>'
     '<g id="character">'
     '<ellipse cx="115" cy="325" rx="26" ry="10" fill="#4a3a28" opacity="0.25"/>'
@@ -491,20 +535,20 @@ _TRUTHY_SVG = (
     '<rect x="-19" y="-20" width="38" height="40" fill="url(#scanlines)" pointer-events="none" opacity="0.7"/>'
     '</g></g>'
     '<g transform="translate(102 193)"><g id="tearLeft">'
-    '<rect x="-1.5" y="0" width="3" height="3" rx="0.4" fill="#9cc8e8"/>'
-    '<rect x="-3" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
-    '<rect x="0" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
-    '<rect x="-3" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
-    '<rect x="0" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
-    '<rect x="-1.5" y="9" width="3" height="3" rx="0.4" fill="#4a86b8"/>'
+    '<rect x="-3" y="0" width="6" height="6" rx="0.8" fill="#9cc8e8"/>'
+    '<rect x="-6" y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
+    '<rect x="0"  y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
+    '<rect x="-6" y="12" width="6" height="6" rx="0.8" fill="#7eb4d8"/>'
+    '<rect x="0"  y="12" width="6" height="6" rx="0.8" fill="#7eb4d8"/>'
+    '<rect x="-3" y="18" width="6" height="6" rx="0.8" fill="#4a86b8"/>'
     '</g></g>'
     '<g transform="translate(198 193)"><g id="tearRight">'
-    '<rect x="-1.5" y="0" width="3" height="3" rx="0.4" fill="#9cc8e8"/>'
-    '<rect x="-3" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
-    '<rect x="0" y="3" width="3" height="3" rx="0.4" fill="#b8dcf0"/>'
-    '<rect x="-3" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
-    '<rect x="0" y="6" width="3" height="3" rx="0.4" fill="#7eb4d8"/>'
-    '<rect x="-1.5" y="9" width="3" height="3" rx="0.4" fill="#4a86b8"/>'
+    '<rect x="-3" y="0" width="6" height="6" rx="0.8" fill="#9cc8e8"/>'
+    '<rect x="-6" y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
+    '<rect x="0"  y="6" width="6" height="6" rx="0.8" fill="#b8dcf0"/>'
+    '<rect x="-6" y="12" width="6" height="6" rx="0.8" fill="#7eb4d8"/>'
+    '<rect x="0"  y="12" width="6" height="6" rx="0.8" fill="#7eb4d8"/>'
+    '<rect x="-3" y="18" width="6" height="6" rx="0.8" fill="#4a86b8"/>'
     '</g></g>'
     '<g id="antenna">'
     '<path d="M 150 62 Q 148 50 152 38" stroke="url(#brassShade)" stroke-width="3" fill="none" stroke-linecap="round"/>'
@@ -843,10 +887,10 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
             reasoning_html = ""
             reasoning_text = _reasoning_paragraphs(getattr(mv, 'explanation', '').strip())
             if reasoning_text:
-                mid = (getattr(mv, "model_id", None) or "").strip() or mv.adapter_name
+                mid_label = _pretty_model_label(mv.adapter_name, getattr(mv, "model_id", ""))
                 reasoning_html = (
                     '<details class="model-reasoning">'
-                    f'  <summary>Model reasoning<span class="model-reasoning-model"> — {_esc(mid)}</span></summary>'
+                    f'  <summary>Model reasoning<span class="model-reasoning-model"> — {_esc(mid_label)}</span></summary>'
                     f'  <div class="model-reasoning-body">{reasoning_text}</div>'
                     '</details>'
                 )
@@ -1327,8 +1371,27 @@ header.masthead:has(.mast-row) {
   align-items: center;
   gap: 2rem;
   padding: 1.5rem 0 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
+/* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail). */
+.index-hero .truthy-bubble {
+  max-width: none;
+  text-align: left;
+}
+.index-hero .truthy-bubble::before,
+.index-hero .truthy-bubble::after {
+  left: -8px;
+  top: 1rem;
+  transform: none;
+  border-left: none;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+.index-hero .truthy-bubble::before { border-right: 8px solid var(--border); border-bottom-color: transparent; }
+.index-hero .truthy-bubble::after  { border-right: 8px solid var(--surface-warm); left: -7px; border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-true::before { border-right-color: rgba(21, 128, 61, 0.3); border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
 .hero-truthy-wrap {
   flex-shrink: 0;
   animation: hero-truthy-float 3.2s ease-in-out infinite;
@@ -1338,15 +1401,15 @@ header.masthead:has(.mast-row) {
   50%      { transform: translateY(-6px); }
 }
 /* Counter-animate the floor shadow so it stays put in the viewport
-   while Truthy bobs, and subtly breathes (smaller when he's up, fuller when down). */
+   while Truthy bobs, and subtly breathes (a touch smaller when he's up). */
 .index-hero #floorShadow {
   transform-box: fill-box;
-  transform-origin: 150px 341px;
+  transform-origin: 150px 353px;
   animation: hero-shadow-breathe 3.2s ease-in-out infinite;
 }
 @keyframes hero-shadow-breathe {
-  0%, 100% { transform: translateY(0)   scale(1);        opacity: 1; }
-  50%      { transform: translateY(6px) scale(0.86, 0.78); opacity: 0.78; }
+  0%, 100% { transform: translateY(0)   scale(1);    opacity: 1; }
+  50%      { transform: translateY(6px) scale(0.95); opacity: 0.9; }
 }
 /* Index hero: wave left arm while happy (clipboard stays in right hand) */
 @keyframes index-hero-wave-arm {
@@ -2244,9 +2307,9 @@ hr.rule-light {
 #mascot.blinking .eye-shape { transform: scaleY(0.06); }
 
 @keyframes tear-fall {
-  0%   { transform: translateY(-4px); opacity: 0; }
+  0%   { transform: translateY(-6px); opacity: 0; }
   18%  { opacity: 1; }
-  100% { transform: translateY(38px); opacity: 0; }
+  100% { transform: translateY(56px); opacity: 0; }
 }
 .state-lie #tearLeft,
 .state-lie #tearRight {
@@ -2322,8 +2385,23 @@ hr.rule-light {
   .stat:last-child { border-bottom: none; }
   .stat .num { font-size: 2.4rem; }
   /* Index hero stacks on mobile */
-  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; }
+  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
   .hero-truthy-wrap svg { width: 120px; height: 144px; }
+  /* Mobile hero stacks vertically; revert the bubble tail to point UP at Truthy. */
+  .index-hero .truthy-bubble::before,
+  .index-hero .truthy-bubble::after {
+    left: 50%;
+    top: -9px;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent !important;
+    border-top: none;
+    border-bottom: 8px solid var(--border);
+  }
+  .index-hero .truthy-bubble::after { top: -7px; border-bottom-color: var(--surface-warm); }
+  .index-hero .truthy-bubble.is-true::before { border-right-color: transparent !important; border-bottom-color: rgba(21, 128, 61, 0.3); }
+  .index-hero .truthy-bubble.is-iffy::before { border-right-color: transparent !important; border-bottom-color: rgba(202, 138, 4, 0.4); }
+  .index-hero .truthy-bubble.is-lie::before  { border-right-color: transparent !important; border-bottom-color: rgba(153, 27, 27, 0.3); }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }
@@ -2674,7 +2752,7 @@ _HERO_SCRIPT = r"""<script>
     { state: 'lie',  cls: 'is-lie',  text: "Lies make me very sad.", dur: STEP_MS }
   ];
   function pose(state) {
-    mascot.className = mascot.className.replace(/state-\w+/g, '').trim();
+    mascot.classList.remove('state-true', 'state-iffy', 'state-lie');
     mascot.classList.add('state-' + state);
     mascot.classList.remove('hero-wave');
     if (state === 'true') {
