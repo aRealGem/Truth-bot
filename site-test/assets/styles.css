@@ -255,6 +255,16 @@ header.masthead:has(.mast-row) {
   color: var(--ink-muted);
   margin-top: 0.6rem;
 }
+.stat-icon {
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+  line-height: 0;
+}
+.stat-icon svg {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
 
 /* Aggregate verdict bar (index page hero) */
 .agg {
@@ -326,7 +336,7 @@ header.masthead:has(.mast-row) {
 }
 /* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail). */
 .index-hero .truthy-bubble {
-  max-width: none;
+  max-width: min(33vw, 340px);
   text-align: left;
 }
 .index-hero .truthy-bubble::before,
@@ -347,6 +357,10 @@ header.masthead:has(.mast-row) {
   flex-shrink: 0;
   animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
+.hero-truthy-wrap svg {
+  width: 280px;
+  height: 336px;
+}
 @keyframes hero-truthy-float {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
@@ -362,15 +376,15 @@ header.masthead:has(.mast-row) {
   0%, 100% { transform: translateY(0)   scale(1);    opacity: 1; }
   50%      { transform: translateY(6px) scale(0.95); opacity: 0.9; }
 }
-/* Index hero: wave left arm while happy (clipboard stays in right hand) */
+/* Index hero: gentle wave on left arm while both arms stay raised (happy state) */
 @keyframes index-hero-wave-arm {
-  0%, 100% { transform: rotate(112deg); }
+  0%, 100% { transform: rotate(130deg); }
   50%      { transform: rotate(150deg); }
 }
 .index-hero #mascot.state-true.hero-wave #armLeftSwing {
-  transform-box: fill-box;
+  transform-box: view-box;
   transform-origin: 88px 253px;
-  animation: index-hero-wave-arm 0.48s ease-in-out infinite;
+  animation: index-hero-wave-arm 0.9s ease-in-out infinite;
 }
 .hero-truthy-col {
   flex: 1;
@@ -1337,7 +1351,7 @@ hr.rule-light {
   .stat .num { font-size: 2.4rem; }
   /* Index hero stacks on mobile */
   .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
-  .hero-truthy-wrap svg { width: 120px; height: 144px; }
+  .hero-truthy-wrap svg { width: 180px; height: 216px; }
   /* Mobile hero stacks vertically; revert the bubble tail to point UP at Truthy. */
   .index-hero .truthy-bubble::before,
   .index-hero .truthy-bubble::after {

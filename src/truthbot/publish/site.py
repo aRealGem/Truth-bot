@@ -857,6 +857,13 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
 
     majority_label = label
 
+    triage_badge = ""
+    if getattr(bundle, "triage_decision", False):
+        triage_badge = (
+            '<span class="claim-pill triage-only" '
+            'title="Unanimous high-confidence triage; frontier models were skipped">Triage</span>'
+        )
+
     def _reasoning_paragraphs(text: str) -> str:
         if not text:
             return ""
@@ -927,6 +934,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         '<div class="claim-head">'
         f'  <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
         f'  <span class="claim-pill v-{css}">{_esc(label)}</span>'
+        f'  {triage_badge}'
         '</div>'
         '<div class="claim-body">'
         f'  <blockquote class="claim-quote">"{_esc(claim.text)}"</blockquote>'
@@ -1304,6 +1312,16 @@ header.masthead:has(.mast-row) {
   color: var(--ink-muted);
   margin-top: 0.6rem;
 }
+.stat-icon {
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+  line-height: 0;
+}
+.stat-icon svg {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
 
 /* Aggregate verdict bar (index page hero) */
 .agg {
@@ -1375,7 +1393,7 @@ header.masthead:has(.mast-row) {
 }
 /* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail). */
 .index-hero .truthy-bubble {
-  max-width: none;
+  max-width: min(33vw, 340px);
   text-align: left;
 }
 .index-hero .truthy-bubble::before,
@@ -1396,6 +1414,10 @@ header.masthead:has(.mast-row) {
   flex-shrink: 0;
   animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
+.hero-truthy-wrap svg {
+  width: 280px;
+  height: 336px;
+}
 @keyframes hero-truthy-float {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
@@ -1411,15 +1433,15 @@ header.masthead:has(.mast-row) {
   0%, 100% { transform: translateY(0)   scale(1);    opacity: 1; }
   50%      { transform: translateY(6px) scale(0.95); opacity: 0.9; }
 }
-/* Index hero: wave left arm while happy (clipboard stays in right hand) */
+/* Index hero: gentle wave on left arm while both arms stay raised (happy state) */
 @keyframes index-hero-wave-arm {
-  0%, 100% { transform: rotate(112deg); }
+  0%, 100% { transform: rotate(130deg); }
   50%      { transform: rotate(150deg); }
 }
 .index-hero #mascot.state-true.hero-wave #armLeftSwing {
-  transform-box: fill-box;
+  transform-box: view-box;
   transform-origin: 88px 253px;
-  animation: index-hero-wave-arm 0.48s ease-in-out infinite;
+  animation: index-hero-wave-arm 0.9s ease-in-out infinite;
 }
 .hero-truthy-col {
   flex: 1;
@@ -2386,7 +2408,7 @@ hr.rule-light {
   .stat .num { font-size: 2.4rem; }
   /* Index hero stacks on mobile */
   .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
-  .hero-truthy-wrap svg { width: 120px; height: 144px; }
+  .hero-truthy-wrap svg { width: 180px; height: 216px; }
   /* Mobile hero stacks vertically; revert the bubble tail to point UP at Truthy. */
   .index-hero .truthy-bubble::before,
   .index-hero .truthy-bubble::after {
@@ -2763,7 +2785,7 @@ _HERO_SCRIPT = r"""<script>
       if (head) head.setAttribute('transform', 'translate(0,0)');
       if (body) body.setAttribute('transform', 'translate(0,0)');
       mascot.classList.add('hero-wave');
-      if (armL) armL.removeAttribute('transform');
+      if (armL) armL.setAttribute('transform', 'rotate(135 88 253)');
       if (armR) armR.setAttribute('transform', 'rotate(-135 212 253)');
       if (clipboard) clipboard.setAttribute('transform', 'translate(228 218) rotate(-8)');
     } else if (state === 'iffy') {
@@ -2821,6 +2843,46 @@ _HERO_SCRIPT = r"""<script>
 </script>
 """
 
+# Minimal program-stats icons (landing page only) — currentColor matches var(--ink) via .stat-icon
+_STAT_ICON_LEADERS = (
+    '<svg viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'
+    '<path fill="currentColor" d="M10 40h28v4H10v-4zm2-4 5-10h14l5 10H12z"/>'
+    '<circle fill="currentColor" cx="24" cy="13" r="5"/>'
+    '<path fill="currentColor" d="M19 18h10v11H19V18z"/>'
+    '<path fill="currentColor" d="M28 17 39 9l3 3-11 9-3-4z"/>'
+    '<circle fill="currentColor" cx="40.5" cy="10.5" r="2.2"/>'
+    '</svg>'
+)
+_STAT_ICON_CLIPBOARD = (
+    '<svg viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" '
+    'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+    '<rect x="14" y="10" width="20" height="30" rx="2"/>'
+    '<path d="M20 8h8v-4h-8v4z"/>'
+    '<path d="M18 22l2.5 2.5 4.5-5.5"/>'
+    '<path d="M18 30l2.5 2.5 5-6"/>'
+    '<path d="M28 36l4 4m0-4-4 4"/>'
+    '</svg>'
+)
+_STAT_ICON_BOT_CONFAB = (
+    '<svg viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" '
+    'fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'
+    '<rect x="2" y="4" width="16" height="11" rx="2"/>'
+    '<rect x="12" y="1" width="17" height="10" rx="2"/>'
+    '<path d="M8.5 9V6"/>'
+    '<circle cx="8.5" cy="11.5" r="1.1" fill="currentColor" stroke="none"/>'
+    '<path d="M20.5 6V3.5"/>'
+    '<circle cx="20.5" cy="9" r="1.1" fill="currentColor" stroke="none"/>'
+    '<path d="M26 5.5h3"/>'
+    '<rect x="3.5" y="25.5" width="11" height="11" rx="2.5"/>'
+    '<path d="M9 25.5v-3"/>'
+    '<rect x="18.5" y="23.5" width="11" height="11" rx="2.5"/>'
+    '<path d="M24 23.5v-3"/>'
+    '<rect x="33.5" y="25.5" width="11" height="11" rx="2.5"/>'
+    '<path d="M39 25.5v-3"/>'
+    '</svg>'
+)
+
+
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
     reports = _disambiguate_report_urls(reports)
@@ -2848,11 +2910,14 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     stats_html = (
         '<div class="section-head"><span>Program stats</span><span class="sub">All time</span></div>'
         '<div class="stats">'
-        + '<div class="stat"><div class="num">' + str(total_leaders) + '</div>'
+        + '<div class="stat"><div class="stat-icon">' + _STAT_ICON_LEADERS + '</div>'
+        + '<div class="num">' + str(total_leaders) + '</div>'
         + '<div class="lbl">Total Leaders Reviewed</div></div>'
-        + '<div class="stat"><div class="num">' + str(total_claims) + '</div>'
+        + '<div class="stat"><div class="stat-icon">' + _STAT_ICON_CLIPBOARD + '</div>'
+        + '<div class="num">' + str(total_claims) + '</div>'
         + '<div class="lbl">Total Claims Reviewed</div></div>'
-        + '<div class="stat"><div class="num">' + avg_pct + '<span class="unit">%</span></div>'
+        + '<div class="stat"><div class="stat-icon">' + _STAT_ICON_BOT_CONFAB + '</div>'
+        + '<div class="num">' + avg_pct + '<span class="unit">%</span></div>'
         + '<div class="lbl">Average Model Consensus</div></div>'
         + '</div>'
     )
