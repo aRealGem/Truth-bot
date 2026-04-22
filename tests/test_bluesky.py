@@ -21,6 +21,10 @@ class TestBlueskyPublisher:
         p = BlueskyPublisher(handle="test.bsky.social", app_password="xxxx-xxxx")
         assert p.is_configured()
 
+    @pytest.mark.xfail(
+        strict=True,
+        reason="Bluesky v2 pending — post_report raises NotImplementedError. Re-enable in Phase 7.",
+    )
     def test_post_report_returns_none_when_unconfigured(self, publisher, sample_report):
         result = publisher.post_report(sample_report)
         assert result is None

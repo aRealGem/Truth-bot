@@ -16,3 +16,18 @@
 - **Provider keys:** GEMINI_API_KEY and XAI_API_KEY are still unset. OPENAI_API_KEY works but flagship `gpt-5.4-pro` is unavailable, so we’re stuck on gpt-4.1 fallback until GA.
 - **ExpressionPi availability:** we need a confirmed docroot + nginx stanza before pushing the static site live.
 - **Bluesky publisher:** intentionally stubbed (`NotImplementedError`) until the site deployment is stable; Phase 7 is still queued.
+
+## Session note — 2026-04-21 evening
+- Fresh clone of `aRealGem/Truth-bot` landed on `main @ b1c3c7b`; existing `.env` preserved.
+- `.venv` created with Python 3.13.12; `pip install -e ".[dev]"` succeeded.
+- (Superseded by 2026-04-22 morning) Earlier run was **175 passed, 9 failed** due to test/schema drift; see morning note for resolution.
+
+## Session note — 2026-04-22 morning
+- **Tests:** Schema drift resolved in `tests/test_verify.py` and `tests/test_pipeline.py` (`ConsensusVerdict` / `.consensus_label` vs legacy `Verdict` on engine returns; `DummyEngine` returns `ConsensusVerdict` to match `Pipeline.run()`).
+- **Bluesky:** `test_post_report_returns_none_when_unconfigured` is **xfail (strict)** until Phase 7 implements `post_report` (see `TODO.md`).
+- **Baseline:** `pytest` → **183 passed, 1 xfailed, 0 failed**. No `--deselect` workaround needed.
+
+### Recommendation (today)
+1. **Next Steps #1** — Phase 6 ExpressionPi deploy (docroot + nginx + `TRUTHBOT_SITE_ROOT`).
+2. **Next Steps #4** — UTF-8 cleanup in `src/truthbot/publish/site.py` (mojibake) before shipping UI refresh.
+3. **Phase 7** — implement Bluesky `post_report`, then remove the strict xfail on the unconfigured test.

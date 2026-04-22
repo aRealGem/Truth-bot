@@ -4,7 +4,15 @@ from __future__ import annotations
 
 import pytest
 
-from truthbot.models import Claim, Confidence, Evidence, SourceTier, Verdict, VerdictLabel
+from truthbot.models import (
+    Claim,
+    Confidence,
+    ConsensusVerdict,
+    Evidence,
+    SourceTier,
+    Verdict,
+    VerdictLabel,
+)
 from truthbot.verify.engine import VerificationEngine
 from truthbot.verify.sources.base import SourceConnector
 
@@ -48,26 +56,26 @@ class TestVerificationEngine:
         engine = VerificationEngine(connectors=[], api_key="")
         evidence, verdict = engine.verify(sample_claim)
         assert isinstance(evidence, list)
-        assert isinstance(verdict, Verdict)
+        assert isinstance(verdict, ConsensusVerdict)
 
     def test_verdict_has_required_fields(self, sample_claim):
         engine = VerificationEngine(connectors=[], api_key="")
         _, verdict = engine.verify(sample_claim)
         assert verdict.claim_id == sample_claim.id
-        assert isinstance(verdict.label, VerdictLabel)
+        assert isinstance(verdict.consensus_label, VerdictLabel)
         assert isinstance(verdict.confidence, Confidence)
         assert verdict.explanation
 
     def test_no_connectors_returns_unverifiable(self, sample_claim):
         engine = VerificationEngine(connectors=[], api_key="")
         _, verdict = engine.verify(sample_claim)
-        assert verdict.label == VerdictLabel.UNVERIFIABLE
+        assert verdict.consensus_label == VerdictLabel.UNVERIFIABLE
 
     def test_connector_error_is_handled(self, sample_claim):
         engine = VerificationEngine(connectors=[ErrorConnector()], api_key="")
         # Should not raise — errors in connectors are caught
         evidence, verdict = engine.verify(sample_claim)
-        assert isinstance(verdict, Verdict)
+        assert isinstance(verdict, ConsensusVerdict)
 
     def test_verify_many_returns_all(self, sample_claim):
         engine = VerificationEngine(connectors=[], api_key="")
@@ -91,7 +99,7 @@ class TestVerificationEngine:
         results = engine.verify_many([claim])
         assert len(results) == 1
         _, evidence, verdict = results[0]
-        assert verdict.label == VerdictLabel.UNVERIFIABLE
+        assert verdict.consensus_label == VerdictLabel.UNVERIFIABLE
         assert evidence == []
 
     def test_stub_verdict_is_unverifiable(self, sample_claim):

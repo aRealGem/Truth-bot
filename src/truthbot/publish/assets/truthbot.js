@@ -71,7 +71,7 @@
         bodyGroup.setAttribute('transform', 'translate(0,0)');
         armLeftSwing.setAttribute('transform', 'rotate(135 88 253)');
         armRightSwing.setAttribute('transform', 'rotate(-135 212 253)');
-        clipboard.setAttribute('transform', 'translate(228 218) rotate(-8)');
+        if (clipboard) clipboard.setAttribute('transform', 'translate(228 218) rotate(-8)');
       } else if (state === 'iffy') {
         led.setAttribute('fill', 'url(#ledGradIffy)');
         ledHalo.setAttribute('fill', '#e8b850');
@@ -81,7 +81,7 @@
         bodyGroup.setAttribute('transform', 'translate(0,0)');
         armLeftSwing.setAttribute('transform', 'rotate(0 88 253)');
         armRightSwing.setAttribute('transform', 'rotate(-110 212 253)');
-        clipboard.setAttribute('transform', 'translate(238 224) rotate(-3)');
+        if (clipboard) clipboard.setAttribute('transform', 'translate(238 224) rotate(-3)');
       } else if (state === 'lie') {
         led.setAttribute('fill', 'url(#ledGradLie)');
         ledHalo.setAttribute('fill', '#5a8ec0');
@@ -91,7 +91,7 @@
         bodyGroup.setAttribute('transform', 'translate(0,3)');
         armLeftSwing.setAttribute('transform', 'rotate(8 88 253)');
         armRightSwing.setAttribute('transform', 'rotate(35 212 253)');
-        clipboard.setAttribute('transform', 'translate(174 298) rotate(40)');
+        if (clipboard) clipboard.setAttribute('transform', 'translate(174 298) rotate(40)');
       }
     }
 

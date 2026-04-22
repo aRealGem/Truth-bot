@@ -24,7 +24,14 @@ class DummyExtractor:
 
 class DummyEngine:
     def verify(self, claim):
-        from truthbot.models import Confidence, Evidence, SourceTier, Verdict, VerdictLabel
+        from truthbot.models import (
+            Confidence,
+            ConsensusVerdict,
+            Evidence,
+            SourceTier,
+            VerdictLabel,
+        )
+
         evidence = [
             Evidence(
                 claim_id=claim.id,
@@ -35,13 +42,17 @@ class DummyEngine:
                 supports_claim=True,
             )
         ]
-        verdict = Verdict(
+        consensus = ConsensusVerdict(
             claim_id=claim.id,
-            label=VerdictLabel.TRUE,
+            model_verdicts=[],
+            consensus_label=VerdictLabel.TRUE,
+            consensus_verdict=VerdictLabel.TRUE.value,
             confidence=Confidence.HIGH,
+            agreement=True,
+            consensus_strength="single",
             explanation="BLS data confirms the claim.",
         )
-        return evidence, verdict
+        return evidence, consensus
 
     def verify_many(self, claims):
         return [

@@ -1,12 +1,5 @@
 # TODO
 
-## Migrate test_verify.py / test_pipeline.py / bluesky stub from legacy Verdict schema to ConsensusVerdict
+## Phase 7 — Bluesky publisher
 
-**Affected files:**
-- `tests/test_verify.py`
-- `tests/test_pipeline.py`
-- `src/truthbot/publish/bluesky.py` (stub references legacy `Verdict` / `.label` / `.consensus_label`)
-
-**Schema drift:** Tests were written against the old `Verdict` model with `.label` and `.consensus_label` string attributes; the current schema uses `ConsensusVerdict` with a `.consensus_label` `VerdictLabel` enum and `ModelVerdict` objects, causing 9 test failures.
-
-**Do not fix until:** schema is stable and adapters are fully integrated.
+- `tests/test_bluesky.py::TestBlueskyPublisher::test_post_report_returns_none_when_unconfigured` is marked **xfail (strict)** until `post_report` is implemented (currently raises `NotImplementedError`). Remove the marker when Bluesky v2 ships.

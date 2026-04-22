@@ -326,6 +326,21 @@ header.masthead:has(.mast-row) {
 }
 .hero-truthy-wrap {
   flex-shrink: 0;
+  animation: hero-truthy-float 3.2s ease-in-out infinite;
+}
+@keyframes hero-truthy-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+/* Index hero: wave left arm while happy (clipboard stays in right hand) */
+@keyframes index-hero-wave-arm {
+  0%, 100% { transform: rotate(112deg); }
+  50%      { transform: rotate(150deg); }
+}
+.index-hero #mascot.state-true.hero-wave #armLeftSwing {
+  transform-box: fill-box;
+  transform-origin: 88px 253px;
+  animation: index-hero-wave-arm 0.48s ease-in-out infinite;
 }
 .hero-truthy-col {
   flex: 1;
@@ -917,6 +932,13 @@ details.model-reasoning > summary {
   align-items: center;
   gap: 0.4rem;
   transition: background 120ms ease;
+}
+details.model-reasoning > summary .model-reasoning-model {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 0.82em;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
 }
 details.model-reasoning > summary::-webkit-details-marker { display: none; }
 details.model-reasoning > summary::before {

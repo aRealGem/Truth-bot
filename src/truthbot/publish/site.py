@@ -520,6 +520,17 @@ _TRUTHY_SVG = (
     '</g>'
     '<circle cx="212" cy="253" r="9" fill="url(#brassShade)"/>'
     '</g>'
+    '<g id="clipboard" transform="translate(228 218) rotate(-8)">'
+    '<rect x="-1" y="-34" width="36" height="44" rx="3.5" fill="#faf6ef" stroke="#6e5e48" stroke-width="1.3"/>'
+    '<rect x="11" y="-39" width="12" height="9" rx="2" fill="url(#brassShade)" stroke="#5a4028" stroke-width="0.5"/>'
+    '<rect x="14" y="-41" width="6" height="4" rx="1" fill="#f4d98a"/>'
+    '<path d="M 5 -26 l 2.5 2.5 l 5.5 -6" fill="none" stroke="#1d6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<line x1="18" y1="-28" x2="31" y2="-28" stroke="#b8a892" stroke-width="1" opacity="0.85"/>'
+    '<path d="M 3 -17 l 5 5 M 8 -17 l -5 5" fill="none" stroke="#9b1c1c" stroke-width="1.5" stroke-linecap="round"/>'
+    '<line x1="18" y1="-17" x2="31" y2="-17" stroke="#b8a892" stroke-width="1" opacity="0.85"/>'
+    '<path d="M 5 -8 l 2 2 l 4.5 -4.5" fill="none" stroke="#1d6b3a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<path d="M 20 -10 l 3 3 M 23 -10 l -3 3" fill="none" stroke="#9b1c1c" stroke-width="1.3" stroke-linecap="round"/>'
+    '</g>'
     '</g>'
     '</svg>'
 )
@@ -826,9 +837,10 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
             reasoning_html = ""
             reasoning_text = _reasoning_paragraphs(getattr(mv, 'explanation', '').strip())
             if reasoning_text:
+                mid = (getattr(mv, "model_id", None) or "").strip() or mv.adapter_name
                 reasoning_html = (
                     '<details class="model-reasoning">'
-                    '  <summary>Model reasoning</summary>'
+                    f'  <summary>Model reasoning<span class="model-reasoning-model"> — {_esc(mid)}</span></summary>'
                     f'  <div class="model-reasoning-body">{reasoning_text}</div>'
                     '</details>'
                 )
@@ -1313,6 +1325,21 @@ header.masthead:has(.mast-row) {
 }
 .hero-truthy-wrap {
   flex-shrink: 0;
+  animation: hero-truthy-float 3.2s ease-in-out infinite;
+}
+@keyframes hero-truthy-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+/* Index hero: wave left arm while happy (clipboard stays in right hand) */
+@keyframes index-hero-wave-arm {
+  0%, 100% { transform: rotate(112deg); }
+  50%      { transform: rotate(150deg); }
+}
+.index-hero #mascot.state-true.hero-wave #armLeftSwing {
+  transform-box: fill-box;
+  transform-origin: 88px 253px;
+  animation: index-hero-wave-arm 0.48s ease-in-out infinite;
 }
 .hero-truthy-col {
   flex: 1;
@@ -1905,6 +1932,13 @@ details.model-reasoning > summary {
   gap: 0.4rem;
   transition: background 120ms ease;
 }
+details.model-reasoning > summary .model-reasoning-model {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 0.82em;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
 details.model-reasoning > summary::-webkit-details-marker { display: none; }
 details.model-reasoning > summary::before {
   content: "▸";
@@ -2413,7 +2447,7 @@ JS = """\
         bodyGroup.setAttribute('transform', 'translate(0,0)');
         armLeftSwing.setAttribute('transform', 'rotate(135 88 253)');
         armRightSwing.setAttribute('transform', 'rotate(-135 212 253)');
-        clipboard.setAttribute('transform', 'translate(228 218) rotate(-8)');
+        if (clipboard) clipboard.setAttribute('transform', 'translate(228 218) rotate(-8)');
       } else if (state === 'iffy') {
         led.setAttribute('fill', 'url(#ledGradIffy)');
         ledHalo.setAttribute('fill', '#e8b850');
@@ -2423,7 +2457,7 @@ JS = """\
         bodyGroup.setAttribute('transform', 'translate(0,0)');
         armLeftSwing.setAttribute('transform', 'rotate(0 88 253)');
         armRightSwing.setAttribute('transform', 'rotate(-110 212 253)');
-        clipboard.setAttribute('transform', 'translate(238 224) rotate(-3)');
+        if (clipboard) clipboard.setAttribute('transform', 'translate(238 224) rotate(-3)');
       } else if (state === 'lie') {
         led.setAttribute('fill', 'url(#ledGradLie)');
         ledHalo.setAttribute('fill', '#5a8ec0');
@@ -2433,7 +2467,7 @@ JS = """\
         bodyGroup.setAttribute('transform', 'translate(0,3)');
         armLeftSwing.setAttribute('transform', 'rotate(8 88 253)');
         armRightSwing.setAttribute('transform', 'rotate(35 212 253)');
-        clipboard.setAttribute('transform', 'translate(174 298) rotate(40)');
+        if (clipboard) clipboard.setAttribute('transform', 'translate(174 298) rotate(40)');
       }
     }
 
@@ -2615,15 +2649,17 @@ _HERO_SCRIPT = r"""<script>
   var body = document.getElementById('bodyGroup');
   var armL = document.getElementById('armLeftSwing');
   var armR = document.getElementById('armRightSwing');
-  var STEP_MS = 2500;
+  var clipboard = document.getElementById('clipboard');
+  var STEP_MS = 3000;
   var steps = [
-    { state: 'true', cls: 'is-true', text: "Hi, I'm Truthy and truth makes me happy.", dur: STEP_MS },
-    { state: 'lie',  cls: 'is-lie',  text: "...and lies make me sad.", dur: STEP_MS },
-    { state: 'iffy', cls: 'is-iffy', text: "I'm here to help you find the truth.", dur: STEP_MS }
+    { state: 'true', cls: 'is-true', text: "I'm Truthy and honesty makes me happy!", dur: STEP_MS },
+    { state: 'iffy', cls: 'is-iffy', text: "I'll evaluate all claims thoroughly.", dur: STEP_MS },
+    { state: 'lie',  cls: 'is-lie',  text: "Lies make me very sad.", dur: STEP_MS }
   ];
   function pose(state) {
     mascot.className = mascot.className.replace(/state-\w+/g, '').trim();
     mascot.classList.add('state-' + state);
+    mascot.classList.remove('hero-wave');
     if (state === 'true') {
       if (led) led.setAttribute('fill', 'url(#ledGradTrue)');
       if (ledHalo) ledHalo.setAttribute('fill', '#5ac075');
@@ -2631,8 +2667,10 @@ _HERO_SCRIPT = r"""<script>
       if (eyeR) eyeR.setAttribute('transform', 'translate(185 154) rotate(0)');
       if (head) head.setAttribute('transform', 'translate(0,0)');
       if (body) body.setAttribute('transform', 'translate(0,0)');
-      if (armL) armL.setAttribute('transform', 'rotate(135 88 253)');
+      mascot.classList.add('hero-wave');
+      if (armL) armL.removeAttribute('transform');
       if (armR) armR.setAttribute('transform', 'rotate(-135 212 253)');
+      if (clipboard) clipboard.setAttribute('transform', 'translate(228 218) rotate(-8)');
     } else if (state === 'iffy') {
       if (led) led.setAttribute('fill', 'url(#ledGradIffy)');
       if (ledHalo) ledHalo.setAttribute('fill', '#e8b850');
@@ -2642,6 +2680,7 @@ _HERO_SCRIPT = r"""<script>
       if (body) body.setAttribute('transform', 'translate(0,0)');
       if (armL) armL.setAttribute('transform', 'rotate(0 88 253)');
       if (armR) armR.setAttribute('transform', 'rotate(-110 212 253)');
+      if (clipboard) clipboard.setAttribute('transform', 'translate(238 224) rotate(-3)');
     } else {
       if (led) led.setAttribute('fill', 'url(#ledGradLie)');
       if (ledHalo) ledHalo.setAttribute('fill', '#5a8ec0');
@@ -2651,6 +2690,7 @@ _HERO_SCRIPT = r"""<script>
       if (body) body.setAttribute('transform', 'translate(0,3)');
       if (armL) armL.setAttribute('transform', 'rotate(8 88 253)');
       if (armR) armR.setAttribute('transform', 'rotate(35 212 253)');
+      if (clipboard) clipboard.setAttribute('transform', 'translate(174 298) rotate(40)');
     }
   }
   function showStep(step) {
