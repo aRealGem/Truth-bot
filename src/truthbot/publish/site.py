@@ -2339,6 +2339,29 @@ hr.rule-light {
 .state-lie #tearRight { animation-delay: 0.7s; }
 #tearLeft, #tearRight { opacity: 0; }
 
+/* Report Truthy is rendered smaller than index-hero (170px vs 280px wide SVG).
+   Scale tears in .truthy-frame so they stay as visually prominent vs. the sad
+   eyes as on the landing hero (extra scale on narrow layouts with 110px SVG). */
+.truthy-frame #mascot.state-lie #tearLeft,
+.truthy-frame #mascot.state-lie #tearRight {
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation-name: tear-fall-report;
+}
+.truthy-frame #mascot.state-lie #tearRight { animation-delay: 0.7s; }
+
+@keyframes tear-fall-report {
+  0%   { transform: translateY(-6px) scale(1.58); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateY(58px) scale(1.58); opacity: 0; }
+}
+
+@keyframes tear-fall-report-sm {
+  0%   { transform: translateY(-6px) scale(2.28); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateY(64px) scale(2.28); opacity: 0; }
+}
+
 #armLeftSwing,
 #armRightSwing,
 #eyeLeftGroup,
@@ -2444,6 +2467,10 @@ hr.rule-light {
     min-width: 0;
   }
   .vp-truthy-col .truthy-frame svg { width: 110px; height: 132px; }
+  .truthy-frame #mascot.state-lie #tearLeft,
+  .truthy-frame #mascot.state-lie #tearRight {
+    animation-name: tear-fall-report-sm;
+  }
   .truthy-bubble {
     max-width: none;
     flex: 1;
