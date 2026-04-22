@@ -388,10 +388,6 @@ header.masthead:has(.mast-row) {
   flex-direction: column;
   align-items: flex-start;
 }
-/* 4-column stats grid (index page) */
-.stats-4 {
-  grid-template-columns: repeat(4, 1fr);
-}
 .stat-wide {
   border-right: none;
 }
@@ -591,30 +587,6 @@ header.masthead:has(.mast-row) {
   letter-spacing: 0.08em;
   color: var(--ink-muted);
   margin-top: 0.5rem;
-}
-.vp-stats {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-.vp-stat-num {
-  font-family: var(--serif);
-  font-size: 1.6rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-.vp-stat-lbl {
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--ink-muted);
-  margin-top: 0.4rem;
 }
 
 /* Big verdict bar inside the panel */
@@ -1364,8 +1336,8 @@ hr.rule-light {
   /* Status bar */
   .status-bar .stamp { margin-left: 0; }
 
-  /* Index aggregate stats — single column */
-  .stats, .stats-4 { grid-template-columns: 1fr; }
+  /* Index aggregate stats — single column (report .stats.stats-4 uses 700/480 breakpoints) */
+  .stats:not(.stats-4) { grid-template-columns: 1fr; }
   .stat {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -1439,7 +1411,6 @@ hr.rule-light {
   .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
   .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
 
-  .vp-stats { gap: 1.25rem; }
   .vp-bar-wrap, .source-row { padding-left: 1.25rem; padding-right: 1.25rem; }
 
   /* Model grid stacks */
@@ -1523,25 +1494,6 @@ hr.rule-light {
   opacity: 0.8;
 }
 
-/* [26] Report page: small icons inside .vp-stats ─────────────────────── */
-.vp-stat {
-  display: flex;
-  flex-direction: column;
-}
-.vp-stat-icon {
-  color: var(--ink-muted);
-  opacity: 0.7;
-  margin-bottom: 0.4rem;
-}
-/* Placeholder keeps the stat-num baseline-aligned across the three stats
-   while the "Models" bot icon is still in design. */
-.vp-stat-icon-placeholder {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-bottom: 0.4rem;
-}
-
 /* [27] Inline icons in section heads + claim cards ───────────────────── */
 .section-head-label {
   display: inline-flex;
@@ -1599,7 +1551,7 @@ hr.rule-light {
   .stat-icon-lg { width: 32px; height: 32px; }
   .how-strip { flex-direction: column; gap: 0.5rem; }
   .how-sep { display: none; }
-  /* .vp-stats can get tight — allow the claim-foot back-links to wrap below */
+  /* Allow the claim-foot back-links to wrap below on narrow screens */
   .claim-foot {
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -1610,5 +1562,20 @@ hr.rule-light {
     width: 100%;
     justify-content: flex-start;
   }
+}
+
+/* [30] Four-column report stats variant */
+.stats.stats-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.verdict-panel > .stats.stats-4 {
+  border-top: 1px solid var(--border);
+  margin: 0 1.25rem 1rem;
+}
+@media (max-width: 700px) {
+  .stats.stats-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .stats.stats-4 { grid-template-columns: 1fr; }
 }
 

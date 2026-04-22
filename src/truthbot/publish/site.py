@@ -654,25 +654,28 @@ def _verdict_panel(site_report) -> str:
         + '<div class="vp-verdict ' + h_cls + '">' + _esc(headline) + '</div>'
         + '<div class="vp-ratio">' + _esc(ratio_text) + '</div>'
         + '</div>'
-        + '<div class="vp-stats">'
-        + '<div class="vp-stat">'
-        + _icon_svg(_ICON_BODY_CLAIMS, size=20, extra_class="vp-stat-icon")
-        + '<div class="vp-stat-num">' + str(claim_count) + '</div>'
-        + '<div class="vp-stat-lbl">Claims checked</div></div>'
-        # "Models" icon slot intentionally empty: user is designing small
-        # bot-silhouette icons that will populate this slot with one bot per
-        # model. Placeholder is a zero-height span so the flex column still
-        # aligns numerals across the three stats.
-        + '<div class="vp-stat">'
-        + '<span class="vp-stat-icon vp-stat-icon-placeholder" aria-hidden="true"></span>'
-        + '<div class="vp-stat-num">' + str(model_count) + '</div>'
-        + '<div class="vp-stat-lbl">Models</div></div>'
-        + '<div class="vp-stat">'
-        + _icon_svg(_ICON_BODY_CONSENSUS, size=20, extra_class="vp-stat-icon")
-        + '<div class="vp-stat-num">' + format(agree_rate, '.0%') + '</div>'
-        + '<div class="vp-stat-lbl">Inter-model agreement</div></div>'
         + '</div>'
-        + '</div>'
+    )
+
+    panel_stats_html = (
+        '  <div class="stats stats-4">\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_CLAIMS, size=32)
+        + '<div class="num">' + str(claim_count) + '</div>'
+        + '<div class="lbl">Claims Checked</div></div>\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_MODELS_ENGAGED, size=32)
+        + '<div class="num">' + str(model_count) + '</div>'
+        + '<div class="lbl">Models Engaged</div></div>\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_MODEL_CONSENSUS, size=32)
+        + '<div class="num">' + format(agree_rate, '.0%') + '</div>'
+        + '<div class="lbl">Model Consensus</div></div>\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_LEADERS, size=32)
+        + '<div class="num">1</div>'
+        + '<div class="lbl">Leaders Reviewed</div></div>\n'
+        '  </div>\n'
     )
 
     bar_html = _verdict_bar_html(dist)
@@ -700,6 +703,7 @@ def _verdict_panel(site_report) -> str:
     return (
         '<section class="verdict-panel">\n'
         + '  <div class="vp-headline">' + text_col + widget + '</div>\n'
+        + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
         + source_row_html
         + '</section>\n'
@@ -1489,10 +1493,6 @@ header.masthead:has(.mast-row) {
   flex-direction: column;
   align-items: flex-start;
 }
-/* 4-column stats grid (index page) */
-.stats-4 {
-  grid-template-columns: repeat(4, 1fr);
-}
 .stat-wide {
   border-right: none;
 }
@@ -1692,30 +1692,6 @@ header.masthead:has(.mast-row) {
   letter-spacing: 0.08em;
   color: var(--ink-muted);
   margin-top: 0.5rem;
-}
-.vp-stats {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-.vp-stat-num {
-  font-family: var(--serif);
-  font-size: 1.6rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-.vp-stat-lbl {
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--ink-muted);
-  margin-top: 0.4rem;
 }
 
 /* Big verdict bar inside the panel */
@@ -2465,8 +2441,8 @@ hr.rule-light {
   /* Status bar */
   .status-bar .stamp { margin-left: 0; }
 
-  /* Index aggregate stats — single column */
-  .stats, .stats-4 { grid-template-columns: 1fr; }
+  /* Index aggregate stats — single column (report .stats.stats-4 uses 700/480 breakpoints) */
+  .stats:not(.stats-4) { grid-template-columns: 1fr; }
   .stat {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -2540,7 +2516,6 @@ hr.rule-light {
   .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
   .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
 
-  .vp-stats { gap: 1.25rem; }
   .vp-bar-wrap, .source-row { padding-left: 1.25rem; padding-right: 1.25rem; }
 
   /* Model grid stacks */
@@ -2624,25 +2599,6 @@ hr.rule-light {
   opacity: 0.8;
 }
 
-/* [26] Report page: small icons inside .vp-stats ─────────────────────── */
-.vp-stat {
-  display: flex;
-  flex-direction: column;
-}
-.vp-stat-icon {
-  color: var(--ink-muted);
-  opacity: 0.7;
-  margin-bottom: 0.4rem;
-}
-/* Placeholder keeps the stat-num baseline-aligned across the three stats
-   while the "Models" bot icon is still in design. */
-.vp-stat-icon-placeholder {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-bottom: 0.4rem;
-}
-
 /* [27] Inline icons in section heads + claim cards ───────────────────── */
 .section-head-label {
   display: inline-flex;
@@ -2700,7 +2656,7 @@ hr.rule-light {
   .stat-icon-lg { width: 32px; height: 32px; }
   .how-strip { flex-direction: column; gap: 0.5rem; }
   .how-sep { display: none; }
-  /* .vp-stats can get tight — allow the claim-foot back-links to wrap below */
+  /* Allow the claim-foot back-links to wrap below on narrow screens */
   .claim-foot {
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -2711,6 +2667,21 @@ hr.rule-light {
     width: 100%;
     justify-content: flex-start;
   }
+}
+
+/* [30] Four-column report stats variant */
+.stats.stats-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.verdict-panel > .stats.stats-4 {
+  border-top: 1px solid var(--border);
+  margin: 0 1.25rem 1rem;
+}
+@media (max-width: 700px) {
+  .stats.stats-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .stats.stats-4 { grid-template-columns: 1fr; }
 }
 
 """
@@ -3093,15 +3064,58 @@ _ICON_BODY_CLAIMS = (
     '<circle cx="17" cy="15" r="4" stroke="currentColor" stroke-width="1.8" fill="none"/>'
     '<line x1="20" y1="18" x2="22.5" y2="20.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
 )
-_ICON_BODY_CONSENSUS = (
-    '<circle cx="8" cy="10" r="5" fill="currentColor" opacity="0.18"/>'
-    '<circle cx="16" cy="10" r="5" fill="currentColor" opacity="0.18"/>'
-    '<circle cx="12" cy="16" r="5" fill="currentColor" opacity="0.18"/>'
-    '<circle cx="8" cy="10" r="5" stroke="currentColor" stroke-width="1.2" fill="none"/>'
-    '<circle cx="16" cy="10" r="5" stroke="currentColor" stroke-width="1.2" fill="none"/>'
-    '<circle cx="12" cy="16" r="5" stroke="currentColor" stroke-width="1.2" fill="none"/>'
-    '<path d="M10.5 12.5l1.2 1.5 2.3-2.8" stroke="currentColor" stroke-width="1.5" '
-    'stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+# Three bot heads in a row (see assets/icons/icon-models-engaged.svg).
+_ICON_BODY_MODELS_ENGAGED = (
+    '<line x1="4.5" y1="5.5" x2="4.5" y2="7" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>'
+    '<circle cx="4.5" cy="5" r="0.8" fill="currentColor"/>'
+    '<rect x="1.5" y="7.5" width="6" height="5" rx="1.8" fill="currentColor" opacity="0.25"/>'
+    '<rect x="2" y="9.5" width="5" height="2" rx="1" fill="currentColor" opacity="0.65"/>'
+    '<circle cx="3.5" cy="10.5" r="0.8" fill="currentColor"/>'
+    '<circle cx="5.5" cy="10.5" r="0.8" fill="currentColor"/>'
+    '<line x1="12" y1="5.5" x2="12" y2="7" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>'
+    '<circle cx="12" cy="5" r="0.8" fill="currentColor"/>'
+    '<rect x="9" y="7.5" width="6" height="5" rx="1.8" fill="currentColor" opacity="0.25"/>'
+    '<rect x="9.5" y="9.5" width="5" height="2" rx="1" fill="currentColor" opacity="0.65"/>'
+    '<circle cx="11" cy="10.5" r="0.8" fill="currentColor"/>'
+    '<circle cx="13" cy="10.5" r="0.8" fill="currentColor"/>'
+    '<line x1="19.5" y1="5.5" x2="19.5" y2="7" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>'
+    '<circle cx="19.5" cy="5" r="0.8" fill="currentColor"/>'
+    '<rect x="16.5" y="7.5" width="6" height="5" rx="1.8" fill="currentColor" opacity="0.25"/>'
+    '<rect x="17" y="9.5" width="5" height="2" rx="1" fill="currentColor" opacity="0.65"/>'
+    '<circle cx="18.5" cy="10.5" r="0.8" fill="currentColor"/>'
+    '<circle cx="20.5" cy="10.5" r="0.8" fill="currentColor"/>'
+    '<line x1="2" y1="14" x2="22" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>'
+)
+# Bots converging to checkmark (see assets/icons/icon-model-consensus.svg).
+_ICON_BODY_MODEL_CONSENSUS = (
+    '<line x1="4.5" y1="4.5" x2="4.5" y2="6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>'
+    '<circle cx="4.5" cy="4" r="0.8" fill="currentColor"/>'
+    '<rect x="1.5" y="6.5" width="6" height="5" rx="1.8" fill="currentColor" opacity="0.25"/>'
+    '<rect x="2" y="8.5" width="5" height="2" rx="1" fill="currentColor" opacity="0.65"/>'
+    '<circle cx="3.5" cy="9.5" r="0.8" fill="currentColor"/>'
+    '<circle cx="5.5" cy="9.5" r="0.8" fill="currentColor"/>'
+    '<line x1="12" y1="4.5" x2="12" y2="6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>'
+    '<circle cx="12" cy="4" r="0.8" fill="currentColor"/>'
+    '<rect x="9" y="6.5" width="6" height="5" rx="1.8" fill="currentColor" opacity="0.25"/>'
+    '<rect x="9.5" y="8.5" width="5" height="2" rx="1" fill="currentColor" opacity="0.65"/>'
+    '<circle cx="11" cy="9.5" r="0.8" fill="currentColor"/>'
+    '<circle cx="13" cy="9.5" r="0.8" fill="currentColor"/>'
+    '<line x1="19.5" y1="4.5" x2="19.5" y2="6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>'
+    '<circle cx="19.5" cy="4" r="0.8" fill="currentColor"/>'
+    '<rect x="16.5" y="6.5" width="6" height="5" rx="1.8" fill="currentColor" opacity="0.25"/>'
+    '<rect x="17" y="8.5" width="5" height="2" rx="1" fill="currentColor" opacity="0.65"/>'
+    '<circle cx="18.5" cy="9.5" r="0.8" fill="currentColor"/>'
+    '<circle cx="20.5" cy="9.5" r="0.8" fill="currentColor"/>'
+    '<line x1="4.5" y1="12.5" x2="10" y2="17" stroke="currentColor" stroke-width="1" opacity="0.35" '
+    'stroke-linecap="round"/>'
+    '<line x1="12" y1="12.5" x2="12" y2="17" stroke="currentColor" stroke-width="1" opacity="0.35" '
+    'stroke-linecap="round"/>'
+    '<line x1="19.5" y1="12.5" x2="14" y2="17" stroke="currentColor" stroke-width="1" opacity="0.35" '
+    'stroke-linecap="round"/>'
+    '<circle cx="12" cy="18.5" r="3" fill="currentColor" opacity="0.12"/>'
+    '<circle cx="12" cy="18.5" r="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.5"/>'
+    '<path d="M10.3 18.5l1.1 1.3 2.2-2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" '
+    'stroke-linejoin="round" fill="none"/>'
 )
 
 
@@ -3109,7 +3123,7 @@ def _icon_svg(body: str, size: int = 28, extra_class: str = "") -> str:
     """Render a monochrome stat-style icon at the requested pixel size.
 
     The icon always uses the 24x24 viewBox and currentColor — size/class is
-    context-dependent (landing hero vs report .vp-stats vs inline badge).
+    context-dependent (landing hero vs report stats strip vs inline badge).
     """
     cls = "stat-icon" + ((" " + extra_class.strip()) if extra_class else "")
     return (
@@ -3153,7 +3167,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + '<div class="num">' + str(total_claims) + '</div>'
         + '<div class="lbl">Claims Checked</div></div>'
         + '<div class="stat">'
-        + _icon_svg(_ICON_BODY_CONSENSUS, size=48, extra_class="stat-icon-lg")
+        + _icon_svg(_ICON_BODY_MODEL_CONSENSUS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + avg_pct + '<span class="unit">%</span></div>'
         + '<div class="lbl">Model Consensus</div></div>'
         + '</div>'

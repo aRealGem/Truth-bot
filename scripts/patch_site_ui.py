@@ -6,8 +6,8 @@ existing report/claim HTML pages to:
   2. Add id="top" to the report hero so per-claim "Top of page" links resolve.
   3. Add id="claim-catalog" + small claim icon to the "Jump to claim"
      section-head (report pages only).
-  4. Wrap each .vp-stats child in .vp-stat and prepend a small icon
-     (claims / placeholder / consensus).
+  4. Wrap each legacy unclassed .vp-stats triple in .vp-stat + icons (then
+     patch 4b upgrades that row to full-width .stats.stats-4).
   5. Prepend a small claim icon inside each .claim-head, grouped in
      .claim-head-lead with the existing .claim-num.
   6. Inject per-claim-card "Back to claim list" + "Top of page" links in
@@ -31,7 +31,9 @@ from truthbot.publish.site import (  # noqa: E402
     JS,
     SitePublisher,
     _ICON_BODY_CLAIMS,
-    _ICON_BODY_CONSENSUS,
+    _ICON_BODY_LEADERS,
+    _ICON_BODY_MODELS_ENGAGED,
+    _ICON_BODY_MODEL_CONSENSUS,
     _icon_svg,
     _pretty_model_label,
     _render_index,
@@ -146,7 +148,7 @@ def _inject_vp_stats(html: str) -> tuple[str, int]:
     if 'class="vp-stat-icon"' in html or 'class="vp-stat vp-stat"' in html or '"vp-stat"' in html:
         return html, 0
     icon_claims = _icon_svg(_ICON_BODY_CLAIMS, size=20, extra_class="vp-stat-icon")
-    icon_consensus = _icon_svg(_ICON_BODY_CONSENSUS, size=20, extra_class="vp-stat-icon")
+    icon_consensus = _icon_svg(_ICON_BODY_MODEL_CONSENSUS, size=20, extra_class="vp-stat-icon")
 
     def repl(m: re.Match) -> str:
         claims, models, agree = m.group(1), m.group(2), m.group(3)
@@ -169,6 +171,59 @@ def _inject_vp_stats(html: str) -> tuple[str, int]:
 
     new, n = _VP_STATS_RE.subn(repl, html)
     return new, n
+
+
+# ── Patch 4b: .vp-stats (patched phase) -> full-width .stats.stats-4 ─────────
+_VP_STATS_PATCHED_RE = re.compile(
+    r'<div class="vp-stats">'
+    r'<div class="vp-stat">[\s\S]*?<div class="vp-stat-num">([^<]+)</div>'
+    r'<div class="vp-stat-lbl">Claims checked</div></div>'
+    r'<div class="vp-stat">[\s\S]*?<div class="vp-stat-num">([^<]+)</div>'
+    r'<div class="vp-stat-lbl">Models</div></div>'
+    r'<div class="vp-stat">[\s\S]*?<div class="vp-stat-num">([^<]+)</div>'
+    r'<div class="vp-stat-lbl">Inter-model agreement</div></div>'
+    r'</div>',
+)
+
+
+def _verdict_stats_4_html(claims: str, models: str, agree: str) -> str:
+    """Inline markup matching site._verdict_panel stats strip (Leaders = 1)."""
+    return (
+        '  <div class="stats stats-4">\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_CLAIMS, size=32)
+        + f'<div class="num">{claims}</div>'
+        + '<div class="lbl">Claims Checked</div></div>\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_MODELS_ENGAGED, size=32)
+        + f'<div class="num">{models}</div>'
+        + '<div class="lbl">Models Engaged</div></div>\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_MODEL_CONSENSUS, size=32)
+        + f'<div class="num">{agree}</div>'
+        + '<div class="lbl">Model Consensus</div></div>\n'
+        '    <div class="stat">'
+        + _icon_svg(_ICON_BODY_LEADERS, size=32)
+        + '<div class="num">1</div>'
+        + '<div class="lbl">Leaders Reviewed</div></div>\n'
+        '  </div>\n'
+    )
+
+
+def _migrate_vp_stats_to_stats4(html: str) -> tuple[str, int]:
+    """Replace prior-phase .vp-stats row with four-column .stats.stats-4 before .vp-bar-wrap."""
+    if 'class="stats stats-4"' in html:
+        return html, 0
+    m = _VP_STATS_PATCHED_RE.search(html)
+    if not m:
+        return html, 0
+    claims, models, agree = m.group(1), m.group(2), m.group(3)
+    new_block = _verdict_stats_4_html(claims, models, agree)
+    stripped = _VP_STATS_PATCHED_RE.sub("", html, count=1)
+    if '<div class="vp-bar-wrap">' not in stripped:
+        return html, 0
+    before, sep, rest = stripped.partition('<div class="vp-bar-wrap">')
+    return before + new_block + sep + rest, 1
 
 
 # ── Patch 5: .claim-head — prepend icon + wrap in .claim-head-lead ──────────
@@ -231,6 +286,7 @@ def _apply_report_patches(html: str) -> tuple[str, dict[str, int]]:
     html, counts["hero_id"] = _inject_hero_id(html)
     html, counts["toc_head"] = _inject_toc_head(html)
     html, counts["vp_stats"] = _inject_vp_stats(html)
+    html, counts["verdict_stats4"] = _migrate_vp_stats_to_stats4(html)
     html, counts["claim_head_icon"] = _inject_claim_head_icon(html)
     html, counts["claim_back_links"] = _inject_claim_back_links(html)
     return html, counts
