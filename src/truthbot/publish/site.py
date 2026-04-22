@@ -1490,8 +1490,53 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
-  margin: 0 0 1.25rem;
+  margin: 0;
+  flex: 1;
+  min-width: 12rem;
+  line-height: 1.45;
 }
+.truthy-sound-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.truthy-sound-toggle {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.truthy-sound-toggle:hover {
+  background: var(--surface-hover);
+  color: var(--ink);
+  border-color: var(--ink-muted);
+}
+.truthy-sound-toggle:focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 2px;
+}
+.truthy-sound-toggle-icons { position: relative; width: 22px; height: 22px; }
+.truthy-sound-toggle-icons svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.truthy-sound-toggle .icon-on { opacity: 1; }
+.truthy-sound-toggle .icon-off { opacity: 0; pointer-events: none; }
+.truthy-sound-toggle.is-muted .icon-on { opacity: 0; }
+.truthy-sound-toggle.is-muted .icon-off { opacity: 1; }
 .truthy-fun-notes {
   margin-top: 2rem;
   padding: 1.25rem 1.5rem;
@@ -3202,19 +3247,54 @@ _TRUTHY_FUN_SCRIPT = r"""<script>
   }
   var soundMap = { true: playHappy, iffy: playConfused, lie: playSad };
 
-  var soundsArmed = false;
-  function armSounds() {
-    if (soundsArmed) return;
-    soundsArmed = true;
-    var c = getCtx();
-    if (c && c.state === 'suspended') c.resume();
-    document.body.removeEventListener('click', armSounds);
-    document.body.removeEventListener('touchstart', armSounds);
-    document.body.removeEventListener('keydown', armSounds);
+  var btn = document.getElementById('truthy-sound-toggle');
+  var audioUnlocked = false;
+  var soundsOn = false;
+
+  function refreshToggleUi() {
+    if (!btn) return;
+    var muted = !audioUnlocked || !soundsOn;
+    btn.classList.toggle('is-muted', muted);
+    btn.setAttribute('aria-pressed', (!muted).toString());
+    if (!audioUnlocked) {
+      btn.setAttribute('aria-label', 'Turn on droid sounds (unlocks audio)');
+    } else if (soundsOn) {
+      btn.setAttribute('aria-label', 'Mute droid sounds');
+    } else {
+      btn.setAttribute('aria-label', 'Unmute droid sounds');
+    }
   }
-  document.body.addEventListener('click', armSounds);
-  document.body.addEventListener('touchstart', armSounds, { passive: true });
-  document.body.addEventListener('keydown', armSounds);
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    var c = getCtx();
+    if (!c) return;
+    if (c.state === 'suspended') c.resume();
+    audioUnlocked = true;
+    soundsOn = true;
+    document.body.removeEventListener('click', onBodyUnlock);
+    document.body.removeEventListener('touchstart', onBodyUnlock);
+    document.body.removeEventListener('keydown', onBodyUnlock);
+    refreshToggleUi();
+  }
+  function onBodyUnlock(e) {
+    if (btn && btn.contains(e.target)) return;
+    if (!audioUnlocked) unlockAudio();
+  }
+  document.body.addEventListener('click', onBodyUnlock);
+  document.body.addEventListener('touchstart', onBodyUnlock, { passive: true });
+  document.body.addEventListener('keydown', onBodyUnlock);
+  if (btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!audioUnlocked) {
+        unlockAudio();
+        return;
+      }
+      soundsOn = !soundsOn;
+      refreshToggleUi();
+    });
+  }
+  refreshToggleUi();
 
   var STEP_MS = 3000;
   var steps = [
@@ -3266,7 +3346,7 @@ _TRUTHY_FUN_SCRIPT = r"""<script>
     bubble.textContent = step.text;
     bubble.style.opacity = '1';
     bubble.style.transform = 'translateY(0)';
-    if (soundsArmed) {
+    if (audioUnlocked && soundsOn) {
       var fn = soundMap[step.state];
       if (fn) fn();
     }
@@ -3591,9 +3671,32 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
 
 def _render_truthy() -> str:
     """Fun Truthy page: shared SVG + index-style hero cycle, gesture-gated droid sounds, masthead chrome."""
+    _sound_icons = (
+        '<span class="truthy-sound-toggle-icons" aria-hidden="true">'
+        '<svg class="icon-on" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">'
+        '<path d="M11 5L6 9H3v6h3l5 4V5z" stroke="currentColor" stroke-width="1.5" '
+        'fill="none" stroke-linejoin="round"/>'
+        '<path d="M15.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+        '<path d="M17.5 6.5a8 8 0 010 11" stroke="currentColor" stroke-width="1.2" '
+        'stroke-linecap="round" opacity="0.55"/>'
+        '</svg>'
+        '<svg class="icon-off" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">'
+        '<path d="M11 5L6 9H3v6h3l5 4V5z" stroke="currentColor" stroke-width="1.5" '
+        'fill="none" stroke-linejoin="round"/>'
+        '<path d="M16 9l5 5M21 9l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+        '</svg>'
+        '</span>'
+    )
     hero_block = (
         '<h1 class="truthy-fun-h1">Truthy</h1>'
-        '<p class="truthy-fun-hint">Tap anywhere once to enable droid sounds.</p>'
+        '<div class="truthy-sound-row">'
+        '<p class="truthy-fun-hint">Tap anywhere once to unlock audio, then use the speaker button '
+        'to toggle droid sounds.</p>'
+        '<button type="button" class="truthy-sound-toggle is-muted" id="truthy-sound-toggle" '
+        'aria-pressed="false" aria-label="Turn on droid sounds (unlocks audio)">'
+        + _sound_icons
+        + '</button>'
+        '</div>'
         '<div class="index-hero">'
         '<div class="hero-truthy-wrap">'
         + _TRUTHY_SVG

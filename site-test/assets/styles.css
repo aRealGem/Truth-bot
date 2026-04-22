@@ -351,8 +351,53 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
-  margin: 0 0 1.25rem;
+  margin: 0;
+  flex: 1;
+  min-width: 12rem;
+  line-height: 1.45;
 }
+.truthy-sound-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.truthy-sound-toggle {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.truthy-sound-toggle:hover {
+  background: var(--surface-hover);
+  color: var(--ink);
+  border-color: var(--ink-muted);
+}
+.truthy-sound-toggle:focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 2px;
+}
+.truthy-sound-toggle-icons { position: relative; width: 22px; height: 22px; }
+.truthy-sound-toggle-icons svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.truthy-sound-toggle .icon-on { opacity: 1; }
+.truthy-sound-toggle .icon-off { opacity: 0; pointer-events: none; }
+.truthy-sound-toggle.is-muted .icon-on { opacity: 0; }
+.truthy-sound-toggle.is-muted .icon-off { opacity: 1; }
 .truthy-fun-notes {
   margin-top: 2rem;
   padding: 1.25rem 1.5rem;
