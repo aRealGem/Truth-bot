@@ -332,6 +332,17 @@ header.masthead:has(.mast-row) {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
 }
+/* Counter-animate the floor shadow so it stays put in the viewport
+   while Truthy bobs, and subtly breathes (smaller when he's up, fuller when down). */
+.index-hero #floorShadow {
+  transform-box: fill-box;
+  transform-origin: 150px 341px;
+  animation: hero-shadow-breathe 3.2s ease-in-out infinite;
+}
+@keyframes hero-shadow-breathe {
+  0%, 100% { transform: translateY(0)   scale(1);        opacity: 1; }
+  50%      { transform: translateY(6px) scale(0.86, 0.78); opacity: 0.78; }
+}
 /* Index hero: wave left arm while happy (clipboard stays in right hand) */
 @keyframes index-hero-wave-arm {
   0%, 100% { transform: rotate(112deg); }

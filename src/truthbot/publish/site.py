@@ -387,8 +387,10 @@ _TRUTHY_SVG = (
     '<line x1="0" y1="1.5" x2="2" y2="1.5" stroke="#000000" stroke-width="0.4" opacity="0.25"/>'
     '</pattern>'
     '</defs>'
+    '<g id="floorShadow">'
     '<ellipse cx="150" cy="340" rx="95" ry="10" fill="url(#floorShadowGrad)"/>'
     '<ellipse cx="150" cy="342" rx="70" ry="6" fill="rgba(0,0,0,0.25)"/>'
+    '</g>'
     '<g id="character">'
     '<ellipse cx="115" cy="325" rx="26" ry="10" fill="#4a3a28" opacity="0.25"/>'
     '<rect x="92" y="312" width="48" height="20" rx="9" fill="url(#brassShade)"/>'
@@ -521,15 +523,19 @@ _TRUTHY_SVG = (
     '<circle cx="212" cy="253" r="9" fill="url(#brassShade)"/>'
     '</g>'
     '<g id="clipboard" transform="translate(228 218) rotate(-8)">'
-    '<rect x="-1" y="-34" width="36" height="44" rx="3.5" fill="#faf6ef" stroke="#6e5e48" stroke-width="1.3"/>'
-    '<rect x="11" y="-39" width="12" height="9" rx="2" fill="url(#brassShade)" stroke="#5a4028" stroke-width="0.5"/>'
-    '<rect x="14" y="-41" width="6" height="4" rx="1" fill="#f4d98a"/>'
-    '<path d="M 5 -26 l 2.5 2.5 l 5.5 -6" fill="none" stroke="#1d6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
-    '<line x1="18" y1="-28" x2="31" y2="-28" stroke="#b8a892" stroke-width="1" opacity="0.85"/>'
-    '<path d="M 3 -17 l 5 5 M 8 -17 l -5 5" fill="none" stroke="#9b1c1c" stroke-width="1.5" stroke-linecap="round"/>'
-    '<line x1="18" y1="-17" x2="31" y2="-17" stroke="#b8a892" stroke-width="1" opacity="0.85"/>'
-    '<path d="M 5 -8 l 2 2 l 4.5 -4.5" fill="none" stroke="#1d6b3a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
-    '<path d="M 20 -10 l 3 3 M 23 -10 l -3 3" fill="none" stroke="#9b1c1c" stroke-width="1.3" stroke-linecap="round"/>'
+    '<rect x="1" y="2" width="38" height="50" rx="3" fill="#3a2e1f" opacity="0.35"/>'
+    '<rect x="0" y="0" width="38" height="50" rx="3" fill="#d4b585" stroke="#5a4028" stroke-width="1.5"/>'
+    '<rect x="0" y="0" width="38" height="4" rx="1.5" fill="#e8c89a"/>'
+    '<rect x="12" y="-3" width="14" height="7" rx="1.5" fill="#5a4028"/>'
+    '<rect x="15" y="-5" width="8" height="5" rx="1" fill="#8a7550"/>'
+    '<rect x="3" y="6" width="32" height="42" rx="1" fill="#fff8e8"/>'
+    '<line x1="6" y1="14" x2="26" y2="14" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
+    '<path d="M 29 12 L 31 15 L 34 10" stroke="#3a8a50" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+    '<line x1="6" y1="22" x2="26" y2="22" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
+    '<path d="M 29 19 L 34 24 M 34 19 L 29 24" stroke="#c44545" stroke-width="1.2" stroke-linecap="round"/>'
+    '<line x1="6" y1="30" x2="26" y2="30" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
+    '<path d="M 29 28 L 31 31 L 34 26" stroke="#3a8a50" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+    '<line x1="6" y1="38" x2="22" y2="38" stroke="#8a7550" stroke-width="0.7" opacity="0.55"/>'
     '</g>'
     '</g>'
     '</svg>'
@@ -1330,6 +1336,17 @@ header.masthead:has(.mast-row) {
 @keyframes hero-truthy-float {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
+}
+/* Counter-animate the floor shadow so it stays put in the viewport
+   while Truthy bobs, and subtly breathes (smaller when he's up, fuller when down). */
+.index-hero #floorShadow {
+  transform-box: fill-box;
+  transform-origin: 150px 341px;
+  animation: hero-shadow-breathe 3.2s ease-in-out infinite;
+}
+@keyframes hero-shadow-breathe {
+  0%, 100% { transform: translateY(0)   scale(1);        opacity: 1; }
+  50%      { transform: translateY(6px) scale(0.86, 0.78); opacity: 0.78; }
 }
 /* Index hero: wave left arm while happy (clipboard stays in right hand) */
 @keyframes index-hero-wave-arm {
@@ -2742,7 +2759,10 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + _TRUTHY_SVG
         + '</div>'
         '<div class="hero-truthy-col">'
-        '<div class="truthy-bubble is-true" id="hero-bubble" style="opacity:0;transition:opacity 100ms ease,transform 100ms ease"></div>'
+        '<div class="truthy-bubble is-true" id="hero-bubble" '
+        'style="opacity:1;transition:opacity 100ms ease,transform 100ms ease">'
+        "I&rsquo;m Truthy and honesty makes me happy!"
+        '</div>'
         '</div>'
         '</div>'
     )
