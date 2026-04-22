@@ -255,16 +255,6 @@ header.masthead:has(.mast-row) {
   color: var(--ink-muted);
   margin-top: 0.6rem;
 }
-.stat-icon {
-  color: var(--ink);
-  margin-bottom: 0.6rem;
-  line-height: 0;
-}
-.stat-icon svg {
-  width: 36px;
-  height: 36px;
-  display: block;
-}
 
 /* Aggregate verdict bar (index page hero) */
 .agg {
@@ -334,9 +324,13 @@ header.masthead:has(.mast-row) {
   padding: 1.5rem 0 1rem;
   flex-wrap: nowrap;
 }
-/* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail). */
+/* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail).
+   width: fit-content + column align-items:flex-start so the bubble hugs caption
+   text instead of stretching to the full flex column width. */
 .index-hero .truthy-bubble {
-  max-width: min(33vw, 340px);
+  width: fit-content;
+  max-width: min(92vw, 260px);
+  box-sizing: border-box;
   text-align: left;
 }
 .index-hero .truthy-bubble::before,
@@ -388,7 +382,10 @@ header.masthead:has(.mast-row) {
 }
 .hero-truthy-col {
   flex: 1;
-  min-width: 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 /* 4-column stats grid (index page) */
 .stats-4 {
@@ -1367,6 +1364,7 @@ hr.rule-light {
   .index-hero .truthy-bubble.is-true::before { border-right-color: transparent !important; border-bottom-color: rgba(21, 128, 61, 0.3); }
   .index-hero .truthy-bubble.is-iffy::before { border-right-color: transparent !important; border-bottom-color: rgba(202, 138, 4, 0.4); }
   .index-hero .truthy-bubble.is-lie::before  { border-right-color: transparent !important; border-bottom-color: rgba(153, 27, 27, 0.3); }
+  .index-hero .truthy-bubble { max-width: min(92vw, 240px); }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }

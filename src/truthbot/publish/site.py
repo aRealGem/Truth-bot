@@ -1312,16 +1312,6 @@ header.masthead:has(.mast-row) {
   color: var(--ink-muted);
   margin-top: 0.6rem;
 }
-.stat-icon {
-  color: var(--ink);
-  margin-bottom: 0.6rem;
-  line-height: 0;
-}
-.stat-icon svg {
-  width: 36px;
-  height: 36px;
-  display: block;
-}
 
 /* Aggregate verdict bar (index page hero) */
 .agg {
@@ -1391,9 +1381,13 @@ header.masthead:has(.mast-row) {
   padding: 1.5rem 0 1rem;
   flex-wrap: nowrap;
 }
-/* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail). */
+/* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail).
+   width: fit-content + column align-items:flex-start so the bubble hugs caption
+   text instead of stretching to the full flex column width. */
 .index-hero .truthy-bubble {
-  max-width: min(33vw, 340px);
+  width: fit-content;
+  max-width: min(92vw, 260px);
+  box-sizing: border-box;
   text-align: left;
 }
 .index-hero .truthy-bubble::before,
@@ -1445,7 +1439,10 @@ header.masthead:has(.mast-row) {
 }
 .hero-truthy-col {
   flex: 1;
-  min-width: 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 /* 4-column stats grid (index page) */
 .stats-4 {
@@ -2424,6 +2421,7 @@ hr.rule-light {
   .index-hero .truthy-bubble.is-true::before { border-right-color: transparent !important; border-bottom-color: rgba(21, 128, 61, 0.3); }
   .index-hero .truthy-bubble.is-iffy::before { border-right-color: transparent !important; border-bottom-color: rgba(202, 138, 4, 0.4); }
   .index-hero .truthy-bubble.is-lie::before  { border-right-color: transparent !important; border-bottom-color: rgba(153, 27, 27, 0.3); }
+  .index-hero .truthy-bubble { max-width: min(92vw, 240px); }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }
@@ -2843,46 +2841,6 @@ _HERO_SCRIPT = r"""<script>
 </script>
 """
 
-# Minimal program-stats icons (landing page only) — currentColor matches var(--ink) via .stat-icon
-_STAT_ICON_LEADERS = (
-    '<svg viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'
-    '<path fill="currentColor" d="M10 40h28v4H10v-4zm2-4 5-10h14l5 10H12z"/>'
-    '<circle fill="currentColor" cx="24" cy="13" r="5"/>'
-    '<path fill="currentColor" d="M19 18h10v11H19V18z"/>'
-    '<path fill="currentColor" d="M28 17 39 9l3 3-11 9-3-4z"/>'
-    '<circle fill="currentColor" cx="40.5" cy="10.5" r="2.2"/>'
-    '</svg>'
-)
-_STAT_ICON_CLIPBOARD = (
-    '<svg viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" '
-    'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-    '<rect x="14" y="10" width="20" height="30" rx="2"/>'
-    '<path d="M20 8h8v-4h-8v4z"/>'
-    '<path d="M18 22l2.5 2.5 4.5-5.5"/>'
-    '<path d="M18 30l2.5 2.5 5-6"/>'
-    '<path d="M28 36l4 4m0-4-4 4"/>'
-    '</svg>'
-)
-_STAT_ICON_BOT_CONFAB = (
-    '<svg viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" '
-    'fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'
-    '<rect x="2" y="4" width="16" height="11" rx="2"/>'
-    '<rect x="12" y="1" width="17" height="10" rx="2"/>'
-    '<path d="M8.5 9V6"/>'
-    '<circle cx="8.5" cy="11.5" r="1.1" fill="currentColor" stroke="none"/>'
-    '<path d="M20.5 6V3.5"/>'
-    '<circle cx="20.5" cy="9" r="1.1" fill="currentColor" stroke="none"/>'
-    '<path d="M26 5.5h3"/>'
-    '<rect x="3.5" y="25.5" width="11" height="11" rx="2.5"/>'
-    '<path d="M9 25.5v-3"/>'
-    '<rect x="18.5" y="23.5" width="11" height="11" rx="2.5"/>'
-    '<path d="M24 23.5v-3"/>'
-    '<rect x="33.5" y="25.5" width="11" height="11" rx="2.5"/>'
-    '<path d="M39 25.5v-3"/>'
-    '</svg>'
-)
-
-
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
     reports = _disambiguate_report_urls(reports)
@@ -2910,14 +2868,11 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     stats_html = (
         '<div class="section-head"><span>Program stats</span><span class="sub">All time</span></div>'
         '<div class="stats">'
-        + '<div class="stat"><div class="stat-icon">' + _STAT_ICON_LEADERS + '</div>'
-        + '<div class="num">' + str(total_leaders) + '</div>'
+        + '<div class="stat"><div class="num">' + str(total_leaders) + '</div>'
         + '<div class="lbl">Total Leaders Reviewed</div></div>'
-        + '<div class="stat"><div class="stat-icon">' + _STAT_ICON_CLIPBOARD + '</div>'
-        + '<div class="num">' + str(total_claims) + '</div>'
+        + '<div class="stat"><div class="num">' + str(total_claims) + '</div>'
         + '<div class="lbl">Total Claims Reviewed</div></div>'
-        + '<div class="stat"><div class="stat-icon">' + _STAT_ICON_BOT_CONFAB + '</div>'
-        + '<div class="num">' + avg_pct + '<span class="unit">%</span></div>'
+        + '<div class="stat"><div class="num">' + avg_pct + '<span class="unit">%</span></div>'
         + '<div class="lbl">Average Model Consensus</div></div>'
         + '</div>'
     )
