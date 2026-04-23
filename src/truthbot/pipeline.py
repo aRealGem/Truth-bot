@@ -330,6 +330,26 @@ def _print_metrics_summary(
         print()
 
 
+def resolve_inject_evidence(
+    evidence_source: str,
+    *,
+    no_inject_flag: bool = False,
+    inject_flag: bool = False,
+) -> bool:
+    """
+    Decide whether prompts should include pre-gathered evidence snippets.
+
+    The default tracks ``evidence_source`` so telemetry stays honest: when no
+    provider is fetching snippets, we don't pretend to inject them. Explicit
+    CLI flags override the default; ``--no-inject-evidence`` wins over
+    ``--inject-evidence`` if both are set.
+    """
+    if no_inject_flag:
+        return False
+    if inject_flag:
+        return True
+    return evidence_source.strip().lower() != "none"
+
 
 def _run_publish(args) -> None:
     """Full pipeline: ingest → extract → verify → publish site."""
@@ -376,10 +396,18 @@ def _run_publish(args) -> None:
     # Verify — parallel fan-out across claims (adapters already fan-out within each claim)
     run_id = str(uuid.uuid4())
     mode = getattr(args, "mode", "live") or "live"
-    no_inject = bool(getattr(args, "no_inject_evidence", False))
     from truthbot.config import settings
     from truthbot.metrics.telemetry import finalize_run, telemetry_run_context
     from truthbot.verify.batch import BatchDispatcher
+
+    inject_evidence = resolve_inject_evidence(
+        settings.evidence_source,
+        no_inject_flag=bool(getattr(args, "no_inject_evidence", False)),
+        inject_flag=bool(getattr(args, "inject_evidence", False)),
+    )
+    print(
+        f"  evidence_source={settings.evidence_source} inject_evidence={inject_evidence}"
+    )
 
     if mode == "batch":
         BatchDispatcher(settings.metrics_dir).record_job(
@@ -400,7 +428,7 @@ def _run_publish(args) -> None:
 
     engine = VerificationEngine(
         run_id=run_id,
-        inject_evidence=not no_inject,
+        inject_evidence=inject_evidence,
         triage_enabled=bool(getattr(args, "triage", False)),
         triage_threshold=float(getattr(args, "triage_threshold", 0.8)),
         triage_shadow_rate=float(getattr(args, "triage_shadow_rate", 0.0)),
@@ -413,7 +441,7 @@ def _run_publish(args) -> None:
         try:
             with telemetry_run_context(
                 run_id=run_id,
-                evidence_injected=not no_inject,
+                evidence_injected=inject_evidence,
                 synthesis_mode=mode,
             ):
                 bundle = engine.verify_bundle(
@@ -576,7 +604,18 @@ def main() -> None:
     pub_parser.add_argument(
         "--no-inject-evidence",
         action="store_true",
-        help="Do not pass prefetched evidence snippets into model prompts (telemetry evidence_injected=false)",
+        help=(
+            "Force-skip evidence injection even when TRUTHBOT_EVIDENCE_SOURCE is set "
+            "(telemetry evidence_injected=false). Wins over --inject-evidence."
+        ),
+    )
+    pub_parser.add_argument(
+        "--inject-evidence",
+        action="store_true",
+        help=(
+            "Force-enable evidence injection even when TRUTHBOT_EVIDENCE_SOURCE=none "
+            "(default tracks the source: none -> off, connectors/datahoover -> on)."
+        ),
     )
 
     batch_parser = subparsers.add_parser("batch", help="Batch job helpers")
