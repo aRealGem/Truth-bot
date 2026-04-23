@@ -3,8 +3,8 @@ Verification engine — orchestrates evidence gathering and multi-model verdict 
 
 For each claim:
   1. Check VerdictBundle cache (key = hash(claim.text + speaker + date))
-  2. Query all configured source connectors in parallel (thread pool)
-  3. Fan out claim + evidence to all active LLM adapters via asyncio.gather,
+  2. Evidence via ``EvidenceProvider`` (``TRUTHBOT_EVIDENCE_SOURCE`` / DataHoover stub / connectors).
+  3. Optional triage tier, then frontier fan-out to all active LLM adapters via asyncio.gather,
      with per-adapter 120s timeout and full error isolation
   4. Build a VerdictBundle with per-model verdicts and consensus output
   5. Write bundle to cache and return
@@ -16,6 +16,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import random
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -33,6 +34,7 @@ from truthbot.models import (
     VerdictBundle,
     VerdictLabel,
 )
+from truthbot.verify.evidence_provider import EvidenceProvider, build_evidence_provider
 from truthbot.verify.sources.base import SourceConnector
 
 logger = logging.getLogger(__name__)
@@ -150,7 +152,9 @@ class VerificationEngine:
     Parameters
     ----------
     connectors:
-        Source connectors to query for evidence. Defaults to BraveSearch + FactCheck + Gov.
+        Connectors used when ``evidence_source`` is ``connectors`` (see ``Settings``).
+    evidence_provider:
+        Optional override; otherwise chosen from ``TRUTHBOT_EVIDENCE_SOURCE``.
     max_workers:
         Thread pool size for evidence gathering.
     cache_dir:
@@ -165,9 +169,37 @@ class VerificationEngine:
         # Legacy params accepted but ignored
         api_key: Optional[str] = None,
         model: Optional[str] = None,
+        evidence_provider: Optional[EvidenceProvider] = None,
+        inject_evidence: bool = True,
+        triage_enabled: bool = False,
+        triage_threshold: float = 0.8,
+        triage_shadow_rate: float = 0.0,
+        triage_seed: Optional[int] = None,
+        run_id: Optional[str] = None,
+        verify_mode: str = "live",
     ) -> None:
         self._max_workers = max_workers
         self._connectors = connectors if connectors is not None else self._default_connectors()
+        from truthbot.config import settings
+
+        src = settings.evidence_source
+        self._evidence_provider = evidence_provider or build_evidence_provider(
+            source=src,
+            connectors=self._connectors,
+            max_workers=max_workers,
+        )
+        self._inject_evidence = inject_evidence
+        self._triage_enabled = triage_enabled
+        self._triage_threshold = triage_threshold
+        self._triage_shadow_rate = triage_shadow_rate
+        self._triage_rng = random.Random(triage_seed if triage_seed is not None else 0)
+        self._triage_adapters: list = []
+        if triage_enabled:
+            from truthbot.verify.triage import build_triage_adapters
+
+            self._triage_adapters = build_triage_adapters()
+        self._run_id = run_id
+        self._verify_mode = verify_mode
         self._adapters = self._build_adapters()
         self._bundle_cache = self._init_cache(cache_dir)
 
@@ -210,13 +242,54 @@ class VerificationEngine:
                 except Exception as exc:
                     logger.warning("Cache entry corrupt, re-verifying: %s", exc)
 
-        # Gather evidence
-        evidence = self._gather_evidence(claim)
+        from truthbot.verify.triage import (
+            run_triage_fan_out,
+            should_shadow_sample,
+            triage_unanimous_high_conf,
+        )
 
-        # Fan out to adapters
+        evidence = self._evidence_provider.get_evidence(claim)
+
+        shadow = (
+            self._triage_enabled
+            and should_shadow_sample(self._triage_shadow_rate, self._triage_rng)
+        )
+
+        if self._triage_enabled and self._triage_adapters and not shadow:
+            triage_verdicts = run_triage_fan_out(
+                self._triage_adapters,
+                claim,
+                evidence,
+                inject_evidence=self._inject_evidence,
+                run_id=self._run_id,
+            )
+            if triage_unanimous_high_conf(triage_verdicts, self._triage_threshold):
+                for v in triage_verdicts:
+                    v.tier = "triage"
+                    v.synthesis_mode = self._verify_mode
+                consensus = _build_consensus(claim.id, triage_verdicts)
+                bundle = VerdictBundle(
+                    claim=claim,
+                    speaker=speaker,
+                    date_str=date_str,
+                    model_verdicts=triage_verdicts,
+                    consensus=consensus,
+                    evidence_count=len(evidence),
+                    cache_hit=False,
+                    triage_skipped_frontier=True,
+                )
+                if self._bundle_cache is not None:
+                    try:
+                        self._bundle_cache.set(key, bundle.model_dump_json())
+                    except Exception as exc:
+                        logger.warning("Failed to write bundle to cache: %s", exc)
+                return bundle
+
         model_verdicts = self._run_fan_out(claim, evidence)
+        if shadow and self._triage_enabled:
+            for v in model_verdicts:
+                v.tier = "frontier_shadow"
 
-        # Consensus
         consensus = _build_consensus(claim.id, model_verdicts)
 
         bundle = VerdictBundle(
@@ -227,9 +300,9 @@ class VerificationEngine:
             consensus=consensus,
             evidence_count=len(evidence),
             cache_hit=False,
+            triage_skipped_frontier=False,
         )
 
-        # Persist to cache
         if self._bundle_cache is not None:
             try:
                 self._bundle_cache.set(key, bundle.model_dump_json())
@@ -243,7 +316,7 @@ class VerificationEngine:
         Legacy interface: returns (evidence, ConsensusVerdict).
         Prefer verify_bundle() for new code.
         """
-        evidence = self._gather_evidence(claim)
+        evidence = self._evidence_provider.get_evidence(claim)
         if not self._adapters:
             logger.warning("No LLM adapters active — returning stub verdict for claim %s", claim.id)
             stub = self._stub_verdict(claim, evidence)
@@ -303,7 +376,14 @@ class VerificationEngine:
 
         async def run_one(adapter) -> ModelVerdict:
             return await asyncio.wait_for(
-                asyncio.to_thread(adapter.call, claim, evidence),
+                asyncio.to_thread(
+                    lambda a=adapter: a.call(
+                        claim,
+                        evidence,
+                        inject_evidence=self._inject_evidence,
+                        run_id=self._run_id,
+                    )
+                ),
                 timeout=_ADAPTER_TIMEOUT_SECONDS,
             )
 
@@ -336,7 +416,14 @@ class VerificationEngine:
             model_verdicts: list[ModelVerdict] = []
             with ThreadPoolExecutor(max_workers=len(self._adapters)) as pool:
                 futures = {
-                    pool.submit(a.call, claim, evidence): a for a in self._adapters
+                    pool.submit(
+                        a.call,
+                        claim,
+                        evidence,
+                        inject_evidence=self._inject_evidence,
+                        run_id=self._run_id,
+                    ): a
+                    for a in self._adapters
                 }
                 for future in as_completed(futures, timeout=_ADAPTER_TIMEOUT_SECONDS + 5):
                     adapter = futures[future]
@@ -393,22 +480,19 @@ class VerificationEngine:
             logger.warning("VerdictBundle cache unavailable: %s", exc)
             return None
 
-    def _gather_evidence(self, claim: Claim) -> list[Evidence]:
-        """Query all connectors in parallel and collect results."""
-        available = [c for c in self._connectors if c.is_available()]
-        if not available:
-            return []
+    def save_bundle_to_cache(self, bundle: VerdictBundle) -> None:
+        """Write a completed bundle to the on-disk VerdictBundle cache."""
+        if self._bundle_cache is None:
+            return
+        key = _cache_key(bundle.claim.text, bundle.speaker, bundle.date_str)
+        try:
+            self._bundle_cache.set(key, bundle.model_dump_json())
+        except Exception as exc:
+            logger.warning("save_bundle_to_cache failed: %s", exc)
 
-        all_evidence: list[Evidence] = []
-        with ThreadPoolExecutor(max_workers=min(self._max_workers, len(available))) as pool:
-            futures = {pool.submit(c.search, claim): c for c in available}
-            for future in as_completed(futures):
-                connector = futures[future]
-                try:
-                    all_evidence.extend(future.result())
-                except Exception as exc:
-                    logger.error("Connector %s failed: %s", connector.source_name, exc)
-        return all_evidence
+    def _gather_evidence(self, claim: Claim) -> list[Evidence]:
+        """Legacy hook — delegates to ``EvidenceProvider``."""
+        return self._evidence_provider.get_evidence(claim)
 
     def _stub_verdict(self, claim: Claim, evidence: list[Evidence]) -> Verdict:
         return Verdict(

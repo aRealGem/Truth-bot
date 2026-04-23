@@ -209,6 +209,15 @@ class ModelVerdict(BaseModel):
     web_sources: list[str] = Field(default_factory=list)
     scored_at: datetime = Field(default_factory=datetime.utcnow)
     no_response: bool = Field(default=False, description="True when the adapter failed/timed out and returned no verdict")
+    tier: str = Field(
+        default="frontier",
+        description="frontier | triage | frontier_shadow",
+    )
+    synthesis_mode: str = Field(
+        default="live",
+        description="live | batch (billing / latency mode for this call)",
+    )
+    cached_input_tokens: int = Field(default=0, description="Input tokens billed at cache rate, if reported")
 
 
 class ConsensusVerdict(BaseModel):
@@ -249,6 +258,10 @@ class VerdictBundle(BaseModel):
     evidence_count: int = Field(default=0)
     cache_hit: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    triage_skipped_frontier: bool = Field(
+        default=False,
+        description="True when unanimous high-confidence triage skipped frontier models",
+    )
 
     @property
     def agreeing_models(self) -> list[str]:

@@ -9,14 +9,14 @@ import logging
 import os
 import re
 
-from truthbot.metrics.telemetry import get_telemetry
+from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
-from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter
+from truthbot.verify.adapters.base import OPENAI_SYNTHESIS_SYSTEM, LLMAdapter
 
 logger = logging.getLogger(__name__)
 
 _FALLBACK_MODEL = "gpt-4o"
-_PRIMARY_MODEL  = "gpt-4.1"   # gpt-5.4-pro returns 500s; gpt-4.1 is stable + fast
+_PRIMARY_MODEL  = "gpt-4.1"   # gpt-5.4 returns 500s; gpt-4.1 is stable + fast
 
 
 def _parse_verdict_json(text: str) -> dict:
@@ -49,14 +49,28 @@ class OpenAIAdapter(LLMAdapter):
         self._api_key = os.environ["OPENAI_API_KEY"]
         self._active_model = self.model_id
 
-    def call(self, claim: Claim, evidence: list[Evidence]) -> ModelVerdict:
+    def call(
+        self,
+        claim: Claim,
+        evidence: list[Evidence],
+        *,
+        inject_evidence: bool = True,
+        telemetry_tier: str = "frontier",
+        run_id: str | None = None,
+    ) -> ModelVerdict:
         """Call OpenAI with web search and return a ModelVerdict."""
         import openai
 
         telemetry = get_telemetry()
-        user_msg = self._build_user_message(claim, evidence)
+        user_msg = self._build_user_message(claim, evidence, inject_evidence=inject_evidence)
 
-        with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
+        with telemetry.measure(
+            self.adapter_name,
+            self._active_model,
+            claim.id,
+            tier=telemetry_tier,
+            run_id=run_id,
+        ) as td:
             try:
                 client = openai.OpenAI(api_key=self._api_key, timeout=60.0)
                 verdict_text, urls, tool_count, usage = self._call_with_search(
@@ -64,8 +78,17 @@ class OpenAIAdapter(LLMAdapter):
                 )
 
                 if usage:
-                    td["input_tokens"] = getattr(usage, "input_tokens", 0) or getattr(usage, "prompt_tokens", 0)
-                    td["output_tokens"] = getattr(usage, "output_tokens", 0) or getattr(usage, "completion_tokens", 0)
+                    td["input_tokens"] = getattr(usage, "input_tokens", 0) or getattr(
+                        usage, "prompt_tokens", 0
+                    )
+                    td["output_tokens"] = getattr(usage, "output_tokens", 0) or getattr(
+                        usage, "completion_tokens", 0
+                    )
+                    details = getattr(usage, "prompt_tokens_details", None)
+                    if details is not None:
+                        td["openai_cached_prompt_tokens"] = getattr(
+                            details, "cached_tokens", 0
+                        ) or 0
                 td["tool_call_count"] = tool_count
                 td["retrieved_url_count"] = len(urls)
                 td["status"] = "ok"
@@ -83,6 +106,9 @@ class OpenAIAdapter(LLMAdapter):
                     explanation=raw.get("explanation", ""),
                     web_sources=raw.get("web_sources", urls[:10]),
                     caveats=raw.get("caveats", ""),
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
+                    cached_input_tokens=int(td.get("openai_cached_prompt_tokens", 0)),
                 )
 
             except json.JSONDecodeError as exc:
@@ -95,6 +121,8 @@ class OpenAIAdapter(LLMAdapter):
                     label=VerdictLabel.UNVERIFIABLE,
                     confidence=Confidence.LOW,
                     explanation=f"Failed to parse model response: {exc}",
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
                 )
             except Exception as exc:
                 exc_str = str(exc).lower()
@@ -110,6 +138,8 @@ class OpenAIAdapter(LLMAdapter):
                     label=VerdictLabel.UNVERIFIABLE,
                     confidence=Confidence.LOW,
                     explanation=f"API error: {exc}",
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
                 )
 
     def _call_with_search(self, client, user_msg: str):
@@ -125,16 +155,11 @@ class OpenAIAdapter(LLMAdapter):
                 self._active_model = model
                 # Use a higher token budget for the fallback model
                 max_out = 4096 if model == _FALLBACK_MODEL else 8192
-                system_text = (
-                    SYNTHESIS_SYSTEM
-                    + "\n\nOperational constraints (OpenAI): Use at most 3 web searches. "
-                    + "Keep reasoning brief. Return ONLY the JSON object."
-                )
                 input_blocks = [
                     {
                         "role": "system",
                         "content": [
-                            {"type": "input_text", "text": system_text},
+                            {"type": "input_text", "text": OPENAI_SYNTHESIS_SYSTEM},
                         ],
                     },
                     {
