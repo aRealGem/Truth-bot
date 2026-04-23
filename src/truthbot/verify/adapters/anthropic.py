@@ -10,7 +10,7 @@ import os
 import re
 from typing import Any
 
-from truthbot.metrics.telemetry import get_telemetry
+from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
 from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, AdapterUnavailable, LLMAdapter
 
@@ -62,14 +62,28 @@ class AnthropicAdapter(LLMAdapter):
         self._api_key = os.environ["ANTHROPIC_API_KEY"]
         self._active_model = self.model_id
 
-    def call(self, claim: Claim, evidence: list[Evidence]) -> ModelVerdict:
+    def call(
+        self,
+        claim: Claim,
+        evidence: list[Evidence],
+        *,
+        inject_evidence: bool = True,
+        telemetry_tier: str = "frontier",
+        run_id: str | None = None,
+    ) -> ModelVerdict:
         """Call Anthropic Claude with web search and return a ModelVerdict."""
         import anthropic
 
         telemetry = get_telemetry()
-        user_msg = self._build_user_message(claim, evidence)
+        user_msg = self._build_user_message(claim, evidence, inject_evidence=inject_evidence)
 
-        with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
+        with telemetry.measure(
+            self.adapter_name,
+            self._active_model,
+            claim.id,
+            tier=telemetry_tier,
+            run_id=run_id,
+        ) as td:
             try:
                 client = anthropic.Anthropic(api_key=self._api_key)
                 response = self._call_with_fallback(client, user_msg)
@@ -96,8 +110,12 @@ class AnthropicAdapter(LLMAdapter):
                 # Update telemetry data
                 usage = getattr(response, "usage", None)
                 if usage:
-                    td["input_tokens"] = getattr(usage, "input_tokens", 0)
-                    td["output_tokens"] = getattr(usage, "output_tokens", 0)
+                    td["input_tokens"] = getattr(usage, "input_tokens", 0) or 0
+                    td["output_tokens"] = getattr(usage, "output_tokens", 0) or 0
+                    td["cache_read_input_tokens"] = getattr(usage, "cache_read_input_tokens", 0) or 0
+                    td["cache_creation_input_tokens"] = (
+                        getattr(usage, "cache_creation_input_tokens", 0) or 0
+                    )
                 td["tool_call_count"] = tool_call_count
                 td["retrieved_url_count"] = len(retrieved_urls)
                 td["status"] = "ok"
@@ -115,6 +133,9 @@ class AnthropicAdapter(LLMAdapter):
                     explanation=raw.get("explanation", ""),
                     caveats=raw.get("caveats", ""),
                     web_sources=raw.get("web_sources", retrieved_urls[:10]),
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
+                    cached_input_tokens=int(td.get("cache_read_input_tokens", 0)),
                 )
 
             except json.JSONDecodeError as exc:
@@ -127,6 +148,8 @@ class AnthropicAdapter(LLMAdapter):
                     label=VerdictLabel.UNVERIFIABLE,
                     confidence=Confidence.LOW,
                     explanation=f"Failed to parse model response: {exc}",
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
                 )
             except Exception as exc:
                 exc_str = str(exc).lower()
@@ -142,6 +165,8 @@ class AnthropicAdapter(LLMAdapter):
                     label=VerdictLabel.UNVERIFIABLE,
                     confidence=Confidence.LOW,
                     explanation=f"API error: {exc}",
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
                 )
 
     def _call_with_fallback(self, client: Any, user_msg: str) -> Any:
@@ -161,7 +186,13 @@ class AnthropicAdapter(LLMAdapter):
                 response = client.messages.create(
                     model=model,
                     max_tokens=2048,
-                    system=SYNTHESIS_SYSTEM,
+                    system=[
+                        {
+                            "type": "text",
+                            "text": SYNTHESIS_SYSTEM,
+                            "cache_control": {"type": "ephemeral"},
+                        }
+                    ],
                     tools=[{"type": "web_search_20250305", "name": "web_search"}],
                     messages=[{"role": "user", "content": user_msg}],
                 )
@@ -181,7 +212,13 @@ class AnthropicAdapter(LLMAdapter):
             response = client.messages.create(
                 model=_FALLBACK_MODELS[-1],
                 max_tokens=2048,
-                system=SYNTHESIS_SYSTEM,
+                system=[
+                    {
+                        "type": "text",
+                        "text": SYNTHESIS_SYSTEM,
+                        "cache_control": {"type": "ephemeral"},
+                    }
+                ],
                 messages=[{"role": "user", "content": user_msg}],
             )
             self._active_model = _FALLBACK_MODELS[-1]

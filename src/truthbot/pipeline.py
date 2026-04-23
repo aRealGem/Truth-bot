@@ -211,7 +211,10 @@ class Pipeline:
         report.published_at = datetime.now(timezone.utc)
 
 
-def _print_metrics_summary(jsonl_path: str | None = None) -> None:
+def _print_metrics_summary(
+    jsonl_path: str | None = None,
+    run_id: str | None = None,
+) -> None:
     """Read adapter_calls.jsonl and print per-adapter summary tables."""
     import json
     from collections import defaultdict
@@ -233,6 +236,7 @@ def _print_metrics_summary(jsonl_path: str | None = None) -> None:
         "tool_calls": 0, "urls": 0,
         "total_cost": 0.0, "total_ms": 0,
     })
+    tier_cost: dict[str, float] = defaultdict(float)
 
     with path.open("r", encoding="utf-8") as f:
         for line in f:
@@ -243,6 +247,10 @@ def _print_metrics_summary(jsonl_path: str | None = None) -> None:
                 rec = json.loads(line)
             except json.JSONDecodeError:
                 continue
+            if run_id and rec.get("run_id") != run_id:
+                continue
+            tier = rec.get("tier", "frontier")
+            tier_cost[tier] += float(rec.get("estimated_cost_usd", 0.0))
             name = rec.get("adapter_name", "unknown")
             s = stats[name]
             s["calls"] += 1
@@ -313,6 +321,14 @@ def _print_metrics_summary(jsonl_path: str | None = None) -> None:
         ))
     print()
 
+    if run_id and tier_cost:
+        print()
+        print(f"Triage / tier cost (run_id={run_id})")
+        print("-" * 50)
+        for tier, cst in sorted(tier_cost.items()):
+            print(f"  {tier:<20} ${cst:.6f}")
+        print()
+
 
 
 def _run_publish(args) -> None:
@@ -358,18 +374,53 @@ def _run_publish(args) -> None:
     print(f"  {len(claims)} claims extracted, {len(checkable)} checkable")
 
     # Verify — parallel fan-out across claims (adapters already fan-out within each claim)
-    engine = VerificationEngine()
+    run_id = str(uuid.uuid4())
+    mode = getattr(args, "mode", "live") or "live"
+    no_inject = bool(getattr(args, "no_inject_evidence", False))
+    from truthbot.config import settings
+    from truthbot.metrics.telemetry import finalize_run, telemetry_run_context
+    from truthbot.verify.batch import BatchDispatcher
+
+    if mode == "batch":
+        BatchDispatcher(settings.metrics_dir).record_job(
+            run_id,
+            transcript_meta={
+                "speaker": args.speaker,
+                "date": args.date,
+                "transcript_chars": len(text),
+            },
+            work_units=[{"claim_id": c.id, "claim_text": c.text[:500]} for c in checkable],
+        )
+        print(f"Batch job descriptor: metrics/batch_jobs/{run_id}.json")
+        print(f"Poll with: truthbot batch poll {run_id}")
+
     bundles_map: dict[int, object] = {}
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    engine = VerificationEngine(
+        run_id=run_id,
+        inject_evidence=not no_inject,
+        triage_enabled=bool(getattr(args, "triage", False)),
+        triage_threshold=float(getattr(args, "triage_threshold", 0.8)),
+        triage_shadow_rate=float(getattr(args, "triage_shadow_rate", 0.0)),
+        verify_mode=mode,
+    )
 
     def _verify_one(idx_claim):
         idx, claim = idx_claim
         print(f"  Verifying claim {idx}/{len(checkable)}: {claim.text[:60]}...")
         try:
-            bundle = engine.verify_bundle(
-                claim,
-                speaker=args.speaker,
-                date_str=args.date,
-            )
+            with telemetry_run_context(
+                run_id=run_id,
+                evidence_injected=not no_inject,
+                synthesis_mode=mode,
+            ):
+                bundle = engine.verify_bundle(
+                    claim,
+                    speaker=args.speaker,
+                    date_str=args.date,
+                )
             label = bundle.consensus.consensus_label.value
             strength = bundle.consensus.consensus_strength
             cache = " [cached]" if bundle.cache_hit else ""
@@ -379,7 +430,6 @@ def _run_publish(args) -> None:
             logger.error("Verify failed for claim %s: %s", claim.id, exc)
             return idx, None
 
-    from concurrent.futures import ThreadPoolExecutor, as_completed
     max_workers = min(len(checkable), 5)
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futs = {pool.submit(_verify_one, (i, c)): i for i, c in enumerate(checkable, 1)}
@@ -387,6 +437,15 @@ def _run_publish(args) -> None:
             idx, bundle = fut.result()
             if bundle is not None:
                 bundles_map[idx] = bundle
+
+    try:
+        fin = finalize_run(run_id)
+        print(
+            f"Telemetry run summary: metrics/run_summaries/{run_id}.json "
+            f"(total_cost_usd={fin['total_cost_usd']:.6f})"
+        )
+    except Exception as exc:
+        logger.warning("finalize_run failed: %s", exc)
 
     # Restore original ordering
     bundles = [bundles_map[i] for i in sorted(bundles_map)]
@@ -474,6 +533,12 @@ def main() -> None:
         "--jsonl",
         help="Path to adapter_calls.jsonl (default: settings.metrics_dir/adapter_calls.jsonl)",
     )
+    summary_parser.add_argument(
+        "--run-id",
+        dest="run_id",
+        default=None,
+        help="Only include telemetry rows with this run_id (also prints tier cost table)",
+    )
 
     # publish subcommand — full pipeline + site generation
     pub_parser = subparsers.add_parser("publish", help="Run pipeline and generate static site")
@@ -485,6 +550,39 @@ def main() -> None:
     pub_parser.add_argument("--source-url", default="",   help="Transcript source URL")
     pub_parser.add_argument("--site-root",  default=None, help="Site output root (overrides TRUTHBOT_SITE_ROOT)")
     pub_parser.add_argument("--max-claims",  type=int, default=5, help="Max checkable claims to verify (default 5)")
+    pub_parser.add_argument(
+        "--mode",
+        choices=("live", "batch"),
+        default="live",
+        help="Verification billing mode: live API calls (default) or batch descriptor + same live verify for now",
+    )
+    pub_parser.add_argument(
+        "--triage",
+        action="store_true",
+        help="Enable cheap-model triage tier before frontier fan-out",
+    )
+    pub_parser.add_argument(
+        "--triage-threshold",
+        type=float,
+        default=0.8,
+        help="Minimum numeric confidence for unanimous triage short-circuit (default 0.8)",
+    )
+    pub_parser.add_argument(
+        "--triage-shadow-rate",
+        type=float,
+        default=0.0,
+        help="Probability of skipping triage and labeling frontier verdicts as frontier_shadow (0–1)",
+    )
+    pub_parser.add_argument(
+        "--no-inject-evidence",
+        action="store_true",
+        help="Do not pass prefetched evidence snippets into model prompts (telemetry evidence_injected=false)",
+    )
+
+    batch_parser = subparsers.add_parser("batch", help="Batch job helpers")
+    batch_sub = batch_parser.add_subparsers(dest="batch_cmd", required=True)
+    batch_poll = batch_sub.add_parser("poll", help="Poll batch job descriptor status for a run_id")
+    batch_poll.add_argument("run_id", help="Publish run UUID written under metrics/batch_jobs/")
 
     args = parser.parse_args()
 
@@ -494,11 +592,25 @@ def main() -> None:
     # Handle metrics subcommand
     if getattr(args, "subcommand", None) == "metrics":
         if getattr(args, "metrics_cmd", None) == "summary":
-            _print_metrics_summary(getattr(args, "jsonl", None))
+            _print_metrics_summary(
+                getattr(args, "jsonl", None),
+                run_id=getattr(args, "run_id", None),
+            )
             return
         else:
             parser.print_help()
             return
+
+    if getattr(args, "subcommand", None) == "batch":
+        if getattr(args, "batch_cmd", None) == "poll":
+            from truthbot.config import settings
+            from truthbot.verify.batch import BatchDispatcher
+
+            st = BatchDispatcher(settings.metrics_dir).poll(args.run_id)
+            print(st)
+            return
+        parser.print_help()
+        return
 
     # Handle publish subcommand
     if getattr(args, "subcommand", None) == "publish":

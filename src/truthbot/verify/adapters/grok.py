@@ -1,5 +1,9 @@
 """
 xAI Grok adapter using the Agent Tools API (Responses endpoint) for live web search.
+
+TODO(prompt-cache): xAI does not expose Anthropic-style prompt caching or a documented
+Context Caching API as of 2026-04. When available, add a provider hook parallel to
+Anthropic/OpenAI/Gemini and wire cache-read token fields into telemetry.
 """
 
 from __future__ import annotations
@@ -9,7 +13,7 @@ import logging
 import os
 import re
 
-from truthbot.metrics.telemetry import get_telemetry
+from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
 from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter
 
@@ -48,14 +52,28 @@ class GrokAdapter(LLMAdapter):
         self._api_key = os.environ["XAI_API_KEY"]
         self._active_model = self.model_id
 
-    def call(self, claim: Claim, evidence: list[Evidence]) -> ModelVerdict:
+    def call(
+        self,
+        claim: Claim,
+        evidence: list[Evidence],
+        *,
+        inject_evidence: bool = True,
+        telemetry_tier: str = "frontier",
+        run_id: str | None = None,
+    ) -> ModelVerdict:
         """Call Grok via the Agent Tools Responses API and return a ModelVerdict."""
         import openai
 
         telemetry = get_telemetry()
-        user_msg = self._build_user_message(claim, evidence)
+        user_msg = self._build_user_message(claim, evidence, inject_evidence=inject_evidence)
 
-        with telemetry.measure(self.adapter_name, self._active_model, claim.id) as td:
+        with telemetry.measure(
+            self.adapter_name,
+            self._active_model,
+            claim.id,
+            tier=telemetry_tier,
+            run_id=run_id,
+        ) as td:
             try:
                 client = openai.OpenAI(api_key=self._api_key, base_url=_XAI_BASE_URL)
                 verdict_text, urls, tool_count, usage = self._call_with_search(client, user_msg)
@@ -85,6 +103,8 @@ class GrokAdapter(LLMAdapter):
                     confidence=confidence,
                     explanation=raw.get("explanation", ""),
                     web_sources=raw.get("web_sources", urls[:10]),
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
                 )
 
             except json.JSONDecodeError as exc:
@@ -97,6 +117,8 @@ class GrokAdapter(LLMAdapter):
                     label=VerdictLabel.UNVERIFIABLE,
                     confidence=Confidence.LOW,
                     explanation=f"Failed to parse model response: {exc}",
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
                 )
             except Exception as exc:
                 exc_str = str(exc).lower()
@@ -112,6 +134,8 @@ class GrokAdapter(LLMAdapter):
                     label=VerdictLabel.UNVERIFIABLE,
                     confidence=Confidence.LOW,
                     explanation=f"API error: {exc}",
+                    tier=telemetry_tier,
+                    synthesis_mode=get_synthesis_mode(),
                 )
 
     def _call_with_search(self, client, user_msg: str):

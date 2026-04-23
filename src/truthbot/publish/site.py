@@ -208,14 +208,14 @@ _ADAPTER_BRAND = {
 }
 _ADAPTER_DEFAULT_MODEL = {
     "anthropic": "claude-opus-4-7",
-    "openai":    "gpt-5.4-pro",
+    "openai":    "gpt-5.4",
     "gemini":    "gemini-2.5-pro",
 }
 _MODEL_TOKEN_UPPER = {"gpt", "ai"}
 
 
 def _prettify_model_id(mid: str) -> str:
-    """Turn 'claude-opus-4-7' → 'Claude Opus 4.7', 'gpt-5.4-pro' → 'GPT 5.4 Pro'."""
+    """Turn 'claude-opus-4-7' → 'Claude Opus 4.7', 'gpt-5.4' → 'GPT 5.4'."""
     if not mid:
         return ""
     parts = [p for p in mid.split("-") if p]
@@ -918,7 +918,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     majority_label = label
 
     triage_badge = ""
-    if getattr(bundle, "triage_decision", False):
+    if getattr(bundle, "triage_skipped_frontier", False):
         triage_badge = (
             '<span class="claim-pill triage-only" '
             'title="Unanimous high-confidence triage; frontier models were skipped">Triage</span>'
@@ -961,10 +961,24 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
                     f'  <div class="model-reasoning-body">{reasoning_text}</div>'
                     '</details>'
                 )
+            tier_slug = getattr(mv, "tier", "frontier") or "frontier"
+            mode_slug = getattr(mv, "synthesis_mode", "live") or "live"
+            tier_html = ""
+            if tier_slug != "frontier" or mode_slug != "live":
+                tier_title = f"Review tier: {tier_slug}; synthesis mode: {mode_slug}"
+                tier_html = (
+                    f'<details class="model-tier-wrap">'
+                    f'  <summary class="model-tier-sum" title="{_esc(tier_title)}">'
+                    f'{_esc(tier_slug)}'
+                    f'</summary>'
+                    f'  <div class="model-tier-body">{_esc(mode_slug)}</div>'
+                    f'</details>'
+                )
             model_cards.append(
                 f'<div class="model{dissent}">'
                 f'  <div class="model-name">{_esc(mv.adapter_name)}</div>'
                 f'  <div class="model-verdict vt-{mv_css}">{VERDICT_EMOJI.get(mv_label, "")} {_esc(mv_label)}</div>'
+                f'  {tier_html}'
                 f'  {reasoning_html}'
                 '</div>'
             )
@@ -2213,6 +2227,28 @@ details.model-reasoning > summary:hover { background: var(--surface-warm); }
 }
 .model-reasoning-body p { margin: 0.4rem 0 0; }
 .model-reasoning-body p:first-child { margin-top: 0.2rem; }
+
+details.model-tier-wrap {
+  margin-top: 0.45rem;
+  border: 1px dashed var(--border);
+}
+details.model-tier-wrap > summary.model-tier-sum {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
+.model-tier-body {
+  padding: 0 0.6rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--ink);
+}
 
 /* [16] Report page — evidence list ───────────────────────────────────── */
 .evidence { margin-top: 1.5rem; }
@@ -3752,7 +3788,7 @@ def _render_about() -> str:
     models_list = (
         "<ul>"
         "<li><strong>Anthropic</strong> claude-opus-4-7 — primary verifier</li>"
-        "<li><strong>OpenAI</strong> gpt-5.4-pro — pending API availability</li>"
+        "<li><strong>OpenAI</strong> gpt-5.4 — pending API availability</li>"
         "<li><strong>Google</strong> gemini-2.5-pro — pending API key</li>"
         "<li><strong>xAI</strong> grok-4 — pending API key</li>"
         "</ul>"

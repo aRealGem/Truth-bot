@@ -51,6 +51,16 @@ class ErrorConnector(SourceConnector):
         raise RuntimeError("Simulated connector failure")
 
 
+class ExplodingConnector(SourceConnector):
+    """Fails if search is invoked — used to assert prefetch stays stubbed."""
+
+    source_name = "ExplodingSource"
+    tier = SourceTier.OTHER
+
+    def search(self, claim):
+        raise AssertionError("connector search must not run when prefetch is stubbed")
+
+
 class TestVerificationEngine:
     def test_verify_returns_tuple(self, sample_claim):
         engine = VerificationEngine(connectors=[], api_key="")
@@ -71,11 +81,29 @@ class TestVerificationEngine:
         _, verdict = engine.verify(sample_claim)
         assert verdict.consensus_label == VerdictLabel.UNVERIFIABLE
 
-    def test_connector_error_is_handled(self, sample_claim):
+    def test_connector_error_is_handled(self, sample_claim, monkeypatch):
+        monkeypatch.setenv("TRUTHBOT_EVIDENCE_SOURCE", "connectors")
         engine = VerificationEngine(connectors=[ErrorConnector()], api_key="")
         # Should not raise — errors in connectors are caught
         evidence, verdict = engine.verify(sample_claim)
         assert isinstance(verdict, ConsensusVerdict)
+
+    def test_gather_evidence_stubbed_by_default(self, sample_claim, monkeypatch):
+        monkeypatch.delenv("TRUTHBOT_PREFETCH_EVIDENCE", raising=False)
+        monkeypatch.delenv("TRUTHBOT_EVIDENCE_SOURCE", raising=False)
+        engine = VerificationEngine(connectors=[ExplodingConnector()], api_key="")
+        assert engine._gather_evidence(sample_claim) == []
+
+    def test_gather_evidence_calls_connectors_when_prefetch_on(self, sample_claim, monkeypatch):
+        monkeypatch.delenv("TRUTHBOT_EVIDENCE_SOURCE", raising=False)
+        monkeypatch.setenv("TRUTHBOT_PREFETCH_EVIDENCE", "1")
+        engine = VerificationEngine(
+            connectors=[MockConnector([("A snippet.", True)])],
+            api_key="",
+        )
+        ev = engine._gather_evidence(sample_claim)
+        assert len(ev) == 1
+        assert ev[0].snippet == "A snippet."
 
     def test_verify_many_returns_all(self, sample_claim):
         engine = VerificationEngine(connectors=[], api_key="")

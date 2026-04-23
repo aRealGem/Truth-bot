@@ -48,6 +48,36 @@ class Settings:
     def brave_api_key(self) -> str:
         return _require("BRAVE_API_KEY")
 
+    @property
+    def prefetch_evidence(self) -> bool:
+        """
+        When False (default), the verification engine does not call source connectors;
+        models receive an empty evidence list and rely on their own web search.
+        Set TRUTHBOT_PREFETCH_EVIDENCE=1 to enable Brave / FactCheck / Gov prefetch.
+
+        Prefer ``TRUTHBOT_EVIDENCE_SOURCE``; when that is unset, ``prefetch_evidence``
+        maps to ``connectors`` vs ``none`` for backward compatibility.
+        """
+        return _optional("TRUTHBOT_PREFETCH_EVIDENCE", "").strip().lower() in (
+            "1",
+            "true",
+            "yes",
+            "on",
+        )
+
+    @property
+    def evidence_source(self) -> str:
+        """
+        ``none`` | ``connectors`` | ``datahoover``.
+
+        If ``TRUTHBOT_EVIDENCE_SOURCE`` is unset, derive from ``TRUTHBOT_PREFETCH_EVIDENCE``
+        (truthy → ``connectors``, else ``none``).
+        """
+        raw = _optional("TRUTHBOT_EVIDENCE_SOURCE", "").strip().lower()
+        if raw in ("none", "connectors", "datahoover"):
+            return raw
+        return "connectors" if self.prefetch_evidence else "none"
+
     # ── Government APIs ───────────────────────────────────────────────────────
     @property
     def fred_api_key(self) -> str:
