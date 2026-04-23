@@ -311,6 +311,11 @@ class BatchDispatcher:
       - one optional sidecar:  ``metrics/batch_sidecar/<run_id>.jsonl`` (Grok live rows)
     """
 
+    # Phase E — sidecar loop chunks claims per-adapter (bounded by
+    # ``max_claims_per_request``) and dispatches via ``adapter.call_multi``.
+    # Tests key auto-skips off this sentinel so they're inert pre-refactor.
+    SIDECAR_SUPPORTS_CALL_MULTI: bool = True
+
     def __init__(self, metrics_dir: Path) -> None:
         self._metrics_dir = metrics_dir
 
@@ -527,44 +532,90 @@ class BatchDispatcher:
                 entry["custom_id_to_claim"] = custom_id_to_claim
             provider_jobs[adapter.adapter_name] = entry
 
-        # Sidecar: run non-batch adapters live, one worker per adapter × 4 claims.
+        # Sidecar: run non-batch adapters live. For adapters that opt into
+        # multi-claim (``max_claims_per_request > 1`` + ``call_multi``
+        # override), dispatch in chunks so SYNTHESIS_SYSTEM is amortized
+        # across N claims. Per-claim fallback on chunk failure preserves the
+        # "every claim gets a verdict" invariant.
         sidecar = sidecar_path(self._metrics_dir, run_id)
         if sidecar_live_adapters:
             sidecar.parent.mkdir(parents=True, exist_ok=True)
             if sidecar.exists():
                 sidecar.unlink()  # start fresh
 
-            def _one(adapter, claim, evidence) -> Optional[ModelVerdict]:
+            def _stamp_and_append(verdict: ModelVerdict) -> None:
+                verdict.tier = "frontier"
+                verdict.synthesis_mode = "live"
+                _append_sidecar(sidecar, verdict)
+
+            def _per_claim_fallback(adapter, chunk) -> None:
+                """Last-resort per-claim loop; used when call_multi raises."""
+                for claim, evidence in chunk:
+                    try:
+                        v = adapter.call(
+                            claim,
+                            evidence,
+                            inject_evidence=inject_evidence,
+                            run_id=run_id,
+                        )
+                        _stamp_and_append(v)
+                    except Exception as exc2:
+                        logger.error(
+                            "sidecar %s per-claim fallback failed on claim %s: %s",
+                            adapter.adapter_name, claim.id, exc2,
+                        )
+
+            def _dispatch_chunk(adapter, chunk) -> None:
+                claims = [c for c, _ in chunk]
+                evidence_by_claim = {c.id: ev for c, ev in chunk}
                 try:
-                    verdict = adapter.call(
-                        claim,
-                        evidence,
+                    verdicts = adapter.call_multi(
+                        claims,
+                        evidence_by_claim,
                         inject_evidence=inject_evidence,
                         run_id=run_id,
                     )
-                    verdict.tier = "frontier"
-                    verdict.synthesis_mode = "live"
-                    return verdict
                 except Exception as exc:
                     logger.error(
-                        "sidecar %s failed on claim %s: %s",
-                        adapter.adapter_name,
-                        claim.id,
-                        exc,
+                        "sidecar %s multi-call failed on chunk of %d "
+                        "(falling back per-claim): %s",
+                        adapter.adapter_name, len(claims), exc,
                     )
-                    return None
+                    _per_claim_fallback(adapter, chunk)
+                    return
 
-            tasks = [
-                (adapter, claim, ev)
-                for adapter in sidecar_live_adapters
-                for claim, ev in claims_with_evidence
-            ]
-            with ThreadPoolExecutor(max_workers=min(8, max(1, len(tasks)))) as pool:
-                futures = {pool.submit(_one, *t): t for t in tasks}
-                for fut in as_completed(futures):
-                    v = fut.result()
-                    if v is not None:
-                        _append_sidecar(sidecar, v)
+                if not verdicts:
+                    logger.warning(
+                        "sidecar %s call_multi returned no verdicts for chunk "
+                        "of %d (falling back per-claim)",
+                        adapter.adapter_name, len(claims),
+                    )
+                    _per_claim_fallback(adapter, chunk)
+                    return
+
+                for v in verdicts:
+                    _stamp_and_append(v)
+
+            adapter_chunks: list[tuple[Any, list]] = []
+            for adapter in sidecar_live_adapters:
+                cap = max(1, int(getattr(adapter, "max_claims_per_request", 1)))
+                chunk_size = min(requested, cap)
+                chunks = chunk_claims_with_evidence(
+                    claims_with_evidence, chunk_size
+                )
+                for chunk in chunks:
+                    adapter_chunks.append((adapter, chunk))
+
+            if adapter_chunks:
+                with ThreadPoolExecutor(
+                    max_workers=min(8, max(1, len(adapter_chunks)))
+                ) as pool:
+                    futures = [
+                        pool.submit(_dispatch_chunk, adapter, chunk)
+                        for adapter, chunk in adapter_chunks
+                    ]
+                    for fut in as_completed(futures):
+                        fut.result()
 
         payload = {
             "run_id": run_id,

@@ -52,9 +52,10 @@ class Settings:
         message enumerates N claims and the model returns a JSON array of
         verdicts). Set ``TRUTHBOT_CLAIMS_PER_REQUEST=1`` to force the legacy
         one-claim-per-call behaviour. Per-adapter ``max_claims_per_request``
-        caps clamp this value at submit time. Currently honoured in
-        ``--mode batch`` only; ``--mode live`` ignores it pending the Phase E
-        live-mode fan-out (see PROJECT_BOARD backlog).
+        caps clamp this value at submit time. Honoured in both
+        ``--mode batch`` (native batch API multi-claim payloads) and
+        ``--mode live`` (Phase E Grok/Gemini slice — live multi-claim via
+        ``LLMAdapter.call_multi`` → ``VerificationEngine.verify_bundles_batch``).
         """
         try:
             return max(1, int(_optional("TRUTHBOT_CLAIMS_PER_REQUEST", "5")))

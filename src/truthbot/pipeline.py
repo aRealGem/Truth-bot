@@ -753,36 +753,90 @@ def _run_publish(args) -> None:
 
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    def _verify_one(idx_claim):
-        idx, claim = idx_claim
-        print(f"  Verifying claim {idx}/{len(checkable)}: {claim.text[:60]}...")
+    # Phase E — live multi-claim fan-out: when the operator requested
+    # multi-claim bundling (``TRUTHBOT_CLAIMS_PER_REQUEST > 1``) AND at least
+    # one active adapter has ``max_claims_per_request > 1``, route the live
+    # path through ``verify_bundles_batch`` so Grok/Gemini can fold
+    # SYNTHESIS_SYSTEM over N claims per API call. Adapters that don't
+    # override ``call_multi`` (Anthropic, OpenAI today) inherit the default
+    # loop → byte-identical to the per-claim path.
+    claims_per_request = getattr(args, "claims_per_request", None)
+    if claims_per_request is None:
+        claims_per_request = settings.claims_per_request
+    claims_per_request = max(1, int(claims_per_request))
+    any_multi_capable = any(
+        int(getattr(a, "max_claims_per_request", 1)) > 1 for a in engine.adapters
+    )
+    use_multi_fanout = (
+        claims_per_request > 1 and any_multi_capable and len(checkable) > 1
+    )
+
+    if use_multi_fanout:
+        print(
+            f"  Live multi-claim fan-out: claims_per_request={claims_per_request}, "
+            f"{len(checkable)} claim(s)"
+        )
         try:
             with telemetry_run_context(
                 run_id=run_id,
                 evidence_injected=inject_evidence,
                 synthesis_mode=mode,
             ):
-                bundle = engine.verify_bundle(
-                    claim,
+                bundles_list = engine.verify_bundles_batch(
+                    checkable,
                     speaker=args.speaker,
                     date_str=args.date,
                 )
-            label = bundle.consensus.consensus_label.value
-            strength = bundle.consensus.consensus_strength
-            cache = " [cached]" if bundle.cache_hit else ""
-            print(f"    -> claim {idx}: {label} ({strength}){cache}")
-            return idx, bundle
-        except Exception as exc:
-            logger.error("Verify failed for claim %s: %s", claim.id, exc)
-            return idx, None
-
-    max_workers = min(len(checkable), 5)
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futs = {pool.submit(_verify_one, (i, c)): i for i, c in enumerate(checkable, 1)}
-        for fut in as_completed(futs):
-            idx, bundle = fut.result()
-            if bundle is not None:
+            # Preserve positional index → bundle map for downstream ordering.
+            by_claim_id = {b.claim.id: b for b in bundles_list}
+            for idx, claim in enumerate(checkable, 1):
+                bundle = by_claim_id.get(claim.id)
+                if bundle is None:
+                    logger.warning(
+                        "verify_bundles_batch dropped claim %s", claim.id
+                    )
+                    continue
+                label = bundle.consensus.consensus_label.value
+                strength = bundle.consensus.consensus_strength
+                cache = " [cached]" if bundle.cache_hit else ""
+                print(f"    -> claim {idx}: {label} ({strength}){cache}")
                 bundles_map[idx] = bundle
+        except Exception as exc:
+            logger.error("verify_bundles_batch failed: %s", exc)
+    else:
+        def _verify_one(idx_claim):
+            idx, claim = idx_claim
+            print(f"  Verifying claim {idx}/{len(checkable)}: {claim.text[:60]}...")
+            try:
+                with telemetry_run_context(
+                    run_id=run_id,
+                    evidence_injected=inject_evidence,
+                    synthesis_mode=mode,
+                ):
+                    bundle = engine.verify_bundle(
+                        claim,
+                        speaker=args.speaker,
+                        date_str=args.date,
+                    )
+                label = bundle.consensus.consensus_label.value
+                strength = bundle.consensus.consensus_strength
+                cache = " [cached]" if bundle.cache_hit else ""
+                print(f"    -> claim {idx}: {label} ({strength}){cache}")
+                return idx, bundle
+            except Exception as exc:
+                logger.error("Verify failed for claim %s: %s", claim.id, exc)
+                return idx, None
+
+        max_workers = min(len(checkable), 5)
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            futs = {
+                pool.submit(_verify_one, (i, c)): i
+                for i, c in enumerate(checkable, 1)
+            }
+            for fut in as_completed(futs):
+                idx, bundle = fut.result()
+                if bundle is not None:
+                    bundles_map[idx] = bundle
 
     try:
         fin = finalize_run(run_id)

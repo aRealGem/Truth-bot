@@ -1,4 +1,87 @@
-# Truth-bot Status — 2026-04-22 evening
+# Truth-bot Status — 2026-04-23
+
+## Session note — 2026-04-23 (Phase E Grok/Gemini live claim-batching)
+
+### Shipped today
+- **Live multi-claim claim-batching for Grok + Gemini.** Both adapters gained a
+  ``call_multi(claims, evidence_by_claim, ...)`` override that folds
+  ``SYNTHESIS_SYSTEM`` over N claims in a single API call — one
+  ``client.responses.create`` for Grok, one ``client.models.generate_content``
+  for Gemini. ``LLMAdapter.call_multi`` landed with a default that loops
+  ``self.call`` so Anthropic/OpenAI ``--mode live`` behavior is byte-identical.
+  New caps: ``GrokAdapter.max_claims_per_request = 6`` and
+  ``GeminiAdapter.max_claims_per_request = 4``. Telemetry attributes the
+  whole call's usage to index-0 (``build_multi_verdicts`` contract) so
+  ``costs.estimate_cost`` bills once per API call, not N times.
+- **Sidecar dispatcher refactor.** ``BatchDispatcher.submit`` now chunks
+  sidecar/live adapters by their cap, issues one ``adapter.call_multi`` per
+  chunk, and falls back to per-claim ``adapter.call`` if the multi-claim
+  call raises. Closes the "multi-claim chunk failure → single-claim retry"
+  backlog row for the sidecar path.
+- **Engine multi-claim entry point.** ``VerificationEngine.verify_bundles_batch``
+  fans out **per adapter** (concurrent) instead of per-claim, each adapter
+  looping its chunks via ``call_multi``. ``Pipeline._run_publish`` now
+  routes ``--mode live`` through this path when
+  ``TRUTHBOT_CLAIMS_PER_REQUEST > 1`` AND at least one active adapter has
+  ``max_claims_per_request > 1`` (default today with Grok/Gemini enabled).
+  Legacy per-claim fan-out is still used when ``TRUTHBOT_CLAIMS_PER_REQUEST=1``.
+- **Tests.** 432 passed / 1 xfailed (up from 426 / 1). Added:
+  - ``tests/test_grok_multi_claim.py`` (6 tests) — fake ``openai.OpenAI``
+    client, verdict ordering, index-0 usage attribution, malformed JSON
+    fallback, URL backfill, cap-raised assertion, single-request invariant.
+  - ``tests/test_gemini_multi_claim.py`` (7 tests) — fake ``google.genai``
+    module, CachedContent singleton reuse across two multi-claim calls,
+    regression guard against passing ``system_instruction`` / ``tools`` when
+    the cache is active, cached-token attribution to index-0, grounding
+    URL backfill, malformed JSON fallback, cap-raised assertion.
+  - ``tests/test_sidecar_multi_claim.py`` (5 tests) — ``call_multi`` invoked
+    exactly once per chunk, chunking math (7 claims × cap=4 → 4+3),
+    per-claim fallback on chunk failure, sidecar JSONL round-tripping
+    ``batch_call_index`` / ``batch_call_id``, legacy cap=1 adapters still
+    produce verdicts.
+  - ``tests/test_verify_bundles_batch.py`` (5 tests) — mixed multi-capable
+    and single-claim adapters, chunking math across adapter caps, per-claim
+    fallback when ``call_multi`` raises, empty-input edge case, no-adapters
+    fallback builds ``UNVERIFIABLE`` bundles.
+  - ``tests/smoke/test_smoke_submit.py`` — new ``TestXAILiveMulti`` and
+    ``TestGeminiLiveMulti`` smoke classes that assert both ground-truth
+    labels come back from a single multi-claim API call and record
+    ``request_count=1`` in ``smoke_summary.jsonl`` for post-run cost diffs
+    against the existing 2-request single-claim baseline.
+
+### Next — full-SOTU cost-diff (operator-run, pending API keys)
+
+To confirm the real-world savings on a ~29-claim SOTU run, re-run the
+publish pipeline under multi-claim mode and diff telemetry against the
+pre-Phase-E baseline. Procedure:
+
+1. Pick a baseline run_id already in ``metrics/run_summaries/`` (the most
+   recent SOTU before this push). Capture its
+   ``total_cost_usd`` / total ``input_tokens`` from
+   ``truthbot metrics summary --run-id <baseline>``.
+2. Re-run the same transcript with multi-claim enabled:
+   ```bash
+   set -a && . ./.env && set +a
+   TRUTHBOT_CLAIMS_PER_REQUEST=6 .venv/bin/truthbot publish \
+     --transcript eval/sotu-2026/transcript.txt \
+     --speaker "Donald Trump" --role "President" \
+     --date 2026-02-24 --venue "State of the Union" \
+     --site-root site-test --mode batch --triage --max-claims 0
+   .venv/bin/truthbot batch reconcile <new_run_id>
+   ```
+   (``--mode live`` also works now — Grok/Gemini will multi-claim on the
+   sidecar; Anthropic/OpenAI inherit the default ``call_multi`` loop in
+   live mode, i.e. behavior-identical to pre-Phase-E.)
+3. Diff the two runs:
+   ```bash
+   .venv/bin/truthbot metrics summary --run-id <baseline>
+   .venv/bin/truthbot metrics summary --run-id <new>
+   ```
+   Expected: Grok + Gemini input_tokens drop ~4-5× on their share of the
+   run (one SYNTHESIS_SYSTEM send per chunk instead of per claim); total
+   cost delta dominated by those two providers because Anthropic/OpenAI
+   already multi-claim in batch mode.
+4. Append the before/after deltas to this file under a new session note.
 
 ## Session note — 2026-04-22 evening (batch-API push)
 

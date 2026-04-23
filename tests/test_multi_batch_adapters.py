@@ -263,3 +263,19 @@ def test_adapters_expose_multi_claim_caps() -> None:
     assert OpenAIAdapter.max_claims_per_request >= 2
     assert AnthropicAdapter.supports_batch is True
     assert OpenAIAdapter.supports_batch is True
+
+
+def test_live_multi_claim_adapters_expose_caps() -> None:
+    """Phase E — Grok/Gemini live claim-batching raises caps past 1.
+
+    Unlike Anthropic/OpenAI (native batch API), these two run live with
+    ``supports_batch=False`` but opt into live multi-claim via
+    ``call_multi`` + elevated ``max_claims_per_request``.
+    """
+    from truthbot.verify.adapters.gemini import GeminiAdapter
+    from truthbot.verify.adapters.grok import GrokAdapter
+
+    assert GrokAdapter.max_claims_per_request >= 2
+    assert GeminiAdapter.max_claims_per_request >= 2
+    assert GrokAdapter.supports_batch is False
+    assert GeminiAdapter.supports_batch is False

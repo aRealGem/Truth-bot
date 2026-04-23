@@ -720,3 +720,41 @@ class LLMAdapter(ABC):
         raise NotImplementedError(
             f"{self.adapter_name} adapter does not implement parse_multi_batch_response"
         )
+
+    # ── Live multi-claim call (Phase E — non-batch-API multi-claim) ──────────
+
+    def call_multi(
+        self,
+        claims: list[Claim],
+        evidence_by_claim: dict[str, list[Evidence]],
+        *,
+        inject_evidence: bool = True,
+        max_evidence_per_claim: int = 5,
+        telemetry_tier: str = "frontier",
+        run_id: Optional[str] = None,
+    ) -> list[ModelVerdict]:
+        """
+        Call the provider with N claims in one request and return N verdicts.
+
+        Default implementation loops ``self.call`` per claim — preserves
+        byte-identical behavior for adapters that don't override this method
+        (Anthropic, OpenAI today). Concrete overrides on Grok/Gemini use
+        ``build_multi_user_message`` + ``parse_multi_claim_json`` +
+        ``build_multi_verdicts`` to fold the SYNTHESIS_SYSTEM rubric across N
+        claims in one API call, attributing the full call usage to the
+        index-0 verdict so ``costs.estimate_cost`` bills once per call.
+
+        ``max_evidence_per_claim`` is a hint to overriding implementations;
+        the default ignores it (single-claim ``build_user_message`` caps
+        evidence to 5 internally).
+        """
+        return [
+            self.call(
+                claim,
+                evidence_by_claim.get(claim.id, []),
+                inject_evidence=inject_evidence,
+                telemetry_tier=telemetry_tier,
+                run_id=run_id,
+            )
+            for claim in claims
+        ]

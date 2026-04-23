@@ -397,6 +397,154 @@ class VerificationEngine:
 
         return None, evidence
 
+    def verify_bundles_batch(
+        self,
+        claims: list[Claim],
+        speaker: str = "",
+        date_str: str = "",
+    ) -> list[VerdictBundle]:
+        """
+        Multi-claim live-mode entry point — fans out **per adapter**, not per claim.
+
+        For each claim: try ``maybe_resolve_early`` (cache / triage short-circuit).
+        For the remaining claims: dispatch to each adapter via ``call_multi``,
+        chunked by ``adapter.max_claims_per_request``. When an adapter's
+        ``call_multi`` raises, the chunk falls back to per-claim ``adapter.call``
+        so no claim is silently dropped.
+
+        Byte-identical to the single-claim path for adapters that don't
+        override ``call_multi`` (the default in ``LLMAdapter`` loops
+        ``self.call`` per claim). The win is real only for Grok/Gemini today
+        where the override folds SYNTHESIS_SYSTEM over N claims in one call.
+
+        Returns bundles in the same order as the input ``claims``; a claim that
+        failed evidence gathering or was not resolved is omitted (matches the
+        per-claim loop's "best effort" behavior in ``_run_publish``).
+        """
+        if not claims:
+            return []
+
+        bundles_by_claim: dict[str, VerdictBundle] = {}
+        unresolved: list[tuple[Claim, list[Evidence]]] = []
+
+        for claim in claims:
+            resolved, evidence = self.maybe_resolve_early(claim, speaker, date_str)
+            if resolved is not None:
+                bundles_by_claim[claim.id] = resolved
+            else:
+                unresolved.append((claim, evidence))
+
+        if unresolved:
+            evidence_count_by_claim = {c.id: len(ev) for c, ev in unresolved}
+
+            if not self._adapters:
+                logger.warning(
+                    "verify_bundles_batch: no adapters active — returning empty "
+                    "bundles for %d unresolved claim(s)",
+                    len(unresolved),
+                )
+                for claim, evidence in unresolved:
+                    bundle = self.finalize_bundle(
+                        claim,
+                        speaker,
+                        date_str,
+                        [],
+                        evidence_count=len(evidence),
+                    )
+                    bundles_by_claim[claim.id] = bundle
+            else:
+                per_adapter_verdicts = self._run_per_adapter_multi(unresolved)
+                for claim, _ in unresolved:
+                    claim_verdicts = per_adapter_verdicts.get(claim.id, [])
+                    bundle = self.finalize_bundle(
+                        claim,
+                        speaker,
+                        date_str,
+                        claim_verdicts,
+                        evidence_count=evidence_count_by_claim[claim.id],
+                    )
+                    bundles_by_claim[claim.id] = bundle
+
+        return [bundles_by_claim[c.id] for c in claims if c.id in bundles_by_claim]
+
+    def _run_per_adapter_multi(
+        self,
+        unresolved: list[tuple[Claim, list[Evidence]]],
+    ) -> dict[str, list[ModelVerdict]]:
+        """Per-adapter multi-claim fan-out; returns ``{claim_id: [ModelVerdict, ...]}``.
+
+        One worker per adapter runs concurrently. Each worker loops its
+        adapter's chunks sequentially (same API key / rate-limit domain),
+        with per-claim fallback on chunk failure so no claim is dropped.
+        """
+        from itertools import islice
+
+        unresolved_claims = [c for c, _ in unresolved]
+        evidence_by_claim = {c.id: ev for c, ev in unresolved}
+
+        def _chunks(seq: list[Claim], n: int) -> list[list[Claim]]:
+            it = iter(seq)
+            out: list[list[Claim]] = []
+            while True:
+                c = list(islice(it, n))
+                if not c:
+                    return out
+                out.append(c)
+
+        def _adapter_worker(adapter) -> list[ModelVerdict]:
+            cap = max(1, int(getattr(adapter, "max_claims_per_request", 1)))
+            collected: list[ModelVerdict] = []
+            for chunk_claims in _chunks(unresolved_claims, cap):
+                chunk_ev = {c.id: evidence_by_claim[c.id] for c in chunk_claims}
+                try:
+                    verdicts = adapter.call_multi(
+                        chunk_claims,
+                        chunk_ev,
+                        inject_evidence=self._inject_evidence,
+                        run_id=self._run_id,
+                    )
+                    collected.extend(verdicts)
+                except Exception as exc:
+                    logger.error(
+                        "verify_bundles_batch: %s call_multi failed on chunk "
+                        "of %d (falling back per-claim): %s",
+                        adapter.adapter_name, len(chunk_claims), exc,
+                    )
+                    for c in chunk_claims:
+                        try:
+                            v = adapter.call(
+                                c,
+                                chunk_ev[c.id],
+                                inject_evidence=self._inject_evidence,
+                                run_id=self._run_id,
+                            )
+                            collected.append(v)
+                        except Exception as exc2:
+                            logger.error(
+                                "verify_bundles_batch: %s per-claim fallback "
+                                "failed on %s: %s",
+                                adapter.adapter_name, c.id, exc2,
+                            )
+            return collected
+
+        grouped: dict[str, list[ModelVerdict]] = {}
+        with ThreadPoolExecutor(max_workers=max(1, len(self._adapters))) as pool:
+            futures = {pool.submit(_adapter_worker, a): a for a in self._adapters}
+            for fut in as_completed(futures):
+                adapter = futures[fut]
+                try:
+                    verdicts = fut.result()
+                except Exception as exc:
+                    logger.error(
+                        "verify_bundles_batch: %s worker crashed: %s",
+                        adapter.adapter_name, exc,
+                    )
+                    continue
+                for v in verdicts:
+                    grouped.setdefault(v.claim_id, []).append(v)
+
+        return grouped
+
     def finalize_bundle(
         self,
         claim: Claim,
