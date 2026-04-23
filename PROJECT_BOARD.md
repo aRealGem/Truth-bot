@@ -16,10 +16,12 @@ Plan files usually live under `.cursor/plans/*.plan.md` (Cursor); links below us
 
 | Item | Plan | PR |
 |------|------|-----|
-| Cost-table refresh + project board | [.cursor/plans/cost-table-refresh-and-board_be12e335.plan.md](.cursor/plans/cost-table-refresh-and-board_be12e335.plan.md) | *(add PR URL when opened)* |
+| *(none)* | | |
 
 ## Done
 
 | Item | Plan | PR |
 |------|------|-----|
-| DataHoover hook + cost optimizations | [.cursor/plans/datahoover-hook-plus-costs_02ead614.plan.md](.cursor/plans/datahoover-hook-plus-costs_02ead614.plan.md) | *(add merged PR URL when merged)* |
+| DataHoover evidence provider + cost optimizations + 2026-04-22 cost-table refresh | [.cursor/plans/datahoover-hook-plus-costs_02ead614.plan.md](.cursor/plans/datahoover-hook-plus-costs_02ead614.plan.md) · [.cursor/plans/cost-table-refresh-and-board_be12e335.plan.md](.cursor/plans/cost-table-refresh-and-board_be12e335.plan.md) | [#3](https://github.com/aRealGem/Truth-bot/pull/3) |
+| Project board (kanban) | [.cursor/plans/cost-table-refresh-and-board_be12e335.plan.md](.cursor/plans/cost-table-refresh-and-board_be12e335.plan.md) | [#2](https://github.com/aRealGem/Truth-bot/pull/2) |
+| Historical SOTU transcripts corpus (Nixon–Trump) | — | [#1](https://github.com/aRealGem/Truth-bot/pull/1) |
