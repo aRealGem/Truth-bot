@@ -1,0 +1,269 @@
+"""
+Shared fixtures + helpers for live smoke tests.
+
+The smoke suite has two phases that talk to each other through a
+**manifest file** on disk:
+
+    metrics/smoke/manifest.json
+
+``test_smoke_submit.py`` writes entries into the manifest once each
+provider is submitted (or complete, for the live providers). The
+``test_smoke_reconcile.py`` tests later read those entries to find
+the ``run_id`` for each batch provider and poll until it completes.
+
+The manifest is deliberately a single JSON blob (not JSONL) because
+these tests rewrite it in place and a single load + dump is simpler
+than keyed JSONL line surgery. Contention is a non-issue: the two
+test files are run in serial phases, never in parallel.
+
+Provider SLAs + the AUTOMATED_WATCH_CAP_S constant below are the
+source-of-truth timeouts; see ``tests/smoke/README.md`` for the
+reasoning.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import time
+from pathlib import Path
+from typing import Any, Iterable
+
+import pytest
+
+from truthbot.models import Claim
+
+
+# ---------------------------------------------------------------------------
+# Fixed test data
+# ---------------------------------------------------------------------------
+
+# Two claims with opposite truth values. Any reasonable fact-checker should
+# label these correctly on the first try, with zero ambiguity.
+CLAIM_TRUE_TEXT = "The United States landed astronauts on the Moon in 1969."
+CLAIM_FALSE_TEXT = "The Eiffel Tower is located in Berlin, Germany."
+
+
+# ---------------------------------------------------------------------------
+# SLA + timeout constants
+# ---------------------------------------------------------------------------
+#
+# Both Anthropic and OpenAI expire batches server-side 24h after creation;
+# past that, the job is unrecoverable regardless of client tooling.
+#
+# Our AUTOMATED cap is 2.5 h: the "longest reasonable" line past which we
+# stop waiting on autopilot. The manifest stays on disk, so operators can
+# manually resume with ``truthbot batch reconcile <run_id>`` any time up
+# to the 24 h vendor cutoff (or with TRUTHBOT_SMOKE_TIMEOUT_<PROVIDER> set
+# higher, opt-in, for another pytest-driven wait).
+#
+# Env overrides (seconds):
+#   TRUTHBOT_SMOKE_TIMEOUT_ANTHROPIC_BATCH
+#   TRUTHBOT_SMOKE_TIMEOUT_OPENAI_BATCH
+#   TRUTHBOT_SMOKE_TIMEOUT_XAI_LIVE
+#   TRUTHBOT_SMOKE_TIMEOUT_GEMINI_LIVE
+# ---------------------------------------------------------------------------
+
+AUTOMATED_WATCH_CAP_S: int = int(2.5 * 60 * 60)   # 9000s = 2.5 h
+VENDOR_EXPIRY_S: int = 24 * 60 * 60               # 86400s = 24 h
+
+_DEFAULT_TIMEOUTS_S: dict[str, int] = {
+    "anthropic_batch": AUTOMATED_WATCH_CAP_S,
+    "openai_batch":    AUTOMATED_WATCH_CAP_S,
+    "xai_live":        3 * 60,
+    "gemini_live":     3 * 60,
+}
+
+
+def provider_timeout_s(provider: str) -> int:
+    """Per-provider wall-clock cap, with env override."""
+    default = _DEFAULT_TIMEOUTS_S[provider]
+    env_var = f"TRUTHBOT_SMOKE_TIMEOUT_{provider.upper()}"
+    raw = os.environ.get(env_var)
+    if not raw:
+        return default
+    try:
+        parsed = int(raw)
+    except ValueError:
+        raise RuntimeError(
+            f"{env_var} must be an integer number of seconds, got {raw!r}"
+        )
+    if parsed <= 0:
+        raise RuntimeError(f"{env_var} must be positive, got {parsed}")
+    return parsed
+
+
+# ---------------------------------------------------------------------------
+# Claim + filesystem fixtures
+# ---------------------------------------------------------------------------
+
+
+def _mk_claim(text: str, transcript_id: str = "smoke-transcript") -> Claim:
+    return Claim(
+        transcript_id=transcript_id,
+        text=text,
+        speaker="Smoke Test",
+        context=text,
+        is_checkable=True,
+    )
+
+
+@pytest.fixture
+def two_claims() -> list[Claim]:
+    return [_mk_claim(CLAIM_TRUE_TEXT), _mk_claim(CLAIM_FALSE_TEXT)]
+
+
+@pytest.fixture(scope="session")
+def smoke_metrics_dir() -> Path:
+    """
+    The on-repo metrics directory the smoke suite writes into.
+
+    We deliberately use the repo-root ``metrics/smoke/`` rather than
+    ``tmp_path``: the whole point of the two-phase design is that
+    ``test_smoke_reconcile.py`` can find the batch IDs from a prior
+    ``test_smoke_submit.py`` run, potentially in a different pytest
+    invocation. ``tmp_path`` is session-scoped and would defeat that.
+    """
+    repo_root = Path(__file__).resolve().parents[2]
+    path = repo_root / "metrics" / "smoke"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+@pytest.fixture(scope="session")
+def manifest_path(smoke_metrics_dir: Path) -> Path:
+    return smoke_metrics_dir / "manifest.json"
+
+
+# ---------------------------------------------------------------------------
+# Manifest IO
+# ---------------------------------------------------------------------------
+
+
+def load_manifest(path: Path) -> dict[str, Any]:
+    """
+    Read the on-disk manifest, or return an empty dict if it doesn't exist.
+
+    Schema (per-provider):
+        {
+          "anthropic": {"run_id": "...", "batch_id": "...", "status": "submitted",
+                        "chunk_size": 2, "submitted_at": 1714.., ...},
+          "openai":    {"run_id": "...", "batch_id": "...", ...},
+          "xai":       {"status": "complete", "verdicts": [...], ...},
+          "gemini":    {"status": "complete", "verdicts": [...], ...}
+        }
+    """
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+
+def save_manifest(path: Path, manifest: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def update_manifest(path: Path, provider: str, entry: dict[str, Any]) -> None:
+    """Merge ``entry`` into the manifest under ``provider``."""
+    current = load_manifest(path)
+    existing = current.get(provider) or {}
+    existing.update(entry)
+    current[provider] = existing
+    save_manifest(path, current)
+
+
+# ---------------------------------------------------------------------------
+# Env + label helpers
+# ---------------------------------------------------------------------------
+
+
+def require_key(name: str) -> str:
+    value = os.environ.get(name)
+    if not value:
+        pytest.skip(f"{name} not set; cannot run live smoke")
+    return value
+
+
+def is_true_label(label) -> bool:
+    from truthbot.models import VerdictLabel
+    return label in {VerdictLabel.TRUE, VerdictLabel.MOSTLY_TRUE}
+
+
+def is_false_label(label) -> bool:
+    from truthbot.models import VerdictLabel
+    return label in {
+        VerdictLabel.FALSE,
+        VerdictLabel.MISLEADING,
+        VerdictLabel.EXAGGERATED,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Poll-cycle helpers (used by the reconcile suite)
+# ---------------------------------------------------------------------------
+
+
+def poll_interval_for_elapsed(elapsed_s: float) -> int:
+    """
+    Return the poll interval (seconds) to use for the next cycle, based on
+    how long we've already waited. Gets coarser over time so we don't
+    hammer vendor status endpoints during the long tail.
+    """
+    if elapsed_s < 5 * 60:
+        return 60
+    if elapsed_s < 30 * 60:
+        return 120
+    return 300
+
+
+def print_poll_line(provider: str, status: str, elapsed_s: float) -> None:
+    """
+    Single-line progress print in a fixed format so the terminal file
+    is easy to tail + grep from the monitoring loop.
+    """
+    mm = int(elapsed_s // 60)
+    ss = int(elapsed_s % 60)
+    stamp = time.strftime("%H:%M:%S")
+    print(
+        f"[smoke] {stamp}  {provider}  status={status}  elapsed={mm:02d}m{ss:02d}s",
+        flush=True,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Summary writer (used by both phases)
+# ---------------------------------------------------------------------------
+
+
+def append_smoke_summary(
+    status_path: Path,
+    provider: str,
+    mode: str,
+    *,
+    wall_clock_s: float,
+    claim_count: int,
+    request_count: int,
+    verdicts: Iterable[dict],
+    notes: str = "",
+) -> None:
+    """Write one row to a structured JSONL summary that the status task reads."""
+    path = status_path / "smoke_summary.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(
+            json.dumps(
+                {
+                    "provider": provider,
+                    "mode": mode,
+                    "wall_clock_s": round(wall_clock_s, 2),
+                    "claim_count": claim_count,
+                    "request_count": request_count,
+                    "verdicts": list(verdicts),
+                    "notes": notes,
+                }
+            )
+            + "\n"
+        )

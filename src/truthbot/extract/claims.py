@@ -71,7 +71,13 @@ _EXTRACTOR_MODEL = "claude-sonnet-4-6"
 # 200K tokens (~800K chars); 200K chars comfortably covers a 60K-char SOTU
 # plus slack without runaway cost.
 _TRANSCRIPT_CHAR_BUDGET = 200_000
-_MAX_OUTPUT_TOKENS = 8_192
+# Output-token ceiling. Anthropic bills on actual emitted tokens, so a larger
+# cap is free unless you hit it. 32K holds ~230 claim objects at ~500 JSON
+# chars apiece — ~3x projected headroom for a full Trump-length SOTU (~60-90
+# claims). 8K (the previous value) truncated the 2026 SOTU mid-array at
+# ~60 claims, which dropped the whole response to an unparseable state
+# until we added repair below.
+_MAX_OUTPUT_TOKENS = 32_768
 
 
 class ClaimExtractor:
@@ -142,12 +148,36 @@ class ClaimExtractor:
                 _TRANSCRIPT_CHAR_BUDGET,
             )
 
-        response = client.messages.create(
+        # Streaming is mandatory once `max_tokens` is large enough that the
+        # server estimates a >10-minute runtime (Anthropic SDK rejects
+        # non-streaming create() in that case). We accumulate the stream and
+        # extract the final message, whose .content / .usage / .stop_reason
+        # have the same shape as a non-streaming response.
+        with client.messages.stream(
             model=self._model,
             max_tokens=_MAX_OUTPUT_TOKENS,
             system=_EXTRACTOR_SYSTEM,
             messages=[{"role": "user", "content": user_msg}],
+        ) as stream:
+            response = stream.get_final_message()
+
+        usage = getattr(response, "usage", None)
+        in_tok = getattr(usage, "input_tokens", None)
+        out_tok = getattr(usage, "output_tokens", None)
+        stop_reason = getattr(response, "stop_reason", None)
+        logger.info(
+            "ClaimExtractor: usage input=%s output=%s (cap=%d) stop_reason=%s",
+            in_tok,
+            out_tok,
+            _MAX_OUTPUT_TOKENS,
+            stop_reason,
         )
+        if stop_reason == "max_tokens":
+            logger.warning(
+                "ClaimExtractor: hit max_tokens ceiling (%d); output was truncated. "
+                "JSON repair will attempt to recover complete claim objects.",
+                _MAX_OUTPUT_TOKENS,
+            )
 
         raw_text = response.content[0].text.strip()
         data = self._parse_response(raw_text)
@@ -182,14 +212,21 @@ class ClaimExtractor:
         return claims
 
     def _parse_response(self, text: str) -> dict:
-        """Parse the JSON response, handling markdown fences if present."""
-        # Direct parse
+        """Parse the JSON response, handling markdown fences if present.
+
+        On `JSONDecodeError` (typically mid-array truncation when the model
+        hit `max_tokens`), attempt `_repair_truncated_claims` to salvage
+        every claim object that was fully emitted. Returns a dict with
+        the recovered ``"claims"`` list; a caller logs how many were
+        recovered vs. lost.
+        """
+        # Direct parse.
         try:
             return json.loads(text)
         except json.JSONDecodeError:
             pass
 
-        # Strip markdown fences
+        # Strip markdown fences.
         match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
         if match:
             try:
@@ -197,12 +234,87 @@ class ClaimExtractor:
             except json.JSONDecodeError:
                 pass
 
-        # Extract first {...} block
+        # Extract first balanced {...} block; fall through to repair on failure.
         match = re.search(r"\{.*\}", text, re.DOTALL)
-        if match:
-            return json.loads(match.group(0))
+        candidate = match.group(0) if match else text
+        try:
+            return json.loads(candidate)
+        except json.JSONDecodeError:
+            pass
+
+        # Last-ditch: truncation-tolerant repair over the raw text.
+        repaired = self._repair_truncated_claims(text)
+        if repaired is not None:
+            recovered = len(repaired.get("claims", []))
+            logger.warning(
+                "ClaimExtractor: JSON parse failed; repair salvaged %d complete claim object(s). "
+                "This usually means the model hit max_tokens mid-array.",
+                recovered,
+            )
+            return repaired
 
         raise ValueError(f"Could not parse JSON from extractor response: {text[:300]}")
+
+    @staticmethod
+    def _repair_truncated_claims(text: str) -> Optional[dict]:
+        """Salvage a JSON response truncated inside the ``"claims"`` array.
+
+        Walk the text from the opening ``[`` of ``"claims": [``, tracking
+        brace/bracket depth and string state, and record the position of
+        every ``}`` that closes a direct child of the array (depth returning
+        from 2 to 1). The last such position is the end of the last fully
+        emitted claim. Build a repaired string:
+
+            text[:last_claim_end + 1] + "]}"
+
+        and try to parse that. Returns the parsed dict on success, or
+        ``None`` if no complete claim object could be found.
+
+        Pure function — no I/O, no logging. Caller decides what to do with
+        the result.
+        """
+        arr_marker = text.find('"claims"')
+        if arr_marker < 0:
+            return None
+        bracket_start = text.find("[", arr_marker)
+        if bracket_start < 0:
+            return None
+
+        depth = 1
+        in_string = False
+        escape = False
+        last_claim_end = -1
+
+        for i in range(bracket_start + 1, len(text)):
+            ch = text[i]
+            if escape:
+                escape = False
+                continue
+            if ch == "\\" and in_string:
+                escape = True
+                continue
+            if ch == '"':
+                in_string = not in_string
+                continue
+            if in_string:
+                continue
+            if ch in "{[":
+                depth += 1
+            elif ch in "}]":
+                depth -= 1
+                if depth == 1 and ch == "}":
+                    last_claim_end = i
+                elif depth == 0:
+                    break
+
+        if last_claim_end < 0:
+            return None
+
+        repaired = text[: last_claim_end + 1] + "]}"
+        try:
+            return json.loads(repaired)
+        except json.JSONDecodeError:
+            return None
 
     def _stub_claims(self, transcript: Transcript) -> list[Claim]:
         """

@@ -19,11 +19,12 @@ from truthbot.verify.adapters.key_sanity import KeyCheck, validate_api_key
 # ── Plausible-but-fake keys per provider (correct prefix, above min length).
 #    ``x`` padding is intentional — we want shape-plausible, not valid.
 _VALID_SHAPED: dict[str, str] = {
-    "anthropic": "sk-ant-api03-" + ("x" * 100),   # 113 chars
-    "openai":    "sk-proj-" + ("x" * 80),          # 88 chars
-    "openai_legacy": "sk-" + ("x" * 45),           # 48 chars (old-style)
-    "gemini":    "AIza" + ("x" * 35),              # 39 chars
-    "xai":       "xai-" + ("x" * 80),              # 84 chars
+    "anthropic":    "sk-ant-api03-" + ("x" * 100),   # 113 chars
+    "openai":       "sk-proj-" + ("x" * 80),         # 88 chars
+    "openai_legacy": "sk-" + ("x" * 45),             # 48 chars (old-style)
+    "gemini":       "AIza" + ("x" * 35),             # 39 chars (legacy AI Studio)
+    "gemini_new":   "AQ." + ("x" * 46),              # 49 chars (2025+ AI Studio)
+    "xai":          "xai-" + ("x" * 80),             # 84 chars
 }
 
 
@@ -37,6 +38,7 @@ _VALID_SHAPED: dict[str, str] = {
         ("openai",    _VALID_SHAPED["openai"]),
         ("openai",    _VALID_SHAPED["openai_legacy"]),
         ("gemini",    _VALID_SHAPED["gemini"]),
+        ("gemini",    _VALID_SHAPED["gemini_new"]),
         ("xai",       _VALID_SHAPED["xai"]),
     ],
 )
@@ -44,6 +46,19 @@ def test_plausible_key_is_accepted(provider, value):
     result = validate_api_key(provider, value)
     assert result.ok, f"{provider} rejected plausible key: {result.reason}"
     assert result.reason == ""
+
+
+def test_live_env_gemini_aq_prefix_is_accepted():
+    """
+    Regression for 2026-04-23: a legitimate ``GEMINI_API_KEY`` in this repo's
+    ``.env`` starts with ``AQ.`` (Google's 2025+ AI Studio key format), not
+    the older ``AIza`` prefix. The preflight validator must accept both, or
+    the CLI will abort on a working key.
+    """
+    shaped_like_real = "AQ.Ab" + ("8RN6KMzZpsoEN29lQLpzsmKdZ4BOaBRahLBX6aPKQhi0QlRg")
+    assert len(shaped_like_real) >= 30  # sanity: long enough for min-len check
+    result = validate_api_key("gemini", shaped_like_real)
+    assert result.ok, f"AQ.-prefixed Gemini key rejected: {result.reason}"
 
 
 def test_provider_name_is_case_insensitive():

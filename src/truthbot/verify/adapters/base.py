@@ -15,6 +15,85 @@ from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLa
 
 logger = logging.getLogger(__name__)
 
+
+# Verdict-label aliases we've seen models emit in the wild that don't match
+# the canonical ``VerdictLabel`` enum verbatim. Keys are lowercased + stripped
+# of dashes/underscores. Values are the canonical enum member we map to.
+#
+# Mapping rationale:
+#   - ``mostly false`` → ``MISLEADING``  (partially-true rubric slot; the 6-label
+#                                         rubric has ``MOSTLY_TRUE`` but no
+#                                         ``MOSTLY_FALSE``, and ``MISLEADING``
+#                                         is the closest partial-false bucket)
+#   - ``half true`` / ``half false``  → ``MISLEADING``
+#   - ``pants on fire``               → ``FALSE`` (PolitiFact term)
+#   - ``no evidence`` / ``n/a``       → ``UNVERIFIABLE``
+#
+# Always logs a warning when a normalization fires so we can track how often
+# models drift off-schema.
+_VERDICT_LABEL_ALIASES: dict[str, VerdictLabel] = {
+    "mostlyfalse":    VerdictLabel.MISLEADING,
+    "halftrue":       VerdictLabel.MISLEADING,
+    "halffalse":      VerdictLabel.MISLEADING,
+    "pantsonfire":    VerdictLabel.FALSE,
+    "noevidence":     VerdictLabel.UNVERIFIABLE,
+    "na":             VerdictLabel.UNVERIFIABLE,
+    "notapplicable":  VerdictLabel.UNVERIFIABLE,
+    "cantverify":     VerdictLabel.UNVERIFIABLE,
+    "cannotverify":   VerdictLabel.UNVERIFIABLE,
+    "needscontext":   VerdictLabel.MISLEADING,
+    "partlytrue":     VerdictLabel.MISLEADING,
+    "partiallytrue":  VerdictLabel.MISLEADING,
+    "partlyfalse":    VerdictLabel.MISLEADING,
+    "partiallyfalse": VerdictLabel.MISLEADING,
+    "overstated":     VerdictLabel.EXAGGERATED,
+    "exaggeration":   VerdictLabel.EXAGGERATED,
+}
+
+
+def _canonicalize(raw: str) -> str:
+    return "".join(c for c in raw.lower() if c.isalnum())
+
+
+def normalize_verdict_label(raw: str) -> VerdictLabel:
+    """Map a raw model-emitted label string to a canonical ``VerdictLabel``.
+
+    Tries, in order:
+      1. Exact ``VerdictLabel(raw)`` match (canonical capitalization).
+      2. Case-insensitive match against enum values
+         (``"true"`` → ``VerdictLabel.TRUE`` etc.).
+      3. Alias map (``"mostly false"``, ``"pants on fire"``, …).
+
+    Raises ``ValueError`` for unknown labels so callers keep their existing
+    ``except Exception`` → ``UNVERIFIABLE`` path for truly off-schema output.
+    """
+    if not isinstance(raw, str):
+        raise ValueError(f"label must be a string, got {type(raw).__name__}")
+
+    try:
+        return VerdictLabel(raw)
+    except ValueError:
+        pass
+
+    key = _canonicalize(raw)
+    for member in VerdictLabel:
+        if _canonicalize(member.value) == key:
+            logger.warning(
+                "normalize_verdict_label: accepted non-canonical case/punct '%s' → %s",
+                raw, member.name,
+            )
+            return member
+
+    if key in _VERDICT_LABEL_ALIASES:
+        mapped = _VERDICT_LABEL_ALIASES[key]
+        logger.warning(
+            "normalize_verdict_label: mapped alias '%s' → %s (no exact enum match)",
+            raw, mapped.name,
+        )
+        return mapped
+
+    raise ValueError(f"'{raw}' is not a recognized verdict label")
+
 # OpenAI automatic prompt caching requires a stable system prefix ≥ ~1024 tokens.
 # Keep this suffix byte-identical across every claim for the same model family.
 _OPENAI_OPERATIONAL_SUFFIX = (
@@ -429,7 +508,8 @@ def build_multi_verdicts(
     the returned list via ``batch_call_index=0``; siblings get index > 0 and
     zero usage so ``costs.estimate_cost`` does not N-count a single API call.
 
-    ``call_usage`` keys honored: ``cached_input_tokens``.
+    ``call_usage`` keys honored: ``input_tokens``, ``output_tokens``,
+    ``cached_input_tokens``. Missing keys default to 0.
     """
     usage = call_usage or {}
     out: list[ModelVerdict] = []
@@ -453,7 +533,7 @@ def build_multi_verdicts(
             )
             continue
         try:
-            label = VerdictLabel(raw["label"])
+            label = normalize_verdict_label(raw["label"])
             confidence = Confidence(raw["confidence"])
         except Exception as exc:
             logger.warning(
@@ -479,7 +559,14 @@ def build_multi_verdicts(
             )
             continue
 
-        cached = int(usage.get("cached_input_tokens", 0) or 0) if idx == 0 else 0
+        if idx == 0:
+            cached_t = int(usage.get("cached_input_tokens", 0) or 0)
+            input_t = int(usage.get("input_tokens", 0) or 0)
+            output_t = int(usage.get("output_tokens", 0) or 0)
+        else:
+            cached_t = 0
+            input_t = 0
+            output_t = 0
         out.append(
             ModelVerdict(
                 adapter_name=adapter_name,
@@ -492,7 +579,9 @@ def build_multi_verdicts(
                 web_sources=list(raw.get("web_sources", []) or []),
                 tier=tier,
                 synthesis_mode=synthesis_mode,
-                cached_input_tokens=cached,
+                cached_input_tokens=cached_t,
+                input_tokens=input_t,
+                output_tokens=output_t,
                 batch_call_index=idx,
                 batch_call_id=batch_call_id,
             )

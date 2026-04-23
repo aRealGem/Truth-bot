@@ -13,7 +13,12 @@ from typing import Any
 
 from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
-from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter, build_user_message
+from truthbot.verify.adapters.base import (
+    SYNTHESIS_SYSTEM,
+    LLMAdapter,
+    build_user_message,
+    normalize_verdict_label,
+)
 
 
 def _get(obj: Any, attr: str, default: Any = None) -> Any:
@@ -117,7 +122,7 @@ class GeminiAdapter(LLMAdapter):
 
         try:
             raw = _parse_verdict_json(verdict_text)
-            label = VerdictLabel(raw["label"])
+            label = normalize_verdict_label(raw["label"])
             confidence = Confidence(raw["confidence"])
         except Exception as exc:
             logger.error("GeminiAdapter batch parse error for claim %s: %s", claim.id, exc)
@@ -155,13 +160,26 @@ class GeminiAdapter(LLMAdapter):
         self._active_model = self.model_id
 
     def _get_or_create_cached_content(self, client: object, types: object) -> str | None:
-        """Create a Context Caching entry for SYNTHESIS_SYSTEM once per process."""
+        """Create a Context Caching entry for SYNTHESIS_SYSTEM once per process.
+
+        Google's genai API rejects a ``generate_content`` call that passes
+        ``cached_content`` alongside ``system_instruction`` or ``tools`` with:
+
+            CachedContent can not be used with GenerateContent request setting
+            system_instruction, tools or tool_config.
+
+        The fix is to bind both ``system_instruction`` AND ``tools`` into the
+        ``CachedContent`` at creation time; the per-claim ``GenerateContent``
+        call then references the cache and passes neither field.
+        """
         if GeminiAdapter._cached_content_name:
             return GeminiAdapter._cached_content_name
         try:
+            tools = [types.Tool(google_search=types.GoogleSearch())]
             create_config = types.CreateCachedContentConfig(
                 display_name="truthbot-synthesis-rubric",
                 system_instruction=SYNTHESIS_SYSTEM,
+                tools=tools,
                 ttl="14400s",
             )
             cached = client.caches.create(
@@ -203,13 +221,16 @@ class GeminiAdapter(LLMAdapter):
                 client = genai.Client(api_key=self._api_key)
 
                 cache_name = self._get_or_create_cached_content(client, types)
-                tools = [types.Tool(google_search=types.GoogleSearch())]
                 if cache_name:
+                    # system_instruction + tools live on the CachedContent; passing
+                    # either here is a hard API error ("CachedContent can not be
+                    # used with GenerateContent request setting system_instruction,
+                    # tools or tool_config").
                     gen_config = types.GenerateContentConfig(
                         cached_content=cache_name,
-                        tools=tools,
                     )
                 else:
+                    tools = [types.Tool(google_search=types.GoogleSearch())]
                     gen_config = types.GenerateContentConfig(
                         system_instruction=SYNTHESIS_SYSTEM,
                         tools=tools,
@@ -262,7 +283,7 @@ class GeminiAdapter(LLMAdapter):
                 td["status"] = "ok"
 
                 raw = _parse_verdict_json(verdict_text)
-                label = VerdictLabel(raw["label"])
+                label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
                 return ModelVerdict(

@@ -218,6 +218,19 @@ class ModelVerdict(BaseModel):
         description="live | batch (billing / latency mode for this call)",
     )
     cached_input_tokens: int = Field(default=0, description="Input tokens billed at cache rate, if reported")
+    input_tokens: int = Field(
+        default=0,
+        description=(
+            "Total input tokens reported by the provider for the API call that "
+            "produced this verdict. For multi-claim batch calls, the full call "
+            "usage is attributed to the index-0 verdict; siblings carry 0 so "
+            "costs.estimate_cost does not N-count a single API call."
+        ),
+    )
+    output_tokens: int = Field(
+        default=0,
+        description="Total output tokens reported by the provider (index-0 only for batch).",
+    )
     batch_call_index: int = Field(
         default=0,
         description=(

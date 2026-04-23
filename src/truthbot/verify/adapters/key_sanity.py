@@ -47,22 +47,29 @@ class KeyCheck:
     reason: str = ""
 
 
-# provider -> (required_prefix, min_total_length)
+# provider -> (required_prefixes, min_total_length)
+#
+# ``required_prefixes`` is a tuple so providers that legitimately rotated
+# their key shape (Google did exactly this — see below) can be expressed
+# without loosening the whole check.
 #
 # Lengths below are conservative lower bounds observed in the wild:
 #   - Anthropic ``sk-ant-*``           ~108 chars end-to-end
 #   - OpenAI legacy ``sk-*``            ~51 chars
 #   - OpenAI ``sk-proj-*``              ~156 chars
-#   - Google ``AIza*``                   39 chars
+#   - Google ``AIza*``                   39 chars (legacy AI Studio keys)
+#   - Google ``AQ.*``                   ~50 chars (2025+ AI Studio keys;
+#                                        the `.env` observed 2026-04-23 is
+#                                        ``AQ.`` + 46 chars)
 #   - xAI ``xai-*``                     ~84 chars
 #
 # We take the shorter legitimate shape as the floor so we don't false-reject
 # an older key format.
-_PROVIDER_SPECS: dict[str, tuple[str, int]] = {
-    "anthropic": ("sk-ant-", 90),
-    "openai":    ("sk-",     40),
-    "gemini":    ("AIza",    30),
-    "xai":       ("xai-",    60),
+_PROVIDER_SPECS: dict[str, tuple[tuple[str, ...], int]] = {
+    "anthropic": (("sk-ant-",),       90),
+    "openai":    (("sk-",),           40),
+    "gemini":    (("AIza", "AQ."),    30),
+    "xai":       (("xai-",),          60),
 }
 
 _CONTROL_CHARS = frozenset(chr(i) for i in range(0x20)) | {chr(0x7F)}
@@ -110,9 +117,12 @@ def validate_api_key(provider: str, value: str | None) -> KeyCheck:
     if spec is None:
         return KeyCheck(True)
 
-    prefix, min_len = spec
-    if not value.startswith(prefix):
-        return KeyCheck(False, f"missing required '{prefix}' prefix")
+    prefixes, min_len = spec
+    if not any(value.startswith(p) for p in prefixes):
+        if len(prefixes) == 1:
+            return KeyCheck(False, f"missing required '{prefixes[0]}' prefix")
+        joined = " / ".join(f"'{p}'" for p in prefixes)
+        return KeyCheck(False, f"missing required prefix (expected one of {joined})")
     if len(value) < min_len:
         return KeyCheck(
             False,

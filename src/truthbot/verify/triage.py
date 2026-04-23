@@ -45,8 +45,16 @@ def build_triage_adapters() -> list:
     from truthbot.verify.adapters.grok import GrokAdapter
     from truthbot.verify.adapters.openai import OpenAIAdapter
 
+    # Triage-tier defaults as of 2026-04-23:
+    #   - ``claude-3-5-haiku-20241022`` was retired; Anthropic now returns
+    #     "model not available" and falls back to Opus — defeating triage.
+    #     ``claude-haiku-4-5`` is the current cheap-tier successor.
+    #   - ``grok-3-mini`` does not accept server-side tools; xAI's API errors
+    #     with "only the grok-4 family of models are supported" when a triage
+    #     call tries to web-search. ``grok-4-fast`` is the current cheap grok-4.
+    # ``gpt-4o-mini`` and ``gemini-2.5-flash`` remain current.
     class TriageAnthropic(AnthropicAdapter):
-        model_id = os.environ.get("TRUTHBOT_TRIAGE_ANTHROPIC_MODEL", "claude-3-5-haiku-20241022")
+        model_id = os.environ.get("TRUTHBOT_TRIAGE_ANTHROPIC_MODEL", "claude-haiku-4-5")
 
     class TriageOpenAI(OpenAIAdapter):
         model_id = os.environ.get("TRUTHBOT_TRIAGE_OPENAI_MODEL", "gpt-4o-mini")
@@ -55,7 +63,7 @@ def build_triage_adapters() -> list:
         model_id = os.environ.get("TRUTHBOT_TRIAGE_GEMINI_MODEL", "gemini-2.5-flash")
 
     class TriageGrok(GrokAdapter):
-        model_id = os.environ.get("TRUTHBOT_TRIAGE_GROK_MODEL", "grok-3-mini")
+        model_id = os.environ.get("TRUTHBOT_TRIAGE_GROK_MODEL", "grok-4-fast")
 
     out: list = []
     for cls in (TriageAnthropic, TriageOpenAI, TriageGemini, TriageGrok):

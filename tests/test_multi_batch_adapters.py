@@ -86,8 +86,17 @@ def test_anthropic_parse_multi_all_succeed() -> None:
     assert verdicts[1].batch_call_index == 1
     assert verdicts[2].batch_call_index == 2
     assert all(v.batch_call_id == "anthropic::multi::xyz" for v in verdicts)
+    # Call-level usage (500 in / 200 out / 42 cached) is attributed to the
+    # index-0 verdict only; siblings carry zeros so downstream cost
+    # aggregation counts a single batched API call, not N.
+    assert verdicts[0].input_tokens == 500
+    assert verdicts[0].output_tokens == 200
     assert verdicts[0].cached_input_tokens == 42
+    assert verdicts[1].input_tokens == 0
+    assert verdicts[1].output_tokens == 0
     assert verdicts[1].cached_input_tokens == 0
+    assert verdicts[2].input_tokens == 0
+    assert verdicts[2].output_tokens == 0
     assert verdicts[2].cached_input_tokens == 0
 
 
@@ -158,7 +167,13 @@ def test_anthropic_parse_multi_backfills_web_sources_on_first_verdict() -> None:
 # ── OpenAI multi-claim envelope (mimics Responses API body) ───────────────────
 
 
-def _openai_body(text: str, *, cached: int = 0) -> SimpleNamespace:
+def _openai_body(
+    text: str,
+    *,
+    cached: int = 0,
+    input_tokens: int = 1200,
+    output_tokens: int = 450,
+) -> SimpleNamespace:
     return SimpleNamespace(
         model="gpt-4.1",
         output=[
@@ -170,7 +185,9 @@ def _openai_body(text: str, *, cached: int = 0) -> SimpleNamespace:
             )
         ],
         usage=SimpleNamespace(
-            prompt_tokens_details=SimpleNamespace(cached_tokens=cached)
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            prompt_tokens_details=SimpleNamespace(cached_tokens=cached),
         ),
     )
 
@@ -199,13 +216,19 @@ def test_openai_parse_multi_all_succeed() -> None:
             {"claim_id": claims[1].id, "label": "False", "confidence": "High", "explanation": "b"},
         ]
     )
-    raw = _openai_body(text, cached=321)
+    raw = _openai_body(text, cached=321, input_tokens=1500, output_tokens=600)
     verdicts = adapter.parse_multi_batch_response(
         raw, claims, batch_call_id="openai::multi::9"
     )
     assert verdicts[0].label == VerdictLabel.TRUE
     assert verdicts[1].label == VerdictLabel.FALSE
+    # Call-level usage lands on index-0 only; sibling carries zero so the
+    # single batched API call is billed once, not N times.
+    assert verdicts[0].input_tokens == 1500
+    assert verdicts[0].output_tokens == 600
     assert verdicts[0].cached_input_tokens == 321
+    assert verdicts[1].input_tokens == 0
+    assert verdicts[1].output_tokens == 0
     assert verdicts[1].cached_input_tokens == 0
     assert all(v.batch_call_id == "openai::multi::9" for v in verdicts)
 

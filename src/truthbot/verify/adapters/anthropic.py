@@ -19,6 +19,7 @@ from truthbot.verify.adapters.base import (
     build_multi_user_message,
     build_multi_verdicts,
     build_user_message,
+    normalize_verdict_label,
     parse_multi_claim_json,
 )
 
@@ -142,7 +143,7 @@ class AnthropicAdapter(LLMAdapter):
 
         try:
             raw = _parse_verdict_json(verdict_text)
-            label = VerdictLabel(raw["label"])
+            label = normalize_verdict_label(raw["label"])
             confidence = Confidence(raw["confidence"])
         except Exception as exc:
             logger.error(
@@ -244,7 +245,13 @@ class AnthropicAdapter(LLMAdapter):
             )
             raw_by_claim = {}
 
-        cached = _get(usage, "cache_read_input_tokens", 0) or 0
+        call_usage = {
+            "input_tokens": int(_get(usage, "input_tokens", 0) or 0),
+            "output_tokens": int(_get(usage, "output_tokens", 0) or 0),
+            "cached_input_tokens": int(
+                _get(usage, "cache_read_input_tokens", 0) or 0
+            ),
+        }
         verdicts = build_multi_verdicts(
             claims,
             raw_by_claim,
@@ -252,7 +259,7 @@ class AnthropicAdapter(LLMAdapter):
             model_id=model_id,
             synthesis_mode="batch",
             tier="frontier",
-            call_usage={"cached_input_tokens": int(cached)},
+            call_usage=call_usage,
             batch_call_id=batch_call_id,
         )
         # If the model omitted web_sources per-claim, backfill the first
@@ -321,7 +328,7 @@ class AnthropicAdapter(LLMAdapter):
                 td["status"] = "ok"
 
                 raw = _parse_verdict_json(verdict_text)
-                label = VerdictLabel(raw["label"])
+                label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
                 return ModelVerdict(
@@ -370,18 +377,28 @@ class AnthropicAdapter(LLMAdapter):
                 )
 
     def _call_with_fallback(self, client: Any, user_msg: str) -> Any:
-        """Try models in fallback order, returning the first successful response."""
+        """Try models in fallback order, returning the first successful response.
+
+        Only logs a fallback warning when an actual prior attempt failed AND the
+        next candidate differs from it. The previous implementation compared
+        ``model`` to ``self.model_id`` (the class-level default), which produced
+        spurious "model X not available, trying X" lines for every claim once
+        ``_active_model`` had drifted to a fallback on a previous call.
+        """
         import anthropic
 
         last_exc: Exception | None = None
+        last_attempted: str | None = None
         for model in _FALLBACK_MODELS:
-            if model != self.model_id:
+            if last_attempted is not None and model != last_attempted:
                 logger.warning(
-                    "AnthropicAdapter: model %s not available, trying %s",
-                    self._active_model,
+                    "AnthropicAdapter: model %s failed (%s); falling back to %s",
+                    last_attempted,
+                    last_exc,
                     model,
                 )
             self._active_model = model
+            last_attempted = model
             try:
                 response = client.messages.create(
                     model=model,

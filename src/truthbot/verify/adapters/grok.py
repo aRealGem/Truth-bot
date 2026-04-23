@@ -15,7 +15,7 @@ import re
 
 from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
-from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter
+from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter, normalize_verdict_label
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +92,7 @@ class GrokAdapter(LLMAdapter):
                 td["status"] = "ok"
 
                 raw = _parse_verdict_json(verdict_text)
-                label = VerdictLabel(raw["label"])
+                label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
                 return ModelVerdict(

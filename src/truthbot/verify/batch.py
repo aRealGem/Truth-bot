@@ -85,14 +85,18 @@ class BatchSubmission:
 
 
 def _custom_id(claim_id: str, adapter_name: str) -> str:
-    # Anthropic custom_ids must be ≤64 chars; keep prefix short + deterministic.
+    # Anthropic custom_ids must match ^[a-zA-Z0-9_-]{1,64}$ (no colons allowed),
+    # so the separator is a double underscore, not "::".
     short = claim_id[:40]
-    return f"{adapter_name}::{short}"
+    return f"{adapter_name}__{short}"
 
 
 def _multi_custom_id(adapter_name: str) -> str:
-    """Opaque custom_id for a multi-claim request (≤64 chars, Anthropic safe)."""
-    return f"{adapter_name}::multi::{uuid.uuid4().hex[:16]}"
+    """Opaque custom_id for a multi-claim request.
+
+    Constrained to ^[a-zA-Z0-9_-]{1,64}$ so Anthropic Message Batches accept it.
+    """
+    return f"{adapter_name}__multi__{uuid.uuid4().hex[:16]}"
 
 
 def chunk_claims_with_evidence(
@@ -721,10 +725,13 @@ def reconcile_run(
             cid: len(cids) for cid, cids in multi_map.items()
         }
 
-        # Telemetry: emit one row per verdict. Only the index-0 verdict in a
-        # multi-claim call carries usage; siblings log zero usage with
-        # claim_count > 1 so costs.estimate_cost doesn't N-count a single
-        # batched call. The real batch_job_id unlocks the 50% batch discount.
+        # Telemetry: emit one row per verdict. Usage is already attributed to
+        # the index-0 verdict in ``build_multi_verdicts`` (siblings carry 0)
+        # so emitting ``mv.input_tokens`` / ``mv.output_tokens`` verbatim gives
+        # exactly one billed row per multi-claim API call. ``claim_count`` on
+        # that row tells downstream cost aggregators how many claims the
+        # single call covered. The real batch_job_id unlocks the 50% batch
+        # discount in ``costs.estimate_cost``.
         log = get_telemetry()
         with telemetry_run_context(
             run_id=run_id,
@@ -740,8 +747,8 @@ def reconcile_run(
                     mode="batch",
                     batch_job_id=batch_id,
                 ) as td:
-                    td["input_tokens"] = 0
-                    td["output_tokens"] = 0
+                    td["input_tokens"] = int(mv.input_tokens or 0)
+                    td["output_tokens"] = int(mv.output_tokens or 0)
                     td["tool_call_count"] = 0
                     td["retrieved_url_count"] = len(mv.web_sources or [])
                     td["status"] = "ok" if not mv.no_response else "api_error"

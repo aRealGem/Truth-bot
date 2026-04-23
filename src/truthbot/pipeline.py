@@ -578,6 +578,76 @@ def _run_publish_batch_reconcile(run_id: str, *, site_root: Optional[str] = None
     print(f"Served at:      {site_url}")
 
 
+def _persist_extracted_claims(
+    run_id: str,
+    claims: list,
+    metrics_dir: str | Path = "metrics",
+) -> Path:
+    """Write extracted claims to ``metrics/extractions/<run_id>.jsonl``.
+
+    One claim per line, each a JSON dump of ``claim.model_dump()``. Called
+    immediately after extraction so that if batch submit/reconcile later
+    fails, we can re-drive the pipeline without re-running Claude Sonnet.
+
+    Returns the written path. Never raises on filesystem or JSON issues —
+    extraction has already succeeded; a persistence failure should not
+    abort the run. Caller sees it via the log warning.
+    """
+    import json as _json
+
+    try:
+        extractions_dir = Path(metrics_dir) / "extractions"
+        extractions_dir.mkdir(parents=True, exist_ok=True)
+        path = extractions_dir / f"{run_id}.jsonl"
+        with path.open("w", encoding="utf-8") as f:
+            for claim in claims:
+                f.write(_json.dumps(claim.model_dump(), default=str) + "\n")
+        logger.info(
+            "Persisted %d extracted claims to %s",
+            len(claims),
+            path,
+        )
+        return path
+    except Exception as exc:
+        logger.warning("Failed to persist extracted claims: %s", exc)
+        return Path(metrics_dir) / "extractions" / f"{run_id}.jsonl"
+
+
+def _preflight_key_sanity() -> None:
+    """Validate any set API keys before any spend.
+
+    Only reports keys that are **set** but have an obviously-broken shape
+    (truncated, whitespace-wrapped, trailing ``>``, wrong prefix). Missing
+    keys are silently allowed — the adapter layer's ``AdapterUnavailable``
+    path handles those. Raises ``SystemExit`` with a human-readable report
+    when any set key fails the shape check, so the operator catches the
+    typo before extraction burns the first Claude Sonnet call.
+    """
+    import os
+
+    from truthbot.verify.adapters.key_sanity import validate_api_key
+
+    provider_env_vars = {
+        "anthropic": "ANTHROPIC_API_KEY",
+        "openai": "OPENAI_API_KEY",
+        "gemini": "GEMINI_API_KEY",
+        "xai": "XAI_API_KEY",
+    }
+    failures: list[str] = []
+    for provider, env_var in provider_env_vars.items():
+        value = os.environ.get(env_var)
+        if not value:
+            continue
+        result = validate_api_key(provider, value)
+        if not result.ok:
+            failures.append(f"  {env_var} ({provider}): {result.reason}")
+    if failures:
+        raise SystemExit(
+            "API key preflight failed — refusing to start:\n"
+            + "\n".join(failures)
+        )
+
+
 def _run_publish(args) -> None:
     """Full pipeline: ingest → extract → verify → publish site."""
     import os, uuid
@@ -586,6 +656,8 @@ def _run_publish(args) -> None:
     from truthbot.ingest.transcript import TranscriptIngester
     from truthbot.verify.engine import VerificationEngine
     from truthbot.publish.site import SitePublisher, SiteReport
+
+    _preflight_key_sanity()
 
     # Load transcript
     src = args.transcript
@@ -615,6 +687,12 @@ def _run_publish(args) -> None:
     print(f"Extracting claims from {len(text):,} chars...")
     extractor = ClaimExtractor()
     claims = extractor.extract(transcript)
+    # Persist claims to disk BEFORE any slicing or verification work. If the
+    # batch submit step later fails, this jsonl is the only record of what
+    # Claude Sonnet actually produced — resubmitting then costs nothing, not
+    # another $0.50-ish extraction.
+    run_id = str(uuid.uuid4())
+    _persist_extracted_claims(run_id, claims)
     all_checkable = [c for c in claims if c.is_checkable]
     # ``--max-claims 0`` means "no cap / verify every checkable claim". We always
     # preserve the full extracted/checkable counts in logs and telemetry even if
@@ -631,8 +709,9 @@ def _run_publish(args) -> None:
         + (f" (cap={max_claims})" if max_claims > 0 else " (no cap)")
     )
 
-    # Verify — parallel fan-out across claims (adapters already fan-out within each claim)
-    run_id = str(uuid.uuid4())
+    # Verify — parallel fan-out across claims (adapters already fan-out within each claim).
+    # ``run_id`` was already minted up-top so the extractions/<run_id>.jsonl
+    # side-file matches whatever telemetry + batch descriptors use.
     mode = getattr(args, "mode", "live") or "live"
     from truthbot.config import settings
     from truthbot.metrics.telemetry import finalize_run, telemetry_run_context

@@ -406,7 +406,13 @@ class _FakeAnthropicMultiAdapter(_FakeAnthropicAdapter):
             raw_by_claim,
             adapter_name=self.adapter_name,
             model_id=raw.get("model", self.model_id),
-            call_usage={"cached_input_tokens": int(usage.get("cache_read_input_tokens", 0) or 0)},
+            call_usage={
+                "input_tokens": int(usage.get("input_tokens", 0) or 0),
+                "output_tokens": int(usage.get("output_tokens", 0) or 0),
+                "cached_input_tokens": int(
+                    usage.get("cache_read_input_tokens", 0) or 0
+                ),
+            },
             batch_call_id=batch_call_id,
         )
 
@@ -570,6 +576,24 @@ def test_submit_and_reconcile_multi_claim_round_trip(tmp_path, monkeypatch) -> N
     assert len(cached_rows) == 2
     claim_counts = sorted({r["claim_count"] for r in multi_rows})
     assert claim_counts == [4, 5]
+
+    # Usage attribution: each chunk's input/output tokens are recorded on the
+    # index-0 verdict row only, so costs are billed once per batched API call
+    # (not N-times). Siblings must carry zero tokens / zero cost.
+    index_zero_rows = [r for r in multi_rows if r.get("batch_call_index") == 0]
+    assert len(index_zero_rows) == 2
+    for r in index_zero_rows:
+        assert r["input_tokens"] == 2000, r
+        assert r["output_tokens"] == 500, r
+        assert r["cache_read_input_tokens"] == 128, r
+        assert r["estimated_cost_usd"] > 0, r
+    sibling_rows = [r for r in multi_rows if r.get("batch_call_index", 0) > 0]
+    assert len(sibling_rows) == 7
+    for r in sibling_rows:
+        assert r["input_tokens"] == 0, r
+        assert r["output_tokens"] == 0, r
+        assert r["cache_read_input_tokens"] == 0, r
+        assert r["estimated_cost_usd"] == 0, r
 
 
 def test_submit_multi_claim_falls_back_to_single_when_adapter_cap_is_one(

@@ -49,6 +49,13 @@ asyncio_mode = "auto"
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+# ``-m "not live"`` is the default so the smoke tests in ``tests/smoke/``
+# never fire during ordinary ``pytest`` / CI runs. Opt in with
+# ``pytest -m live`` when you actually want to burn real API budget.
+addopts = "-m 'not live'"
+markers = [
+    "live: hits real provider APIs and spends money; opt in via `pytest -m live`",
+]
 
 [tool.ruff]
 line-length = 100

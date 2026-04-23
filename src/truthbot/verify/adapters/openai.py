@@ -18,6 +18,7 @@ from truthbot.verify.adapters.base import (
     build_multi_user_message,
     build_multi_verdicts,
     build_user_message,
+    normalize_verdict_label,
     parse_multi_claim_json,
 )
 
@@ -130,7 +131,7 @@ class OpenAIAdapter(LLMAdapter):
 
         try:
             raw = _parse_verdict_json(text)
-            label = VerdictLabel(raw["label"])
+            label = normalize_verdict_label(raw["label"])
             confidence = Confidence(raw["confidence"])
         except Exception as exc:
             logger.error("OpenAIAdapter batch parse error for claim %s: %s", claim.id, exc)
@@ -239,6 +240,19 @@ class OpenAIAdapter(LLMAdapter):
         usage = _get(raw_response, "usage", None)
         details = _get(usage, "prompt_tokens_details", None)
         cached = _get(details, "cached_tokens", 0) or 0
+        call_usage = {
+            "input_tokens": int(
+                _get(usage, "input_tokens", 0)
+                or _get(usage, "prompt_tokens", 0)
+                or 0
+            ),
+            "output_tokens": int(
+                _get(usage, "output_tokens", 0)
+                or _get(usage, "completion_tokens", 0)
+                or 0
+            ),
+            "cached_input_tokens": int(cached),
+        }
 
         verdicts = build_multi_verdicts(
             claims,
@@ -247,7 +261,7 @@ class OpenAIAdapter(LLMAdapter):
             model_id=model_id,
             synthesis_mode="batch",
             tier="frontier",
-            call_usage={"cached_input_tokens": int(cached)},
+            call_usage=call_usage,
             batch_call_id=batch_call_id,
         )
         if verdicts and not verdicts[0].web_sources:
@@ -299,7 +313,7 @@ class OpenAIAdapter(LLMAdapter):
                 td["status"] = "ok"
 
                 raw = _parse_verdict_json(verdict_text)
-                label = VerdictLabel(raw["label"])
+                label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
                 return ModelVerdict(
