@@ -144,6 +144,36 @@ def five_claims_truth_pattern() -> list[bool]:
     return [True, False] + [expected for _, expected in CLAIM_EXTRAS]
 
 
+def chunk_claims(
+    claims: list[Claim],
+    truth_pattern: list[bool],
+    chunk_size: int,
+) -> list[tuple[list[Claim], list[bool]]]:
+    """
+    Partition ``claims`` + ``truth_pattern`` into fixed-size chunks.
+
+    Returns a list of ``(chunk_claims, chunk_truth_pattern)`` tuples. The
+    final tuple may hold fewer than ``chunk_size`` items when
+    ``len(claims)`` doesn't divide evenly.
+
+    Used by the paginated-multi smoke tests to manually drive
+    ``adapter.call_multi`` N times over five claims (e.g. chunk_size=2
+    yields 2+2+1, chunk_size=4 yields 4+1, chunk_size=6 yields one
+    5-claim chunk).
+    """
+    if chunk_size < 1:
+        raise ValueError(f"chunk_size must be >= 1, got {chunk_size}")
+    if len(claims) != len(truth_pattern):
+        raise ValueError(
+            f"claims / truth_pattern length mismatch: "
+            f"{len(claims)} vs {len(truth_pattern)}"
+        )
+    return [
+        (claims[i : i + chunk_size], truth_pattern[i : i + chunk_size])
+        for i in range(0, len(claims), chunk_size)
+    ]
+
+
 @pytest.fixture(scope="session")
 def smoke_metrics_dir() -> Path:
     """
