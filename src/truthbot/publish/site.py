@@ -89,6 +89,39 @@ def _url_display_host(url: str) -> str:
 GITHUB_URL = "https://github.com/aRealGem/Truth-bot"
 PIPELINE_VERSION = "0.2.0"
 
+# Atom feed template. [SITE_URL] is a placeholder replaced when a production
+# domain is configured. Entries are appended by the pipeline at the marker below.
+FEED_XML_TEMPLATE = """\
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>truth-bot</title>
+  <subtitle>Automated political fact-checking with multi-model consensus</subtitle>
+  <link href="[SITE_URL]/feed.xml" rel="self" type="application/atom+xml"/>
+  <link href="[SITE_URL]/" rel="alternate" type="text/html"/>
+  <updated>2026-04-21T19:18:00Z</updated>
+  <id>urn:truth-bot:feed</id>
+  <author>
+    <name>truth-bot pipeline</name>
+  </author>
+  <generator version="0.2.0">truth-bot</generator>
+  <rights>Data sourced from public speeches and government primary sources.</rights>
+
+  <entry>
+    <title>Donald Trump \u2014 March 04, 2026</title>
+    <link href="[SITE_URL]/reports/2026-03-04-donald-trump-165937.html" rel="alternate" type="text/html"/>
+    <id>urn:truth-bot:report:2026-03-04-donald-trump-165937</id>
+    <published>2026-03-04T00:00:00Z</published>
+    <updated>2026-04-21T19:18:00Z</updated>
+    <summary type="text">5 claims checked. Verdict: Largely False (3 of 5 claims). Multi-model AI fact-check of address to Joint Session of Congress at U.S. Capitol.</summary>
+    <category term="fact-check"/>
+    <category term="speech"/>
+  </entry>
+
+  <!-- Pipeline appends new <entry> blocks here as reports are generated -->
+
+</feed>
+"""
+
 # Google Fonts link tags (exact — do not modify)
 _GOOGLE_FONTS = """\
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
@@ -284,6 +317,38 @@ def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
         return f"Mostly {max_label}", f"vt-{css}"
     else:
         return "Mixed verdict", "neutral"
+
+
+def _tier_bucket(url: str) -> str:
+    """Classify a source URL into one of: gov, wire, news, fc, other.
+
+    Uses the same substring rules as _tier_badge so the two stay in sync.
+    """
+    lower = url.lower()
+    if any(d in lower for d in (".gov", ".mil")):
+        return "gov"
+    if any(d in lower for d in ("apnews.com", "reuters.com")):
+        return "wire"
+    if any(d in lower for d in ("nytimes.com", "washingtonpost.com", "bbc.", "npr.org",
+                                "nbcnews.com", "cbsnews.com", "abcnews.go.com")):
+        return "news"
+    if any(d in lower for d in ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")):
+        return "fc"
+    return "other"
+
+
+def _tier_counts_for_report(site_report) -> dict[str, int]:
+    """Tally deduped source URLs per tier bucket across all checkable bundles."""
+    seen: set[str] = set()
+    counts = {"gov": 0, "wire": 0, "news": 0, "fc": 0, "other": 0}
+    for bundle in site_report.checkable_bundles:
+        for mv in bundle.model_verdicts:
+            for url in mv.web_sources or []:
+                if not url or url in seen:
+                    continue
+                seen.add(url)
+                counts[_tier_bucket(url)] += 1
+    return counts
 
 
 def _tier_badge(url: str) -> str:
@@ -758,7 +823,62 @@ def _masthead_compact(rel: str = "../") -> str:
     )
 
 
-def _page_index(title: str, body: str, footer: str = "", model_count: int = 0) -> str:
+# Default OG/Twitter description used when a page doesn't provide one.
+_DEFAULT_OG_DESCRIPTION = (
+    "Multi-model AI consensus analysis of political speeches. Every claim "
+    "decomposed, verified against primary sources, and scored for accuracy."
+)
+
+
+def _social_head(
+    rel: str,
+    og_title: str,
+    og_description: str,
+    og_type: str = "website",
+    og_image_alt: str = "truth-bot: automated political fact-checking with multi-model consensus",
+    include_feed_link: bool = False,
+) -> str:
+    """Emit favicon links, Open Graph meta, Twitter Card meta, and optional feed link.
+
+    `rel` is the path prefix to reach the site root from the page
+    (`./` for root pages, `../` for pages in `reports/` or `claims/`).
+    """
+    twitter_desc = og_description
+    parts = [
+        f'  <link rel="icon" href="{rel}favicon.ico" sizes="any">\n',
+        f'  <link rel="icon" href="{rel}assets/favicon-32.png" type="image/png" sizes="32x32">\n',
+        f'  <link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png">\n',
+        f'  <meta property="og:type" content="{_esc(og_type)}">\n',
+        '  <meta property="og:site_name" content="truth-bot">\n',
+        f'  <meta property="og:title" content="{_esc(og_title)}">\n',
+        f'  <meta property="og:description" content="{_esc(og_description)}">\n',
+        f'  <meta property="og:image" content="{rel}assets/social-card.png">\n',
+        '  <meta property="og:image:width" content="1200">\n',
+        '  <meta property="og:image:height" content="630">\n',
+        f'  <meta property="og:image:alt" content="{_esc(og_image_alt)}">\n',
+        '  <meta name="twitter:card" content="summary_large_image">\n',
+        f'  <meta name="twitter:title" content="{_esc(og_title)}">\n',
+        f'  <meta name="twitter:description" content="{_esc(twitter_desc)}">\n',
+        f'  <meta name="twitter:image" content="{rel}assets/social-card.png">\n',
+        f'  <meta name="twitter:image:alt" content="{_esc(og_image_alt)}">\n',
+    ]
+    if include_feed_link:
+        parts.append(
+            f'  <link rel="alternate" type="application/atom+xml" '
+            f'title="truth-bot feed" href="{rel}feed.xml">\n'
+        )
+    return ''.join(parts)
+
+
+def _page_index(
+    title: str,
+    body: str,
+    footer: str = "",
+    model_count: int = 0,
+    og_title: str = "truth-bot — Automated Political Fact-Checking",
+    og_description: str = _DEFAULT_OG_DESCRIPTION,
+    og_type: str = "website",
+) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
         if footer else ''
@@ -774,7 +894,8 @@ def _page_index(title: str, body: str, footer: str = "", model_count: int = 0) -
         # Keep in sync with --bg in CSS.
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
+        + _social_head("./", og_title, og_description, og_type=og_type, include_feed_link=True)
+        + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
         '</head>\n'
@@ -791,12 +912,22 @@ def _page_index(title: str, body: str, footer: str = "", model_count: int = 0) -
     )
 
 
-def _page_report(title: str, body: str, footer: str = "", model_count: int = 0, analyzed_at: Optional[str] = None) -> str:
+def _page_report(
+    title: str,
+    body: str,
+    footer: str = "",
+    model_count: int = 0,
+    analyzed_at: Optional[str] = None,
+    og_title: Optional[str] = None,
+    og_description: str = _DEFAULT_OG_DESCRIPTION,
+    og_type: str = "article",
+) -> str:
     stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
         if footer else ''
     )
+    _og_title = og_title or f"{title.removesuffix(' — truth-bot')} — truth-bot"
     return (
         '<!DOCTYPE html>\n'
         '<html lang="en">\n'
@@ -806,7 +937,8 @@ def _page_report(title: str, body: str, footer: str = "", model_count: int = 0, 
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
+        + _social_head("../", _og_title, og_description, og_type=og_type)
+        + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="../assets/styles.css">\n'
         '</head>\n'
@@ -823,11 +955,19 @@ def _page_report(title: str, body: str, footer: str = "", model_count: int = 0, 
     )
 
 
-def _page_about(title: str, body: str, footer: str = "") -> str:
+def _page_about(
+    title: str,
+    body: str,
+    footer: str = "",
+    og_title: Optional[str] = None,
+    og_description: str = _DEFAULT_OG_DESCRIPTION,
+    og_type: str = "website",
+) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
         if footer else ''
     )
+    _og_title = og_title or f"{title.removesuffix(' — truth-bot')} — truth-bot"
     return (
         '<!DOCTYPE html>\n'
         '<html lang="en">\n'
@@ -837,7 +977,8 @@ def _page_about(title: str, body: str, footer: str = "") -> str:
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
+        + _social_head("./", _og_title, og_description, og_type=og_type)
+        + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
         '</head>\n'
@@ -854,12 +995,19 @@ def _page_about(title: str, body: str, footer: str = "") -> str:
     )
 
 
-def _page_truthy(title: str, body: str, footer: str = "") -> str:
+def _page_truthy(
+    title: str,
+    body: str,
+    footer: str = "",
+    og_title: Optional[str] = None,
+    og_description: str = _DEFAULT_OG_DESCRIPTION,
+) -> str:
     """Fun / mascot page shell — same chrome as about, no truthbot.js (inline _TRUTHY_FUN_SCRIPT in body)."""
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
         if footer else ''
     )
+    _og_title = og_title or f"{title.removesuffix(' — truth-bot')} — truth-bot"
     return (
         '<!DOCTYPE html>\n'
         '<html lang="en">\n'
@@ -869,7 +1017,8 @@ def _page_truthy(title: str, body: str, footer: str = "") -> str:
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
+        + _social_head("./", _og_title, og_description, og_type="website")
+        + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
         '</head>\n'
@@ -1094,6 +1243,18 @@ def _report_card(r: dict) -> str:
         meta_bits.append(_esc(r["venue"]))
     meta = '<span class="sep">·</span>'.join(meta_bits)
 
+    tier_counts = r.get("tier_counts") or {}
+    _tier_label_order = [("gov", "gov"), ("wire", "wire"), ("news", "news"), ("fc", "fc")]
+    _tier_parts = [
+        f'{tier_counts.get(key, 0)} {label}'
+        for key, label in _tier_label_order
+        if tier_counts.get(key, 0)
+    ]
+    src_tiers_html = (
+        f'    <span class="src-tiers">Sources: {" · ".join(_tier_parts)}</span>'
+        if _tier_parts else ''
+    )
+
     return (
         f'<a href="{_esc(r.get("url", "#"))}" class="report">'
         '  <div class="report-top">'
@@ -1110,6 +1271,7 @@ def _report_card(r: dict) -> str:
         f'  <div class="report-counts">{"".join(counts)}</div>'
         '  <div class="report-cta">'
         f'    <span class="src">{claim_count} claim{"s" if claim_count != 1 else ""}</span>'
+        + src_tiers_html +
         '    <span class="read">Read full report →</span>'
         '  </div>'
         '</a>'
@@ -1756,6 +1918,13 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   letter-spacing: 0.07em;
 }
 .report-cta .src { color: var(--ink-faint); }
+.report-cta .src-tiers {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
 .report-cta .read {
   color: var(--ink);
   display: inline-flex;
@@ -2402,6 +2571,16 @@ footer.foot a {
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
   padding-bottom: 1px;
+}
+footer.foot .footer-hash {
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  border-bottom: none;
+  text-decoration: none;
+}
+footer.foot .footer-hash:hover {
+  text-decoration: underline;
+  color: var(--ink-muted);
 }
 
 
@@ -3581,12 +3760,24 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + cards_html
         + _HERO_SCRIPT
     )
+    _phash = _prompt_hash()
     footer = (
         '<span>Last updated: ' + now + '</span>'
         + '<span>Pipeline v' + PIPELINE_VERSION
+        + f' · Prompt <a class="footer-hash" href="./about.html#prompt">{_phash}</a>'
         + ' · <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">GitHub</a></span>'
     )
-    return _page_index("Latest Reports", body, footer)
+    return _page_index(
+        "Latest Reports",
+        body,
+        footer,
+        og_title="truth-bot — Automated Political Fact-Checking",
+        og_description=(
+            "Multi-model AI consensus analysis of political speeches. Every claim "
+            "decomposed, verified against primary sources, and scored for accuracy."
+        ),
+        og_type="website",
+    )
 
 
 def _render_report(site_report: SiteReport) -> str:
@@ -3676,13 +3867,27 @@ def _render_report(site_report: SiteReport) -> str:
     )
     footer = (
         '<span>truth-bot · pipeline v' + PIPELINE_VERSION + '</span>'
+        + f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a></span>'
         + '<span>Source: <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">'
         + 'github.com/aRealGem/Truth-bot</a></span>'
+    )
+    _headline, _ = _headline_verdict(site_report.verdict_distribution)
+    _n_claims = len(site_report.checkable_bundles)
+    _report_og_desc = (
+        f"{_n_claims} claim{'s' if _n_claims != 1 else ''} checked. "
+        f"Verdict: {_headline}. "
+        "Multi-model AI fact-check with primary source verification."
+    )
+    _report_og_title = (
+        f"{site_report.speaker} — {site_report.display_date} — truth-bot"
     )
     return _page_report(
         _esc(site_report.speaker) + " — " + _esc(site_report.display_date),
         body,
         footer=footer,
+        og_title=_report_og_title,
+        og_description=_report_og_desc,
+        og_type="article",
     )
 
 
@@ -3700,10 +3905,31 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
     gen_ts = site_report.generated_at.strftime("%Y-%m-%d %H:%M UTC")
     footer = (
         f'<span>truth-bot · pipeline v{PIPELINE_VERSION}</span>'
+        f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a></span>'
         f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
         f'github.com/aRealGem/Truth-bot</a></span>'
     )
-    return _page_report(f"Claim: {bundle.claim.text[:60]}", body, footer=footer)
+    _claim_text_trunc = bundle.claim.text[:60]
+    _claim_og_title = f"Claim: {_claim_text_trunc} — truth-bot"
+    _verdict_label = bundle.consensus.consensus_verdict
+    _total_models = len(bundle.model_verdicts)
+    _agree_models = sum(
+        1 for mv in bundle.model_verdicts
+        if mv.label.value == _verdict_label
+    )
+    _claim_og_desc = (
+        f"Verdict: {_verdict_label}. "
+        f"{_agree_models} of {_total_models} model{'s' if _total_models != 1 else ''} agree. "
+        "Verified against primary government sources."
+    )
+    return _page_report(
+        f"Claim: {_claim_text_trunc}",
+        body,
+        footer=footer,
+        og_title=_claim_og_title,
+        og_description=_claim_og_desc,
+        og_type="article",
+    )
 
 
 def _render_truthy() -> str:
@@ -3757,12 +3983,23 @@ def _render_truthy() -> str:
         '</div>'
     )
     body = hero_block + notes + _TRUTHY_FUN_SCRIPT
+    _phash = _prompt_hash()
     footer = (
         '<span><a href="./index.html">Back to reports</a></span>'
-        f'<span>Pipeline v{PIPELINE_VERSION} &middot; '
-        f'<a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub</a></span>'
+        f'<span>Pipeline v{PIPELINE_VERSION}'
+        f' &middot; Prompt <a class="footer-hash" href="./about.html#prompt">{_phash}</a>'
+        f' &middot; <a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub</a></span>'
     )
-    return _page_truthy("Meet Truthy", body, footer)
+    return _page_truthy(
+        "Meet Truthy",
+        body,
+        footer,
+        og_title="Meet Truthy McTruthface — truth-bot",
+        og_description=(
+            "Truthy McTruthface is truth-bot's citizen-funded fact-checking mascot. "
+            "A fact-check for every citizen."
+        ),
+    )
 
 
 def _render_about() -> str:
@@ -3833,7 +4070,7 @@ def _render_about() -> str:
         f'{tier_table}'
         f'<h3 style="margin-top:1.5rem">Known limitations</h3>'
         f'{limitations}'
-        f'<h3 style="margin-top:1.5rem">Full verdict prompt (hash: {phash})</h3>'
+        f'<h3 id="prompt" style="margin-top:1.5rem">Full verdict prompt (hash: {phash})</h3>'
         f'<p class="dim">Verbatim prompt sent to each model for verdict synthesis.</p>'
         f'<pre>{_esc(prompt_text)}</pre>'
         f'<hr class="rule-light">'
@@ -3842,10 +4079,21 @@ def _render_about() -> str:
     )
     footer = (
         f'<span>truth-bot · pipeline v{PIPELINE_VERSION}</span>'
+        f'<span>Prompt <a class="footer-hash" href="./about.html#prompt">{phash}</a></span>'
         f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
         f'github.com/aRealGem/Truth-bot</a></span>'
     )
-    return _page_about("About", body, footer=footer)
+    return _page_about(
+        "About",
+        body,
+        footer=footer,
+        og_title="About — truth-bot",
+        og_description=(
+            "How truth-bot works: atomic claim decomposition, multi-model verification "
+            "against government primary sources, and transparent consensus scoring."
+        ),
+        og_type="website",
+    )
 
 
 def _render_404() -> str:
@@ -3854,7 +4102,13 @@ def _render_404() -> str:
         '<p class="dim">The page you requested does not exist.</p>'
         '<p><a href="index.html">Return to reports</a></p>'
     )
-    return _page_about("404 Not Found", body)
+    return _page_about(
+        "404 Not Found",
+        body,
+        og_title="404 Not Found — truth-bot",
+        og_description="The page you requested does not exist on truth-bot.",
+        og_type="website",
+    )
 
 
 # ── SitePublisher ─────────────────────────────────────────────────────────────
@@ -3939,6 +4193,8 @@ class SitePublisher:
         self._write(self._root / "assets" / "styles.css", CSS)
         self._write(self._root / "assets" / "truthbot.js", JS)
         self._copy_icons()
+        self._copy_social_assets()
+        self._write_feed()
 
     def _copy_icons(self) -> None:
         """Copy package-shipped icon SVGs to the site's assets/icons/ folder."""
@@ -3951,6 +4207,26 @@ class SitePublisher:
             dst = dst_dir / svg.name
             dst.write_bytes(svg.read_bytes())
             logger.debug("Copied icon %s -> %s", svg.name, dst)
+
+    def _copy_social_assets(self) -> None:
+        """Copy social card + favicon PNGs to assets/, and favicon.ico to site root."""
+        src_dir = Path(__file__).resolve().parent / "assets"
+        assets_dir = self._root / "assets"
+        assets_dir.mkdir(parents=True, exist_ok=True)
+        for name in ("social-card.png", "favicon-32.png", "apple-touch-icon.png"):
+            src = src_dir / name
+            if src.exists():
+                (assets_dir / name).write_bytes(src.read_bytes())
+                logger.debug("Copied social asset %s", name)
+        ico_src = src_dir / "favicon.ico"
+        if ico_src.exists():
+            (self._root / "favicon.ico").write_bytes(ico_src.read_bytes())
+            logger.debug("Copied favicon.ico to site root")
+
+    def _write_feed(self) -> None:
+        """Write Atom feed template to site root. Placeholder [SITE_URL] preserved."""
+        (self._root / "feed.xml").write_text(FEED_XML_TEMPLATE, encoding="utf-8")
+        logger.debug("Wrote feed.xml")
 
     def _write(self, path: Path, content: str) -> None:
         path.write_text(content, encoding="utf-8")
@@ -3993,6 +4269,7 @@ class SitePublisher:
             "verdict_distribution": sr.verdict_distribution,
             "model_agreement_rate": round(sr.model_agreement_rate, 3),
             "url":                 sr.report_url,
+            "tier_counts":         _tier_counts_for_report(sr),
             # New decomposed speaker/speech fields
             "source_of_claims":                          sr.source_of_claims or sr.speaker,
             "source_of_claims_professional_public_title": sr.source_of_claims_professional_public_title or sr.role,

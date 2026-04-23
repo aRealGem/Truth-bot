@@ -19,6 +19,13 @@
     "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "47th President of the United States",
     "event": "State of the Union Address",
-    "channel": ""
+    "channel": "",
+    "tier_counts": {
+      "gov": 27,
+      "wire": 0,
+      "news": 1,
+      "fc": 1,
+      "other": 5
+    }
   }
 ]
