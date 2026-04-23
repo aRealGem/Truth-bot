@@ -351,6 +351,233 @@ def resolve_inject_evidence(
     return evidence_source.strip().lower() != "none"
 
 
+def _run_publish_batch_submit(
+    *,
+    args,
+    engine,
+    claims: list,
+    checkable: list,
+    run_id: str,
+    inject_evidence: bool,
+    source_url: str,
+    max_claims: int,
+    settings,
+) -> None:
+    """Batch-mode submit: triage live, submit batch, run Grok sidecar, print poll cmd, exit."""
+    from truthbot.verify.batch import BatchDispatcher
+
+    triaged_bundles: list = []
+    triaged_claims_json: list = []
+    claims_with_evidence: list = []
+
+    speaker = args.speaker
+    date_str = args.date
+
+    for claim in checkable:
+        bundle, evidence = engine.maybe_resolve_early(
+            claim, speaker=speaker, date_str=date_str
+        )
+        if bundle is not None:
+            triaged_bundles.append(bundle)
+            triaged_claims_json.append(claim.model_dump(mode="json"))
+            print(f"  early-resolve: {claim.text[:60]}... -> cached / triage")
+        else:
+            claims_with_evidence.append((claim, evidence))
+
+    batch_adapters = [a for a in engine.adapters if getattr(a, "supports_batch", False)]
+    sidecar_adapters = [
+        a for a in engine.adapters if not getattr(a, "supports_batch", False)
+    ]
+
+    requested_cpr = getattr(args, "claims_per_request", None)
+    if requested_cpr is None:
+        requested_cpr = settings.claims_per_request
+    requested_cpr = max(1, int(requested_cpr))
+
+    effective_chunk_size_by_adapter = {
+        a.adapter_name: min(
+            requested_cpr, max(1, int(getattr(a, "max_claims_per_request", 1)))
+        )
+        for a in batch_adapters
+    }
+
+    transcript_meta = {
+        "speaker": speaker,
+        "role": getattr(args, "role", "") or "",
+        "date": date_str,
+        "venue": getattr(args, "venue", "") or "",
+        "source_url": source_url,
+        "site_root": getattr(args, "site_root", None),
+        "total_claims_extracted": len(claims),
+        "total_claims_checkable": sum(1 for c in claims if c.is_checkable),
+        "claims_verified_target": len(checkable),
+        "claims_batched": len(claims_with_evidence),
+        "claims_triaged_auto": len(triaged_bundles),
+        "triaged_claim_ids": [b.claim.id for b in triaged_bundles],
+        "triaged_claims": triaged_claims_json,
+        "max_claims_cap": max_claims,
+        "triage_enabled": bool(getattr(args, "triage", False)),
+        "adapters_batch": [a.adapter_name for a in batch_adapters],
+        "adapters_sidecar": [a.adapter_name for a in sidecar_adapters],
+        "claims_per_request_requested": requested_cpr,
+        "claims_per_request_effective": effective_chunk_size_by_adapter,
+    }
+
+    disp = BatchDispatcher(settings.metrics_dir)
+    if claims_with_evidence and batch_adapters:
+        descriptor_path = disp.submit(
+            run_id,
+            adapters=batch_adapters,
+            claims_with_evidence=claims_with_evidence,
+            transcript_meta=transcript_meta,
+            inject_evidence=inject_evidence,
+            sidecar_live_adapters=sidecar_adapters,
+            claims_per_request=requested_cpr,
+            max_evidence_per_claim_in_batch=settings.max_evidence_per_claim_in_batch,
+        )
+    else:
+        descriptor_path = disp.record_job(
+            run_id,
+            transcript_meta=transcript_meta,
+            work_units=[],
+            provider_hints={},
+        )
+
+    max_effective = max(effective_chunk_size_by_adapter.values(), default=1)
+    savings_pct = (1 - 1 / max_effective) * 100 if max_effective > 1 else 0.0
+
+    print()
+    print("=" * 72)
+    print(f"Batch submitted. run_id = {run_id}")
+    print(f"  Descriptor:          {descriptor_path}")
+    print(
+        f"  Claims extracted:    {transcript_meta['total_claims_extracted']}"
+    )
+    print(
+        f"  Claims checkable:    {transcript_meta['total_claims_checkable']}"
+        f"  (cap: {max_claims})"
+    )
+    print(
+        f"  Claims triaged live: {transcript_meta['claims_triaged_auto']}"
+    )
+    print(
+        f"  Claims to batch:     {transcript_meta['claims_batched']}"
+    )
+    print(f"  Batch providers:     {transcript_meta['adapters_batch']}")
+    print(f"  Sidecar providers:   {transcript_meta['adapters_sidecar']}")
+    print(
+        f"  Claims per request:  {requested_cpr} requested; "
+        f"effective {effective_chunk_size_by_adapter or '{}'}"
+        + (
+            f"  (~{savings_pct:.0f}% per-call overhead amortized)"
+            if max_effective > 1
+            else ""
+        )
+    )
+    print()
+    print(f"Poll status:         truthbot batch poll {run_id}")
+    print(f"Reconcile+publish:   truthbot batch reconcile {run_id}")
+    print("=" * 72)
+
+
+def _run_publish_batch_reconcile(run_id: str, *, site_root: Optional[str] = None) -> None:
+    """Poll → parse → merge → cache → publish for a previously submitted batch run."""
+    import uuid as _uuid
+    from datetime import datetime
+
+    from truthbot.config import settings
+    from truthbot.metrics.telemetry import finalize_run
+    from truthbot.publish.site import SitePublisher, SiteReport
+    from truthbot.verify.adapters.base import AdapterUnavailable
+    from truthbot.verify.batch import reconcile_run
+    from truthbot.verify.engine import VerificationEngine
+
+    adapters_by_name: dict = {}
+    for cls_import in (
+        ("truthbot.verify.adapters.anthropic", "AnthropicAdapter"),
+        ("truthbot.verify.adapters.openai", "OpenAIAdapter"),
+        ("truthbot.verify.adapters.gemini", "GeminiAdapter"),
+        ("truthbot.verify.adapters.grok", "GrokAdapter"),
+    ):
+        mod_name, cls_name = cls_import
+        try:
+            mod = __import__(mod_name, fromlist=[cls_name])
+            cls = getattr(mod, cls_name)
+            adapters_by_name[cls.adapter_name] = cls()
+        except AdapterUnavailable as exc:
+            logger.info("reconcile: skipping %s (%s)", cls_name, exc)
+        except Exception as exc:
+            logger.warning("reconcile: failed to build %s: %s", cls_name, exc)
+
+    engine = VerificationEngine(run_id=run_id, verify_mode="batch")
+
+    result = reconcile_run(
+        settings.metrics_dir,
+        run_id,
+        adapters_by_name=adapters_by_name,
+        engine=engine,
+    )
+
+    status = result["status"]
+    if status == "missing":
+        print(f"No batch descriptor for run_id={run_id}")
+        sys.exit(1)
+    if status == "pending":
+        print(f"Batch run_id={run_id} still pending:")
+        for provider, st in result.get("pending_providers", []):
+            print(
+                f"  - {provider}: {st.get('raw_status', st.get('status', '?'))}"
+                f" ({st.get('done', 0)}/{st.get('total', 0)})"
+            )
+        sys.exit(2)
+
+    meta = result["transcript_meta"]
+    bundles = result["bundles"]
+    triaged = result.get("triaged_bundles", [])
+    all_bundles = triaged + bundles
+
+    try:
+        fin = finalize_run(run_id)
+        print(
+            f"Telemetry run summary: metrics/run_summaries/{run_id}.json "
+            f"(total_cost_usd={fin['total_cost_usd']:.6f})"
+        )
+    except Exception as exc:
+        logger.warning("finalize_run failed: %s", exc)
+
+    date_val = None
+    if meta.get("date"):
+        try:
+            date_val = datetime.strptime(meta["date"], "%Y-%m-%d")
+        except Exception:
+            pass
+
+    site_report = SiteReport(
+        report_id=str(_uuid.uuid4()),
+        speaker=meta.get("speaker", ""),
+        role=meta.get("role", ""),
+        date=date_val,
+        venue=meta.get("venue", ""),
+        transcript_source_url=meta.get("source_url", ""),
+        bundles=all_bundles,
+    )
+
+    effective_site_root = site_root or meta.get("site_root")
+    publisher = SitePublisher(site_root=effective_site_root)
+    report_path = publisher.publish(site_report)
+    site_url = publisher.site_url(site_report)
+    stats = publisher.summary()
+
+    print()
+    print(f"Reconciled run_id={run_id}:")
+    print(f"  Total claims extracted: {meta.get('total_claims_extracted', '?')}")
+    print(f"  Triaged (cached/live):  {len(triaged)}")
+    print(f"  Batched (reconciled):   {len(bundles)}")
+    print(f"Site generated: {stats['root']}")
+    print(f"Report page:    {report_path}")
+    print(f"Served at:      {site_url}")
+
+
 def _run_publish(args) -> None:
     """Full pipeline: ingest → extract → verify → publish site."""
     import os, uuid
@@ -388,10 +615,21 @@ def _run_publish(args) -> None:
     print(f"Extracting claims from {len(text):,} chars...")
     extractor = ClaimExtractor()
     claims = extractor.extract(transcript)
-    checkable = [c for c in claims if c.is_checkable]
-    max_claims = getattr(args, 'max_claims', 5) or 5
-    checkable = checkable[:max_claims]
-    print(f"  {len(claims)} claims extracted, {len(checkable)} checkable")
+    all_checkable = [c for c in claims if c.is_checkable]
+    # ``--max-claims 0`` means "no cap / verify every checkable claim". We always
+    # preserve the full extracted/checkable counts in logs and telemetry even if
+    # the verification slice is smaller.
+    raw_cap = getattr(args, "max_claims", 0)
+    max_claims = int(raw_cap) if raw_cap is not None else 0
+    if max_claims and max_claims > 0:
+        checkable = all_checkable[:max_claims]
+    else:
+        checkable = all_checkable
+    print(
+        f"  {len(claims)} claims extracted total, {len(all_checkable)} checkable, "
+        f"{len(checkable)} selected for verification"
+        + (f" (cap={max_claims})" if max_claims > 0 else " (no cap)")
+    )
 
     # Verify — parallel fan-out across claims (adapters already fan-out within each claim)
     run_id = str(uuid.uuid4())
@@ -409,23 +647,6 @@ def _run_publish(args) -> None:
         f"  evidence_source={settings.evidence_source} inject_evidence={inject_evidence}"
     )
 
-    if mode == "batch":
-        BatchDispatcher(settings.metrics_dir).record_job(
-            run_id,
-            transcript_meta={
-                "speaker": args.speaker,
-                "date": args.date,
-                "transcript_chars": len(text),
-            },
-            work_units=[{"claim_id": c.id, "claim_text": c.text[:500]} for c in checkable],
-        )
-        print(f"Batch job descriptor: metrics/batch_jobs/{run_id}.json")
-        print(f"Poll with: truthbot batch poll {run_id}")
-
-    bundles_map: dict[int, object] = {}
-
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
     engine = VerificationEngine(
         run_id=run_id,
         inject_evidence=inject_evidence,
@@ -434,6 +655,24 @@ def _run_publish(args) -> None:
         triage_shadow_rate=float(getattr(args, "triage_shadow_rate", 0.0)),
         verify_mode=mode,
     )
+
+    if mode == "batch":
+        _run_publish_batch_submit(
+            args=args,
+            engine=engine,
+            claims=claims,
+            checkable=checkable,
+            run_id=run_id,
+            inject_evidence=inject_evidence,
+            source_url=source_url,
+            max_claims=max_claims,
+            settings=settings,
+        )
+        return
+
+    bundles_map: dict[int, object] = {}
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
 
     def _verify_one(idx_claim):
         idx, claim = idx_claim
@@ -577,12 +816,33 @@ def main() -> None:
     pub_parser.add_argument("--venue",      default="",   help="Venue or event name")
     pub_parser.add_argument("--source-url", default="",   help="Transcript source URL")
     pub_parser.add_argument("--site-root",  default=None, help="Site output root (overrides TRUTHBOT_SITE_ROOT)")
-    pub_parser.add_argument("--max-claims",  type=int, default=5, help="Max checkable claims to verify (default 5)")
+    pub_parser.add_argument(
+        "--max-claims",
+        type=int,
+        default=0,
+        help=(
+            "Max checkable claims to verify. 0 (default) = no cap, verify every "
+            "checkable claim the extractor returns. The total-extracted and "
+            "total-checkable counts are always preserved in logs/telemetry."
+        ),
+    )
     pub_parser.add_argument(
         "--mode",
         choices=("live", "batch"),
         default="live",
         help="Verification billing mode: live API calls (default) or batch descriptor + same live verify for now",
+    )
+    pub_parser.add_argument(
+        "--claims-per-request",
+        dest="claims_per_request",
+        type=int,
+        default=None,
+        help=(
+            "Bundle this many atomic claims into a single LLM request "
+            "(per provider, clamped by adapter.max_claims_per_request). "
+            "Default reads TRUTHBOT_CLAIMS_PER_REQUEST (1 = no batching). "
+            "Currently honored in --mode batch only; --mode live ignores."
+        ),
     )
     pub_parser.add_argument(
         "--triage",
@@ -620,8 +880,20 @@ def main() -> None:
 
     batch_parser = subparsers.add_parser("batch", help="Batch job helpers")
     batch_sub = batch_parser.add_subparsers(dest="batch_cmd", required=True)
-    batch_poll = batch_sub.add_parser("poll", help="Poll batch job descriptor status for a run_id")
+    batch_poll = batch_sub.add_parser(
+        "poll", help="Poll batch job status for a run_id (no reconcile/publish)"
+    )
     batch_poll.add_argument("run_id", help="Publish run UUID written under metrics/batch_jobs/")
+    batch_reconcile = batch_sub.add_parser(
+        "reconcile",
+        help="Poll → fetch results → merge sidecar → cache bundles → publish site",
+    )
+    batch_reconcile.add_argument("run_id", help="Publish run UUID written under metrics/batch_jobs/")
+    batch_reconcile.add_argument(
+        "--site-root",
+        default=None,
+        help="Override site output root (else reads from descriptor or TRUTHBOT_SITE_ROOT)",
+    )
 
     args = parser.parse_args()
 
@@ -647,6 +919,11 @@ def main() -> None:
 
             st = BatchDispatcher(settings.metrics_dir).poll(args.run_id)
             print(st)
+            return
+        if getattr(args, "batch_cmd", None) == "reconcile":
+            _run_publish_batch_reconcile(
+                args.run_id, site_root=getattr(args, "site_root", None)
+            )
             return
         parser.print_help()
         return

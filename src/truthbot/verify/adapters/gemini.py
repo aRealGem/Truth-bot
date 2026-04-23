@@ -9,10 +9,19 @@ import json
 import logging
 import os
 import re
+from typing import Any
 
 from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
-from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter
+from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM, LLMAdapter, build_user_message
+
+
+def _get(obj: Any, attr: str, default: Any = None) -> Any:
+    if obj is None:
+        return default
+    if isinstance(obj, dict):
+        return obj.get(attr, default)
+    return getattr(obj, attr, default)
 
 logger = logging.getLogger(__name__)
 
@@ -41,8 +50,104 @@ class GeminiAdapter(LLMAdapter):
     adapter_name = "gemini"
     model_id = "gemini-2.5-pro"
     required_env_key = "GEMINI_API_KEY"
+    # Google's batch API (``google.genai.batches``) is a Vertex AI-style batch
+    # prediction service: inputs/outputs flow through GCS buckets, it needs a
+    # GCP project + service-account credentials (separate from GEMINI_API_KEY),
+    # and — critically — it does NOT support tool calls or GoogleSearch
+    # grounding. Grounding is only available on synchronous/streaming calls.
+    # ``supports_batch=False`` is therefore permanent until Google ships a
+    # grounding-capable batch tier. In the meantime the BatchDispatcher routes
+    # this adapter to the live-sidecar path: ``GeminiAdapter.call()`` runs live
+    # during ``truthbot publish --mode batch`` with full GoogleSearch grounding
+    # and context caching (``SYNTHESIS_SYSTEM`` cached process-wide), and
+    # verdicts are spooled to ``metrics/batch_sidecar/<run_id>.jsonl`` for
+    # reconcile-time merging. This preserves verdict quality at the cost of
+    # missing the 50% batch discount that Anthropic/OpenAI enjoy.
+    supports_batch = False
+    # Multi-claim batching only ships for ``supports_batch=True`` adapters
+    # today (batch mode). Keeping this explicit at 1 documents that the live
+    # sidecar path is single-claim; raising it will be done alongside the
+    # Phase E live-mode multi-claim fan-out backlog item.
+    max_claims_per_request = 1
     # Process-wide reuse of Context Caching resource for the static rubric.
     _cached_content_name: str | None = None
+
+    # ── Batch support (payload/parse only; submit/retrieve guarded above) ─────
+
+    def build_batch_payload(
+        self,
+        claim: Claim,
+        evidence: list[Evidence],
+        *,
+        inject_evidence: bool = True,
+    ) -> dict:
+        """Provider-agnostic description of a single Gemini batch request."""
+        user_msg = build_user_message(claim, evidence, inject_evidence=inject_evidence)
+        return {
+            "model": self.model_id,
+            "contents": user_msg,
+            "system_instruction": SYNTHESIS_SYSTEM,
+            "tools": [{"google_search": {}}],
+        }
+
+    def parse_batch_response(
+        self,
+        raw_response: Any,
+        claim: Claim,
+    ) -> ModelVerdict:
+        """Parse a Gemini batch result row (shape: GenerateContentResponse-like)."""
+        candidates = _get(raw_response, "candidates", []) or []
+        verdict_text = ""
+        urls: list[str] = []
+
+        for candidate in candidates:
+            gm = _get(candidate, "grounding_metadata", None)
+            if gm:
+                for chunk in _get(gm, "grounding_chunks", []) or []:
+                    web = _get(chunk, "web", None)
+                    if web:
+                        url = _get(web, "uri", None)
+                        if url:
+                            urls.append(url)
+            content = _get(candidate, "content", None)
+            for part in _get(content, "parts", []) or []:
+                verdict_text += _get(part, "text", "") or ""
+
+        model_id = _get(raw_response, "model_version", self.model_id)
+
+        try:
+            raw = _parse_verdict_json(verdict_text)
+            label = VerdictLabel(raw["label"])
+            confidence = Confidence(raw["confidence"])
+        except Exception as exc:
+            logger.error("GeminiAdapter batch parse error for claim %s: %s", claim.id, exc)
+            return ModelVerdict(
+                adapter_name=self.adapter_name,
+                model_id=model_id,
+                claim_id=claim.id,
+                label=VerdictLabel.UNVERIFIABLE,
+                confidence=Confidence.LOW,
+                explanation=f"Failed to parse batch response: {exc}",
+                tier="frontier",
+                synthesis_mode="batch",
+            )
+
+        usage = _get(raw_response, "usage_metadata", None)
+        cached = _get(usage, "cached_content_token_count", 0) or 0
+
+        return ModelVerdict(
+            adapter_name=self.adapter_name,
+            model_id=model_id,
+            claim_id=claim.id,
+            label=label,
+            confidence=confidence,
+            explanation=raw.get("explanation", ""),
+            caveats=raw.get("caveats", ""),
+            web_sources=raw.get("web_sources", urls[:10]),
+            tier="frontier",
+            synthesis_mode="batch",
+            cached_input_tokens=int(cached),
+        )
 
     def __init__(self) -> None:
         super().__init__()

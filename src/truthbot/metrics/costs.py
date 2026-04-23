@@ -21,6 +21,8 @@ Gemini 2.5 Pro: table uses the ≤200K-token bucket; prompts here stay well unde
 """
 from __future__ import annotations
 
+from typing import Optional
+
 # (input_per_token, cached_input_per_token, output_per_token)
 COST_TABLE: dict[tuple[str, str], tuple[float, float, float]] = {
     # --- Anthropic (frontier + fallbacks) ---
@@ -136,12 +138,18 @@ def estimate_cost(
     openai_cached_prompt_tokens: int = 0,
     gemini_cached_content_tokens: int = 0,
     mode: str = "live",
+    batch_job_id: Optional[str] = None,
 ) -> float:
     """
     Compute estimated USD cost for one adapter call.
 
     ``input_tokens`` should be the API-reported total input / prompt tokens when available.
     Provider-specific cache fields subtract from full-rate input where applicable.
+
+    The 50% batch discount is only applied when ``mode == "batch"`` AND a real
+    ``batch_job_id`` is present. Calls labeled batch without an actual provider
+    batch ID (scaffolding / misconfiguration) are billed at live list prices so
+    telemetry stays honest.
     """
     in_rate, cached_in_rate, out_rate = COST_TABLE.get(
         (adapter_name, model_id), FALLBACK_COST_PER_TOKEN
@@ -174,7 +182,7 @@ def estimate_cost(
     else:
         cost = input_tokens * in_rate + output_tokens * out_rate
 
-    if mode == "batch":
+    if mode == "batch" and batch_job_id:
         mult = BATCH_DISCOUNT.get(adapter_name, 1.0)
         cost *= mult
 

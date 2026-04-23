@@ -4,11 +4,16 @@ Base class and shared utilities for LLM adapters.
 
 from __future__ import annotations
 
+import json
+import logging
 import os
+import re
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
 
-from truthbot.models import Claim, Evidence, ModelVerdict
+from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
+
+logger = logging.getLogger(__name__)
 
 # OpenAI automatic prompt caching requires a stable system prefix ≥ ~1024 tokens.
 # Keep this suffix byte-identical across every claim for the same model family.
@@ -238,7 +243,7 @@ def build_user_message(
 
     evidence_text = "\n\n".join(
         f"[{i+1}] {e.source_name} ({e.source_tier.value})\n{e.snippet}"
-        for i, e in enumerate(evidence[:10])
+        for i, e in enumerate(evidence[:5])
     )
     if evidence_text:
         return (
@@ -252,6 +257,247 @@ def build_user_message(
         f"Speaker: {claim.speaker}\n\n"
         "No pre-gathered evidence available. Please use web search to research this claim."
     )
+
+
+# ── Multi-claim batching helpers ──────────────────────────────────────────────
+
+_MULTI_CLAIM_PREAMBLE = (
+    "You will verify {n} claims in a single request. Return ONLY a JSON array "
+    "with one object per claim, keyed by \"claim_id\" matching the IDs below. "
+    "Do NOT merge, reorder, or omit claims. Each object must include the same "
+    "fields as a single-claim verdict (label, confidence, explanation, caveats, "
+    "web_sources).\n\n"
+)
+
+_MULTI_CLAIM_OUTPUT_SCHEMA = (
+    "\n\nRespond with ONLY a raw JSON array (no markdown fences, no preamble):\n"
+    "[\n"
+    "  {\n"
+    "    \"claim_id\": \"<id>\",\n"
+    "    \"label\": \"True|Mostly True|Misleading|Exaggerated|False|Unverifiable\",\n"
+    "    \"confidence\": \"High|Medium|Low\",\n"
+    "    \"explanation\": \"<one paragraph>\",\n"
+    "    \"caveats\": \"<source-quality notes, or empty string>\",\n"
+    "    \"web_sources\": [\"<url1>\", \"<url2>\", ...]\n"
+    "  },\n"
+    "  ...one object per claim, in the order listed above...\n"
+    "]"
+)
+
+
+def _short_claim_tag(claim_id: str) -> str:
+    """A stable, short label for a claim used inside multi-claim prompts."""
+    return claim_id[:12]
+
+
+def build_multi_user_message(
+    claims: list[Claim],
+    evidence_by_claim: dict[str, list[Evidence]],
+    *,
+    inject_evidence: bool = True,
+    max_evidence_per_claim: int = 5,
+) -> str:
+    """
+    Build a single user message enumerating multiple claims for one LLM call.
+
+    The message preserves per-claim structure (speaker, pre-gathered evidence)
+    and asks the model to return a JSON array keyed by ``claim_id``. Callers
+    should not invoke this with an empty list.
+    """
+    if not claims:
+        raise ValueError("build_multi_user_message requires at least one claim")
+
+    blocks: list[str] = [_MULTI_CLAIM_PREAMBLE.format(n=len(claims))]
+    for idx, claim in enumerate(claims, start=1):
+        tag = _short_claim_tag(claim.id)
+        evidence = evidence_by_claim.get(claim.id, []) if inject_evidence else []
+        evidence = evidence[:max_evidence_per_claim]
+
+        block = [
+            f"Claim #{idx}  (claim_id={claim.id}, tag={tag})",
+            f"  Speaker: {claim.speaker}",
+            f"  Text: {claim.text}",
+        ]
+        if evidence:
+            ev_lines = "\n".join(
+                f"    [{i+1}] {e.source_name} ({e.source_tier.value}) — {e.snippet}"
+                for i, e in enumerate(evidence)
+            )
+            block.append(f"  {EVIDENCE_CAVEAT.strip()}")
+            block.append(ev_lines)
+        else:
+            block.append(
+                "  No pre-gathered evidence; use your web search tool to research this claim."
+            )
+        blocks.append("\n".join(block))
+
+    blocks.append(_MULTI_CLAIM_OUTPUT_SCHEMA)
+    return "\n\n".join(blocks)
+
+
+def _extract_json_array(text: str) -> list:
+    """Parse a JSON array out of raw model text, tolerating markdown fences."""
+    if not text:
+        raise json.JSONDecodeError("empty response", text or "", 0)
+    cleaned = text.strip()
+
+    try:
+        parsed = json.loads(cleaned)
+        if isinstance(parsed, list):
+            return parsed
+        if isinstance(parsed, dict):
+            for key in ("verdicts", "results", "claims", "items"):
+                if isinstance(parsed.get(key), list):
+                    return parsed[key]
+            return [parsed]
+    except json.JSONDecodeError:
+        pass
+
+    fence = re.search(r"```(?:json)?\s*(.*?)\s*```", cleaned, re.DOTALL)
+    if fence:
+        try:
+            parsed = json.loads(fence.group(1))
+            if isinstance(parsed, list):
+                return parsed
+            if isinstance(parsed, dict):
+                for key in ("verdicts", "results", "claims", "items"):
+                    if isinstance(parsed.get(key), list):
+                        return parsed[key]
+                return [parsed]
+        except json.JSONDecodeError:
+            pass
+
+    array_match = re.search(r"\[.*\]", cleaned, re.DOTALL)
+    if array_match:
+        try:
+            parsed = json.loads(array_match.group(0))
+            if isinstance(parsed, list):
+                return parsed
+        except json.JSONDecodeError:
+            pass
+
+    raise json.JSONDecodeError("No JSON array found in response", cleaned, 0)
+
+
+def parse_multi_claim_json(text: str, claims: list[Claim]) -> dict[str, dict]:
+    """
+    Parse a multi-claim model response into a ``{claim_id: raw_verdict_dict}`` map.
+
+    Keys by ``claim_id`` when the model returns it; otherwise falls back to
+    positional matching against ``claims``. Missing entries are simply absent
+    from the returned map — callers are responsible for filling them as
+    ``UNVERIFIABLE no_response=True``.
+    """
+    rows = _extract_json_array(text)
+
+    by_id: dict[str, dict] = {}
+    leftover: list[dict] = []
+    claim_ids = {c.id for c in claims}
+
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        cid = row.get("claim_id") or row.get("id")
+        if isinstance(cid, str) and cid in claim_ids:
+            by_id.setdefault(cid, row)
+        else:
+            leftover.append(row)
+
+    if leftover:
+        missing = [c for c in claims if c.id not in by_id]
+        for claim, row in zip(missing, leftover):
+            by_id.setdefault(claim.id, row)
+
+    return by_id
+
+
+def build_multi_verdicts(
+    claims: list[Claim],
+    raw_by_claim: dict[str, dict],
+    *,
+    adapter_name: str,
+    model_id: str,
+    synthesis_mode: str = "batch",
+    tier: str = "frontier",
+    call_usage: Optional[dict[str, Any]] = None,
+    batch_call_id: str = "",
+) -> list[ModelVerdict]:
+    """
+    Convert a parsed multi-claim response into one ``ModelVerdict`` per claim.
+
+    Usage (input/output/cached tokens) is attributed to the first verdict in
+    the returned list via ``batch_call_index=0``; siblings get index > 0 and
+    zero usage so ``costs.estimate_cost`` does not N-count a single API call.
+
+    ``call_usage`` keys honored: ``cached_input_tokens``.
+    """
+    usage = call_usage or {}
+    out: list[ModelVerdict] = []
+    for idx, claim in enumerate(claims):
+        raw = raw_by_claim.get(claim.id)
+        if raw is None:
+            out.append(
+                ModelVerdict(
+                    adapter_name=adapter_name,
+                    model_id=model_id,
+                    claim_id=claim.id,
+                    label=VerdictLabel.UNVERIFIABLE,
+                    confidence=Confidence.LOW,
+                    explanation="batch partial response: no verdict for this claim",
+                    tier=tier,
+                    synthesis_mode=synthesis_mode,
+                    no_response=True,
+                    batch_call_index=idx,
+                    batch_call_id=batch_call_id,
+                )
+            )
+            continue
+        try:
+            label = VerdictLabel(raw["label"])
+            confidence = Confidence(raw["confidence"])
+        except Exception as exc:
+            logger.warning(
+                "%s multi-claim parse: bad label/confidence for %s: %s",
+                adapter_name,
+                claim.id,
+                exc,
+            )
+            out.append(
+                ModelVerdict(
+                    adapter_name=adapter_name,
+                    model_id=model_id,
+                    claim_id=claim.id,
+                    label=VerdictLabel.UNVERIFIABLE,
+                    confidence=Confidence.LOW,
+                    explanation=f"Failed to parse verdict fields: {exc}",
+                    tier=tier,
+                    synthesis_mode=synthesis_mode,
+                    no_response=True,
+                    batch_call_index=idx,
+                    batch_call_id=batch_call_id,
+                )
+            )
+            continue
+
+        cached = int(usage.get("cached_input_tokens", 0) or 0) if idx == 0 else 0
+        out.append(
+            ModelVerdict(
+                adapter_name=adapter_name,
+                model_id=model_id,
+                claim_id=claim.id,
+                label=label,
+                confidence=confidence,
+                explanation=raw.get("explanation", ""),
+                caveats=raw.get("caveats", ""),
+                web_sources=list(raw.get("web_sources", []) or []),
+                tier=tier,
+                synthesis_mode=synthesis_mode,
+                cached_input_tokens=cached,
+                batch_call_index=idx,
+                batch_call_id=batch_call_id,
+            )
+        )
+    return out
 
 
 class AdapterUnavailable(Exception):
@@ -297,3 +543,91 @@ class LLMAdapter(ABC):
     ) -> str:
         """Build the user message string for the LLM prompt."""
         return build_user_message(claim, evidence, inject_evidence=inject_evidence)
+
+    # ── Batch API support (optional, provider-specific) ───────────────────────
+
+    #: True when the adapter ships a production ``build_batch_payload``/``parse_batch_response``
+    #: pair and can be routed through the BatchDispatcher.
+    supports_batch: bool = False
+
+    #: Maximum number of atomic claims the adapter can safely fold into a single
+    #: request. Default ``1`` means the adapter only handles single-claim mode;
+    #: concrete adapters that implement ``build_multi_batch_payload`` should
+    #: raise this to the empirically-safe ceiling (context window / tool-call
+    #: budget / cost). ``BatchDispatcher`` clamps the user-requested chunk size
+    #: at submit time.
+    max_claims_per_request: int = 1
+
+    def build_batch_payload(
+        self,
+        claim: Claim,
+        evidence: list[Evidence],
+        *,
+        inject_evidence: bool = True,
+    ) -> dict:
+        """
+        Return the provider-specific request body for a batch submission.
+
+        The returned dict should be ready to hand to the provider's batch SDK
+        (e.g. as ``params`` in an Anthropic Message Batches request, or as
+        ``body`` in an OpenAI batch JSONL line). Providers that do not
+        implement batch mode should leave the default ``NotImplementedError``.
+        """
+        raise NotImplementedError(
+            f"{self.adapter_name} adapter does not implement build_batch_payload"
+        )
+
+    def parse_batch_response(
+        self,
+        raw_response: Any,
+        claim: Claim,
+    ) -> ModelVerdict:
+        """
+        Parse a provider-specific batch response envelope into a ``ModelVerdict``.
+
+        ``raw_response`` is the result payload as returned by the provider batch
+        API for a single request (shape varies per provider).
+        """
+        raise NotImplementedError(
+            f"{self.adapter_name} adapter does not implement parse_batch_response"
+        )
+
+    # ── Multi-claim batching (optional, gated on max_claims_per_request > 1) ──
+
+    def build_multi_batch_payload(
+        self,
+        claims: list[Claim],
+        evidence_by_claim: dict[str, list[Evidence]],
+        *,
+        inject_evidence: bool = True,
+        max_evidence_per_claim: int = 5,
+    ) -> dict:
+        """
+        Return the provider-specific request body for a multi-claim submission.
+
+        Implementations should keep the system prompt byte-identical to the
+        single-claim version so that provider-side prompt caches continue to
+        hit, and scale ``max_tokens`` / tool-call budgets proportionally to
+        ``len(claims)``.
+        """
+        raise NotImplementedError(
+            f"{self.adapter_name} adapter does not implement build_multi_batch_payload"
+        )
+
+    def parse_multi_batch_response(
+        self,
+        raw_response: Any,
+        claims: list[Claim],
+        *,
+        batch_call_id: str = "",
+    ) -> list[ModelVerdict]:
+        """
+        Parse a multi-claim response envelope into one ``ModelVerdict`` per claim.
+
+        Missing claims (partial responses) should be filled with
+        ``UNVERIFIABLE no_response=True``; usage should be attributed to the
+        first verdict only (``batch_call_index=0``).
+        """
+        raise NotImplementedError(
+            f"{self.adapter_name} adapter does not implement parse_multi_batch_response"
+        )

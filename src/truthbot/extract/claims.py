@@ -61,8 +61,16 @@ Return JSON only. No preamble, no commentary."""
 
 # ── Extractor model ───────────────────────────────────────────────────────────
 
+# Hard safety cap on extracted claims so a runaway model can't drain the budget.
+# User-facing "max claims to verify" lives at the pipeline layer; this is only a
+# last-line guard at extract time.
+_EXTRACT_HARD_CAP = 500
+
 _EXTRACTOR_MODEL = "claude-sonnet-4-6"
-_TOKEN_BUDGET = 14_000   # ~10k words; covers most speeches without runaway cost
+# Characters of transcript fed to the extractor. Claude Sonnet 4.6 supports
+# 200K tokens (~800K chars); 200K chars comfortably covers a 60K-char SOTU
+# plus slack without runaway cost.
+_TRANSCRIPT_CHAR_BUDGET = 200_000
 _MAX_OUTPUT_TOKENS = 8_192
 
 
@@ -86,10 +94,11 @@ class ClaimExtractor:
         model: Optional[str] = None,
         max_claims: Optional[int] = None,
     ) -> None:
-        from truthbot.config import settings
         self._api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
         self._model = model or _EXTRACTOR_MODEL
-        self._max_claims = max_claims or settings.max_claims
+        # Extractor safety cap only; pipeline-level --max-claims controls
+        # how many of these extracted claims actually get verified.
+        self._max_claims = max_claims or _EXTRACT_HARD_CAP
 
     # ── Public interface ──────────────────────────────────────────────────────
 
@@ -123,8 +132,15 @@ class ClaimExtractor:
             role=transcript.metadata.get("role", "Unknown"),
             date=transcript.date.strftime("%B %d, %Y") if transcript.date else "Unknown",
             venue=transcript.venue or "Unknown",
-            transcript_text=transcript.text[:_TOKEN_BUDGET],
+            transcript_text=transcript.text[:_TRANSCRIPT_CHAR_BUDGET],
         )
+
+        if len(transcript.text) > _TRANSCRIPT_CHAR_BUDGET:
+            logger.warning(
+                "ClaimExtractor: transcript truncated from %d to %d chars before extraction",
+                len(transcript.text),
+                _TRANSCRIPT_CHAR_BUDGET,
+            )
 
         response = client.messages.create(
             model=self._model,
@@ -136,8 +152,17 @@ class ClaimExtractor:
         raw_text = response.content[0].text.strip()
         data = self._parse_response(raw_text)
 
+        raw_claims = data.get("claims", [])
+        capped = raw_claims[: self._max_claims]
+        if len(raw_claims) > self._max_claims:
+            logger.warning(
+                "ClaimExtractor: model returned %d claims; capping at %d for safety",
+                len(raw_claims),
+                self._max_claims,
+            )
+
         claims: list[Claim] = []
-        for i, item in enumerate(data.get("claims", [])[: self._max_claims]):
+        for item in capped:
             claim = Claim(
                 transcript_id=transcript.id,
                 text=item["text"],

@@ -78,6 +78,11 @@ class CallRecord:
     mode: str = "live"
     evidence_injected: bool = True
     batch_job_id: Optional[str] = None
+    # Multi-claim batching: index within a multi-claim API call (0 = primary).
+    # Usage is attributed to index 0 only so costs are not N-counted.
+    batch_call_index: int = 0
+    batch_call_id: str = ""
+    claim_count: int = 1
 
 
 class TelemetryLogger:
@@ -139,6 +144,7 @@ class TelemetryLogger:
         finally:
             wall_clock_ms = int((time.monotonic() - start) * 1000)
             eff_mode = str(data.get("mode") or get_synthesis_mode())
+            eff_batch_id = data.get("batch_job_id") or batch_job_id
             estimated_cost = estimate_cost(
                 adapter_name,
                 model_id,
@@ -149,6 +155,7 @@ class TelemetryLogger:
                 openai_cached_prompt_tokens=int(data.get("openai_cached_prompt_tokens", 0)),
                 gemini_cached_content_tokens=int(data.get("gemini_cached_content_tokens", 0)),
                 mode=eff_mode,
+                batch_job_id=eff_batch_id,
             )
             record = CallRecord(
                 timestamp=datetime.utcnow().isoformat(),
@@ -170,7 +177,10 @@ class TelemetryLogger:
                 tier=tier,
                 mode=eff_mode,
                 evidence_injected=eff_ev,
-                batch_job_id=batch_job_id,
+                batch_job_id=eff_batch_id,
+                batch_call_index=int(data.get("batch_call_index", 0) or 0),
+                batch_call_id=str(data.get("batch_call_id", "") or ""),
+                claim_count=int(data.get("claim_count", 1) or 1),
             )
             self.log(record)
 

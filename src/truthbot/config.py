@@ -43,6 +43,38 @@ class Settings:
     def max_claims(self) -> int:
         return int(_optional("TRUTHBOT_MAX_CLAIMS", "30"))
 
+    @property
+    def claims_per_request(self) -> int:
+        """
+        How many atomic claims to bundle into a single LLM request.
+
+        Default ``5`` enables multi-claim batching out of the box (the user
+        message enumerates N claims and the model returns a JSON array of
+        verdicts). Set ``TRUTHBOT_CLAIMS_PER_REQUEST=1`` to force the legacy
+        one-claim-per-call behaviour. Per-adapter ``max_claims_per_request``
+        caps clamp this value at submit time. Currently honoured in
+        ``--mode batch`` only; ``--mode live`` ignores it pending the Phase E
+        live-mode fan-out (see PROJECT_BOARD backlog).
+        """
+        try:
+            return max(1, int(_optional("TRUTHBOT_CLAIMS_PER_REQUEST", "5")))
+        except ValueError:
+            return 5
+
+    @property
+    def max_evidence_per_claim_in_batch(self) -> int:
+        """
+        Cap on injected evidence snippets per claim.
+
+        Applied everywhere; single-claim and multi-claim paths share the same
+        5-snippet cap by default. Tighten via ``TRUTHBOT_MAX_EVIDENCE_PER_CLAIM_IN_BATCH``
+        if multi-claim runs ever push past provider context windows.
+        """
+        try:
+            return max(1, int(_optional("TRUTHBOT_MAX_EVIDENCE_PER_CLAIM_IN_BATCH", "5")))
+        except ValueError:
+            return 5
+
     # ── Search ────────────────────────────────────────────────────────────────
     @property
     def brave_api_key(self) -> str:

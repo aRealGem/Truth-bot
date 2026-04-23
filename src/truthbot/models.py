@@ -218,6 +218,18 @@ class ModelVerdict(BaseModel):
         description="live | batch (billing / latency mode for this call)",
     )
     cached_input_tokens: int = Field(default=0, description="Input tokens billed at cache rate, if reported")
+    batch_call_index: int = Field(
+        default=0,
+        description=(
+            "Position of this verdict within a multi-claim API call (0 = first). "
+            "Telemetry attributes the call's full usage to the index-0 verdict; "
+            "siblings carry zero so cost is not N-counted."
+        ),
+    )
+    batch_call_id: str = Field(
+        default="",
+        description="Opaque identifier for the multi-claim API call that produced this verdict (custom_id).",
+    )
 
 
 class ConsensusVerdict(BaseModel):

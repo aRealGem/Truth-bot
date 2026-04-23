@@ -95,6 +95,13 @@ def test_estimate_cost_openai_cached_split() -> None:
 
 
 def test_estimate_cost_batch_multiplier() -> None:
+    """Batch discount only applies when a real batch_job_id is present."""
     base = estimate_cost("openai", "gpt-4.1", 1000, 200, mode="live")
-    batched = estimate_cost("openai", "gpt-4.1", 1000, 200, mode="batch")
-    assert abs(batched - base * 0.5) < 1e-9
+    # mode=batch without a job id → honest full-price reporting (scaffolding guard).
+    fake_batch = estimate_cost("openai", "gpt-4.1", 1000, 200, mode="batch")
+    assert abs(fake_batch - base) < 1e-9
+    # mode=batch with a real provider job id → 50% discount applies.
+    real_batch = estimate_cost(
+        "openai", "gpt-4.1", 1000, 200, mode="batch", batch_job_id="batch_abc123"
+    )
+    assert abs(real_batch - base * 0.5) < 1e-9

@@ -311,6 +311,126 @@ class VerificationEngine:
 
         return bundle
 
+    # ── Split-path helpers for batch-mode submit/reconcile ────────────────────
+
+    @property
+    def adapters(self) -> list:
+        """Read-only view of the active frontier adapters."""
+        return list(self._adapters)
+
+    @property
+    def evidence_provider(self) -> EvidenceProvider:
+        """Expose the evidence provider so batch mode can prefetch before submit."""
+        return self._evidence_provider
+
+    def maybe_resolve_early(
+        self,
+        claim: Claim,
+        speaker: str = "",
+        date_str: str = "",
+    ) -> tuple[Optional[VerdictBundle], list[Evidence]]:
+        """
+        Try to resolve a claim without frontier fan-out (cache hit or triage short-circuit).
+
+        Returns a tuple ``(bundle, evidence)`` — if ``bundle`` is non-None the
+        claim is done (already cached or resolved unanimously at triage); the
+        caller should NOT dispatch a frontier call. Otherwise ``bundle is None``
+        and the caller should submit the claim to the batch/live frontier with
+        the returned evidence list.
+
+        Side effect: successful triage bundles are written to the on-disk
+        bundle cache just like the normal ``verify_bundle`` flow.
+        """
+        key = _cache_key(claim.text, speaker, date_str)
+
+        if self._bundle_cache is not None:
+            cached = self._bundle_cache.get(key)
+            if cached:
+                try:
+                    bundle = VerdictBundle.model_validate_json(cached)
+                    bundle.cache_hit = True
+                    logger.info("maybe_resolve_early: cache HIT for %s", claim.id)
+                    return bundle, []
+                except Exception as exc:
+                    logger.warning("maybe_resolve_early: cache entry corrupt: %s", exc)
+
+        from truthbot.verify.triage import (
+            run_triage_fan_out,
+            should_shadow_sample,
+            triage_unanimous_high_conf,
+        )
+
+        evidence = self._evidence_provider.get_evidence(claim)
+        shadow = (
+            self._triage_enabled
+            and should_shadow_sample(self._triage_shadow_rate, self._triage_rng)
+        )
+        if self._triage_enabled and self._triage_adapters and not shadow:
+            triage_verdicts = run_triage_fan_out(
+                self._triage_adapters,
+                claim,
+                evidence,
+                inject_evidence=self._inject_evidence,
+                run_id=self._run_id,
+            )
+            if triage_unanimous_high_conf(triage_verdicts, self._triage_threshold):
+                for v in triage_verdicts:
+                    v.tier = "triage"
+                    v.synthesis_mode = self._verify_mode
+                consensus = _build_consensus(claim.id, triage_verdicts)
+                bundle = VerdictBundle(
+                    claim=claim,
+                    speaker=speaker,
+                    date_str=date_str,
+                    model_verdicts=triage_verdicts,
+                    consensus=consensus,
+                    evidence_count=len(evidence),
+                    cache_hit=False,
+                    triage_skipped_frontier=True,
+                )
+                if self._bundle_cache is not None:
+                    try:
+                        self._bundle_cache.set(key, bundle.model_dump_json())
+                    except Exception as exc:
+                        logger.warning("Failed to write bundle to cache: %s", exc)
+                return bundle, evidence
+
+        return None, evidence
+
+    def finalize_bundle(
+        self,
+        claim: Claim,
+        speaker: str,
+        date_str: str,
+        model_verdicts: list[ModelVerdict],
+        evidence_count: int = 0,
+    ) -> VerdictBundle:
+        """
+        Build a ``VerdictBundle`` from externally-collected model verdicts and cache it.
+
+        Used by the batch reconcile path: after parsing provider batch results
+        and merging any live-sidecar verdicts, call this to produce a
+        consensus + cached bundle that the SitePublisher can consume.
+        """
+        consensus = _build_consensus(claim.id, model_verdicts)
+        bundle = VerdictBundle(
+            claim=claim,
+            speaker=speaker,
+            date_str=date_str,
+            model_verdicts=model_verdicts,
+            consensus=consensus,
+            evidence_count=evidence_count,
+            cache_hit=False,
+            triage_skipped_frontier=False,
+        )
+        if self._bundle_cache is not None:
+            key = _cache_key(claim.text, speaker, date_str)
+            try:
+                self._bundle_cache.set(key, bundle.model_dump_json())
+            except Exception as exc:
+                logger.warning("finalize_bundle: cache write failed: %s", exc)
+        return bundle
+
     def verify(self, claim: Claim) -> tuple[list[Evidence], ConsensusVerdict]:
         """
         Legacy interface: returns (evidence, ConsensusVerdict).

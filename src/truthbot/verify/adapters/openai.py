@@ -8,10 +8,26 @@ import json
 import logging
 import os
 import re
+from typing import Any
 
 from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
-from truthbot.verify.adapters.base import OPENAI_SYNTHESIS_SYSTEM, LLMAdapter
+from truthbot.verify.adapters.base import (
+    OPENAI_SYNTHESIS_SYSTEM,
+    LLMAdapter,
+    build_multi_user_message,
+    build_multi_verdicts,
+    build_user_message,
+    parse_multi_claim_json,
+)
+
+
+def _get(obj: Any, attr: str, default: Any = None) -> Any:
+    if obj is None:
+        return default
+    if isinstance(obj, dict):
+        return obj.get(attr, default)
+    return getattr(obj, attr, default)
 
 logger = logging.getLogger(__name__)
 
@@ -43,11 +59,200 @@ class OpenAIAdapter(LLMAdapter):
     adapter_name = "openai"
     model_id = _PRIMARY_MODEL
     required_env_key = "OPENAI_API_KEY"
+    supports_batch = True
+    # Conservative first-pass cap; tune up after empirical multi-claim runs.
+    max_claims_per_request = 10
 
     def __init__(self) -> None:
         super().__init__()
         self._api_key = os.environ["OPENAI_API_KEY"]
         self._active_model = self.model_id
+
+    # ── Batch support ─────────────────────────────────────────────────────────
+
+    def build_batch_payload(
+        self,
+        claim: Claim,
+        evidence: list[Evidence],
+        *,
+        inject_evidence: bool = True,
+    ) -> dict:
+        """Build a request ``body`` for an OpenAI Batch JSONL line (endpoint=/v1/responses)."""
+        user_msg = build_user_message(claim, evidence, inject_evidence=inject_evidence)
+        return {
+            "model": self.model_id,
+            "tools": [{"type": "web_search_preview"}],
+            "input": [
+                {
+                    "role": "system",
+                    "content": [
+                        {"type": "input_text", "text": OPENAI_SYNTHESIS_SYSTEM},
+                    ],
+                },
+                {
+                    "role": "user",
+                    "content": [{"type": "input_text", "text": user_msg}],
+                },
+            ],
+            "max_tool_calls": 2,
+            "max_output_tokens": 8192,
+        }
+
+    def parse_batch_response(
+        self,
+        raw_response: Any,
+        claim: Claim,
+    ) -> ModelVerdict:
+        """
+        Parse a completed OpenAI batch row's response body into a ModelVerdict.
+
+        ``raw_response`` is the ``response.body`` field (a Responses API envelope)
+        of a single ``status='completed'`` batch result line.
+        """
+        output = _get(raw_response, "output", []) or []
+        text = ""
+        urls: list[str] = []
+        tool_count = 0
+        for item in output:
+            itype = _get(item, "type", "")
+            if itype == "web_search_call":
+                tool_count += 1
+            elif itype == "message":
+                for block in _get(item, "content", []) or []:
+                    if _get(block, "type", "") == "output_text":
+                        text += _get(block, "text", "") or ""
+                    for ann in _get(block, "annotations", []) or []:
+                        url = _get(ann, "url", None)
+                        if url:
+                            urls.append(url)
+
+        model_id = _get(raw_response, "model", self.model_id)
+
+        try:
+            raw = _parse_verdict_json(text)
+            label = VerdictLabel(raw["label"])
+            confidence = Confidence(raw["confidence"])
+        except Exception as exc:
+            logger.error("OpenAIAdapter batch parse error for claim %s: %s", claim.id, exc)
+            return ModelVerdict(
+                adapter_name=self.adapter_name,
+                model_id=model_id,
+                claim_id=claim.id,
+                label=VerdictLabel.UNVERIFIABLE,
+                confidence=Confidence.LOW,
+                explanation=f"Failed to parse batch response: {exc}",
+                tier="frontier",
+                synthesis_mode="batch",
+            )
+
+        usage = _get(raw_response, "usage", None)
+        details = _get(usage, "prompt_tokens_details", None)
+        cached = _get(details, "cached_tokens", 0) or 0
+
+        return ModelVerdict(
+            adapter_name=self.adapter_name,
+            model_id=model_id,
+            claim_id=claim.id,
+            label=label,
+            confidence=confidence,
+            explanation=raw.get("explanation", ""),
+            caveats=raw.get("caveats", ""),
+            web_sources=raw.get("web_sources", urls[:10]),
+            tier="frontier",
+            synthesis_mode="batch",
+            cached_input_tokens=int(cached),
+        )
+
+    # ── Multi-claim batch support ────────────────────────────────────────────
+
+    def build_multi_batch_payload(
+        self,
+        claims: list[Claim],
+        evidence_by_claim: dict[str, list[Evidence]],
+        *,
+        inject_evidence: bool = True,
+        max_evidence_per_claim: int = 5,
+    ) -> dict:
+        """Build a Responses API body for a multi-claim OpenAI Batch row."""
+        user_msg = build_multi_user_message(
+            claims,
+            evidence_by_claim,
+            inject_evidence=inject_evidence,
+            max_evidence_per_claim=max_evidence_per_claim,
+        )
+        n = max(1, len(claims))
+        return {
+            "model": self.model_id,
+            "tools": [{"type": "web_search_preview"}],
+            "input": [
+                {
+                    "role": "system",
+                    "content": [
+                        {"type": "input_text", "text": OPENAI_SYNTHESIS_SYSTEM},
+                    ],
+                },
+                {
+                    "role": "user",
+                    "content": [{"type": "input_text", "text": user_msg}],
+                },
+            ],
+            # 2 web searches per claim, capped so one bad claim can't burn the budget.
+            "max_tool_calls": 2 * n,
+            # 2048 tokens headroom + 1024 per claim verdict (explanation + sources).
+            "max_output_tokens": 2048 + 1024 * n,
+        }
+
+    def parse_multi_batch_response(
+        self,
+        raw_response: Any,
+        claims: list[Claim],
+        *,
+        batch_call_id: str = "",
+    ) -> list[ModelVerdict]:
+        """Parse one OpenAI Responses-API body into N multi-claim ModelVerdicts."""
+        output = _get(raw_response, "output", []) or []
+        text = ""
+        urls: list[str] = []
+        for item in output:
+            itype = _get(item, "type", "")
+            if itype == "message":
+                for block in _get(item, "content", []) or []:
+                    if _get(block, "type", "") == "output_text":
+                        text += _get(block, "text", "") or ""
+                    for ann in _get(block, "annotations", []) or []:
+                        url = _get(ann, "url", None)
+                        if url:
+                            urls.append(url)
+
+        model_id = _get(raw_response, "model", self.model_id)
+
+        try:
+            raw_by_claim = parse_multi_claim_json(text, claims)
+        except json.JSONDecodeError as exc:
+            logger.error(
+                "OpenAIAdapter multi-claim parse error (call=%s): %s",
+                batch_call_id,
+                exc,
+            )
+            raw_by_claim = {}
+
+        usage = _get(raw_response, "usage", None)
+        details = _get(usage, "prompt_tokens_details", None)
+        cached = _get(details, "cached_tokens", 0) or 0
+
+        verdicts = build_multi_verdicts(
+            claims,
+            raw_by_claim,
+            adapter_name=self.adapter_name,
+            model_id=model_id,
+            synthesis_mode="batch",
+            tier="frontier",
+            call_usage={"cached_input_tokens": int(cached)},
+            batch_call_id=batch_call_id,
+        )
+        if verdicts and not verdicts[0].web_sources:
+            verdicts[0].web_sources = urls[:10]
+        return verdicts
 
     def call(
         self,
