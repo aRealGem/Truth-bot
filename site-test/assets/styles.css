@@ -603,6 +603,13 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   letter-spacing: 0.07em;
 }
 .report-cta .src { color: var(--ink-faint); }
+.report-cta .src-tiers {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
 .report-cta .read {
   color: var(--ink);
   display: inline-flex;
@@ -1075,6 +1082,28 @@ details.model-reasoning > summary:hover { background: var(--surface-warm); }
 .model-reasoning-body p { margin: 0.4rem 0 0; }
 .model-reasoning-body p:first-child { margin-top: 0.2rem; }
 
+details.model-tier-wrap {
+  margin-top: 0.45rem;
+  border: 1px dashed var(--border);
+}
+details.model-tier-wrap > summary.model-tier-sum {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
+.model-tier-body {
+  padding: 0 0.6rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--ink);
+}
+
 /* [16] Report page — evidence list ───────────────────────────────────── */
 .evidence { margin-top: 1.5rem; }
 .evidence-label {
@@ -1227,6 +1256,16 @@ footer.foot a {
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
   padding-bottom: 1px;
+}
+footer.foot .footer-hash {
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  border-bottom: none;
+  text-decoration: none;
+}
+footer.foot .footer-hash:hover {
+  text-decoration: underline;
+  color: var(--ink-muted);
 }
 
 
