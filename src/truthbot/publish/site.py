@@ -89,12 +89,21 @@ def _url_display_host(url: str) -> str:
 GITHUB_URL = "https://github.com/aRealGem/Truth-bot"
 PIPELINE_VERSION = "0.2.0"
 
+# Pre-1.0 releases are flagged "Beta" next to the version string everywhere the
+# version is rendered. Flips off automatically when PIPELINE_VERSION crosses 1.0.
+IS_BETA = PIPELINE_VERSION.split(".", 1)[0] == "0"
+BETA_BADGE_HTML = (
+    '<span class="beta-badge" aria-label="Beta release">Beta</span>'
+    if IS_BETA else ''
+)
+BETA_TEXT_SUFFIX = ' (beta)' if IS_BETA else ''
+
 # Atom feed template. [SITE_URL] is a placeholder replaced when a production
 # domain is configured. Entries are appended by the pipeline at the marker below.
-FEED_XML_TEMPLATE = """\
+FEED_XML_TEMPLATE = f"""\
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>truth-bot</title>
+  <title>truth-bot{BETA_TEXT_SUFFIX}</title>
   <subtitle>Automated political fact-checking with multi-model consensus</subtitle>
   <link href="[SITE_URL]/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="[SITE_URL]/" rel="alternate" type="text/html"/>
@@ -103,7 +112,7 @@ FEED_XML_TEMPLATE = """\
   <author>
     <name>truth-bot pipeline</name>
   </author>
-  <generator version="0.2.0">truth-bot</generator>
+  <generator version="{PIPELINE_VERSION}">truth-bot{BETA_TEXT_SUFFIX}</generator>
   <rights>Data sourced from public speeches and government primary sources.</rights>
 
   <entry>
@@ -783,7 +792,7 @@ def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
         '<div class="status-bar">\n'
         '  <div class="row">\n'
         '    <span class="live">Operational</span>\n'
-        f'    <span>Pipeline v{PIPELINE_VERSION}</span>\n'
+        f'    <span>Pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>\n'
         f'    <span>{model_str}</span>\n'
         f'    <span class="stamp">{_esc(stamp)}</span>\n'
         '  </div>\n'
@@ -889,7 +898,7 @@ def _page_index(
         '<head>\n'
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         # Tint mobile browser chrome to match the page background.
         # Keep in sync with --bg in CSS.
         '  <meta name="theme-color" content="#fafaf9">\n'
@@ -934,7 +943,7 @@ def _page_report(
         '<head>\n'
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
         + _social_head("../", _og_title, og_description, og_type=og_type)
@@ -974,7 +983,7 @@ def _page_about(
         '<head>\n'
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
         + _social_head("./", _og_title, og_description, og_type=og_type)
@@ -1014,7 +1023,7 @@ def _page_truthy(
         '<head>\n'
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}">\n'
+        f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
         + _social_head("./", _og_title, og_description, og_type="website")
@@ -2584,6 +2593,37 @@ footer.foot .footer-hash:hover {
 }
 
 
+/* [18a] Beta release badge ──────────────────────────────────────────── */
+/* Rendered inline next to every "Pipeline vX.Y.Z" version string while the
+   project is pre-1.0 (see IS_BETA in site.py). Auto-hidden once version ≥ 1.0
+   because the render sites concat an empty string instead of the span. */
+.beta-badge {
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0.05em 0.45em;
+  font-family: var(--mono);
+  font-size: 0.82em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--surface-warm, #f5f4ef);
+  border: 1px solid var(--border-strong, #d6d3d1);
+  border-radius: 3px;
+  line-height: 1.3;
+  vertical-align: baseline;
+}
+.status-bar .beta-badge {
+  color: #d6d3d1;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+footer.foot .beta-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+
 /* [18b] HR dividers & dim helper ────────────────────────────────────── */
 hr.rule {
   border: none;
@@ -3763,7 +3803,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     _phash = _prompt_hash()
     footer = (
         '<span>Last updated: ' + now + '</span>'
-        + '<span>Pipeline v' + PIPELINE_VERSION
+        + '<span>Pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML
         + f' · Prompt <a class="footer-hash" href="./about.html#prompt">{_phash}</a>'
         + ' · <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">GitHub</a></span>'
     )
@@ -3866,7 +3906,7 @@ def _render_report(site_report: SiteReport) -> str:
         + methodology_html
     )
     footer = (
-        '<span>truth-bot · pipeline v' + PIPELINE_VERSION + '</span>'
+        '<span>truth-bot · pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML + '</span>'
         + f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a></span>'
         + '<span>Source: <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">'
         + 'github.com/aRealGem/Truth-bot</a></span>'
@@ -3904,7 +3944,7 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
     phash = _prompt_hash()
     gen_ts = site_report.generated_at.strftime("%Y-%m-%d %H:%M UTC")
     footer = (
-        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}</span>'
+        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
         f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a></span>'
         f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
         f'github.com/aRealGem/Truth-bot</a></span>'
@@ -3986,7 +4026,7 @@ def _render_truthy() -> str:
     _phash = _prompt_hash()
     footer = (
         '<span><a href="./index.html">Back to reports</a></span>'
-        f'<span>Pipeline v{PIPELINE_VERSION}'
+        f'<span>Pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}'
         f' &middot; Prompt <a class="footer-hash" href="./about.html#prompt">{_phash}</a>'
         f' &middot; <a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub</a></span>'
     )
@@ -4075,10 +4115,10 @@ def _render_about() -> str:
         f'<pre>{_esc(prompt_text)}</pre>'
         f'<hr class="rule-light">'
         f'<p class="dim"><a href="{GITHUB_URL}" target="_blank">GitHub</a> · '
-        f'Pipeline v{PIPELINE_VERSION}</p>'
+        f'Pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</p>'
     )
     footer = (
-        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}</span>'
+        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
         f'<span>Prompt <a class="footer-hash" href="./about.html#prompt">{phash}</a></span>'
         f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
         f'github.com/aRealGem/Truth-bot</a></span>'

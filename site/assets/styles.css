@@ -1269,6 +1269,37 @@ footer.foot .footer-hash:hover {
 }
 
 
+/* [18a] Beta release badge ──────────────────────────────────────────── */
+/* Rendered inline next to every "Pipeline vX.Y.Z" version string while the
+   project is pre-1.0 (see IS_BETA in site.py). Auto-hidden once version ≥ 1.0
+   because the render sites concat an empty string instead of the span. */
+.beta-badge {
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0.05em 0.45em;
+  font-family: var(--mono);
+  font-size: 0.82em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--surface-warm, #f5f4ef);
+  border: 1px solid var(--border-strong, #d6d3d1);
+  border-radius: 3px;
+  line-height: 1.3;
+  vertical-align: baseline;
+}
+.status-bar .beta-badge {
+  color: #d6d3d1;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+footer.foot .beta-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+
 /* [18b] HR dividers & dim helper ────────────────────────────────────── */
 hr.rule {
   border: none;

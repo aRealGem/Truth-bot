@@ -19,6 +19,7 @@ from typing import Optional
 from xml.etree import ElementTree as ET
 
 from truthbot.models import Report, VerdictLabel
+from truthbot.publish.site import BETA_TEXT_SUFFIX, PIPELINE_VERSION
 from truthbot.scoring.rubric import VERDICT_SCORES
 
 logger = logging.getLogger(__name__)
@@ -76,7 +77,7 @@ class RSSPublisher:
         ET.SubElement(channel, "link").text = self.feed_link
         ET.SubElement(channel, "description").text = self.feed_description
         ET.SubElement(channel, "language").text = "en-us"
-        ET.SubElement(channel, "generator").text = "truth-bot"
+        ET.SubElement(channel, "generator").text = f"truth-bot{BETA_TEXT_SUFFIX} {PIPELINE_VERSION}"
         ET.SubElement(channel, "lastBuildDate").text = self._rfc822(datetime.now(timezone.utc))
 
         atom_link = ET.SubElement(channel, "atom:link")

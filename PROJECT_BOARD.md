@@ -22,6 +22,7 @@ Plan files usually live under `.cursor/plans/*.plan.md` (Cursor); links below us
 | Item | Plan | PR |
 |------|------|-----|
 | **Multi-claim batching (batch mode)** | [.cursor/plans/multi_claim_batching_ac006a9d.plan.md](.cursor/plans/multi_claim_batching_ac006a9d.plan.md) | — |
+| **"Beta" badge next to version until 1.0** | — | — _(IS_BETA constant in `src/truthbot/publish/site.py`; wired into status bar, footers on index/report/claim/truthy/about, the about-page prose, `<meta name="generator">` on all four page shells, `FEED_XML_TEMPLATE` Atom generator, and the RSS 2.0 `<generator>` in `publish/rss.py`. `.beta-badge` CSS added in section [18a] of the embedded stylesheet. Auto-disappears when `PIPELINE_VERSION` crosses 1.0.0 because the render sites concat `BETA_BADGE_HTML`/`BETA_TEXT_SUFFIX` which become empty strings.)_ |
 
 ## Done
 
