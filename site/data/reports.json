@@ -1,0 +1,31 @@
+[
+  {
+    "id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "Joint Session of Congress",
+    "claim_count": 117,
+    "verdict_distribution": {
+      "True": 42,
+      "Mostly True": 18,
+      "Misleading": 6,
+      "Exaggerated": 13,
+      "False": 32,
+      "Unverifiable": 6
+    },
+    "model_agreement_rate": 0.179,
+    "url": "reports/2026-02-24-donald-trump-e28cf8.html",
+    "tier_counts": {
+      "gov": 362,
+      "wire": 24,
+      "news": 88,
+      "fc": 38,
+      "other": 746
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  }
+]

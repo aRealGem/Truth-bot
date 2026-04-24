@@ -1,0 +1,3512 @@
+[
+  {
+    "id": "4c978b99-3ef6-4668-a9bf-8bbb2c7477a2",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the 250th anniversary of American independence will occur less than five months from February 24, 2026, on July 4, 2026.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/4c978b99-3ef6-4668-a9bf-8bbb2c7477a2.html"
+  },
+  {
+    "id": "3b091eae-c544-4025-9b98-16bd1a4cccfd",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that when he last spoke in Congress (approximately 12 months before February 24, 2026), he had inherited a nation with inflation at record levels.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/3b091eae-c544-4025-9b98-16bd1a4cccfd.html"
+  },
+  {
+    "id": "e1153466-d40b-4c24-b4f7-034e8e8d2e1f",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e1153466-d40b-4c24-b4f7-034e8e8d2e1f.html"
+  },
+  {
+    "id": "60c7552a-6301-4972-a2a5-4656a1fa6aa0",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the flow of deadly fentanyl across the U.S. border is down by a record 56 percent in one year.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/60c7552a-6301-4972-a2a5-4656a1fa6aa0.html"
+  },
+  {
+    "id": "a15aa472-0ba1-4b7f-8236-3808b8f2bdd4",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that last year the murder rate saw its single largest decline in recorded history.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/a15aa472-0ba1-4b7f-8236-3808b8f2bdd4.html"
+  },
+  {
+    "id": "9ecaa0fb-ec6e-4303-b20f-4f0a27e9782f",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the murder rate is at the lowest number in over 125 years, going back to approximately year 1900.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/9ecaa0fb-ec6e-4303-b20f-4f0a27e9782f.html"
+  },
+  {
+    "id": "a3bfdf9b-366d-4fba-80bc-8a2f976dff79",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims his administration drove core inflation down to the lowest level in more than five years within 12 months.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/a3bfdf9b-366d-4fba-80bc-8a2f976dff79.html"
+  },
+  {
+    "id": "e4395036-7400-4c78-8e0d-1b43af8afde6",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims core inflation in the last three months of 2025 was down to 1.7 percent.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e4395036-7400-4c78-8e0d-1b43af8afde6.html"
+  },
+  {
+    "id": "d056d4aa-a5aa-4e32-b0d1-b877070f4e93",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims gasoline reached a peak of over $6 a gallon in some states under his predecessor (Biden).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d056d4aa-a5aa-4e32-b0d1-b877070f4e93.html"
+  },
+  {
+    "id": "02177780-c4de-404d-9bdc-0074a3665482",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims gasoline is now below $2.30 a gallon in most states.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/02177780-c4de-404d-9bdc-0074a3665482.html"
+  },
+  {
+    "id": "fec15511-9f6e-42ae-8055-5d91cea449e0",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that when he visited Iowa a few weeks before February 24, 2026, he saw gasoline at $1.85 a gallon.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/fec15511-9f6e-42ae-8055-5d91cea449e0.html"
+  },
+  {
+    "id": "6cb77fa3-c324-4f86-b0f0-707a3b0340c8",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims mortgage rates are at the lowest level in four years and falling.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/6cb77fa3-c324-4f86-b0f0-707a3b0340c8.html"
+  },
+  {
+    "id": "0d98d517-34f8-4294-9881-5b2526685f1e",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the annual cost of a typical new mortgage is down almost $5,000 since he took office (approximately one year).",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/0d98d517-34f8-4294-9881-5b2526685f1e.html"
+  },
+  {
+    "id": "8a4209ab-3ae1-4676-b754-e24d7a870151",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the stock market has reached 53 all-time record highs since the election.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/8a4209ab-3ae1-4676-b754-e24d7a870151.html"
+  },
+  {
+    "id": "081681ab-3e13-45ea-95f3-3a75069e5aa4",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Biden administration secured less than $1 trillion in new investment in the United States over four years.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/081681ab-3e13-45ea-95f3-3a75069e5aa4.html"
+  },
+  {
+    "id": "6970524a-5432-4cbf-b179-da27533b205d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims his administration secured commitments for more than $18 trillion in investment in 12 months.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/6970524a-5432-4cbf-b179-da27533b205d.html"
+  },
+  {
+    "id": "6dc18810-dce8-4401-8e86-4f9122b7fa88",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims his administration added 70,000 new construction jobs in a short period of time.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/6dc18810-dce8-4401-8e86-4f9122b7fa88.html"
+  },
+  {
+    "id": "ed915040-ec8c-4bee-b734-df8886bb9301",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims American oil production is up by more than 600,000 barrels a day.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ed915040-ec8c-4bee-b734-df8886bb9301.html"
+  },
+  {
+    "id": "85f4cbd5-94a7-4290-95d1-2abf536cb62a",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the U.S. received more than 80 million barrels of oil from Venezuela.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/85f4cbd5-94a7-4290-95d1-2abf536cb62a.html"
+  },
+  {
+    "id": "36a97319-1752-4478-8785-db352416c69a",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims American natural gas production is at an all-time high.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/36a97319-1752-4478-8785-db352416c69a.html"
+  },
+  {
+    "id": "cbb9bf2d-f167-433b-95b5-9c336cfbc6fc",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims more Americans are working today than at any time in the history of the country.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/cbb9bf2d-f167-433b-95b5-9c336cfbc6fc.html"
+  },
+  {
+    "id": "494d86bc-a67d-4aba-91de-76524469374d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims 100 percent of all jobs created under his administration have been in the private sector.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/494d86bc-a67d-4aba-91de-76524469374d.html"
+  },
+  {
+    "id": "7a6118db-cc7c-42cb-bf85-600b336eeee3",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims his administration lifted 2.4 million Americans off food stamps in one year, which he describes as a record.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/7a6118db-cc7c-42cb-bf85-600b336eeee3.html"
+  },
+  {
+    "id": "c7d62474-e285-46fe-b3d5-39f9782c3220",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Big Beautiful Bill included no tax on tips.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c7d62474-e285-46fe-b3d5-39f9782c3220.html"
+  },
+  {
+    "id": "c4c4957b-1ba5-4209-b682-8c9bcc297baf",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Big Beautiful Bill included no tax on overtime.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c4c4957b-1ba5-4209-b682-8c9bcc297baf.html"
+  },
+  {
+    "id": "0ab0d96f-27ee-430a-a541-49ddc25ca889",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Big Beautiful Bill included no tax on Social Security for seniors.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/0ab0d96f-27ee-430a-a541-49ddc25ca889.html"
+  },
+  {
+    "id": "defc9809-efb1-4844-a36d-63c885f32637",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Big Beautiful Bill made interest on auto loans tax-deductible, but only if the car is made in America.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/defc9809-efb1-4844-a36d-63c885f32637.html"
+  },
+  {
+    "id": "abad4527-31d9-4157-a483-eb900f78eb70",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims all Democrats voted against the tax cuts in the Big Beautiful Bill.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/abad4527-31d9-4157-a483-eb900f78eb70.html"
+  },
+  {
+    "id": "ed7b151a-feb0-48fd-ba80-1aae9dcf284d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that a mom named Megan Hemhauser home-schools her children during the day and waits tables at night while her husband works overtime operating heavy equipment.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ed7b151a-feb0-48fd-ba80-1aae9dcf284d.html"
+  },
+  {
+    "id": "8b672334-fdf2-4b63-8468-1538a06dbc1d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Megan Hemhauser and her husband will take home more than $5,000 extra per year due to no tax on tips, no tax on overtime, and the expanded child tax credit.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/8b672334-fdf2-4b63-8468-1538a06dbc1d.html"
+  },
+  {
+    "id": "ed25434b-7069-4f55-8598-cab8368d7740",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Michael and Susan Dell donated $6,250,000,000 to fund Trump accounts for 25 million American children.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ed25434b-7069-4f55-8598-cab8368d7740.html"
+  },
+  {
+    "id": "26dfa8e6-1daa-4776-9c83-7c367f81525b",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Dow Jones broke 50,000, four years ahead of schedule.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/26dfa8e6-1daa-4776-9c83-7c367f81525b.html"
+  },
+  {
+    "id": "e52c4c79-419f-45da-af85-936fc35ce0b0",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the S&P hit 7,000.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e52c4c79-419f-45da-af85-936fc35ce0b0.html"
+  },
+  {
+    "id": "d1ffdc08-b266-45cf-842b-f506127d45b5",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims 22 Nobel Prize winners in economics predicted tariffs would cause inflation but were wrong.",
+    "consensus_verdict": "Misleading",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Misleading",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d1ffdc08-b266-45cf-842b-f506127d45b5.html"
+  },
+  {
+    "id": "8f1f2bc5-5fae-4eb4-a315-22160220ca0f",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the U.S. Supreme Court issued an unfortunate ruling four days before February 24, 2026, related to his tariff authority.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/8f1f2bc5-5fae-4eb4-a315-22160220ca0f.html"
+  },
+  {
+    "id": "d18c9253-841a-474e-94a8-419fce3f58d6",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the price of eggs is down 60 percent.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d18c9253-841a-474e-94a8-419fce3f58d6.html"
+  },
+  {
+    "id": "aba08c62-7536-46bb-b635-6e32181d4167",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the cost of chicken, butter, fruit, hotels, automobiles, and rent is lower than when he took office.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/aba08c62-7536-46bb-b635-6e32181d4167.html"
+  },
+  {
+    "id": "4ee753d2-7433-4fed-860c-54659fa1174e",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that since the passage of the Affordable Care Act, big insurance company stock prices have soared between 1,000 and 1,700 percent.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/4ee753d2-7433-4fed-860c-54659fa1174e.html"
+  },
+  {
+    "id": "b4c32bb0-412b-4357-8610-83e6c9e517c0",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims he introduced a 'Great Health Care Plan' that would stop all payments to big insurance companies and give money directly to people.",
+    "consensus_verdict": "Misleading",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b4c32bb0-412b-4357-8610-83e6c9e517c0.html"
+  },
+  {
+    "id": "664941e1-3d00-4606-9028-deb25358b154",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims his administration enacted 'most favored nation' agreements for prescription drug pricing that will give Americans the lowest prescription drug prices in the world.",
+    "consensus_verdict": "Misleading",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/664941e1-3d00-4606-9028-deb25358b154.html"
+  },
+  {
+    "id": "87e74ae6-081d-4530-b336-82052d618f54",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the most favored nation drug pricing resulted in price differences of 300, 400, 500, and 600 percent or more.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/87e74ae6-081d-4530-b336-82052d618f54.html"
+  },
+  {
+    "id": "08d05e80-2e3c-410d-90f7-54cfa3be1204",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Catherine Rayner purchased a drug for IVF that previously cost $4,000 for under $500 through the TrumpRx website.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/08d05e80-2e3c-410d-90f7-54cfa3be1204.html"
+  },
+  {
+    "id": "61519503-d3a0-4b94-8eec-18b57212f5c8",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims he signed an executive order to ban large Wall Street investment firms from buying up single-family homes.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/61519503-d3a0-4b94-8eec-18b57212f5c8.html"
+  },
+  {
+    "id": "15d26548-65f3-4e08-a8fc-a1c68f53b965",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the typical 401(k) balance is up by at least $30,000 since he took office.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/15d26548-65f3-4e08-a8fc-a1c68f53b965.html"
+  },
+  {
+    "id": "8ae27cd5-edc5-4177-acca-0673642e27d0",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims half of all working Americans do not have access to a retirement plan with matching contributions from an employer.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/8ae27cd5-edc5-4177-acca-0673642e27d0.html"
+  },
+  {
+    "id": "06eb5ed1-47c4-4a16-a25c-e136a209addc",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims members of the Somali community in Minnesota have pillaged an estimated $19 billion from the American taxpayer.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/06eb5ed1-47c4-4a16-a25c-e136a209addc.html"
+  },
+  {
+    "id": "c7d9d225-e43e-4969-bdaf-00d410fdff4a",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims illegal immigrants let in under Biden committed 11,888 murders.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Misleading",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c7d9d225-e43e-4969-bdaf-00d410fdff4a.html"
+  },
+  {
+    "id": "3794286d-9370-4656-9ebc-906a43cc8865",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Biden administration's policies cost the typical family $34,000 through inflation.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/3794286d-9370-4656-9ebc-906a43cc8865.html"
+  },
+  {
+    "id": "ec80e1f2-b525-4210-9d85-932f9f6f26cc",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Dalilah Coleman was 5 years old in June 2024 when an 18-wheel tractor-trailer driven by an illegal alien struck her stopped car at 60 miles per hour.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ec80e1f2-b525-4210-9d85-932f9f6f26cc.html"
+  },
+  {
+    "id": "8ad2fbb0-79ba-43bf-b3c4-4fc17f2fbaa3",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that in 2023, 16-year-old Lizbeth Medina was stabbed 25 times and killed by a previously arrested illegal alien.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/8ad2fbb0-79ba-43bf-b3c4-4fc17f2fbaa3.html"
+  },
+  {
+    "id": "d67678cc-37f3-4426-a84c-df01fa2fc181",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Democrats cut off all funding for the Department of Homeland Security, instituting a government shutdown.",
+    "consensus_verdict": "Misleading",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Misleading",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d67678cc-37f3-4426-a84c-df01fa2fc181.html"
+  },
+  {
+    "id": "648cf46a-d252-4e21-a54b-386bb9373c93",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims a previous Democrat shutdown cost two points on GDP.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/648cf46a-d252-4e21-a54b-386bb9373c93.html"
+  },
+  {
+    "id": "b14b38be-9886-4b44-b10c-d6c8c18d5aa7",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that in 2021, school officials in Virginia sought to socially transition 14-year-old Sage Blair to a new gender and hid it from her parents.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/b14b38be-9886-4b44-b10c-d6c8c18d5aa7.html"
+  },
+  {
+    "id": "ce6c20fe-1edd-43ef-8d64-113e663b906c",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims a left-wing judge refused to return Sage Blair to her parents because they did not immediately state that their daughter was their son.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/ce6c20fe-1edd-43ef-8d64-113e663b906c.html"
+  },
+  {
+    "id": "8ae3ab09-b03e-40e9-84c1-bfaf5a55615e",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Sage Blair has a full-ride scholarship to Liberty University.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/8ae3ab09-b03e-40e9-84c1-bfaf5a55615e.html"
+  },
+  {
+    "id": "e03cb9eb-eac4-4801-b91b-1be8ee82572d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Melania Trump helped secure $30 million to launch the Melania Trump Foster Youth to Independence Initiative.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e03cb9eb-eac4-4801-b91b-1be8ee82572d.html"
+  },
+  {
+    "id": "e37645ba-55aa-4543-8024-eaa717224c69",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Charlie Kirk was violently murdered by an assassin in the last year.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e37645ba-55aa-4543-8024-eaa717224c69.html"
+  },
+  {
+    "id": "97ece8f5-2cb2-4ef2-90cb-cfe814defb49",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims he deployed National Guard and federal law enforcement to Memphis, New Orleans, and Washington D.C. starting last summer.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/97ece8f5-2cb2-4ef2-90cb-cfe814defb49.html"
+  },
+  {
+    "id": "eab67439-58cb-4f3a-b3b2-1a140cfaa1d5",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims crime in Washington D.C. is at the lowest level ever recorded.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/eab67439-58cb-4f3a-b3b2-1a140cfaa1d5.html"
+  },
+  {
+    "id": "412dbd7a-63b6-47b1-abc6-43d780c79320",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims murders in Washington D.C. in January 2026 were down close to 100 percent from a year ago.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/412dbd7a-63b6-47b1-abc6-43d780c79320.html"
+  },
+  {
+    "id": "7e9179aa-b294-4a66-990b-5cf3ca662ba8",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Army National Guard Specialist Sarah Beckstrom was shot in the head and killed by a terrorist from Afghanistan while on patrol near the White House.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/7e9179aa-b294-4a66-990b-5cf3ca662ba8.html"
+  },
+  {
+    "id": "d8b769b9-c0c7-4ef8-8271-0236e33a1100",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Staff Sgt. Andrew Wolfe was also shot in the head by the same terrorist who killed Sarah Beckstrom.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d8b769b9-c0c7-4ef8-8271-0236e33a1100.html"
+  },
+  {
+    "id": "2272b833-521d-4c54-bfb6-b81ad44566f6",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims his first 10 months ended eight wars, including those involving Cambodia and Thailand, Pakistan and India, Kosovo and Serbia, Israel and Iran, Egypt and Ethiopia, Armenia and Azerbaijan, the Congo and Rwanda, and the war in Gaza.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/2272b833-521d-4c54-bfb6-b81ad44566f6.html"
+  },
+  {
+    "id": "008c1d4e-48f3-4450-bc57-0772c70871f9",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Prime Minister of Pakistan said 35 million people would have died if it were not for Trump's involvement in the Pakistan-India conflict.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/008c1d4e-48f3-4450-bc57-0772c70871f9.html"
+  },
+  {
+    "id": "6de26b88-678a-4fe0-a1fd-b3ce3cef771d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that under the cease-fire he negotiated regarding Gaza hostages, every single hostage, both living and dead, has been returned home.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/6de26b88-678a-4fe0-a1fd-b3ce3cef771d.html"
+  },
+  {
+    "id": "7cf60b97-7aea-4222-adba-da9e86029029",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Hamas and Israel recovered all 28 dead hostages, with the last one making the total 28.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/7cf60b97-7aea-4222-adba-da9e86029029.html"
+  },
+  {
+    "id": "c24d4d00-2958-4fae-89a2-2b4b75394d98",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims 25,000 soldiers are dying each and every month in the Russia-Ukraine war.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c24d4d00-2958-4fae-89a2-2b4b75394d98.html"
+  },
+  {
+    "id": "a143d91a-499a-4495-bda5-73c9395fff82",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the United States military obliterated Iran's nuclear weapons program in an operation called Operation Midnight Hammer last June, with an attack on Iranian soil.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/a143d91a-499a-4495-bda5-73c9395fff82.html"
+  },
+  {
+    "id": "c91416a2-6f4e-49b6-93b8-5a91543fd889",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Iran's regime seized control of the country 47 years ago.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c91416a2-6f4e-49b6-93b8-5a91543fd889.html"
+  },
+  {
+    "id": "b793d965-e3e3-40b9-b98e-103aa72c3f49",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Iran has killed at least 32,000 protesters in their own country in the last couple of months.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b793d965-e3e3-40b9-b98e-103aa72c3f49.html"
+  },
+  {
+    "id": "64424791-88ea-4ff0-b09e-c3b56742437b",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims he killed Qasem Soleimani during his first term and that Soleimani was the father of the roadside bomb.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/64424791-88ea-4ff0-b09e-c3b56742437b.html"
+  },
+  {
+    "id": "0450ef16-b37b-48f7-a33e-953d352489c8",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the U.S. approved a one-trillion-dollar military budget.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/0450ef16-b37b-48f7-a33e-953d352489c8.html"
+  },
+  {
+    "id": "7ff6f5bf-eea7-4c60-af0d-29fcc096b4ea",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims NATO countries agreed to pay 5 percent of GDP for military defense at his request.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/7ff6f5bf-eea7-4c60-af0d-29fcc096b4ea.html"
+  },
+  {
+    "id": "6b769e2f-58e4-4edf-b209-4866e7a4a437",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims NATO members were previously supposed to pay 2 percent of GDP for defense but were not paying it, with the U.S. paying for almost all of NATO.",
+    "consensus_verdict": "Misleading",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Misleading",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/6b769e2f-58e4-4edf-b209-4866e7a4a437.html"
+  },
+  {
+    "id": "b9547cb3-1520-4c36-8193-7ac47a039f6c",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims every branch of the U.S. armed forces is setting records for recruitment.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b9547cb3-1520-4c36-8193-7ac47a039f6c.html"
+  },
+  {
+    "id": "b1f41ec8-f4e9-4050-896e-a7481a77057d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims every service member recently received a warrior dividend of $1,776.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b1f41ec8-f4e9-4050-896e-a7481a77057d.html"
+  },
+  {
+    "id": "da0a8ad5-a9c1-4aba-95b0-380b2e5f66b7",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the U.S. designated cartels as foreign terrorist organizations and declared illicit fentanyl a weapon of mass destruction.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/da0a8ad5-a9c1-4aba-95b0-380b2e5f66b7.html"
+  },
+  {
+    "id": "bda81f8b-6e0c-4321-9bbe-004156ed6713",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that in January, elite American warriors carried out a military operation to end the reign of Nicolás Maduro and bring him to face American justice.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/bda81f8b-6e0c-4321-9bbe-004156ed6713.html"
+  },
+  {
+    "id": "de73ab57-9dc3-47b6-99eb-e8779ac50896",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the new president of Venezuela is Delcy Rodríguez.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/de73ab57-9dc3-47b6-99eb-e8779ac50896.html"
+  },
+  {
+    "id": "81bcebb6-316e-445f-98a1-f8f87086ae67",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Maduro's military fortress was protected by thousands of soldiers and guarded by Russian and Chinese military technology.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/81bcebb6-316e-445f-98a1-f8f87086ae67.html"
+  },
+  {
+    "id": "d4eff40a-7bf0-4ed2-9134-a0e0eb6d30c2",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Chief Warrant Officer Five Eric Slover was shot four times in the leg and hip during the Venezuela raid while piloting a Chinook helicopter.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d4eff40a-7bf0-4ed2-9134-a0e0eb6d30c2.html"
+  },
+  {
+    "id": "0e750b41-05c5-4823-bb79-22048e4005ff",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Navy Captain Royce Williams flew more than 220 missions in World War II, Korea, and Vietnam.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/0e750b41-05c5-4823-bb79-22048e4005ff.html"
+  },
+  {
+    "id": "14762056-6436-4ff9-86a4-33e980ff8316",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that in 1952, Royce Williams' squadron was ambushed by seven Soviet fighter planes over Korea, and he shot down four enemy jets while taking 263 bullets to his own plane.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/14762056-6436-4ff9-86a4-33e980ff8316.html"
+  },
+  {
+    "id": "50dec216-5bb5-4d77-aefd-6d18f738403e",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Royce Williams' story was secret for over 50 years.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/50dec216-5bb5-4d77-aefd-6d18f738403e.html"
+  },
+  {
+    "id": "72c851ff-aaad-42e8-b228-b8c7f5fb5789",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Royce Williams is 100 years old at the time of the speech (February 24, 2026).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/72c851ff-aaad-42e8-b228-b8c7f5fb5789.html"
+  },
+  {
+    "id": "167b9678-3e8a-44c6-b39a-7ee0624a5547",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Thomas Jefferson died on July 4, 1826.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/167b9678-3e8a-44c6-b39a-7ee0624a5547.html"
+  },
+  {
+    "id": "e0feb0e4-84e9-4f6e-899c-5d30801b023a",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Thomas Jefferson was the author of the Declaration of Independence.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e0feb0e4-84e9-4f6e-899c-5d30801b023a.html"
+  },
+  {
+    "id": "3aef3a00-8b61-4b6a-8110-cbb7505aa2d1",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the 2028 Summer Olympics will be held in Los Angeles.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/3aef3a00-8b61-4b6a-8110-cbb7505aa2d1.html"
+  },
+  {
+    "id": "70daf735-49aa-4a41-b263-68bf3d7c1d99",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the U.S. is hosting the 2026 FIFA World Cup.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/70daf735-49aa-4a41-b263-68bf3d7c1d99.html"
+  },
+  {
+    "id": "fb7a4084-4f8c-49a9-9a29-bae04b5dd338",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the men's Olympic hockey team beat Canada in overtime.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/fb7a4084-4f8c-49a9-9a29-bae04b5dd338.html"
+  },
+  {
+    "id": "9f3931f3-f434-4eb5-8e38-134476336824",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims goaltender Connor Hellebuyck faced 46 shots on goal in the Olympic gold medal game.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/9f3931f3-f434-4eb5-8e38-134476336824.html"
+  },
+  {
+    "id": "a9a4ea3d-72d9-4a52-a20a-9215947d0cd5",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims he will award Connor Hellebuyck the Presidential Medal of Freedom.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/a9a4ea3d-72d9-4a52-a20a-9215947d0cd5.html"
+  },
+  {
+    "id": "02a32b26-7256-4a00-80cf-3fe4d9c55096",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Buddy Taggart volunteered to serve in World War II at age 17, served under General Douglas MacArthur in the Pacific, fought in the Battle of Manila, was badly wounded by enemy machine guns in Luzon, and 81 years before the speech liberated the largest internment camp in the Philippines.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/02a32b26-7256-4a00-80cf-3fe4d9c55096.html"
+  },
+  {
+    "id": "288c7837-f104-4718-b079-1231fb17ccd2",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Buddy Taggart earned a Purple Heart and a Bronze Star.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/288c7837-f104-4718-b079-1231fb17ccd2.html"
+  },
+  {
+    "id": "62e4257c-88ef-4d58-b195-b5b7ad443a90",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Buddy Taggart will turn 100 years old on July 4, 2026.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/62e4257c-88ef-4d58-b195-b5b7ad443a90.html"
+  },
+  {
+    "id": "538c3182-ef59-4955-8000-1eff8df2569f",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that on July 4 of the previous year (2025), floodwaters tore through a girls' summer camp in central Texas, rising 26 feet in minutes and claiming many lives.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/538c3182-ef59-4955-8000-1eff8df2569f.html"
+  },
+  {
+    "id": "c66fa5fa-2f3a-4bd3-b6d0-d0a2db01702f",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Coast Guard rescue swimmer Scott Ruskan lifted 164 people to safety during the Texas flood disaster, and it was his first-ever rescue mission.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c66fa5fa-2f3a-4bd3-b6d0-d0a2db01702f.html"
+  },
+  {
+    "id": "38491a6b-e04f-4ccb-ba75-fdbbb7facae6",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims he is awarding Petty Officer Ruskan the Legion of Merit for extraordinary heroism.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/38491a6b-e04f-4ccb-ba75-fdbbb7facae6.html"
+  },
+  {
+    "id": "10d9015b-aa33-46fe-b488-b1f4ffad4063",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Secretary of State Marco Rubio received 100 percent of votes in his Senate confirmation.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/10d9015b-aa33-46fe-b488-b1f4ffad4063.html"
+  },
+  {
+    "id": "9f4e645e-db7e-4e1d-b93c-2eaf371ca4d8",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that Iryna Zarutska, a 23-year-old Ukrainian refugee, was killed on a train near Charlotte, N.C., when a man who had been arrested over a dozen times and released through no-cash bail slashed her with a knife.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/9f4e645e-db7e-4e1d-b93c-2eaf371ca4d8.html"
+  },
+  {
+    "id": "d072b04a-68b3-47b6-8627-63fa1c4a0212",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Anya Zarutska and her daughter Iryna fled war-torn Ukraine in 2022 to live with relatives near Charlotte, N.C.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d072b04a-68b3-47b6-8627-63fa1c4a0212.html"
+  },
+  {
+    "id": "8fdda541-a877-422a-ac1d-e8416ee6bccf",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Biden administration gave the U.S. the worst inflation in the history of the country.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/8fdda541-a877-422a-ac1d-e8416ee6bccf.html"
+  },
+  {
+    "id": "f6efb79c-09c5-4342-b8b5-c48620c0d896",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the Democrats' first government shutdown cost the U.S. two points on GDP.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/f6efb79c-09c5-4342-b8b5-c48620c0d896.html"
+  },
+  {
+    "id": "bcadcfd8-bab6-4aff-9b07-35a244bc718d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims voter ID polling is at 89 percent approval including among Democrats.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/bcadcfd8-bab6-4aff-9b07-35a244bc718d.html"
+  },
+  {
+    "id": "b1dbbe99-cb42-4155-b636-8244d5eea0cd",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Space Force was created during his administration.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b1dbbe99-cb42-4155-b636-8244d5eea0cd.html"
+  },
+  {
+    "id": "85201604-4e21-48f3-b6dd-0f8e24ed7496",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims a ratepayer protection pledge was negotiated requiring major tech companies to build their own power plants to meet energy needs from AI data centers.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/85201604-4e21-48f3-b6dd-0f8e24ed7496.html"
+  },
+  {
+    "id": "4fb0c2e8-1cea-4a1d-8255-4243a56324be",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that during the Venezuela raid, Maduro's fortress was guarded by Russian and Chinese military technology and protected by thousands of soldiers.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/4fb0c2e8-1cea-4a1d-8255-4243a56324be.html"
+  },
+  {
+    "id": "44d6ba32-3603-4ea4-b865-9a274136184e",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims a new Venezuelan prison was ordered closed and hundreds of political prisoners have been released since the January raid.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/44d6ba32-3603-4ea4-b865-9a274136184e.html"
+  },
+  {
+    "id": "f3feb197-bd5e-4c11-b6da-eb801877b75f",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the most favored nation drug pricing program was made available through a website called trumprx.gov.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/f3feb197-bd5e-4c11-b6da-eb801877b75f.html"
+  },
+  {
+    "id": "b9a92991-3afe-4480-b4b3-da6c77aa7f2e",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims Trump accounts are tax-free investment accounts for every American child, with millions prefunded by the U.S. Treasury.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/b9a92991-3afe-4480-b4b3-da6c77aa7f2e.html"
+  },
+  {
+    "id": "59aeef6f-1dc8-43a5-accc-de830077017d",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims he implemented maximum price transparency for health care in his first term and Democrats immediately terminated it.",
+    "consensus_verdict": "False",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/59aeef6f-1dc8-43a5-accc-de830077017d.html"
+  },
+  {
+    "id": "2d376d12-71c4-4a68-88b5-8072a39a6998",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims modest additional contributions to Trump accounts could allow them to grow to over $100,000 or more by the time the child turns 18.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/2d376d12-71c4-4a68-88b5-8072a39a6998.html"
+  },
+  {
+    "id": "99b91a25-497a-4042-a22b-d4ad711de8cf",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the military award called the Purple Heart was created by President George Washington.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/99b91a25-497a-4042-a22b-d4ad711de8cf.html"
+  },
+  {
+    "id": "4e930842-add8-4038-a1b2-886f86aa00b4",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims that on July 4, 1826, both John Adams and Thomas Jefferson died (implied by the context that Jefferson drew his last breath on that date, which is a well-known historical claim involving both founders).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/4e930842-add8-4038-a1b2-886f86aa00b4.html"
+  },
+  {
+    "id": "5a1dcab5-9de0-4bbd-8099-4ec01ff2d672",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the U.S. started as 13 colonies.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/5a1dcab5-9de0-4bbd-8099-4ec01ff2d672.html"
+  },
+  {
+    "id": "ef3bfa06-279e-4ebf-a334-7009dd26c613",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the administration's new military campaign stopped record amounts of drugs coming into the country by water or sea.",
+    "consensus_verdict": "Exaggerated",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Misleading",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ef3bfa06-279e-4ebf-a334-7009dd26c613.html"
+  },
+  {
+    "id": "af0f4aec-53c2-4aef-892e-74793712010f",
+    "report_id": "e28cf819-ed4c-4693-bb41-99930e6f6bb1",
+    "claim_text": "Trump claims the administration has removed Fort Bragg's name change and restored its original name.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/af0f4aec-53c2-4aef-892e-74793712010f.html"
+  }
+]
