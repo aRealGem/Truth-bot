@@ -13,9 +13,18 @@ Idempotent: each patch checks for its marker before rewriting, so the script
 is safe to re-run any number of times. When PIPELINE_VERSION crosses 1.0.0,
 BETA_BADGE_HTML and BETA_TEXT_SUFFIX both become empty strings, and the
 patches become no-ops.
+
+Usage:
+    python scripts/rebuild_site_beta_badge.py                 # site-test/ (default)
+    python scripts/rebuild_site_beta_badge.py --site-root site
+    python scripts/rebuild_site_beta_badge.py /abs/path/to/out
+
+Default target is `site-test/` per project convention (see STATUS.md and
+scripts/patch_site_ui.py).
 """
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -34,12 +43,11 @@ from truthbot.publish.site import (  # noqa: E402
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
 
 
-def refresh_assets_and_static_pages() -> None:
+def refresh_assets_and_static_pages(site: Path) -> None:
     """Rewrite CSS, truthbot.js, feed.xml, and the four static pages."""
-    pub = SitePublisher(site_root=str(SITE))
+    pub = SitePublisher(site_root=str(site))
     pub._ensure_structure()
     pub._copy_assets()  # CSS + JS + icons + social + feed.xml
 
@@ -47,12 +55,12 @@ def refresh_assets_and_static_pages() -> None:
     claims_index = pub._load_claims_index()
     stats = pub._compute_stats(reports_index, claims_index)
 
-    (SITE / "index.html").write_text(
+    (site / "index.html").write_text(
         _render_index(reports_index, stats), encoding="utf-8"
     )
-    (SITE / "about.html").write_text(_render_about(), encoding="utf-8")
-    (SITE / "truthy.html").write_text(_render_truthy(), encoding="utf-8")
-    (SITE / "404.html").write_text(_render_404(), encoding="utf-8")
+    (site / "about.html").write_text(_render_about(), encoding="utf-8")
+    (site / "truthy.html").write_text(_render_truthy(), encoding="utf-8")
+    (site / "404.html").write_text(_render_404(), encoding="utf-8")
     print(f"  Refreshed: index.html, about.html, truthy.html, 404.html")
 
 
@@ -94,14 +102,13 @@ def _patch_version_markup(html: str) -> tuple[str, int]:
     return html, n
 
 
-def patch_reports_and_claims() -> None:
-    """Patch every existing report/claim HTML in place."""
-    report_dir = SITE / "reports"
-    claim_dir = SITE / "claims"
-
+def patch_reports_and_claims(site: Path) -> None:
+    """Patch every existing report/claim/widget HTML in place."""
     patched = 0
     touched_files = 0
-    for d in (report_dir, claim_dir):
+
+    subdirs = [site / "reports", site / "claims"]
+    for d in subdirs:
         if not d.exists():
             continue
         for p in sorted(d.glob("*.html")):
@@ -112,15 +119,43 @@ def patch_reports_and_claims() -> None:
                 patched += n
                 touched_files += 1
 
+    for extra in site.glob("truthy_widget.html"):
+        original = extra.read_text(encoding="utf-8")
+        new_html, n = _patch_version_markup(original)
+        if n and new_html != original:
+            extra.write_text(new_html, encoding="utf-8")
+            patched += n
+            touched_files += 1
+
     print(f"  Patched {patched} version markers across {touched_files} HTML files")
 
 
 def main() -> None:
-    print(f"Rebuilding site at {SITE} (PIPELINE_VERSION={PIPELINE_VERSION})")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "site_root",
+        nargs="?",
+        default=None,
+        help="Positional site root (e.g. site-test or an absolute path). "
+        "Overrides --site-root if both given.",
+    )
+    parser.add_argument(
+        "--site-root",
+        dest="site_root_opt",
+        default="site-test",
+        help="Site root directory (default: site-test, per project convention).",
+    )
+    args = parser.parse_args()
+    target = args.site_root or args.site_root_opt
+    site = Path(target)
+    if not site.is_absolute():
+        site = (ROOT / site).resolve()
+
+    print(f"Rebuilding site at {site} (PIPELINE_VERSION={PIPELINE_VERSION})")
     print(f"  BETA_BADGE_HTML={BETA_BADGE_HTML!r}")
     print(f"  BETA_TEXT_SUFFIX={BETA_TEXT_SUFFIX!r}")
-    refresh_assets_and_static_pages()
-    patch_reports_and_claims()
+    refresh_assets_and_static_pages(site)
+    patch_reports_and_claims(site)
     print("Done.")
 
 
