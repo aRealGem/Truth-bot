@@ -200,6 +200,7 @@ class ClaimExtractor:
                 context=item.get("context_window", ""),
                 category=item.get("claim_type", "other"),
                 is_checkable=bool(item.get("is_checkable", True)),
+                speech_date=transcript.date,
             )
             claims.append(claim)
 
@@ -330,6 +331,7 @@ class ClaimExtractor:
                 context=sentence[:120],
                 category="other",
                 is_checkable=True,
+                speech_date=transcript.date,
             )
             for sentence in sentences[:3]
         ]

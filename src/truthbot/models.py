@@ -101,6 +101,14 @@ class Claim(BaseModel):
     is_checkable: bool = Field(
         True, description="False if LLM judged it an opinion or value statement"
     )
+    speech_date: Optional[datetime] = Field(
+        None,
+        description=(
+            "Date the claim was spoken, copied from the source Transcript at "
+            "extract time. Read by the temporal-preamble helper to anchor "
+            "model reasoning in the correct era (fixes C10 wrong-term errors)."
+        ),
+    )
     extracted_at: datetime = Field(default_factory=datetime.utcnow)
 
     @field_validator("text")
@@ -242,6 +250,18 @@ class ModelVerdict(BaseModel):
     batch_call_id: str = Field(
         default="",
         description="Opaque identifier for the multi-claim API call that produced this verdict (custom_id).",
+    )
+    temporal_flags: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Post-hoc temporal-alignment flags attached by "
+            "``verify.context.validator.apply_temporal_flags``. A non-empty "
+            "list means the model's reasoning referenced dates outside the "
+            "expected claim window (e.g. cited Trump-I 2017 data for a 2026 "
+            "claim — fix for C10 wrong-term errors). Consumed by the "
+            "adjudication layer (Phase 3e) and the family-aware consensus "
+            "weighting (Phase 3c)."
+        ),
     )
 
 

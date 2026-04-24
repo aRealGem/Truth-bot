@@ -24,6 +24,7 @@ from truthbot.verify.adapters.base import (
     normalize_verdict_label,
     parse_multi_claim_json,
 )
+from truthbot.verify.context import apply_temporal_flags
 
 logger = logging.getLogger(__name__)
 
@@ -107,7 +108,7 @@ class GrokAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
-                return ModelVerdict(
+                verdict = ModelVerdict(
                     adapter_name=self.adapter_name,
                     model_id=self._active_model,
                     claim_id=claim.id,
@@ -118,6 +119,8 @@ class GrokAdapter(LLMAdapter):
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
                 )
+                apply_temporal_flags(verdict, claim)
+                return verdict
 
             except json.JSONDecodeError as exc:
                 td["status"] = "parse_error"

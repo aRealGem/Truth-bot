@@ -22,6 +22,7 @@ from truthbot.verify.adapters.base import (
     normalize_verdict_label,
     parse_multi_claim_json,
 )
+from truthbot.verify.context import apply_temporal_flags
 
 logger = logging.getLogger(__name__)
 
@@ -162,7 +163,7 @@ class AnthropicAdapter(LLMAdapter):
 
         cache_read = _get(usage, "cache_read_input_tokens", 0) or 0
 
-        return ModelVerdict(
+        verdict = ModelVerdict(
             adapter_name=self.adapter_name,
             model_id=model_id,
             claim_id=claim.id,
@@ -175,6 +176,8 @@ class AnthropicAdapter(LLMAdapter):
             synthesis_mode="batch",
             cached_input_tokens=int(cache_read),
         )
+        apply_temporal_flags(verdict, claim)
+        return verdict
 
     # ── Multi-claim batch support ────────────────────────────────────────────
 
@@ -331,7 +334,7 @@ class AnthropicAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
-                return ModelVerdict(
+                verdict = ModelVerdict(
                     adapter_name=self.adapter_name,
                     model_id=self._active_model,
                     claim_id=claim.id,
@@ -344,6 +347,8 @@ class AnthropicAdapter(LLMAdapter):
                     synthesis_mode=get_synthesis_mode(),
                     cached_input_tokens=int(td.get("cache_read_input_tokens", 0)),
                 )
+                apply_temporal_flags(verdict, claim)
+                return verdict
 
             except json.JSONDecodeError as exc:
                 td["status"] = "parse_error"

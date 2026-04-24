@@ -21,6 +21,7 @@ from truthbot.verify.adapters.base import (
     normalize_verdict_label,
     parse_multi_claim_json,
 )
+from truthbot.verify.context import apply_temporal_flags
 
 
 def _get(obj: Any, attr: str, default: Any = None) -> Any:
@@ -150,7 +151,7 @@ class OpenAIAdapter(LLMAdapter):
         details = _get(usage, "prompt_tokens_details", None)
         cached = _get(details, "cached_tokens", 0) or 0
 
-        return ModelVerdict(
+        verdict = ModelVerdict(
             adapter_name=self.adapter_name,
             model_id=model_id,
             claim_id=claim.id,
@@ -163,6 +164,8 @@ class OpenAIAdapter(LLMAdapter):
             synthesis_mode="batch",
             cached_input_tokens=int(cached),
         )
+        apply_temporal_flags(verdict, claim)
+        return verdict
 
     # ── Multi-claim batch support ────────────────────────────────────────────
 
@@ -316,7 +319,7 @@ class OpenAIAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
-                return ModelVerdict(
+                verdict = ModelVerdict(
                     adapter_name=self.adapter_name,
                     model_id=self._active_model,
                     claim_id=claim.id,
@@ -329,6 +332,8 @@ class OpenAIAdapter(LLMAdapter):
                     synthesis_mode=get_synthesis_mode(),
                     cached_input_tokens=int(td.get("openai_cached_prompt_tokens", 0)),
                 )
+                apply_temporal_flags(verdict, claim)
+                return verdict
 
             except json.JSONDecodeError as exc:
                 td["status"] = "parse_error"

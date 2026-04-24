@@ -12,6 +12,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 
 from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLabel
+from truthbot.verify.context import apply_temporal_flags, build_temporal_preamble
 
 logger = logging.getLogger(__name__)
 
@@ -311,9 +312,18 @@ def build_user_message(
     """
     Build the per-claim user message. When inject_evidence is True and snippets exist,
     include them with a caveat that models may ignore them and use web search instead.
+
+    Every message is prefixed with a ``build_temporal_preamble`` block that
+    anchors the model's reasoning to the speech era (fixes C10 wrong-term
+    errors) and declares post-training-cutoff search results as primary
+    evidence (fixes C3 "this must be fiction"). The preamble lives in the
+    user message rather than the system prompt so that Anthropic/OpenAI
+    prompt caching on the stable SYNTHESIS_SYSTEM prefix continues to hit.
     """
+    preamble = build_temporal_preamble(claim)
     if not inject_evidence:
         return (
+            f"{preamble}"
             f"Claim: {claim.text}\n\n"
             f"Speaker: {claim.speaker}\n\n"
             "Use your web search tool to research this claim. "
@@ -326,12 +336,14 @@ def build_user_message(
     )
     if evidence_text:
         return (
+            f"{preamble}"
             f"Claim: {claim.text}\n\n"
             f"Speaker: {claim.speaker}\n\n"
             f"{EVIDENCE_CAVEAT}"
             f"Evidence:\n{evidence_text}"
         )
     return (
+        f"{preamble}"
         f"Claim: {claim.text}\n\n"
         f"Speaker: {claim.speaker}\n\n"
         "No pre-gathered evidence available. Please use web search to research this claim."
@@ -386,7 +398,14 @@ def build_multi_user_message(
     if not claims:
         raise ValueError("build_multi_user_message requires at least one claim")
 
-    blocks: list[str] = [_MULTI_CLAIM_PREAMBLE.format(n=len(claims))]
+    # Temporal preamble: one block at the top of the multi-claim message.
+    # Uses claims[0] as the representative claim — all claims in a single
+    # multi-claim request share a transcript (and therefore a speech_date +
+    # speaker) via the BatchDispatcher's chunking contract.
+    blocks: list[str] = [
+        build_temporal_preamble(claims[0]),
+        _MULTI_CLAIM_PREAMBLE.format(n=len(claims)),
+    ]
     for idx, claim in enumerate(claims, start=1):
         tag = _short_claim_tag(claim.id)
         evidence = evidence_by_claim.get(claim.id, []) if inject_evidence else []
@@ -567,25 +586,25 @@ def build_multi_verdicts(
             cached_t = 0
             input_t = 0
             output_t = 0
-        out.append(
-            ModelVerdict(
-                adapter_name=adapter_name,
-                model_id=model_id,
-                claim_id=claim.id,
-                label=label,
-                confidence=confidence,
-                explanation=raw.get("explanation", ""),
-                caveats=raw.get("caveats", ""),
-                web_sources=list(raw.get("web_sources", []) or []),
-                tier=tier,
-                synthesis_mode=synthesis_mode,
-                cached_input_tokens=cached_t,
-                input_tokens=input_t,
-                output_tokens=output_t,
-                batch_call_index=idx,
-                batch_call_id=batch_call_id,
-            )
+        verdict = ModelVerdict(
+            adapter_name=adapter_name,
+            model_id=model_id,
+            claim_id=claim.id,
+            label=label,
+            confidence=confidence,
+            explanation=raw.get("explanation", ""),
+            caveats=raw.get("caveats", ""),
+            web_sources=list(raw.get("web_sources", []) or []),
+            tier=tier,
+            synthesis_mode=synthesis_mode,
+            cached_input_tokens=cached_t,
+            input_tokens=input_t,
+            output_tokens=output_t,
+            batch_call_index=idx,
+            batch_call_id=batch_call_id,
         )
+        apply_temporal_flags(verdict, claim)
+        out.append(verdict)
     return out
 
 
