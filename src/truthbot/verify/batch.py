@@ -800,7 +800,7 @@ def reconcile_run(
                 ) as td:
                     td["input_tokens"] = int(mv.input_tokens or 0)
                     td["output_tokens"] = int(mv.output_tokens or 0)
-                    td["tool_call_count"] = 0
+                    td["tool_call_count"] = int(mv.tool_call_count or 0)
                     td["retrieved_url_count"] = len(mv.web_sources or [])
                     td["status"] = "ok" if not mv.no_response else "api_error"
                     td["cache_read_input_tokens"] = int(mv.cached_input_tokens or 0)

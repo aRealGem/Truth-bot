@@ -528,7 +528,9 @@ def build_multi_verdicts(
     zero usage so ``costs.estimate_cost`` does not N-count a single API call.
 
     ``call_usage`` keys honored: ``input_tokens``, ``output_tokens``,
-    ``cached_input_tokens``. Missing keys default to 0.
+    ``cached_input_tokens``, ``tool_call_count``. Missing keys default to 0.
+    ``tool_call_count`` is attributed to the index-0 verdict (like tokens) so
+    per-run aggregation does not N-count a single API call's tool usage.
     """
     usage = call_usage or {}
     out: list[ModelVerdict] = []
@@ -582,10 +584,12 @@ def build_multi_verdicts(
             cached_t = int(usage.get("cached_input_tokens", 0) or 0)
             input_t = int(usage.get("input_tokens", 0) or 0)
             output_t = int(usage.get("output_tokens", 0) or 0)
+            tool_count = int(usage.get("tool_call_count", 0) or 0)
         else:
             cached_t = 0
             input_t = 0
             output_t = 0
+            tool_count = 0
         verdict = ModelVerdict(
             adapter_name=adapter_name,
             model_id=model_id,
@@ -602,6 +606,7 @@ def build_multi_verdicts(
             output_tokens=output_t,
             batch_call_index=idx,
             batch_call_id=batch_call_id,
+            tool_call_count=tool_count,
         )
         apply_temporal_flags(verdict, claim)
         out.append(verdict)

@@ -30,7 +30,7 @@ import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from truthbot.models import VerdictBundle, VerdictLabel
 
@@ -240,6 +240,101 @@ def _verdict_css(label_str: str) -> str:
     return VERDICT_CSS.get(label_str, "unverifiable")
 
 
+# How many normalized leading characters of a caveat form its dedup key.
+# Different models often volunteer caveats that share the same opening
+# sentence but diverge in phrasing later; collapsing on a normalized prefix
+# groups them under a single list item without demanding exact-string
+# equality (fix for C9).
+_CAVEAT_PREFIX_LEN = 80
+
+
+def _normalize_caveat_signature(text: str, *, length: int = _CAVEAT_PREFIX_LEN) -> str:
+    """
+    Return a dedup signature for a caveat.
+
+    Two caveats share a signature when they agree on their first ``length``
+    characters of normalized content: lowercased, whitespace collapsed to a
+    single space, with leading/trailing punctuation stripped. This is the
+    heuristic that lets "Source reliability may vary."  from one model and
+    "Source reliability may vary,\\n  as noted above." from another collapse
+    into a single caveat-list entry attributed to both.
+    """
+    if not text:
+        return ""
+    normalized = re.sub(r"\s+", " ", text.strip()).lower()
+    normalized = normalized.strip(".,;:!? \t")
+    return normalized[:length]
+
+
+def _model_attribution(mv: Any) -> str:
+    """Display label for a ``ModelVerdict`` in the caveat list.
+
+    Prefers the adapter brand (Anthropic / OpenAI / Google / xAI). Falls
+    back to a prettified model_id when the adapter_name is unrecognized so
+    legacy rehydrated reports still render a readable label.
+    """
+    adapter = getattr(mv, "adapter_name", "") or ""
+    brand = _ADAPTER_BRAND.get(adapter)
+    if brand:
+        return brand
+    model_id = getattr(mv, "model_id", "") or ""
+    return _prettify_model_id(model_id) or (adapter or "Model")
+
+
+def _render_caveat_block(model_verdicts: list[Any]) -> str:
+    """
+    Render the per-model caveat callout for a claim card.
+
+    Fixes C8 (no attribution) + C9 (exact-string dedup only). Groups caveats
+    by normalized-prefix signature, attributes each surviving caveat to the
+    contributing adapter brand(s), and preserves first-seen insertion order
+    so the visible transcript matches the underlying model ordering.
+
+    Returns an empty string when no model supplied a non-empty caveat.
+    """
+    groups: list[dict[str, Any]] = []
+    sig_to_idx: dict[str, int] = {}
+    for mv in model_verdicts:
+        if getattr(mv, "no_response", False):
+            continue
+        raw = (getattr(mv, "caveats", "") or "").strip()
+        if not raw:
+            continue
+        sig = _normalize_caveat_signature(raw)
+        if not sig:
+            continue
+        label = _model_attribution(mv)
+        idx = sig_to_idx.get(sig)
+        if idx is None:
+            sig_to_idx[sig] = len(groups)
+            groups.append({"text": raw, "labels": [label], "seen": {label}})
+        else:
+            g = groups[idx]
+            if label not in g["seen"]:
+                g["labels"].append(label)
+                g["seen"].add(label)
+
+    if not groups:
+        return ""
+
+    items: list[str] = []
+    for g in groups:
+        attribution = ", ".join(g["labels"])
+        items.append(
+            '<li class="caveat-item">'
+            f'<span class="caveat-attribution">{_esc(attribution)}</span>'
+            f'<span class="caveat-text">{_esc(g["text"])}</span>'
+            '</li>'
+        )
+
+    return (
+        '<div class="caveat">'
+        '<div class="caveat-label">Model notes</div>'
+        f'<ul class="caveat-list">{"".join(items)}</ul>'
+        '</div>'
+    )
+
+
 # Provider brand names + the production default model for each adapter.
 # Used as fallback labels when a ModelVerdict lacks an explicit model_id
 # (e.g. older reports rehydrated after a schema migration).
@@ -247,6 +342,7 @@ _ADAPTER_BRAND = {
     "anthropic": "Anthropic",
     "openai":    "OpenAI",
     "gemini":    "Google",
+    "grok":      "xAI",
 }
 _ADAPTER_DEFAULT_MODEL = {
     "anthropic": "claude-opus-4-7",
@@ -1057,21 +1153,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     if claim.category:
         context_html = f'<div class="claim-context"><span>{_esc(claim.category)}</span></div>'
 
-    caveat_html = ''
-    caveats = []
-    seen = set()
-    for mv in bundle.model_verdicts:
-        cav = mv.caveats.strip()
-        if cav and cav not in seen:
-            seen.add(cav)
-            caveats.append(cav)
-    if caveats:
-        caveat_html = (
-            '<div class="caveat">'
-            '  <div class="caveat-label">Caveat</div>'
-            f'  <div class="caveat-text">{_esc(" ".join(caveats))}</div>'
-            '</div>'
-        )
+    caveat_html = _render_caveat_block(bundle.model_verdicts)
 
     majority_label = label
 
@@ -2277,6 +2359,38 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--v-exaggerated);
   font-weight: 600;
   margin-bottom: 0.35rem;
+}
+.caveat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.caveat-item {
+  display: block;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.caveat-item + .caveat-item {
+  margin-top: 0.45rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed color-mix(in srgb, var(--v-exaggerated) 35%, transparent);
+}
+.caveat-attribution {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--v-exaggerated);
+  font-weight: 600;
+  margin-right: 0.45rem;
+}
+.caveat-attribution::after {
+  content: "\2022";
+  margin-left: 0.45rem;
+  color: var(--ink-faint);
+  font-weight: 400;
 }
 .caveat-text {
   font-size: 0.92rem;
@@ -4065,7 +4179,7 @@ def _render_about() -> str:
     models_list = (
         "<ul>"
         "<li><strong>Anthropic</strong> claude-opus-4-7 — primary verifier</li>"
-        "<li><strong>OpenAI</strong> gpt-5.4 — pending API availability</li>"
+        "<li><strong>OpenAI</strong> gpt-5.4 — verifier (batch mode)</li>"
         "<li><strong>Google</strong> gemini-2.5-pro — pending API key</li>"
         "<li><strong>xAI</strong> grok-4 — pending API key</li>"
         "</ul>"

@@ -112,10 +112,14 @@ class GeminiAdapter(LLMAdapter):
         candidates = _get(raw_response, "candidates", []) or []
         verdict_text = ""
         urls: list[str] = []
+        search_query_count = 0
 
         for candidate in candidates:
             gm = _get(candidate, "grounding_metadata", None)
             if gm:
+                search_query_count += len(
+                    _get(gm, "web_search_queries", []) or []
+                )
                 for chunk in _get(gm, "grounding_chunks", []) or []:
                     web = _get(chunk, "web", None)
                     if web:
@@ -160,6 +164,7 @@ class GeminiAdapter(LLMAdapter):
             tier="frontier",
             synthesis_mode="batch",
             cached_input_tokens=int(cached),
+            tool_call_count=int(search_query_count),
         )
         apply_temporal_flags(verdict, claim)
         return verdict
@@ -307,6 +312,7 @@ class GeminiAdapter(LLMAdapter):
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
                     cached_input_tokens=int(td.get("gemini_cached_content_tokens", 0)),
+                    tool_call_count=int(search_query_count),
                 )
                 apply_temporal_flags(verdict, claim)
                 return verdict
@@ -468,6 +474,7 @@ class GeminiAdapter(LLMAdapter):
                     "cached_input_tokens": int(
                         td.get("gemini_cached_content_tokens", 0) or 0
                     ),
+                    "tool_call_count": int(search_query_count),
                 }
                 verdicts = build_multi_verdicts(
                     claims,

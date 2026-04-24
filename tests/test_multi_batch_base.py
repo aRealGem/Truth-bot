@@ -223,6 +223,47 @@ def test_build_multi_verdicts_attributes_usage_only_to_first_verdict() -> None:
     assert out[1].cached_input_tokens == 0
 
 
+def test_build_multi_verdicts_attributes_tool_call_count_to_first_only() -> None:
+    """Regression guard for finding C6 — tool_call_count must not N-count
+    a single API call's tool usage across the per-claim verdict rows."""
+    claims = [_claim("A"), _claim("B"), _claim("C")]
+    raw_by_claim = {
+        c.id: {"label": "True", "confidence": "High", "explanation": "x"} for c in claims
+    }
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="openai",
+        model_id="gpt-5.4",
+        call_usage={
+            "input_tokens": 1200,
+            "output_tokens": 450,
+            "tool_call_count": 7,
+        },
+    )
+    assert out[0].tool_call_count == 7
+    assert out[1].tool_call_count == 0
+    assert out[2].tool_call_count == 0
+    assert sum(v.tool_call_count for v in out) == 7
+
+
+def test_build_multi_verdicts_tool_call_count_defaults_to_zero() -> None:
+    """call_usage may omit tool_call_count entirely (Grok / unset path)."""
+    claims = [_claim("A"), _claim("B")]
+    raw_by_claim = {
+        c.id: {"label": "True", "confidence": "High", "explanation": "x"} for c in claims
+    }
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="grok",
+        model_id="grok-4",
+        call_usage={"input_tokens": 100},
+    )
+    assert out[0].tool_call_count == 0
+    assert out[1].tool_call_count == 0
+
+
 def test_build_multi_verdicts_handles_invalid_label_gracefully() -> None:
     claims = [_claim("A")]
     raw_by_claim = {claims[0].id: {"label": "NotALabel", "confidence": "High"}}

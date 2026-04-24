@@ -251,6 +251,18 @@ class ModelVerdict(BaseModel):
         default="",
         description="Opaque identifier for the multi-claim API call that produced this verdict (custom_id).",
     )
+    tool_call_count: int = Field(
+        default=0,
+        description=(
+            "Number of provider-side tool/search invocations (e.g. OpenAI "
+            "``web_search_call`` output items, Anthropic ``server_tool_use`` "
+            "content blocks) that fired during the API call that produced this "
+            "verdict. For multi-claim batch calls the full call's count is "
+            "attributed to the index-0 verdict; siblings carry 0 so per-run "
+            "totals don't N-count a single API call. Fix for C6 (batch tool-"
+            "call undercount): previously hardcoded to 0 for every batch row."
+        ),
+    )
     temporal_flags: list[str] = Field(
         default_factory=list,
         description=(

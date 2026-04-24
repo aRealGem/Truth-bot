@@ -175,6 +175,7 @@ class AnthropicAdapter(LLMAdapter):
             tier="frontier",
             synthesis_mode="batch",
             cached_input_tokens=int(cache_read),
+            tool_call_count=int(tool_call_count),
         )
         apply_temporal_flags(verdict, claim)
         return verdict
@@ -223,9 +224,12 @@ class AnthropicAdapter(LLMAdapter):
         content = _get(raw_response, "content", None) or []
         verdict_text = ""
         retrieved_urls: list[str] = []
+        tool_count = 0
         for block in content:
             btype = _get(block, "type", "")
-            if btype == "web_search_tool_result":
+            if btype == "server_tool_use":
+                tool_count += 1
+            elif btype == "web_search_tool_result":
                 inner = _get(block, "content", []) or []
                 if isinstance(inner, list):
                     for result in inner:
@@ -254,6 +258,7 @@ class AnthropicAdapter(LLMAdapter):
             "cached_input_tokens": int(
                 _get(usage, "cache_read_input_tokens", 0) or 0
             ),
+            "tool_call_count": int(tool_count),
         }
         verdicts = build_multi_verdicts(
             claims,
@@ -346,6 +351,7 @@ class AnthropicAdapter(LLMAdapter):
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
                     cached_input_tokens=int(td.get("cache_read_input_tokens", 0)),
+                    tool_call_count=int(tool_call_count),
                 )
                 apply_temporal_flags(verdict, claim)
                 return verdict

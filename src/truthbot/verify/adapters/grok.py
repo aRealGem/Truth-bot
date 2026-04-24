@@ -118,6 +118,7 @@ class GrokAdapter(LLMAdapter):
                     web_sources=raw.get("web_sources", urls[:10]),
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
+                    tool_call_count=int(tool_count),
                 )
                 apply_temporal_flags(verdict, claim)
                 return verdict
@@ -230,6 +231,7 @@ class GrokAdapter(LLMAdapter):
                     "input_tokens": int(td.get("input_tokens", 0) or 0),
                     "output_tokens": int(td.get("output_tokens", 0) or 0),
                     "cached_input_tokens": 0,
+                    "tool_call_count": int(tool_count),
                 }
                 verdicts = build_multi_verdicts(
                     claims,

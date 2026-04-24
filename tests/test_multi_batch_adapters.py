@@ -31,9 +31,15 @@ def _claim(text: str) -> Claim:
 
 
 def _anthropic_message(
-    verdicts_json: str, *, urls: list[str] | None = None, cached: int = 0
+    verdicts_json: str,
+    *,
+    urls: list[str] | None = None,
+    cached: int = 0,
+    tool_calls: int = 0,
 ) -> dict:
     content = []
+    for _ in range(tool_calls):
+        content.append({"type": "server_tool_use", "name": "web_search"})
     if urls:
         content.append(
             {
@@ -173,17 +179,23 @@ def _openai_body(
     cached: int = 0,
     input_tokens: int = 1200,
     output_tokens: int = 450,
+    tool_calls: int = 0,
 ) -> SimpleNamespace:
+    output = [
+        SimpleNamespace(type="web_search_call", id=f"ws_{i}")
+        for i in range(tool_calls)
+    ]
+    output.append(
+        SimpleNamespace(
+            type="message",
+            content=[
+                SimpleNamespace(type="output_text", text=text, annotations=[])
+            ],
+        )
+    )
     return SimpleNamespace(
-        model="gpt-4.1",
-        output=[
-            SimpleNamespace(
-                type="message",
-                content=[
-                    SimpleNamespace(type="output_text", text=text, annotations=[])
-                ],
-            )
-        ],
+        model="gpt-5.4",
+        output=output,
         usage=SimpleNamespace(
             input_tokens=input_tokens,
             output_tokens=output_tokens,
@@ -198,7 +210,7 @@ def test_openai_build_multi_payload_scales_tool_budget_with_n() -> None:
     payload = adapter.build_multi_batch_payload(
         claims, {c.id: [] for c in claims}, inject_evidence=False
     )
-    assert payload["model"] == "gpt-4.1"
+    assert payload["model"] == "gpt-5.4"
     assert payload["max_tool_calls"] == 2 * 4
     assert payload["max_output_tokens"] >= 1024 * 4
     # Prompt-cache parity: the OpenAI system text must match OPENAI_SYNTHESIS_SYSTEM exactly.
@@ -256,6 +268,73 @@ def test_openai_parse_multi_duplicated_claim_id_uses_first() -> None:
     # First occurrence wins for claims[0]; claims[1] still gets its own verdict.
     assert verdicts[0].label == VerdictLabel.TRUE
     assert verdicts[1].label == VerdictLabel.MOSTLY_TRUE
+
+
+def test_anthropic_parse_multi_counts_server_tool_use_blocks() -> None:
+    """Fix for C6 — Anthropic multi-claim batch must count each
+    ``server_tool_use`` content block and attribute the total to the
+    index-0 verdict so ``tool_call_count`` telemetry is non-zero on
+    successful batched web_search runs."""
+    adapter = AnthropicAdapter()
+    claims = [_claim("A"), _claim("B"), _claim("C")]
+    verdicts_json = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+            {"claim_id": claims[2].id, "label": "Misleading", "confidence": "Medium"},
+        ]
+    )
+    raw = _anthropic_message(verdicts_json, tool_calls=4)
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert verdicts[0].tool_call_count == 4
+    assert verdicts[1].tool_call_count == 0
+    assert verdicts[2].tool_call_count == 0
+
+
+def test_anthropic_parse_multi_zero_tool_calls_stays_zero() -> None:
+    adapter = AnthropicAdapter()
+    claims = [_claim("A"), _claim("B")]
+    verdicts_json = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+        ]
+    )
+    raw = _anthropic_message(verdicts_json)
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert all(v.tool_call_count == 0 for v in verdicts)
+
+
+def test_openai_parse_multi_counts_web_search_call_items() -> None:
+    """Fix for C6 — OpenAI multi-claim batch must count every
+    ``web_search_call`` output item and attribute the total to the
+    index-0 verdict."""
+    adapter = OpenAIAdapter()
+    claims = [_claim("A"), _claim("B")]
+    text = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+        ]
+    )
+    raw = _openai_body(text, tool_calls=3)
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert verdicts[0].tool_call_count == 3
+    assert verdicts[1].tool_call_count == 0
+
+
+def test_openai_parse_multi_zero_tool_calls_stays_zero() -> None:
+    adapter = OpenAIAdapter()
+    claims = [_claim("A"), _claim("B")]
+    text = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+        ]
+    )
+    raw = _openai_body(text)
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert all(v.tool_call_count == 0 for v in verdicts)
 
 
 def test_adapters_expose_multi_claim_caps() -> None:

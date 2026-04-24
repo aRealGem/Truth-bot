@@ -34,7 +34,14 @@ def _get(obj: Any, attr: str, default: Any = None) -> Any:
 logger = logging.getLogger(__name__)
 
 _FALLBACK_MODEL = "gpt-4o"
-_PRIMARY_MODEL  = "gpt-4.1"   # gpt-5.4 returns 500s; gpt-4.1 is stable + fast
+# Promoted from gpt-4.1 to gpt-5.4 (Phase 2a of fix-accuracy-sotu-v2).
+# Rationale: gpt-4.1 knowledge cutoff ~Oct 2024 produced training-data-only
+# verdicts on 2025-2026 current-events claims in the SOTU run (findings C1,
+# C2). gpt-5.4 is current flagship, already wired into costs.py and the
+# eval harness, and is the required substrate for the Phase 2.5 empirical
+# batch-web_search capability test. Fallback to gpt-4o preserves the prior
+# stability guarantee if 5.4 returns 500s on a given call.
+_PRIMARY_MODEL = "gpt-5.4"
 
 
 def _parse_verdict_json(text: str) -> dict:
@@ -163,6 +170,7 @@ class OpenAIAdapter(LLMAdapter):
             tier="frontier",
             synthesis_mode="batch",
             cached_input_tokens=int(cached),
+            tool_call_count=int(tool_count),
         )
         apply_temporal_flags(verdict, claim)
         return verdict
@@ -217,8 +225,12 @@ class OpenAIAdapter(LLMAdapter):
         output = _get(raw_response, "output", []) or []
         text = ""
         urls: list[str] = []
+        tool_count = 0
         for item in output:
             itype = _get(item, "type", "")
+            if itype == "web_search_call":
+                tool_count += 1
+                continue
             if itype == "message":
                 for block in _get(item, "content", []) or []:
                     if _get(block, "type", "") == "output_text":
@@ -255,6 +267,7 @@ class OpenAIAdapter(LLMAdapter):
                 or 0
             ),
             "cached_input_tokens": int(cached),
+            "tool_call_count": int(tool_count),
         }
 
         verdicts = build_multi_verdicts(
@@ -331,6 +344,7 @@ class OpenAIAdapter(LLMAdapter):
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
                     cached_input_tokens=int(td.get("openai_cached_prompt_tokens", 0)),
+                    tool_call_count=int(tool_count),
                 )
                 apply_temporal_flags(verdict, claim)
                 return verdict
