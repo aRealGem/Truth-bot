@@ -180,16 +180,68 @@ def _openai_body(
     input_tokens: int = 1200,
     output_tokens: int = 450,
     tool_calls: int = 0,
+    open_page_urls: list[str] | None = None,
+    action_sources: list[list[str]] | None = None,
+    annotations: list[dict] | None = None,
 ) -> SimpleNamespace:
-    output = [
-        SimpleNamespace(type="web_search_call", id=f"ws_{i}")
-        for i in range(tool_calls)
+    """Build a fake Responses API body.
+
+    Args:
+        tool_calls: number of plain ``search``-action ``web_search_call`` items
+            (no URLs surfaced — matches the bulk of the real ed7be4ad-… run).
+        open_page_urls: each URL spawns one extra ``web_search_call`` with
+            ``action.type == 'open_page'`` and ``action.url`` set. Mirrors the
+            documented GA web_search "the model directly fetched this URL"
+            shape that the legacy parser ignored.
+        action_sources: each inner list spawns one ``web_search_call`` whose
+            ``action.sources[]`` carries those URLs (defensive coverage for the
+            documented but unobserved-in-this-run SERP-source shape).
+        annotations: list of ``{url, type?}`` dicts attached to the single
+            ``output_text`` block. Covers ``url_citation`` typed annotations
+            and the legacy bare ``{url: ...}`` shape.
+    """
+    output: list[SimpleNamespace] = []
+    for i in range(tool_calls):
+        output.append(
+            SimpleNamespace(
+                type="web_search_call",
+                id=f"ws_search_{i}",
+                action=SimpleNamespace(type="search", queries=["q"], query="q"),
+            )
+        )
+    for i, url in enumerate(open_page_urls or []):
+        output.append(
+            SimpleNamespace(
+                type="web_search_call",
+                id=f"ws_open_{i}",
+                action=SimpleNamespace(type="open_page", url=url),
+            )
+        )
+    for i, sources in enumerate(action_sources or []):
+        output.append(
+            SimpleNamespace(
+                type="web_search_call",
+                id=f"ws_sources_{i}",
+                action=SimpleNamespace(
+                    type="search",
+                    queries=["q"],
+                    query="q",
+                    sources=[SimpleNamespace(url=u) for u in sources],
+                ),
+            )
+        )
+    ann_blocks = [
+        SimpleNamespace(
+            url=ann["url"],
+            type=ann.get("type", "url_citation"),
+        )
+        for ann in (annotations or [])
     ]
     output.append(
         SimpleNamespace(
             type="message",
             content=[
-                SimpleNamespace(type="output_text", text=text, annotations=[])
+                SimpleNamespace(type="output_text", text=text, annotations=ann_blocks)
             ],
         )
     )
@@ -217,6 +269,16 @@ def test_openai_build_multi_payload_scales_tool_budget_with_n() -> None:
     from truthbot.verify.adapters.base import OPENAI_SYNTHESIS_SYSTEM
 
     assert payload["input"][0]["content"][0]["text"] == OPENAI_SYNTHESIS_SYSTEM
+    # Phase 2.5a sentinel: must use GA ``web_search`` tool, not legacy ``web_search_preview``.
+    assert payload["tools"] == [{"type": "web_search"}]
+
+
+def test_openai_build_single_batch_payload_uses_ga_web_search_tool() -> None:
+    """Phase 2.5a sentinel for the single-claim batch path."""
+    adapter = OpenAIAdapter()
+    claim = _claim("A single claim.")
+    payload = adapter.build_batch_payload(claim, [], inject_evidence=False)
+    assert payload["tools"] == [{"type": "web_search"}]
 
 
 def test_openai_parse_multi_all_succeed() -> None:
@@ -358,3 +420,238 @@ def test_live_multi_claim_adapters_expose_caps() -> None:
     assert GeminiAdapter.max_claims_per_request >= 2
     assert GrokAdapter.supports_batch is False
     assert GeminiAdapter.supports_batch is False
+
+
+# ── OpenAI tool-URL extraction (regression for the ed7be4ad-… 100% gap) ──────
+
+
+def test_openai_parse_multi_collects_open_page_url_from_action() -> None:
+    """Real ed7be4ad-… batch shape — the only URLs surfaced live on
+    ``web_search_call.action.url`` for ``open_page``-action items. The
+    legacy parser missed this surface entirely so every model-cited URL
+    got stripped (100% fabrication-rate readout). Locks the fix in place.
+    """
+    adapter = OpenAIAdapter()
+    claims = [_claim("A")]
+    text = json.dumps(
+        [
+            {
+                "claim_id": claims[0].id,
+                "label": "False",
+                "confidence": "High",
+                "explanation": "x",
+                "web_sources": [
+                    "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+                    "https://www.bls.gov/fabricated.htm",
+                ],
+            },
+        ]
+    )
+    raw = _openai_body(
+        text,
+        tool_calls=2,
+        open_page_urls=[
+            "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+        ],
+    )
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert verdicts[0].web_sources == [
+        "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+    ]
+    assert verdicts[0].model_reported_sources == [
+        "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+        "https://www.bls.gov/fabricated.htm",
+    ]
+    assert verdicts[0].stripped_source_count == 1
+    assert verdicts[0].tool_call_count == 3  # 2 search + 1 open_page
+
+
+def test_openai_parse_multi_collects_action_sources_urls() -> None:
+    """Defensive coverage — Responses API documents a SERP-style
+    ``action.sources[].url`` shape that did not appear in the observed
+    batch but must keep grounding correctly if the API surfaces it.
+    """
+    adapter = OpenAIAdapter()
+    claims = [_claim("A")]
+    text = json.dumps(
+        [
+            {
+                "claim_id": claims[0].id,
+                "label": "True",
+                "confidence": "High",
+                "explanation": "x",
+                "web_sources": [
+                    "https://example.com/serp-1",
+                    "https://example.com/serp-2",
+                    "https://example.com/fabricated",
+                ],
+            },
+        ]
+    )
+    raw = _openai_body(
+        text,
+        action_sources=[
+            ["https://example.com/serp-1", "https://example.com/serp-2"],
+        ],
+    )
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert verdicts[0].web_sources == [
+        "https://example.com/serp-1",
+        "https://example.com/serp-2",
+    ]
+    assert verdicts[0].stripped_source_count == 1
+
+
+def test_openai_parse_multi_collects_url_citation_annotations() -> None:
+    """Live Responses API still emits citations on ``output_text``
+    annotations; the type is typically ``url_citation`` post-GA. The
+    helper must keep collecting those alongside the new action surfaces.
+    """
+    adapter = OpenAIAdapter()
+    claims = [_claim("A")]
+    text = json.dumps(
+        [
+            {
+                "claim_id": claims[0].id,
+                "label": "True",
+                "confidence": "High",
+                "explanation": "x",
+                "web_sources": [
+                    "https://example.com/citation-1",
+                    "https://example.com/citation-2",
+                    "https://example.com/fabricated",
+                ],
+            },
+        ]
+    )
+    raw = _openai_body(
+        text,
+        annotations=[
+            {"url": "https://example.com/citation-1", "type": "url_citation"},
+            {"url": "https://example.com/citation-2", "type": "url_citation"},
+        ],
+    )
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert verdicts[0].web_sources == [
+        "https://example.com/citation-1",
+        "https://example.com/citation-2",
+    ]
+    assert verdicts[0].stripped_source_count == 1
+
+
+def test_openai_parse_multi_unions_all_url_surfaces() -> None:
+    """All three URL surfaces on the same body are unioned, deduped, and
+    used as the ground-truth set for the intersection."""
+    adapter = OpenAIAdapter()
+    claims = [_claim("A")]
+    text = json.dumps(
+        [
+            {
+                "claim_id": claims[0].id,
+                "label": "Mostly True",
+                "confidence": "High",
+                "explanation": "x",
+                "web_sources": [
+                    "https://example.com/open-page",
+                    "https://example.com/serp",
+                    "https://example.com/citation",
+                    "https://example.com/never-grounded",
+                ],
+            },
+        ]
+    )
+    raw = _openai_body(
+        text,
+        open_page_urls=["https://example.com/open-page"],
+        action_sources=[["https://example.com/serp"]],
+        annotations=[{"url": "https://example.com/citation"}],
+    )
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert verdicts[0].web_sources == [
+        "https://example.com/open-page",
+        "https://example.com/serp",
+        "https://example.com/citation",
+    ]
+    assert verdicts[0].stripped_source_count == 1
+
+
+def test_openai_parse_multi_strips_when_no_tool_urls_present() -> None:
+    """Sanity: when all ``web_search_call`` actions are pure ``search``
+    (no URLs anywhere) and the model still emits ``web_sources``, every
+    cited URL gets stripped. This is the strict-mode behavior that drove
+    the original 100% readout — preserve it for runs that genuinely
+    expose nothing groundable."""
+    adapter = OpenAIAdapter()
+    claims = [_claim("A")]
+    text = json.dumps(
+        [
+            {
+                "claim_id": claims[0].id,
+                "label": "True",
+                "confidence": "High",
+                "explanation": "x",
+                "web_sources": [
+                    "https://example.com/cited-but-not-grounded",
+                ],
+            },
+        ]
+    )
+    raw = _openai_body(text, tool_calls=3)
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    assert verdicts[0].web_sources == []
+    assert verdicts[0].model_reported_sources == [
+        "https://example.com/cited-but-not-grounded"
+    ]
+    assert verdicts[0].stripped_source_count == 1
+
+
+def test_openai_parse_single_batch_response_collects_open_page_url() -> None:
+    """Symmetric coverage for the single-claim ``parse_batch_response``
+    entry point — same helper, same surfaces."""
+    adapter = OpenAIAdapter()
+    claim = _claim("A")
+    text = json.dumps(
+        {
+            "label": "False",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": [
+                "https://example.com/grounded",
+                "https://example.com/fabricated",
+            ],
+        }
+    )
+    raw = _openai_body(
+        text,
+        open_page_urls=["https://example.com/grounded"],
+    )
+    verdict = adapter.parse_batch_response(raw, claim)
+    assert verdict.web_sources == ["https://example.com/grounded"]
+    assert verdict.stripped_source_count == 1
+
+
+def test_openai_parse_multi_uses_real_open_page_fixture() -> None:
+    """Loads the sanitized real-batch fixture (excerpt of the ed7be4ad-…
+    body) and asserts the observed URL flows through grounding non-empty.
+    Guards against any future regression that re-strips this surface."""
+    from pathlib import Path
+
+    fixture = (
+        Path(__file__).parent / "fixtures" / "openai_batch_response_with_open_page.json"
+    )
+    body = json.loads(fixture.read_text())
+    adapter = OpenAIAdapter()
+    claim = Claim(
+        id="a11e4bdb-acdd-43a4-b762-5998d92431de",
+        transcript_id="t1",
+        text="A",
+        speaker="Test",
+    )
+    verdicts = adapter.parse_multi_batch_response(body, [claim])
+    assert len(verdicts) == 1
+    assert (
+        "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+        in verdicts[0].web_sources
+    )
+    assert verdicts[0].stripped_source_count >= 1
+    assert verdicts[0].tool_call_count == 3

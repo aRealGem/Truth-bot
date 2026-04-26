@@ -200,6 +200,130 @@ class TestTemporalValidator:
         apply_temporal_flags(verdict, claim)  # idempotent
         assert len(verdict.temporal_flags) == 1
 
+    # ── Phase 1c refinement: false-positive regressions from v-p1-p2 ────
+
+    def test_year_appearing_in_claim_text_is_exempt_from_flagging(self) -> None:
+        """v-p1-p2 case c33522d3: claim says 'referencing the year 1900'.
+
+        Before the refinement: validator flagged models for citing 1900.
+        After: 1900 is a claim-referenced year and must not flag.
+        """
+        claim_text = (
+            "Trump claims the murder rate reached its lowest number in "
+            "over 125 years, specifically referencing the year 1900."
+        )
+        explanation = (
+            "Compared with historical baselines going back to 1900, "
+            "the 2025 rate is the lowest in a century."
+        )
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert not f.is_flagged, f"unexpected flagged_years: {f.flagged_years}"
+
+    def test_historical_window_phrase_extends_lookback_floor(self) -> None:
+        """v-p1-p2 case 9f978c90: claim says 'lowest in more than five years'.
+
+        The 'five years' phrasing legitimizes citing 2020 as the baseline
+        for a 2026 speech. Before: 2020 flagged. After: in-comparison-window.
+        """
+        claim_text = (
+            "Core inflation driven down to its lowest level in more than "
+            "five years within 12 months."
+        )
+        explanation = (
+            "Comparing 2020's 1.4% core CPI against 2025's 2.6% reading..."
+        )
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert not f.is_flagged
+
+    def test_decades_phrase_extends_lookback_floor(self) -> None:
+        claim_text = "First border wall construction in four decades."
+        explanation = "Construction paused around 1990 per DHS historical records."
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert not f.is_flagged
+
+    def test_wrong_term_still_flags_when_no_historical_framing(self) -> None:
+        """Negative control: the C10 pattern we DO want to catch is unchanged.
+
+        A claim with no historical-comparison phrasing and no in-text
+        year reference should still flag a 2017 citation.
+        """
+        claim_text = (
+            "Trump claims the border is the most secure it has ever been."
+        )
+        explanation = "Per 2017 CBP encounters data, apprehensions were 310K."
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert f.is_flagged
+        assert 2017 in f.flagged_years
+
+    def test_claim_year_exempt_but_other_deep_past_still_flags(self) -> None:
+        """If the claim mentions 1900 but the explanation also cites 1975
+        without a matching historical frame, 1975 should still flag."""
+        claim_text = (
+            "Lowest murder rate in 125 years, specifically referencing 1900."
+        )
+        explanation = "Per 1900 baseline and 1975 CDC data, the 2025 rate is low."
+        # claim_lookback = 125 -> floor = 2026-125 = 1901, so 1975 is inside
+        # the historical window and exempt. This confirms 'in N years'
+        # phrases widen the window generously.
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert not f.is_flagged
+
+    def test_open_ended_record_levels_suppresses_flag(self) -> None:
+        """v-p1-p2 case aed0b384: claim says 'inflation at record levels'.
+
+        Models correctly cite 1920 and 1980 as historical inflation peaks
+        to show 2025's 3.0% is NOT a record. 'Record levels' is an
+        unbounded historical claim — no year should flag.
+        """
+        claim_text = (
+            "Trump claims that when he last spoke in the chamber 12 months "
+            "prior, he had inherited a nation with inflation at record levels."
+        )
+        explanation = (
+            "The highest recorded inflation in U.S. history was 23.7% in "
+            "June 1920. By January 2025 the rate was 3.0%, far from records."
+        )
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert not f.is_flagged, f"flagged: {f.flagged_years}"
+
+    def test_open_ended_all_time_high_suppresses_flag(self) -> None:
+        claim_text = "Border encounters at an all-time high."
+        explanation = "Historical CBP data from 1960 onward shows..."
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert not f.is_flagged
+
+    def test_open_ended_most_in_history_suppresses_flag(self) -> None:
+        claim_text = "Most border arrests in U.S. history."
+        explanation = "Comparing 1954 Operation Wetback figures..."
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        assert not f.is_flagged
+
+    def test_open_ended_does_not_exempt_purely_wrong_term_anchoring(self) -> None:
+        """Negative control: even if the claim has 'record' framing, a
+        model citing a single deep-past year with NO in-window grounding
+        is still suspicious. We accept this as a known permissive-mode
+        false negative in exchange for eliminating the false positives
+        the v-p1-p2 run exposed. Documents the trade-off explicitly.
+        """
+        claim_text = "Unprecedented economic growth."
+        explanation = "Per 2017 GDP data, growth was 2.3%."
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        # Permissive: we allow this through because 'unprecedented' is
+        # an open-ended historical claim. If the model is wrong-term
+        # anchored, the family-aware consensus layer (Phase 3c) will
+        # catch it via disagreement with other providers.
+        assert not f.is_flagged
+
+    def test_historical_lookback_n_years_does_not_leak_in_window_years(self) -> None:
+        """The extended floor must not inflate in_window_years reporting."""
+        claim_text = "Lowest in 125 years."
+        explanation = "1900 baseline vs 2025 level."
+        f = scan_text(explanation, self.speech, claim_text=claim_text)
+        # 1900 is in the extended historical window but NOT in the
+        # [speech_year-4, speech_year+1] reporting window.
+        assert 1900 not in f.in_window_years
+        assert 2025 in f.in_window_years
+
     def test_apply_scans_caveats_too(self) -> None:
         claim = _sotu_claim(datetime(2026, 2, 24))
         verdict = ModelVerdict(

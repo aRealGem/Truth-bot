@@ -109,6 +109,83 @@ def test_build_multi_user_message_rejects_empty_claim_list() -> None:
         build_multi_user_message([], {})
 
 
+def test_build_multi_user_message_demands_per_claim_web_sources() -> None:
+    """Regression for the Phase 3a calibration finding (Bug A): OpenAI/Grok
+    multi-claim verdicts returned ``web_sources: []`` for every claim despite
+    invoking the search tool 7-17 times, because the original multi-claim
+    preamble only mentioned ``web_sources`` once and relied on inheritance
+    from the single-claim CITATION DISCIPLINE block in the system prompt.
+
+    The strengthened preamble must explicitly require per-claim attribution
+    (each claim's ``web_sources`` reflects URLs retrieved for THAT claim),
+    forbid the field being omitted, and reiterate that empty-list is the
+    only acceptable empty signal."""
+    claims = [_claim("A"), _claim("B")]
+    msg = build_multi_user_message(claims, {}, inject_evidence=False)
+
+    lower = msg.lower()
+    assert "per-claim" in lower or "per claim" in lower
+    assert "that specific claim" in lower or "that claim" in lower
+    assert "do not omit" in lower or "not omit" in lower or "must" in lower
+    assert "web_sources" in msg
+    assert "MUST include the `web_sources`" in msg
+
+
+def test_build_multi_user_message_schema_block_is_valid_json_shape() -> None:
+    """Regression for the post-Step-1 calibration finding: an earlier draft
+    of the strengthened schema put a JavaScript-style ``// REQUIRED ...``
+    inline comment inside the JSON-shaped example block. JSON does not allow
+    comments, and Anthropic + Gemini both responded with prose explaining
+    the schema instead of valid JSON arrays — every multi-claim batch row
+    was logged as ``parse_error`` / ``api_error`` (zero verdicts).
+
+    The schema example block (between ``[`` and ``]``) must remain
+    JSON-shaped: a ``//`` comment may appear in the surrounding free-text
+    instructions, but never inside the bracketed schema example.
+    """
+    from truthbot.verify.adapters.base import _MULTI_CLAIM_OUTPUT_SCHEMA
+
+    bracket_block_start = _MULTI_CLAIM_OUTPUT_SCHEMA.index("[")
+    bracket_block_end = _MULTI_CLAIM_OUTPUT_SCHEMA.rindex("]")
+    json_block = _MULTI_CLAIM_OUTPUT_SCHEMA[bracket_block_start : bracket_block_end + 1]
+    assert "//" not in json_block, (
+        f"Schema example block must be JSON-shaped (no // comments). "
+        f"Got: {json_block!r}"
+    )
+
+
+def test_parse_multi_claim_json_preserves_explicit_empty_web_sources() -> None:
+    """Regression: when the model explicitly returns ``web_sources: []`` for
+    a claim, ``parse_multi_claim_json`` must preserve that signal so
+    downstream ``apply_url_grounding`` records it as model-asserted "no
+    sources" (mrs=[], stripped=0) rather than treating the field as absent.
+
+    This complements the strengthened multi-claim prompt: the prompt makes
+    the model's intent explicit, and this test guarantees the parser
+    propagates that intent without coercion."""
+    claims = [_claim("A"), _claim("B")]
+    payload = json.dumps(
+        [
+            {
+                "claim_id": claims[0].id,
+                "label": "True",
+                "confidence": "High",
+                "web_sources": [],
+            },
+            {
+                "claim_id": claims[1].id,
+                "label": "False",
+                "confidence": "High",
+                "web_sources": ["https://example.gov/foo"],
+            },
+        ]
+    )
+    out = parse_multi_claim_json(payload, claims)
+    assert out[claims[0].id]["web_sources"] == []
+    assert out[claims[1].id]["web_sources"] == ["https://example.gov/foo"]
+    assert "web_sources" in out[claims[0].id]
+
+
 # ── parse_multi_claim_json ────────────────────────────────────────────────────
 
 

@@ -15,6 +15,7 @@ from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLa
 from truthbot.verify.adapters.base import (
     OPENAI_SYNTHESIS_SYSTEM,
     LLMAdapter,
+    apply_url_grounding,
     build_multi_user_message,
     build_multi_verdicts,
     build_user_message,
@@ -62,6 +63,59 @@ def _parse_verdict_json(text: str) -> dict:
     raise json.JSONDecodeError("No valid JSON found in response", text, 0)
 
 
+def _walk_output_for_urls(output: Any) -> tuple[str, list[str], int]:
+    """Walk a Responses API ``output`` list; return ``(text, urls, web_search_call_count)``.
+
+    Pulls URLs from every known surface produced by the GA ``web_search`` tool
+    so the Layer 1d ground-truth intersection has a real ``tool_retrieved`` set
+    instead of the empty list the legacy parser produced for batch bodies:
+
+      * ``web_search_call.action.url`` — the ``open_page`` action variant
+        (the model directly fetched a specific URL). This is the surface
+        that was missing in the original parser and caused the 100%
+        fabrication-rate readout for OpenAI batch verdicts in the
+        ``ed7be4ad-…`` SOTU run.
+      * ``web_search_call.action.sources[].url`` — defensive coverage for
+        the documented Responses API + ``web_search`` shape that surfaces
+        SERP-result URLs alongside the action. Did not appear in the
+        observed batch body but is included so a future API revision
+        cannot silently regress telemetry.
+      * ``message.content[].annotations[].url`` — covers both bare
+        ``{url: ...}`` annotations and ``type: 'url_citation'`` shapes the
+        live Responses API emits.
+
+    URLs are deduplicated in encounter order. ``text`` is the concatenation
+    of every ``output_text`` block, identical to the legacy behavior.
+    """
+    text = ""
+    urls: list[str] = []
+    seen: set[str] = set()
+    tool_count = 0
+
+    def _add(url: Any) -> None:
+        if isinstance(url, str) and url and url not in seen:
+            seen.add(url)
+            urls.append(url)
+
+    for item in output or []:
+        itype = _get(item, "type", "")
+        if itype == "web_search_call":
+            tool_count += 1
+            action = _get(item, "action", None)
+            _add(_get(action, "url", None))
+            for src in _get(action, "sources", []) or []:
+                _add(_get(src, "url", None))
+            continue
+        if itype == "message":
+            for block in _get(item, "content", []) or []:
+                if _get(block, "type", "") == "output_text":
+                    text += _get(block, "text", "") or ""
+                for ann in _get(block, "annotations", []) or []:
+                    _add(_get(ann, "url", None))
+
+    return text, urls, tool_count
+
+
 class OpenAIAdapter(LLMAdapter):
     """OpenAI GPT adapter using Responses API with web search preview."""
 
@@ -90,7 +144,12 @@ class OpenAIAdapter(LLMAdapter):
         user_msg = build_user_message(claim, evidence, inject_evidence=inject_evidence)
         return {
             "model": self.model_id,
-            "tools": [{"type": "web_search_preview"}],
+            # Phase 2.5a: GA ``web_search`` replaces legacy ``web_search_preview``.
+            # Both coexist per OpenAI docs, but ``web_search`` is the
+            # recommended post-GA variant and accepts additional flags
+            # (e.g. ``external_web_access``). See
+            # developers.openai.com/api/docs/guides/tools-web-search.
+            "tools": [{"type": "web_search"}],
             "input": [
                 {
                     "role": "system",
@@ -119,21 +178,7 @@ class OpenAIAdapter(LLMAdapter):
         of a single ``status='completed'`` batch result line.
         """
         output = _get(raw_response, "output", []) or []
-        text = ""
-        urls: list[str] = []
-        tool_count = 0
-        for item in output:
-            itype = _get(item, "type", "")
-            if itype == "web_search_call":
-                tool_count += 1
-            elif itype == "message":
-                for block in _get(item, "content", []) or []:
-                    if _get(block, "type", "") == "output_text":
-                        text += _get(block, "text", "") or ""
-                    for ann in _get(block, "annotations", []) or []:
-                        url = _get(ann, "url", None)
-                        if url:
-                            urls.append(url)
+        text, urls, tool_count = _walk_output_for_urls(output)
 
         model_id = _get(raw_response, "model", self.model_id)
 
@@ -158,6 +203,7 @@ class OpenAIAdapter(LLMAdapter):
         details = _get(usage, "prompt_tokens_details", None)
         cached = _get(details, "cached_tokens", 0) or 0
 
+        ws, mrs, stripped = apply_url_grounding(raw, urls)
         verdict = ModelVerdict(
             adapter_name=self.adapter_name,
             model_id=model_id,
@@ -166,7 +212,9 @@ class OpenAIAdapter(LLMAdapter):
             confidence=confidence,
             explanation=raw.get("explanation", ""),
             caveats=raw.get("caveats", ""),
-            web_sources=raw.get("web_sources", urls[:10]),
+            web_sources=ws,
+            model_reported_sources=mrs,
+            stripped_source_count=stripped,
             tier="frontier",
             synthesis_mode="batch",
             cached_input_tokens=int(cached),
@@ -195,7 +243,8 @@ class OpenAIAdapter(LLMAdapter):
         n = max(1, len(claims))
         return {
             "model": self.model_id,
-            "tools": [{"type": "web_search_preview"}],
+            # Phase 2.5a: use GA ``web_search`` for multi-claim batches too.
+            "tools": [{"type": "web_search"}],
             "input": [
                 {
                     "role": "system",
@@ -223,22 +272,7 @@ class OpenAIAdapter(LLMAdapter):
     ) -> list[ModelVerdict]:
         """Parse one OpenAI Responses-API body into N multi-claim ModelVerdicts."""
         output = _get(raw_response, "output", []) or []
-        text = ""
-        urls: list[str] = []
-        tool_count = 0
-        for item in output:
-            itype = _get(item, "type", "")
-            if itype == "web_search_call":
-                tool_count += 1
-                continue
-            if itype == "message":
-                for block in _get(item, "content", []) or []:
-                    if _get(block, "type", "") == "output_text":
-                        text += _get(block, "text", "") or ""
-                    for ann in _get(block, "annotations", []) or []:
-                        url = _get(ann, "url", None)
-                        if url:
-                            urls.append(url)
+        text, urls, tool_count = _walk_output_for_urls(output)
 
         model_id = _get(raw_response, "model", self.model_id)
 
@@ -279,8 +313,9 @@ class OpenAIAdapter(LLMAdapter):
             tier="frontier",
             call_usage=call_usage,
             batch_call_id=batch_call_id,
+            tool_retrieved_urls=urls,
         )
-        if verdicts and not verdicts[0].web_sources:
+        if verdicts and not verdicts[0].web_sources and not verdicts[0].model_reported_sources:
             verdicts[0].web_sources = urls[:10]
         return verdicts
 
@@ -332,6 +367,9 @@ class OpenAIAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
+                ws, mrs, stripped = apply_url_grounding(raw, urls)
+                td["model_reported_source_count"] = len(mrs)
+                td["stripped_source_count"] = stripped
                 verdict = ModelVerdict(
                     adapter_name=self.adapter_name,
                     model_id=self._active_model,
@@ -339,7 +377,9 @@ class OpenAIAdapter(LLMAdapter):
                     label=label,
                     confidence=confidence,
                     explanation=raw.get("explanation", ""),
-                    web_sources=raw.get("web_sources", urls[:10]),
+                    web_sources=ws,
+                    model_reported_sources=mrs,
+                    stripped_source_count=stripped,
                     caveats=raw.get("caveats", ""),
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
@@ -380,19 +420,33 @@ class OpenAIAdapter(LLMAdapter):
                     synthesis_mode=get_synthesis_mode(),
                 )
 
-    def _call_with_search(self, client, user_msg: str):
-        """Try Responses API first, fall back to Chat Completions."""
+    def _call_with_search(
+        self,
+        client,
+        user_msg: str,
+        *,
+        max_output_tokens: int | None = None,
+        max_tool_calls: int = 2,
+    ):
+        """Try Responses API first, fall back to Chat Completions.
+
+        ``max_output_tokens`` and ``max_tool_calls`` are passed through so
+        the live multi-claim path (``call_multi``) can scale both budgets
+        with the chunk size N — same scaling rule as
+        ``build_multi_batch_payload``.
+        """
         import openai
 
-        # Try Responses API
         try:
             if not hasattr(client, "responses"):
                 raise AttributeError("responses API not available")
 
             for model in [self.model_id, _FALLBACK_MODEL]:
                 self._active_model = model
-                # Use a higher token budget for the fallback model
-                max_out = 4096 if model == _FALLBACK_MODEL else 8192
+                if max_output_tokens is not None:
+                    max_out = max_output_tokens
+                else:
+                    max_out = 4096 if model == _FALLBACK_MODEL else 8192
                 input_blocks = [
                     {
                         "role": "system",
@@ -410,9 +464,10 @@ class OpenAIAdapter(LLMAdapter):
                 try:
                     kwargs = dict(
                         model=model,
-                        tools=[{"type": "web_search_preview"}],
+                        # Phase 2.5a: live Responses API also uses GA ``web_search``.
+                        tools=[{"type": "web_search"}],
                         input=input_blocks,
-                        max_tool_calls=2,
+                        max_tool_calls=max_tool_calls,
                         max_output_tokens=max_out,
                     )
                     try:
@@ -437,22 +492,9 @@ class OpenAIAdapter(LLMAdapter):
                             continue  # retry with fallback model + higher token budget
                         raise RuntimeError(f"OpenAI Responses status={status}: {details}")
 
-                    text = ""
-                    urls: list[str] = []
-                    tool_count = 0
-                    for item in getattr(response, "output", []):
-                        itype = getattr(item, "type", "")
-                        if itype == "web_search_call":
-                            tool_count += 1
-                        elif itype == "message":
-                            for block in getattr(item, "content", []):
-                                if getattr(block, "type", "") == "output_text":
-                                    text += getattr(block, "text", "")
-                                # Extract citations/URLs
-                                for ann in getattr(block, "annotations", []):
-                                    url = getattr(ann, "url", None)
-                                    if url:
-                                        urls.append(url)
+                    text, urls, tool_count = _walk_output_for_urls(
+                        getattr(response, "output", [])
+                    )
                     usage = getattr(response, "usage", None)
                     return text, urls, tool_count, usage
 

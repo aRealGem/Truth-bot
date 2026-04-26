@@ -31,6 +31,26 @@ This does NOT flag "2020" or "2021" references in a 2026-dated SOTU
 speech, which are almost always legitimate Biden/COVID-era comparisons.
 It DOES flag "2017" or "2018" references, which are the Pattern A
 wrong-term bug the external review called the #1 blocker.
+
+Claim-text awareness (Phase 1c refinement)
+------------------------------------------
+Empirical evidence from the v-p1-p2 calibration run showed the raw
+heuristic above false-positives on legitimate historical-baseline
+reasoning. The refined contract:
+
+1. Years that appear verbatim in the *claim text* are exempt from
+   flagging (they are the comparison anchor the claim itself invokes —
+   e.g. "lowest murder rate in 125 years, specifically referencing 1900"
+   makes citing 1900 correct, not wrong-term).
+2. When the claim contains a historical-comparison phrase
+   ("lowest in N years", "first time in N years", "since YYYY",
+   "in over N decades", etc.), the lookback floor is extended back
+   to ``speech_year - N`` (decades multiplied ×10). Years inside that
+   extended window are exempt from flagging.
+
+Both adjustments target the C10 pattern (wrong-presidential-term
+anchoring) while preserving the legitimate use of deep-history years as
+comparison baselines.
 """
 
 from __future__ import annotations
@@ -45,6 +65,91 @@ from truthbot.verify.context import terms as terms_registry
 
 
 _YEAR_RX = re.compile(r"\b(19\d{2}|20\d{2})\b")
+
+# Historical-comparison phrases that expand the lookback floor back
+# to ``speech_year - N`` (or ``N * 10`` for "decades"). Captures the
+# numeric quantifier in group 1 and the unit in group 2.
+#
+# Examples (from real SOTU claims):
+#   * "lowest in over 125 years"    -> floor back to speech_year - 125
+#   * "highest since 1900"          -> handled separately via verbatim-year exemption
+#   * "first time in four decades"  -> floor back to speech_year - 40
+#
+# Deliberately tolerant of small-word quantifiers ("five", "ten",
+# "twenty") because claim extraction sometimes preserves spelled-out
+# numerals. We only recognize low-risk word forms.
+_N_YEARS_RX = re.compile(
+    r"\b(?:in|for)\s+(?:over|more than|at least|about|nearly|almost)?\s*"
+    r"(\d+|one|two|three|four|five|six|seven|eight|nine|ten|"
+    r"eleven|twelve|fifteen|twenty|twenty-five|thirty|forty|fifty|"
+    r"sixty|seventy|eighty|ninety|one hundred)\s+"
+    r"(years?|decades?)\b",
+    re.IGNORECASE,
+)
+
+_WORD_NUM = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+    "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+    "eleven": 11, "twelve": 12, "fifteen": 15, "twenty": 20,
+    "twenty-five": 25, "thirty": 30, "forty": 40, "fifty": 50,
+    "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90,
+    "one hundred": 100,
+}
+
+# Open-ended historical-comparison phrases. When any of these appears
+# in the claim, the claim invites *unbounded* historical comparison
+# (e.g. "record levels", "all-time high", "highest ever"). In those
+# cases, the validator should not flag any year citation in the model's
+# reasoning — deep-past references are the evidentiary backbone of the
+# comparison, not wrong-term anchoring.
+_OPEN_ENDED_HISTORICAL_RX = re.compile(
+    r"(?:"
+    # Explicit historical-scope phrases
+    r"\bin\s+(?:u\.?s\.?\s+)?(?:american\s+)?history\b"
+    r"|\brecord\s+(?:level|high|low|setting|breaking)s?\b"
+    r"|\ball[-\s]?time\s+(?:high|low|record|peak|best|worst)\b"
+    # Superlative + ever (e.g. "lowest ever", "most arrests ever")
+    r"|\b(?:highest|lowest|largest|smallest|worst|best|most|greatest|fewest|strongest|weakest)\s+ever\b"
+    r"|\b(?:first|last)\s+time\s+ever\b"
+    r"|\bnever\s+before\b"
+    r"|\bunprecedented\b"
+    r"|\bhistoric(?:al)?\s+(?:high|low|first|level|peak)s?\b"
+    r")",
+    re.IGNORECASE,
+)
+
+
+def _is_open_ended_historical(claim_text: str) -> bool:
+    """True when the claim invokes unbounded historical comparison.
+
+    These claims legitimize any deep-past year citation because the
+    model is establishing a historical baseline, not anchoring its
+    reasoning in the wrong era.
+    """
+    if not claim_text:
+        return False
+    return _OPEN_ENDED_HISTORICAL_RX.search(claim_text) is not None
+
+
+def _historical_lookback_years(claim_text: str) -> int:
+    """Return the largest N-year historical window implied by the claim.
+
+    Returns 0 when no historical-comparison phrase is detected.
+    """
+    if not claim_text:
+        return 0
+    largest = 0
+    for match in _N_YEARS_RX.finditer(claim_text):
+        raw_num, unit = match.group(1).lower(), match.group(2).lower()
+        if raw_num.isdigit():
+            n = int(raw_num)
+        else:
+            n = _WORD_NUM.get(raw_num, 0)
+        if unit.startswith("decade"):
+            n *= 10
+        if n > largest:
+            largest = n
+    return largest
 
 
 @dataclass(frozen=True)
@@ -110,12 +215,20 @@ def _extract_years(text: str) -> set[int]:
     return out
 
 
-def scan_text(text: str, speech_date: date) -> TemporalFinding:
+def scan_text(
+    text: str,
+    speech_date: date,
+    claim_text: Optional[str] = None,
+) -> TemporalFinding:
     """Pure scan: given free-text and a speech date, return a ``TemporalFinding``.
 
     Exposed separately from ``apply_temporal_flags`` so tests can exercise
     the heuristic on synthetic strings without constructing full
     ``ModelVerdict`` objects.
+
+    When ``claim_text`` is provided, years appearing verbatim in the claim
+    are exempt from flagging, and any historical-comparison window implied
+    by the claim ("in over 125 years") extends the lookback floor.
     """
     years = _extract_years(text)
     speech_year = speech_date.year
@@ -123,7 +236,29 @@ def scan_text(text: str, speech_date: date) -> TemporalFinding:
     window_end_year = speech_year + 1
     lookback_floor = speech_year - 5  # flag strictly older than this
 
-    flagged = sorted(y for y in years if y < lookback_floor)
+    claim_years = _extract_years(claim_text or "")
+
+    # Open-ended historical framing: don't flag any deep-past citation.
+    # Implemented as a blanket floor set to the earliest representable
+    # year in our regex (1900). Leaves normal mixed-reference flagging
+    # intact for non-historical claims.
+    if _is_open_ended_historical(claim_text or ""):
+        lookback_floor = 1900
+
+    claim_lookback = _historical_lookback_years(claim_text or "")
+    if claim_lookback:
+        # Historical comparisons legitimize citations back to
+        # speech_year - N. We include one extra year of buffer to cover
+        # "more than N" / "over N" phrasing, which semantically means
+        # ≥ N + 1 years ago. This is intentionally permissive; the goal
+        # is to suppress false positives on legitimate historical-window
+        # reasoning, not to catch subtle off-by-one anchoring bugs.
+        lookback_floor = min(lookback_floor, speech_year - claim_lookback - 1)
+
+    flagged = sorted(
+        y for y in years
+        if y < lookback_floor and y not in claim_years
+    )
     in_window = sorted(
         y for y in years if window_start_year <= y <= window_end_year
     )
@@ -148,7 +283,7 @@ def apply_temporal_flags(verdict: ModelVerdict, claim: Claim) -> ModelVerdict:
         return verdict
 
     combined = f"{verdict.explanation or ''}\n{verdict.caveats or ''}"
-    finding = scan_text(combined, speech_dt)
+    finding = scan_text(combined, speech_dt, claim_text=getattr(claim, "text", None))
     flag = finding.format_flag()
     if flag is None:
         return verdict

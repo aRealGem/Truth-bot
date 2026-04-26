@@ -83,6 +83,15 @@ class CallRecord:
     batch_call_index: int = 0
     batch_call_id: str = ""
     claim_count: int = 1
+    # Layer 5 — anti-hallucination fabrication-rate telemetry.
+    # ``model_reported_source_count`` is the size of the model's raw
+    # ``web_sources`` array before the Layer 1d ground-truth intersection.
+    # ``stripped_source_count`` is how many of those URLs were stripped
+    # because they did not appear in the search tool's retrieved-URL set
+    # (i.e. were fabricated). The per-call fabrication rate is the ratio
+    # of the two; ``finalize_run`` aggregates per-adapter and overall.
+    model_reported_source_count: int = 0
+    stripped_source_count: int = 0
 
 
 class TelemetryLogger:
@@ -181,6 +190,12 @@ class TelemetryLogger:
                 batch_call_index=int(data.get("batch_call_index", 0) or 0),
                 batch_call_id=str(data.get("batch_call_id", "") or ""),
                 claim_count=int(data.get("claim_count", 1) or 1),
+                model_reported_source_count=int(
+                    data.get("model_reported_source_count", 0) or 0
+                ),
+                stripped_source_count=int(
+                    data.get("stripped_source_count", 0) or 0
+                ),
             )
             self.log(record)
 
@@ -215,6 +230,15 @@ def finalize_run(run_id: str, *, jsonl_path: Optional[Path] = None) -> dict:
         "by_adapter": {},
         "by_tier": {},
         "by_mode": {},
+        # Layer 5 — fabrication-rate aggregation.
+        # ``fabrication`` totals are summed across calls; the rate is
+        # computed once at the end so divide-by-zero is bounded.
+        "fabrication": {
+            "model_reported_sources_total": 0,
+            "stripped_sources_total": 0,
+            "fabrication_rate": 0.0,
+            "by_adapter": {},
+        },
     }
     if not path.exists():
         logger.warning("finalize_run: no telemetry file at %s", path)
@@ -239,6 +263,26 @@ def finalize_run(run_id: str, *, jsonl_path: Optional[Path] = None) -> dict:
                 summary["by_tier"][tier] = summary["by_tier"].get(tier, 0.0) + cost
                 m = rec.get("mode", "live")
                 summary["by_mode"][m] = summary["by_mode"].get(m, 0.0) + cost
+
+                reported = int(rec.get("model_reported_source_count", 0) or 0)
+                stripped = int(rec.get("stripped_source_count", 0) or 0)
+                fab = summary["fabrication"]
+                fab["model_reported_sources_total"] += reported
+                fab["stripped_sources_total"] += stripped
+                ad_fab = fab["by_adapter"].setdefault(
+                    ad, {"reported": 0, "stripped": 0, "rate": 0.0}
+                )
+                ad_fab["reported"] += reported
+                ad_fab["stripped"] += stripped
+
+    fab = summary["fabrication"]
+    if fab["model_reported_sources_total"] > 0:
+        fab["fabrication_rate"] = (
+            fab["stripped_sources_total"] / fab["model_reported_sources_total"]
+        )
+    for ad, ad_fab in fab["by_adapter"].items():
+        if ad_fab["reported"] > 0:
+            ad_fab["rate"] = ad_fab["stripped"] / ad_fab["reported"]
 
     out_dir = settings.metrics_dir / "run_summaries"
     out_dir.mkdir(parents=True, exist_ok=True)

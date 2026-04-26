@@ -234,7 +234,7 @@ class TestGeminiLive:
         # Reset the process-wide cache handle so the first call in this
         # live run actually exercises CreateCachedContentConfig with tools,
         # rather than reusing a stale cache from a prior test.
-        GeminiAdapter._cached_content_name = None
+        GeminiAdapter._cached_content_names = {}
 
         run_id = f"smoke-gemini-{int(time.time())}"
         adapter = GeminiAdapter()
@@ -281,7 +281,7 @@ class TestGeminiLive:
                 "status": "complete",
                 "wall_clock_s": round(wall_s, 2),
                 "verdicts": verdict_rows,
-                "cached_content_name": GeminiAdapter._cached_content_name or "",
+                "cached_content_name": next(iter(GeminiAdapter._cached_content_names.values()), ""),
                 "notes": "gemini-2.5-pro with GoogleSearch + CachedContent",
             },
         )
@@ -392,7 +392,7 @@ class TestGeminiLiveMulti:
         # Fresh cache so we see a cache-creation usage signal on call 1 and
         # a cache-hit signal on call 2 (which happens to be this one if a
         # prior Gemini test ran in this process).
-        GeminiAdapter._cached_content_name = None
+        GeminiAdapter._cached_content_names = {}
 
         run_id = f"smoke-gemini-multi-{int(time.time())}"
         adapter = GeminiAdapter()
@@ -441,7 +441,7 @@ class TestGeminiLiveMulti:
                 "status": "complete",
                 "wall_clock_s": round(wall_s, 2),
                 "verdicts": verdict_rows,
-                "cached_content_name": GeminiAdapter._cached_content_name or "",
+                "cached_content_name": next(iter(GeminiAdapter._cached_content_names.values()), ""),
                 "notes": "gemini-2.5-pro call_multi (1 API call for 2 claims) + CachedContent",
             },
         )

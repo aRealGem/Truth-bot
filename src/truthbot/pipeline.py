@@ -480,7 +480,148 @@ def _run_publish_batch_submit(
     print("=" * 72)
 
 
-def _run_publish_batch_reconcile(run_id: str, *, site_root: Optional[str] = None) -> None:
+def _run_urls_check(
+    *,
+    sidecar_path: str,
+    cache_path: str,
+    timeout: float,
+    max_workers: int,
+) -> None:
+    """Phase 3b: HEAD-check every unique URL from a sidecar file.
+
+    Prints a classification summary (ok / bot-blocked / dead-4xx / etc.)
+    and persists results to the shared cache. Operates read-only on
+    verdict data — does not mutate sidecar or verdict caches.
+    """
+    import json
+    from collections import Counter
+    from pathlib import Path as _Path
+
+    from truthbot.verify.url_validation import UrlCache, check_urls_bulk
+
+    sidecar = _Path(sidecar_path)
+    if not sidecar.exists():
+        print(f"sidecar not found: {sidecar}")
+        sys.exit(2)
+
+    urls: set[str] = set()
+    with sidecar.open() as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            for u in row.get("web_sources") or []:
+                if isinstance(u, str) and u:
+                    urls.add(u)
+
+    print(f"unique URLs in {sidecar.name}: {len(urls)}")
+    if not urls:
+        return
+
+    cache = UrlCache.load(_Path(cache_path))
+    print(f"cache pre-load: {len(cache.entries)} entries")
+
+    results = check_urls_bulk(
+        urls, timeout=timeout, max_workers=max_workers, cache=cache
+    )
+    cache.save(_Path(cache_path))
+
+    classes = Counter(r.failure_class for r in results.values())
+    likely_real = sum(1 for r in results.values() if r.likely_real)
+
+    print()
+    print("classification:")
+    for cls, n in classes.most_common():
+        print(f"  {cls:15s} {n}")
+    print()
+    pct = 100 * likely_real / max(1, len(results))
+    print(f"likely real (ok + bot-blocked): {likely_real}/{len(results)} ({pct:.0f}%)")
+
+    suspect = [
+        r for r in results.values()
+        if r.failure_class in ("dead-4xx", "malformed", "dns", "cert-error")
+    ]
+    if suspect:
+        print()
+        print("suspect URLs (likely hallucinated or dead):")
+        for r in sorted(suspect, key=lambda x: (x.failure_class, x.url)):
+            print(f"  [{r.failure_class}] {r.url}")
+
+
+def _run_urls_filter_sidecar(
+    *,
+    sidecar_path: str,
+    out_path: Optional[str],
+    cache_path: str,
+    timeout: float,
+    max_workers: int,
+) -> None:
+    """Layer 3: write a *cleaned* sidecar with broken URLs stripped.
+
+    The output JSONL adds three new fields per row:
+        * ``verified_sources``   — reachable.
+        * ``unverified_sources`` — bot-blocked or transient (likely real).
+        * ``broken_sources``     — dead-4xx / malformed / dns / cert-error.
+
+    ``web_sources`` in the output is rewritten to ``verified + unverified``
+    so the existing publish-layer code continues to work without
+    rendering known-broken URLs. ``model_reported_sources`` (the raw
+    pre-intersection list from Layer 1) is left untouched as the audit
+    trail.
+    """
+    from pathlib import Path as _Path
+
+    from truthbot.verify.url_validation import UrlCache, filter_sidecar
+
+    in_p = _Path(sidecar_path)
+    if not in_p.exists():
+        print(f"sidecar not found: {in_p}")
+        sys.exit(2)
+
+    if out_path:
+        out_p = _Path(out_path)
+    else:
+        # Default lives alongside the input with a `.cleaned.jsonl`
+        # suffix so it's obvious which file the publish pipeline should
+        # consume.
+        stem = in_p.name
+        if stem.endswith(".jsonl"):
+            stem = stem[: -len(".jsonl")]
+        out_p = in_p.with_name(f"{stem}.cleaned.jsonl")
+
+    cache_p = _Path(cache_path)
+    cache = UrlCache.load(cache_p)
+    pre = len(cache.entries)
+
+    stats = filter_sidecar(
+        in_p,
+        out_p,
+        cache=cache,
+        timeout=timeout,
+        max_workers=max_workers,
+    )
+    cache.save(cache_p)
+
+    print(f"input : {in_p}")
+    print(f"output: {out_p}")
+    print(f"cache : {cache_p} ({pre} -> {len(cache.entries)} entries)")
+    print()
+    print(f"rows processed   : {stats['rows']}")
+    print(f"verified URLs    : {stats['verified']}")
+    print(f"unverified URLs  : {stats['unverified']} (likely real, bot-blocked/transient)")
+    print(f"broken URLs      : {stats['broken']} (stripped from web_sources)")
+
+
+def _run_publish_batch_reconcile(
+    run_id: str,
+    *,
+    site_root: Optional[str] = None,
+    validate_urls: bool = False,
+) -> None:
     """Poll → parse → merge → cache → publish for a previously submitted batch run."""
     import uuid as _uuid
     from datetime import datetime
@@ -516,6 +657,7 @@ def _run_publish_batch_reconcile(run_id: str, *, site_root: Optional[str] = None
         run_id,
         adapters_by_name=adapters_by_name,
         engine=engine,
+        validate_urls=validate_urls,
     )
 
     status = result["status"]
@@ -1027,6 +1169,66 @@ def main() -> None:
         default=None,
         help="Override site output root (else reads from descriptor or TRUTHBOT_SITE_ROOT)",
     )
+    batch_reconcile.add_argument(
+        "--validate-urls",
+        action="store_true",
+        help=(
+            "HEAD-check every URL across all merged verdicts and populate "
+            "ModelVerdict.url_classifications so the publish layer renders "
+            "the three trust tiers (verified / unverified / broken). Uses "
+            "the metrics/url_cache.jsonl cache so re-checks are nearly "
+            "free. Recommended for the final published report."
+        ),
+    )
+
+    # Phase 3b: URL reachability subcommand.
+    urls_parser = subparsers.add_parser(
+        "urls", help="URL reachability checks over a run's web_sources"
+    )
+    urls_sub = urls_parser.add_subparsers(dest="urls_cmd", required=True)
+    urls_check = urls_sub.add_parser(
+        "check",
+        help="HEAD-check every unique URL in a sidecar and print classification stats",
+    )
+    urls_check.add_argument(
+        "sidecar",
+        help="Path to metrics/batch_sidecar/<run_id>.jsonl (one row per verdict)",
+    )
+    urls_check.add_argument(
+        "--cache",
+        default="metrics/url_cache.jsonl",
+        help="Path to the URL reachability cache (default: metrics/url_cache.jsonl)",
+    )
+    urls_check.add_argument("--timeout", type=float, default=5.0)
+    urls_check.add_argument("--max-workers", type=int, default=8)
+
+    urls_filter = urls_sub.add_parser(
+        "filter-sidecar",
+        help=(
+            "HEAD-check every URL in a sidecar and write a cleaned sidecar "
+            "with URLs partitioned into verified / unverified / broken "
+            "(Layer 3 of the anti-hallucination defense-in-depth)."
+        ),
+    )
+    urls_filter.add_argument(
+        "sidecar",
+        help="Path to metrics/batch_sidecar/<run_id>.jsonl (input).",
+    )
+    urls_filter.add_argument(
+        "--out",
+        default=None,
+        help=(
+            "Output path for the cleaned sidecar. Defaults to "
+            "<sidecar-stem>.cleaned.jsonl alongside the input."
+        ),
+    )
+    urls_filter.add_argument(
+        "--cache",
+        default="metrics/url_cache.jsonl",
+        help="Path to the URL reachability cache (default: metrics/url_cache.jsonl).",
+    )
+    urls_filter.add_argument("--timeout", type=float, default=5.0)
+    urls_filter.add_argument("--max-workers", type=int, default=8)
 
     args = parser.parse_args()
 
@@ -1045,6 +1247,27 @@ def main() -> None:
             parser.print_help()
             return
 
+    if getattr(args, "subcommand", None) == "urls":
+        if getattr(args, "urls_cmd", None) == "check":
+            _run_urls_check(
+                sidecar_path=args.sidecar,
+                cache_path=args.cache,
+                timeout=args.timeout,
+                max_workers=args.max_workers,
+            )
+            return
+        if getattr(args, "urls_cmd", None) == "filter-sidecar":
+            _run_urls_filter_sidecar(
+                sidecar_path=args.sidecar,
+                out_path=args.out,
+                cache_path=args.cache,
+                timeout=args.timeout,
+                max_workers=args.max_workers,
+            )
+            return
+        parser.print_help()
+        return
+
     if getattr(args, "subcommand", None) == "batch":
         if getattr(args, "batch_cmd", None) == "poll":
             from truthbot.config import settings
@@ -1055,7 +1278,9 @@ def main() -> None:
             return
         if getattr(args, "batch_cmd", None) == "reconcile":
             _run_publish_batch_reconcile(
-                args.run_id, site_root=getattr(args, "site_root", None)
+                args.run_id,
+                site_root=getattr(args, "site_root", None),
+                validate_urls=bool(getattr(args, "validate_urls", False)),
             )
             return
         parser.print_help()

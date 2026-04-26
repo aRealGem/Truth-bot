@@ -1,0 +1,57 @@
+{
+  "_comment": "Synthetic OpenAI Responses API body covering the legacy / future-compatible URL surfaces the parser must keep handling: url_citation-typed annotations on output_text blocks plus a web_search_call.action.sources[] list. Both surfaces are documented in the Responses API + web_search tool reference but did not appear in the real ed7be4ad-… batch run. Used to lock in defensive coverage so a future API revision that switches surfaces does not silently regress fabrication-rate telemetry.",
+  "id": "resp_test_annotations",
+  "object": "response",
+  "model": "gpt-5.4-2026-03-05",
+  "status": "completed",
+  "output": [
+    {
+      "id": "ws_test_search_with_sources",
+      "type": "web_search_call",
+      "status": "completed",
+      "action": {
+        "type": "search",
+        "queries": ["example query"],
+        "query": "example query",
+        "sources": [
+          {"url": "https://example.com/source-from-action-sources"}
+        ]
+      }
+    },
+    {
+      "type": "message",
+      "id": "msg_test_ann",
+      "status": "completed",
+      "role": "assistant",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [
+            {
+              "type": "url_citation",
+              "url": "https://example.com/citation-1",
+              "title": "Citation 1",
+              "start_index": 0,
+              "end_index": 10
+            },
+            {
+              "type": "url_citation",
+              "url": "https://example.com/citation-2",
+              "title": "Citation 2",
+              "start_index": 11,
+              "end_index": 20
+            }
+          ],
+          "text": "[{\"claim_id\":\"test-claim\",\"label\":\"True\",\"confidence\":\"High\",\"explanation\":\"ok\",\"caveats\":\"\",\"web_sources\":[\"https://example.com/citation-1\",\"https://example.com/source-from-action-sources\",\"https://example.com/fabricated\"]}]"
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "input_tokens": 1000,
+    "output_tokens": 200,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  }
+}

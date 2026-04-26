@@ -17,6 +17,7 @@ from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLa
 from truthbot.verify.adapters.base import (
     SYNTHESIS_SYSTEM,
     LLMAdapter,
+    apply_url_grounding,
     build_multi_user_message,
     build_multi_verdicts,
     build_user_message,
@@ -32,6 +33,93 @@ def _get(obj: Any, attr: str, default: Any = None) -> Any:
     if isinstance(obj, dict):
         return obj.get(attr, default)
     return getattr(obj, attr, default)
+
+
+# Gemini's ``grounding_chunks[].web.uri`` is *always* a Vertex AI
+# grounding-redirect URL of the form
+# ``https://vertexaisearch.cloud.google.com/grounding-api-redirect/<opaque>``.
+# These are useless as standalone citation targets — they require a session
+# cookie to follow and return 403 otherwise — so we resolve them to their
+# final destination via :func:`resolve_gemini_redirect` before they enter
+# the anti-hallucination ground-truth intersection. URLs that fail to
+# resolve are dropped.
+#
+# Phase 3b follow-up: v-p1-p2 had 3/45 URLs in this pattern. See
+# eval/sotu-2026/v-p1-p2-followups.md follow-up (B). Phase: anti-
+# hallucination Layer 1c.
+_GEMINI_OPAQUE_URL_PREFIXES = (
+    "https://vertexaisearch.cloud.google.com/grounding-api-redirect/",
+    "http://vertexaisearch.cloud.google.com/grounding-api-redirect/",
+)
+
+
+def _should_keep_gemini_url(url: str) -> bool:
+    """Reject Gemini grounding-redirect URLs (not durable citations).
+
+    Retained for any legacy call sites; new code should call
+    :func:`resolve_gemini_redirect` instead, which actively follows the
+    redirect rather than dropping it.
+    """
+    if not isinstance(url, str) or not url:
+        return False
+    return not url.startswith(_GEMINI_OPAQUE_URL_PREFIXES)
+
+
+def resolve_gemini_redirect(
+    url: str,
+    *,
+    cache: Any = None,
+    timeout: float = 5.0,
+) -> "str | None":
+    """Resolve a Gemini grounding-redirect URL to its final destination.
+
+    Behavior matrix:
+      * ``url`` is empty / not a string → return ``None`` (drop).
+      * ``url`` is not a Vertex AI grounding-redirect → return ``url``
+        unchanged (passthrough, in case Gemini ever returns a real URL).
+      * ``url`` is a grounding-redirect:
+          - cache hit with a resolved ``final_url`` → return that.
+          - cache hit reporting a failed resolution → return ``None``.
+          - cache miss → run :func:`url_validation.check_url`, persist the
+            result to the cache (if provided), and return ``final_url`` on
+            success or ``None`` on any failure (timeout, 403, no redirect
+            chain, etc.).
+
+    The cache argument is typed as ``Any`` to avoid a hard dependency from
+    ``gemini.py`` onto ``url_validation`` at import time — pass a
+    ``UrlCache`` instance from the caller (e.g. the engine), which is the
+    common case.
+    """
+    if not isinstance(url, str) or not url:
+        return None
+    if not url.startswith(_GEMINI_OPAQUE_URL_PREFIXES):
+        return url
+
+    if cache is not None:
+        try:
+            cached = cache.get(url)
+        except Exception:
+            cached = None
+        if cached is not None:
+            # ``UrlCheckResult.final_url`` is None on resolution failure;
+            # we propagate that as a drop signal.
+            return cached.final_url
+
+    from truthbot.verify.url_validation import check_url
+
+    try:
+        result = check_url(url, timeout=timeout)
+    except Exception:
+        return None
+
+    if cache is not None:
+        try:
+            cache.put(result)
+        except Exception:
+            pass
+
+    return result.final_url
+
 
 logger = logging.getLogger(__name__)
 
@@ -82,8 +170,40 @@ class GeminiAdapter(LLMAdapter):
     # smoke-measured grounding accuracy at higher N (tracked in the Phase E
     # plan).
     max_claims_per_request = 4
-    # Process-wide reuse of Context Caching resource for the static rubric.
-    _cached_content_name: str | None = None
+    # Process-wide reuse of Context Caching resource for the static rubric,
+    # keyed by model id. Keying by model is required because Google's API
+    # rejects ``generate_content`` calls whose model differs from the one
+    # the CachedContent was created against ("Model used by GenerateContent
+    # request and CachedContent has to be the same"). Triage and frontier
+    # share the rubric prefix but use different models (e.g. flash vs pro),
+    # so each gets its own cache entry instead of stomping on a single slot.
+    _cached_content_names: dict[str, str] = {}
+    # Shared URL cache for grounding-redirect resolution (anti-hallucination
+    # Layer 1c). Lazy-loaded from ``metrics/url_cache.jsonl`` on first use,
+    # mutated in-place across calls. Persistence is the publish layer's job
+    # via the ``truthbot urls`` subcommands; the adapter does not save.
+    _url_cache: Any = None
+
+    @classmethod
+    def _get_redirect_cache(cls) -> Any:
+        """Return a process-wide ``UrlCache`` for redirect resolution.
+
+        Returns ``None`` if the cache module or backing file is unavailable
+        (tests, sandboxed runs); ``resolve_gemini_redirect`` handles ``None``
+        gracefully and proceeds without persistence.
+        """
+        if cls._url_cache is not None:
+            return cls._url_cache
+        try:
+            from truthbot.config import settings
+            from truthbot.verify.url_validation import UrlCache
+
+            cache_path = settings.metrics_dir / "url_cache.jsonl"
+            cls._url_cache = UrlCache.load(cache_path)
+        except Exception as exc:
+            logger.debug("Gemini redirect cache unavailable: %s", exc)
+            cls._url_cache = None
+        return cls._url_cache
 
     # ── Batch support (payload/parse only; submit/retrieve guarded above) ─────
 
@@ -120,12 +240,15 @@ class GeminiAdapter(LLMAdapter):
                 search_query_count += len(
                     _get(gm, "web_search_queries", []) or []
                 )
+                cache = self._get_redirect_cache()
                 for chunk in _get(gm, "grounding_chunks", []) or []:
                     web = _get(chunk, "web", None)
                     if web:
                         url = _get(web, "uri", None)
                         if url:
-                            urls.append(url)
+                            resolved = resolve_gemini_redirect(url, cache=cache)
+                            if resolved:
+                                urls.append(resolved)
             content = _get(candidate, "content", None)
             for part in _get(content, "parts", []) or []:
                 verdict_text += _get(part, "text", "") or ""
@@ -152,6 +275,7 @@ class GeminiAdapter(LLMAdapter):
         usage = _get(raw_response, "usage_metadata", None)
         cached = _get(usage, "cached_content_token_count", 0) or 0
 
+        ws, mrs, stripped = apply_url_grounding(raw, urls)
         verdict = ModelVerdict(
             adapter_name=self.adapter_name,
             model_id=model_id,
@@ -160,7 +284,9 @@ class GeminiAdapter(LLMAdapter):
             confidence=confidence,
             explanation=raw.get("explanation", ""),
             caveats=raw.get("caveats", ""),
-            web_sources=raw.get("web_sources", urls[:10]),
+            web_sources=ws,
+            model_reported_sources=mrs,
+            stripped_source_count=stripped,
             tier="frontier",
             synthesis_mode="batch",
             cached_input_tokens=int(cached),
@@ -175,7 +301,8 @@ class GeminiAdapter(LLMAdapter):
         self._active_model = self.model_id
 
     def _get_or_create_cached_content(self, client: object, types: object) -> str | None:
-        """Create a Context Caching entry for SYNTHESIS_SYSTEM once per process.
+        """Create a Context Caching entry for SYNTHESIS_SYSTEM once per process,
+        keyed by ``self._active_model``.
 
         Google's genai API rejects a ``generate_content`` call that passes
         ``cached_content`` alongside ``system_instruction`` or ``tools`` with:
@@ -183,30 +310,50 @@ class GeminiAdapter(LLMAdapter):
             CachedContent can not be used with GenerateContent request setting
             system_instruction, tools or tool_config.
 
-        The fix is to bind both ``system_instruction`` AND ``tools`` into the
+        It also requires the request model to match the cache's model:
+
+            Model used by GenerateContent request (models/gemini-2.5-pro) and
+            CachedContent (models/gemini-2.5-flash) has to be the same.
+
+        Because ``GeminiAdapter`` is shared by triage (``gemini-2.5-flash``)
+        and frontier (``gemini-2.5-pro``) subclasses, the cache map is keyed
+        by ``self._active_model``. The Phase 3a calibration broke when both
+        tiers shared a single cache slot: triage created the cache against
+        flash, and every subsequent frontier call 400'd until the slot
+        expired. Keying by model preserves cross-instance reuse within a
+        tier while preventing cross-tier contamination.
+
+        The fix for the system_instruction/tools rejection (separate issue)
+        remains: bind both ``system_instruction`` AND ``tools`` into the
         ``CachedContent`` at creation time; the per-claim ``GenerateContent``
         call then references the cache and passes neither field.
         """
-        if GeminiAdapter._cached_content_name:
-            return GeminiAdapter._cached_content_name
+        model = self._active_model
+        cached_name = GeminiAdapter._cached_content_names.get(model)
+        if cached_name:
+            return cached_name
         try:
             tools = [types.Tool(google_search=types.GoogleSearch())]
             create_config = types.CreateCachedContentConfig(
-                display_name="truthbot-synthesis-rubric",
+                display_name=f"truthbot-synthesis-rubric-{model}",
                 system_instruction=SYNTHESIS_SYSTEM,
                 tools=tools,
                 ttl="14400s",
             )
             cached = client.caches.create(
-                model=self._active_model,
+                model=model,
                 config=create_config,
             )
             name = getattr(cached, "name", None)
             if name:
-                GeminiAdapter._cached_content_name = name
+                GeminiAdapter._cached_content_names[model] = name
             return name
         except Exception as exc:
-            logger.warning("Gemini context caching unavailable, using inline system_instruction: %s", exc)
+            logger.warning(
+                "Gemini context caching unavailable for model %s, using inline system_instruction: %s",
+                model,
+                exc,
+            )
             return None
 
     def call(
@@ -262,6 +409,7 @@ class GeminiAdapter(LLMAdapter):
                 search_query_count = 0
 
                 candidates = response.candidates or []
+                cache = self._get_redirect_cache()
                 for candidate in candidates:
                     gm = getattr(candidate, "grounding_metadata", None)
                     if gm:
@@ -273,7 +421,11 @@ class GeminiAdapter(LLMAdapter):
                             if web:
                                 url = getattr(web, "uri", None)
                                 if url:
-                                    urls.append(url)
+                                    resolved = resolve_gemini_redirect(
+                                        url, cache=cache
+                                    )
+                                    if resolved:
+                                        urls.append(resolved)
 
                 # Extract text
                 verdict_text = ""
@@ -301,6 +453,9 @@ class GeminiAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
+                ws, mrs, stripped = apply_url_grounding(raw, urls)
+                td["model_reported_source_count"] = len(mrs)
+                td["stripped_source_count"] = stripped
                 verdict = ModelVerdict(
                     adapter_name=self.adapter_name,
                     model_id=self._active_model,
@@ -308,7 +463,9 @@ class GeminiAdapter(LLMAdapter):
                     label=label,
                     confidence=confidence,
                     explanation=raw.get("explanation", ""),
-                    web_sources=raw.get("web_sources", urls[:10]),
+                    web_sources=ws,
+                    model_reported_sources=mrs,
+                    stripped_source_count=stripped,
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
                     cached_input_tokens=int(td.get("gemini_cached_content_tokens", 0)),
@@ -420,6 +577,7 @@ class GeminiAdapter(LLMAdapter):
                 urls: list[str] = []
                 search_query_count = 0
                 candidates = response.candidates or []
+                cache = self._get_redirect_cache()
                 for candidate in candidates:
                     gm = getattr(candidate, "grounding_metadata", None)
                     if gm:
@@ -431,7 +589,11 @@ class GeminiAdapter(LLMAdapter):
                             if web:
                                 url = getattr(web, "uri", None)
                                 if url:
-                                    urls.append(url)
+                                    resolved = resolve_gemini_redirect(
+                                        url, cache=cache
+                                    )
+                                    if resolved:
+                                        urls.append(resolved)
 
                 verdict_text = ""
                 try:
@@ -485,8 +647,14 @@ class GeminiAdapter(LLMAdapter):
                     tier=telemetry_tier,
                     call_usage=call_usage,
                     batch_call_id=batch_call_id,
+                    tool_retrieved_urls=urls,
                 )
-                if verdicts and not verdicts[0].web_sources and urls:
+                if (
+                    verdicts
+                    and not verdicts[0].web_sources
+                    and not verdicts[0].model_reported_sources
+                    and urls
+                ):
                     verdicts[0].web_sources = urls[:10]
                 return verdicts
 

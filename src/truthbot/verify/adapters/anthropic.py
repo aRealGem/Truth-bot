@@ -16,6 +16,7 @@ from truthbot.verify.adapters.base import (
     SYNTHESIS_SYSTEM,
     AdapterUnavailable,
     LLMAdapter,
+    apply_url_grounding,
     build_multi_user_message,
     build_multi_verdicts,
     build_user_message,
@@ -163,6 +164,7 @@ class AnthropicAdapter(LLMAdapter):
 
         cache_read = _get(usage, "cache_read_input_tokens", 0) or 0
 
+        ws, mrs, stripped = apply_url_grounding(raw, retrieved_urls)
         verdict = ModelVerdict(
             adapter_name=self.adapter_name,
             model_id=model_id,
@@ -171,7 +173,9 @@ class AnthropicAdapter(LLMAdapter):
             confidence=confidence,
             explanation=raw.get("explanation", ""),
             caveats=raw.get("caveats", ""),
-            web_sources=raw.get("web_sources", retrieved_urls[:10]),
+            web_sources=ws,
+            model_reported_sources=mrs,
+            stripped_source_count=stripped,
             tier="frontier",
             synthesis_mode="batch",
             cached_input_tokens=int(cache_read),
@@ -269,11 +273,13 @@ class AnthropicAdapter(LLMAdapter):
             tier="frontier",
             call_usage=call_usage,
             batch_call_id=batch_call_id,
+            tool_retrieved_urls=retrieved_urls,
         )
-        # If the model omitted web_sources per-claim, backfill the first
-        # verdict's with the URLs we harvested from the web_search_tool_result
-        # blocks so the site still shows citations.
-        if verdicts and not verdicts[0].web_sources:
+        # If the model omitted web_sources entirely (and Layer 1d's grounding
+        # therefore left it empty), backfill the first verdict with up to
+        # 10 tool-retrieved URLs so the site still shows tool-grounded
+        # citations.
+        if verdicts and not verdicts[0].web_sources and not verdicts[0].model_reported_sources:
             verdicts[0].web_sources = retrieved_urls[:10]
         return verdicts
 
@@ -339,6 +345,9 @@ class AnthropicAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
+                ws, mrs, stripped = apply_url_grounding(raw, retrieved_urls)
+                td["model_reported_source_count"] = len(mrs)
+                td["stripped_source_count"] = stripped
                 verdict = ModelVerdict(
                     adapter_name=self.adapter_name,
                     model_id=self._active_model,
@@ -347,7 +356,9 @@ class AnthropicAdapter(LLMAdapter):
                     confidence=confidence,
                     explanation=raw.get("explanation", ""),
                     caveats=raw.get("caveats", ""),
-                    web_sources=raw.get("web_sources", retrieved_urls[:10]),
+                    web_sources=ws,
+                    model_reported_sources=mrs,
+                    stripped_source_count=stripped,
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
                     cached_input_tokens=int(td.get("cache_read_input_tokens", 0)),
@@ -390,17 +401,30 @@ class AnthropicAdapter(LLMAdapter):
     def _call_with_fallback(self, client: Any, user_msg: str) -> Any:
         """Try models in fallback order, returning the first successful response.
 
-        Only logs a fallback warning when an actual prior attempt failed AND the
-        next candidate differs from it. The previous implementation compared
-        ``model`` to ``self.model_id`` (the class-level default), which produced
-        spurious "model X not available, trying X" lines for every claim once
-        ``_active_model`` had drifted to a fallback on a previous call.
+        Fallback order is ``[self.model_id, *_FALLBACK_MODELS-without-it]`` so
+        that triage subclasses (e.g. ``TriageAnthropic`` overriding
+        ``model_id = "claude-haiku-4-5"``) actually exercise their preferred
+        cheap-tier model. The Phase 3a calibration found that an earlier
+        version iterated ``_FALLBACK_MODELS`` directly, which always tried
+        ``claude-opus-4-7`` first and silently paid Opus prices for triage.
+
+        Only logs a fallback warning when an actual prior attempt failed AND
+        the next candidate differs from it. The previous implementation
+        compared ``model`` to ``self.model_id`` (the class-level default),
+        which produced spurious "model X not available, trying X" lines for
+        every claim once ``_active_model`` had drifted to a fallback on a
+        previous call.
         """
         import anthropic
 
+        chain: list[str] = [self.model_id]
+        for m in _FALLBACK_MODELS:
+            if m != self.model_id:
+                chain.append(m)
+
         last_exc: Exception | None = None
         last_attempted: str | None = None
-        for model in _FALLBACK_MODELS:
+        for model in chain:
             if last_attempted is not None and model != last_attempted:
                 logger.warning(
                     "AnthropicAdapter: model %s failed (%s); falling back to %s",

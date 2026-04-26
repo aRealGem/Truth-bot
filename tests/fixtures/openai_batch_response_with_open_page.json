@@ -1,0 +1,62 @@
+{
+  "_comment": "Sanitized excerpt of a real OpenAI Responses API batch row body (run ed7be4ad-…, batch_69eba50283648190b919495f69366411). Demonstrates the GA web_search 'open_page' action shape that exposes a single retrieved URL on web_search_call.action.url, plus several 'search' actions that carry only query strings. Annotations are empty in this body — same as the real run. Used by tests to lock in the parser's tool-URL extraction behavior.",
+  "id": "resp_test_open_page",
+  "object": "response",
+  "model": "gpt-5.4-2026-03-05",
+  "status": "completed",
+  "output": [
+    {
+      "id": "ws_test_search_1",
+      "type": "web_search_call",
+      "status": "completed",
+      "action": {
+        "type": "search",
+        "queries": [
+          "site:bls.gov core inflation 2025 1.7 last three months"
+        ],
+        "query": "site:bls.gov core inflation 2025 1.7 last three months"
+      }
+    },
+    {
+      "id": "ws_test_open_page_1",
+      "type": "web_search_call",
+      "status": "completed",
+      "action": {
+        "type": "open_page",
+        "url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+      }
+    },
+    {
+      "id": "ws_test_search_2",
+      "type": "web_search_call",
+      "status": "completed",
+      "action": {
+        "type": "search",
+        "queries": [
+          "Reuters January 2026 core inflation 1.7 three months annualized 2025"
+        ],
+        "query": "Reuters January 2026 core inflation 1.7 three months annualized 2025"
+      }
+    },
+    {
+      "type": "message",
+      "id": "msg_test",
+      "status": "completed",
+      "role": "assistant",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "text": "[{\"claim_id\":\"a11e4bdb-acdd-43a4-b762-5998d92431de\",\"label\":\"False\",\"confidence\":\"High\",\"explanation\":\"BLS reports core CPI at 2.7% YoY in December 2025, not 1.7%.\",\"caveats\":\"\",\"web_sources\":[\"https://www.bls.gov/news.release/archives/cpi_01132026.htm\",\"https://www.bls.gov/news.release/archives/cpi_12182025.htm\",\"https://www.bea.gov/news/2026/personal-income-and-outlays-december-2025\"]}]"
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "input_tokens": 1500,
+    "output_tokens": 600,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  }
+}
