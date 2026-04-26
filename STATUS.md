@@ -1,4 +1,101 @@
-# Truth-bot Status — 2026-04-23
+# Truth-bot Status — 2026-04-25
+
+## Session note — 2026-04-25 (Calibration fixes + 10-claim rerun)
+
+### Shipped today
+
+Three high-leverage fixes uncovered by the Phase 3a calibration, plus the 10-claim rerun that proved/disproved each.
+
+- **Bug A — multi-claim `web_sources` schema (partial fix).** Strengthened
+  the multi-claim user-message preamble in
+  ``src/truthbot/verify/adapters/base.py`` to require per-claim
+  ``web_sources`` attribution explicitly, instead of relying on inheritance
+  from the single-claim CITATION DISCIPLINE rubric. Also fixed a JSON-shape
+  bug introduced mid-fix: an inline ``// REQUIRED ...`` comment placed inside
+  the JSON example block, which made Anthropic and Gemini respond with prose
+  explaining the schema instead of valid JSON arrays (every batch row in the
+  v1 rerun logged ``parse_error`` / ``api_error``). Comment moved to
+  surrounding free-text. New regression test
+  ``test_build_multi_user_message_schema_block_is_valid_json_shape`` asserts
+  the bracketed schema example contains no ``//`` substring; new
+  ``test_build_multi_user_message_demands_per_claim_web_sources`` pins the
+  strengthened preamble.
+
+- **Bug — Anthropic triage cost $0.18/call (fixed).** Audit of
+  ``metrics/adapter_calls.jsonl`` showed 9/10 Anthropic triage calls in the
+  Phase 3a run used ``claude-opus-4-7`` despite the ``TriageAnthropic``
+  subclass overriding ``model_id = "claude-haiku-4-5"``. Root cause:
+  ``AnthropicAdapter._call_with_fallback`` iterated the hard-coded
+  ``_FALLBACK_MODELS`` list (Opus-first) and ignored ``self.model_id``
+  entirely. Fix prepends ``self.model_id`` to the fallback chain (with
+  dedup) so triage subclasses and ``TRUTHBOT_TRIAGE_ANTHROPIC_MODEL`` env
+  overrides actually drive the first request. New regression tests in
+  ``tests/test_anthropic_fallback.py``:
+  ``test_fallback_chain_starts_with_subclass_model_id`` and
+  ``test_fallback_chain_does_not_duplicate_model_id``.
+
+- **Bug B — Gemini cache/model mismatch (fixed).** All Phase 3a Gemini
+  frontier multi-claim calls 400'd with ``Model used by GenerateContent
+  request (models/gemini-2.5-pro) and CachedContent (models/gemini-2.5-flash)
+  has to be the same``. Root cause: ``_cached_content_name`` was a single
+  class-level slot, so triage (flash) populated it first and every later
+  frontier (pro) call reused the flash-bound cache name. Fix replaces the
+  scalar with ``_cached_content_names: dict[str, str]`` keyed by
+  ``self._active_model``; cross-instance reuse within a tier is preserved.
+  Migrated all callers (``test_gemini_cache.py``,
+  ``test_gemini_multi_claim.py``, ``tests/smoke/test_smoke_submit*.py``).
+  New regression: ``test_cache_is_keyed_by_active_model`` (instantiates
+  triage and frontier subclasses, asserts each gets its own cache entry
+  and the second call within a tier reuses).
+
+### 10-claim calibration deltas (SOTU 2026 transcript)
+
+Baseline: ``run_id=10764cdb-9b4a-489a-b76d-8f9d3fd7ba59`` (Phase 3a).
+Rerun:    ``run_id=128597ce-6e83-44a3-8811-8811e1fa219e`` (today).
+
+| Metric | Baseline | Rerun | Delta |
+| --- | --- | --- | --- |
+| Total cost | $5.04 | **$4.15** | **−18%** |
+| Anthropic triage cost | $1.80 (9× Opus) | **$0.55 (10× Haiku)** | **−69%** |
+| Anthropic frontier status | ok (gold standard) | ok | unchanged |
+| Anthropic frontier reported / retrieved | 34/34 | 42/42 | preserved |
+| Gemini frontier API status | 100% 400 (cache mismatch) | **100% ok** | fixed |
+| Gemini frontier reported / retrieved | 0/0 (all errored) | 0/16 | partial |
+| OpenAI frontier reported / retrieved | 0/1 | 0/0 | unchanged |
+| xAI frontier reported / retrieved | 0/85 | 0/160 | unchanged |
+| URL classification (verified / broken) | 36 / 4 | **131 / 0** | broader + cleaner |
+
+### Outcome vs plan
+
+- **Step 1 (multi-claim ``web_sources``):** ✅ for Anthropic batch (42
+  reported, gold standard preserved). ❌ for OpenAI / Gemini / xAI live
+  multi-claim — they still emit ``web_sources: []`` despite invoking the
+  search tool 6–27 times per chunk. The strengthened prompt was insufficient
+  for these providers; their tool-result ergonomics differ from Anthropic's
+  inlined-citation model. Likely follow-up: change
+  ``build_multi_verdicts`` so when ``web_sources`` is missing/empty AND
+  ``tool_retrieved_urls`` is non-empty, populate ``model_reported_sources``
+  with the tool URLs as a defensive backfill (vs the current contract where
+  only index-0 ``web_sources`` is backfilled). Trade-off documented:
+  attribution fidelity vs visible grounding.
+- **Step 2 (Anthropic triage cost):** ✅ confirmed; cost fell 3.3× and
+  ``model_id`` is now ``claude-haiku-4-5`` for all triage rows.
+- **Step 3 (Gemini cache pin):** ✅ confirmed; zero 400s, frontier verdicts
+  return.
+- **Step 4 (rerun + STATUS.md update):** ✅ this note.
+
+### Explicitly still deferred
+
+- **Bug C — triage-tier URL grounding** (OpenAI + Gemini triage strip 100%
+  of model-reported URLs, 24/24 and 31/31 in the rerun). Triage runs a
+  separate single-claim code path; the strengthened multi-claim prompt does
+  not affect it. Reasoning unchanged from the original plan: triage
+  verdicts are consensus inputs, not published, so the strip is an audit
+  signal rather than a production failure. Worth revisiting only if we
+  start surfacing triage citations downstream.
+- **Grok unbounded tool-call budget.** xAI triage spent $2.92 today (70%
+  of total cost) on 500K input tokens and 83 tool calls across 10 claims.
+  Real concern but not a regression and not on this plan's scope.
 
 ## Session note — 2026-04-23 (Phase E Grok/Gemini live claim-batching)
 

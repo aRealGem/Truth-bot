@@ -200,7 +200,7 @@ class TestGeminiLivePaginated:
         from truthbot.metrics.telemetry import telemetry_run_context
         from truthbot.verify.adapters.gemini import GeminiAdapter
 
-        GeminiAdapter._cached_content_name = None
+        GeminiAdapter._cached_content_names = {}
 
         run_id = f"smoke-pg-gemini-{int(time.time())}"
         adapter = GeminiAdapter()
@@ -249,7 +249,7 @@ class TestGeminiLivePaginated:
                 "status": "complete",
                 "wall_clock_s": round(wall_s, 2),
                 "verdicts": verdict_rows,
-                "cached_content_name": GeminiAdapter._cached_content_name or "",
+                "cached_content_name": next(iter(GeminiAdapter._cached_content_names.values()), ""),
                 "correct_count": correct_count,
                 "notes": "gemini-2.5-pro with GoogleSearch + CachedContent, 5 claims",
             },
@@ -417,7 +417,7 @@ class TestGeminiLivePaginatedMultiClaim:
         # Reset cache once at the start so the first chunk pays creation
         # and remaining chunks benefit from a warm CachedContent (the
         # point of this test is to measure that warm-path efficiency).
-        GeminiAdapter._cached_content_name = None
+        GeminiAdapter._cached_content_names = {}
 
         run_id = f"smoke-pg-multi-gemini-c{chunk_size}-{int(time.time())}"
         adapter = GeminiAdapter()
@@ -486,7 +486,7 @@ class TestGeminiLivePaginatedMultiClaim:
                 "wall_clock_s": round(wall_s, 2),
                 "chunk_size": chunk_size,
                 "request_count": expected_request_count,
-                "cached_content_name": GeminiAdapter._cached_content_name or "",
+                "cached_content_name": next(iter(GeminiAdapter._cached_content_names.values()), ""),
                 "correct_count": correct_count,
                 "verdicts": verdict_rows,
                 "notes": (

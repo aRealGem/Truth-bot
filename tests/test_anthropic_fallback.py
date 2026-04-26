@@ -97,6 +97,61 @@ class TestAnthropicFallbackWarning:
         assert "claude-opus-4-5" in msg
         assert "claude-opus-4-7" != "claude-opus-4-5"
 
+    def test_fallback_chain_starts_with_subclass_model_id(self, env_with_key):
+        """Regression for the Phase 3a calibration finding: 9/10 Anthropic
+        triage calls silently used ``claude-opus-4-7`` because
+        ``_call_with_fallback`` iterated the hard-coded ``_FALLBACK_MODELS``
+        list (Opus-first) instead of honoring the ``TriageAnthropic`` subclass
+        override of ``model_id``. Cost impact was ~25× per triage call.
+
+        The fallback chain must start with ``self.model_id`` so that
+        triage subclasses (and env-var overrides) actually exercise their
+        configured cheap-tier model on the very first attempt.
+        """
+        from truthbot.verify.adapters.anthropic import AnthropicAdapter
+
+        class TriageStub(AnthropicAdapter):
+            model_id = "claude-haiku-4-5"
+
+        ok_response = MagicMock()
+        client = _make_client_sequence(ok_response)
+
+        adapter = TriageStub()
+        resp = adapter._call_with_fallback(client, "user text")
+        assert resp is ok_response
+
+        first_call_model = client.messages.create.call_args_list[0].kwargs.get("model")
+        assert first_call_model == "claude-haiku-4-5", (
+            f"Triage subclass override must drive the first request; "
+            f"got {first_call_model!r}. If this fails with 'claude-opus-4-7' "
+            f"the original Phase 3a triage cost bug has regressed."
+        )
+        assert adapter._active_model == "claude-haiku-4-5"
+
+    def test_fallback_chain_does_not_duplicate_model_id(self, env_with_key):
+        """When ``self.model_id`` is already in ``_FALLBACK_MODELS`` (the
+        default base-class case), the chain must not retry it twice.
+        """
+        from truthbot.verify.adapters.anthropic import AnthropicAdapter
+
+        err = _fake_not_found("primary unavailable")
+        ok_response = MagicMock()
+        client = _make_client_sequence(err, ok_response)
+
+        adapter = AnthropicAdapter()
+        resp = adapter._call_with_fallback(client, "user text")
+        assert resp is ok_response
+
+        attempted_models = [
+            c.kwargs.get("model")
+            for c in client.messages.create.call_args_list
+        ]
+        assert attempted_models[0] == "claude-opus-4-7"
+        assert attempted_models[1] == "claude-opus-4-5"
+        assert len(set(attempted_models)) == len(attempted_models), (
+            f"Models attempted in chain must be unique; got {attempted_models}"
+        )
+
     def test_repeat_call_does_not_log_spurious_same_model_fallback(
         self, env_with_key, caplog
     ):

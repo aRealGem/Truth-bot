@@ -215,6 +215,44 @@ class ModelVerdict(BaseModel):
     explanation: str
     caveats: str = Field(default="", description="Source-quality notes from the adapter")
     web_sources: list[str] = Field(default_factory=list)
+
+    @field_validator("web_sources", mode="before")
+    @classmethod
+    def _sanitize_web_sources(cls, value: Any) -> list[str]:
+        """Sanitize model-emitted web_sources URLs.
+
+        Empirical fix (Phase 3b follow-up): live Gemini output
+        occasionally contains doubled-scheme URLs like
+        ``httpshttps://www.ebc.com/...``. These are clearly concatenation
+        artifacts; we collapse them to the last scheme present. URLs that
+        still lack a recognizable scheme after normalization are dropped
+        rather than rendered as trusted sources.
+        """
+        import re
+
+        _double_scheme_rx = re.compile(r"^https?(?=https?://)", re.IGNORECASE)
+
+        if value is None or not isinstance(value, list):
+            return []
+        out: list[str] = []
+        for item in value:
+            if not isinstance(item, str):
+                continue
+            url = item.strip()
+            if not url:
+                continue
+            # Collapse ``httpshttps://``/``httphttps://``/``httpshttp://``
+            # /``httphttp://`` prefixes down to the inner scheme. Anchored
+            # at start; runs at most twice to cover ``httpshttpshttps://``
+            # edge cases without unbounded looping.
+            for _ in range(3):
+                new = _double_scheme_rx.sub("", url, count=1)
+                if new == url:
+                    break
+                url = new
+            if url.lower().startswith(("http://", "https://")):
+                out.append(url)
+        return out
     scored_at: datetime = Field(default_factory=datetime.utcnow)
     no_response: bool = Field(default=False, description="True when the adapter failed/timed out and returned no verdict")
     tier: str = Field(
@@ -273,6 +311,49 @@ class ModelVerdict(BaseModel):
             "claim — fix for C10 wrong-term errors). Consumed by the "
             "adjudication layer (Phase 3e) and the family-aware consensus "
             "weighting (Phase 3c)."
+        ),
+    )
+    model_reported_sources: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Raw URL list emitted by the model in its JSON output, before "
+            "the anti-hallucination ground-truth intersection ran (Layer 1 "
+            "of the anti-hallucination defense-in-depth). ``web_sources`` "
+            "is the post-intersection subset; this field preserves the "
+            "model's full claim for audit, fabrication-rate metrics, and "
+            "the future cross-model consensus rescue path (Phase 3c — if "
+            "≥2 model families independently emit the same non-tool-"
+            "retrieved URL it likely isn't a hallucination)."
+        ),
+    )
+    stripped_source_count: int = Field(
+        default=0,
+        description=(
+            "Number of *distinct* model-reported URLs that were stripped "
+            "by the ground-truth intersection because they did not appear "
+            "in the search tool's retrieved-URL set. Combined with "
+            "``len(model_reported_sources)`` this yields the per-call "
+            "fabrication rate. Always ``<= len(model_reported_sources)`` "
+            "after dedup; a value > 0 with ``tool_call_count == 0`` means "
+            "the model fabricated citations from training data without "
+            "running search."
+        ),
+    )
+    url_classifications: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Per-URL reachability classification (Layer 4 of the anti-"
+            "hallucination defense-in-depth). Keys are URLs from "
+            "``web_sources``; values are the strings emitted by "
+            "``truthbot.verify.url_validation.classify_failure`` — one of "
+            "``ok`` / ``bot-blocked`` / ``transient`` / ``dead-4xx`` / "
+            "``malformed`` / ``dns`` / ``cert-error`` / ``unknown``. "
+            "Populated by ``classify_verdicts_in_place`` (or loaded from "
+            "the cleaned-sidecar ``url_filter_classification`` audit "
+            "field). The publish layer reads this to render the three "
+            "trust tiers (verified / unverified / broken). An empty dict "
+            "means the URLs were never classified, so the renderer falls "
+            "back to the legacy verified-by-default rendering."
         ),
     )
 

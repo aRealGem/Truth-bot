@@ -28,7 +28,7 @@ def env_with_key(monkeypatch):
 @pytest.fixture(autouse=True)
 def reset_cache(monkeypatch):
     from truthbot.verify.adapters.gemini import GeminiAdapter
-    monkeypatch.setattr(GeminiAdapter, "_cached_content_name", None)
+    monkeypatch.setattr(GeminiAdapter, "_cached_content_names", {})
 
 
 def _fake_types_module():
@@ -113,6 +113,67 @@ class TestGeminiCachedContentConfig:
             "CachedContent is a process-wide singleton — no second create call"
         )
 
+    def test_cache_is_keyed_by_active_model(self, env_with_key):
+        """Regression for the Phase 3a calibration finding (Bug B): all
+        Gemini frontier multi-claim calls failed with a 400 error::
+
+            Model used by GenerateContent request (models/gemini-2.5-pro)
+            and CachedContent (models/gemini-2.5-flash) has to be the same.
+
+        Root cause was that ``_cached_content_name`` was a single class-level
+        slot. Triage (``gemini-2.5-flash``) populated it first; every later
+        frontier (``gemini-2.5-pro``) call then reused the same flash-bound
+        cache name, which Google's API rejects.
+
+        The cache map must be keyed by ``self._active_model`` so each tier
+        gets its own cache entry and request-vs-cache models always agree.
+        """
+        from truthbot.verify.adapters.gemini import GeminiAdapter
+
+        class TriageGemini(GeminiAdapter):
+            model_id = "gemini-2.5-flash"
+
+        class FrontierGemini(GeminiAdapter):
+            model_id = "gemini-2.5-pro"
+
+        triage = TriageGemini()
+        frontier = FrontierGemini()
+        types_mod = _fake_types_module()
+
+        flash_cache = MagicMock()
+        flash_cache.name = "caches/flash-rubric"
+        pro_cache = MagicMock()
+        pro_cache.name = "caches/pro-rubric"
+
+        fake_client = MagicMock()
+        fake_client.caches.create.side_effect = [flash_cache, pro_cache]
+
+        triage_name = triage._get_or_create_cached_content(fake_client, types_mod)
+        frontier_name = frontier._get_or_create_cached_content(fake_client, types_mod)
+
+        assert triage_name == "caches/flash-rubric"
+        assert frontier_name == "caches/pro-rubric"
+        assert triage_name != frontier_name, (
+            "Triage and frontier must NOT share a cache entry; cross-tier "
+            "reuse triggers Google's 'request and CachedContent must use the "
+            "same model' 400 error."
+        )
+
+        create_calls = fake_client.caches.create.call_args_list
+        assert len(create_calls) == 2, (
+            f"Each model must trigger its own create call; got {len(create_calls)}"
+        )
+        assert create_calls[0].kwargs["model"] == "gemini-2.5-flash"
+        assert create_calls[1].kwargs["model"] == "gemini-2.5-pro"
+
+        triage_again = triage._get_or_create_cached_content(fake_client, types_mod)
+        frontier_again = frontier._get_or_create_cached_content(fake_client, types_mod)
+        assert triage_again == "caches/flash-rubric"
+        assert frontier_again == "caches/pro-rubric"
+        assert fake_client.caches.create.call_count == 2, (
+            "Within a tier, the cache must be reused (no extra create calls)"
+        )
+
     def test_cache_creation_failure_returns_none(self, env_with_key, caplog):
         from truthbot.verify.adapters.gemini import GeminiAdapter
 
@@ -133,9 +194,12 @@ class TestGeminiCachedContentConfig:
 
         adapter = GeminiAdapter()
 
-        # Pre-seed the process-wide cache handle so the call() path skips
-        # the create branch and exercises the cached_content-only config.
-        GeminiAdapter._cached_content_name = "caches/truthbot-rubric-xyz"
+        # Pre-seed the process-wide cache map for the active model so the
+        # call() path skips the create branch and exercises the
+        # cached_content-only config.
+        GeminiAdapter._cached_content_names = {
+            adapter._active_model: "caches/truthbot-rubric-xyz",
+        }
 
         fake_response = MagicMock()
         fake_response.candidates = []

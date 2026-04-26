@@ -36,8 +36,8 @@ def env_with_key(monkeypatch) -> None:
 
 @pytest.fixture(autouse=True)
 def _reset_cache(monkeypatch) -> None:
-    """Clear the process-wide cache-name singleton between tests."""
-    monkeypatch.setattr(GeminiAdapter, "_cached_content_name", None)
+    """Clear the process-wide cache map between tests."""
+    monkeypatch.setattr(GeminiAdapter, "_cached_content_names", {})
 
 
 def _claim(text: str) -> Claim:
@@ -205,7 +205,6 @@ def test_gemini_call_multi_omits_system_instruction_when_cache_is_set(
     ``GenerateContentConfig`` must reference the cache and NOT pass
     ``system_instruction`` or ``tools`` — Google rejects that combination.
     """
-    GeminiAdapter._cached_content_name = "caches/truthbot-rubric-pre-seeded"
     claims = [_claim("A"), _claim("B")]
     text = json.dumps(
         [

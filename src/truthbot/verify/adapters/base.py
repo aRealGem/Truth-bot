@@ -282,6 +282,31 @@ verdict rests on secondary analysis."
 is not acceptable without this caveat.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CITATION DISCIPLINE — anti-hallucination requirement
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The "web_sources" array MUST contain ONLY URLs that the web_search tool \
+returned during this exact call. Do NOT fabricate URLs from training data, \
+do NOT guess URL patterns even for sites you know well (bls.gov, cbp.gov, \
+whitehouse.gov, etc.), and do NOT reconstruct URLs from a snippet \
+description. A URL you cite must be one your tool retrieved verbatim.
+
+If you want to reference a source you remember but did not retrieve, \
+describe the source in `caveats` (e.g. "Per BLS CPI release Feb 2026, \
+unverified at retrieval time") rather than emitting a URL for it.
+
+If the web_search tool returned zero relevant URLs for this claim, return \
+"web_sources": [] and either:
+  - set "confidence": "Low" with a verdict label other than Unverifiable if \
+the claim is otherwise supported by retrieved evidence text, OR
+  - set "label": "Unverifiable" if no retrieved evidence supports a verdict.
+
+Fabricated URLs are stripped automatically by a downstream ground-truth \
+intersection. URLs you fabricate will NOT appear in the published report; \
+they will appear in fabrication-rate telemetry against your model. \
+Citation discipline is enforced.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 OUTPUT FORMAT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -358,6 +383,16 @@ _MULTI_CLAIM_PREAMBLE = (
     "Do NOT merge, reorder, or omit claims. Each object must include the same "
     "fields as a single-claim verdict (label, confidence, explanation, caveats, "
     "web_sources).\n\n"
+    "CRITICAL — per-claim web_sources attribution:\n"
+    "Each claim's `web_sources` array MUST list the URLs the web_search tool "
+    "retrieved while researching THAT specific claim, exactly as the "
+    "single-claim CITATION DISCIPLINE rule above requires. Do NOT collapse "
+    "URLs into a single shared list across claims, do NOT leave `web_sources` "
+    "empty just because you researched multiple claims in one request, and do "
+    "NOT omit the field. If you genuinely retrieved no URL relevant to a "
+    "particular claim, set its `web_sources` to [] and lower that claim's "
+    "confidence accordingly. The CITATION DISCIPLINE rule applies per-claim "
+    "in this multi-claim format, not request-wide.\n\n"
 )
 
 _MULTI_CLAIM_OUTPUT_SCHEMA = (
@@ -372,7 +407,12 @@ _MULTI_CLAIM_OUTPUT_SCHEMA = (
     "    \"web_sources\": [\"<url1>\", \"<url2>\", ...]\n"
     "  },\n"
     "  ...one object per claim, in the order listed above...\n"
-    "]"
+    "]\n\n"
+    "Field rules: every object MUST include the `web_sources` field "
+    "(do not omit). It is a JSON array of URL strings retrieved by the "
+    "web_search tool while researching THAT claim, or `[]` when no URL was "
+    "retrieved for that claim. JSON does not allow comments, so do NOT "
+    "include any `//` inline annotations in your output."
 )
 
 
@@ -477,6 +517,148 @@ def _extract_json_array(text: str) -> list:
     raise json.JSONDecodeError("No JSON array found in response", cleaned, 0)
 
 
+def _normalize_url_for_compare(url: str) -> str:
+    """Normalize ``url`` into a comparison-only key.
+
+    Used by :func:`ground_truth_web_sources` to decide whether a model-reported
+    URL matches one of the URLs the search tool actually returned. Comparison
+    is liberal — most cosmetic differences (case, fragment, default port,
+    leading ``www.``, trailing ``/``) are collapsed so that a model that lightly
+    rewrites a tool URL still matches.
+
+    The original URL strings are *never* mutated in caller-visible output;
+    this is purely a comparison key.
+
+    Returns ``""`` for inputs that aren't a recognizable HTTP/HTTPS URL — the
+    caller treats those as non-matching (i.e. stripped).
+    """
+    if not isinstance(url, str):
+        return ""
+    s = url.strip()
+    if not s:
+        return ""
+    if not s.lower().startswith(("http://", "https://")):
+        return ""
+    from urllib.parse import urlparse, urlunparse
+
+    try:
+        p = urlparse(s)
+    except Exception:
+        return ""
+    scheme = (p.scheme or "").lower()
+    netloc = (p.netloc or "").lower()
+    if scheme == "https" and netloc.endswith(":443"):
+        netloc = netloc[:-4]
+    elif scheme == "http" and netloc.endswith(":80"):
+        netloc = netloc[:-3]
+    if netloc.startswith("www."):
+        netloc = netloc[4:]
+    path = p.path or ""
+    if path == "/":
+        path = ""
+    elif len(path) > 1 and path.endswith("/"):
+        path = path[:-1]
+    return urlunparse((scheme, netloc, path, p.params or "", p.query or "", ""))
+
+
+def ground_truth_web_sources(
+    model_reported: Optional[list[str]],
+    tool_retrieved: Optional[list[str]],
+) -> tuple[list[str], int]:
+    """Filter ``model_reported`` to URLs that intersect ``tool_retrieved``.
+
+    This is the **anti-hallucination intersection** invoked by every adapter
+    after the model emits its JSON verdict. Models occasionally fabricate
+    URLs that *look* like real citations (correct domain pattern, plausible
+    slug) but were never returned by the web_search tool. We strip those.
+
+    Comparison is performed via :func:`_normalize_url_for_compare`; matching
+    URLs are returned in their **original model-reported form** (so the
+    publish layer still shows what the model emitted, not a normalized
+    variant). Order from ``model_reported`` is preserved; duplicates are
+    collapsed (first occurrence wins).
+
+    Returns
+    -------
+    (kept, stripped_count)
+        ``kept`` — the subset of ``model_reported`` URLs that match at least
+        one URL in ``tool_retrieved``, deduplicated.
+        ``stripped_count`` — number of distinct model-reported URLs that did
+        NOT match, including malformed entries. Useful for fabrication-rate
+        telemetry.
+
+    Edge cases
+    ----------
+    * ``model_reported`` is None / empty → ``([], 0)``.
+    * ``tool_retrieved`` is None / empty → strict mode: every model-reported
+      URL is stripped. (Caller is expected to combine this with
+      ``tool_call_count`` to decide whether to mark the verdict
+      ``Unverifiable`` per the CITATION DISCIPLINE prompt block.)
+    """
+    reported = list(model_reported or [])
+    if not reported:
+        return [], 0
+
+    truth_keys: set[str] = set()
+    for u in tool_retrieved or []:
+        k = _normalize_url_for_compare(u)
+        if k:
+            truth_keys.add(k)
+
+    kept: list[str] = []
+    seen_kept: set[str] = set()
+    stripped_keys: set[str] = set()
+
+    for raw in reported:
+        key = _normalize_url_for_compare(raw)
+        if not key:
+            stripped_keys.add(repr(raw))
+            continue
+        if key in truth_keys:
+            if key not in seen_kept:
+                kept.append(raw)
+                seen_kept.add(key)
+        else:
+            stripped_keys.add(key)
+
+    return kept, len(stripped_keys)
+
+
+def apply_url_grounding(
+    raw: dict,
+    tool_retrieved: Optional[list[str]],
+    *,
+    fallback_limit: int = 10,
+) -> tuple[list[str], list[str], int]:
+    """Compute the three URL fields for a single ``ModelVerdict`` (Layer 1d).
+
+    Returns ``(web_sources, model_reported_sources, stripped_source_count)``:
+        * ``web_sources``           — what the publish layer renders.
+        * ``model_reported_sources``— the model's raw self-reported URLs
+          before intersection (audit trail / Phase 3c consensus).
+        * ``stripped_source_count`` — distinct model-reported URLs that
+          failed the ground-truth intersection (fabrication-rate metric).
+
+    Behavior:
+      * Model emitted ``web_sources`` (key present, value may be empty
+        list) → run :func:`ground_truth_web_sources` against
+        ``tool_retrieved``; respect the model's claim of "no sources"
+        when the list is empty.
+      * Model omitted ``web_sources`` entirely → fall back to up to
+        ``fallback_limit`` tool-retrieved URLs in ``web_sources``,
+        empty ``model_reported_sources``, zero stripped count. These
+        URLs are tool-grounded by definition so this is not a
+        fabrication.
+    """
+    raw_ws = raw.get("web_sources", None)
+    tool_retrieved = list(tool_retrieved or [])
+    if raw_ws is None:
+        return list(tool_retrieved[:fallback_limit]), [], 0
+    model_reported = [u for u in (raw_ws or []) if isinstance(u, str)]
+    kept, stripped = ground_truth_web_sources(model_reported, tool_retrieved)
+    return kept, model_reported, stripped
+
+
 def parse_multi_claim_json(text: str, claims: list[Claim]) -> dict[str, dict]:
     """
     Parse a multi-claim model response into a ``{claim_id: raw_verdict_dict}`` map.
@@ -519,6 +701,7 @@ def build_multi_verdicts(
     tier: str = "frontier",
     call_usage: Optional[dict[str, Any]] = None,
     batch_call_id: str = "",
+    tool_retrieved_urls: Optional[list[str]] = None,
 ) -> list[ModelVerdict]:
     """
     Convert a parsed multi-claim response into one ``ModelVerdict`` per claim.
@@ -531,6 +714,17 @@ def build_multi_verdicts(
     ``cached_input_tokens``, ``tool_call_count``. Missing keys default to 0.
     ``tool_call_count`` is attributed to the index-0 verdict (like tokens) so
     per-run aggregation does not N-count a single API call's tool usage.
+
+    Anti-hallucination Layer 1d: ``tool_retrieved_urls`` is the set of URLs
+    the search tool actually returned during this batch call (a single URL
+    set covers all claims since they share one API call). Each verdict's
+    model-reported ``web_sources`` is intersected against that set via
+    :func:`apply_url_grounding`; matching URLs become ``web_sources``, the
+    raw list is preserved on ``model_reported_sources``, and
+    ``stripped_source_count`` records how many distinct URLs were rejected
+    (fabrication signal). When ``tool_retrieved_urls`` is ``None`` (legacy
+    callers that haven't been wired yet), grounding is skipped and the
+    pre-Layer-1d behavior is preserved.
     """
     usage = call_usage or {}
     out: list[ModelVerdict] = []
@@ -590,6 +784,24 @@ def build_multi_verdicts(
             input_t = 0
             output_t = 0
             tool_count = 0
+        if tool_retrieved_urls is None:
+            ws = list(raw.get("web_sources", []) or [])
+            mrs: list[str] = []
+            stripped = 0
+        elif raw.get("web_sources") is None:
+            # Model omitted web_sources for this claim. In the multi-claim
+            # path we *don't* apply the per-verdict fallback — adapters
+            # backfill index-0 explicitly with tool-retrieved URLs after
+            # build_multi_verdicts returns. Fanning the same tool URL list
+            # out to every sibling verdict would falsely suggest each claim
+            # was independently grounded.
+            ws = []
+            mrs = []
+            stripped = 0
+        else:
+            ws, mrs, stripped = apply_url_grounding(
+                raw, tool_retrieved_urls
+            )
         verdict = ModelVerdict(
             adapter_name=adapter_name,
             model_id=model_id,
@@ -598,7 +810,9 @@ def build_multi_verdicts(
             confidence=confidence,
             explanation=raw.get("explanation", ""),
             caveats=raw.get("caveats", ""),
-            web_sources=list(raw.get("web_sources", []) or []),
+            web_sources=ws,
+            model_reported_sources=mrs,
+            stripped_source_count=stripped,
             tier=tier,
             synthesis_mode=synthesis_mode,
             cached_input_tokens=cached_t,

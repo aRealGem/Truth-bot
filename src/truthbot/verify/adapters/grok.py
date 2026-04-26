@@ -19,6 +19,7 @@ from truthbot.models import Claim, Confidence, Evidence, ModelVerdict, VerdictLa
 from truthbot.verify.adapters.base import (
     SYNTHESIS_SYSTEM,
     LLMAdapter,
+    apply_url_grounding,
     build_multi_user_message,
     build_multi_verdicts,
     normalize_verdict_label,
@@ -108,6 +109,9 @@ class GrokAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
+                ws, mrs, stripped = apply_url_grounding(raw, urls)
+                td["model_reported_source_count"] = len(mrs)
+                td["stripped_source_count"] = stripped
                 verdict = ModelVerdict(
                     adapter_name=self.adapter_name,
                     model_id=self._active_model,
@@ -115,7 +119,9 @@ class GrokAdapter(LLMAdapter):
                     label=label,
                     confidence=confidence,
                     explanation=raw.get("explanation", ""),
-                    web_sources=raw.get("web_sources", urls[:10]),
+                    web_sources=ws,
+                    model_reported_sources=mrs,
+                    stripped_source_count=stripped,
                     tier=telemetry_tier,
                     synthesis_mode=get_synthesis_mode(),
                     tool_call_count=int(tool_count),
@@ -242,8 +248,14 @@ class GrokAdapter(LLMAdapter):
                     tier=telemetry_tier,
                     call_usage=call_usage,
                     batch_call_id=batch_call_id,
+                    tool_retrieved_urls=urls,
                 )
-                if verdicts and not verdicts[0].web_sources and urls:
+                if (
+                    verdicts
+                    and not verdicts[0].web_sources
+                    and not verdicts[0].model_reported_sources
+                    and urls
+                ):
                     verdicts[0].web_sources = urls[:10]
                 return verdicts
 

@@ -284,16 +284,50 @@ def _append_sidecar(path: Path, verdict: ModelVerdict) -> None:
         f.write(verdict.model_dump_json() + "\n")
 
 
-def load_sidecar(path: Path) -> list[ModelVerdict]:
-    if not path.exists():
+def cleaned_sidecar_path(metrics_dir: Path, run_id: str) -> Path:
+    """Path of the post-``urls filter-sidecar`` cleaned variant.
+
+    Co-located with the raw sidecar; suffix ``.cleaned.jsonl`` matches
+    the default output of the ``truthbot urls filter-sidecar`` CLI.
+    """
+    return sidecar_path(metrics_dir, run_id).with_name(f"{run_id}.cleaned.jsonl")
+
+
+def load_sidecar(
+    path: Path, *, cleaned_path: Optional[Path] = None
+) -> list[ModelVerdict]:
+    """Load verdicts from a sidecar.
+
+    When ``cleaned_path`` is provided and exists, that file is read
+    instead of ``path`` and each row's ``url_filter_classification``
+    audit field (written by ``filter_sidecar_row``) is mapped onto the
+    ``ModelVerdict.url_classifications`` model field so the publish
+    layer's three-tier rendering kicks in automatically.
+    """
+    src = cleaned_path if (cleaned_path is not None and cleaned_path.exists()) else path
+    if not src.exists():
         return []
     out: list[ModelVerdict] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in src.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line:
             continue
         try:
-            out.append(ModelVerdict.model_validate_json(line))
+            row = json.loads(line)
+        except json.JSONDecodeError as exc:
+            logger.warning("skipping unreadable sidecar row: %s", exc)
+            continue
+        # The cleaned-sidecar audit key is named for what the URL
+        # filter pass writes; the model field is named for what the
+        # publish layer reads. Translate once at load time so callers
+        # downstream see only ``url_classifications``.
+        if (
+            "url_filter_classification" in row
+            and not row.get("url_classifications")
+        ):
+            row["url_classifications"] = row["url_filter_classification"]
+        try:
+            out.append(ModelVerdict.model_validate(row))
         except Exception as exc:
             logger.warning("skipping unreadable sidecar row: %s", exc)
     return out
@@ -673,6 +707,7 @@ def reconcile_run(
     *,
     adapters_by_name: dict[str, LLMAdapter],
     engine,
+    validate_urls: bool = False,
 ) -> dict[str, Any]:
     """
     Reconcile a submitted run: poll → parse → merge sidecar → build+cache bundles.
@@ -809,14 +844,50 @@ def reconcile_run(
                     td["claim_count"] = chunk_size_by_call.get(
                         mv.batch_call_id, 1
                     )
+                    # Layer 5 — fabrication-rate telemetry.
+                    td["model_reported_source_count"] = len(
+                        mv.model_reported_sources or []
+                    )
+                    td["stripped_source_count"] = int(
+                        mv.stripped_source_count or 0
+                    )
                 verdicts_by_claim.setdefault(mv.claim_id, []).append(mv)
 
-    # Merge sidecar (Grok) rows
+    # Merge sidecar (Grok + Gemini live) rows. Prefer the post-filter
+    # cleaned variant when present so URL classifications flow through
+    # to the publish layer for free.
     sidecar = sidecar_path(metrics_dir, run_id)
-    for mv in load_sidecar(sidecar):
+    cleaned = cleaned_sidecar_path(metrics_dir, run_id)
+    sidecar_mvs = load_sidecar(sidecar, cleaned_path=cleaned)
+    for mv in sidecar_mvs:
         verdicts_by_claim.setdefault(mv.claim_id, []).append(mv)
 
-    # Build bundles
+    if validate_urls:
+        # Layer 4 backbone — classify every URL across all merged
+        # verdicts (live and batch) so the publish layer can render the
+        # three trust tiers. Cleaned-sidecar rows already carry their
+        # classifications; this pass backfills the batch-tier verdicts
+        # (OpenAI, Anthropic) so the run summary's fabrication rates
+        # cover all four adapters and rendering is uniform.
+        from truthbot.verify.url_validation import (
+            UrlCache,
+            classify_verdicts_in_place,
+        )
+
+        all_mvs = [mv for mvs in verdicts_by_claim.values() for mv in mvs]
+        url_cache_path = metrics_dir / "url_cache.jsonl"
+        url_cache = UrlCache.load(url_cache_path)
+        try:
+            stats = classify_verdicts_in_place(all_mvs, cache=url_cache)
+            logger.info(
+                "reconcile: URL classification — verified=%d unverified=%d broken=%d",
+                stats["verified"],
+                stats["unverified"],
+                stats["broken"],
+            )
+        finally:
+            url_cache.save(url_cache_path)
+
     bundles = []
     for cid, claim in claim_by_id.items():
         mvs = verdicts_by_claim.get(cid, [])
