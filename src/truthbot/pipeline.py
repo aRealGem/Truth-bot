@@ -351,6 +351,28 @@ def resolve_inject_evidence(
     return evidence_source.strip().lower() != "none"
 
 
+def _routes_to_batch(adapter, settings) -> bool:
+    """Phase 3a — honor ``TRUTHBOT_OPENAI_LIVE`` to flip OpenAI to sidecar.
+
+    The default static routing (``supports_batch=True`` → batch API,
+    ``False`` → sidecar live) is preserved. The single override is
+    OpenAI: when ``settings.openai_live_mode`` is truthy, route OpenAI
+    through the sidecar so verdicts complete in seconds instead of the
+    3–24h batch SLA we hit on the ``ed7be4ad-…`` SOTU run.
+
+    Promoted to module scope so the routing decision is testable in
+    isolation — see ``tests/test_openai_live_routing.py``.
+    """
+    if not getattr(adapter, "supports_batch", False):
+        return False
+    if (
+        getattr(adapter, "adapter_name", "") == "openai"
+        and getattr(settings, "openai_live_mode", False)
+    ):
+        return False
+    return True
+
+
 def _run_publish_batch_submit(
     *,
     args,
@@ -384,9 +406,9 @@ def _run_publish_batch_submit(
         else:
             claims_with_evidence.append((claim, evidence))
 
-    batch_adapters = [a for a in engine.adapters if getattr(a, "supports_batch", False)]
+    batch_adapters = [a for a in engine.adapters if _routes_to_batch(a, settings)]
     sidecar_adapters = [
-        a for a in engine.adapters if not getattr(a, "supports_batch", False)
+        a for a in engine.adapters if not _routes_to_batch(a, settings)
     ]
 
     requested_cpr = getattr(args, "claims_per_request", None)

@@ -63,6 +63,29 @@ class Settings:
             return 5
 
     @property
+    def openai_live_mode(self) -> bool:
+        """Run the OpenAI adapter live (sidecar) instead of via the Batch API.
+
+        OpenAI exposes a 50%-discounted Batch API (1× input/output token cost
+        becomes 0.5×) but its end-to-end turnaround in practice is hours
+        (3–24h SLA), which is unworkable for tight iteration cycles. Setting
+        ``TRUTHBOT_OPENAI_LIVE=1`` flips the pipeline to dispatch OpenAI
+        through the live Responses API at submit time alongside Gemini/Grok,
+        with verdicts persisted in the sidecar. Roughly trades 50% of OpenAI's
+        per-run cost for a sub-minute completion window.
+
+        Default ``False`` preserves the legacy batch path so existing
+        scheduled/long-running fact-check runs keep their cost discount
+        until explicitly opted out.
+        """
+        return _optional("TRUTHBOT_OPENAI_LIVE", "").strip().lower() in (
+            "1",
+            "true",
+            "yes",
+            "on",
+        )
+
+    @property
     def max_evidence_per_claim_in_batch(self) -> int:
         """
         Cap on injected evidence snippets per claim.
