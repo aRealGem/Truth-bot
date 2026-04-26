@@ -8,6 +8,7 @@ import json
 import logging
 import os
 import re
+import uuid
 from typing import Any
 
 from truthbot.metrics.telemetry import get_synthesis_mode, get_telemetry
@@ -318,6 +319,147 @@ class OpenAIAdapter(LLMAdapter):
         if verdicts and not verdicts[0].web_sources and not verdicts[0].model_reported_sources:
             verdicts[0].web_sources = urls[:10]
         return verdicts
+
+    # ── Live multi-claim call (Phase 3a — promotion from Batch API) ──────────
+
+    def call_multi(
+        self,
+        claims: list[Claim],
+        evidence_by_claim: dict[str, list[Evidence]],
+        *,
+        inject_evidence: bool = True,
+        max_evidence_per_claim: int = 5,
+        telemetry_tier: str = "frontier",
+        run_id: str | None = None,
+    ) -> list[ModelVerdict]:
+        """Call OpenAI live for N claims; mirrors the batch multi-claim payload.
+
+        Phase 3a: when ``settings.openai_live_mode`` is set the pipeline
+        routes OpenAI through the sidecar live path instead of the Batch
+        API. This trades the 50% batch discount for a sub-minute end-to-end
+        completion window (the batch path's 3–24h SLA was unworkable for
+        iteration). Token / tool budgets scale linearly with N to match
+        ``build_multi_batch_payload``.
+        """
+        if not claims:
+            return []
+
+        import openai
+
+        telemetry = get_telemetry()
+        n = len(claims)
+        user_msg = build_multi_user_message(
+            claims,
+            evidence_by_claim,
+            inject_evidence=inject_evidence,
+            max_evidence_per_claim=max_evidence_per_claim,
+        )
+        batch_call_id = f"openai-live-multi-{uuid.uuid4().hex[:12]}"
+        max_output_tokens = 2048 + 1024 * n
+        max_tool_calls = 2 * n
+
+        with telemetry.measure(
+            self.adapter_name,
+            self._active_model,
+            claims[0].id,
+            tier=telemetry_tier,
+            run_id=run_id,
+        ) as td:
+            td["claim_count"] = n
+            td["batch_call_id"] = batch_call_id
+
+            try:
+                client = openai.OpenAI(api_key=self._api_key, timeout=120.0)
+                verdict_text, urls, tool_count, usage = self._call_with_search(
+                    client,
+                    user_msg,
+                    max_output_tokens=max_output_tokens,
+                    max_tool_calls=max_tool_calls,
+                )
+
+                cached = 0
+                if usage:
+                    td["input_tokens"] = (
+                        getattr(usage, "input_tokens", 0)
+                        or getattr(usage, "prompt_tokens", 0)
+                    )
+                    td["output_tokens"] = (
+                        getattr(usage, "output_tokens", 0)
+                        or getattr(usage, "completion_tokens", 0)
+                    )
+                    details = getattr(usage, "prompt_tokens_details", None)
+                    if details is not None:
+                        cached = getattr(details, "cached_tokens", 0) or 0
+                        td["openai_cached_prompt_tokens"] = cached
+                td["tool_call_count"] = tool_count
+                td["retrieved_url_count"] = len(urls)
+
+                try:
+                    raw_by_claim = parse_multi_claim_json(verdict_text, claims)
+                except json.JSONDecodeError as exc:
+                    logger.error(
+                        "OpenAIAdapter multi-claim parse error (call=%s, n=%d): %s",
+                        batch_call_id, n, exc,
+                    )
+                    td["status"] = "parse_error"
+                    raw_by_claim = {}
+                else:
+                    td["status"] = "ok"
+
+                call_usage = {
+                    "input_tokens": int(td.get("input_tokens", 0) or 0),
+                    "output_tokens": int(td.get("output_tokens", 0) or 0),
+                    "cached_input_tokens": int(cached),
+                    "tool_call_count": int(tool_count),
+                }
+                verdicts = build_multi_verdicts(
+                    claims,
+                    raw_by_claim,
+                    adapter_name=self.adapter_name,
+                    model_id=self._active_model,
+                    synthesis_mode=get_synthesis_mode(),
+                    tier=telemetry_tier,
+                    call_usage=call_usage,
+                    batch_call_id=batch_call_id,
+                    tool_retrieved_urls=urls,
+                )
+                if (
+                    verdicts
+                    and not verdicts[0].web_sources
+                    and not verdicts[0].model_reported_sources
+                    and urls
+                ):
+                    verdicts[0].web_sources = urls[:10]
+                for v, claim in zip(verdicts, claims):
+                    apply_temporal_flags(v, claim)
+                return verdicts
+
+            except Exception as exc:
+                exc_str = str(exc).lower()
+                td["status"] = (
+                    "timeout"
+                    if ("timeout" in exc_str or "timed out" in exc_str)
+                    else "api_error"
+                )
+                logger.error(
+                    "OpenAIAdapter multi-claim API error (call=%s, n=%d): %s",
+                    batch_call_id, n, exc,
+                )
+                return [
+                    ModelVerdict(
+                        adapter_name=self.adapter_name,
+                        model_id=self._active_model,
+                        claim_id=c.id,
+                        label=VerdictLabel.UNVERIFIABLE,
+                        confidence=Confidence.LOW,
+                        explanation=f"API error: {exc}",
+                        no_response=True,
+                        tier=telemetry_tier,
+                        synthesis_mode=get_synthesis_mode(),
+                        batch_call_id=batch_call_id,
+                    )
+                    for c in claims
+                ]
 
     def call(
         self,
