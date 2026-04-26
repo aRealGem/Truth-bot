@@ -1,0 +1,43 @@
+---
+description: Always state up-front how many sandbox approval prompts the user will see for the current task, so they can step away without losing productive time.
+alwaysApply: true
+---
+
+# Approval-budget heads-up
+
+Cursor's shell sandbox prompts the user to approve commands that need elevated permissions (`full_network`, `git_write`, `all`, etc.). The user wants to know up-front, before any work begins, exactly how many approval prompts they'll see, so they can decide whether to babysit or step away.
+
+## Rule
+
+Before starting any non-trivial task, **state the approval count first**, in this format:
+
+> **Approval budget: N prompts** — `<one-line summary of which steps need approval>`.
+
+Then proceed with the work. If the count changes mid-task (e.g., a command fails sandboxed and needs to be retried with elevated perms), surface the revision immediately:
+
+> **Approval budget revised: N → M** — `<reason>`.
+
+## What needs approval (count these)
+
+- `git push`, `gh pr create`, anything that hits an external write API → `git_write` or `full_network` → **1 prompt each**.
+- Network-heavy commands not on the auto-allowlist (curl to non-allowlisted hosts, custom MCP calls touching unfamiliar endpoints) → `full_network` → **1 prompt each**.
+- Commands that need to escape the sandbox entirely (uncommon: filesystem ops outside the workspace, USB, etc.) → `all` → **1 prompt each**.
+
+## What does NOT need approval (zero-count)
+
+- Local `git status`, `git diff`, `git log`, `git add`, `git commit` (no remote contact).
+- Reading/writing files in the workspace.
+- `pytest`, `ruff`, `npm install`, package-manager commands on allowlisted registries.
+- Running `truthbot ...` CLI commands (LLM API calls go through allowlisted hosts).
+
+## Examples
+
+> **Approval budget: 1 prompt** — the `git push origin main` step. Everything else (commit, file edits, rule write) runs in-sandbox.
+
+> **Approval budget: 3 prompts** — `git push`, `gh pr create`, and a follow-up `gh pr checks --watch`.
+
+> **Approval budget: 0 prompts** — pure local refactor + tests, no remote calls.
+
+## When to skip
+
+For trivial single-step requests (one read, one edit, one local script), the count is obviously zero and stating it adds noise. Use judgment — but lean toward stating it whenever the task involves git push, PR creation, deploys, long-running pipelines, or anything where the user might walk away.
