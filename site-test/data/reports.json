@@ -1,5 +1,179 @@
 [
   {
+    "id": "e81546a0-6371-4e96-9e94-3d6213864d5a",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 29,
+    "verdict_distribution": {
+      "True": 5,
+      "Mostly True": 4,
+      "Misleading": 0,
+      "Exaggerated": 6,
+      "False": 11,
+      "Unverifiable": 3
+    },
+    "model_agreement_rate": 0.138,
+    "url": "reports/2026-02-24-donald-trump-e81546.html",
+    "tier_counts": {
+      "gov": 164,
+      "wire": 2,
+      "news": 9,
+      "fc": 9,
+      "other": 116
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "c782dc0a-326e-46f7-95d5-b56b36d2ffa6",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 10,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 3,
+      "Misleading": 0,
+      "Exaggerated": 1,
+      "False": 4,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.2,
+    "url": "reports/2026-02-24-donald-trump-c782dc.html",
+    "tier_counts": {
+      "gov": 46,
+      "wire": 0,
+      "news": 6,
+      "fc": 1,
+      "other": 51
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "c01a0083-22a2-4e00-94ea-f83b4d57ff9b",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 10,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 3,
+      "Misleading": 3,
+      "Exaggerated": 1,
+      "False": 1,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.2,
+    "url": "reports/2026-02-24-donald-trump-c01a00.html",
+    "tier_counts": {
+      "gov": 94,
+      "wire": 0,
+      "news": 7,
+      "fc": 2,
+      "other": 59
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "2368f2e6-1823-4c86-810d-8044f025a98c",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 10,
+    "verdict_distribution": {
+      "True": 1,
+      "Mostly True": 1,
+      "Misleading": 0,
+      "Exaggerated": 1,
+      "False": 3,
+      "Unverifiable": 4
+    },
+    "model_agreement_rate": 0.1,
+    "url": "reports/2026-02-24-donald-trump-2368f2.html",
+    "tier_counts": {
+      "gov": 45,
+      "wire": 0,
+      "news": 0,
+      "fc": 0,
+      "other": 20
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "27e55786-660a-420f-bf65-a3486fba81a1",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 10,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 3,
+      "Misleading": 1,
+      "Exaggerated": 0,
+      "False": 3,
+      "Unverifiable": 1
+    },
+    "model_agreement_rate": 0.1,
+    "url": "reports/2026-02-24-donald-trump-27e557.html",
+    "tier_counts": {
+      "gov": 44,
+      "wire": 0,
+      "news": 5,
+      "fc": 3,
+      "other": 30
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "4161a143-8caf-4e93-9ba8-9ac7d00b5fde",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 10,
+    "verdict_distribution": {
+      "True": 2,
+      "Mostly True": 3,
+      "Misleading": 0,
+      "Exaggerated": 1,
+      "False": 4,
+      "Unverifiable": 0
+    },
+    "model_agreement_rate": 0.1,
+    "url": "reports/2026-02-24-donald-trump-4161a1.html",
+    "tier_counts": {
+      "gov": 47,
+      "wire": 0,
+      "news": 4,
+      "fc": 3,
+      "other": 42
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
     "id": "165937eb-5797-4fac-afe6-65553ff74aed",
     "date": "2026-03-04",
     "speaker": "Donald Trump",
