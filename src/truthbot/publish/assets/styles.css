@@ -980,6 +980,28 @@ details.reasoning[open] > summary::before { transform: rotate(90deg); }
 .tier-fc    { background: #e65100; }
 .tier-other { background: #546e7a; }
 
+/* Layer 4 — anti-hallucination URL trust tiers.
+   ``source-verified`` is the default rendering. ``source-unverified``
+   is rendered with a muted color + small "unverified" badge; the URL
+   is still clickable because trusted sites (.gov, major news) are
+   often bot-blocked even when real. ``source-broken`` is never
+   rendered (publish strips broken URLs from the list). */
+.evidence-list li.source-unverified a { color: var(--ink-muted); }
+.source-unverified-badge {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  padding: 0.08rem 0.3rem;
+  color: #6a4a00;
+  background: #fff3cd;
+  border: 1px solid #f0d779;
+  border-radius: 1px;
+  font-weight: 600;
+  margin-left: 0.4rem;
+  text-transform: uppercase;
+  cursor: help;
+}
+
 
 /* [17] Report page — claim footer & methodology ──────────────────────── */
 .claim-foot {
