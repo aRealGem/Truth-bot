@@ -471,20 +471,114 @@ def _tier_badge(url: str) -> str:
     return '<span class="evidence-tier tier-other">T6</span>'
 
 
-def _evidence_list_html(urls: list[str]) -> str:
-    """Render evidence URLs as evidence-list structure."""
+# Layer 4 — anti-hallucination publish-layer rendering.
+#
+# A URL's reachability classification (from
+# ``truthbot.verify.url_validation.classify_failure``) determines how we
+# render it on the static site:
+#
+#   * ``ok``                       → "verified" (default rendering).
+#   * ``bot-blocked`` / ``transient`` / ``unknown`` → "unverified"
+#     (muted, small "unverified" badge so readers know we couldn't
+#     confirm the URL but the citation likely still exists).
+#   * ``dead-4xx`` / ``malformed`` / ``dns`` / ``cert-error`` →
+#     "broken" — *skipped from the rendered list entirely*. Even if the
+#     cleaned sidecar didn't strip these, the publish layer must as a
+#     belt-and-suspenders defense against rendering hallucinated or
+#     rotted URLs that destroy reader trust.
+_RENDER_AS_BROKEN = frozenset({"dead-4xx", "malformed", "dns", "cert-error"})
+_RENDER_AS_UNVERIFIED = frozenset({"bot-blocked", "transient", "unknown"})
+
+# Severity rank for collapsing per-verdict URL classifications into a
+# single combined-evidence-list rendering decision. Higher rank wins,
+# so if model A says "ok" and model B says "dead-4xx" for the same URL
+# the reader sees "broken" (and the URL is stripped) rather than being
+# told it's verified. The catch-all default keeps unfamiliar new
+# classifications from accidentally being treated as worse than broken.
+_CLASSIFICATION_RANK = {
+    "ok": 0,
+    "transient": 1,
+    "unknown": 1,
+    "bot-blocked": 1,
+    "cert-error": 2,
+    "dns": 2,
+    "malformed": 2,
+    "dead-4xx": 2,
+}
+
+
+def _worse_classification(a: "str | None", b: str) -> str:
+    """Return the worse of two classification strings (higher rank)."""
+    if a is None:
+        return b
+    return a if _CLASSIFICATION_RANK.get(a, 0) >= _CLASSIFICATION_RANK.get(b, 0) else b
+
+
+def _classify_source_for_render(
+    url: str, classifications: "dict[str, str] | None"
+) -> str:
+    """Return one of ``"verified"``, ``"unverified"``, or ``"broken"``.
+
+    Defaults to ``"verified"`` when no classification map is provided —
+    preserving pre-Layer-4 rendering behavior on reports generated
+    before the URL filter ran.
+    """
+    if not classifications:
+        return "verified"
+    cls = classifications.get(url)
+    if cls is None:
+        return "verified"
+    if cls in _RENDER_AS_BROKEN:
+        return "broken"
+    if cls in _RENDER_AS_UNVERIFIED:
+        return "unverified"
+    return "verified"
+
+
+def _evidence_list_html(
+    urls: list[str],
+    *,
+    classifications: "dict[str, str] | None" = None,
+) -> str:
+    """Render evidence URLs as evidence-list structure.
+
+    When ``classifications`` is provided (mapping URL → failure class
+    string from ``classify_failure``), URLs are rendered with one of
+    three CSS classes (``source-verified`` / ``source-unverified`` /
+    skipped-as-broken) so the static site can visually distinguish them.
+
+    Without ``classifications`` every URL renders as verified (the
+    pre-Layer-4 behavior), so older publish runs still look identical.
+    """
     if not urls:
         return '<p style="font-size:0.88rem;color:var(--ink-muted)">No sources retrieved.</p>'
-    items = []
+    items: list[str] = []
     for url in urls[:10]:
+        render_cls = _classify_source_for_render(url, classifications)
+        if render_cls == "broken":
+            # Defense in depth — never render a known-broken URL even
+            # if it slipped through filter-sidecar.
+            continue
         badge = _tier_badge(url)
         short = url.replace("https://", "").replace("http://", "")
         if len(short) > 80:
             short = short[:77] + "…"
+        unverified_badge = ""
+        if render_cls == "unverified":
+            unverified_badge = (
+                ' <span class="source-unverified-badge" '
+                'title="Could not be auto-verified at publish time '
+                '(bot-blocked or transient error). The URL is most '
+                'likely real but you should confirm before relying on '
+                'it.">unverified</span>'
+            )
         items.append(
-            f'<li><span class="ev-mark">→</span>{badge}'
-            f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a></li>'
+            f'<li class="source-{render_cls}"><span class="ev-mark">→</span>{badge}'
+            f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
+            f'{unverified_badge}</li>'
         )
+    if not items:
+        return '<p style="font-size:0.88rem;color:var(--ink-muted)">No sources retrieved.</p>'
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
 
 
@@ -1176,6 +1270,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     agreeing = 0
     all_urls: list[str] = []
     seen_urls: set[str] = set()
+    combined_classifications: dict[str, str] = {}
     for mv in bundle.model_verdicts:
         mv_label = mv.label.value
         mv_css = _verdict_css(mv_label)
@@ -1226,6 +1321,16 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
             if url not in seen_urls:
                 seen_urls.add(url)
                 all_urls.append(url)
+        # Layer 4 — merge per-verdict URL classifications so the
+        # combined evidence list can render the three trust tiers. If
+        # multiple verdicts disagree on a URL's classification (rare),
+        # the *worse* verdict wins so the reader is never told a URL is
+        # verified when one model's run found it broken.
+        for url, cls in (mv.url_classifications or {}).items():
+            existing = combined_classifications.get(url)
+            combined_classifications[url] = _worse_classification(
+                existing, cls
+            )
 
     total_models = len(bundle.model_verdicts)
     dissenting = total_models - agreeing
@@ -1235,7 +1340,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         '<details class="evidence-details">'
         '  <summary class="evidence-summary">Combined evidence / sources list</summary>'
         '  <div class="evidence">'
-        f'{_evidence_list_html(all_urls[:10])}'
+        f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None)}'
         '  </div>'
         '</details>'
     )
