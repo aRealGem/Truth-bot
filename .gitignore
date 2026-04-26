@@ -37,6 +37,7 @@ htmlcov/
 # Caches
 .cache/
 truthbot_cache/
+truthbot_cache_p3*/
 *.cache
 
 # Reports (generated)
@@ -57,9 +58,12 @@ eval/sotu-2026/*/runner_cache*/
 # Telemetry data (runtime-generated, not source)
 metrics/adapter_calls.jsonl
 metrics/*.jsonl
+metrics/*.csv
 metrics/batch_inputs/
 metrics/batch_jobs/
 metrics/batch_sidecar/
+metrics/extractions/
+metrics/run_summaries/
 metrics/smoke/
 
 # UI reference drops (design specs, not site artifacts)
