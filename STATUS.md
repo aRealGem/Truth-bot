@@ -1,4 +1,101 @@
-# Truth-bot Status — 2026-04-25
+# Truth-bot Status — 2026-04-26
+
+## Session note — 2026-04-26 (Pre-SOTU Grok cap + multi-claim backfill, 29-claim fire)
+
+### Shipped today
+
+Two pre-SOTU fixes from the
+[`pre-sotu-grok-cap-and-backfill_7b176093`](.cursor/plans/pre-sotu-grok-cap-and-backfill_7b176093.plan.md)
+plan plus a clean 29-claim SOTU fire on the validated stack.
+
+- **Fix 1 — Grok `max_tool_calls` cap.** `GrokAdapter._call_with_search` now
+  passes `max_tool_calls = _max_tool_calls_per_claim() * n` on every
+  `client.responses.create`. Default is 8/claim, override via
+  `TRUTHBOT_GROK_MAX_TOOL_CALLS`. Defensive `TypeError`/server-rejection
+  fallback retries without the kwarg if the xAI SDK or server doesn't
+  recognize it (xAI's Responses endpoint is undocumented for this param).
+  Tests: 4 new in `tests/test_grok_multi_claim.py` (default cap, env override,
+  rejection fallback, single-claim default).
+- **Fix 2 — Multi-claim `model_reported_sources` defensive backfill.**
+  `build_multi_verdicts` in `src/truthbot/verify/adapters/base.py` now
+  populates `model_reported_sources` for **all** chunk indices with
+  `tool_retrieved_urls` whenever a multi-claim provider drops attribution
+  (`web_sources` either missing or explicit `[]`), and additionally
+  populates `web_sources` for the index-0 "call owner" so reports keep at
+  least one visible cited source per chunk. Closes the
+  attribution-fidelity-vs-visible-grounding trade-off documented in the
+  prior session note. Tests: 7 new in `tests/test_multi_batch_base.py` plus
+  one each in `tests/test_grok_multi_claim.py` and
+  `tests/test_gemini_multi_claim.py`.
+
+Test suite: 437 passed / 1 xfailed (was 432 / 1).
+
+### 10-claim validation rerun (gate before SOTU fire)
+
+Baseline: `run_id=128597ce-6e83-44a3-8811-8811e1fa219e` (yesterday, no caps).
+Rerun:    `run_id=146ee42a-97c8-443b-ae4a-8511dda0916d` (today, both fixes).
+
+| Metric | Baseline | Rerun | Delta |
+| --- | --- | --- | --- |
+| Total cost | $4.15 | **$1.69** | **−59%** |
+| xAI cost | $3.19 | **$1.22** | **−62%** |
+| xAI tools / claim | unbounded | **4.60 (cap=8)** | capped |
+| MRS non-empty (multi-claim) | <50% | **100%** all 3 sidecar providers | fixed |
+| Anthropic gold-standard verdicts | 10/10 ok | 10/10 ok | unchanged |
+
+All five pass criteria green — fire authorized.
+
+### SOTU 29-claim fire — 2026-04-26
+
+Run ID: `258b5758-8e25-4bf0-8f34-63778d2f976e`
+Report: `site-test/reports/2026-02-24-donald-trump-e81546.html`
+Wall clock: ~12 min submit + ~24 min Anthropic batch reconcile.
+Command: `truthbot publish --transcript eval/sotu-2026/transcript.txt
+--mode batch --triage --max-claims 29` (with `TRUTHBOT_OPENAI_LIVE=1`).
+Pipeline routing: 16 claims short-circuited via cache HIT / triage,
+13 claims dispatched to Anthropic batch + OpenAI/Gemini/xAI live sidecar.
+
+| Provider | Cost | vs pre-fix baseline (10× scale) | Tools/claim (frontier) | MRS non-empty | WS non-empty |
+| --- | --- | --- | --- | --- | --- |
+| Anthropic | $0.76 | n/a (already golden standard) | n/a (batch) | 100% | 100% |
+| OpenAI    | $0.25 | unchanged | 0.69 | 92% | 15% |
+| Gemini    | $0.17 | unchanged | 3.62 | **100%** (was ≈0%) | 0% (all hallucinated, stripped) |
+| xAI       | $3.79 | $14.62 projected → **$3.79 actual = −74%** | **2.15** (cap=8, never hit) | 100% | 100% |
+| **Total** | **$4.97** | $14.62 projected → **−66%** | — | — | — |
+
+URL fabrication rate (frontier sidecar): xAI 1.5% (1/66 stripped),
+Anthropic 0%, OpenAI 100%, Gemini 100% — i.e. OpenAI and Gemini still
+hallucinate citations in `web_sources`, but the defensive backfill ensures
+`model_reported_sources` carries the verifiable `tool_retrieved_urls` so
+audit and consensus see grounding signal. xAI now consistently emits
+real, retrieved URLs.
+
+Consensus distribution across all 29 claims (all four adapters answered
+100% of claims):
+- False: 9 / Exaggerated: 6 / True: 5 / Mostly True: 4 / Unverifiable: 3 / Models split: 2
+- Strength: strong 12 / weak 15 / none 2
+
+### Cost-diff vs Phase E baseline
+
+Linear-scale projection from pre-cap 10-claim Phase 3a baseline
+(`10764cdb`, $5.04) to 29 claims = **$14.62 expected**. Actual = $4.97
+= **−66%**. Reproducibility: 10-claim validation predicted $1.69 × 2.9 =
+$4.90 → 29-claim actual $4.97 (within 1.4%). The Grok cap is the dominant
+saving lever; the MRS backfill cost is zero — it only labels existing
+tool-retrieved URLs.
+
+### Explicitly still deferred (unchanged from yesterday)
+
+- **Bug C — triage-tier URL grounding.** OpenAI / Gemini triage still
+  strip 100% of model-reported URLs at the triage tier; needs its own
+  planning session.
+- **Anthropic / OpenAI `--mode live` multi-claim overrides.** Phase E
+  extension; intentionally deferred to preserve A/B baseline.
+- **111-claim full-transcript run.** Optional follow-up; 29-claim
+  benchmark is sufficient for code-path coverage and reference-set
+  comparison.
+
+---
 
 ## Session note — 2026-04-25 (Calibration fixes + 10-claim rerun)
 

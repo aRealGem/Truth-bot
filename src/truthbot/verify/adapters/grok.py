@@ -31,6 +31,30 @@ logger = logging.getLogger(__name__)
 
 _XAI_BASE_URL = "https://api.x.ai/v1"
 
+# Default per-claim tool-call cap for Grok. The 2026-04-25 10-claim calibration
+# rerun showed Grok issuing 83 tool calls across 10 claims (~8.3/claim) and
+# spending $2.92 — 70% of total run cost. xAI exposes no documented
+# ``max_tool_calls`` knob on the Responses endpoint as of 2026-04-26, so we
+# pass the kwarg defensively and fall back without it if the server rejects
+# it (see ``GrokAdapter._call_with_search``). Override via
+# ``TRUTHBOT_GROK_MAX_TOOL_CALLS`` for runs where higher recall justifies
+# the cost.
+_DEFAULT_MAX_TOOL_CALLS_PER_CLAIM = 8
+
+
+def _max_tool_calls_per_claim() -> int:
+    """Read ``TRUTHBOT_GROK_MAX_TOOL_CALLS`` env var, clamped to >= 1.
+
+    Returns the per-claim ceiling. Multi-claim chunks scale linearly:
+    ``max_tool_calls = cap * n``.
+    """
+    raw = os.environ.get("TRUTHBOT_GROK_MAX_TOOL_CALLS", "")
+    try:
+        n = int(raw)
+    except (TypeError, ValueError):
+        return _DEFAULT_MAX_TOOL_CALLS_PER_CLAIM
+    return max(1, n)
+
 
 def _parse_verdict_json(text: str) -> dict:
     text = text.strip()
@@ -90,7 +114,11 @@ class GrokAdapter(LLMAdapter):
         ) as td:
             try:
                 client = openai.OpenAI(api_key=self._api_key, base_url=_XAI_BASE_URL)
-                verdict_text, urls, tool_count, usage = self._call_with_search(client, user_msg)
+                verdict_text, urls, tool_count, usage = self._call_with_search(
+                    client,
+                    user_msg,
+                    max_tool_calls=_max_tool_calls_per_claim(),
+                )
 
                 if usage:
                     td["input_tokens"] = (
@@ -174,9 +202,14 @@ class GrokAdapter(LLMAdapter):
     ) -> list[ModelVerdict]:
         """Call Grok once for N claims; amortize SYNTHESIS_SYSTEM across the chunk.
 
-        xAI has no batch API and no ``max_tool_calls`` knob on the Responses
-        endpoint, so the web-search budget is enforced via prompt instruction
-        in ``build_multi_user_message``. Token budget scales linearly with N.
+        xAI has no batch API. The web-search budget is now actively capped via
+        ``max_tool_calls = _max_tool_calls_per_claim() * n`` (default 8/claim),
+        passed as a kwarg to ``responses.create``. xAI's Responses endpoint
+        does not document this parameter as of 2026-04-26 — if the server
+        rejects the unknown kwarg, ``_call_with_search`` retries without it
+        and the call falls back to the legacy unbounded behavior. Token
+        budget scales linearly with N. Override the per-claim ceiling via
+        ``TRUTHBOT_GROK_MAX_TOOL_CALLS``.
         """
         if not claims:
             return []
@@ -206,7 +239,10 @@ class GrokAdapter(LLMAdapter):
             try:
                 client = openai.OpenAI(api_key=self._api_key, base_url=_XAI_BASE_URL)
                 verdict_text, urls, tool_count, usage = self._call_with_search(
-                    client, user_msg, max_output_tokens=2048 + 1024 * n
+                    client,
+                    user_msg,
+                    max_output_tokens=2048 + 1024 * n,
+                    max_tool_calls=_max_tool_calls_per_claim() * n,
                 )
 
                 if usage:
@@ -284,14 +320,29 @@ class GrokAdapter(LLMAdapter):
                     batch_call_id=batch_call_id,
                 )
 
-    def _call_with_search(self, client, user_msg: str, *, max_output_tokens: int = 2048):
-        """Call via the Agent Tools Responses API; fall back to plain Chat Completions."""
+    def _call_with_search(
+        self,
+        client,
+        user_msg: str,
+        *,
+        max_output_tokens: int = 2048,
+        max_tool_calls: int | None = None,
+    ):
+        """Call via the Agent Tools Responses API; fall back to plain Chat Completions.
+
+        ``max_tool_calls`` is passed through to ``responses.create`` when set.
+        xAI does not document this parameter as of 2026-04-26, so we attempt
+        the call with the kwarg and silently retry without it if the server
+        responds with TypeError or a 4xx that mentions ``max_tool_calls`` /
+        unknown / unsupported. This way the cap is honored when xAI ships
+        support and behaves identically to the pre-cap path otherwise.
+        """
         # Prefer the Responses API with web_search tool (Agent Tools API)
         try:
             if not hasattr(client, "responses"):
                 raise AttributeError("Responses API not available in SDK")
 
-            response = client.responses.create(
+            create_kwargs: dict = dict(
                 model=self._active_model,
                 input=[
                     {"role": "system", "content": SYNTHESIS_SYSTEM},
@@ -300,6 +351,46 @@ class GrokAdapter(LLMAdapter):
                 tools=[{"type": "web_search"}],
                 max_output_tokens=max_output_tokens,
             )
+            if max_tool_calls is not None and max_tool_calls > 0:
+                create_kwargs["max_tool_calls"] = int(max_tool_calls)
+
+            try:
+                response = client.responses.create(**create_kwargs)
+            except TypeError as exc:
+                if (
+                    "max_tool_calls" in create_kwargs
+                    and "max_tool_calls" in str(exc)
+                ):
+                    logger.warning(
+                        "GrokAdapter: xAI SDK rejected max_tool_calls kwarg "
+                        "(%s); retrying without cap.",
+                        exc,
+                    )
+                    create_kwargs.pop("max_tool_calls", None)
+                    response = client.responses.create(**create_kwargs)
+                else:
+                    raise
+            except Exception as exc:
+                msg = str(exc).lower()
+                rejected = (
+                    "max_tool_calls" in create_kwargs
+                    and (
+                        "max_tool_calls" in msg
+                        or "unknown parameter" in msg
+                        or "unrecognized" in msg
+                        or "unsupported" in msg
+                    )
+                )
+                if rejected:
+                    logger.warning(
+                        "GrokAdapter: xAI server rejected max_tool_calls "
+                        "(%s); retrying without cap.",
+                        exc,
+                    )
+                    create_kwargs.pop("max_tool_calls", None)
+                    response = client.responses.create(**create_kwargs)
+                else:
+                    raise
 
             text = ""
             urls: list[str] = []

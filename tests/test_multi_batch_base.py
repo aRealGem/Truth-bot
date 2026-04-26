@@ -367,3 +367,185 @@ def test_build_multi_verdicts_propagates_batch_call_id() -> None:
         batch_call_id="anthropic::multi::abc123",
     )
     assert all(v.batch_call_id == "anthropic::multi::abc123" for v in out)
+
+
+# ── Defensive ``model_reported_sources`` backfill (2026-04-26) ───────────────
+# When OpenAI / Gemini / xAI multi-claim drop per-claim attribution despite
+# the search tool firing, we backfill ``model_reported_sources`` for every
+# claim so audit trails / cross-claim consensus see the grounding signal.
+# Index-0 also gets ``web_sources`` populated for visible publish-layer
+# grounding, but siblings keep ``web_sources`` empty to preserve attribution
+# fidelity (see STATUS.md L75-80 trade-off).
+
+
+def test_build_multi_verdicts_backfills_mrs_when_web_sources_omitted() -> None:
+    """Model omits ``web_sources`` entirely → tool URLs land on every mrs."""
+    claims = [_claim("A"), _claim("B"), _claim("C")]
+    raw_by_claim = {
+        c.id: {"label": "True", "confidence": "High", "explanation": "x"}
+        for c in claims
+    }
+    tool_urls = ["https://bls.gov/x", "https://bea.gov/y"]
+
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="xai",
+        model_id="grok-4",
+        tool_retrieved_urls=tool_urls,
+    )
+
+    assert all(v.model_reported_sources == tool_urls for v in out), (
+        "all chunk indices must have model_reported_sources populated from "
+        "tool URLs when the model dropped per-claim attribution"
+    )
+
+
+def test_build_multi_verdicts_backfills_mrs_when_web_sources_explicit_empty() -> None:
+    """Model emits ``web_sources: []`` explicitly → same backfill applies."""
+    claims = [_claim("A"), _claim("B")]
+    raw_by_claim = {
+        c.id: {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": [],
+        }
+        for c in claims
+    }
+    tool_urls = ["https://example.gov/a", "https://example.gov/b"]
+
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="gemini",
+        model_id="gemini-2.5-pro",
+        tool_retrieved_urls=tool_urls,
+    )
+
+    assert out[0].model_reported_sources == tool_urls
+    assert out[1].model_reported_sources == tool_urls
+
+
+def test_build_multi_verdicts_backfill_visible_grounding_index_zero_only() -> None:
+    """``web_sources`` (publish-layer field) is backfilled on index-0 only.
+
+    Siblings stay empty so the published report doesn't claim each claim
+    was independently grounded by the same URL set.
+    """
+    claims = [_claim("A"), _claim("B"), _claim("C")]
+    raw_by_claim = {
+        c.id: {"label": "True", "confidence": "High", "explanation": "x"}
+        for c in claims
+    }
+    tool_urls = ["https://bls.gov/x", "https://bea.gov/y"]
+
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="openai",
+        model_id="gpt-5.4",
+        tool_retrieved_urls=tool_urls,
+    )
+
+    assert out[0].web_sources == tool_urls, "index-0 gets visible grounding"
+    assert out[1].web_sources == [], "siblings keep web_sources empty"
+    assert out[2].web_sources == [], "siblings keep web_sources empty"
+
+
+def test_build_multi_verdicts_no_backfill_when_tool_urls_empty() -> None:
+    """If the search tool didn't fire, neither field is backfilled."""
+    claims = [_claim("A"), _claim("B")]
+    raw_by_claim = {
+        c.id: {"label": "True", "confidence": "High", "explanation": "x"}
+        for c in claims
+    }
+
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="xai",
+        model_id="grok-4",
+        tool_retrieved_urls=[],
+    )
+
+    assert all(v.web_sources == [] for v in out)
+    assert all(v.model_reported_sources == [] for v in out)
+
+
+def test_build_multi_verdicts_no_backfill_when_tool_retrieved_urls_is_none() -> None:
+    """Legacy callers (no Layer 1d wiring) keep the pre-grounding behavior."""
+    claims = [_claim("A"), _claim("B")]
+    raw_by_claim = {
+        c.id: {"label": "True", "confidence": "High", "explanation": "x"}
+        for c in claims
+    }
+
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="anthropic",
+        model_id="claude-opus-4-7",
+        # tool_retrieved_urls omitted → defaults to None
+    )
+
+    assert all(v.model_reported_sources == [] for v in out)
+
+
+def test_build_multi_verdicts_preserves_partial_attribution() -> None:
+    """When the model attributes some URLs validly, no backfill clobbers them.
+
+    Anthropic-style gold-standard path: model emits real per-claim
+    web_sources that intersect with tool URLs; the new backfill must not
+    overwrite this.
+    """
+    claims = [_claim("A"), _claim("B")]
+    raw_by_claim = {
+        claims[0].id: {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": ["https://bls.gov/x"],
+        },
+        claims[1].id: {
+            "label": "False",
+            "confidence": "High",
+            "explanation": "y",
+            "web_sources": ["https://bea.gov/y"],
+        },
+    }
+    tool_urls = ["https://bls.gov/x", "https://bea.gov/y", "https://other.gov/z"]
+
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="anthropic",
+        model_id="claude-opus-4-7",
+        tool_retrieved_urls=tool_urls,
+    )
+
+    assert out[0].web_sources == ["https://bls.gov/x"]
+    assert out[0].model_reported_sources == ["https://bls.gov/x"]
+    assert out[1].web_sources == ["https://bea.gov/y"]
+    assert out[1].model_reported_sources == ["https://bea.gov/y"]
+
+
+def test_build_multi_verdicts_backfill_caps_tool_urls_at_ten() -> None:
+    """Tool URL backfill is capped at 10 to avoid exploding the audit list."""
+    claims = [_claim("A")]
+    raw_by_claim = {
+        claims[0].id: {"label": "True", "confidence": "High", "explanation": "x"}
+    }
+    tool_urls = [f"https://example.gov/{i}" for i in range(20)]
+
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="xai",
+        model_id="grok-4",
+        tool_retrieved_urls=tool_urls,
+    )
+
+    assert len(out[0].model_reported_sources) == 10
+    assert len(out[0].web_sources) == 10
+    assert out[0].model_reported_sources == tool_urls[:10]

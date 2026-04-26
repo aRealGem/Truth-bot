@@ -292,6 +292,47 @@ def test_gemini_call_multi_backfills_grounding_urls_on_index_zero(
     assert verdicts[1].web_sources == []
 
 
+def test_gemini_call_multi_backfills_mrs_on_all_indices(
+    env_with_key,
+) -> None:
+    """Defensive backfill: all chunk indices get ``model_reported_sources``.
+
+    Gemini multi-claim drops per-claim attribution despite GoogleSearch
+    grounding firing per chunk. The 2026-04-25 rerun showed 0/16 reported
+    URLs from Gemini frontier multi-claim. Without this backfill, the
+    audit trail / cross-claim consensus signal is dark for ~3/4 claims
+    in any chunk (Gemini cap=4) on the SOTU run.
+    """
+    claims = [_claim("A"), _claim("B"), _claim("C"), _claim("D")]
+    text = json.dumps(
+        [
+            {"claim_id": c.id, "label": "True", "confidence": "High",
+             "web_sources": []}
+            for c in claims
+        ]
+    )
+    tool_urls = ["https://bls.gov/a", "https://cbo.gov/b"]
+    response = _fake_generate_response(text, urls=tool_urls)
+    _client, _types, patcher = _install_fake_genai(response)
+
+    with patcher:
+        adapter = GeminiAdapter()
+        verdicts = adapter.call_multi(
+            claims, {c.id: [] for c in claims}, inject_evidence=False
+        )
+
+    for v in verdicts:
+        assert v.model_reported_sources == tool_urls, (
+            f"every chunk index must have mrs backfilled; got {v.model_reported_sources}"
+        )
+    assert verdicts[0].web_sources == tool_urls
+    for sibling in verdicts[1:]:
+        assert sibling.web_sources == [], (
+            "siblings keep web_sources empty to avoid pretending each "
+            "claim was independently grounded"
+        )
+
+
 def test_gemini_call_multi_malformed_marks_all_no_response(env_with_key) -> None:
     """Garbage response → all claims get UNVERIFIABLE no_response=True."""
     claims = [_claim("A"), _claim("B")]

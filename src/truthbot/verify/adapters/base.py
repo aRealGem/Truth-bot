@@ -725,6 +725,20 @@ def build_multi_verdicts(
     (fabrication signal). When ``tool_retrieved_urls`` is ``None`` (legacy
     callers that haven't been wired yet), grounding is skipped and the
     pre-Layer-1d behavior is preserved.
+
+    Defensive ``model_reported_sources`` backfill (2026-04-26): when the
+    model emits empty / missing ``web_sources`` but the search tool DID
+    retrieve URLs during the chunk, every claim in the chunk gets
+    ``model_reported_sources`` populated with up to 10 of those tool URLs.
+    This preserves the audit trail / cross-claim consensus signal for
+    OpenAI / Gemini / xAI multi-claim — they routinely drop per-claim
+    attribution despite the search tool firing 6-27 times per chunk. We
+    deliberately do NOT fan tool URLs out to siblings' ``web_sources``
+    (visible publish-layer field) because that would falsely suggest each
+    claim was independently grounded; the index-0 verdict still gets the
+    legacy visible-grounding fallback so the report shows at least one
+    cited source per chunk. Trade-off: attribution fidelity for siblings,
+    visible grounding for index-0.
     """
     usage = call_usage or {}
     out: list[ModelVerdict] = []
@@ -789,19 +803,37 @@ def build_multi_verdicts(
             mrs: list[str] = []
             stripped = 0
         elif raw.get("web_sources") is None:
-            # Model omitted web_sources for this claim. In the multi-claim
-            # path we *don't* apply the per-verdict fallback — adapters
-            # backfill index-0 explicitly with tool-retrieved URLs after
-            # build_multi_verdicts returns. Fanning the same tool URL list
-            # out to every sibling verdict would falsely suggest each claim
-            # was independently grounded.
-            ws = []
-            mrs = []
+            # Model omitted ``web_sources`` for this claim entirely. We do
+            # NOT fan tool URLs out to siblings' ``web_sources`` (publish-
+            # layer field) because that would falsely suggest each claim
+            # was independently grounded. Two backfills happen instead:
+            #   1. ``model_reported_sources`` gets the chunk's tool URLs
+            #      for every claim, so audit trails / cross-claim
+            #      consensus see grounding signal even when multi-claim
+            #      providers drop per-claim attribution.
+            #   2. Index-0 (the "call owner") also gets ``web_sources``
+            #      populated, preserving the legacy visible-grounding
+            #      behavior so the report shows at least one cited source
+            #      per chunk.
+            tool_urls = list((tool_retrieved_urls or [])[:10])
+            ws = list(tool_urls) if (idx == 0 and tool_urls) else []
+            mrs = list(tool_urls)
             stripped = 0
         else:
             ws, mrs, stripped = apply_url_grounding(
                 raw, tool_retrieved_urls
             )
+            # Same defensive backfill when the model emitted an explicit
+            # empty ``web_sources: []`` array and the tool DID retrieve
+            # URLs. Distinguishes "model said nothing was relevant" from
+            # "model researched but didn't bother attributing" — both look
+            # identical post-grounding (ws=[], mrs=[]), so we only backfill
+            # when the tool actually fired (tool_retrieved_urls non-empty).
+            if not ws and not mrs and tool_retrieved_urls:
+                tool_urls = list(tool_retrieved_urls[:10])
+                mrs = list(tool_urls)
+                if idx == 0:
+                    ws = list(tool_urls)
         verdict = ModelVerdict(
             adapter_name=adapter_name,
             model_id=model_id,

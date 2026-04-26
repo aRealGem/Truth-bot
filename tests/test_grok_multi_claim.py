@@ -201,6 +201,50 @@ def test_grok_call_multi_backfills_urls_on_index_zero(monkeypatch) -> None:
     assert verdicts[1].web_sources == []
 
 
+def test_grok_call_multi_backfills_mrs_on_all_indices(monkeypatch) -> None:
+    """Defensive backfill: every chunk index gets ``model_reported_sources``.
+
+    xAI multi-claim routinely emits ``web_sources: []`` per-claim despite
+    the search tool firing 6-27 times per chunk. Without this backfill,
+    ~22/29 published claims look ungrounded for Grok in a SOTU-sized run.
+    Audit trail / cross-claim consensus needs the URLs even when visible
+    grounding is reserved for index-0.
+    """
+    claims = [_claim("A"), _claim("B"), _claim("C")]
+    text = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High",
+             "web_sources": []},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High",
+             "web_sources": []},
+            {"claim_id": claims[2].id, "label": "Misleading",
+             "confidence": "Medium", "web_sources": []},
+        ]
+    )
+    tool_urls = ["https://bls.gov/x", "https://bea.gov/y"]
+    _patch_openai(
+        monkeypatch, _fake_response(text, urls=tool_urls, tool_calls=2)
+    )
+    adapter = GrokAdapter()
+
+    verdicts = adapter.call_multi(
+        claims, {c.id: [] for c in claims}, inject_evidence=False
+    )
+
+    assert verdicts[0].model_reported_sources == tool_urls
+    assert verdicts[1].model_reported_sources == tool_urls
+    assert verdicts[2].model_reported_sources == tool_urls
+    assert verdicts[0].web_sources == tool_urls, (
+        "index-0 keeps the visible-grounding fallback so the publish "
+        "layer shows at least one cited source per chunk"
+    )
+    assert verdicts[1].web_sources == [], (
+        "siblings keep web_sources empty to avoid claiming each claim "
+        "was independently grounded by the same URL set"
+    )
+    assert verdicts[2].web_sources == []
+
+
 def test_grok_max_claims_per_request_raised_to_six() -> None:
     """Grok's class-level cap documents the conservative per-call chunk size."""
     assert GrokAdapter.max_claims_per_request >= 6, (
@@ -241,3 +285,129 @@ def test_grok_call_multi_sends_single_request_with_multi_user_message(monkeypatc
     )
     assert claims[0].id in user_text
     assert claims[1].id in user_text
+
+
+# ── Tool-call cap (Grok unbounded-budget fix) ─────────────────────────────────
+
+
+def test_grok_call_multi_passes_default_max_tool_calls(monkeypatch) -> None:
+    """Default cap is 8 tool-calls per claim; multi-claim chunks scale to 8*N.
+
+    Pins the protection against Grok's unbounded ``responses.create`` tool
+    budget, which spent $2.92 / 70% of the 2026-04-25 10-claim rerun cost.
+    """
+    monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    claims = [_claim("A"), _claim("B"), _claim("C")]
+    text = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+            {"claim_id": claims[2].id, "label": "True", "confidence": "High"},
+        ]
+    )
+    client = _patch_openai(monkeypatch, _fake_response(text))
+    adapter = GrokAdapter()
+
+    adapter.call_multi(
+        claims, {c.id: [] for c in claims}, inject_evidence=False
+    )
+
+    kwargs = client.responses.last_kwargs
+    assert kwargs is not None
+    assert kwargs.get("max_tool_calls") == 8 * len(claims), (
+        f"max_tool_calls={kwargs.get('max_tool_calls')} must scale "
+        f"with N (default 8/claim); got chunk size {len(claims)}."
+    )
+
+
+def test_grok_call_multi_honors_env_override_for_max_tool_calls(monkeypatch) -> None:
+    """``TRUTHBOT_GROK_MAX_TOOL_CALLS=4`` should produce ``max_tool_calls=4*N``."""
+    monkeypatch.setenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", "4")
+    claims = [_claim("A"), _claim("B")]
+    text = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+        ]
+    )
+    client = _patch_openai(monkeypatch, _fake_response(text))
+    adapter = GrokAdapter()
+
+    adapter.call_multi(
+        claims, {c.id: [] for c in claims}, inject_evidence=False
+    )
+
+    kwargs = client.responses.last_kwargs
+    assert kwargs is not None
+    assert kwargs.get("max_tool_calls") == 4 * len(claims)
+
+
+def test_grok_call_multi_falls_back_when_xai_rejects_max_tool_calls(monkeypatch) -> None:
+    """If xAI's server rejects ``max_tool_calls``, retry once without the kwarg.
+
+    xAI doesn't document this parameter; we pass it defensively. When the
+    server returns an error mentioning the unknown param, the adapter MUST
+    retry without it rather than failing the entire chunk.
+    """
+    monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    claims = [_claim("A"), _claim("B")]
+    text = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+        ]
+    )
+    response = _fake_response(text)
+
+    call_log: list[dict] = []
+
+    class _RejectingResponses:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def create(self, **kwargs):
+            self.calls += 1
+            call_log.append(dict(kwargs))
+            if self.calls == 1 and "max_tool_calls" in kwargs:
+                raise ValueError(
+                    "Unknown parameter: 'max_tool_calls' is not supported"
+                )
+            return response
+
+    class _RejectingClient:
+        def __init__(self) -> None:
+            self.responses = _RejectingResponses()
+
+    import openai
+
+    client = _RejectingClient()
+    monkeypatch.setattr(openai, "OpenAI", lambda **_kw: client)
+    adapter = GrokAdapter()
+
+    verdicts = adapter.call_multi(
+        claims, {c.id: [] for c in claims}, inject_evidence=False
+    )
+
+    assert len(verdicts) == 2
+    assert client.responses.calls == 2, "must retry once after rejection"
+    assert "max_tool_calls" in call_log[0]
+    assert "max_tool_calls" not in call_log[1]
+
+
+def test_grok_call_default_per_claim_max_tool_calls(monkeypatch) -> None:
+    """Single-claim ``call()`` path also passes the per-claim cap."""
+    from truthbot.models import Claim
+
+    monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    claim = Claim(transcript_id="t1", text="ping", speaker="Test")
+    text = json.dumps(
+        {"label": "True", "confidence": "High", "explanation": "ok"}
+    )
+    client = _patch_openai(monkeypatch, _fake_response(text))
+    adapter = GrokAdapter()
+
+    adapter.call(claim, [], inject_evidence=False)
+
+    kwargs = client.responses.last_kwargs
+    assert kwargs is not None
+    assert kwargs.get("max_tool_calls") == 8

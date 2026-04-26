@@ -349,7 +349,9 @@ class TestGrokMultiVerdictGrounding:
     def _patch_client(self, adapter, verdict_text: str, urls: list[str], monkeypatch):
         # GrokAdapter's _call_with_search returns a tuple
         # (verdict_text, urls, tool_count, usage). Patch it to bypass HTTP.
-        def fake_call_with_search(client, user_msg, max_output_tokens=None):
+        def fake_call_with_search(
+            client, user_msg, max_output_tokens=None, max_tool_calls=None
+        ):
             return verdict_text, list(urls), len(urls), MagicMock(
                 input_tokens=100, output_tokens=50,
                 prompt_tokens=100, completion_tokens=50,
