@@ -49,6 +49,99 @@ _TIE_BREAK_ORDER = [
     VerdictLabel.TRUE,
 ]
 
+# ── 5-bucket coarse-axis projections ──────────────────────────────────────────
+# The consensus engine emits two parallel projections of the model panel onto
+# a 5-bucket "Truthy scale" alongside the existing 6-bucket fine consensus.
+# Source rubric: ``eval/sotu-2026/findings-review.md`` Part H (the doc that
+# proposed the 5-bin scale based on the 117-claim 2026 SOTU run).
+#
+# Empirical motivation (2026-04-27 analysis on 84 published claims):
+#   * Status quo (6 buckets):   39% strong, 23% Models split.
+#   * LENIENT_PROJECTION:       55% strong (+16pp), 18% split.
+#   * STRICT_PROJECTION:        39% strong (no improvement; preserves the
+#                               editorial "Exaggerated reads as Falsey" lens).
+#
+# Lenient is the published default (it's the only mapping that delivers on
+# 5-bucket's reason to exist — surfacing hidden agreement across the
+# Mostly-True / Exaggerated boundary). Strict is published alongside as a
+# client-side toggle so readers retain agency on the editorial threshold.
+LENIENT_PROJECTION: dict[VerdictLabel, str] = {
+    VerdictLabel.TRUE:         "True",
+    VerdictLabel.MOSTLY_TRUE:  "Truthy",
+    VerdictLabel.EXAGGERATED:  "Truthy",
+    VerdictLabel.MISLEADING:   "Falsey",
+    VerdictLabel.FALSE:        "False",
+    VerdictLabel.UNVERIFIABLE: "Unverifiable",
+}
+
+STRICT_PROJECTION: dict[VerdictLabel, str] = {
+    VerdictLabel.TRUE:         "True",
+    VerdictLabel.MOSTLY_TRUE:  "Truthy",
+    VerdictLabel.EXAGGERATED:  "Falsey",   # diverges from Lenient
+    VerdictLabel.MISLEADING:   "Falsey",
+    VerdictLabel.FALSE:        "False",
+    VerdictLabel.UNVERIFIABLE: "Unverifiable",
+}
+
+# Coarse-axis tie-break: most conservative wins on plurality ties when the
+# guardrail does not trigger. False > Falsey > Unverifiable > Truthy > True.
+_COARSE_TIE_BREAK_ORDER: list[str] = [
+    "False",
+    "Falsey",
+    "Unverifiable",
+    "Truthy",
+    "True",
+]
+
+
+def _project_consensus(
+    model_verdicts: list[ModelVerdict],
+    mapping: dict[VerdictLabel, str],
+) -> tuple[str, str]:
+    """Compute (label, strength) on a 5-bucket coarse projection.
+
+    Strength rules mirror the fine axis: single / strong (≥3 agree) /
+    weak (exactly 2 agree, plurality) / none (no plurality).
+
+    Split-projection guardrail: if the projected panel has no plurality
+    (e.g. 2-2 Truthy/Falsey, or all-different), label resolves to
+    ``"Models split"`` rather than tie-breaking into a single side. This
+    preserves the audit signal that genuine directional disagreement exists,
+    instead of letting the projection manufacture false agreement.
+
+    Returns ``("", "none")`` for an empty panel (caller uses fine-axis defaults).
+    """
+    n = len(model_verdicts)
+    if n == 0:
+        return "", "none"
+
+    projected = [mapping.get(mv.label, mv.label.value) for mv in model_verdicts]
+    counts = Counter(projected)
+    max_count = max(counts.values())
+    tied = [lbl for lbl, cnt in counts.items() if cnt == max_count]
+
+    if n == 1:
+        return projected[0], "single"
+
+    if max_count >= 3:
+        # Strong consensus on the projected axis. Even if multiple labels
+        # tie at the same max (impossible at 4 adapters with max≥3, but
+        # defensive for future panel sizes), pick most conservative.
+        if len(tied) == 1:
+            label = tied[0]
+        else:
+            label = min(tied, key=lambda l: _COARSE_TIE_BREAK_ORDER.index(l)
+                        if l in _COARSE_TIE_BREAK_ORDER else len(_COARSE_TIE_BREAK_ORDER))
+        return label, "strong"
+
+    if max_count == 2 and len(tied) == 1:
+        # Strict plurality of 2: weak consensus on this label.
+        return tied[0], "weak"
+
+    # No plurality (2-2 across two labels, or all-different). Guardrail fires.
+    return "Models split", "none"
+
+
 _ADAPTER_TIMEOUT_SECONDS = 120.0
 
 
@@ -82,6 +175,10 @@ def _build_consensus(claim_id: str, model_verdicts: list[ModelVerdict]) -> Conse
             agreement=False,
             consensus_strength="none",
             explanation="No model verdicts returned.",
+            coarse_lenient_label="",
+            coarse_lenient_strength="none",
+            coarse_strict_label="",
+            coarse_strict_strength="none",
         )
 
     label_counts = Counter(mv.label for mv in model_verdicts)
@@ -133,6 +230,9 @@ def _build_consensus(claim_id: str, model_verdicts: list[ModelVerdict]) -> Conse
         f"Consensus: {consensus_label.value} [{suffix}]."
     )
 
+    lenient_label, lenient_strength = _project_consensus(model_verdicts, LENIENT_PROJECTION)
+    strict_label, strict_strength = _project_consensus(model_verdicts, STRICT_PROJECTION)
+
     return ConsensusVerdict(
         claim_id=claim_id,
         model_verdicts=model_verdicts,
@@ -142,6 +242,10 @@ def _build_consensus(claim_id: str, model_verdicts: list[ModelVerdict]) -> Conse
         agreement=all_agree,
         consensus_strength=strength,
         explanation=explanation,
+        coarse_lenient_label=lenient_label,
+        coarse_lenient_strength=lenient_strength,
+        coarse_strict_label=strict_label,
+        coarse_strict_strength=strict_strength,
     )
 
 

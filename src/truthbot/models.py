@@ -376,6 +376,36 @@ class ConsensusVerdict(BaseModel):
     explanation: str
     scored_at: datetime = Field(default_factory=datetime.utcnow)
 
+    # ── 5-bucket coarse-axis projection (Truthy scale) ────────────────────────
+    # Two parallel lenses are computed at consensus time from the existing
+    # 6-bucket model labels (no model-side change). Lenient is the published
+    # default; Strict is published alongside for the client-side toggle.
+    # Older bundles that predate this layer deserialize cleanly with empty
+    # defaults; the renderer falls back to the fine-axis pill when these are
+    # blank.
+    coarse_lenient_label: str = Field(
+        default="",
+        description=(
+            "Lenient 5-bucket projection of consensus: "
+            "'True' | 'Truthy' | 'Unverifiable' | 'Falsey' | 'False' | 'Models split' | ''"
+        ),
+    )
+    coarse_lenient_strength: str = Field(
+        default="none",
+        description="strong | weak | none | single — strength on the Lenient projected axis",
+    )
+    coarse_strict_label: str = Field(
+        default="",
+        description=(
+            "Strict 5-bucket projection of consensus (Exaggerated→Falsey): "
+            "'True' | 'Truthy' | 'Unverifiable' | 'Falsey' | 'False' | 'Models split' | ''"
+        ),
+    )
+    coarse_strict_strength: str = Field(
+        default="none",
+        description="strong | weak | none | single — strength on the Strict projected axis",
+    )
+
     @property
     def dissenting_models(self) -> list[str]:
         return [mv.adapter_name for mv in self.model_verdicts if mv.label != self.consensus_label]
