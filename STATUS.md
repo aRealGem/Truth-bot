@@ -30,6 +30,13 @@ plan plus a clean 29-claim SOTU fire on the validated stack.
 
 Test suite: 437 passed / 1 xfailed (was 432 / 1).
 
+- **Approval-budget rule.** Codified the operator preference for upfront
+  approval-prompt counts as a Cursor rule
+  ([`.cursor/rules/approval-budget.mdc`](.cursor/rules/approval-budget.mdc),
+  `alwaysApply: true`). Future sessions in this repo will lead with
+  `Approval budget: N prompts -- <summary>` before non-trivial tasks so
+  the operator can decide whether to babysit or step away.
+
 ### 10-claim validation rerun (gate before SOTU fire)
 
 Baseline: `run_id=128597ce-6e83-44a3-8811-8811e1fa219e` (yesterday, no caps).
