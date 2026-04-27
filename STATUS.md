@@ -1,4 +1,70 @@
-# Truth-bot Status — 2026-04-26
+# Truth-bot Status — 2026-04-27
+
+## Session note — 2026-04-27 (P0 #3 — reference-set regression scoring, current baseline established)
+
+First execution of the P0 #3 reference-set regression scorecard (board: WIP→Done this session).
+Wires `eval/evolver/fitness.py:FitnessScorer` against the published 29-claim run output (run
+`258b5758`) so every release now has a single-line accuracy signal instead of relying on
+cost-diff + spot-check.
+
+### Current baseline (Run 4 in [`eval/sotu-2026/BENCHMARK.md`](eval/sotu-2026/BENCHMARK.md))
+
+| Metric | Score | Weight | Notes |
+|---|---|---|---|
+| Claim recall | **100.0%** (29/29) | 0.25 | Matches the 2026-04-19 baseline exactly. |
+| Verdict agreement | **62.8%** | 0.30 | -18pp vs the 2026-04-19 single-model baseline (~81%) — see caveat below. |
+| Explanation quality | 39.5% | 0.20 | Sidecar adapters only (OpenAI/Gemini/xAI); Anthropic explanations live in claim HTML and aren't in a canonical JSON. |
+| Source citation | 16.1% | 0.15 | Same caveat. |
+| Parsimony | 0.0% | 0.10 | 262k tokens sidecar-only vs target_max=30k calibrated for single-model standalone — not meaningful here, see calibration gap #2. |
+| **Fitness** | **0.5413** | — | vs 0.679 baseline (Δ −0.1377). |
+
+Cost: $4.97. Reproduce: `python eval/sotu-2026/score_run.py --run-id 258b5758-8e25-4bf0-8f34-63778d2f976e --report-id e81546a0-6371-4e96-9e94-3d6213864d5a`.
+
+### Important interpretation caveat (the −18pp is not a clean regression signal)
+
+The 2026-04-19 baseline was **single-model standalone** (claude-opus-4-7 only). Run 4 is the
+**4-adapter consensus** pipeline (Anthropic + OpenAI + Gemini + xAI). The verdict-agreement
+gap conflates:
+
+1. Any genuine quality drift since 2026-04-19.
+2. Consensus-voting label drift — the consensus algorithm can land on a label different from
+   the strongest individual model's vote, even when that model matches the reference.
+3. The new "Models split" verdict state (2/29 in this run, mapped to `unverifiable` in the
+   scorer) that didn't exist in single-model baselines.
+
+Untangling requires capturing an Anthropic-only single-claim re-score against the same 29-claim
+transcript and adding it as Run 5. Tracked as P1 follow-up in the calibration-gaps section of
+[`eval/sotu-2026/BENCHMARK.md`](eval/sotu-2026/BENCHMARK.md).
+
+### Plumbing shipped
+
+- New: [`eval/sotu-2026/score_run.py`](eval/sotu-2026/score_run.py) — argparse CLI joining
+  extractions + sidecar + `claims.json` to feed `FitnessScorer.score()`. Trivial to repeat per
+  release: `--run-id`, `--report-id`, optional `--metrics-dir`, `--site-data-dir`,
+  `--baseline-fitness` overrides.
+- Modified: [`eval/evolver/fitness.py`](eval/evolver/fitness.py) — added `"Models split" →
+  "unverifiable"` to `_TRUTHBOT_LABEL_NORMALIZE` so the scorer recognizes the production
+  consensus's no-majority state instead of warning + defaulting. All 81 existing eval tests
+  still pass (`.venv/bin/python -m pytest eval/tests/`).
+- Updated: [`eval/sotu-2026/BENCHMARK.md`](eval/sotu-2026/BENCHMARK.md) — Run 4 added as
+  current baseline with full scorecard, plus a "Known calibration gaps" section enumerating
+  Anthropic-explanation persistence, parsimony target_max recalibration, and the apples-to-
+  oranges baseline mismatch.
+
+### Action items surfaced by the first scorecard
+
+1. **62.8% verdict agreement merits investigation.** Even after accounting for the consensus-vs-
+   standalone caveat, this is the single biggest accuracy lever. Check whether the
+   underperformance is concentrated in specific verdict categories (e.g., are Exaggerated/
+   Misleading consistently mis-mapped?) before attributing it to consensus drift.
+2. **Anthropic explanations need a canonical persistence path** so explanation_quality and
+   source_citation become honest 4-adapter scores instead of sidecar-only.
+3. **Parsimony target needs production-pipeline recalibration** (e.g., 100k–500k window) but
+   only after we lock the new baseline so the recalibration doesn't invalidate trend tracking.
+
+These will be added as P1/P2 backlog rows in the next board pass.
+
+---
 
 ## Session note — 2026-04-26 (Pre-SOTU Grok cap + multi-claim backfill, 29-claim fire)
 

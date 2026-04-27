@@ -64,6 +64,11 @@ _TRUTHBOT_LABEL_NORMALIZE: dict[str, str] = {
     "Exaggerated": "exaggerated",
     "False": "false",
     "Unverifiable": "unverifiable",
+    # Production consensus emits "Models split" when adapters disagree and no
+    # majority emerges. Semantically equivalent to "no defensible verdict" —
+    # mapped to unverifiable so it sits at the neutral position in the
+    # verdict-distance order rather than triggering an unrecognised-label warning.
+    "Models split": "unverifiable",
 }
 
 # Ordered list (most positive â most negative)

@@ -2,7 +2,7 @@
 
 Benchmark: 2026 State of the Union address (29 checkable claims).  
 Reference: GPT 5.4 Pro extended analysis (`reference.json`).  
-Last updated: 2026-04-19.
+Last updated: 2026-04-27.
 
 ---
 
@@ -13,9 +13,70 @@ Last updated: 2026-04-19.
 | 1 | `evolution_results/` | claude-sonnet-4-5 / haiku | Evolver (dry-run) | 8 | 5 | N/A (stub) | N/A (stub) | 0.5456 (all identical) | $0.00 | PARKING LOT |
 | 2 | `opus-optimized-results/` | claude-opus-4-7 | Standalone fixed-prompt | — | 1 | 100% (29/29) | 80.7% | ~0.492 (simplified) | $2.15 | PARKING LOT |
 | 3 | `opus-4-7-results/` | claude-opus-4-7 | Evolver gen-1 seed | 4 | 1 | 100% (29/29) | ~81% | **0.679** (best known) | $0.65 | PARKING LOT |
+| 4 | `metrics/run_summaries/258b5758` | 4-adapter consensus (claude-opus-4-7 + gpt-5.4 + gemini-2.5-pro + grok-4) | Production pipeline (`--mode batch`, `--max-claims 29`) | — | — | 100% (29/29) | 62.8% | **0.5413** | $4.97 | **CURRENT BASELINE 2026-04-27** |
 
-**GA / prompt evolver approach parked as of 2026-04-19.** Best known result preserved as reference
-baseline. New evaluation approach TBD — see `eval/evolver/PARKING_LOT.md`.
+**Run 4 is the new current baseline** — first regression scoring against the production
+4-adapter consensus pipeline post the 2026-04-26 SOTU fire (Grok `max_tool_calls` cap +
+multi-claim `model_reported_sources` backfill). Apples-to-oranges versus runs 2/3 (single-model
+standalone) so the −18pp verdict-agreement gap is not a clean regression signal — it conflates
+(a) any genuine quality drift since 2026-04-19, (b) consensus-voting label drift (the consensus
+algorithm can land on a label different from the strongest individual model's vote), and
+(c) the new "Models split" verdict state (2/29 in this run) that did not exist in the
+single-model baselines.
+
+**Earlier GA / prompt evolver approach parked as of 2026-04-19.** Best known result (Run 3,
+fitness 0.679) preserved as reference baseline. Re-score this run via:
+
+```bash
+python eval/sotu-2026/score_run.py \
+    --run-id 258b5758-8e25-4bf0-8f34-63778d2f976e \
+    --report-id e81546a0-6371-4e96-9e94-3d6213864d5a
+```
+
+---
+
+## Current baseline (Run 4) — full scorecard
+
+```
+Inputs:
+  Extracted claims:       100 (all checkable: 99)
+  Published verdicts:     29 (consensus from claims.json)
+  Sidecar entries:        39 (OpenAI/Gemini/xAI)
+  Sidecar coverage:       13/29 claims have ≥1 sidecar explanation
+  Anthropic explanations: excluded (lives in claim HTML — see TODO)
+  Token count (sidecar):  262,262
+
+Scores (FitnessScorer, 5-dimension):
+  Claim recall:           100.0%   weight 0.25  (29/29 reference claims matched)
+  Verdict agreement:       62.8%   weight 0.30
+  Explanation quality:     39.5%   weight 0.20  (sidecar-only; Anthropic excluded)
+  Source citation:         16.1%   weight 0.15  (sidecar-only; Anthropic excluded)
+  Parsimony:                0.0%   weight 0.10  (262,262 tokens, sidecar-only)
+  (target_max=30k calibrated for single-model standalone; not meaningful for 4-adapter consensus runs — see TODO)
+  ──────────────────────────────────────
+  Fitness:                0.5413
+
+Vs baseline (best known: 0.679, claude-opus-4-7 standalone, 2026-04-19):
+  Fitness delta:          -0.1377
+  Cost:                   $4.97
+```
+
+### Known calibration gaps for production-pipeline regression scoring
+
+1. **Anthropic explanations excluded.** They live in the rendered claim HTML pages, not in a
+   single canonical JSON. `explanation_quality` and `source_citation_quality` are therefore
+   computed from sidecar adapters only (OpenAI/Gemini/xAI = 3 of 4 voters) and undercount
+   Anthropic's contribution. Fix-it: persist a per-run consolidated `verdicts.jsonl` covering
+   all four adapters, or add an HTML-parse fallback in `score_run.py`.
+2. **Parsimony target_max=30k.** Calibrated for single-model standalone runs (~15k tokens
+   typical). Production 4-adapter pipeline routinely emits 200k+ in sidecar alone, so
+   parsimony will always score 0%. Recalibrating to e.g. 100k–500k would make it a
+   meaningful signal again, but changing the calibration mid-flight invalidates baseline
+   comparisons. Track separately as a tunable.
+3. **Baseline mismatch.** Runs 2/3 are single-model standalone (Anthropic Opus only). Run 4
+   is 4-adapter consensus. Useful trend signal but not a clean A/B. To get apples-to-apples,
+   capture an Anthropic-only single-claim re-score against the same 29-claim transcript and
+   add as Run 5.
 
 ---
 
