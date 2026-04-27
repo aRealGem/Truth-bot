@@ -72,7 +72,7 @@ Real and useful but not the optimization target right now.
 
 | Item | Plan | PR |
 |------|------|-----|
-| _(empty)_ | | |
+| **5-bucket coarse-axis projection (Lenient default + Strict toggle)** | [.cursor/plans/5-bucket_coarse-axis_projection_ba2d0050.plan.md](.cursor/plans/5-bucket_coarse-axis_projection_ba2d0050.plan.md) · rubric: [`eval/sotu-2026/findings-review.md`](eval/sotu-2026/findings-review.md) Part H · empirical motivation: C11 + Rec #3 in same doc, validated against the 84 published claims (Lenient: +16pp strong consensus; Strict: no change) | — _(2026-04-27 session: Models keep their 6-bucket rubric and prompt cache; consensus emits both projections; headline pill defaults to Lenient with a Strict toggle in the status bar; per-model strip stays 6-bucket for audit. Engine + projection unit tests + render tests landed.)_ |
 
 ## Done
 

@@ -1,5 +1,69 @@
 # Truth-bot Status — 2026-04-27
 
+## Session note — 2026-04-27 (5-bucket coarse-axis projection — Lenient default + Strict toggle)
+
+Implemented the 5-bucket "Truthy scale" coarse-axis projection layer first proposed in
+Part H of [`eval/sotu-2026/findings-review.md`](eval/sotu-2026/findings-review.md). Plan:
+[.cursor/plans/5-bucket_coarse-axis_projection_ba2d0050.plan.md](.cursor/plans/5-bucket_coarse-axis_projection_ba2d0050.plan.md).
+Board: Backlog → WIP this session.
+
+### Why now (empirical motivation)
+
+Same-session analysis across the 84 published claims (4 adapters, 7 reports) compared the
+status quo against the two candidate projection rubrics:
+
+| Rubric | Strong consensus | Models split | Δ vs status quo |
+|---|---|---|---|
+| Status quo (6 buckets) | 39% | 23% | — |
+| **Lenient projection (Part H default)** | **55%** | 18% | **+16pp strong** |
+| Strict projection | 39% | 23% | (no change) |
+
+16 / 84 claims (19%) shift consensus strength under Lenient vs Strict — that's exactly the
+editorial-tension cohort the toggle is meant to surface. Lenient delivers the agreement-lift
+the projection layer was designed for; Strict preserves the editorial bar where Exaggerated
+reads as Falsey, and lets readers flip between them.
+
+### What shipped
+
+- **Engine layer** ([`src/truthbot/verify/engine.py`](src/truthbot/verify/engine.py)):
+  module-level `LENIENT_PROJECTION` + `STRICT_PROJECTION` constants, a `_project_consensus`
+  helper that re-runs the same plurality/strength logic on the projected panel, and a
+  split-projection guardrail (no plurality on the projected axis ⇒ "Models split", never
+  tie-broken — prevents the projection from manufacturing false agreement). `_build_consensus`
+  now emits four extra fields: `coarse_lenient_label`/`coarse_lenient_strength` and
+  `coarse_strict_label`/`coarse_strict_strength`.
+- **Data model** ([`src/truthbot/models.py`](src/truthbot/models.py)): `ConsensusVerdict`
+  extended with the four optional fields, all defaulted to empty strings / `"none"` so legacy
+  cached bundles deserialize cleanly.
+- **Site render** ([`src/truthbot/publish/site.py`](src/truthbot/publish/site.py)): headline
+  `.claim-pill-headline` defaults to the Lenient label and carries `data-fine-label`,
+  `data-coarse-lenient`, `data-coarse-strict` attrs (plus `*-css` slugs) so the JS toggle can
+  flip without DOM rebuild. Per-model strip is unchanged (still 6-bucket). Status bar gains an
+  Editorial-lens chip; About page documents both lenses + the guardrail. `claims.json` now
+  publishes the coarse fields too.
+- **Assets** ([`src/truthbot/publish/assets/styles.css`](src/truthbot/publish/assets/styles.css),
+  [`src/truthbot/publish/assets/truthbot.js`](src/truthbot/publish/assets/truthbot.js)):
+  `--v-truthy` (#84cc16) / `--v-falsey` (#ea580c) CSS vars + matching `.v-truthy` / `.v-falsey`
+  pill classes; lens chip styling; client-side toggle persists choice to
+  `localStorage["editorial-lens"]` and no-ops on pages with no headline pills.
+- **Tests**: [`tests/test_consensus_projection.py`](tests/test_consensus_projection.py) (18
+  cases — projection-mapping invariants, both-lens unanimity/strong/weak, the 2-2 and
+  all-different guardrail paths, single-adapter, all-Unverifiable, empty panel, and the
+  round-trip-no-fine-axis-change guarantee). [`tests/test_site_render_projection.py`](tests/test_site_render_projection.py)
+  (5 cases — headline data-attrs, default-Lenient render, per-model strip retains 6-bucket
+  classes, legacy-bundle fallback, dissent counter stays on fine axis). All 23 new tests pass;
+  existing site-social and verify suites unchanged.
+
+### What's explicitly out of scope
+
+Model-side `SYNTHESIS_SYSTEM` rubric is unchanged — frontier prompts and prompt-cache hits are
+preserved. Historical 84 claims keep their 6-bucket headlines until a re-publish happens
+(non-blocking; the projection is computed at consensus time so any re-render with current code
+emits the new headline). `VerdictLabel` enum stays 6-bucket. FitnessScorer coarse-axis verdict
+agreement is a future calibration row, not this layer.
+
+---
+
 ## Session note — 2026-04-27 (P0 #3 — reference-set regression scoring, current baseline established)
 
 First execution of the P0 #3 reference-set regression scorecard (board: WIP→Done this session).
