@@ -52,6 +52,12 @@
   --v-misleading:   #c2410c;
   --v-false:        #991b1b;
   --v-unverifiable: #44403c;
+  /* 5-bucket coarse-axis projection (Truthy scale). Used on the headline
+     pill only — the per-model strip stays on the 6-bucket palette above.
+     truthy sits between true (green) and exaggerated (amber); falsey
+     sits between misleading (orange) and false (red). */
+  --v-truthy:       #84cc16;
+  --v-falsey:       #ea580c;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -1076,6 +1082,9 @@ footer.foot a {
 .v-misleading   { background: var(--v-misleading); }
 .v-false        { background: var(--v-false); }
 .v-unverifiable { background: var(--v-unverifiable); }
+/* 5-bucket coarse-axis paint (headline pill only). */
+.v-truthy       { background: var(--v-truthy); }
+.v-falsey       { background: var(--v-falsey); }
 /* Text paint */
 .vt-true         { color: var(--v-true); }
 .vt-mostly-true  { color: var(--v-mostly-true); }
@@ -1083,6 +1092,47 @@ footer.foot a {
 .vt-misleading   { color: var(--v-misleading); }
 .vt-false        { color: var(--v-false); }
 .vt-unverifiable { color: var(--v-unverifiable); }
+.vt-truthy       { color: var(--v-truthy); }
+.vt-falsey       { color: var(--v-falsey); }
+
+/* ── Editorial-lens chip (status bar) ──────────────────────────────────────
+   Toggles the headline pill between the Lenient and Strict 5-bucket
+   projections. Hidden by default; the toggle JS reveals it once it has
+   wired up at least one ``.claim-pill-headline`` element on the page. */
+.editorial-lens {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.editorial-lens:hover,
+.editorial-lens:focus-visible {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: var(--ink-faint);
+  outline: none;
+}
+.editorial-lens .lens-label {
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.editorial-lens .lens-value {
+  font-weight: 600;
+}
+.editorial-lens[data-lens="strict"] .lens-value {
+  color: var(--v-falsey);
+}
+.editorial-lens[data-lens="lenient"] .lens-value {
+  color: var(--v-truthy);
+}
 
 
 /* [20] Truthy SVG internal animations ────────────────────────────────── */

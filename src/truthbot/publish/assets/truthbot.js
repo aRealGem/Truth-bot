@@ -218,3 +218,105 @@
     init();
   }
 })();
+
+/* ─────────────────────────────────────────────────────────────────────
+   Editorial-lens toggle — flips the headline claim pill between the
+   Lenient (default) and Strict 5-bucket coarse-axis projections.
+
+   Per-claim pill markup (rendered by site.py / _claim_card):
+     <span class="claim-pill claim-pill-headline v-{css}"
+           data-fine-label    data-fine-css
+           data-coarse-lenient data-coarse-lenient-css
+           data-coarse-strict  data-coarse-strict-css>{label}</span>
+
+   Per-model strip pills are NOT touched — they keep the 6-bucket fine
+   labels for audit. Selector ``.claim-pill-headline`` scopes us to
+   headline pills only.
+
+   Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
+   Default: lenient (matches Part H of findings-review.md).
+   No-op if the page has no headline pills (e.g. about, 404).
+   ───────────────────────────────────────────────────────────────────── */
+(function() {
+  'use strict';
+
+  var STORAGE_KEY = 'editorial-lens';
+  var DEFAULT_LENS = 'lenient';
+  var ALL_PILL_CSS_CLASSES = [
+    'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
+    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey'
+  ];
+
+  function readLens() {
+    try {
+      var v = localStorage.getItem(STORAGE_KEY);
+      return (v === 'strict' || v === 'lenient') ? v : DEFAULT_LENS;
+    } catch (e) {
+      return DEFAULT_LENS;
+    }
+  }
+
+  function writeLens(lens) {
+    try { localStorage.setItem(STORAGE_KEY, lens); } catch (e) { /* ignore */ }
+  }
+
+  function applyLensToPill(pill, lens) {
+    var label, cssSlug;
+    if (lens === 'strict') {
+      label = pill.getAttribute('data-coarse-strict') || pill.getAttribute('data-fine-label') || '';
+      cssSlug = pill.getAttribute('data-coarse-strict-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
+    } else {
+      label = pill.getAttribute('data-coarse-lenient') || pill.getAttribute('data-fine-label') || '';
+      cssSlug = pill.getAttribute('data-coarse-lenient-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
+    }
+    if (!label) return;  // legacy bundle without coarse data; leave as rendered
+    pill.textContent = label;
+    for (var i = 0; i < ALL_PILL_CSS_CLASSES.length; i++) {
+      pill.classList.remove(ALL_PILL_CSS_CLASSES[i]);
+    }
+    pill.classList.add('v-' + cssSlug);
+  }
+
+  function applyLens(lens) {
+    var pills = document.querySelectorAll('.claim-pill-headline');
+    for (var i = 0; i < pills.length; i++) {
+      applyLensToPill(pills[i], lens);
+    }
+    var chip = document.querySelector('.editorial-lens');
+    if (chip) {
+      chip.setAttribute('data-lens', lens);
+      var valEl = chip.querySelector('.lens-value');
+      if (valEl) valEl.textContent = (lens === 'strict') ? 'Strict' : 'Lenient';
+      chip.setAttribute('aria-pressed', lens === 'strict' ? 'true' : 'false');
+    }
+  }
+
+  function init() {
+    var pills = document.querySelectorAll('.claim-pill-headline');
+    var chip = document.querySelector('.editorial-lens');
+    if (!pills.length) {
+      // No headline pills on this page (about, 404, mascot fun page);
+      // hide the chip if rendered and bail. Mascot page doesn't load this
+      // script at all, but defensive cleanup is cheap.
+      if (chip) chip.hidden = true;
+      return;
+    }
+    var lens = readLens();
+    applyLens(lens);
+    if (chip) {
+      chip.hidden = false;
+      chip.addEventListener('click', function() {
+        var current = chip.getAttribute('data-lens') || DEFAULT_LENS;
+        var next = (current === 'lenient') ? 'strict' : 'lenient';
+        writeLens(next);
+        applyLens(next);
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

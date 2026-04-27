@@ -46,6 +46,13 @@ VERDICT_CSS: dict[str, str] = {
     "Exaggerated":   "exaggerated",
     "False":         "false",
     "Unverifiable":  "unverifiable",
+    # 5-bucket coarse-axis projection (Truthy scale) — used on the headline
+    # pill, not the per-model strip. ``Models split`` reuses the same neutral
+    # styling as ``Unverifiable`` so the guardrail surfaces visibly without
+    # a new CSS class.
+    "Truthy":        "truthy",
+    "Falsey":        "falsey",
+    "Models split":  "unverifiable",
 }
 
 # Display order for the verdict bar legend (always show all 6)
@@ -978,12 +985,25 @@ def _verdict_panel(site_report) -> str:
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
+    # Editorial-lens chip toggles the headline-pill projection between
+    # Lenient (default) and Strict. The chip is hidden by default and the
+    # toggle JS reveals it on pages that have any claim pills to flip.
+    lens_chip = (
+        '    <button type="button" class="editorial-lens" data-lens="lenient" hidden '
+        'title="Toggle the headline pill between the Lenient (Mostly True + Exaggerated → Truthy) '
+        'and Strict (Exaggerated + Misleading → Falsey) projections. '
+        'Per-model strip stays 6-bucket.">\n'
+        '      <span class="lens-label">Lens:</span>\n'
+        '      <span class="lens-value">Lenient</span>\n'
+        '    </button>\n'
+    )
     return (
         '<div class="status-bar">\n'
         '  <div class="row">\n'
         '    <span class="live">Operational</span>\n'
         f'    <span>Pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>\n'
         f'    <span>{model_str}</span>\n'
+        + lens_chip +
         f'    <span class="stamp">{_esc(stamp)}</span>\n'
         '  </div>\n'
         '</div>\n'
@@ -1239,8 +1259,22 @@ def _page_truthy(
 def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", standalone: bool = False) -> str:
     claim = bundle.claim
     consensus = bundle.consensus
-    label = consensus.consensus_label.value
+    fine_label = consensus.consensus_label.value
+    # Headline defaults to the Lenient 5-bucket projection. Older cached
+    # bundles (pre-projection-layer) carry blank coarse fields; in that case
+    # fall back to the fine label so existing reports still render.
+    coarse_lenient = (consensus.coarse_lenient_label or "").strip()
+    coarse_strict = (consensus.coarse_strict_label or "").strip()
+    label = coarse_lenient or fine_label
     css = _verdict_css(label)
+    # Pre-compute both axes for the JS toggle. When projections are absent
+    # (legacy bundles), data-* attrs echo the fine label so toggling becomes
+    # a visual no-op rather than a broken render.
+    fine_css = _verdict_css(fine_label)
+    lenient_attr = coarse_lenient or fine_label
+    strict_attr = coarse_strict or fine_label
+    lenient_css = _verdict_css(lenient_attr)
+    strict_css = _verdict_css(strict_attr)
     n = str(idx).zfill(2)
 
     context_html = ''
@@ -1249,7 +1283,10 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
 
     caveat_html = _render_caveat_block(bundle.model_verdicts)
 
-    majority_label = label
+    # Dissent is computed on the fine 6-bucket axis (the per-model strip
+    # also stays fine-axis), even though the headline pill renders on the
+    # coarse axis. This keeps "N of M agree" consistent with the strip.
+    majority_label = fine_label
 
     triage_badge = ""
     if getattr(bundle, "triage_skipped_frontier", False):
@@ -1368,7 +1405,12 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="claim-head-icon")
         + f'    <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
         '  </span>'
-        f'  <span class="claim-pill v-{css}">{_esc(label)}</span>'
+        f'  <span class="claim-pill claim-pill-headline v-{css}"'
+        f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
+        f' data-coarse-lenient="{_esc(lenient_attr)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
+        f' data-coarse-strict="{_esc(strict_attr)}" data-coarse-strict-css="{_esc(strict_css)}"'
+        ' title="Headline shows the 5-bucket coarse projection. Per-model strip below uses the 6-bucket fine scale. Use the Editorial lens chip to toggle Lenient/Strict.">'
+        f'{_esc(label)}</span>'
         f'  {triage_badge}'
         '</div>'
         '<div class="claim-body">'
@@ -1563,6 +1605,12 @@ CSS = """\
   --v-misleading:   #c2410c;
   --v-false:        #991b1b;
   --v-unverifiable: #44403c;
+  /* 5-bucket coarse-axis projection (Truthy scale). Used on the headline
+     pill only — the per-model strip stays on the 6-bucket palette above.
+     truthy sits between true (green) and exaggerated (amber); falsey
+     sits between misleading (orange) and false (red). */
+  --v-truthy:       #84cc16;
+  --v-falsey:       #ea580c;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -2876,6 +2924,9 @@ hr.rule-light {
 .v-misleading   { background: var(--v-misleading); }
 .v-false        { background: var(--v-false); }
 .v-unverifiable { background: var(--v-unverifiable); }
+/* 5-bucket coarse-axis paint (headline pill only). */
+.v-truthy       { background: var(--v-truthy); }
+.v-falsey       { background: var(--v-falsey); }
 /* Text paint */
 .vt-true         { color: var(--v-true); }
 .vt-mostly-true  { color: var(--v-mostly-true); }
@@ -2883,6 +2934,47 @@ hr.rule-light {
 .vt-misleading   { color: var(--v-misleading); }
 .vt-false        { color: var(--v-false); }
 .vt-unverifiable { color: var(--v-unverifiable); }
+.vt-truthy       { color: var(--v-truthy); }
+.vt-falsey       { color: var(--v-falsey); }
+
+/* ── Editorial-lens chip (status bar) ──────────────────────────────────────
+   Toggles the headline pill between the Lenient and Strict 5-bucket
+   projections. Hidden by default; the toggle JS reveals it once it has
+   wired up at least one ``.claim-pill-headline`` element on the page. */
+.editorial-lens {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.editorial-lens:hover,
+.editorial-lens:focus-visible {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: var(--ink-faint);
+  outline: none;
+}
+.editorial-lens .lens-label {
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.editorial-lens .lens-value {
+  font-weight: 600;
+}
+.editorial-lens[data-lens="strict"] .lens-value {
+  color: var(--v-falsey);
+}
+.editorial-lens[data-lens="lenient"] .lens-value {
+  color: var(--v-truthy);
+}
 
 
 /* [20] Truthy SVG internal animations ────────────────────────────────── */
@@ -3517,6 +3609,105 @@ JS = """\
   }
 
   // Run init immediately if DOM is already parsed; otherwise wait
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+/* ─────────────────────────────────────────────────────────────────────
+   Editorial-lens toggle — flips the headline claim pill between the
+   Lenient (default) and Strict 5-bucket coarse-axis projections.
+
+   Per-claim pill markup (rendered by site.py / _claim_card):
+     <span class="claim-pill claim-pill-headline v-{css}"
+           data-fine-label    data-fine-css
+           data-coarse-lenient data-coarse-lenient-css
+           data-coarse-strict  data-coarse-strict-css>{label}</span>
+
+   Per-model strip pills are NOT touched — they keep the 6-bucket fine
+   labels for audit. Selector ``.claim-pill-headline`` scopes us to
+   headline pills only.
+
+   Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
+   Default: lenient (matches Part H of findings-review.md).
+   No-op if the page has no headline pills (e.g. about, 404).
+   ───────────────────────────────────────────────────────────────────── */
+(function() {
+  'use strict';
+
+  var STORAGE_KEY = 'editorial-lens';
+  var DEFAULT_LENS = 'lenient';
+  var ALL_PILL_CSS_CLASSES = [
+    'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
+    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey'
+  ];
+
+  function readLens() {
+    try {
+      var v = localStorage.getItem(STORAGE_KEY);
+      return (v === 'strict' || v === 'lenient') ? v : DEFAULT_LENS;
+    } catch (e) {
+      return DEFAULT_LENS;
+    }
+  }
+
+  function writeLens(lens) {
+    try { localStorage.setItem(STORAGE_KEY, lens); } catch (e) { /* ignore */ }
+  }
+
+  function applyLensToPill(pill, lens) {
+    var label, cssSlug;
+    if (lens === 'strict') {
+      label = pill.getAttribute('data-coarse-strict') || pill.getAttribute('data-fine-label') || '';
+      cssSlug = pill.getAttribute('data-coarse-strict-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
+    } else {
+      label = pill.getAttribute('data-coarse-lenient') || pill.getAttribute('data-fine-label') || '';
+      cssSlug = pill.getAttribute('data-coarse-lenient-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
+    }
+    if (!label) return;
+    pill.textContent = label;
+    for (var i = 0; i < ALL_PILL_CSS_CLASSES.length; i++) {
+      pill.classList.remove(ALL_PILL_CSS_CLASSES[i]);
+    }
+    pill.classList.add('v-' + cssSlug);
+  }
+
+  function applyLens(lens) {
+    var pills = document.querySelectorAll('.claim-pill-headline');
+    for (var i = 0; i < pills.length; i++) {
+      applyLensToPill(pills[i], lens);
+    }
+    var chip = document.querySelector('.editorial-lens');
+    if (chip) {
+      chip.setAttribute('data-lens', lens);
+      var valEl = chip.querySelector('.lens-value');
+      if (valEl) valEl.textContent = (lens === 'strict') ? 'Strict' : 'Lenient';
+      chip.setAttribute('aria-pressed', lens === 'strict' ? 'true' : 'false');
+    }
+  }
+
+  function init() {
+    var pills = document.querySelectorAll('.claim-pill-headline');
+    var chip = document.querySelector('.editorial-lens');
+    if (!pills.length) {
+      if (chip) chip.hidden = true;
+      return;
+    }
+    var lens = readLens();
+    applyLens(lens);
+    if (chip) {
+      chip.hidden = false;
+      chip.addEventListener('click', function() {
+        var current = chip.getAttribute('data-lens') || DEFAULT_LENS;
+        var next = (current === 'lenient') ? 'strict' : 'lenient';
+        writeLens(next);
+        applyLens(next);
+      });
+    }
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
@@ -4323,6 +4514,33 @@ def _render_about() -> str:
         f'<p style="margin-top:0.75rem">Consensus is computed by majority vote. '
         f'Three or more models returning the same label = "Strong consensus." '
         f'Two models agreeing = "Weak consensus." No majority = "Models split."</p>'
+        f'<h3 style="margin-top:1.5rem">Headline pill: 5-bucket coarse-axis projection</h3>'
+        f'<p>Each model returns one of <strong>six</strong> labels — True, Mostly True, '
+        f'Exaggerated, Misleading, False, Unverifiable. Those per-model labels are '
+        f'preserved in full on the per-claim model strip for audit. The headline pill '
+        f'on each claim collapses the panel into a <strong>five-bucket "Truthy scale"</strong> '
+        f'(True · Truthy · Unverifiable · Falsey · False) so directionally aligned panels '
+        f'don\'t look split just because two models split <em>Mostly True</em> from '
+        f'<em>Exaggerated</em>.</p>'
+        f'<p style="margin-top:0.75rem">Two projections are published side-by-side and you '
+        f'can flip between them with the <strong>Lens</strong> chip in the status bar:</p>'
+        f'<table class="tier-table" style="margin-top:0.5rem">'
+        f'<tr><th>6-bucket label</th><th>Lenient (default)</th><th>Strict</th></tr>'
+        f'<tr><td>True</td><td>True</td><td>True</td></tr>'
+        f'<tr><td>Mostly True</td><td>Truthy</td><td>Truthy</td></tr>'
+        f'<tr><td>Exaggerated</td><td>Truthy</td><td><strong>Falsey</strong></td></tr>'
+        f'<tr><td>Misleading</td><td>Falsey</td><td>Falsey</td></tr>'
+        f'<tr><td>False</td><td>False</td><td>False</td></tr>'
+        f'<tr><td>Unverifiable</td><td>Unverifiable</td><td>Unverifiable</td></tr>'
+        f'</table>'
+        f'<p style="margin-top:0.75rem"><strong>Split-projection guardrail:</strong> if the '
+        f'panel still has no plurality after projecting (e.g. 2-2 Truthy/Falsey), the '
+        f'headline shows "Models split" rather than tie-breaking — the projection is not '
+        f'allowed to manufacture agreement that isn\'t there.</p>'
+        f'<p style="margin-top:0.75rem"><strong>Per-model strip is unaffected.</strong> '
+        f'Individual model verdicts always render on the original 6-bucket axis so you can '
+        f'see the editorial nuance each model assigned, even when the headline rolls up to '
+        f'Truthy or Falsey.</p>'
         f'<h3 style="margin-top:1.5rem">Models</h3>'
         f'{models_list}'
         f'<h3 style="margin-top:1.5rem">Source tier hierarchy</h3>'
@@ -4543,6 +4761,14 @@ class SitePublisher:
             "claim_text":            bundle.claim.text,
             "consensus_verdict":     bundle.consensus.consensus_verdict,
             "consensus_strength":    bundle.consensus.consensus_strength,
+            # 5-bucket coarse-axis projections (Truthy scale). Default empty
+            # strings on legacy bundles deserialize cleanly; downstream
+            # consumers can detect "post-projection" data by checking for
+            # non-empty ``coarse_lenient_label``.
+            "coarse_lenient_label":   bundle.consensus.coarse_lenient_label,
+            "coarse_lenient_strength": bundle.consensus.coarse_lenient_strength,
+            "coarse_strict_label":     bundle.consensus.coarse_strict_label,
+            "coarse_strict_strength":  bundle.consensus.coarse_strict_strength,
             "model_verdicts_summary": [
                 {"adapter": mv.adapter_name, "label": mv.label.value,
                  "confidence": mv.confidence.value}
