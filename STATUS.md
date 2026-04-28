@@ -1,4 +1,95 @@
-# Truth-bot Status — 2026-04-27
+# Truth-bot Status — 2026-04-28
+
+## Session note — 2026-04-28 (FitnessScorer coarse-axis verdict-agreement metric + Run 5)
+
+Overnight follow-up to the 2026-04-27 5-bucket projection layer (commit
+[`dc64ca0`](https://github.com/aRealGem/Truth-bot/commit/dc64ca0)). Plan:
+[.cursor/plans/fitnessscorer_coarse-axis_b49ee82d.plan.md](.cursor/plans/fitnessscorer_coarse-axis_b49ee82d.plan.md).
+Goal: re-score Run 4's verdict-agreement on the 5-bucket Truthy scale to disentangle
+genuine quality drift from fine-axis label noise, since the GPT 5.4 Pro reference set
+is already roughly coarse-axis-shaped.
+
+### What shipped
+
+- **`FitnessScorer` axis parameter** ([`eval/evolver/fitness.py`](eval/evolver/fitness.py)):
+  `verdict_distance(..., axis="fine")` accepts `"coarse_lenient"` / `"coarse_strict"`
+  alongside the historical `"fine"` default. Both projections mirror
+  `LENIENT_PROJECTION` / `STRICT_PROJECTION` in
+  [`src/truthbot/verify/engine.py`](src/truthbot/verify/engine.py); coarse axis uses a
+  5-bucket label order (`true → truthy → unverifiable → falsey → false`) with the same
+  `[0, 1]` normalised distance ceiling so verdict-agreement scores are directly
+  comparable across axes. `axis="fine"` is byte-identical to the pre-axis-param form
+  (round-trip test pins this).
+- **`score_run.py` CLI extension** ([`eval/sotu-2026/score_run.py`](eval/sotu-2026/score_run.py)):
+  new `--axis {fine,coarse_lenient,coarse_strict}` flag (default `fine`) + `--all-axes`
+  flag that prints a 3-column scorecard with a one-line headline like
+  `Verdict agreement: 62.8% fine -> 60.3% coarse_lenient (-2.4pp) -> 69.0% coarse_strict (+6.2pp)`.
+- **Tests** ([`eval/tests/test_fitness_coarse_axis.py`](eval/tests/test_fitness_coarse_axis.py)):
+  25 cases covering identity-on-every-axis, Lenient-lifts MT/Excg, Strict-separates
+  Excg-from-MT, symmetric distance, max-distance preserved across axes, "Models split"
+  handled as unverifiable on every axis, default-axis round-trip byte-identical, unknown
+  axis raises `ValueError`, and `FitnessScorer.score(axis=...)` actually re-scores
+  verdict_agreement (not just decorates the dict).
+- **Run 5 documented** ([`eval/sotu-2026/BENCHMARK.md`](eval/sotu-2026/BENCHMARK.md)):
+  multi-axis re-score of Run 4, full scorecard, label-distribution analysis, and
+  architectural takeaway.
+
+### Headline empirical finding (counter to the going-in hypothesis)
+
+The plan predicted Lenient would *lift* verdict-agreement; the data flipped the sign:
+
+| Axis              | Verdict agreement | Δ vs fine | Fitness | Δ vs 0.679 baseline |
+|-------------------|------------------:|----------:|--------:|--------------------:|
+| fine (6-bucket)   | 62.8%             | —         | 0.5413  | −0.1377             |
+| **coarse_lenient**| 60.3%             | **−2.4pp**| 0.5341  | −0.1449             |
+| **coarse_strict** | **69.0%**         | **+6.2pp**| **0.5599** | **−0.1191**     |
+
+The data explains why. Reference label distribution: 9 `MISLEADING`-family + 7 `MISLEADING`
+plain + 4 `TRUE` + 4 `UNSUPPORTED` + 2 `PARTLY TRUE` + 1 `UNVERIFIABLE`. Consensus on the
+same 29 claims: 9 `False` + 6 **`Exaggerated`** + 5 `True` + 4 `Mostly True` + 3
+`Unverifiable` + 2 `Models split` + **0 `Misleading`**. The reference has no
+`EXAGGERATED` bucket and the consensus has no `Misleading` verdicts — that's the editorial-bar
+disagreement.
+
+- Under Lenient, consensus `Exaggerated → Truthy` vs reference `Misleading → Falsey`
+  pushes the pair onto opposite sides of the Truthy/Falsey divide (worse than fine's
+  partial-credit adjacency).
+- Under Strict, both `Exaggerated` and `Misleading` collapse onto `Falsey`, which is
+  exactly where the reference's editorial bar sits.
+
+### Architectural takeaway: two defaults for two audiences
+
+| Surface | Default | Why |
+|---|---|---|
+| Public-facing site (headline pill) | **Lenient** (shipped 2026-04-27) | Reader-facing — Lenient surfaces consensus agreement within the panel and respects the consensus's own editorial choice that "Exaggerated" sits closer to "Mostly True" than to "Misleading." |
+| Regression scorecard (`score_run.py`) | **Strict** *(interpretation default; CLI keeps `--axis fine` for byte-identical Run 4 backward compat)* | Reference-facing — the reference set labels rhetorical claims `MISLEADING`. Strict puts both `Exaggerated` and `Misleading` on `Falsey` and isolates real verdict disagreement from label-vocabulary drift. |
+
+The fine-axis score remains useful as a fine-grained drift signal between
+`Mostly True` ↔ `Exaggerated` ↔ `Misleading`, which Strict deliberately collapses.
+
+### What this rules out — and what it doesn't
+
+- **Rules out:** "the −18pp Run 4 gap is mostly fine-axis label drift between
+  Mostly True and Exaggerated." It isn't. Lenient (which collapses MT + Excg → Truthy)
+  makes the gap *worse*, so MT/Excg drift is small.
+- **Confirms:** the gap is partially driven by the **Misleading vs Exaggerated** editorial-threshold
+  divergence between consensus and the GPT 5.4 Pro reference. Strict closes ≈14% of it
+  (`−0.1377 → −0.1191`).
+- **Doesn't rule out:** that the remaining ≈86% of the gap (still −0.1191 fitness even
+  under Strict) is genuine quality drift between the 2026-04-19 single-model baseline and
+  the current 4-adapter consensus pipeline. The Anthropic-only single-claim re-score
+  (originally listed under [`BENCHMARK.md`](eval/sotu-2026/BENCHMARK.md) calibration gap
+  #3) is the right next experiment to nail that down — but the surprise-magnitude case for
+  it weakened once the lens decomposition landed.
+
+### Test health
+
+- 25/25 new coarse-axis tests pass.
+- 106/106 existing eval tests pass (no fine-axis regression).
+- Default-axis CLI run produces byte-identical Run 4 numbers (Fitness 0.5413,
+  verdict_agreement 62.8%) — confirming pure-additive surface.
+
+---
 
 ## Session note — 2026-04-27 (5-bucket coarse-axis projection — Lenient default + Strict toggle)
 
