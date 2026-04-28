@@ -75,11 +75,82 @@ _TRUTHBOT_LABEL_NORMALIZE: dict[str, str] = {
 _LABEL_ORDER = ["true", "mostly_true", "exaggerated", "misleading", "unverifiable", "false"]
 _LABEL_POS = {label: i for i, label in enumerate(_LABEL_ORDER)}
 
+# ── 5-bucket coarse-axis projections (Truthy scale) ───────────────────────────
+# Mirror of LENIENT_PROJECTION / STRICT_PROJECTION in src/truthbot/verify/engine.py,
+# but keyed on the *normalized* fine-axis labels this module already produces.
+# Used by verdict_distance / verdict_agreement_score when ``axis != "fine"``.
+#
+# The reference set (eval/sotu-2026/reference.json) is already roughly
+# coarse-axis shaped (TRUE / PARTLY TRUE / UNSUPPORTED / FALSE / MISLEADING —
+# no separate EXAGGERATED bucket), so coarse-axis scoring removes Mostly-True
+# vs Exaggerated label drift between the four-adapter consensus and the
+# human-curated reference.
+_LENIENT_PROJECTION_FOR_SCORING: dict[str, str] = {
+    "true":         "true",
+    "mostly_true":  "truthy",
+    "exaggerated":  "truthy",
+    "misleading":   "falsey",
+    "false":        "false",
+    "unverifiable": "unverifiable",
+}
 
-def verdict_distance(ref_verdict: str, pred_verdict: str) -> float:
+_STRICT_PROJECTION_FOR_SCORING: dict[str, str] = {
+    "true":         "true",
+    "mostly_true":  "truthy",
+    "exaggerated":  "falsey",   # diverges from Lenient
+    "misleading":   "falsey",
+    "false":        "false",
+    "unverifiable": "unverifiable",
+}
+
+# Coarse-axis ordered list (most positive → most negative).
+_COARSE_LABEL_ORDER = ["true", "truthy", "unverifiable", "falsey", "false"]
+_COARSE_LABEL_POS = {label: i for i, label in enumerate(_COARSE_LABEL_ORDER)}
+
+# Recognized axis names. ``"fine"`` preserves the historical 6-bucket distance
+# table byte-identically and is the default for backward compatibility.
+_VALID_AXES = ("fine", "coarse_lenient", "coarse_strict")
+
+
+def _project_for_axis(label: str, axis: str) -> str:
+    """Project a normalized fine-axis label into the chosen scoring axis.
+
+    ``label`` must already be one of the values in ``_LABEL_ORDER``.
+    Unknown axis names raise ValueError so misspellings fail loud rather than
+    silently scoring on the fine axis.
+    """
+    if axis == "fine":
+        return label
+    if axis == "coarse_lenient":
+        return _LENIENT_PROJECTION_FOR_SCORING.get(label, "unverifiable")
+    if axis == "coarse_strict":
+        return _STRICT_PROJECTION_FOR_SCORING.get(label, "unverifiable")
+    raise ValueError(
+        f"verdict_distance: unknown axis {axis!r}; expected one of {_VALID_AXES}"
+    )
+
+
+def verdict_distance(
+    ref_verdict: str,
+    pred_verdict: str,
+    axis: str = "fine",
+) -> float:
     """
     Return a penalty in [0, 1] for the distance between two verdict labels.
     0 = perfect match, 1 = opposite ends (true <-> false).
+
+    ``axis`` selects the comparison space:
+      * ``"fine"`` (default): historical 6-bucket scale (true, mostly_true,
+        exaggerated, misleading, unverifiable, false).
+      * ``"coarse_lenient"``: 5-bucket Truthy scale; Mostly True + Exaggerated
+        collapse into Truthy, Misleading collapses into Falsey. Matches the
+        published-default headline projection.
+      * ``"coarse_strict"``: same but Exaggerated → Falsey (tougher editorial
+        bar; matches the Strict toggle on the published site).
+
+    Distance is normalized by the axis's max position-distance, so scores
+    remain in [0, 1] and ``verdict_agreement_score`` is comparable across
+    axes (true ↔ false = 1.0 on both axes).
     """
     ref_norm = _LABEL_NORMALIZE.get(ref_verdict.upper().strip(), "unverifiable")
     pred_norm = _TRUTHBOT_LABEL_NORMALIZE.get(pred_verdict.strip(), None)
@@ -94,18 +165,37 @@ def verdict_distance(ref_verdict: str, pred_verdict: str) -> float:
         )
         pred_norm = "unverifiable"
 
-    if ref_norm == pred_norm:
+    # Project both sides into the requested axis. For axis="fine" this is a
+    # no-op and the function behaves byte-identically to its pre-axis-param
+    # form.
+    ref_proj = _project_for_axis(ref_norm, axis)
+    pred_proj = _project_for_axis(pred_norm, axis)
+
+    if ref_proj == pred_proj:
         return 0.0
 
-    ref_pos = _LABEL_POS.get(ref_norm, 3)
-    pred_pos = _LABEL_POS.get(pred_norm, 3)
-    max_dist = len(_LABEL_ORDER) - 1
+    if axis == "fine":
+        order_pos = _LABEL_POS
+        max_dist = len(_LABEL_ORDER) - 1
+    else:
+        order_pos = _COARSE_LABEL_POS
+        max_dist = len(_COARSE_LABEL_ORDER) - 1
+
+    ref_pos = order_pos.get(ref_proj, max_dist // 2)
+    pred_pos = order_pos.get(pred_proj, max_dist // 2)
     return abs(ref_pos - pred_pos) / max_dist
 
 
-def verdict_agreement_score(ref_verdict: str, pred_verdict: str) -> float:
-    """1.0 = exact match, approaching 0 as verdicts diverge."""
-    return 1.0 - verdict_distance(ref_verdict, pred_verdict)
+def verdict_agreement_score(
+    ref_verdict: str,
+    pred_verdict: str,
+    axis: str = "fine",
+) -> float:
+    """1.0 = exact match, approaching 0 as verdicts diverge.
+
+    See ``verdict_distance`` for the meaning of ``axis``.
+    """
+    return 1.0 - verdict_distance(ref_verdict, pred_verdict, axis=axis)
 
 
 # ââ Fuzzy claim matching âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
@@ -320,6 +410,7 @@ class FitnessScorer:
         extracted_claims: list[dict],
         verdicts: list[dict],
         token_count: int = 0,
+        axis: str = "fine",
     ) -> dict[str, float]:
         """
         Score a complete pipeline run against the reference.
@@ -332,11 +423,18 @@ class FitnessScorer:
             Verdict dicts (each with "claim_text", "label", "explanation").
         token_count:
             Total tokens used (extraction + synthesis) for parsimony scoring.
+        axis:
+            Verdict-comparison axis (passed through to ``verdict_distance``).
+            Defaults to ``"fine"`` for byte-identical backward compatibility.
+            ``"coarse_lenient"`` / ``"coarse_strict"`` re-score verdict
+            agreement on the 5-bucket Truthy scale, which removes the
+            Mostly-True vs Exaggerated label drift between the four-adapter
+            consensus and the (already coarse-axis-shaped) reference set.
 
         Returns
         -------
         dict with keys: claim_recall, verdict_agreement, explanation_quality,
-        source_citation_quality, parsimony, fitness
+        source_citation_quality, parsimony, fitness, axis
         """
         checkable = [c for c in extracted_claims if c.get("is_checkable", True)]
 
@@ -353,7 +451,9 @@ class FitnessScorer:
             verdict = self._find_verdict(match["matched_claim"], verdicts)
             if verdict is None:
                 continue
-            score = verdict_agreement_score(match["ref_verdict"], verdict["label"])
+            score = verdict_agreement_score(
+                match["ref_verdict"], verdict["label"], axis=axis
+            )
             verdict_scores.append(score)
         verdict_agreement = (
             sum(verdict_scores) / len(verdict_scores) if verdict_scores else 0.0
@@ -418,6 +518,7 @@ class FitnessScorer:
             "matched_count": sum(1 for m in matches if m["matched"]),
             "total_extracted": len(checkable),
             "numeric_error_directions": ned_list,
+            "axis": axis,
         }
 
     def score_extraction_only(self, extracted_claims: list[dict], token_count: int = 0) -> dict:
