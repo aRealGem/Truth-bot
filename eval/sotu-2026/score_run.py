@@ -102,6 +102,32 @@ def main() -> int:
         default=0.679,
         help="Reference fitness baseline for delta reporting (default: %(default)s, claude-opus-4-7 2026-04-19)",
     )
+    # ── Axis controls (5-bucket coarse projection) ────────────────────────────
+    # ``--axis`` re-scores verdict-agreement on the chosen comparison axis.
+    # ``--all-axes`` runs all three side-by-side and adds a one-line headline
+    # so the difference between fine-axis label drift and genuine quality
+    # drift is glanceable (mirrors the published Lenient/Strict toggle in
+    # site.py). Default ``fine`` is byte-identical to pre-axis-param runs,
+    # so older `score_run.py` invocations keep producing the same numbers.
+    parser.add_argument(
+        "--axis",
+        choices=("fine", "coarse_lenient", "coarse_strict"),
+        default="fine",
+        help=(
+            "Verdict-agreement comparison axis. 'fine' (default) keeps the "
+            "historical 6-bucket distance table; 'coarse_lenient' / "
+            "'coarse_strict' re-score on the 5-bucket Truthy scale "
+            "(mirrors the published headline pill projection)."
+        ),
+    )
+    parser.add_argument(
+        "--all-axes",
+        action="store_true",
+        help=(
+            "Run all three axes (fine / coarse_lenient / coarse_strict) "
+            "side-by-side and print a headline summary line. Overrides --axis."
+        ),
+    )
     args = parser.parse_args()
 
     metrics_dir = Path(args.metrics_dir)
@@ -158,18 +184,19 @@ def main() -> int:
 
     token_count = _token_count_from_sidecar(sidecar)
 
-    scorer = FitnessScorer()
-    scores = scorer.score(
-        extracted_claims=extracted_for_recall,
-        verdicts=verdicts,
-        token_count=token_count,
-    )
-
     cost_usd = float(run_summary.get("total_cost_usd", 0.0))
 
-    fitness = scores["fitness"]
-    delta = fitness - args.baseline_fitness
+    scorer = FitnessScorer()
 
+    def _score_axis(axis: str) -> dict:
+        return scorer.score(
+            extracted_claims=extracted_for_recall,
+            verdicts=verdicts,
+            token_count=token_count,
+            axis=axis,
+        )
+
+    # ── Header (shared across single-axis and all-axes modes) ────────────────
     print()
     print(f"Reference-set regression scorecard for run {args.run_id}")
     print("=" * 72)
@@ -185,6 +212,36 @@ def main() -> int:
     print(f"  Anthropic explanations: excluded (lives in claim HTML — see TODO)")
     print(f"  Token count (sidecar):  {token_count:,}")
     print()
+
+    if args.all_axes:
+        all_scores = {axis: _score_axis(axis) for axis in ("fine", "coarse_lenient", "coarse_strict")}
+        _print_scorecard_all_axes(all_scores, args.baseline_fitness, cost_usd)
+    else:
+        scores = _score_axis(args.axis)
+        _print_scorecard_single(scores, args.baseline_fitness, cost_usd, token_count)
+
+    return 0
+
+
+def _print_scorecard_single(
+    scores: dict,
+    baseline_fitness: float,
+    cost_usd: float,
+    token_count: int,
+) -> None:
+    """Single-axis scorecard (preserves the original Run 4 output shape)."""
+    axis = scores.get("axis", "fine")
+    fitness = scores["fitness"]
+    delta = fitness - baseline_fitness
+
+    axis_label = {
+        "fine":           "fine (6-bucket)",
+        "coarse_lenient": "coarse_lenient (5-bucket Truthy scale, default lens)",
+        "coarse_strict":  "coarse_strict (5-bucket Truthy scale, Strict lens)",
+    }[axis]
+
+    print(f"Scoring axis: {axis_label}")
+    print()
     print("Scores (FitnessScorer, 5-dimension):")
     print(f"  Claim recall:           {_format_pct(scores['claim_recall'])}   weight 0.25  ({scores['matched_count']}/29 reference claims matched)")
     print(f"  Verdict agreement:      {_format_pct(scores['verdict_agreement'])}   weight 0.30")
@@ -199,13 +256,89 @@ def main() -> int:
     print( "  ──────────────────────────────────────")
     print(f"  Fitness:                {fitness:.4f}")
     print()
-    print(f"Vs baseline (best known: {args.baseline_fitness:.3f}, claude-opus-4-7 standalone, 2026-04-19):")
+    print(f"Vs baseline (best known: {baseline_fitness:.3f}, claude-opus-4-7 standalone, 2026-04-19):")
     sign = "+" if delta >= 0 else ""
     print(f"  Fitness delta:          {sign}{delta:.4f}")
     print(f"  Cost:                   ${cost_usd:.2f}")
     print()
 
-    return 0
+
+def _print_scorecard_all_axes(
+    all_scores: dict[str, dict],
+    baseline_fitness: float,
+    cost_usd: float,
+) -> None:
+    """Side-by-side 3-column scorecard for fine / coarse_lenient / coarse_strict.
+
+    The headline line is intentionally one printable string so it can be
+    eyeballed at the bottom of a CI tail without scrolling.
+    """
+    fine = all_scores["fine"]
+    lenient = all_scores["coarse_lenient"]
+    strict = all_scores["coarse_strict"]
+
+    def col(scores: dict, key: str) -> str:
+        return _format_pct(scores[key])
+
+    def delta_pp(a: float, b: float) -> str:
+        diff = (b - a) * 100
+        sign = "+" if diff >= 0 else ""
+        return f"{sign}{diff:.1f}pp"
+
+    print("Multi-axis scorecard (FitnessScorer):")
+    print()
+    print(f"  {'Metric':<24}{'fine':>10}{'lenient':>12}{'strict':>12}   weight")
+    print(f"  {'-' * 22:<24}{'----':>10}{'-------':>12}{'------':>12}   ------")
+    print(
+        f"  {'Claim recall':<24}{col(fine, 'claim_recall'):>10}"
+        f"{col(lenient, 'claim_recall'):>12}{col(strict, 'claim_recall'):>12}   0.25"
+    )
+    print(
+        f"  {'Verdict agreement':<24}{col(fine, 'verdict_agreement'):>10}"
+        f"{col(lenient, 'verdict_agreement'):>12}{col(strict, 'verdict_agreement'):>12}   0.30"
+    )
+    print(
+        f"  {'Explanation quality':<24}{col(fine, 'explanation_quality'):>10}"
+        f"{col(lenient, 'explanation_quality'):>12}{col(strict, 'explanation_quality'):>12}   0.20"
+    )
+    print(
+        f"  {'Source citation':<24}{col(fine, 'source_citation_quality'):>10}"
+        f"{col(lenient, 'source_citation_quality'):>12}{col(strict, 'source_citation_quality'):>12}   0.15"
+    )
+    print(
+        f"  {'Parsimony':<24}{col(fine, 'parsimony'):>10}"
+        f"{col(lenient, 'parsimony'):>12}{col(strict, 'parsimony'):>12}   0.10"
+    )
+    print(f"  {'-' * 22:<24}{'----':>10}{'-------':>12}{'------':>12}")
+    print(
+        f"  {'Fitness':<24}{fine['fitness']:>10.4f}"
+        f"{lenient['fitness']:>12.4f}{strict['fitness']:>12.4f}"
+    )
+    print()
+
+    # Headline summary — the single line worth grepping for.
+    va_fine = fine["verdict_agreement"]
+    va_lenient = lenient["verdict_agreement"]
+    va_strict = strict["verdict_agreement"]
+    print(
+        f"Verdict agreement: "
+        f"{va_fine * 100:.1f}% fine "
+        f"-> {va_lenient * 100:.1f}% coarse_lenient ({delta_pp(va_fine, va_lenient)}) "
+        f"-> {va_strict * 100:.1f}% coarse_strict ({delta_pp(va_fine, va_strict)})"
+    )
+    print()
+    print(f"Vs baseline (best known: {baseline_fitness:.3f}, claude-opus-4-7 standalone, 2026-04-19):")
+    for axis_name, label in (
+        ("fine",           "fine          "),
+        ("coarse_lenient", "coarse_lenient"),
+        ("coarse_strict",  "coarse_strict "),
+    ):
+        f = all_scores[axis_name]["fitness"]
+        d = f - baseline_fitness
+        sign = "+" if d >= 0 else ""
+        print(f"  Fitness ({label}):  {f:.4f}   delta {sign}{d:.4f}")
+    print(f"  Cost:                   ${cost_usd:.2f}")
+    print()
 
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@ Last updated: 2026-04-27.
 | 2 | `opus-optimized-results/` | claude-opus-4-7 | Standalone fixed-prompt | — | 1 | 100% (29/29) | 80.7% | ~0.492 (simplified) | $2.15 | PARKING LOT |
 | 3 | `opus-4-7-results/` | claude-opus-4-7 | Evolver gen-1 seed | 4 | 1 | 100% (29/29) | ~81% | **0.679** (best known) | $0.65 | PARKING LOT |
 | 4 | `metrics/run_summaries/258b5758` | 4-adapter consensus (claude-opus-4-7 + gpt-5.4 + gemini-2.5-pro + grok-4) | Production pipeline (`--mode batch`, `--max-claims 29`) | — | — | 100% (29/29) | 62.8% | **0.5413** | $4.97 | **CURRENT BASELINE 2026-04-27** |
+| 5 | (re-score of Run 4) | same | Multi-axis re-score (`score_run.py --all-axes`) | — | — | 100% (29/29) | 62.8% / 60.3% / **69.0%** *(fine / lenient / strict)* | 0.5413 / 0.5341 / **0.5599** | $0.00 | **2026-04-28** — coarse-axis calibration |
 
 **Run 4 is the new current baseline** — first regression scoring against the production
 4-adapter consensus pipeline post the 2026-04-26 SOTU fire (Grok `max_tool_calls` cap +
@@ -73,10 +74,122 @@ Vs baseline (best known: 0.679, claude-opus-4-7 standalone, 2026-04-19):
    parsimony will always score 0%. Recalibrating to e.g. 100k–500k would make it a
    meaningful signal again, but changing the calibration mid-flight invalidates baseline
    comparisons. Track separately as a tunable.
-3. **Baseline mismatch.** Runs 2/3 are single-model standalone (Anthropic Opus only). Run 4
-   is 4-adapter consensus. Useful trend signal but not a clean A/B. To get apples-to-apples,
-   capture an Anthropic-only single-claim re-score against the same 29-claim transcript and
-   add as Run 5.
+3. **Baseline mismatch — partially addressed by Run 5 (2026-04-28).** Runs 2/3 are
+   single-model standalone (Anthropic Opus only); Run 4 is 4-adapter consensus. Useful
+   trend signal but not a clean A/B. The 2026-04-28 multi-axis re-score (Run 5, below)
+   factors out the Mostly-True / Exaggerated / Misleading label-drift axis: under
+   `coarse_strict` the Run 4 → Run 3 fitness gap narrows from −0.1377 to −0.1191 (≈14%
+   of the gap was lens-dependent). The remaining gap is genuine quality drift between
+   the single-model 2026-04-19 baseline and the 4-adapter consensus, not label noise.
+   An Anthropic-only single-claim re-score against the same 29-claim transcript would
+   still complete the apples-to-apples picture and remains a P1 follow-up, but the
+   surprise-magnitude case for it weakened once the lens decomposition landed.
+
+---
+
+## Run 5 — Multi-axis re-score (2026-04-28)
+
+Re-scores Run 4's published verdicts on three comparison axes, made possible by the
+2026-04-27 5-bucket coarse-axis projection layer (commit
+[`dc64ca0`](https://github.com/aRealGem/Truth-bot/commit/dc64ca0)). Inputs are unchanged
+(same `--run-id 258b5758-...` / `--report-id e81546a0-...`); only the verdict-distance
+axis varies. No LLM calls, no cost.
+
+```bash
+python eval/sotu-2026/score_run.py --all-axes \
+    --run-id 258b5758-8e25-4bf0-8f34-63778d2f976e \
+    --report-id e81546a0-6371-4e96-9e94-3d6213864d5a
+```
+
+### Multi-axis scorecard
+
+| Metric                | fine (6-bucket) | coarse_lenient (5-bucket) | coarse_strict (5-bucket) | weight |
+|-----------------------|----------------:|--------------------------:|-------------------------:|-------:|
+| Claim recall          | 100.0%          | 100.0%                    | 100.0%                   | 0.25   |
+| Verdict agreement     | 62.8%           | 60.3% *(−2.4pp)*          | **69.0%** *(+6.2pp)*     | 0.30   |
+| Explanation quality   | 39.5%           | 39.5%                     | 39.5%                    | 0.20   |
+| Source citation       | 16.1%           | 16.1%                     | 16.1%                    | 0.15   |
+| Parsimony             | 0.0%            | 0.0%                      | 0.0%                     | 0.10   |
+| **Fitness**           | 0.5413          | 0.5341                    | **0.5599**               | —      |
+| Δ vs 0.679 baseline   | −0.1377         | −0.1449                   | **−0.1191**              | —      |
+
+### Headline finding (counter to the going-in hypothesis)
+
+The plan
+([`.cursor/plans/fitnessscorer_coarse-axis_b49ee82d.plan.md`](.cursor/plans/fitnessscorer_coarse-axis_b49ee82d.plan.md))
+hypothesised that *Lenient* would lift verdict-agreement because the reference set is
+"already coarse-axis-shaped." The empirics flipped the sign: **Strict** lifts (+6.2pp),
+**Lenient** drops (−2.4pp). The data explains why.
+
+Reference label distribution (29 claims):
+
+| Reference label | Count | Lenient projection | Strict projection |
+|-----------------|------:|--------------------|-------------------|
+| FALSE           | 9     | False              | False             |
+| MISLEADING      | 7     | Falsey             | Falsey            |
+| TRUE            | 4     | True               | True              |
+| UNSUPPORTED     | 4     | Unverifiable       | Unverifiable      |
+| PARTLY TRUE     | 2     | Truthy             | Truthy            |
+| FALSE / MISLEADING | 2  | Falsey             | Falsey            |
+| UNVERIFIABLE    | 1     | Unverifiable       | Unverifiable      |
+
+Consensus (4-adapter) label distribution on the same 29 claims:
+
+| Consensus label | Count |
+|-----------------|------:|
+| False           | 9     |
+| **Exaggerated** | **6** |
+| True            | 5     |
+| Mostly True     | 4     |
+| Unverifiable    | 3     |
+| Models split    | 2     |
+| *(Misleading)*  | 0     |
+
+The crux: the reference set has **9 MISLEADING-family claims and zero EXAGGERATED**,
+while consensus has **6 Exaggerated and zero Misleading**. This is the editorial-bar
+disagreement. Under each axis:
+
+- **Fine (6-bucket):** consensus `Exaggerated` (pos 2) vs reference `Misleading` (pos 3)
+  → distance 1/5 = 0.2, score 0.8. Partial credit for being adjacent on the rhetorical
+  scale.
+- **Lenient:** consensus `Exaggerated → Truthy` (pos 1) vs reference `Misleading → Falsey`
+  (pos 3) → distance 2/4 = 0.5, score 0.5. *Worse* than fine because the projection
+  pushes them onto opposite sides of the Truthy/Falsey divide.
+- **Strict:** consensus `Exaggerated → Falsey` and reference `Misleading → Falsey`
+  collapse into the same bucket → distance 0, score 1.0. *Best* match because Strict's
+  editorial bar lines up with the reference's.
+
+### Architectural takeaway: two defaults for two audiences
+
+The published headline pill defaults to **Lenient** (commit
+[`dc64ca0`](https://github.com/aRealGem/Truth-bot/commit/dc64ca0)) because that's the
+reader-facing surface — Lenient surfaces the agreement *within* the model panel that the
+6-bucket axis hides, and respects the consensus's own editorial choice that "Exaggerated"
+sits closer to "Mostly True" than to "Misleading."
+
+The regression scorecard, by contrast, is the *reference-facing* surface. Strict is the
+better default there because the reference set's editorial bar is closer to Strict's
+projection — the reference labels rhetorical claims as `MISLEADING`, where consensus
+labels them as `Exaggerated`. Strict-axis scoring puts both on `Falsey` and isolates real
+verdict disagreement from label-vocabulary drift.
+
+`score_run.py` keeps `--axis fine` as its CLI default for byte-identical backward
+compatibility with the Run 4 numbers, but the *interpretation* default for ongoing
+regression tracking should be `--axis coarse_strict` (or `--all-axes` with Strict as the
+headline). The fine-axis score remains useful as a fine-grained drift signal between
+`Mostly True` ↔ `Exaggerated` ↔ `Misleading`, which Strict deliberately collapses.
+
+### What this rules out — and what it doesn't
+
+- **Rules out:** "the −18pp gap is mostly fine-axis label drift between Mostly True and
+  Exaggerated." It isn't. Lenient (which collapses MT + Excg → Truthy) makes the gap
+  *worse*, so MT/Excg drift is small.
+- **Confirms:** the gap is partially driven by the **Misleading vs Exaggerated**
+  consensus-vs-reference editorial-threshold divergence — Strict closes ≈14% of it.
+- **Doesn't rule out:** that the remaining ≈86% of the gap (still −0.1191 fitness even
+  under Strict) is genuine quality drift between the 2026-04-19 single-model baseline and
+  the current 4-adapter consensus pipeline. The Anthropic-only single-claim re-score
+  (originally listed under gap #3) is the right next experiment to nail that down.
 
 ---
 
