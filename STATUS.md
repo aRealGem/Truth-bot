@@ -1,5 +1,67 @@
 # Truth-bot Status — 2026-04-28
 
+## Session note — 2026-04-28 (site-test refresh from cache — Truthy-scale demo)
+
+Follow-up to the FitnessScorer coarse-axis work below. The `site-test/`
+artifacts that drive the `raw.githack` preview were last rendered before the
+5-bucket projection layer landed, so the headline pills, lens chip, and About
+page still showed the legacy 6-bucket markup even though the templates and
+engine were already updated. A full LLM re-fire of all 6 reports would have
+been expensive; the bundle cache already had every per-model verdict needed.
+
+Shipped a one-shot tool — [`scripts/republish_site_test_from_cache.py`](scripts/republish_site_test_from_cache.py) —
+that walks the on-disk bundle cache (`truthbot_cache/bundles`, 146 entries),
+recomputes `_build_consensus(claim.id, model_verdicts)` per bundle (which
+populates the new `coarse_lenient_*` / `coarse_strict_*` fields on
+`ConsensusVerdict`), saves the bundle back to the cache, then sequentially
+re-renders every report listed in `site-test/data/reports.json` via
+`SitePublisher.publish(...)`. No LLM calls. Idempotent.
+
+Two lookup paths over the cache:
+
+1. **By `claim.id`** — primary. Preserves existing claim URLs in `site-test/`
+   so cross-links (and any external links someone may have shared) stay live.
+2. **By `(claim_text_norm, speaker_norm, date_str)` content key** — fallback
+   for reports whose original `claim.id` was rotated by a later run that wrote
+   the same content key. Re-running the LLMs would do the same (the engine's
+   own `_cache_key` uses this triple), so the trade-off is acceptable.
+
+### Result
+
+- 6 of 7 reports refreshed from cache (29, 10, 10, 7, 7, 5 bundles).
+- 1 report (`165937eb…`, 5 claims) was orphaned in the cache — its bundles had
+  been overwritten by later runs with no content-key matches; removed from
+  `site-test/` rather than leaving a pre-projection page next to fresh ones.
+- `site-test/data/claims.json` now has 68 records (40 unique by `claim.id`,
+  28 multi-report references) — every record has a matching `claims/*.html`
+  file with the new headline pill, both `data-coarse-lenient` and
+  `data-coarse-strict` attributes, and the lens-toggle chip in the status bar.
+- 23/23 projection tests still green (`tests/test_consensus_projection.py` +
+  `tests/test_site_render_projection.py`).
+
+### `raw.githack` preview
+
+After push, the demo URLs surface the new chrome:
+
+- Index: <https://raw.githack.com/aRealGem/Truth-bot/main/site-test/index.html>
+- Sample SOTU report (29 claims):
+  <https://raw.githack.com/aRealGem/Truth-bot/main/site-test/reports/2026-02-24-donald-trump-e81546.html>
+- About page (5-bucket projection table + guardrail explainer):
+  <https://raw.githack.com/aRealGem/Truth-bot/main/site-test/about.html>
+
+The Lens chip in the status bar toggles every headline pill between Lenient
+(default) and Strict; the per-model strip stays 6-bucket. Preference persists
+in `localStorage`.
+
+### Out of scope (intentional)
+
+- Re-firing the orphaned report against live LLMs.
+- Refreshing the production `site/` artifacts (this script targets
+  `site-test/` per project convention; pass `--site-root site` to retarget).
+- Changing the engine, projection rubrics, or scorer.
+
+---
+
 ## Session note — 2026-04-28 (FitnessScorer coarse-axis verdict-agreement metric + Run 5)
 
 Overnight follow-up to the 2026-04-27 5-bucket projection layer (commit
