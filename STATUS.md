@@ -1,4 +1,121 @@
-# Truth-bot Status — 2026-04-28
+# Truth-bot Status — 2026-04-29
+
+## Session note — 2026-04-29 (5-bucket scale on every aggregate + retire per-model "frontier" chip)
+
+Two threads from the 2026-04-28 demo refresh that the user spotted on
+`raw.githack` were addressed in one shipped change:
+
+1. **5-bucket scale should be the headline EVERYWHERE, not just per-claim.**
+   The 2026-04-27 projection layer plumbed the Truthy scale onto the
+   per-claim headline pill, but every other aggregate display (the report-
+   page verdict-panel headline + ratio + bar, the per-claim TOC mini-pill,
+   the index per-report cards, the index site-wide totals) was still
+   speaking the 6-bucket fine vocabulary. That created a visible
+   inconsistency: pills said "Truthy / Falsey", aggregates said "Mostly
+   True / Exaggerated". User-visible promise of "5-bucket everywhere" was
+   half-kept.
+
+2. **Per-model "Frontier" chip on the claim card is editorial noise.**
+   The chip rendered for any `ModelVerdict` whose `tier != "frontier"` or
+   `synthesis_mode != "live"` — which in practice meant Anthropic + OpenAI
+   batch verdicts wore a "frontier"/"batch" badge while live Grok/Gemini
+   verdicts stayed naked. That made batch frontier verdicts *look* less
+   trustworthy than live frontier verdicts when they're identically
+   frontier. The user's editorial intent has always been "frontier for all
+   final outcomes; the only legit exception is the bundle-level Triage
+   pill that already renders when triage_skipped_frontier=True". The chip
+   was removed; the methodology line "verified by N frontier language
+   models" was intentionally kept (top-line accurate descriptor).
+
+### Implementation shape
+
+Two render patterns toggle together to keep every page internally
+consistent regardless of which lens the reader picked:
+
+- **Per-pill swap (existing, widened).** The headline pill carries
+  `data-coarse-lenient` / `data-coarse-strict` attrs; JS rewrites text +
+  CSS class in place. Selector widened from `.claim-pill-headline` to
+  the new shared `.lens-pill` class so TOC mini-pills get swapped too.
+- **Paired-axis swap (new).** Aggregate views (verdict panel headline +
+  ratio + bar, report cards on the index) now render *both* axes
+  server-side as sibling blocks tagged `[data-lens-axis="lenient"]` and
+  `[data-lens-axis="strict"]`. JS just flips `hidden`. Strict starts
+  hidden so the published default for non-JS clients matches the per-pill
+  default.
+
+`document.body.dataset.lens` is also set on every toggle so any future
+lens-aware CSS can react without bespoke JS.
+
+`_headline_verdict_coarse(dist)` (new) speaks the Truthy-scale vocabulary
+end-to-end: never says "Mostly Truthy" or "Largely Falsey" because those
+labels are already qualified; reads a dominant "Models split" bucket as
+"Mixed verdict" because "Mostly Models split" is nonsense English.
+
+`_project_dist(fine_dist, projection)` (new) backfills the coarse fields
+when a `reports.json` entry predates the projection layer (no
+`verdict_distribution_lenient` / `_strict` keys), so mixed-vintage
+indexes render consistently without a second cache walk.
+
+`reports.json` and the site-stats dict gained
+`verdict_distribution_lenient` / `verdict_distribution_strict` and
+`verdict_totals_lenient` / `verdict_totals_strict` respectively. The
+6-bucket fields stay for backward compat with anything reading
+`reports.json` externally.
+
+### Frontier chip retirement
+
+Single surgical edit in `_claim_card`: deleted the `tier_html` block
+([`src/truthbot/publish/site.py`](src/truthbot/publish/site.py) ex-lines
+1336-1348) and its `f'  {tier_html}'` interpolation. Engine still records
+`mv.tier` and `mv.synthesis_mode` on every `ModelVerdict` for telemetry;
+audit consumers can still read them off `claims.json` or the bundle
+cache. The bundle-level "Triage" headline pill (rendered only when
+`triage_skipped_frontier=True`) stays as the sole frontier-vs-not signal
+the reader sees.
+
+### Test coverage
+
+`tests/test_site_render_aggregates.py` (15 new cases):
+
+- Projection mapping invariants — `site.py` mirror of the engine's
+  `LENIENT_PROJECTION` / `STRICT_PROJECTION` is pinned to detect drift
+  on either side. `_project_dist` collapses Mostly True + Exaggerated
+  under Lenient and separates them under Strict.
+- `SiteReport` coarse distributions — uses stored coarse labels when
+  present, falls back to on-the-fly projection for legacy bundles.
+- `_headline_verdict_coarse` — speaks Truthy-scale vocabulary, treats
+  dominant "Models split" as Mixed verdict.
+- `_verdict_panel` renders both lens-axis blocks with Strict starting
+  hidden; uses coarse labels in the headline (no leaking "Exaggerated").
+- `_toc` mini-pill carries both data attrs + the `.lens-pill` class.
+- `_report_card` paired lens-axis blocks; legacy reports.json fallback.
+- Per-model card has no `model-tier-wrap` element in any state.
+- Methodology line still says "frontier language model(s)" (pinned).
+
+23 pre-existing projection tests still green; 678 of 679 broader unit
+tests pass (the one failure — `test_bluesky.py::test_not_configured_without_creds`
+— pre-exists on `main` and is environment-dependent, not regression-related).
+
+### Demo
+
+`raw.githack` SOTU report (29 claims) confirms after demo refresh:
+
+- 29 TOC mini-pills + 29 headline pills, all wearing the new `.lens-pill` class
+- 2 lens-axis paired blocks per report (verdict-panel headline, verdict-panel bar)
+- 18 lens-axis paired blocks on the index (6 reports × 3 paired blocks per card)
+- 0 `model-tier-wrap` elements anywhere
+- Methodology line preserved: "verified by 4 frontier language models"
+
+### Deferred follow-up (next task)
+
+User flagged a third observation in the same message: Opus sometimes
+votes True while ≥2 other frontier models vote False. Out of scope for
+this chrome work but easy to investigate from the published data —
+deferred as a separate one-shot scan over `site-test/data/claims.json`
+that produces a short markdown report under `eval/` with the top
+extreme-split examples for spot-checking.
+
+---
 
 ## Session note — 2026-04-28 (site-test refresh from cache — Truthy-scale demo)
 
