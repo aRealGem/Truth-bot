@@ -58,6 +58,35 @@ VERDICT_CSS: dict[str, str] = {
 # Display order for the verdict bar legend (always show all 6)
 VERDICT_ORDER = ["True", "Mostly True", "Exaggerated", "Misleading", "False", "Unverifiable"]
 
+# 5-bucket coarse-axis "Truthy scale" — used by every aggregate display
+# (verdict panel, TOC pills, report cards, index totals). Order is most
+# positive → most negative so segment-bar renderers can iterate it directly.
+# Source rubric: ``eval/sotu-2026/findings-review.md`` Part H.
+COARSE_VERDICT_ORDER = ["True", "Truthy", "Unverifiable", "Falsey", "False"]
+
+# Mirror of LENIENT_PROJECTION / STRICT_PROJECTION in
+# ``src/truthbot/verify/engine.py``, but keyed on the *fine-axis label string*
+# (not the ``VerdictLabel`` enum) so this module can stay string-typed. The
+# two must stay in lockstep — see test_consensus_projection.py for the
+# canonical mapping invariants.
+COARSE_LENIENT_PROJECTION: dict[str, str] = {
+    "True":         "True",
+    "Mostly True":  "Truthy",
+    "Exaggerated":  "Truthy",
+    "Misleading":   "Falsey",
+    "False":        "False",
+    "Unverifiable": "Unverifiable",
+}
+
+COARSE_STRICT_PROJECTION: dict[str, str] = {
+    "True":         "True",
+    "Mostly True":  "Truthy",
+    "Exaggerated":  "Falsey",   # diverges from Lenient
+    "Misleading":   "Falsey",
+    "False":        "False",
+    "Unverifiable": "Unverifiable",
+}
+
 VERDICT_EMOJI: dict[str, str] = {
     "True":          "✅",
     "Mostly True":   "🟢",
@@ -183,6 +212,51 @@ class SiteReport:
         dist: dict[str, int] = {v: 0 for v in VERDICT_CSS}
         for b in self.checkable_bundles:
             label = b.consensus.consensus_label.value
+            dist[label] = dist.get(label, 0) + 1
+        return dist
+
+    @property
+    def verdict_distribution_lenient(self) -> dict[str, int]:
+        """5-bucket histogram on the Lenient projection axis.
+
+        Reads ``coarse_lenient_label`` straight off the bundle's
+        ``ConsensusVerdict`` when present (post-projection bundles). Falls
+        back to projecting ``consensus_label`` on the fly via
+        ``COARSE_LENIENT_PROJECTION`` for legacy bundles whose coarse
+        fields are still empty strings — keeps render output consistent
+        regardless of when the cache was last refreshed.
+        """
+        return self._coarse_distribution(
+            label_attr="coarse_lenient_label",
+            projection=COARSE_LENIENT_PROJECTION,
+        )
+
+    @property
+    def verdict_distribution_strict(self) -> dict[str, int]:
+        """5-bucket histogram on the Strict projection axis (Exaggerated → Falsey)."""
+        return self._coarse_distribution(
+            label_attr="coarse_strict_label",
+            projection=COARSE_STRICT_PROJECTION,
+        )
+
+    def _coarse_distribution(
+        self,
+        label_attr: str,
+        projection: dict[str, str],
+    ) -> dict[str, int]:
+        dist: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
+        # Add a "Models split" bucket alongside the 5 coarse buckets so the
+        # split-projection guardrail in engine._project_consensus shows up in
+        # aggregates rather than being silently dropped. Renderers can choose
+        # to fold it into "Mixed verdict" presentation.
+        dist["Models split"] = 0
+        for b in self.checkable_bundles:
+            stored = getattr(b.consensus, label_attr, "") or ""
+            if stored:
+                label = stored
+            else:
+                fine = b.consensus.consensus_label.value
+                label = projection.get(fine, "Unverifiable")
             dist[label] = dist.get(label, 0) + 1
         return dist
 
@@ -431,6 +505,49 @@ def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
         return "Mixed verdict", "neutral"
 
 
+# Coarse-axis labels that read naturally on their own and shouldn't get
+# the "Mostly"/"Largely" prefix.
+_COARSE_ALREADY_QUALIFIED: frozenset[str] = frozenset({"Truthy", "Falsey"})
+
+
+def _headline_verdict_coarse(dist: dict[str, int]) -> tuple[str, str]:
+    """Headline verdict + CSS class for a 5-bucket coarse-axis distribution.
+
+    Mirrors :func:`_headline_verdict` but speaks the Truthy-scale vocabulary
+    (True / Truthy / Unverifiable / Falsey / False, plus "Models split"
+    from the projection guardrail). "Truthy" and "Falsey" are already
+    qualified — we don't say "Mostly Truthy" because Truthy already means
+    "directionally correct with caveats", which is exactly what "Mostly" is
+    trying to convey.
+
+    Tie / split rules: a "Models split" bucket that ties with another
+    label is treated like a normal tie → Mixed verdict. A dominant
+    "Models split" reads as Mixed verdict (we never say "Mostly Models
+    split").
+    """
+    total = sum(dist.values())
+    if total == 0:
+        return "No claims evaluated", "neutral"
+    max_count = max(dist.values())
+    if sum(1 for v in dist.values() if v == max_count) > 1:
+        return "Mixed verdict", "neutral"
+    max_label = max(dist, key=lambda k: dist[k])
+    max_pct = max_count / total
+    if max_label == "Models split":
+        return "Mixed verdict", "neutral"
+    css = _verdict_css(max_label)
+    if max_label in _COARSE_ALREADY_QUALIFIED:
+        if max_pct >= 0.40:
+            return max_label, f"vt-{css}"
+        return "Mixed verdict", "neutral"
+    if max_pct >= 0.60:
+        return f"Largely {max_label}", f"vt-{css}"
+    elif max_pct >= 0.40:
+        return f"Mostly {max_label}", f"vt-{css}"
+    else:
+        return "Mixed verdict", "neutral"
+
+
 def _tier_bucket(url: str) -> str:
     """Classify a source URL into one of: gov, wire, news, fc, other.
 
@@ -589,11 +706,23 @@ def _evidence_list_html(
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
 
 
-def _verdict_bar_html(dist: dict[str, int], bar_class: str = "vp-bar") -> str:
-    """Render a full 6-category verdict bar + legend."""
-    total = sum(dist.values()) or 1
+def _verdict_bar_html(
+    dist: dict[str, int],
+    bar_class: str = "vp-bar",
+    order: Optional[list[str]] = None,
+) -> str:
+    """Render a verdict bar + legend.
+
+    ``order`` controls which labels are iterated and in what order. Defaults
+    to the 6-bucket fine axis (``VERDICT_ORDER``) for backward compatibility,
+    but every aggregate caller now passes ``COARSE_VERDICT_ORDER`` (plus
+    "Models split" implicitly skipped since it carries no semantic position
+    on the bar).
+    """
+    label_order = order if order is not None else VERDICT_ORDER
+    total = sum(dist.get(l, 0) for l in label_order) or 1
     segs = []
-    for label in VERDICT_ORDER:
+    for label in label_order:
         count = dist.get(label, 0)
         if count == 0:
             continue
@@ -603,14 +732,14 @@ def _verdict_bar_html(dist: dict[str, int], bar_class: str = "vp-bar") -> str:
             f'<div class="seg v-{css}" style="width:{pct:.1f}%" '
             f'title="{_esc(label)}: {count}">{count}</div>'
         )
-    parts_aria = [f"{dist.get(l,0)} {l}" for l in VERDICT_ORDER if dist.get(l, 0) > 0]
+    parts_aria = [f"{dist.get(l,0)} {l}" for l in label_order if dist.get(l, 0) > 0]
     aria = "Verdict distribution: " + ", ".join(parts_aria)
     bar_html = (
         f'<div class="{bar_class}" role="img" aria-label="{_esc(aria)}">'
         f'{"".join(segs)}</div>'
     )
     legend_items = []
-    for label in VERDICT_ORDER:
+    for label in label_order:
         count = dist.get(label, 0)
         css = _verdict_css(label)
         zero_cls = " zero" if count == 0 else ""
@@ -895,12 +1024,27 @@ def _verdict_panel(site_report) -> str:
     claim_count = len(site_report.checkable_bundles)
     model_count = len({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
     agree_rate  = site_report.model_agreement_rate
-    dist        = site_report.verdict_distribution
-    headline, h_cls = _headline_verdict(dist)
+    # 5-bucket Truthy-scale aggregates rendered side-by-side; the Lens
+    # chip swaps them in lockstep with the per-claim headline pills.
+    # Lenient is the published default (matches the per-claim pill default).
+    dist_lenient = site_report.verdict_distribution_lenient
+    dist_strict  = site_report.verdict_distribution_strict
+    headline_lenient, hcls_lenient = _headline_verdict_coarse(dist_lenient)
+    headline_strict,  hcls_strict  = _headline_verdict_coarse(dist_strict)
 
-    total   = sum(dist.values()) or 1
-    max_lbl = max(dist, key=lambda k: dist[k]) if dist else ""
-    ratio_text = str(dist.get(max_lbl, 0)) + " of " + str(total) + " claims rated " + max_lbl.lower() if max_lbl else str(total) + " claims checked"
+    def _ratio_text(d: dict[str, int]) -> str:
+        # Exclude "Models split" from the dominant-label search so the ratio
+        # text always names a real verdict bucket. If everything is split,
+        # fall back to a generic count.
+        named = {k: v for k, v in d.items() if k != "Models split"}
+        total = sum(named.values()) or 1
+        if not any(named.values()):
+            return f"{sum(d.values())} claims checked"
+        max_lbl = max(named, key=lambda k: named[k])
+        return f"{named.get(max_lbl, 0)} of {total} claims rated {max_lbl.lower()}"
+
+    ratio_text_lenient = _ratio_text(dist_lenient)
+    ratio_text_strict  = _ratio_text(dist_strict)
 
     bubble_text, bubble_cls = _initial_bubble(mood, claim_count)
 
@@ -920,11 +1064,19 @@ def _verdict_panel(site_report) -> str:
         + '</div>'
     )
 
+    # Two paired headline+ratio blocks, one per lens. The Strict block is
+    # ``hidden`` on initial render so non-JS clients see the published
+    # default (Lenient). The toggle JS finds elements by ``data-lens-axis``
+    # and flips ``hidden`` based on the user's stored preference.
     text_col = (
         '<div class="vp-text-col">'
-        + '<div>'
-        + '<div class="vp-verdict ' + h_cls + '">' + _esc(headline) + '</div>'
-        + '<div class="vp-ratio">' + _esc(ratio_text) + '</div>'
+        + '<div class="vp-headline-lens" data-lens-axis="lenient">'
+        + '<div class="vp-verdict ' + hcls_lenient + '">' + _esc(headline_lenient) + '</div>'
+        + '<div class="vp-ratio">' + _esc(ratio_text_lenient) + '</div>'
+        + '</div>'
+        + '<div class="vp-headline-lens" data-lens-axis="strict" hidden>'
+        + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
+        + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
         + '</div>'
         + '</div>'
     )
@@ -950,7 +1102,15 @@ def _verdict_panel(site_report) -> str:
         '  </div>\n'
     )
 
-    bar_html = _verdict_bar_html(dist)
+    # Lens-aware verdict bar + legend. Same paired-element pattern as the
+    # headline above. Both axes are 5-bucket so the segment colors match
+    # the per-claim pill palette (Truthy / Falsey gradient stops).
+    bar_html_lenient = _verdict_bar_html(dist_lenient, order=COARSE_VERDICT_ORDER)
+    bar_html_strict  = _verdict_bar_html(dist_strict,  order=COARSE_VERDICT_ORDER)
+    bar_html = (
+        '<div class="vp-bar-lens" data-lens-axis="lenient">' + bar_html_lenient + '</div>'
+        + '<div class="vp-bar-lens" data-lens-axis="strict" hidden>' + bar_html_strict + '</div>'
+    )
 
     model_names = sorted({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
     model_str = ' · '.join(model_names) if model_names else 'Multi-model'
@@ -1333,24 +1493,20 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
                     f'  <div class="model-reasoning-body">{reasoning_text}</div>'
                     '</details>'
                 )
-            tier_slug = getattr(mv, "tier", "frontier") or "frontier"
-            mode_slug = getattr(mv, "synthesis_mode", "live") or "live"
-            tier_html = ""
-            if tier_slug != "frontier" or mode_slug != "live":
-                tier_title = f"Review tier: {tier_slug}; synthesis mode: {mode_slug}"
-                tier_html = (
-                    f'<details class="model-tier-wrap">'
-                    f'  <summary class="model-tier-sum" title="{_esc(tier_title)}">'
-                    f'{_esc(tier_slug)}'
-                    f'</summary>'
-                    f'  <div class="model-tier-body">{_esc(mode_slug)}</div>'
-                    f'</details>'
-                )
+            # Per-model tier/mode chip removed (2026-04-29). Editorial intent
+            # has always been frontier for all final outcomes; the only legit
+            # non-frontier exception is the bundle-level "Triage" pill above
+            # (rendered when ``triage_skipped_frontier=True``). Surfacing
+            # ``mv.tier`` / ``mv.synthesis_mode`` per-model just made it look
+            # like Anthropic/OpenAI batch verdicts were "less than frontier"
+            # next to live Grok/Gemini verdicts that didn't render a chip,
+            # which is the opposite of the truth. Engine still records
+            # tier/mode on each ModelVerdict for telemetry; consumers that
+            # care can read claims.json or the bundle cache directly.
             model_cards.append(
                 f'<div class="model{dissent}">'
                 f'  <div class="model-name">{_esc(mv.adapter_name)}</div>'
                 f'  <div class="model-verdict vt-{mv_css}">{VERDICT_EMOJI.get(mv_label, "")} {_esc(mv_label)}</div>'
-                f'  {tier_html}'
                 f'  {reasoning_html}'
                 '</div>'
             )
@@ -1405,7 +1561,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="claim-head-icon")
         + f'    <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
         '  </span>'
-        f'  <span class="claim-pill claim-pill-headline v-{css}"'
+        f'  <span class="claim-pill claim-pill-headline lens-pill v-{css}"'
         f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
         f' data-coarse-lenient="{_esc(lenient_attr)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
         f' data-coarse-strict="{_esc(strict_attr)}" data-coarse-strict-css="{_esc(strict_css)}"'
@@ -1437,12 +1593,33 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
 def _toc(bundles: list[VerdictBundle]) -> str:
     items = []
     for i, b in enumerate(bundles, 1):
-        label = b.consensus.consensus_label.value
-        css = _verdict_css(label)
+        consensus = b.consensus
+        fine_label = consensus.consensus_label.value
+        # Coarse-axis labels with on-the-fly fallback for legacy bundles
+        # whose coarse fields are still empty. Same fallback pattern used
+        # on the per-claim headline pill in _claim_card.
+        coarse_lenient = (
+            consensus.coarse_lenient_label
+            or COARSE_LENIENT_PROJECTION.get(fine_label, "Unverifiable")
+        )
+        coarse_strict = (
+            consensus.coarse_strict_label
+            or COARSE_STRICT_PROJECTION.get(fine_label, "Unverifiable")
+        )
+        # Default text is Lenient (matches the published default lens).
+        default_label = coarse_lenient
+        default_css   = _verdict_css(default_label)
+        fine_css      = _verdict_css(fine_label)
+        lenient_css   = _verdict_css(coarse_lenient)
+        strict_css    = _verdict_css(coarse_strict)
         items.append(
             f'<a class="toc-item" href="#claim-{i}">'
             f'  <span class="toc-num">{str(i).zfill(2)}</span>'
-            f'  <span class="toc-pill v-{css}">{_esc(label)}</span>'
+            f'  <span class="toc-pill lens-pill v-{default_css}"'
+            f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
+            f' data-coarse-lenient="{_esc(coarse_lenient)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
+            f' data-coarse-strict="{_esc(coarse_strict)}" data-coarse-strict-css="{_esc(strict_css)}">'
+            f'{_esc(default_label)}</span>'
             f'  <span class="toc-text">"{_esc(b.claim.text)}"</span>'
             '  <span class="toc-jump">↓</span>'
             '</a>'
@@ -1451,28 +1628,51 @@ def _toc(bundles: list[VerdictBundle]) -> str:
 
 
 def _report_card(r: dict) -> str:
-    dist = r.get("verdict_distribution", {})
     claim_count = r.get("claim_count", 0)
-    headline, cls = _headline_verdict(dist)
-    total = sum(dist.values()) or 1
-    max_label = max(dist, key=lambda k: dist[k]) if dist else ""
-    ratio = f"{dist.get(max_label, 0)} of {total} claims" if max_label else f"{claim_count} claims"
 
-    segs = []
-    for label in VERDICT_ORDER:
-        count = dist.get(label, 0)
-        if not count:
-            continue
-        segs.append(f'<div class="seg v-{_verdict_css(label)}" style="width:{count/total*100:.1f}%"></div>')
+    # 5-bucket coarse-axis aggregates for both lenses. Falls back to
+    # projecting the legacy 6-bucket distribution if a report predates
+    # the projection layer (older reports.json entries).
+    fine_dist = r.get("verdict_distribution", {}) or {}
+    dist_lenient = r.get("verdict_distribution_lenient") or _project_dist(
+        fine_dist, COARSE_LENIENT_PROJECTION
+    )
+    dist_strict = r.get("verdict_distribution_strict") or _project_dist(
+        fine_dist, COARSE_STRICT_PROJECTION
+    )
 
-    counts = []
-    for label in VERDICT_ORDER:
-        count = dist.get(label, 0)
-        if count:
-            counts.append(
+    def _card_axis_html(d: dict[str, int]) -> tuple[str, str, str, str]:
+        """Return (headline_html, ratio_text, segs_html, counts_html) for one axis."""
+        headline, cls = _headline_verdict_coarse(d)
+        named = {k: v for k, v in d.items() if k != "Models split"}
+        total_named = sum(named.values()) or 1
+        max_label = max(named, key=lambda k: named[k]) if any(named.values()) else ""
+        ratio_text = (
+            f"{named.get(max_label, 0)} of {total_named} claims"
+            if max_label else f"{claim_count} claims"
+        )
+        segs_inner: list[str] = []
+        counts_inner: list[str] = []
+        for label in COARSE_VERDICT_ORDER:
+            count = d.get(label, 0)
+            if not count:
+                continue
+            segs_inner.append(
+                f'<div class="seg v-{_verdict_css(label)}" '
+                f'style="width:{count/total_named*100:.1f}%"></div>'
+            )
+            counts_inner.append(
                 f'<div class="ct"><span class="swatch v-{_verdict_css(label)}"></span>'
                 f'{_esc(label)} <span class="n">{count}</span></div>'
             )
+        head_html = (
+            f'<span class="label {cls}">{_esc(headline)}</span>'
+            f'<span class="ratio">{_esc(ratio_text)}</span>'
+        )
+        return head_html, ratio_text, "".join(segs_inner), "".join(counts_inner)
+
+    head_lenient, _ratio_lenient, segs_lenient, counts_lenient = _card_axis_html(dist_lenient)
+    head_strict,  _ratio_strict,  segs_strict,  counts_strict  = _card_axis_html(dist_strict)
 
     meta_bits = []
     if r.get("date"):
@@ -1501,12 +1701,14 @@ def _report_card(r: dict) -> str:
         f'      <div class="report-meta">{meta}</div>'
         '    </div>'
         '    <div class="verdict-pill">'
-        f'      <span class="label {cls}">{_esc(headline)}</span>'
-        f'      <span class="ratio">{_esc(ratio)}</span>'
+        f'      <span class="lens-target" data-lens-axis="lenient">{head_lenient}</span>'
+        f'      <span class="lens-target" data-lens-axis="strict" hidden>{head_strict}</span>'
         '    </div>'
         '  </div>'
-        f'  <div class="report-bar">{"".join(segs)}</div>'
-        f'  <div class="report-counts">{"".join(counts)}</div>'
+        f'  <div class="report-bar lens-target" data-lens-axis="lenient">{segs_lenient}</div>'
+        f'  <div class="report-bar lens-target" data-lens-axis="strict" hidden>{segs_strict}</div>'
+        f'  <div class="report-counts lens-target" data-lens-axis="lenient">{counts_lenient}</div>'
+        f'  <div class="report-counts lens-target" data-lens-axis="strict" hidden>{counts_strict}</div>'
         '  <div class="report-cta">'
         f'    <span class="src">{claim_count} claim{"s" if claim_count != 1 else ""}</span>'
         + src_tiers_html +
@@ -1516,11 +1718,40 @@ def _report_card(r: dict) -> str:
     )
 
 
-def _agg_bar(verdict_totals: dict[str, int]) -> str:
-    total = sum(verdict_totals.values()) or 1
+def _project_dist(
+    fine_dist: dict[str, int], projection: dict[str, str]
+) -> dict[str, int]:
+    """Project a 6-bucket distribution onto the 5-bucket coarse axis.
+
+    Used by ``_report_card`` and the index-aggregate path to backfill the
+    coarse fields when a ``reports.json`` entry predates the projection
+    layer (older runs). Counts that map to the same coarse bucket are
+    summed (e.g. ``Mostly True + Exaggerated → Truthy`` under Lenient).
+    """
+    out: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
+    out["Models split"] = 0
+    for fine_label, cnt in fine_dist.items():
+        coarse = projection.get(fine_label, "Unverifiable")
+        out[coarse] = out.get(coarse, 0) + cnt
+    return out
+
+
+def _agg_bar(
+    verdict_totals: dict[str, int],
+    order: Optional[list[str]] = None,
+) -> str:
+    """Site-wide aggregate verdict bar + legend.
+
+    ``order`` defaults to the 6-bucket ``VERDICT_ORDER`` for backward
+    compat, but the index renderer now passes ``COARSE_VERDICT_ORDER`` for
+    both Lenient and Strict aggregate views (rendered side-by-side and
+    swapped by the lens toggle).
+    """
+    label_order = order if order is not None else VERDICT_ORDER
+    total = sum(verdict_totals.get(l, 0) for l in label_order) or 1
     segs = []
     legend = []
-    for label in VERDICT_ORDER:
+    for label in label_order:
         count = verdict_totals.get(label, 0)
         if count:
             segs.append(
@@ -1532,7 +1763,9 @@ def _agg_bar(verdict_totals: dict[str, int]) -> str:
             f'<div class="legend-item{zero}"><span class="swatch v-{_verdict_css(label)}"></span>'
             f'{_esc(label)} <span class="ct">{count}</span></div>'
         )
-    aria = ", ".join(f"{verdict_totals.get(l,0)} {l}" for l in VERDICT_ORDER if verdict_totals.get(l,0))
+    aria = ", ".join(
+        f"{verdict_totals.get(l,0)} {l}" for l in label_order if verdict_totals.get(l, 0)
+    )
     return (
         '<div class="agg">'
         '  <div class="agg-label">Verdict distribution</div>'
@@ -3617,22 +3850,33 @@ JS = """\
 })();
 
 /* ─────────────────────────────────────────────────────────────────────
-   Editorial-lens toggle — flips the headline claim pill between the
+   Editorial-lens toggle — flips every Truthy-scale display between the
    Lenient (default) and Strict 5-bucket coarse-axis projections.
 
-   Per-claim pill markup (rendered by site.py / _claim_card):
-     <span class="claim-pill claim-pill-headline v-{css}"
-           data-fine-label    data-fine-css
-           data-coarse-lenient data-coarse-lenient-css
-           data-coarse-strict  data-coarse-strict-css>{label}</span>
+   Two render patterns are toggled together so the page never goes
+   internally inconsistent (e.g. headline says "Mostly Truthy" while the
+   verdict bar still shows the Strict aggregate):
 
-   Per-model strip pills are NOT touched — they keep the 6-bucket fine
-   labels for audit. Selector ``.claim-pill-headline`` scopes us to
-   headline pills only.
+   1) PER-PILL SWAP — in-place text+class rewrite on individual pills.
+      Used by the per-claim headline pill (claim card) and the
+      per-claim TOC mini-pill on report pages. Both wear ``.lens-pill``
+      and carry the data-coarse-{lenient,strict} attribute pair.
+
+   2) PAIRED-AXIS SWAP — show/hide complementary blocks pre-rendered
+      server-side. Used by aggregate views: the verdict-panel headline
+      + ratio + bar, the per-report cards on the index, and any future
+      lens-aware aggregate. Each block wears ``[data-lens-axis="X"]``
+      and the toggle simply flips the ``hidden`` attribute.
+
+   The per-model strip pills (Anthropic / OpenAI / Gemini / xAI) are
+   NEVER touched — they keep the 6-bucket fine labels for audit.
+
+   Body data attribute ``document.body.dataset.lens`` is also set so
+   any lens-aware CSS rule can react.
 
    Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
    Default: lenient (matches Part H of findings-review.md).
-   No-op if the page has no headline pills (e.g. about, 404).
+   No-op if the page has nothing toggleable (e.g. about, 404).
    ───────────────────────────────────────────────────────────────────── */
 (function() {
   'use strict';
@@ -3674,11 +3918,31 @@ JS = """\
     pill.classList.add('v-' + cssSlug);
   }
 
+  function applyLensToAxisPairs(lens) {
+    /* Show the block tagged with the active lens, hide the other.
+       Idempotent — safe to call repeatedly. */
+    var blocks = document.querySelectorAll('[data-lens-axis]');
+    for (var i = 0; i < blocks.length; i++) {
+      var axis = blocks[i].getAttribute('data-lens-axis');
+      if (axis === lens) {
+        blocks[i].hidden = false;
+      } else {
+        blocks[i].hidden = true;
+      }
+    }
+  }
+
   function applyLens(lens) {
-    var pills = document.querySelectorAll('.claim-pill-headline');
+    /* 1) per-pill text+class swap (headline pill + TOC pill) */
+    var pills = document.querySelectorAll('.lens-pill');
     for (var i = 0; i < pills.length; i++) {
       applyLensToPill(pills[i], lens);
     }
+    /* 2) paired-axis show/hide for aggregate displays */
+    applyLensToAxisPairs(lens);
+    /* 3) body data-attr so any lens-aware CSS rule can react */
+    if (document.body) document.body.setAttribute('data-lens', lens);
+    /* 4) chip state */
     var chip = document.querySelector('.editorial-lens');
     if (chip) {
       chip.setAttribute('data-lens', lens);
@@ -3689,9 +3953,11 @@ JS = """\
   }
 
   function init() {
-    var pills = document.querySelectorAll('.claim-pill-headline');
+    var pills = document.querySelectorAll('.lens-pill');
+    var axisBlocks = document.querySelectorAll('[data-lens-axis]');
     var chip = document.querySelector('.editorial-lens');
-    if (!pills.length) {
+    var hasToggleableContent = pills.length > 0 || axisBlocks.length > 0;
+    if (!hasToggleableContent) {
       if (chip) chip.hidden = true;
       return;
     }
@@ -4744,6 +5010,13 @@ class SitePublisher:
             "venue":               sr.venue,
             "claim_count":         len(sr.checkable_bundles),
             "verdict_distribution": sr.verdict_distribution,
+            # 5-bucket coarse-axis distributions for lens-aware aggregate
+            # rendering on the index page (and external consumers of
+            # reports.json that want the Truthy-scale histogram). The
+            # 6-bucket ``verdict_distribution`` above is kept for backward
+            # compat with anyone already reading reports.json.
+            "verdict_distribution_lenient": sr.verdict_distribution_lenient,
+            "verdict_distribution_strict":  sr.verdict_distribution_strict,
             "model_agreement_rate": round(sr.model_agreement_rate, 3),
             "url":                 sr.report_url,
             "tier_counts":         _tier_counts_for_report(sr),
@@ -4788,6 +5061,41 @@ class SitePublisher:
             for label, cnt in r.get("verdict_distribution", {}).items():
                 verdict_totals[label] = verdict_totals.get(label, 0) + cnt
 
+        # 5-bucket coarse-axis aggregates for the lens-aware index. Both
+        # axes are summed across whichever per-report fields exist; legacy
+        # reports.json entries that predate the projection layer simply
+        # contribute 0s. The renderer falls back to projecting from the
+        # 6-bucket verdict_totals at render time when a particular report
+        # is missing both coarse fields, keeping mixed-vintage indexes
+        # internally consistent.
+        verdict_totals_lenient: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
+        verdict_totals_lenient["Models split"] = 0
+        verdict_totals_strict: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
+        verdict_totals_strict["Models split"] = 0
+        for r in reports:
+            for label, cnt in (r.get("verdict_distribution_lenient") or {}).items():
+                verdict_totals_lenient[label] = verdict_totals_lenient.get(label, 0) + cnt
+            for label, cnt in (r.get("verdict_distribution_strict") or {}).items():
+                verdict_totals_strict[label] = verdict_totals_strict.get(label, 0) + cnt
+        # Fallback projection for legacy reports.json entries that have only
+        # the 6-bucket verdict_distribution. We project each report's
+        # 6-bucket dist into both axes and add it in.
+        for r in reports:
+            if r.get("verdict_distribution_lenient") and r.get("verdict_distribution_strict"):
+                continue
+            fine = r.get("verdict_distribution") or {}
+            for fine_label, cnt in fine.items():
+                if not r.get("verdict_distribution_lenient"):
+                    lenient_label = COARSE_LENIENT_PROJECTION.get(fine_label, "Unverifiable")
+                    verdict_totals_lenient[lenient_label] = (
+                        verdict_totals_lenient.get(lenient_label, 0) + cnt
+                    )
+                if not r.get("verdict_distribution_strict"):
+                    strict_label = COARSE_STRICT_PROJECTION.get(fine_label, "Unverifiable")
+                    verdict_totals_strict[strict_label] = (
+                        verdict_totals_strict.get(strict_label, 0) + cnt
+                    )
+
         # Distinct leaders reviewed
         distinct_leaders = len({
             r.get("source_of_claims") or r.get("speaker", "")
@@ -4827,6 +5135,8 @@ class SitePublisher:
             "model_agreement_rate": agree_rate,
             "avg_consensus": avg_consensus,
             "verdict_totals": verdict_totals,
+            "verdict_totals_lenient": verdict_totals_lenient,
+            "verdict_totals_strict":  verdict_totals_strict,
             "models_above_mean": models_above,
             "model_lowest": model_lowest,
         }
