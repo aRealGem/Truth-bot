@@ -220,22 +220,33 @@
 })();
 
 /* ─────────────────────────────────────────────────────────────────────
-   Editorial-lens toggle — flips the headline claim pill between the
+   Editorial-lens toggle — flips every Truthy-scale display between the
    Lenient (default) and Strict 5-bucket coarse-axis projections.
 
-   Per-claim pill markup (rendered by site.py / _claim_card):
-     <span class="claim-pill claim-pill-headline v-{css}"
-           data-fine-label    data-fine-css
-           data-coarse-lenient data-coarse-lenient-css
-           data-coarse-strict  data-coarse-strict-css>{label}</span>
+   Two render patterns are toggled together so the page never goes
+   internally inconsistent (e.g. headline says "Mostly Truthy" while the
+   verdict bar still shows the Strict aggregate):
 
-   Per-model strip pills are NOT touched — they keep the 6-bucket fine
-   labels for audit. Selector ``.claim-pill-headline`` scopes us to
-   headline pills only.
+   1) PER-PILL SWAP — in-place text+class rewrite on individual pills.
+      Used by the per-claim headline pill (claim card) and the
+      per-claim TOC mini-pill on report pages. Both wear ``.lens-pill``
+      and carry the data-coarse-{lenient,strict} attribute pair.
+
+   2) PAIRED-AXIS SWAP — show/hide complementary blocks pre-rendered
+      server-side. Used by aggregate views: the verdict-panel headline
+      + ratio + bar, the per-report cards on the index, and any future
+      lens-aware aggregate. Each block wears ``[data-lens-axis="X"]``
+      and the toggle simply flips the ``hidden`` attribute.
+
+   The per-model strip pills (Anthropic / OpenAI / Gemini / xAI) are
+   NEVER touched — they keep the 6-bucket fine labels for audit.
+
+   Body data attribute ``document.body.dataset.lens`` is also set so
+   any lens-aware CSS rule can react.
 
    Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
    Default: lenient (matches Part H of findings-review.md).
-   No-op if the page has no headline pills (e.g. about, 404).
+   No-op if the page has nothing toggleable (e.g. about, 404).
    ───────────────────────────────────────────────────────────────────── */
 (function() {
   'use strict';
@@ -277,11 +288,31 @@
     pill.classList.add('v-' + cssSlug);
   }
 
+  function applyLensToAxisPairs(lens) {
+    /* Show the block tagged with the active lens, hide the other.
+       Idempotent — safe to call repeatedly. */
+    var blocks = document.querySelectorAll('[data-lens-axis]');
+    for (var i = 0; i < blocks.length; i++) {
+      var axis = blocks[i].getAttribute('data-lens-axis');
+      if (axis === lens) {
+        blocks[i].hidden = false;
+      } else {
+        blocks[i].hidden = true;
+      }
+    }
+  }
+
   function applyLens(lens) {
-    var pills = document.querySelectorAll('.claim-pill-headline');
+    /* 1) per-pill text+class swap (headline pill + TOC pill) */
+    var pills = document.querySelectorAll('.lens-pill');
     for (var i = 0; i < pills.length; i++) {
       applyLensToPill(pills[i], lens);
     }
+    /* 2) paired-axis show/hide for aggregate displays */
+    applyLensToAxisPairs(lens);
+    /* 3) body data-attr so any lens-aware CSS rule can react */
+    if (document.body) document.body.setAttribute('data-lens', lens);
+    /* 4) chip state */
     var chip = document.querySelector('.editorial-lens');
     if (chip) {
       chip.setAttribute('data-lens', lens);
@@ -292,9 +323,11 @@
   }
 
   function init() {
-    var pills = document.querySelectorAll('.claim-pill-headline');
+    var pills = document.querySelectorAll('.lens-pill');
+    var axisBlocks = document.querySelectorAll('[data-lens-axis]');
     var chip = document.querySelector('.editorial-lens');
-    if (!pills.length) {
+    var hasToggleableContent = pills.length > 0 || axisBlocks.length > 0;
+    if (!hasToggleableContent) {
       if (chip) chip.hidden = true;
       return;
     }
