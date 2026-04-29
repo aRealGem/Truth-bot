@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="truth-bot 0.2.0 (beta)">
+  <meta name="theme-color" content="#fafaf9">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="truth-bot">
+  <meta property="og:title" content="Model panel insights — truth-bot">
+  <meta property="og:description" content="How frontier models agree, dissent, and skew on truth-bot's fact-check panel — pairwise agreement, truthy bias, lone-outlier splits.">
+  <meta property="og:image" content="./assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Model panel insights — truth-bot">
+  <meta name="twitter:description" content="How frontier models agree, dissent, and skew on truth-bot's fact-check panel — pairwise agreement, truthy bias, lone-outlier splits.">
+  <meta name="twitter:image" content="./assets/social-card.png">
+  <meta name="twitter:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
+  <title>Model panel insights — truth-bot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400;6..72,1,500&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+<div class="status-bar">
+  <div class="row">
+    <span class="live">Operational</span>
+    <span>Pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></span>
+    <span>Multi-model</span>
+    <button type="button" class="editorial-lens" data-lens="lenient" hidden title="Toggle the headline pill between the Lenient (Mostly True + Exaggerated → Truthy) and Strict (Exaggerated + Misleading → Falsey) projections. Per-model strip stays 6-bucket.">
+      <span class="lens-label">Lens:</span>
+      <span class="lens-value">Lenient</span>
+    </button>
+    <span class="stamp">2026-04-29 21:53 UTC</span>
+  </div>
+</div>
+<header class="masthead">
+  <div class="wrap masthead-row">
+    <div>
+      <div class="wordmark"><a href="./index.html" style="color:inherit;text-decoration:none">truth-bot<span class="dot">.</span></a></div>
+      <p class="tagline">Automated political fact-checking with multi-model consensus analysis.</p>
+    </div>
+    <nav class="top-nav">
+      <a href="./index.html">Reports</a>
+      <a href="./about.html">About</a>
+      <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<section class="prose">
+  <h1>Model panel insights</h1>
+  <p class="insights-meta">40 distinct claims across 4 frontier models. All numbers update on every report publish.</p>
+  <h2>Per-model summary</h2>
+  <table class="insights-summary">
+    <thead><tr><th>Model</th><th class="num-cell">Claims</th><th class="num-cell">Dissents</th><th class="num-cell">Dissent %</th><th class="num-cell">Truthy bias</th><th class="num-cell">Lone &uarr;</th><th class="num-cell">Lone &darr;</th></tr></thead>
+    <tbody><tr><td><strong>Anthropic</strong></td><td class="num-cell">40</td><td class="num-cell">18</td><td class="num-cell">45%</td><td class="num-cell">+0.33</td><td class="num-cell">4</td><td class="num-cell">1</td></tr>
+<tr><td><strong>Google</strong></td><td class="num-cell">40</td><td class="num-cell">11</td><td class="num-cell">28%</td><td class="num-cell">+0.09</td><td class="num-cell">1</td><td class="num-cell">1</td></tr>
+<tr><td><strong>OpenAI</strong></td><td class="num-cell">40</td><td class="num-cell">20</td><td class="num-cell">50%</td><td class="num-cell">-0.44</td><td class="num-cell">1</td><td class="num-cell">2</td></tr>
+<tr><td><strong>xAI</strong></td><td class="num-cell">40</td><td class="num-cell">13</td><td class="num-cell">32%</td><td class="num-cell">+0.03</td><td class="num-cell">4</td><td class="num-cell">2</td></tr></tbody>
+  </table>
+  <h2>Truthy bias</h2>
+  <p class="insights-meta">Average signed gap between this model&rsquo;s truthy-axis score and the panel mean, per claim. Positive = leaner toward Truthy; negative = stricter.</p>
+  <div class="bias-chart"><div class="bias-row">  <div class="bias-row-label">Anthropic</div>
+  <div class="bias-track" aria-hidden="true">
+    <div class="bias-mid"></div>
+    <div class="bias-fill bias-fill-lenient" style="width:16.25%"></div>
+  </div>
+  <div class="bias-row-figure" style="color:var(--v-truthy)">+0.33</div>
+</div>
+<div class="bias-row">  <div class="bias-row-label">Google</div>
+  <div class="bias-track" aria-hidden="true">
+    <div class="bias-mid"></div>
+    <div class="bias-fill bias-fill-lenient" style="width:4.58%"></div>
+  </div>
+  <div class="bias-row-figure" style="color:var(--v-truthy)">+0.09</div>
+</div>
+<div class="bias-row">  <div class="bias-row-label">OpenAI</div>
+  <div class="bias-track" aria-hidden="true">
+    <div class="bias-mid"></div>
+    <div class="bias-fill bias-fill-strict" style="width:22.08%"></div>
+  </div>
+  <div class="bias-row-figure" style="color:var(--v-falsey)">-0.44</div>
+</div>
+<div class="bias-row">  <div class="bias-row-label">xAI</div>
+  <div class="bias-track" aria-hidden="true">
+    <div class="bias-mid"></div>
+    <div class="bias-fill bias-fill-lenient" style="width:1.25%"></div>
+  </div>
+  <div class="bias-row-figure" style="color:var(--v-truthy)">+0.03</div>
+</div></div>
+  <h2>Pairwise agreement</h2>
+  <p class="insights-meta">Share of co-checked claims where the two models cast identical fine-label verdicts.</p>
+<table class="agreement-matrix">
+  <thead><tr><th></th><th scope="col">Anthropic</th><th scope="col">Google</th><th scope="col">OpenAI</th><th scope="col">xAI</th></tr></thead>
+  <tbody><tr><th scope="row">Anthropic</th><td class="agg-self">&mdash;</td><td class="agg-cell">38%<span class="agg-n">n=40</span></td><td class="agg-cell">32%<span class="agg-n">n=40</span></td><td class="agg-cell">38%<span class="agg-n">n=40</span></td></tr><tr><th scope="row">Google</th><td class="agg-cell">38%<span class="agg-n">n=40</span></td><td class="agg-self">&mdash;</td><td class="agg-cell">40%<span class="agg-n">n=40</span></td><td class="agg-cell">55%<span class="agg-n">n=40</span></td></tr><tr><th scope="row">OpenAI</th><td class="agg-cell">32%<span class="agg-n">n=40</span></td><td class="agg-cell">40%<span class="agg-n">n=40</span></td><td class="agg-self">&mdash;</td><td class="agg-cell">32%<span class="agg-n">n=40</span></td></tr><tr><th scope="row">xAI</th><td class="agg-cell">38%<span class="agg-n">n=40</span></td><td class="agg-cell">55%<span class="agg-n">n=40</span></td><td class="agg-cell">32%<span class="agg-n">n=40</span></td><td class="agg-self">&mdash;</td></tr></tbody>
+</table>
+</section>
+<section class="prose insights-extremes">
+  <h2>Top extreme splits</h2>
+  <p class="insights-meta">Claims where exactly one model was the lone outlier (&Delta; ≥ 3 points on the truthy axis). Sorted by magnitude.</p>
+<article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;4</span>
+    <span class="extreme-odd">OpenAI as lone pessimist</span>
+    <span class="extreme-odd-label">False</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/defc9809-efb1-4844-a36d-63c885f32637.html">Trump claims the Big Beautiful Bill made interest on auto loans tax-deductible, but only if the car is made in America.</a></p>
+  <p class="extreme-meta">vs Anthropic: <strong>Mostly True</strong>, Google: <strong>True</strong>, xAI: <strong>True</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;4</span>
+    <span class="extreme-odd">xAI as lone optimist</span>
+    <span class="extreme-odd-label">True</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/a11e4bdb-acdd-43a4-b762-5998d92431de.html">Trump claims that in the last three months of 2025, core inflation was down to 1.7 percent.</a></p>
+  <p class="extreme-meta">vs Anthropic: <strong>False</strong>, OpenAI: <strong>False</strong>, Google: <strong>False</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">Anthropic as lone optimist</span>
+    <span class="extreme-odd-label">Mostly True</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/a3bfdf9b-366d-4fba-80bc-8a2f976dff79.html">Trump claims his administration drove core inflation down to the lowest level in more than five years within 12 months.</a></p>
+  <p class="extreme-meta">vs OpenAI: <strong>False</strong>, Google: <strong>False</strong>, xAI: <strong>False</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">Anthropic as lone optimist</span>
+    <span class="extreme-odd-label">Mostly True</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/e1153466-d40b-4c24-b4f7-034e8e8d2e1f.html">Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.</a></p>
+  <p class="extreme-meta">vs OpenAI: <strong>False</strong>, Google: <strong>False</strong>, xAI: <strong>False</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">Anthropic as lone optimist</span>
+    <span class="extreme-odd-label">Mostly True</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/aed0b384-6404-46fe-b5f1-c055a8dd4f08.html">Trump claims that when he last spoke in the chamber 12 months prior, he had inherited a nation with inflation at record levels.</a></p>
+  <p class="extreme-meta">vs OpenAI: <strong>False</strong>, Google: <strong>False</strong>, xAI: <strong>False</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">Anthropic as lone pessimist</span>
+    <span class="extreme-odd-label">False</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/9f978c90-6c62-4e2d-94b3-fc0137fbdf41.html">Trump claims his administration drove core inflation down to its lowest level in more than five years within 12 months.</a></p>
+  <p class="extreme-meta">vs OpenAI: <strong>Mostly True</strong>, Google: <strong>Mostly True</strong>, xAI: <strong>Exaggerated</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">Google as lone optimist</span>
+    <span class="extreme-odd-label">True</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/ed915040-ec8c-4bee-b734-df8886bb9301.html">Trump claims American oil production is up by more than 600,000 barrels a day.</a></p>
+  <p class="extreme-meta">vs Anthropic: <strong>Exaggerated</strong>, OpenAI: <strong>Unverifiable</strong>, xAI: <strong>Exaggerated</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">OpenAI as lone pessimist</span>
+    <span class="extreme-odd-label">False</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/7e711cea-8bcb-4803-acf3-3ae4a2bc0fac.html">Trump claims the murder rate is now at the lowest number in over 125 years, approximately since year 1900.</a></p>
+  <p class="extreme-meta">vs Anthropic: <strong>Mostly True</strong>, Google: <strong>True</strong>, xAI: <strong>Unverifiable</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">xAI as lone optimist</span>
+    <span class="extreme-odd-label">True</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/fb68e8a3-f9cf-460a-a567-68871cfcf68d.html">Trump claims the United States now has the strongest and most secure border in American history.</a></p>
+  <p class="extreme-meta">vs Anthropic: <strong>Mostly True</strong>, OpenAI: <strong>Exaggerated</strong>, Google: <strong>Exaggerated</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">xAI as lone optimist</span>
+    <span class="extreme-odd-label">True</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/01e989ad-f394-4a71-a796-ace198bf53db.html">Trump claims the Big Beautiful Bill eliminated taxes on tips for workers.</a></p>
+  <p class="extreme-meta">vs Anthropic: <strong>Exaggerated</strong>, OpenAI: <strong>Mostly True</strong>, Google: <strong>Exaggerated</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article></section>
+<section class="prose insights-method">
+  <h2>Method</h2>
+  <p>Truthy-axis scores: True (+2), Mostly True (+1), Unverifiable (0), Exaggerated/Misleading (-1), False (-2). Dissents are counted against the published consensus verdict for each claim. Pairwise agreement uses the full 6-bucket fine label, not the projected 5-bucket Truthy scale, so it&rsquo;s a strict measurement of label identity.</p>
+  <p>The <a href="https://github.com/truth-bot/truth-bot/blob/main/eval/opus_vs_rest_scan.py">Opus-vs-rest scan</a> is the standalone variant that inspired this page; both share their constants via <code>truthbot.publish.insights.LABEL_SCORE</code>.</p>
+  <p><a href="./about.html">&larr; About this site</a></p>
+</section>
+
+</main>
+<footer class="foot wrap">
+<span><a href="./index.html">Back to reports</a></span><span>Pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span> &middot; Prompt <a class="footer-hash" href="./about.html#prompt">7c462496</a> &middot; <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">GitHub</a></span>
+</footer>
+<script src="./assets/truthbot.js"></script>
+</body>
+</html>

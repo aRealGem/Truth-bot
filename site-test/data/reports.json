@@ -1,190 +1,46 @@
 [
   {
-    "id": "27e55786-660a-420f-bf65-a3486fba81a1",
+    "id": "4161a143-8caf-4e93-9ba8-9ac7d00b5fde",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "State of the Union",
-    "claim_count": 5,
+    "claim_count": 10,
     "verdict_distribution": {
-      "True": 1,
-      "Mostly True": 0,
+      "True": 2,
+      "Mostly True": 3,
       "Misleading": 0,
       "Exaggerated": 1,
-      "False": 3,
+      "False": 4,
       "Unverifiable": 0,
       "Truthy": 0,
       "Falsey": 0,
       "Models split": 0
     },
     "verdict_distribution_lenient": {
-      "True": 1,
-      "Truthy": 2,
+      "True": 2,
+      "Truthy": 5,
       "Unverifiable": 0,
       "Falsey": 0,
-      "False": 2,
+      "False": 3,
       "Models split": 0
     },
     "verdict_distribution_strict": {
-      "True": 1,
-      "Truthy": 0,
-      "Unverifiable": 0,
-      "Falsey": 1,
-      "False": 2,
-      "Models split": 1
-    },
-    "model_agreement_rate": 0.0,
-    "url": "reports/2026-02-24-donald-trump-27e557.html",
-    "tier_counts": {
-      "gov": 30,
-      "wire": 0,
-      "news": 0,
-      "fc": 1,
-      "other": 16
-    },
-    "source_of_claims": "Donald Trump",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "2368f2e6-1823-4c86-810d-8044f025a98c",
-    "date": "2026-02-24",
-    "speaker": "Donald Trump",
-    "role": "President",
-    "venue": "State of the Union",
-    "claim_count": 7,
-    "verdict_distribution": {
-      "True": 0,
-      "Mostly True": 1,
-      "Misleading": 0,
-      "Exaggerated": 1,
-      "False": 5,
-      "Unverifiable": 0,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 0
-    },
-    "verdict_distribution_lenient": {
-      "True": 0,
+      "True": 2,
       "Truthy": 3,
       "Unverifiable": 0,
-      "Falsey": 0,
-      "False": 4,
-      "Models split": 0
-    },
-    "verdict_distribution_strict": {
-      "True": 0,
-      "Truthy": 1,
-      "Unverifiable": 0,
       "Falsey": 1,
-      "False": 4,
+      "False": 3,
       "Models split": 1
     },
-    "model_agreement_rate": 0.143,
-    "url": "reports/2026-02-24-donald-trump-2368f2.html",
+    "model_agreement_rate": 0.1,
+    "url": "reports/2026-02-24-donald-trump-4161a1.html",
     "tier_counts": {
-      "gov": 45,
+      "gov": 47,
       "wire": 0,
       "news": 4,
-      "fc": 0,
-      "other": 25
-    },
-    "source_of_claims": "Donald Trump",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "c01a0083-22a2-4e00-94ea-f83b4d57ff9b",
-    "date": "2026-02-24",
-    "speaker": "Donald Trump",
-    "role": "President",
-    "venue": "State of the Union",
-    "claim_count": 7,
-    "verdict_distribution": {
-      "True": 1,
-      "Mostly True": 1,
-      "Misleading": 0,
-      "Exaggerated": 1,
-      "False": 4,
-      "Unverifiable": 0,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 0
-    },
-    "verdict_distribution_lenient": {
-      "True": 1,
-      "Truthy": 3,
-      "Unverifiable": 0,
-      "Falsey": 0,
-      "False": 3,
-      "Models split": 0
-    },
-    "verdict_distribution_strict": {
-      "True": 1,
-      "Truthy": 1,
-      "Unverifiable": 0,
-      "Falsey": 1,
-      "False": 3,
-      "Models split": 1
-    },
-    "model_agreement_rate": 0.0,
-    "url": "reports/2026-02-24-donald-trump-c01a00.html",
-    "tier_counts": {
-      "gov": 41,
-      "wire": 0,
-      "news": 2,
-      "fc": 1,
-      "other": 30
-    },
-    "source_of_claims": "Donald Trump",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "e81546a0-6371-4e96-9e94-3d6213864d5a",
-    "date": "2026-02-24",
-    "speaker": "Donald Trump",
-    "role": "President",
-    "venue": "State of the Union",
-    "claim_count": 29,
-    "verdict_distribution": {
-      "True": 5,
-      "Mostly True": 4,
-      "Misleading": 0,
-      "Exaggerated": 6,
-      "False": 11,
-      "Unverifiable": 3,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 0
-    },
-    "verdict_distribution_lenient": {
-      "True": 5,
-      "Truthy": 10,
-      "Unverifiable": 3,
-      "Falsey": 0,
-      "False": 8,
-      "Models split": 3
-    },
-    "verdict_distribution_strict": {
-      "True": 5,
-      "Truthy": 3,
-      "Unverifiable": 3,
-      "Falsey": 7,
-      "False": 8,
-      "Models split": 3
-    },
-    "model_agreement_rate": 0.138,
-    "url": "reports/2026-02-24-donald-trump-e81546.html",
-    "tier_counts": {
-      "gov": 164,
-      "wire": 2,
-      "news": 9,
-      "fc": 9,
-      "other": 116
+      "fc": 3,
+      "other": 42
     },
     "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
@@ -240,15 +96,63 @@
     "channel": ""
   },
   {
-    "id": "4161a143-8caf-4e93-9ba8-9ac7d00b5fde",
+    "id": "e81546a0-6371-4e96-9e94-3d6213864d5a",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "State of the Union",
-    "claim_count": 10,
+    "claim_count": 29,
     "verdict_distribution": {
-      "True": 2,
-      "Mostly True": 3,
+      "True": 5,
+      "Mostly True": 4,
+      "Misleading": 0,
+      "Exaggerated": 6,
+      "False": 11,
+      "Unverifiable": 3,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_lenient": {
+      "True": 5,
+      "Truthy": 10,
+      "Unverifiable": 3,
+      "Falsey": 0,
+      "False": 8,
+      "Models split": 3
+    },
+    "verdict_distribution_strict": {
+      "True": 5,
+      "Truthy": 3,
+      "Unverifiable": 3,
+      "Falsey": 7,
+      "False": 8,
+      "Models split": 3
+    },
+    "model_agreement_rate": 0.138,
+    "url": "reports/2026-02-24-donald-trump-e81546.html",
+    "tier_counts": {
+      "gov": 164,
+      "wire": 2,
+      "news": 9,
+      "fc": 9,
+      "other": 116
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "c01a0083-22a2-4e00-94ea-f83b4d57ff9b",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 7,
+    "verdict_distribution": {
+      "True": 1,
+      "Mostly True": 1,
       "Misleading": 0,
       "Exaggerated": 1,
       "False": 4,
@@ -258,29 +162,125 @@
       "Models split": 0
     },
     "verdict_distribution_lenient": {
-      "True": 2,
-      "Truthy": 5,
+      "True": 1,
+      "Truthy": 3,
       "Unverifiable": 0,
       "Falsey": 0,
       "False": 3,
       "Models split": 0
     },
     "verdict_distribution_strict": {
-      "True": 2,
-      "Truthy": 3,
+      "True": 1,
+      "Truthy": 1,
       "Unverifiable": 0,
       "Falsey": 1,
       "False": 3,
       "Models split": 1
     },
-    "model_agreement_rate": 0.1,
-    "url": "reports/2026-02-24-donald-trump-4161a1.html",
+    "model_agreement_rate": 0.0,
+    "url": "reports/2026-02-24-donald-trump-c01a00.html",
     "tier_counts": {
-      "gov": 47,
+      "gov": 41,
+      "wire": 0,
+      "news": 2,
+      "fc": 1,
+      "other": 30
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "2368f2e6-1823-4c86-810d-8044f025a98c",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 7,
+    "verdict_distribution": {
+      "True": 0,
+      "Mostly True": 1,
+      "Misleading": 0,
+      "Exaggerated": 1,
+      "False": 5,
+      "Unverifiable": 0,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_lenient": {
+      "True": 0,
+      "Truthy": 3,
+      "Unverifiable": 0,
+      "Falsey": 0,
+      "False": 4,
+      "Models split": 0
+    },
+    "verdict_distribution_strict": {
+      "True": 0,
+      "Truthy": 1,
+      "Unverifiable": 0,
+      "Falsey": 1,
+      "False": 4,
+      "Models split": 1
+    },
+    "model_agreement_rate": 0.143,
+    "url": "reports/2026-02-24-donald-trump-2368f2.html",
+    "tier_counts": {
+      "gov": 45,
       "wire": 0,
       "news": 4,
-      "fc": 3,
-      "other": 42
+      "fc": 0,
+      "other": 25
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "27e55786-660a-420f-bf65-a3486fba81a1",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "State of the Union",
+    "claim_count": 5,
+    "verdict_distribution": {
+      "True": 1,
+      "Mostly True": 0,
+      "Misleading": 0,
+      "Exaggerated": 1,
+      "False": 3,
+      "Unverifiable": 0,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_lenient": {
+      "True": 1,
+      "Truthy": 2,
+      "Unverifiable": 0,
+      "Falsey": 0,
+      "False": 2,
+      "Models split": 0
+    },
+    "verdict_distribution_strict": {
+      "True": 1,
+      "Truthy": 0,
+      "Unverifiable": 0,
+      "Falsey": 1,
+      "False": 2,
+      "Models split": 1
+    },
+    "model_agreement_rate": 0.0,
+    "url": "reports/2026-02-24-donald-trump-27e557.html",
+    "tier_counts": {
+      "gov": 30,
+      "wire": 0,
+      "news": 0,
+      "fc": 1,
+      "other": 16
     },
     "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
