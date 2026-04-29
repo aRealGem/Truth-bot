@@ -380,3 +380,89 @@ def test_methodology_line_still_says_frontier_language_models() -> None:
     html = _render_report(sr)
     # 4-adapter panel from _make_bundle → "4 frontier language models".
     assert "frontier language model" in html
+
+
+# ── Round 3: "% truthy or better" lens-aware stat ─────────────────────────────
+
+
+def test_verdict_panel_renders_truthy_or_better_stat_paired_axes() -> None:
+    """The verdict panel grew a 5th stat that lens-toggles between
+    Lenient and Strict. Both axes must be present, Strict starts hidden."""
+    bundles = [
+        _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
+        _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
+        _make_bundle(VerdictLabel.FALSE,       coarse_lenient="False",  coarse_strict="False"),
+    ]
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    assert 'class="stats stats-5"' in html
+    assert 'Truthy or better' in html
+    # Both axes present inside the new stat
+    assert '<span class="lens-target" data-lens-axis="lenient">' in html
+    assert '<span class="lens-target" data-lens-axis="strict"' in html
+    # Strict starts hidden (paired-axis pattern, Lenient is the published default).
+    assert 'data-lens-axis="strict" hidden' in html
+
+
+def test_truthy_or_better_includes_unverifiable_in_denominator() -> None:
+    """Editorial choice: a leader citing an unverifiable claim is itself
+    a fact-check failure, so Unverifiable counts in the denominator
+    (NOT just the numerator-eligible Truthy/True buckets)."""
+    bundles = [
+        _make_bundle(VerdictLabel.TRUE,         coarse_lenient="True",        coarse_strict="True"),
+        _make_bundle(VerdictLabel.MOSTLY_TRUE,  coarse_lenient="Truthy",      coarse_strict="Truthy"),
+        _make_bundle(VerdictLabel.UNVERIFIABLE, coarse_lenient="Unverifiable", coarse_strict="Unverifiable"),
+        _make_bundle(VerdictLabel.FALSE,        coarse_lenient="False",       coarse_strict="False"),
+    ]
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    # 2 of 4 are Truthy-or-better → 50%. If Unverifiable were excluded
+    # from the denominator we'd see 2/3 = 67%, which would be wrong.
+    assert '<span class="lens-target" data-lens-axis="lenient">50%</span>' in html
+    assert '<span class="lens-target" data-lens-axis="strict" hidden>50%</span>' in html
+
+
+# ── Round 3: site-wide Truthy mute persistence contract ─────────────────────
+
+
+def test_embedded_js_contains_truthy_mute_storage_key() -> None:
+    """The mute-toggle IIFE persists state under localStorage["truthy-mute"].
+    We pin the key here so a rename can't silently break stored prefs."""
+    from truthbot.publish.site import JS
+    assert "'truthy-mute'" in JS
+    assert "isTruthyFunPage" in JS  # fun-page exclusion path stays in place
+
+
+def test_truthy_tap_hint_includes_label_span_for_state_aware_text() -> None:
+    """The tap-hint label is now JS-controlled (Tap / Tap to mute / Muted)
+    so the JS needs a stable hook to find. Pin the marker class."""
+    from truthbot.publish.site import _TRUTHY_TAP_HINT
+    assert 'class="tap-hint-label"' in _TRUTHY_TAP_HINT
+
+
+# ── Round 3: index strip wiring ─────────────────────────────────────────────
+
+
+def test_compute_stats_populates_insights_when_claims_present() -> None:
+    """`SitePublisher._compute_stats` should produce an `insights` entry
+    when the claims index is populated, so the index renderer can pick
+    it up. Drives the data flow end-to-end without a live publisher."""
+    from truthbot.publish.site import SitePublisher
+    publisher = SitePublisher.__new__(SitePublisher)   # bypass __init__
+    publisher._root = None  # type: ignore[assignment]  # not used by _compute_stats
+    reports = [{"id": "r1", "claim_count": 1, "model_agreement_rate": 1.0,
+                "verdict_distribution": {"True": 1}}]
+    claims = [{
+        "id": "c1", "report_id": "r1",
+        "claim_text": "alpha",
+        "consensus_verdict": "True",
+        "model_verdicts_summary": [
+            {"adapter": "anthropic", "label": "True", "confidence": "High"},
+            {"adapter": "openai",    "label": "True", "confidence": "High"},
+        ],
+        "url": "claims/c1.html",
+    }]
+    stats = publisher._compute_stats(reports, claims)
+    assert "insights" in stats
+    assert stats["insights"] is not None
+    assert stats["insights"].total_claims == 1

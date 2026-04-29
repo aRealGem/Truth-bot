@@ -992,7 +992,7 @@ _TRUTHY_TAP_HINT = (
     '<svg class="icon" viewBox="0 0 24 24" fill="currentColor">'
     '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4.03v8.05a4.5 4.5 0 002.5-4.02zM14 3.23v2.06a7 7 0 010 13.42v2.06a9 9 0 000-17.54z"/>'
     '</svg>'
-    'Tap'
+    '<span class="tap-hint-label">Tap</span>'
     '</div>'
 )
 
@@ -1081,8 +1081,37 @@ def _verdict_panel(site_report) -> str:
         + '</div>'
     )
 
+    # "% Truthy or better" — fraction of all claims (Unverifiable
+    # included in the denominator, by editorial choice: a leader
+    # citing an unverifiable claim is itself a fact-check failure)
+    # that landed on True or Truthy under the active lens.
+    # Lens-aware: Truthy count differs between Lenient and Strict, so
+    # both axes are rendered server-side and the lens toggle JS swaps
+    # them via the same paired-axis pattern used by the headline.
+    def _truthy_or_better_pct(d: dict[str, int]) -> str:
+        total = sum(d.values()) or 1   # claim_count exactly; safe-divide on 0
+        num = d.get("True", 0) + d.get("Truthy", 0)
+        return format(num / total, '.0%')
+
+    truthy_pct_lenient = _truthy_or_better_pct(dist_lenient)
+    truthy_pct_strict  = _truthy_or_better_pct(dist_strict)
+    truthy_or_better_title = (
+        "Share of claims rated True or Truthy on the active lens. "
+        "Denominator includes Unverifiable claims (a leader citing an "
+        "unverifiable claim is itself a fact-check failure)."
+    )
+    truthy_or_better_stat = (
+        '    <div class="stat" title="' + _esc(truthy_or_better_title) + '">'
+        + _icon_svg(_ICON_BODY_TRUTHY_RATE, size=32)
+        + '<div class="num">'
+        + '<span class="lens-target" data-lens-axis="lenient">' + truthy_pct_lenient + '</span>'
+        + '<span class="lens-target" data-lens-axis="strict" hidden>' + truthy_pct_strict + '</span>'
+        + '</div>'
+        + '<div class="lbl">Truthy or better</div></div>\n'
+    )
+
     panel_stats_html = (
-        '  <div class="stats stats-4">\n'
+        '  <div class="stats stats-5">\n'
         '    <div class="stat">'
         + _icon_svg(_ICON_BODY_CLAIMS, size=32)
         + '<div class="num">' + str(claim_count) + '</div>'
@@ -1091,6 +1120,7 @@ def _verdict_panel(site_report) -> str:
         + _icon_svg(_ICON_BODY_MODELS_ENGAGED, size=32)
         + '<div class="num">' + str(model_count) + '</div>'
         + '<div class="lbl">Models Engaged</div></div>\n'
+        + truthy_or_better_stat +
         '    <div class="stat">'
         + _icon_svg(_ICON_BODY_MODEL_CONSENSUS, size=32)
         + '<div class="num">' + format(agree_rate, '.0%') + '</div>'
@@ -3375,8 +3405,10 @@ hr.rule-light {
   /* Status bar */
   .status-bar .stamp { margin-left: 0; }
 
-  /* Index aggregate stats — single column (report .stats.stats-4 uses 700/480 breakpoints) */
-  .stats:not(.stats-4) { grid-template-columns: 1fr; }
+  /* Index aggregate stats — single column. Report .stats.stats-4 and
+     .stats.stats-5 own their own breakpoints (further down in this
+     stylesheet) so they're excluded here. */
+  .stats:not(.stats-4):not(.stats-5) { grid-template-columns: 1fr; }
   .stat {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -3607,16 +3639,213 @@ hr.rule-light {
 .stats.stats-4 {
   grid-template-columns: repeat(4, 1fr);
 }
-.verdict-panel > .stats.stats-4 {
+.stats.stats-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+.verdict-panel > .stats.stats-4,
+.verdict-panel > .stats.stats-5 {
   border-top: 1px solid var(--border);
   margin: 0 1.25rem 1rem;
 }
+@media (max-width: 900px) {
+  .stats.stats-5 { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 700px) {
   .stats.stats-4 { grid-template-columns: repeat(2, 1fr); }
+  .stats.stats-5 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 480px) {
   .stats.stats-4 { grid-template-columns: 1fr; }
+  .stats.stats-5 { grid-template-columns: 1fr; }
 }
+
+/* [16] Model Panel Insights ─────────────────────────────────────────── */
+
+.insights-strip {
+  margin: 0 0 1.4rem;
+}
+.insight-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.insight-card {
+  padding: 1.1rem 1.25rem;
+  border-right: 1px solid var(--border);
+}
+.insight-card:last-child { border-right: none; }
+.insight-card-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 0.4rem;
+}
+.insight-card-headline {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.3rem;
+  color: var(--ink);
+}
+.insight-card-figure {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+@media (max-width: 700px) {
+  .insight-cards { grid-template-columns: 1fr; }
+  .insight-card { border-right: none; border-bottom: 1px solid var(--border); }
+  .insight-card:last-child { border-bottom: none; }
+}
+
+/* Per-model summary table on the dedicated insights page */
+.insights-summary {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0.75rem 0 1.5rem;
+}
+.insights-summary th, .insights-summary td {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.insights-summary thead th {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+.insights-summary .num-cell { text-align: right; font-variant-numeric: tabular-nums; }
+.insights-meta {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+/* Bias chart — paired horizontal bars centered on a midpoint */
+.bias-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.bias-row {
+  display: grid;
+  grid-template-columns: 13rem 1fr 4rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+.bias-row-label { font-weight: 600; }
+.bias-track {
+  position: relative;
+  height: 14px;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+.bias-mid {
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  bottom: -2px;
+  width: 1px;
+  background: var(--ink-faint);
+}
+.bias-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.bias-fill-lenient { left: 50%; background: var(--v-truthy); }
+.bias-fill-strict  { right: 50%; background: var(--v-falsey); }
+.bias-row-figure {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  text-align: right;
+}
+@media (max-width: 600px) {
+  .bias-row { grid-template-columns: 1fr; }
+  .bias-row-figure { text-align: left; }
+}
+
+/* Pairwise agreement matrix */
+.agreement-matrix {
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.agreement-matrix th, .agreement-matrix td {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.agreement-matrix thead th { background: var(--surface); }
+.agreement-matrix .agg-self {
+  background: var(--surface);
+  color: var(--ink-faint);
+}
+.agreement-matrix .agg-cell {
+  font-variant-numeric: tabular-nums;
+}
+.agreement-matrix .agg-n {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  font-family: var(--mono);
+}
+
+/* Extreme split cards */
+.insights-extremes { margin-top: 1.25rem; }
+.extreme-card {
+  border: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--surface);
+}
+.extreme-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+  font-size: 0.78rem;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+.extreme-diff {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+}
+.extreme-odd-label {
+  margin-left: auto;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+}
+.extreme-text {
+  margin: 0.25rem 0;
+  font-size: 0.96rem;
+  line-height: 1.4;
+}
+.extreme-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.extreme-speaker { color: var(--ink-faint); }
+.insights-method { margin-top: 1.5rem; font-size: 0.92rem; }
 
 """
 
@@ -3832,11 +4061,93 @@ JS = """\
     var stateMap = { happy: 'true', iffy: 'iffy', sad: 'lie' };
     setState(stateMap[mood] || 'iffy');
 
-    widget.addEventListener('click', speak);
+    /* ─── Site-wide mute state + queued first-gesture autoplay ─────
+       Default: ``mute === 'off'`` (sound enabled). On report and
+       index pages we attempt a one-shot mood sound on the user's
+       first interaction with the page (browser autoplay policies
+       block AudioContext.start() until a gesture). On the dedicated
+       Truthy fun page we keep the legacy "tap = always plays"
+       behavior so the page stays a playground.
+
+       Persistence: localStorage["truthy-mute"] in {"on", "off"}.
+       ─────────────────────────────────────────────────────────── */
+    var TRUTHY_MUTE_KEY = 'truthy-mute';
+    var DEFAULT_TRUTHY_MUTE = 'off';
+    var path = (window.location && window.location.pathname) || '';
+    /* The dedicated Truthy fun page keeps the legacy "tap always plays"
+       behavior; everywhere else uses the mute toggle. Detection is by
+       URL path substring so query strings / hashes don't trip it up. */
+    var isTruthyFunPage = path.indexOf('truthy.html') !== -1;
+
+    function readMute() {
+      try {
+        var v = localStorage.getItem(TRUTHY_MUTE_KEY);
+        return (v === 'on' || v === 'off') ? v : DEFAULT_TRUTHY_MUTE;
+      } catch (e) { return DEFAULT_TRUTHY_MUTE; }
+    }
+    function writeMute(v) {
+      try { localStorage.setItem(TRUTHY_MUTE_KEY, v); } catch (e) { /* ignore */ }
+    }
+
+    var tapHintLabel = widget.querySelector('.tap-hint-label');
+    function updateTapHintLabel(mute) {
+      if (!tapHintLabel) return;
+      if (isTruthyFunPage) {
+        tapHintLabel.textContent = 'Tap';
+      } else if (mute === 'on') {
+        tapHintLabel.textContent = 'Muted';
+      } else {
+        tapHintLabel.textContent = 'Tap to mute';
+      }
+    }
+    if (tapHintLabel) widget.setAttribute('data-mute', isTruthyFunPage ? 'na' : readMute());
+    updateTapHintLabel(readMute());
+
+    /* Queued first-gesture autoplay. Suppressed on the fun page
+       (legacy behavior). Removed if the user explicitly taps the
+       mascot before any other gesture (taking explicit control of
+       the mute toggle should not also fire the queued play). */
+    var queuedHandler = null;
+    function removeQueued() {
+      if (!queuedHandler) return;
+      document.removeEventListener('click',      queuedHandler, true);
+      document.removeEventListener('keydown',    queuedHandler, true);
+      document.removeEventListener('touchstart', queuedHandler, true);
+      queuedHandler = null;
+    }
+    function setupQueuedAutoplay() {
+      if (isTruthyFunPage) return;
+      if (readMute() === 'on') return;
+      queuedHandler = function() { speak(); removeQueued(); };
+      document.addEventListener('click',      queuedHandler, true);
+      document.addEventListener('keydown',    queuedHandler, true);
+      document.addEventListener('touchstart', queuedHandler, true);
+    }
+    setupQueuedAutoplay();
+
+    function onMascotActivate(e) {
+      if (isTruthyFunPage) {
+        speak();
+        return;
+      }
+      /* User explicitly took control before any queued autoplay
+         could fire — cancel it so the click only does the mute
+         toggle, not also a play. */
+      removeQueued();
+      if (e && e.stopPropagation) e.stopPropagation();
+      var current = readMute();
+      var next = (current === 'on') ? 'off' : 'on';
+      writeMute(next);
+      widget.setAttribute('data-mute', next);
+      updateTapHintLabel(next);
+      if (next === 'off') speak();  // unmuting always plays once
+    }
+
+    widget.addEventListener('click', onMascotActivate);
     widget.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        speak();
+        onMascotActivate(e);
       }
     });
   }
@@ -4349,6 +4660,18 @@ _ICON_BODY_MODELS_ENGAGED = (
     '<line x1="2" y1="14" x2="22" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>'
 )
 # Bots converging to checkmark (see assets/icons/icon-model-consensus.svg).
+# Check-mark inside a circle. Used by the "Truthy or better" stat in the
+# verdict panel — communicates "passed" without leaning on a green color
+# the rest of the palette doesn't have. Matches the existing 24x24 grid
+# the other ``_ICON_BODY_*`` constants use.
+_ICON_BODY_TRUTHY_RATE = (
+    '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" '
+    'fill="currentColor" fill-opacity="0.12"/>'
+    '<path d="M 7.5 12.5 L 11 16 L 17 8.5" stroke="currentColor" stroke-width="2" '
+    'fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+)
+
+
 _ICON_BODY_MODEL_CONSENSUS = (
     '<line x1="4.5" y1="4.5" x2="4.5" y2="6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>'
     '<circle cx="4.5" cy="4" r="0.8" fill="currentColor"/>'
@@ -4465,11 +4788,14 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         cards_html += '<p class="dim">No reports yet.</p>'
     cards_html += '</div>'
 
+    insights_strip = _insights_strip_html(stats.get("insights"))
+
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     body = (
         hero_html
         + stats_html
         + how_strip_html
+        + insights_strip
         + '<hr class="rule">'
         + '<div class="section-head"><span>Latest truthiness reviews</span>'
         + '<span class="sub">Feed</span></div>'
@@ -4718,6 +5044,294 @@ def _render_truthy() -> str:
     )
 
 
+def _insights_strip_html(insights: "ModelPanelInsights | None") -> str:
+    """Compact 3-card highlight strip for the landing page.
+
+    Renders nothing when ``insights`` is None or has no models — the
+    strip is purely additive context, so a fresh / empty corpus
+    shouldn't break the index. The CTA always points to
+    ``./model-insights.html`` regardless.
+    """
+    if insights is None or not insights.per_model:
+        return ""
+    cards: list[str] = []
+    top_pair = insights.top_pair
+    if top_pair is not None:
+        cards.append(
+            '<div class="insight-card">'
+            '<div class="insight-card-eyebrow">Strongest pairwise agreement</div>'
+            '<div class="insight-card-headline">'
+            + _esc(_adapter_pretty(top_pair.a))
+            + ' &harr; '
+            + _esc(_adapter_pretty(top_pair.b))
+            + '</div>'
+            '<div class="insight-card-figure">'
+            + format(top_pair.agreement_rate, '.0%')
+            + ' identical fine-label calls</div>'
+            '</div>'
+        )
+    most_div = insights.most_divergent
+    if most_div is not None and most_div.dissent_rate > 0:
+        cards.append(
+            '<div class="insight-card">'
+            '<div class="insight-card-eyebrow">Most divergent on the panel</div>'
+            '<div class="insight-card-headline">'
+            + _esc(most_div.pretty_name)
+            + '</div>'
+            '<div class="insight-card-figure">'
+            + format(most_div.dissent_rate, '.0%')
+            + ' of claims diverge from consensus</div>'
+            '</div>'
+        )
+    most_lenient = insights.most_lenient
+    most_strict  = insights.most_strict
+    if (most_lenient is not None and most_strict is not None
+            and most_lenient.adapter != most_strict.adapter):
+        cards.append(
+            '<div class="insight-card">'
+            '<div class="insight-card-eyebrow">Truthy-axis bias spread</div>'
+            '<div class="insight-card-headline">'
+            + _esc(most_lenient.pretty_name)
+            + ' &uarr; &nbsp; vs &nbsp; '
+            + _esc(most_strict.pretty_name)
+            + ' &darr;'
+            + '</div>'
+            '<div class="insight-card-figure">'
+            + format(most_lenient.truthy_bias, '+.2f')
+            + ' &nbsp;&middot;&nbsp; '
+            + format(most_strict.truthy_bias, '+.2f')
+            + '</div>'
+            '</div>'
+        )
+    if not cards:
+        return ""
+    return (
+        '<section class="insights-strip" aria-labelledby="insights-strip-head">\n'
+        '  <div class="section-head">'
+        '<span id="insights-strip-head">Model panel insights</span>'
+        '<span class="sub"><a href="./model-insights.html">'
+        'Full breakdown &rarr;</a></span></div>\n'
+        '  <div class="insight-cards">' + ''.join(cards) + '</div>\n'
+        '</section>\n'
+    )
+
+
+def _adapter_pretty(adapter: str) -> str:
+    """Insights-side adapter pretty name (delegates to ``insights`` map)."""
+    from truthbot.publish.insights import _adapter_brand
+    return _adapter_brand(adapter)
+
+
+def _bias_bar_html(stat: "ModelStat") -> str:
+    """Two-sided horizontal bar for the truthy bias number.
+
+    Bias range is theoretically -2..+2 but in practice clusters near
+    -0.5..+0.5. We clamp to -1..+1 for display so the chart axis is
+    stable across vintages.
+    """
+    bias = max(-1.0, min(1.0, stat.truthy_bias))
+    half_pct = abs(bias) * 50.0
+    side = 'lenient' if bias >= 0 else 'strict'
+    label_color = (
+        'var(--v-truthy)' if bias > 0
+        else ('var(--v-falsey)' if bias < 0 else 'var(--ink)')
+    )
+    return (
+        '<div class="bias-row">'
+        '  <div class="bias-row-label">' + _esc(stat.pretty_name) + '</div>\n'
+        '  <div class="bias-track" aria-hidden="true">\n'
+        '    <div class="bias-mid"></div>\n'
+        '    <div class="bias-fill bias-fill-' + side + '" '
+        'style="width:' + format(half_pct, '.2f') + '%"></div>\n'
+        '  </div>\n'
+        '  <div class="bias-row-figure" style="color:' + label_color + '">'
+        + format(stat.truthy_bias, '+.2f')
+        + '</div>\n'
+        '</div>'
+    )
+
+
+def _agreement_matrix_html(insights: "ModelPanelInsights") -> str:
+    """4x4 agreement table. Diagonal is greyed out."""
+    adapters = sorted({m.adapter for m in insights.per_model})
+    if not adapters:
+        return ""
+    pretty = {a: _adapter_pretty(a) for a in adapters}
+    by_pair = {
+        (p.a, p.b): p for p in insights.pairwise
+    }
+    head_cells = "".join(
+        f'<th scope="col">{_esc(pretty[a])}</th>' for a in adapters
+    )
+    rows: list[str] = []
+    for a in adapters:
+        cells: list[str] = [f'<th scope="row">{_esc(pretty[a])}</th>']
+        for b in adapters:
+            if a == b:
+                cells.append('<td class="agg-self">&mdash;</td>')
+                continue
+            key = (min(a, b), max(a, b))
+            pair = by_pair.get(key)
+            if pair is None:
+                cells.append('<td class="agg-empty">&mdash;</td>')
+            else:
+                cells.append(
+                    '<td class="agg-cell">'
+                    + format(pair.agreement_rate, '.0%')
+                    + '<span class="agg-n">n=' + str(pair.claims_both_present) + '</span>'
+                    + '</td>'
+                )
+        rows.append('<tr>' + ''.join(cells) + '</tr>')
+    return (
+        '<table class="agreement-matrix">\n'
+        '  <thead><tr><th></th>' + head_cells + '</tr></thead>\n'
+        '  <tbody>' + ''.join(rows) + '</tbody>\n'
+        '</table>\n'
+    )
+
+
+def _extreme_split_card(e: "ExtremeSplit") -> str:
+    others = ", ".join(
+        _esc(_adapter_pretty(a)) + ': <strong>' + _esc(lbl) + '</strong>'
+        for a, lbl in e.other_labels.items()
+    )
+    direction_word = "lone optimist" if e.direction == "optimist" else "lone pessimist"
+    href = '../' + e.claim_url if e.claim_url else ''
+    title_html = _esc(e.claim_text)
+    speaker_meta = ''
+    if e.speaker:
+        speaker_meta = (
+            ' &middot; <span class="extreme-speaker">'
+            + _esc(e.speaker)
+            + (' &middot; ' + _esc(e.date) if e.date else '')
+            + '</span>'
+        )
+    return (
+        '<article class="extreme-card">\n'
+        '  <header class="extreme-head">\n'
+        '    <span class="extreme-diff">&Delta;' + str(e.diff) + '</span>\n'
+        '    <span class="extreme-odd">'
+        + _esc(_adapter_pretty(e.odd_one_out))
+        + ' as ' + direction_word + '</span>\n'
+        '    <span class="extreme-odd-label">'
+        + _esc(e.odd_label)
+        + '</span>\n'
+        '  </header>\n'
+        '  <p class="extreme-text">' + (
+            f'<a href="{href}">{title_html}</a>' if href else title_html
+        ) + '</p>\n'
+        '  <p class="extreme-meta">vs ' + others + speaker_meta + '</p>\n'
+        '</article>'
+    )
+
+
+def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
+    """Dedicated model-insights deep-dive page."""
+    from truthbot.publish.insights import EXTREME_DIFF_THRESHOLD
+    if insights is None or not insights.per_model:
+        body = (
+            '<section class="prose">\n'
+            '  <h1>Model panel insights</h1>\n'
+            '  <p>Not enough claims yet to compute panel insights. Check back '
+            'after the next report run.</p>\n'
+            '</section>\n'
+        )
+    else:
+        bias_rows = "\n".join(_bias_bar_html(m) for m in insights.per_model)
+        per_model_table_rows = "\n".join(
+            '<tr>'
+            f'<td><strong>{_esc(m.pretty_name)}</strong></td>'
+            f'<td class="num-cell">{m.claims_seen}</td>'
+            f'<td class="num-cell">{m.dissent_count}</td>'
+            f'<td class="num-cell">{m.dissent_rate:.0%}</td>'
+            f'<td class="num-cell">{m.truthy_bias:+.2f}</td>'
+            f'<td class="num-cell">{m.extreme_lone_optimist}</td>'
+            f'<td class="num-cell">{m.extreme_lone_pessimist}</td>'
+            '</tr>'
+            for m in insights.per_model
+        )
+        extreme_html = ""
+        if insights.top_extreme_splits:
+            extreme_html = (
+                '<section class="prose insights-extremes">\n'
+                '  <h2>Top extreme splits</h2>\n'
+                '  <p class="insights-meta">'
+                'Claims where exactly one model was the lone outlier '
+                f'(&Delta; ≥ {EXTREME_DIFF_THRESHOLD} points on the truthy axis). '
+                'Sorted by magnitude.</p>\n'
+                + ''.join(_extreme_split_card(e) for e in insights.top_extreme_splits)
+                + '</section>\n'
+            )
+        body = (
+            '<section class="prose">\n'
+            '  <h1>Model panel insights</h1>\n'
+            f'  <p class="insights-meta">{insights.total_claims} distinct claims '
+            f'across {len(insights.per_model)} frontier models. '
+            'All numbers update on every report publish.</p>\n'
+            '  <h2>Per-model summary</h2>\n'
+            '  <table class="insights-summary">\n'
+            '    <thead><tr>'
+            '<th>Model</th>'
+            '<th class="num-cell">Claims</th>'
+            '<th class="num-cell">Dissents</th>'
+            '<th class="num-cell">Dissent %</th>'
+            '<th class="num-cell">Truthy bias</th>'
+            '<th class="num-cell">Lone &uarr;</th>'
+            '<th class="num-cell">Lone &darr;</th>'
+            '</tr></thead>\n'
+            '    <tbody>'
+            + per_model_table_rows +
+            '</tbody>\n'
+            '  </table>\n'
+            '  <h2>Truthy bias</h2>\n'
+            '  <p class="insights-meta">'
+            'Average signed gap between this model&rsquo;s truthy-axis '
+            'score and the panel mean, per claim. Positive = leaner '
+            'toward Truthy; negative = stricter.</p>\n'
+            '  <div class="bias-chart">' + bias_rows + '</div>\n'
+            '  <h2>Pairwise agreement</h2>\n'
+            '  <p class="insights-meta">'
+            'Share of co-checked claims where the two models cast '
+            'identical fine-label verdicts.</p>\n'
+            + _agreement_matrix_html(insights) +
+            '</section>\n'
+            + extreme_html +
+            '<section class="prose insights-method">\n'
+            '  <h2>Method</h2>\n'
+            '  <p>Truthy-axis scores: True (+2), Mostly True (+1), '
+            'Unverifiable (0), Exaggerated/Misleading (-1), False (-2). '
+            'Dissents are counted against the published consensus '
+            'verdict for each claim. Pairwise agreement uses the full '
+            '6-bucket fine label, not the projected 5-bucket Truthy '
+            'scale, so it&rsquo;s a strict measurement of label '
+            'identity.</p>\n'
+            '  <p>The <a href="https://github.com/truth-bot/truth-bot/blob/main/eval/opus_vs_rest_scan.py">'
+            'Opus-vs-rest scan</a> is the standalone variant that '
+            'inspired this page; both share their constants via '
+            '<code>truthbot.publish.insights.LABEL_SCORE</code>.</p>\n'
+            '  <p><a href="./about.html">&larr; About this site</a></p>\n'
+            '</section>\n'
+        )
+    _phash = _prompt_hash()
+    footer = (
+        '<span><a href="./index.html">Back to reports</a></span>'
+        f'<span>Pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}'
+        f' &middot; Prompt <a class="footer-hash" href="./about.html#prompt">{_phash}</a>'
+        f' &middot; <a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub</a></span>'
+    )
+    return _page_about(
+        "Model panel insights",
+        body,
+        footer,
+        og_title="Model panel insights — truth-bot",
+        og_description=(
+            "How frontier models agree, dissent, and skew on truth-bot's "
+            "fact-check panel — pairwise agreement, truthy bias, lone-outlier "
+            "splits."
+        ),
+    )
+
+
 def _render_about() -> str:
     """Render the about/method page."""
     try:
@@ -4920,6 +5534,10 @@ class SitePublisher:
         self._write(self._root / "about.html", _render_about())
         self._write(self._root / "truthy.html", _render_truthy())
         self._write(self._root / "404.html",   _render_404())
+        self._write(
+            self._root / "model-insights.html",
+            _render_model_insights(stats.get("insights")),
+        )
 
         return report_path.resolve()
 
@@ -5128,6 +5746,21 @@ class SitePublisher:
         if model_rates and len(set(round(v, 4) for v in model_rates.values())) == 1:
             model_lowest = None
 
+        # Per-model panel insights — computed best-effort from the
+        # claims index. None when claims are unavailable; renderers
+        # treat None as "skip".
+        insights = None
+        if claims:
+            try:
+                from truthbot.publish.insights import compute_model_panel_insights
+                reports_by_id = {r.get("id"): r for r in reports if r.get("id")}
+                insights = compute_model_panel_insights(
+                    claims, reports_by_id=reports_by_id
+                )
+            except Exception:  # pragma: no cover — defensive
+                logger.debug("compute_model_panel_insights failed", exc_info=True)
+                insights = None
+
         return {
             "total_speeches": len(reports),
             "total_leaders": distinct_leaders,
@@ -5139,6 +5772,7 @@ class SitePublisher:
             "verdict_totals_strict":  verdict_totals_strict,
             "models_above_mean": models_above,
             "model_lowest": model_lowest,
+            "insights": insights,
         }
 
     def summary(self) -> dict:

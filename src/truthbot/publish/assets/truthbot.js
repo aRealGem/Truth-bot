@@ -202,11 +202,90 @@
     var stateMap = { happy: 'true', iffy: 'iffy', sad: 'lie' };
     setState(stateMap[mood] || 'iffy');
 
-    widget.addEventListener('click', speak);
+    /* ─── Site-wide mute state + queued first-gesture autoplay ─────
+       Default: ``mute === 'off'`` (sound enabled). On report and
+       index pages we attempt a one-shot mood sound on the user's
+       first interaction with the page (browser autoplay policies
+       block AudioContext.start() until a gesture). On the dedicated
+       Truthy fun page we keep the legacy "tap = always plays"
+       behavior so the page stays a playground.
+
+       Persistence: localStorage["truthy-mute"] in {"on", "off"}.
+       ─────────────────────────────────────────────────────────── */
+    var TRUTHY_MUTE_KEY = 'truthy-mute';
+    var DEFAULT_TRUTHY_MUTE = 'off';
+    var path = (window.location && window.location.pathname) || '';
+    var isTruthyFunPage = path.indexOf('truthy.html') !== -1;
+
+    function readMute() {
+      try {
+        var v = localStorage.getItem(TRUTHY_MUTE_KEY);
+        return (v === 'on' || v === 'off') ? v : DEFAULT_TRUTHY_MUTE;
+      } catch (e) { return DEFAULT_TRUTHY_MUTE; }
+    }
+    function writeMute(v) {
+      try { localStorage.setItem(TRUTHY_MUTE_KEY, v); } catch (e) { /* ignore */ }
+    }
+
+    var tapHintLabel = widget.querySelector('.tap-hint-label');
+    function updateTapHintLabel(mute) {
+      if (!tapHintLabel) return;
+      if (isTruthyFunPage) {
+        tapHintLabel.textContent = 'Tap';
+      } else if (mute === 'on') {
+        tapHintLabel.textContent = 'Muted';
+      } else {
+        tapHintLabel.textContent = 'Tap to mute';
+      }
+    }
+    if (tapHintLabel) widget.setAttribute('data-mute', isTruthyFunPage ? 'na' : readMute());
+    updateTapHintLabel(readMute());
+
+    /* Queued first-gesture autoplay. Suppressed on the fun page
+       (legacy behavior). Removed if the user explicitly taps the
+       mascot before any other gesture (taking explicit control of
+       the mute toggle should not also fire the queued play). */
+    var queuedHandler = null;
+    function removeQueued() {
+      if (!queuedHandler) return;
+      document.removeEventListener('click',      queuedHandler, true);
+      document.removeEventListener('keydown',    queuedHandler, true);
+      document.removeEventListener('touchstart', queuedHandler, true);
+      queuedHandler = null;
+    }
+    function setupQueuedAutoplay() {
+      if (isTruthyFunPage) return;
+      if (readMute() === 'on') return;
+      queuedHandler = function() { speak(); removeQueued(); };
+      document.addEventListener('click',      queuedHandler, true);
+      document.addEventListener('keydown',    queuedHandler, true);
+      document.addEventListener('touchstart', queuedHandler, true);
+    }
+    setupQueuedAutoplay();
+
+    function onMascotActivate(e) {
+      if (isTruthyFunPage) {
+        speak();
+        return;
+      }
+      /* User explicitly took control before any queued autoplay
+         could fire — cancel it so the click only does the mute
+         toggle, not also a play. */
+      removeQueued();
+      if (e && e.stopPropagation) e.stopPropagation();
+      var current = readMute();
+      var next = (current === 'on') ? 'off' : 'on';
+      writeMute(next);
+      widget.setAttribute('data-mute', next);
+      updateTapHintLabel(next);
+      if (next === 'off') speak();  // unmuting always plays once
+    }
+
+    widget.addEventListener('click', onMascotActivate);
     widget.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        speak();
+        onMascotActivate(e);
       }
     });
   }

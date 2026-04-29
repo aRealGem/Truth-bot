@@ -1,4 +1,132 @@
-# Truth-bot Status — 2026-04-29
+# Truth-bot Status — 2026-04-30
+
+## Session note — 2026-04-30 (Round 3 polish: Truthy mute, % truthy stat, model panel insights)
+
+Three threads from the 2026-04-29 demo refresh, plus a deferred backlog
+item, all bundled into one commit cycle so the demo only needs to refresh
+once.
+
+### What shipped
+
+1. **Site-wide Truthy mascot mute toggle + queued first-gesture autoplay.**
+   Report and index pages were silent on load: browser autoplay policy
+   blocks `AudioContext.start()` until a user gesture, but the mascot
+   click handler just played the current mood and didn't bridge that gap.
+   Now there's a persistent `localStorage["truthy-mute"]` (default `off`),
+   a one-shot first-gesture listener that plays once on load when not
+   muted, and the mascot tap acts as a sticky mute toggle (unmuting always
+   plays the mood once). The Truthy fun page (`truthy.html`) is
+   explicitly excluded — it keeps the legacy "tap = always plays"
+   playground behavior. Tap-hint label is JS-driven and now reads
+   `Tap to mute` / `Muted` based on state. Implemented in both the
+   embedded `JS` constant in
+   [`src/truthbot/publish/site.py`](src/truthbot/publish/site.py) and the
+   standalone
+   [`src/truthbot/publish/assets/truthbot.js`](src/truthbot/publish/assets/truthbot.js)
+   (kept in lockstep).
+
+2. **"% truthy or better" lens-aware stat in the report verdict panel.**
+   New 5th stat tile (icon: check-in-circle) showing the share of the
+   speech's claims rated True or Truthy on the active lens. Editorial
+   note: Unverifiable claims count *against* the rate (full claim count
+   in the denominator) — a leader citing an unverifiable claim is itself
+   a fact-check failure. Lens-aware via the same paired-axis pattern the
+   headline pill already uses (`<span class="lens-target"
+   data-lens-axis="lenient/strict">…</span>`). The 29-claim SOTU report
+   on the demo lands at 52% Lenient / 28% Strict, which makes the lens
+   delta visible at a glance.
+
+3. **Model panel insights — landing strip + dedicated deep-dive page.**
+   Generalized
+   [`eval/opus_vs_rest_scan.py`](eval/opus_vs_rest_scan.py) into a
+   reusable, render-agnostic data layer at
+   [`src/truthbot/publish/insights.py`](src/truthbot/publish/insights.py)
+   (`compute_model_panel_insights`). Computes per-model dissent rate,
+   truthy-axis bias, lone-optimist / lone-pessimist counts, pairwise
+   agreement, and top extreme splits — once, off the published claims
+   index. Wired two consumers:
+     - **Index strip** (between Program stats and the report feed) shows
+       the strongest pairwise pair, the most-divergent model, and the
+       lenient-vs-strict bias spread, with a CTA to the deep-dive page.
+     - **`model-insights.html`** dedicated page with per-model summary
+       table, signed truthy-bias bars (centered on a midpoint, falsey-
+       /truthy-tinted), 4×4 pairwise agreement matrix, top extreme-split
+       cards (linked to the underlying claim pages), and a Method
+       footnote that links back to the eval-side scan + About.
+   The eval-side Opus scan retains its own copy of the threshold +
+   label scoring so it stays standalone-runnable; constants are
+   pinned in lockstep by `tests/test_insights.py`.
+
+### Why bundle these three
+
+All three want a single `site-test/` demo refresh + commit cycle, and
+the insights page reuses the same paired-axis CSS the % truthy stat
+introduces. Splitting them would have triggered three demo regenerations
+back-to-back.
+
+### Numbers from the demo refresh
+
+Running `compute_model_panel_insights` on the 40 distinct deduped
+claims currently in `site-test/data/claims.json` produces:
+
+| Model      | Claims | Dissents (%) | Truthy bias | Lone &uarr; / &darr; |
+|------------|--------|--------------|-------------|-----------------------|
+| Anthropic  | 40     | 18 (45%)     | +0.33       | 4 / 1                 |
+| Google     | 40     | 11 (28%)     | +0.09       | 1 / 1                 |
+| OpenAI     | 40     | 20 (50%)     | -0.44       | 1 / 2                 |
+| xAI        | 40     | 13 (32%)     | +0.03       | 4 / 2                 |
+
+Pairwise agreement tops out at Gemini ↔ xAI (55%, n=40) and bottoms at
+Anthropic ↔ OpenAI / OpenAI ↔ xAI (32% each). The corpus is highly
+contested — those numbers are real, not artifacts of the projection.
+The Opus-as-lone-optimist asymmetry the user flagged (4× lone optimist
+vs 1× lone pessimist) is now front-and-center on the insights page
+rather than sitting in `eval/opus_vs_rest_extreme_splits.md`.
+
+### Tests
+
+- New `tests/test_insights.py` (14 cases) — empty input, dedup,
+  dissent rate, truthy bias signed averaging, lone-optimist /
+  -pessimist recognition, threshold gating, pairwise agreement on
+  fine labels (not the projection), convenience accessors.
+  Pinned `LABEL_SCORE` lockstep with
+  `eval/opus_vs_rest_scan.py`.
+- New `tests/test_site_render_insights.py` (11 cases) — strip
+  empty-state degrade, CTA link, both highlight cards, page renders
+  every section + the methodology footnote, extreme-card claim links,
+  bias-bar lenient/strict class, &Delta; badge.
+- Extended `tests/test_site_render_aggregates.py` with 4 new cases:
+  paired-axis truthy-or-better stat, Unverifiable-in-denominator
+  pin, mute storage-key contract, tap-hint span pin, plus an
+  end-to-end check that `_compute_stats` populates the `insights`
+  entry when the claims index is non-empty.
+- Full suite: 694 passed (1 deselected: pre-existing
+  Bluesky-credentials env test, not a regression).
+
+### Demo
+
+`scripts/republish_site_test_from_cache.py --skip-rebuild` regenerated
+all 6 reports / 68 claim pages + the new `model-insights.html` from
+the existing bundle cache (no LLM calls). Smoke checks confirmed:
+
+- `model-insights.html` exists at site-test root (15.5 KB).
+- Verdict panels show `class="stats stats-5"` and the new
+  `Truthy or better` tile with paired lenient / strict spans.
+- Index `index.html` has `data-lens-axis` markers on 18 elements
+  (9 paired report-card axes); the insights strip is rendered.
+- All embedded JS now contains the `'truthy-mute'` storage key and
+  `isTruthyFunPage` exclusion path.
+
+### Out-of-scope deferrals
+
+- Light/dark theming for the bias chart fills — current `--v-truthy`
+  / `--v-falsey` variables already adapt with the existing palette.
+- Re-firing the SOTU through LLMs — all data already cached.
+- Touching prompt-engineering or model selection — Opus asymmetry
+  observation surfaces on the insights page; whether to drop Opus
+  weighting or recalibrate is a future discussion.
+
+---
 
 ## Session note — 2026-04-29 (5-bucket scale on every aggregate + retire per-model "frontier" chip)
 
