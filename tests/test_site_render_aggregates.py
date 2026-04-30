@@ -35,6 +35,7 @@ from truthbot.models import (
 from truthbot.publish.site import (
     COARSE_LENIENT_PROJECTION,
     COARSE_STRICT_PROJECTION,
+    CSS,
     SiteReport,
     _claim_card,
     _headline_verdict_coarse,
@@ -315,6 +316,14 @@ def test_toc_pill_falls_back_for_legacy_bundles() -> None:
 
 
 # ── _report_card (index per-report card) renders both axes ───────────────────
+
+
+def test_css_hidden_attribute_hides_lens_axis_under_flex_display() -> None:
+    """Without this rule, `.report-bar` / `.report-counts` ``display:flex``
+    overrides the HTML ``hidden`` attribute and *both* lens bars show on
+    index cards — only one bar should be visible at a time."""
+    assert "[data-lens-axis][hidden]" in CSS
+    assert "display: none !important" in CSS
 
 
 def test_report_card_renders_paired_lens_axis_blocks_strict_first() -> None:

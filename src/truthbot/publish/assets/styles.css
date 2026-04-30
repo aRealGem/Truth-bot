@@ -384,6 +384,13 @@ header.masthead:has(.mast-row) {
   margin-top: 0.35rem;
 }
 
+/* Paired editorial-lens blocks: ``hidden`` must win over display:flex on
+   `.report-bar` / `.report-counts`. Otherwise both Strict + Lenient bars
+   show on index report cards. */
+[data-lens-axis][hidden] {
+  display: none !important;
+}
+
 /* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
 .report-bar {
   display: flex;

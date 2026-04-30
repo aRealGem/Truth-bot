@@ -2424,6 +2424,13 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.35rem;
 }
 
+/* Paired editorial-lens blocks: ``hidden`` must win over display:flex on
+   `.report-bar` / `.report-counts` / etc. Otherwise index report cards
+   stack *both* Strict and Lenient bars at once (user only wants one bar). */
+[data-lens-axis][hidden] {
+  display: none !important;
+}
+
 /* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
 .report-bar {
   display: flex;
