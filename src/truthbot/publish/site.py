@@ -1026,7 +1026,7 @@ def _verdict_panel(site_report) -> str:
     agree_rate  = site_report.model_agreement_rate
     # 5-bucket Truthy-scale aggregates rendered side-by-side; the Lens
     # chip swaps them in lockstep with the per-claim headline pills.
-    # Lenient is the published default (matches the per-claim pill default).
+    # Strict is the published default (matches the per-claim pill + lens chip).
     dist_lenient = site_report.verdict_distribution_lenient
     dist_strict  = site_report.verdict_distribution_strict
     headline_lenient, hcls_lenient = _headline_verdict_coarse(dist_lenient)
@@ -4181,7 +4181,12 @@ JS = """\
       if (!fn) return;
       mascot.classList.add('speaking');
       setTimeout(function() { mascot.classList.remove('speaking'); }, 700);
-      unlockAudio().then(function(ctx) { if (ctx) fn(ctx); });
+      unlockAudio().then(function(ctx) {
+        if (!ctx) return;
+        /* Defer oscillator scheduling one microtask so ``resume()``'s
+           state transition has flushed on Safari / some Chrome builds. */
+        queueMicrotask(function() { fn(ctx); });
+      });
     }
 
     /* ─── Initialize ─── */
@@ -4296,7 +4301,8 @@ JS = """\
 
 /* ─────────────────────────────────────────────────────────────────────
    Editorial-lens toggle — flips every Truthy-scale display between the
-   Lenient (default) and Strict 5-bucket coarse-axis projections.
+   Strict (default since 2026-04-30) and Lenient 5-bucket coarse-axis
+   projections.
 
    Two render patterns are toggled together so the page never goes
    internally inconsistent (e.g. headline says "Mostly Truthy" while the

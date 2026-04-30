@@ -212,7 +212,12 @@
       if (!fn) return;
       mascot.classList.add('speaking');
       setTimeout(function() { mascot.classList.remove('speaking'); }, 700);
-      unlockAudio().then(function(ctx) { if (ctx) fn(ctx); });
+      unlockAudio().then(function(ctx) {
+        if (!ctx) return;
+        /* Defer oscillator scheduling one microtask so ``resume()``'s
+           state transition has flushed on Safari / some Chrome builds. */
+        queueMicrotask(function() { fn(ctx); });
+      });
     }
 
     /* ─── Initialize ─── */
@@ -327,7 +332,8 @@
 
 /* ─────────────────────────────────────────────────────────────────────
    Editorial-lens toggle — flips every Truthy-scale display between the
-   Lenient (default) and Strict 5-bucket coarse-axis projections.
+   Strict (default since 2026-04-30) and Lenient 5-bucket coarse-axis
+   projections.
 
    Two render patterns are toggled together so the page never goes
    internally inconsistent (e.g. headline says "Mostly Truthy" while the

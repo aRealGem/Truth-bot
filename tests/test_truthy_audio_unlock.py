@@ -37,10 +37,20 @@ def test_embedded_js_uses_promise_returning_unlock_audio() -> None:
     assert "var p = audioCtx.resume();" in JS
     assert "p.then(" in JS
 
-    # speak() awaits unlock before scheduling oscillators.
+    # speak() awaits unlock before scheduling oscillators (deferred one
+    # microtask so AudioContext state has flushed on Safari).
     assert "unlockAudio().then(function(ctx)" in JS
+    assert "queueMicrotask(function() { fn(ctx);" in JS
+    assert "queueMicrotask(function() { fn(ctx);" in JS
 
 
+def test_standalone_truthbot_js_default_lens_is_strict() -> None:
+    """Standalone asset must mirror embedded DEFAULT_LENS (Strict since 2026-04-30)."""
+    from pathlib import Path
+
+    js_path = Path(__file__).resolve().parents[1] / "src" / "truthbot" / "publish" / "assets" / "truthbot.js"
+    js_src = js_path.read_text(encoding="utf-8")
+    assert "var DEFAULT_LENS = 'strict';" in js_src
 def test_embedded_js_queues_pointerdown_for_first_gesture_autoplay() -> None:
     """``pointerdown`` fires before the subsequent ``click``, which
     matters when the user's first interaction is a navigation link.
@@ -68,6 +78,7 @@ def test_standalone_truthbot_js_mirrors_unlock_audio_contract() -> None:
     assert "function unlockAudio()" in js_src
     assert "function getCtx()" not in js_src
     assert "unlockAudio().then(function(ctx)" in js_src
+    assert "queueMicrotask(function() { fn(ctx);" in js_src
     assert "QUEUE_EVENTS" in js_src
     assert "'pointerdown'" in js_src
 

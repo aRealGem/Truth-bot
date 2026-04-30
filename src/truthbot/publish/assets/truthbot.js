@@ -212,7 +212,10 @@
       if (!fn) return;
       mascot.classList.add('speaking');
       setTimeout(function() { mascot.classList.remove('speaking'); }, 700);
-      unlockAudio().then(function(ctx) { if (ctx) fn(ctx); });
+      unlockAudio().then(function(ctx) {
+        if (!ctx) return;
+        queueMicrotask(function() { fn(ctx); });
+      });
     }
 
     /* ─── Initialize ─── */
@@ -324,7 +327,8 @@
 
 /* ─────────────────────────────────────────────────────────────────────
    Editorial-lens toggle — flips every Truthy-scale display between the
-   Lenient (default) and Strict 5-bucket coarse-axis projections.
+   Strict (default since 2026-04-30) and Lenient 5-bucket coarse-axis
+   projections.
 
    Two render patterns are toggled together so the page never goes
    internally inconsistent (e.g. headline says "Mostly Truthy" while the
@@ -348,14 +352,15 @@
    any lens-aware CSS rule can react.
 
    Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
-   Default: lenient (matches Part H of findings-review.md).
+   Default: strict (2026-04-30 editorial flip — Strict aligns with the
+   reference set per FitnessScorer Run 5; stored user preference wins).
    No-op if the page has nothing toggleable (e.g. about, 404).
    ───────────────────────────────────────────────────────────────────── */
 (function() {
   'use strict';
 
   var STORAGE_KEY = 'editorial-lens';
-  var DEFAULT_LENS = 'lenient';
+  var DEFAULT_LENS = 'strict';
   var ALL_PILL_CSS_CLASSES = [
     'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
     'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey'
