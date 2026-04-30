@@ -234,7 +234,11 @@ def test_headline_verdict_coarse_dominant_models_split_reads_as_mixed() -> None:
 # ── _verdict_panel renders both lens axes ─────────────────────────────────────
 
 
-def test_verdict_panel_renders_both_lens_aggregates() -> None:
+def test_verdict_panel_renders_both_lens_aggregates_strict_first() -> None:
+    """2026-04-30: Strict became the published default. Both lens
+    blocks still render server-side, but Strict comes first in DOM
+    order and stays visible on initial paint while Lenient ships
+    ``hidden``. Non-JS clients therefore see Strict."""
     bundles = [
         _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
         _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
@@ -242,17 +246,29 @@ def test_verdict_panel_renders_both_lens_aggregates() -> None:
     ]
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
-    # Both lens-axis blocks present, only Strict starts hidden.
     assert 'data-lens-axis="lenient"' in html
     assert 'data-lens-axis="strict"' in html
-    # Strict block comes after Lenient in source order; assert hidden attr
-    # appears between the two markers so the page renders Lenient by default
-    # for non-JS clients.
-    lenient_idx = html.index('data-lens-axis="lenient"')
+    # Strict comes first now.
     strict_idx  = html.index('data-lens-axis="strict"')
-    assert lenient_idx < strict_idx
-    assert 'data-lens-axis="strict" hidden' in html
-    assert 'data-lens-axis="lenient" hidden' not in html
+    lenient_idx = html.index('data-lens-axis="lenient"')
+    assert strict_idx < lenient_idx
+    assert 'data-lens-axis="lenient" hidden' in html
+    assert 'data-lens-axis="strict" hidden' not in html
+
+
+def test_verdict_panel_bar_blocks_carry_lens_caption() -> None:
+    """Each bar block is now self-labeled so the reader knows which
+    lens they're seeing without consulting the chip."""
+    bundles = [
+        _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
+    ]
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    assert "Strict lens" in html
+    assert "Lenient lens" in html
+    # Captions live inside their own data-lens-axis block — assert that
+    # the Strict caption appears before the Lenient caption (strict-first).
+    assert html.index("Strict lens") < html.index("Lenient lens")
 
 
 def test_verdict_panel_uses_coarse_labels_in_headline() -> None:
@@ -301,7 +317,9 @@ def test_toc_pill_falls_back_for_legacy_bundles() -> None:
 # ── _report_card (index per-report card) renders both axes ───────────────────
 
 
-def test_report_card_renders_paired_lens_axis_blocks() -> None:
+def test_report_card_renders_paired_lens_axis_blocks_strict_first() -> None:
+    """Same Strict-first DOM order as the verdict panel — landing-page
+    cards reflect the published default."""
     r = {
         "id": "rid", "url": "reports/r.html",
         "speaker": "X", "date": "2026-03-04", "venue": "v",
@@ -322,10 +340,12 @@ def test_report_card_renders_paired_lens_axis_blocks() -> None:
     html = _report_card(r)
     assert 'data-lens-axis="lenient"' in html
     assert 'data-lens-axis="strict"' in html
-    assert 'data-lens-axis="strict" hidden' in html
-    # Lenient says all 5 are Truthy (Mostly True + Exaggerated collapse).
-    # Strict splits 3 Truthy / 2 Falsey.
-    # Headlines should be self-descriptive (Truthy / Mixed verdict respectively).
+    assert 'data-lens-axis="lenient" hidden' in html
+    assert 'data-lens-axis="strict" hidden' not in html
+    # Captions name the active lens.
+    assert "Strict lens" in html
+    assert "Lenient lens" in html
+    # Lenient says all 5 are Truthy; Strict splits 3 Truthy / 2 Falsey.
     assert "Truthy" in html
     assert "Falsey" in html
 
@@ -385,9 +405,10 @@ def test_methodology_line_still_says_frontier_language_models() -> None:
 # ── Round 3: "% truthy or better" lens-aware stat ─────────────────────────────
 
 
-def test_verdict_panel_renders_truthy_or_better_stat_paired_axes() -> None:
-    """The verdict panel grew a 5th stat that lens-toggles between
-    Lenient and Strict. Both axes must be present, Strict starts hidden."""
+def test_verdict_panel_promotes_truthy_and_false_into_headline_frames() -> None:
+    """2026-04-30: '% Truthy or better' moved out of the stats grid
+    into a dedicated 2-frame block above the grid; '% False or worse'
+    joined it. Stats grid reverts to 4 columns (no more stats-5)."""
     bundles = [
         _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
         _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
@@ -395,13 +416,33 @@ def test_verdict_panel_renders_truthy_or_better_stat_paired_axes() -> None:
     ]
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
-    assert 'class="stats stats-5"' in html
+    # Frame markup present, both labels visible.
+    assert 'vp-headline-stats' in html
+    assert 'vp-stat-truthy' in html
+    assert 'vp-stat-false' in html
     assert 'Truthy or better' in html
-    # Both axes present inside the new stat
-    assert '<span class="lens-target" data-lens-axis="lenient">' in html
-    assert '<span class="lens-target" data-lens-axis="strict"' in html
-    # Strict starts hidden (paired-axis pattern, Lenient is the published default).
-    assert 'data-lens-axis="strict" hidden' in html
+    assert 'False or worse' in html
+    # Stats grid reverted to 4 columns; no more stats-5.
+    assert 'class="stats stats-4"' in html
+    assert 'class="stats stats-5"' not in html
+    # Truthy-or-better is no longer a tile inside the .stats grid.
+    truthy_idx = html.index("Truthy or better")
+    grid_idx   = html.index('class="stats stats-4"')
+    assert truthy_idx < grid_idx, "Truthy frame must precede the stats grid"
+
+
+def test_headline_frames_are_lens_paired_strict_first() -> None:
+    """Each frame holds two ``data-lens-axis`` spans (strict + lenient);
+    Strict ships visible, Lenient ships ``hidden``."""
+    bundles = [
+        _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
+        _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
+    ]
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    # Both axes present in headline-frame markup
+    assert '<span class="lens-target" data-lens-axis="strict">' in html
+    assert '<span class="lens-target" data-lens-axis="lenient" hidden>' in html
 
 
 def test_truthy_or_better_includes_unverifiable_in_denominator() -> None:
@@ -417,9 +458,32 @@ def test_truthy_or_better_includes_unverifiable_in_denominator() -> None:
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
     # 2 of 4 are Truthy-or-better → 50%. If Unverifiable were excluded
-    # from the denominator we'd see 2/3 = 67%, which would be wrong.
-    assert '<span class="lens-target" data-lens-axis="lenient">50%</span>' in html
-    assert '<span class="lens-target" data-lens-axis="strict" hidden>50%</span>' in html
+    # from the denominator we'd see 2/3 = 67%.
+    assert '<span class="lens-target" data-lens-axis="strict">50%</span>' in html
+    assert '<span class="lens-target" data-lens-axis="lenient" hidden>50%</span>' in html
+
+
+def test_false_or_worse_uses_falsey_plus_false_numerator() -> None:
+    """% False or worse mirrors % Truthy or better on the negative
+    end of the scale: numerator = (False + Falsey), denominator =
+    full claim count (Unverifiable counts against)."""
+    bundles = [
+        _make_bundle(VerdictLabel.MOSTLY_TRUE,  coarse_lenient="Truthy",      coarse_strict="Truthy"),
+        _make_bundle(VerdictLabel.MISLEADING,   coarse_lenient="Falsey",      coarse_strict="Falsey"),
+        _make_bundle(VerdictLabel.FALSE,        coarse_lenient="False",       coarse_strict="False"),
+        _make_bundle(VerdictLabel.UNVERIFIABLE, coarse_lenient="Unverifiable", coarse_strict="Unverifiable"),
+    ]
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    # 2 of 4 (Misleading + False) → 50% on both axes for this fixture.
+    # We pin the strict-side default since that's what non-JS sees.
+    assert "False or worse" in html
+    # Find the False-or-worse frame and check its numbers.
+    false_frame_idx = html.index("vp-stat-false")
+    next_frame_close = html.index('</div>', html.index('</div>', false_frame_idx) + 1)
+    false_frame_html = html[false_frame_idx : next_frame_close + 200]
+    assert 'data-lens-axis="strict">50%' in false_frame_html
+    assert 'data-lens-axis="lenient" hidden>50%' in false_frame_html
 
 
 # ── Round 3: site-wide Truthy mute persistence contract ─────────────────────
@@ -431,6 +495,27 @@ def test_embedded_js_contains_truthy_mute_storage_key() -> None:
     from truthbot.publish.site import JS
     assert "'truthy-mute'" in JS
     assert "isTruthyFunPage" in JS  # fun-page exclusion path stays in place
+
+
+def test_embedded_js_default_lens_is_strict() -> None:
+    """2026-04-30 editorial flip: the published default editorial-lens
+    flipped from Lenient to Strict. Pin the JS constant so a rename or
+    accidental flip-back surfaces immediately. Stored user preference
+    still wins on revisit — only the unset default is asserted here."""
+    from truthbot.publish.site import JS
+    assert "var DEFAULT_LENS = 'strict';" in JS
+    # Storage key itself unchanged (existing localStorage values still work).
+    assert "var STORAGE_KEY = 'editorial-lens';" in JS
+
+
+def test_status_bar_lens_chip_defaults_to_strict() -> None:
+    """The chip ships with ``data-lens="strict"`` and the visible value
+    is "Strict" — matches the JS default so non-JS clients stay in
+    sync with what the JS would write on first paint."""
+    from truthbot.publish.site import _status_bar
+    html = _status_bar(model_count=4, stamp="x")
+    assert 'data-lens="strict"' in html
+    assert "<span class=\"lens-value\">Strict</span>" in html
 
 
 def test_truthy_tap_hint_includes_label_span_for_state_aware_text() -> None:

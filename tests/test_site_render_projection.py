@@ -94,21 +94,27 @@ def test_headline_pill_carries_both_projection_data_attrs() -> None:
     assert 'data-coarse-strict-css="unverifiable"' in html
 
 
-def test_headline_pill_default_renders_lenient_label_and_class() -> None:
+def test_headline_pill_default_renders_strict_label_and_class() -> None:
+    """2026-04-30: published default flipped from Lenient to Strict.
+    The pill now paints the Strict projection on initial render — the
+    lens-toggle JS still swaps to Lenient when the user picks it."""
     bundle = _bundle(
-        fine_label=VerdictLabel.MOSTLY_TRUE,
-        model_labels=[VerdictLabel.MOSTLY_TRUE, VerdictLabel.EXAGGERATED,
-                      VerdictLabel.MOSTLY_TRUE, VerdictLabel.EXAGGERATED],
+        fine_label=VerdictLabel.EXAGGERATED,
+        model_labels=[VerdictLabel.EXAGGERATED, VerdictLabel.MOSTLY_TRUE,
+                      VerdictLabel.EXAGGERATED, VerdictLabel.MOSTLY_TRUE],
         lenient="Truthy",
-        strict="Models split",
+        strict="Falsey",
     )
     html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
     assert "claim-pill-headline" in html
-    # Default-rendered class + visible label is the Lenient projection.
-    assert "v-truthy" in html
-    assert ">Truthy</span>" in html
+    # Default-rendered class + visible label is the Strict projection.
+    assert "v-falsey" in html
+    assert ">Falsey</span>" in html
     # Fine label is NOT what's painted by default — it lives in data-* only.
-    assert ">Mostly True</span>" not in html
+    assert ">Exaggerated</span>" not in html
+    # Both axes still in the data-* attrs so the toggle has both sides.
+    assert 'data-coarse-lenient="Truthy"' in html
+    assert 'data-coarse-strict="Falsey"' in html
 
 
 def test_per_model_strip_keeps_fine_axis_classes() -> None:

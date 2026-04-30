@@ -1064,54 +1064,75 @@ def _verdict_panel(site_report) -> str:
         + '</div>'
     )
 
-    # Two paired headline+ratio blocks, one per lens. The Strict block is
-    # ``hidden`` on initial render so non-JS clients see the published
-    # default (Lenient). The toggle JS finds elements by ``data-lens-axis``
-    # and flips ``hidden`` based on the user's stored preference.
+    # Two paired headline+ratio blocks, one per lens. Strict is the
+    # published default (2026-04-30 editorial flip from Lenient) so it
+    # ships first and visible; Lenient ships ``hidden`` and the lens
+    # chip flips them. Non-JS clients therefore see Strict.
     text_col = (
         '<div class="vp-text-col">'
-        + '<div class="vp-headline-lens" data-lens-axis="lenient">'
-        + '<div class="vp-verdict ' + hcls_lenient + '">' + _esc(headline_lenient) + '</div>'
-        + '<div class="vp-ratio">' + _esc(ratio_text_lenient) + '</div>'
-        + '</div>'
-        + '<div class="vp-headline-lens" data-lens-axis="strict" hidden>'
+        + '<div class="vp-headline-lens" data-lens-axis="strict">'
         + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
         + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
         + '</div>'
+        + '<div class="vp-headline-lens" data-lens-axis="lenient" hidden>'
+        + '<div class="vp-verdict ' + hcls_lenient + '">' + _esc(headline_lenient) + '</div>'
+        + '<div class="vp-ratio">' + _esc(ratio_text_lenient) + '</div>'
+        + '</div>'
         + '</div>'
     )
 
-    # "% Truthy or better" — fraction of all claims (Unverifiable
-    # included in the denominator, by editorial choice: a leader
-    # citing an unverifiable claim is itself a fact-check failure)
-    # that landed on True or Truthy under the active lens.
-    # Lens-aware: Truthy count differs between Lenient and Strict, so
-    # both axes are rendered server-side and the lens toggle JS swaps
-    # them via the same paired-axis pattern used by the headline.
-    def _truthy_or_better_pct(d: dict[str, int]) -> str:
-        total = sum(d.values()) or 1   # claim_count exactly; safe-divide on 0
-        num = d.get("True", 0) + d.get("Truthy", 0)
-        return format(num / total, '.0%')
+    # Headline-stats frames: "Truthy or better" + "False or worse",
+    # promoted out of the stats grid into two prominent block frames
+    # above the aggregate stats. Both share the same denominator
+    # (full claim count, Unverifiable included) by editorial choice:
+    # a leader citing an unverifiable claim is itself a fact-check
+    # failure. Both frames are lens-aware via the paired data-lens-axis
+    # pattern; Strict is the published default since 2026-04-30.
+    def _pct(numerator: int, total: int) -> str:
+        return format(numerator / total, '.0%') if total else "0%"
 
-    truthy_pct_lenient = _truthy_or_better_pct(dist_lenient)
-    truthy_pct_strict  = _truthy_or_better_pct(dist_strict)
-    truthy_or_better_title = (
-        "Share of claims rated True or Truthy on the active lens. "
-        "Denominator includes Unverifiable claims (a leader citing an "
-        "unverifiable claim is itself a fact-check failure)."
+    total_for_pct = sum(dist_strict.values()) or 1   # == claim_count
+    truthy_pct_strict  = _pct(dist_strict.get("True", 0)  + dist_strict.get("Truthy", 0),  total_for_pct)
+    truthy_pct_lenient = _pct(dist_lenient.get("True", 0) + dist_lenient.get("Truthy", 0), total_for_pct)
+    false_pct_strict   = _pct(dist_strict.get("False", 0)  + dist_strict.get("Falsey", 0),  total_for_pct)
+    false_pct_lenient  = _pct(dist_lenient.get("False", 0) + dist_lenient.get("Falsey", 0), total_for_pct)
+
+    truthy_frame_title = (
+        "True + Truthy / all claims (Unverifiable counts in the denominator)."
     )
-    truthy_or_better_stat = (
-        '    <div class="stat" title="' + _esc(truthy_or_better_title) + '">'
-        + _icon_svg(_ICON_BODY_TRUTHY_RATE, size=32)
-        + '<div class="num">'
-        + '<span class="lens-target" data-lens-axis="lenient">' + truthy_pct_lenient + '</span>'
-        + '<span class="lens-target" data-lens-axis="strict" hidden>' + truthy_pct_strict + '</span>'
-        + '</div>'
-        + '<div class="lbl">Truthy or better</div></div>\n'
+    false_frame_title = (
+        "False + Falsey / all claims (Unverifiable counts in the denominator)."
+    )
+
+    headline_stats_html = (
+        '  <div class="vp-headline-stats">\n'
+        + '    <div class="vp-headline-stat vp-stat-truthy" title="' + _esc(truthy_frame_title) + '">\n'
+        + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_TRUTHY_RATE, size=42) + '</div>\n'
+        + '      <div class="vp-stat-body">\n'
+        + '        <div class="vp-stat-num">'
+        + '<span class="lens-target" data-lens-axis="strict">' + truthy_pct_strict + '</span>'
+        + '<span class="lens-target" data-lens-axis="lenient" hidden>' + truthy_pct_lenient + '</span>'
+        + '</div>\n'
+        + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
+        + '        <div class="vp-stat-hint">True + Truthy / all claims</div>\n'
+        + '      </div>\n'
+        + '    </div>\n'
+        + '    <div class="vp-headline-stat vp-stat-false" title="' + _esc(false_frame_title) + '">\n'
+        + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_FALSE_RATE, size=42) + '</div>\n'
+        + '      <div class="vp-stat-body">\n'
+        + '        <div class="vp-stat-num">'
+        + '<span class="lens-target" data-lens-axis="strict">' + false_pct_strict + '</span>'
+        + '<span class="lens-target" data-lens-axis="lenient" hidden>' + false_pct_lenient + '</span>'
+        + '</div>\n'
+        + '        <div class="vp-stat-lbl">False or worse</div>\n'
+        + '        <div class="vp-stat-hint">False + Falsey / all claims</div>\n'
+        + '      </div>\n'
+        + '    </div>\n'
+        + '  </div>\n'
     )
 
     panel_stats_html = (
-        '  <div class="stats stats-5">\n'
+        '  <div class="stats stats-4">\n'
         '    <div class="stat">'
         + _icon_svg(_ICON_BODY_CLAIMS, size=32)
         + '<div class="num">' + str(claim_count) + '</div>'
@@ -1120,7 +1141,6 @@ def _verdict_panel(site_report) -> str:
         + _icon_svg(_ICON_BODY_MODELS_ENGAGED, size=32)
         + '<div class="num">' + str(model_count) + '</div>'
         + '<div class="lbl">Models Engaged</div></div>\n'
-        + truthy_or_better_stat +
         '    <div class="stat">'
         + _icon_svg(_ICON_BODY_MODEL_CONSENSUS, size=32)
         + '<div class="num">' + format(agree_rate, '.0%') + '</div>'
@@ -1135,11 +1155,22 @@ def _verdict_panel(site_report) -> str:
     # Lens-aware verdict bar + legend. Same paired-element pattern as the
     # headline above. Both axes are 5-bucket so the segment colors match
     # the per-claim pill palette (Truthy / Falsey gradient stops).
+    #
+    # Each block now carries a ``vp-lens-caption`` so the reader knows
+    # which lens they're seeing (the legend below the bar lists buckets,
+    # not the active rubric). Strict block is rendered first and visible
+    # by default — Lenient ships ``hidden`` and the lens chip flips it.
     bar_html_lenient = _verdict_bar_html(dist_lenient, order=COARSE_VERDICT_ORDER)
     bar_html_strict  = _verdict_bar_html(dist_strict,  order=COARSE_VERDICT_ORDER)
     bar_html = (
-        '<div class="vp-bar-lens" data-lens-axis="lenient">' + bar_html_lenient + '</div>'
-        + '<div class="vp-bar-lens" data-lens-axis="strict" hidden>' + bar_html_strict + '</div>'
+        '<div class="vp-bar-lens" data-lens-axis="strict">'
+        + '<div class="vp-lens-caption">Strict lens</div>'
+        + bar_html_strict
+        + '</div>'
+        + '<div class="vp-bar-lens" data-lens-axis="lenient" hidden>'
+        + '<div class="vp-lens-caption">Lenient lens</div>'
+        + bar_html_lenient
+        + '</div>'
     )
 
     model_names = sorted({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
@@ -1165,6 +1196,7 @@ def _verdict_panel(site_report) -> str:
     return (
         '<section class="verdict-panel">\n'
         + '  <div class="vp-headline">' + text_col + widget + '</div>\n'
+        + headline_stats_html
         + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
         + source_row_html
@@ -1176,15 +1208,16 @@ def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
     # Editorial-lens chip toggles the headline-pill projection between
-    # Lenient (default) and Strict. The chip is hidden by default and the
-    # toggle JS reveals it on pages that have any claim pills to flip.
+    # Strict (default since 2026-04-30) and Lenient. The chip is hidden
+    # by default and the toggle JS reveals it on pages that have any
+    # claim pills to flip.
     lens_chip = (
-        '    <button type="button" class="editorial-lens" data-lens="lenient" hidden '
-        'title="Toggle the headline pill between the Lenient (Mostly True + Exaggerated → Truthy) '
-        'and Strict (Exaggerated + Misleading → Falsey) projections. '
+        '    <button type="button" class="editorial-lens" data-lens="strict" hidden '
+        'title="Toggle the headline pill between the Strict (Exaggerated + Misleading → Falsey) '
+        'and Lenient (Mostly True + Exaggerated → Truthy) projections. '
         'Per-model strip stays 6-bucket.">\n'
         '      <span class="lens-label">Lens:</span>\n'
-        '      <span class="lens-value">Lenient</span>\n'
+        '      <span class="lens-value">Strict</span>\n'
         '    </button>\n'
     )
     return (
@@ -1450,12 +1483,13 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     claim = bundle.claim
     consensus = bundle.consensus
     fine_label = consensus.consensus_label.value
-    # Headline defaults to the Lenient 5-bucket projection. Older cached
-    # bundles (pre-projection-layer) carry blank coarse fields; in that case
-    # fall back to the fine label so existing reports still render.
+    # Headline defaults to the Strict 5-bucket projection (2026-04-30
+    # editorial flip from Lenient). Older cached bundles (pre-projection-
+    # layer) carry blank coarse fields; in that case fall back to the
+    # fine label so existing reports still render.
     coarse_lenient = (consensus.coarse_lenient_label or "").strip()
     coarse_strict = (consensus.coarse_strict_label or "").strip()
-    label = coarse_lenient or fine_label
+    label = coarse_strict or fine_label
     css = _verdict_css(label)
     # Pre-compute both axes for the JS toggle. When projections are absent
     # (legacy bundles), data-* attrs echo the fine label so toggling becomes
@@ -1636,8 +1670,9 @@ def _toc(bundles: list[VerdictBundle]) -> str:
             consensus.coarse_strict_label
             or COARSE_STRICT_PROJECTION.get(fine_label, "Unverifiable")
         )
-        # Default text is Lenient (matches the published default lens).
-        default_label = coarse_lenient
+        # Default text is Strict (matches the published default lens
+        # since the 2026-04-30 flip).
+        default_label = coarse_strict
         default_css   = _verdict_css(default_label)
         fine_css      = _verdict_css(fine_label)
         lenient_css   = _verdict_css(coarse_lenient)
@@ -1731,14 +1766,18 @@ def _report_card(r: dict) -> str:
         f'      <div class="report-meta">{meta}</div>'
         '    </div>'
         '    <div class="verdict-pill">'
-        f'      <span class="lens-target" data-lens-axis="lenient">{head_lenient}</span>'
-        f'      <span class="lens-target" data-lens-axis="strict" hidden>{head_strict}</span>'
+        f'      <span class="lens-target" data-lens-axis="strict">{head_strict}</span>'
+        f'      <span class="lens-target" data-lens-axis="lenient" hidden>{head_lenient}</span>'
         '    </div>'
         '  </div>'
-        f'  <div class="report-bar lens-target" data-lens-axis="lenient">{segs_lenient}</div>'
-        f'  <div class="report-bar lens-target" data-lens-axis="strict" hidden>{segs_strict}</div>'
-        f'  <div class="report-counts lens-target" data-lens-axis="lenient">{counts_lenient}</div>'
-        f'  <div class="report-counts lens-target" data-lens-axis="strict" hidden>{counts_strict}</div>'
+        '  <div class="report-bar-row">'
+        f'    <div class="report-bar-caption lens-target" data-lens-axis="strict">Strict lens</div>'
+        f'    <div class="report-bar-caption lens-target" data-lens-axis="lenient" hidden>Lenient lens</div>'
+        '  </div>'
+        f'  <div class="report-bar lens-target" data-lens-axis="strict">{segs_strict}</div>'
+        f'  <div class="report-bar lens-target" data-lens-axis="lenient" hidden>{segs_lenient}</div>'
+        f'  <div class="report-counts lens-target" data-lens-axis="strict">{counts_strict}</div>'
+        f'  <div class="report-counts lens-target" data-lens-axis="lenient" hidden>{counts_lenient}</div>'
         '  <div class="report-cta">'
         f'    <span class="src">{claim_count} claim{"s" if claim_count != 1 else ""}</span>'
         + src_tiers_html +
@@ -2390,9 +2429,21 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   display: flex;
   height: 6px;
   overflow: hidden;
-  margin: 0.5rem 0 1rem;
+  margin: 0.25rem 0 1rem;
 }
 .report-bar .seg { transition: filter 200ms ease; }
+.report-bar-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.6rem;
+}
+.report-bar-caption {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
 
 .report-counts {
   display: flex;
@@ -2521,6 +2572,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 
 /* Big verdict bar inside the panel */
 .vp-bar-wrap { padding: 1.5rem 1.75rem; }
+.vp-lens-caption {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 0.5rem;
+}
 .vp-bar {
   display: flex;
   height: 38px;
@@ -3639,24 +3698,75 @@ hr.rule-light {
 .stats.stats-4 {
   grid-template-columns: repeat(4, 1fr);
 }
-.stats.stats-5 {
-  grid-template-columns: repeat(5, 1fr);
-}
-.verdict-panel > .stats.stats-4,
-.verdict-panel > .stats.stats-5 {
+.verdict-panel > .stats.stats-4 {
   border-top: 1px solid var(--border);
   margin: 0 1.25rem 1rem;
 }
-@media (max-width: 900px) {
-  .stats.stats-5 { grid-template-columns: repeat(3, 1fr); }
-}
 @media (max-width: 700px) {
   .stats.stats-4 { grid-template-columns: repeat(2, 1fr); }
-  .stats.stats-5 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 480px) {
   .stats.stats-4 { grid-template-columns: 1fr; }
-  .stats.stats-5 { grid-template-columns: 1fr; }
+}
+
+/* [30b] Headline-stats frames — promoted % truthy / % false above the
+   aggregate stats grid. Two prominent block frames so the verdict
+   percentages aren't competing visually with claim/model/leader counts. */
+.vp-headline-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.25rem 0.5rem;
+}
+.vp-headline-stat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.1rem 1rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.vp-headline-stat::before {
+  /* Tinted left accent strip — Truthy frame uses the truthy color,
+     False frame uses the falsey color. Matches the per-claim pill
+     palette so the two frames are visually distinct. */
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+}
+.vp-headline-stat.vp-stat-truthy::before { background: var(--v-truthy); }
+.vp-headline-stat.vp-stat-false::before  { background: var(--v-falsey); }
+.vp-headline-stat .vp-stat-icon { color: var(--ink-muted); flex: 0 0 auto; }
+.vp-headline-stat.vp-stat-truthy .vp-stat-icon { color: var(--v-truthy); }
+.vp-headline-stat.vp-stat-false  .vp-stat-icon { color: var(--v-falsey); }
+.vp-headline-stat .vp-stat-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.vp-headline-stat .vp-stat-num {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.vp-headline-stat .vp-stat-lbl {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-top: 0.15rem;
+}
+.vp-headline-stat .vp-stat-hint {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  margin-top: 0.1rem;
+}
+@media (max-width: 600px) {
+  .vp-headline-stats { grid-template-columns: 1fr; }
 }
 
 /* [16] Model Panel Insights ─────────────────────────────────────────── */
@@ -3971,24 +4081,39 @@ JS = """\
 
     /* ─── Web Audio droid sounds ─────────────────────────────────────
        Synthesized via Web Audio API. No audio files needed,
-       no licensing, no network round-trips.
-       AudioContext is lazily created on first user gesture (browsers
-       block autoplay otherwise). All sounds resolve in <500ms.
+       no licensing, no network round-trips. All sounds resolve in
+       <500ms.
+
+       Autoplay-policy contract: browsers (especially Safari) leave a
+       freshly-created AudioContext in ``suspended`` until a user
+       gesture explicitly resumes it. ``audioCtx.resume()`` returns
+       a Promise. The earlier implementation called resume() and
+       *immediately* scheduled oscillators against ``ctx.currentTime``
+       — on Safari and some Chrome variants the context was still
+       suspended at schedule time, so the oscillator silently
+       no-op'd. The fix: ``unlockAudio()`` returns a Promise, and the
+       play functions are only invoked after that Promise resolves.
        ──────────────────────────────────────────────────────────── */
     var audioCtx = null;
-    function getCtx() {
+    function unlockAudio() {
       if (!audioCtx) {
         try {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        } catch (e) { return null; }
+        } catch (e) { return Promise.resolve(null); }
       }
-      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-      return audioCtx;
+      if (audioCtx.state === 'suspended') {
+        var p = audioCtx.resume();
+        // Some old Safari versions return undefined from resume().
+        if (p && typeof p.then === 'function') {
+          return p.then(function() { return audioCtx; },
+                        function() { return audioCtx; });
+        }
+      }
+      return Promise.resolve(audioCtx);
     }
 
     // Happy: bright rising arpeggio (C5 → E5 → G5 → C6) with square wave
-    function playHappy() {
-      var ctx = getCtx(); if (!ctx) return;
+    function playHappy(ctx) {
       var notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach(function(freq, i) {
         var t0 = ctx.currentTime + i * 0.07;
@@ -4006,8 +4131,7 @@ JS = """\
     }
 
     // Confused: triangle wave bending up to ~620Hz then dropping to ~330Hz
-    function playConfused() {
-      var ctx = getCtx(); if (!ctx) return;
+    function playConfused(ctx) {
       var t0 = ctx.currentTime;
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
@@ -4024,8 +4148,7 @@ JS = """\
     }
 
     // Sad: descending minor third (G4 → Eb4) with downward pitch bend on each note
-    function playSad() {
-      var ctx = getCtx(); if (!ctx) return;
+    function playSad(ctx) {
       var notes = [392.00, 311.13];
       notes.forEach(function(freq, i) {
         var t0 = ctx.currentTime + i * 0.20;
@@ -4045,15 +4168,20 @@ JS = """\
 
     var soundMap = { true: playHappy, iffy: playConfused, lie: playSad };
 
-    /* ─── Speak handler ─── */
+    /* ─── Speak handler ──────────────────────────────────────────────
+       Awaits the AudioContext unlock Promise before scheduling
+       oscillators. Browsers that silently dropped the prior
+       fire-and-forget pattern now actually emit sound.
+       ──────────────────────────────────────────────────────────── */
     function speak() {
       var match = mascot.className.match(/state-(true|iffy|lie)/);
       if (!match) return;
       var state = match[1];
       var fn = soundMap[state];
-      if (fn) fn();
+      if (!fn) return;
       mascot.classList.add('speaking');
       setTimeout(function() { mascot.classList.remove('speaking'); }, 700);
+      unlockAudio().then(function(ctx) { if (ctx) fn(ctx); });
     }
 
     /* ─── Initialize ─── */
@@ -4106,22 +4234,28 @@ JS = """\
     /* Queued first-gesture autoplay. Suppressed on the fun page
        (legacy behavior). Removed if the user explicitly taps the
        mascot before any other gesture (taking explicit control of
-       the mute toggle should not also fire the queued play). */
+       the mute toggle should not also fire the queued play).
+
+       ``pointerdown`` fires *before* the subsequent ``click``, which
+       matters when the user's first gesture is on a navigation link:
+       click navigates the page away, while pointerdown gives the
+       AudioContext unlock + oscillator schedule a head start. */
     var queuedHandler = null;
+    var QUEUE_EVENTS = ['pointerdown', 'click', 'keydown', 'touchstart'];
     function removeQueued() {
       if (!queuedHandler) return;
-      document.removeEventListener('click',      queuedHandler, true);
-      document.removeEventListener('keydown',    queuedHandler, true);
-      document.removeEventListener('touchstart', queuedHandler, true);
+      QUEUE_EVENTS.forEach(function(evt) {
+        document.removeEventListener(evt, queuedHandler, true);
+      });
       queuedHandler = null;
     }
     function setupQueuedAutoplay() {
       if (isTruthyFunPage) return;
       if (readMute() === 'on') return;
-      queuedHandler = function() { speak(); removeQueued(); };
-      document.addEventListener('click',      queuedHandler, true);
-      document.addEventListener('keydown',    queuedHandler, true);
-      document.addEventListener('touchstart', queuedHandler, true);
+      queuedHandler = function() { removeQueued(); speak(); };
+      QUEUE_EVENTS.forEach(function(evt) {
+        document.addEventListener(evt, queuedHandler, true);
+      });
     }
     setupQueuedAutoplay();
 
@@ -4186,14 +4320,17 @@ JS = """\
    any lens-aware CSS rule can react.
 
    Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
-   Default: lenient (matches Part H of findings-review.md).
+   Default: strict (2026-04-30 editorial flip from Lenient — Strict
+   tracks more closely with the reference set per FitnessScorer Run 5
+   and stays the conservative default for non-JS clients). Stored
+   user preference still wins on revisit.
    No-op if the page has nothing toggleable (e.g. about, 404).
    ───────────────────────────────────────────────────────────────────── */
 (function() {
   'use strict';
 
   var STORAGE_KEY = 'editorial-lens';
-  var DEFAULT_LENS = 'lenient';
+  var DEFAULT_LENS = 'strict';
   var ALL_PILL_CSS_CLASSES = [
     'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
     'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey'
@@ -4660,14 +4797,23 @@ _ICON_BODY_MODELS_ENGAGED = (
     '<line x1="2" y1="14" x2="22" y2="14" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>'
 )
 # Bots converging to checkmark (see assets/icons/icon-model-consensus.svg).
-# Check-mark inside a circle. Used by the "Truthy or better" stat in the
-# verdict panel — communicates "passed" without leaning on a green color
-# the rest of the palette doesn't have. Matches the existing 24x24 grid
-# the other ``_ICON_BODY_*`` constants use.
+# Check-mark inside a circle. Used by the "Truthy or better" headline
+# frame above the verdict panel's aggregate stats grid. Matches the
+# existing 24x24 grid the other ``_ICON_BODY_*`` constants use.
 _ICON_BODY_TRUTHY_RATE = (
     '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" '
     'fill="currentColor" fill-opacity="0.12"/>'
     '<path d="M 7.5 12.5 L 11 16 L 17 8.5" stroke="currentColor" stroke-width="2" '
+    'fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+)
+
+
+# X-mark inside a circle — the negative counterpart to TRUTHY_RATE,
+# used by the "False or worse" headline frame.
+_ICON_BODY_FALSE_RATE = (
+    '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" '
+    'fill="currentColor" fill-opacity="0.12"/>'
+    '<path d="M 8 8 L 16 16 M 16 8 L 8 16" stroke="currentColor" stroke-width="2" '
     'fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
 )
 

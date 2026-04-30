@@ -112,24 +112,39 @@
 
     /* ─── Web Audio droid sounds ─────────────────────────────────────
        Synthesized via Web Audio API. No audio files needed,
-       no licensing, no network round-trips.
-       AudioContext is lazily created on first user gesture (browsers
-       block autoplay otherwise). All sounds resolve in <500ms.
+       no licensing, no network round-trips. All sounds resolve in
+       <500ms.
+
+       Autoplay-policy contract: browsers (especially Safari) leave a
+       freshly-created AudioContext in ``suspended`` until a user
+       gesture explicitly resumes it. ``audioCtx.resume()`` returns
+       a Promise. The earlier implementation called resume() and
+       *immediately* scheduled oscillators against ``ctx.currentTime``
+       — on Safari and some Chrome variants the context was still
+       suspended at schedule time, so the oscillator silently
+       no-op'd. The fix: ``unlockAudio()`` returns a Promise, and the
+       play functions are only invoked after that Promise resolves.
        ──────────────────────────────────────────────────────────── */
     var audioCtx = null;
-    function getCtx() {
+    function unlockAudio() {
       if (!audioCtx) {
         try {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        } catch (e) { return null; }
+        } catch (e) { return Promise.resolve(null); }
       }
-      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-      return audioCtx;
+      if (audioCtx.state === 'suspended') {
+        var p = audioCtx.resume();
+        // Some old Safari versions return undefined from resume().
+        if (p && typeof p.then === 'function') {
+          return p.then(function() { return audioCtx; },
+                        function() { return audioCtx; });
+        }
+      }
+      return Promise.resolve(audioCtx);
     }
 
     // Happy: bright rising arpeggio (C5 → E5 → G5 → C6) with square wave
-    function playHappy() {
-      var ctx = getCtx(); if (!ctx) return;
+    function playHappy(ctx) {
       var notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach(function(freq, i) {
         var t0 = ctx.currentTime + i * 0.07;
@@ -147,8 +162,7 @@
     }
 
     // Confused: triangle wave bending up to ~620Hz then dropping to ~330Hz
-    function playConfused() {
-      var ctx = getCtx(); if (!ctx) return;
+    function playConfused(ctx) {
       var t0 = ctx.currentTime;
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
@@ -165,8 +179,7 @@
     }
 
     // Sad: descending minor third (G4 → Eb4) with downward pitch bend on each note
-    function playSad() {
-      var ctx = getCtx(); if (!ctx) return;
+    function playSad(ctx) {
       var notes = [392.00, 311.13];
       notes.forEach(function(freq, i) {
         var t0 = ctx.currentTime + i * 0.20;
@@ -186,15 +199,20 @@
 
     var soundMap = { true: playHappy, iffy: playConfused, lie: playSad };
 
-    /* ─── Speak handler ─── */
+    /* ─── Speak handler ──────────────────────────────────────────────
+       Awaits the AudioContext unlock Promise before scheduling
+       oscillators. Browsers that silently dropped the prior
+       fire-and-forget pattern now actually emit sound.
+       ──────────────────────────────────────────────────────────── */
     function speak() {
       var match = mascot.className.match(/state-(true|iffy|lie)/);
       if (!match) return;
       var state = match[1];
       var fn = soundMap[state];
-      if (fn) fn();
+      if (!fn) return;
       mascot.classList.add('speaking');
       setTimeout(function() { mascot.classList.remove('speaking'); }, 700);
+      unlockAudio().then(function(ctx) { if (ctx) fn(ctx); });
     }
 
     /* ─── Initialize ─── */
@@ -244,22 +262,28 @@
     /* Queued first-gesture autoplay. Suppressed on the fun page
        (legacy behavior). Removed if the user explicitly taps the
        mascot before any other gesture (taking explicit control of
-       the mute toggle should not also fire the queued play). */
+       the mute toggle should not also fire the queued play).
+
+       ``pointerdown`` fires *before* the subsequent ``click``, which
+       matters when the user's first gesture is on a navigation link:
+       click navigates the page away, while pointerdown gives the
+       AudioContext unlock + oscillator schedule a head start. */
     var queuedHandler = null;
+    var QUEUE_EVENTS = ['pointerdown', 'click', 'keydown', 'touchstart'];
     function removeQueued() {
       if (!queuedHandler) return;
-      document.removeEventListener('click',      queuedHandler, true);
-      document.removeEventListener('keydown',    queuedHandler, true);
-      document.removeEventListener('touchstart', queuedHandler, true);
+      QUEUE_EVENTS.forEach(function(evt) {
+        document.removeEventListener(evt, queuedHandler, true);
+      });
       queuedHandler = null;
     }
     function setupQueuedAutoplay() {
       if (isTruthyFunPage) return;
       if (readMute() === 'on') return;
-      queuedHandler = function() { speak(); removeQueued(); };
-      document.addEventListener('click',      queuedHandler, true);
-      document.addEventListener('keydown',    queuedHandler, true);
-      document.addEventListener('touchstart', queuedHandler, true);
+      queuedHandler = function() { removeQueued(); speak(); };
+      QUEUE_EVENTS.forEach(function(evt) {
+        document.addEventListener(evt, queuedHandler, true);
+      });
     }
     setupQueuedAutoplay();
 
