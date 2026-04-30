@@ -1,5 +1,92 @@
 # Truth-bot Status — 2026-04-30
 
+## Session note — 2026-04-30 (Round 4 polish: Truthy audio fix, lens-labeled bars, Strict default, headline frames)
+
+Four polish threads on top of the Round 3 demo plus two advisory answers
+about a full-SOTU re-fire.
+
+### What shipped
+
+1. **Truthy audio actually plays now.** Root cause was a fire-and-forget
+   `audioCtx.resume()` followed by an immediate `osc.start(t0)` — Safari
+   (and some Chrome variants) left the AudioContext in `suspended` at
+   schedule time, so the report-page mascot was silent. Refactored
+   `getCtx()` → `unlockAudio()` returning a Promise; `playHappy /
+   playConfused / playSad` now take a pre-resolved `ctx`. `speak()` is
+   `unlockAudio().then(fn)`, and the queued first-gesture listener gained
+   `pointerdown` (fires before `click` so an outbound nav-link click no
+   longer beats the oscillator schedule). Mirrored in both the embedded
+   `JS` constant in
+   [`src/truthbot/publish/site.py`](src/truthbot/publish/site.py) and the
+   standalone
+   [`src/truthbot/publish/assets/truthbot.js`](src/truthbot/publish/assets/truthbot.js).
+   Pinned by [`tests/test_truthy_audio_unlock.py`](tests/test_truthy_audio_unlock.py).
+
+2. **Lens-labeled verdict bars.** Each `vp-bar-lens` block (and each
+   `report-bar` on the index card) now wears a `Strict lens` /
+   `Lenient lens` caption above the bar. The legend already lives below
+   the bar in `_verdict_bar_html`, so the caption-bar-legend grouping
+   ships as a single unit per lens. Reader no longer has to consult the
+   chip to know which projection the percentages reflect.
+
+3. **Strict became the published default; Strict-first DOM order.**
+   Editorial flip from Lenient (Round 1's published default) to Strict.
+   Rationale: FitnessScorer Run 5 already showed Strict tracks more
+   closely with the reference set, and Strict is the conservative
+   editorial floor for non-JS clients. Stored user preference still
+   wins on revisit — only the unset default flipped. DOM order swapped
+   in `_verdict_panel`, `_report_card`, `_toc`, `_status_bar`, and the
+   embedded JS `DEFAULT_LENS` constant. Non-JS clients now see Strict.
+
+4. **`% Truthy or better` + new `% False or worse` promoted to two
+   prominent headline frames above the aggregate stats grid.** The
+   Round-3 fifth stat tile got crowded against Claims/Models/Consensus/
+   Leaders. New `vp-headline-stats` 2-column grid: each frame has a
+   tinted left accent (truthy-green / falsey-red), the icon, the lens-
+   paired percentage, the label, and a one-line denominator hint. Stats
+   grid reverted to `stats-4`. False-or-worse formula = `(False +
+   Falsey) / total_claims_including_unverifiable` (mirror of Truthy on
+   the negative end, both with the same denominator: a leader citing an
+   unverifiable claim is itself a fact-check failure).
+
+### Tests + demo refresh
+
+- 8 new / updated cases across
+  [`tests/test_site_render_aggregates.py`](tests/test_site_render_aggregates.py)
+  and
+  [`tests/test_site_render_projection.py`](tests/test_site_render_projection.py)
+  for Strict-default + headline frames + False-or-worse formula + lens
+  caption + chip default.
+- New [`tests/test_truthy_audio_unlock.py`](tests/test_truthy_audio_unlock.py)
+  pins the published JS source for the unlock contract — `unlockAudio()`
+  returns a Promise, `speak()` is `.then(`-chained, the four-event queue
+  list keeps `pointerdown` first.
+- 703 tests pass (only pre-existing env-dependent
+  `test_bluesky.py::test_not_configured_without_creds` excluded).
+- Demo refreshed via
+  [`scripts/republish_site_test_from_cache.py --skip-rebuild`](scripts/republish_site_test_from_cache.py)
+  — same 6 reports / 68 cached bundles, all artifacts now reflect the
+  Strict default + new headline frames.
+
+### Advisory answered (in-plan)
+
+- **5. Ready for a full-SOTU re-fire?** The verification path is
+  unchanged since the 2026-04-26 fire (commit `258b5758`'s baseline) —
+  Round 1-4 is all display, projection, scoring, and insights work. The
+  cheap, high-value pre-flight is the still-open P0 of extending
+  `TRUTHBOT_GROK_MAX_TOOL_CALLS` to the triage adapter
+  ([`src/truthbot/verify/adapters/grok.py`](src/truthbot/verify/adapters/grok.py));
+  triage was 76% of the $4.97 29-claim total, and uncapped triage tool
+  calls dilute the short-circuit signal. Recommend: ship Round 4 polish
+  → land the Grok triage cap → fire the full 111-claim SOTU.
+- **6. Will consensus stats materially shift?** No. `_build_consensus`,
+  prompts, model selection, and tool config didn't move. Expected drift:
+  web-data drift (largest, 1-3 claims), LLM nondeterminism (<1%
+  per-claim at temp=0 with prompt caching), cache hits unchanged. Net:
+  <2% on aggregate consensus rate, <3% on per-bucket counts. The new
+  `coarse_*` fields will be populated end-to-end in production for the
+  first time, replacing today's projection-from-cache demo.
+
 ## Session note — 2026-04-30 (Round 3 polish: Truthy mute, % truthy stat, model panel insights)
 
 Three threads from the 2026-04-29 demo refresh, plus a deferred backlog

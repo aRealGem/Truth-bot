@@ -574,9 +574,21 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   display: flex;
   height: 6px;
   overflow: hidden;
-  margin: 0.5rem 0 1rem;
+  margin: 0.25rem 0 1rem;
 }
 .report-bar .seg { transition: filter 200ms ease; }
+.report-bar-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.6rem;
+}
+.report-bar-caption {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
 
 .report-counts {
   display: flex;
@@ -705,6 +717,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 
 /* Big verdict bar inside the panel */
 .vp-bar-wrap { padding: 1.5rem 1.75rem; }
+.vp-lens-caption {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 0.5rem;
+}
 .vp-bar {
   display: flex;
   height: 38px;
@@ -1823,24 +1843,75 @@ hr.rule-light {
 .stats.stats-4 {
   grid-template-columns: repeat(4, 1fr);
 }
-.stats.stats-5 {
-  grid-template-columns: repeat(5, 1fr);
-}
-.verdict-panel > .stats.stats-4,
-.verdict-panel > .stats.stats-5 {
+.verdict-panel > .stats.stats-4 {
   border-top: 1px solid var(--border);
   margin: 0 1.25rem 1rem;
 }
-@media (max-width: 900px) {
-  .stats.stats-5 { grid-template-columns: repeat(3, 1fr); }
-}
 @media (max-width: 700px) {
   .stats.stats-4 { grid-template-columns: repeat(2, 1fr); }
-  .stats.stats-5 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 480px) {
   .stats.stats-4 { grid-template-columns: 1fr; }
-  .stats.stats-5 { grid-template-columns: 1fr; }
+}
+
+/* [30b] Headline-stats frames — promoted % truthy / % false above the
+   aggregate stats grid. Two prominent block frames so the verdict
+   percentages aren't competing visually with claim/model/leader counts. */
+.vp-headline-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.25rem 0.5rem;
+}
+.vp-headline-stat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.1rem 1rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.vp-headline-stat::before {
+  /* Tinted left accent strip — Truthy frame uses the truthy color,
+     False frame uses the falsey color. Matches the per-claim pill
+     palette so the two frames are visually distinct. */
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+}
+.vp-headline-stat.vp-stat-truthy::before { background: var(--v-truthy); }
+.vp-headline-stat.vp-stat-false::before  { background: var(--v-falsey); }
+.vp-headline-stat .vp-stat-icon { color: var(--ink-muted); flex: 0 0 auto; }
+.vp-headline-stat.vp-stat-truthy .vp-stat-icon { color: var(--v-truthy); }
+.vp-headline-stat.vp-stat-false  .vp-stat-icon { color: var(--v-falsey); }
+.vp-headline-stat .vp-stat-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.vp-headline-stat .vp-stat-num {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.vp-headline-stat .vp-stat-lbl {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-top: 0.15rem;
+}
+.vp-headline-stat .vp-stat-hint {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  margin-top: 0.1rem;
+}
+@media (max-width: 600px) {
+  .vp-headline-stats { grid-template-columns: 1fr; }
 }
 
 /* [16] Model Panel Insights ─────────────────────────────────────────── */
