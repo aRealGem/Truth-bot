@@ -981,3 +981,189 @@ def test_render_report_inserts_run_manifest_after_methodology() -> None:
         "methodology aside must precede run-manifest aside"
     )
 
+
+# ── Family-aware dissent flagging (roadmap [6]) ──────────────────────────────
+#
+# Findings-review C4: dissent is computed by exact-fine-label match against
+# the consensus, so [Mostly True, Mostly True, True, True] flags both True
+# voters as dissenting despite directional agreement. This degrades the
+# dissent panel that the lens toggle exposes. Family-aware flagging fixes
+# the canonical case + a few neighbors. See ``_verdict_family`` in
+# publish/site.py for the family map + rationale.
+
+
+from truthbot.publish.site import _verdict_family  # noqa: E402
+
+
+def _bundle_with_panel_labels(
+    labels: list[VerdictLabel],
+    *,
+    fine_consensus: VerdictLabel | None = None,
+) -> VerdictBundle:
+    """Build a bundle with per-model fine-axis labels — consensus optional.
+
+    When ``fine_consensus`` is None, falls back to ``labels[0]`` so the
+    test author specifies the consensus explicitly only when it diverges
+    from the panel majority (e.g., synthetic edge cases).
+    """
+    consensus_label = fine_consensus if fine_consensus is not None else labels[0]
+    claim = Claim(
+        transcript_id="t",
+        text="dissent test claim",
+        speaker="X",
+        context="ctx",
+        category="economy",
+        is_checkable=True,
+    )
+    mvs = [
+        ModelVerdict(
+            adapter_name=f"adapter-{i}",
+            model_id=f"model-{i}",
+            claim_id=claim.id,
+            label=lbl,
+            confidence=Confidence.HIGH,
+            explanation="r",
+        )
+        for i, lbl in enumerate(labels)
+    ]
+    consensus = ConsensusVerdict(
+        claim_id=claim.id,
+        model_verdicts=mvs,
+        consensus_label=consensus_label,
+        consensus_verdict=consensus_label.value,
+        confidence=Confidence.HIGH,
+        agreement=True,
+        consensus_strength="strong",
+        explanation="x",
+        coarse_lenient_label=consensus_label.value,
+        coarse_lenient_strength="strong",
+        coarse_strict_label=consensus_label.value,
+        coarse_strict_strength="strong",
+    )
+    return VerdictBundle(
+        claim=claim,
+        speaker="X",
+        date_str="2026-03-04",
+        model_verdicts=mvs,
+        consensus=consensus,
+    )
+
+
+# ── Family-mapping pins ──────────────────────────────────────────────────────
+
+
+def test_verdict_family_maps_truthy_pair_to_same_family() -> None:
+    """The findings-review C4 canonical case: True and Mostly True share
+    a family so a True voter against a Mostly True consensus does not
+    flag as dissent."""
+    assert _verdict_family("True") == _verdict_family("Mostly True")
+
+
+def test_verdict_family_maps_falsey_pair_to_same_family() -> None:
+    """Misleading and False share a falsey family — a Misleading voter
+    against a False consensus is directional agreement, not dissent."""
+    assert _verdict_family("Misleading") == _verdict_family("False")
+
+
+def test_verdict_family_keeps_exaggerated_in_its_own_family() -> None:
+    """Exaggerated is editorially the most ambiguous label (Lenient
+    projects it to Truthy, Strict projects to Falsey). Putting it in
+    its own family means a Mostly True consensus + Exaggerated voter
+    still flags as dissent — that's a genuine framing disagreement."""
+    assert _verdict_family("Exaggerated") != _verdict_family("Mostly True")
+    assert _verdict_family("Exaggerated") != _verdict_family("Misleading")
+
+
+def test_verdict_family_unverifiable_separate_from_truthy_falsey() -> None:
+    """Unverifiable stays its own family — defensive votes against a
+    confident consensus must still surface as dissent."""
+    assert _verdict_family("Unverifiable") not in {
+        _verdict_family("True"),
+        _verdict_family("Mostly True"),
+        _verdict_family("Misleading"),
+        _verdict_family("False"),
+        _verdict_family("Exaggerated"),
+    }
+
+
+# ── Render-level dissent pin: the canonical findings-review C4 case ──────────
+
+
+def test_panel_with_true_and_mostly_true_voters_shows_zero_dissents() -> None:
+    """The smoking-gun case from findings-review C4:
+    [Mostly True, Mostly True, True, True] → consensus Mostly True. The
+    two True voters are directionally aligned with the consensus, so the
+    rendered card MUST show "4 of 4 agree" with NO dissent flags. Pre-
+    fix: 2 dissents flagged (the True voters). Pin so this regression
+    can't return."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.MOSTLY_TRUE, VerdictLabel.MOSTLY_TRUE,
+         VerdictLabel.TRUE, VerdictLabel.TRUE],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert "4 of 4</span> agree" in html, (
+        "All four voters in the truthy family — must read as full agreement"
+    )
+    # No `class="model dissent"` (or with-leading-space variant) should appear.
+    assert 'class="model dissent"' not in html
+    # And no "N dissent..." copy in the agreement note.
+    assert " dissent" not in html.split("Model consensus")[1].split("</span>")[0]
+
+
+def test_panel_mixed_truthy_and_falsey_still_flags_dissent() -> None:
+    """Anti-regression on the family-aware fix: dissent must still flag
+    when a voter is in a different family than the consensus."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.MOSTLY_TRUE, VerdictLabel.MOSTLY_TRUE,
+         VerdictLabel.MOSTLY_TRUE, VerdictLabel.FALSE],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # The False voter is in a different family → dissent flagged.
+    assert 'class="model dissent"' in html
+    assert "3 of 4</span> agree" in html
+
+
+def test_panel_with_exaggerated_voter_against_mostly_true_consensus_flags_dissent() -> None:
+    """Exaggerated is intentionally NOT collapsed with truthy (despite
+    Lenient projection grouping them) — it represents a genuine framing
+    disagreement that's worth surfacing on the dissent panel."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.MOSTLY_TRUE, VerdictLabel.MOSTLY_TRUE,
+         VerdictLabel.MOSTLY_TRUE, VerdictLabel.EXAGGERATED],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert 'class="model dissent"' in html
+    assert "3 of 4</span> agree" in html
+
+
+def test_panel_with_misleading_voter_against_false_consensus_shows_zero_dissents() -> None:
+    """Symmetric to the truthy case: Misleading and False share the
+    falsey family, so a Misleading voter against a False consensus is
+    directional agreement."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.FALSE, VerdictLabel.FALSE,
+         VerdictLabel.MISLEADING, VerdictLabel.MISLEADING],
+        fine_consensus=VerdictLabel.FALSE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert "4 of 4</span> agree" in html
+    assert 'class="model dissent"' not in html
+
+
+def test_panel_with_unverifiable_voter_against_truthy_consensus_flags_dissent() -> None:
+    """Unverifiable stays its own family. A defensive Unverifiable voter
+    against a confident truthy consensus must surface as dissent so
+    readers see the disagreement."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.TRUE, VerdictLabel.TRUE,
+         VerdictLabel.MOSTLY_TRUE, VerdictLabel.UNVERIFIABLE],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert 'class="model dissent"' in html
+    assert "3 of 4</span> agree" in html
+
+

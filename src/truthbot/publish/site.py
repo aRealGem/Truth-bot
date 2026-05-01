@@ -321,6 +321,51 @@ def _verdict_css(label_str: str) -> str:
     return VERDICT_CSS.get(label_str, "unverifiable")
 
 
+# Family map for per-model dissent flagging on a claim card. Two model
+# verdicts in the same family are NOT flagged as disagreeing with the
+# bundle consensus, even if their fine-axis labels differ. Families are
+# intentionally narrower than the publish-layer LENIENT/STRICT
+# projections because the projections are tuned for headline-pill
+# bucketing across the full panel, while dissent flagging is tuned for
+# "this voter is directionally aligned with the consensus."
+#
+# Specifically:
+#   * ``True`` and ``Mostly True`` are in the same family (truthy). The
+#     2026-04 SOTU run had ``[Mostly True, Mostly True, True, True]``
+#     → consensus Mostly True, both ``True`` voters flagged as dissent
+#     (findings-review C4). With family-aware flagging, the same panel
+#     shows zero dissents — directional agreement is honored.
+#   * ``Misleading`` and ``False`` are in the same family (falsey).
+#   * ``Exaggerated`` lives in its own family rather than collapsing
+#     with truthy or falsey because it's editorially the most
+#     ambiguous label (Lenient projects → Truthy, Strict projects →
+#     Falsey). A ``Mostly True`` consensus with one ``Exaggerated``
+#     voter SHOULD show dissent — that's a genuine framing
+#     disagreement worth surfacing.
+#   * ``Unverifiable`` and any unknown label each get their own
+#     family so a defensive vote of "Unverifiable" against a "True"
+#     consensus is still flagged.
+_VERDICT_FAMILY: dict[str, str] = {
+    "True": "truthy",
+    "Mostly True": "truthy",
+    "Exaggerated": "exaggerated",
+    "Misleading": "falsey",
+    "False": "falsey",
+    "Unverifiable": "unverifiable",
+}
+
+
+def _verdict_family(label_str: str) -> str:
+    """Map a fine-axis verdict label to its dissent-flagging family.
+
+    See ``_VERDICT_FAMILY`` for the full mapping + rationale. Unknown
+    labels (defensive — should never appear in production) get a unique
+    family keyed by the label itself, so every cross-label comparison
+    against an unknown stays "dissent."
+    """
+    return _VERDICT_FAMILY.get(label_str, f"unknown:{label_str}")
+
+
 # How many normalized leading characters of a caveat form its dedup key.
 # Different models often volunteer caveats that share the same opening
 # sentence but diverge in phrasing later; collapsing on a normalized prefix
@@ -1809,10 +1854,16 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
 
     caveat_html = _render_caveat_block(bundle.model_verdicts)
 
-    # Dissent is computed on the fine 6-bucket axis (the per-model strip
-    # also stays fine-axis), even though the headline pill renders on the
-    # coarse axis. This keeps "N of M agree" consistent with the strip.
+    # Dissent is computed on the *family* axis (2026-05-01 follow-up to
+    # findings-review C4): {True, Mostly True} share a family, as do
+    # {Misleading, False}; Exaggerated and Unverifiable each stand
+    # alone. A True voter against a Mostly True consensus is no longer
+    # flagged — directional agreement is honored. The per-model strip
+    # still RENDERS the fine-axis label; only the dissent CSS class
+    # (and the "N of M agree" tally) reads on the family axis. See
+    # ``_verdict_family`` for the full mapping + rationale.
     majority_label = fine_label
+    majority_family = _verdict_family(majority_label)
 
     triage_badge = ""
     if getattr(bundle, "triage_skipped_frontier", False):
@@ -1846,7 +1897,11 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
                 '</div>'
             )
         else:
-            dissent = " dissent" if mv_label != majority_label else ""
+            dissent = (
+                " dissent"
+                if _verdict_family(mv_label) != majority_family
+                else ""
+            )
             if not dissent:
                 agreeing += 1
             reasoning_html = ""
