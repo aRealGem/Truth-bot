@@ -141,3 +141,83 @@ emit no `web_sources` for that fact").
   — `_walk_output_for_urls` (potential harness fix locus)
 - [`src/truthbot/publish/site.py`](../../src/truthbot/publish/site.py)
   — render locus for intervention 1
+
+## Addendum — structural classification (2026-05-01, sandbox-bound)
+
+Operator follow-up on a non-blocked egress remains the ground-truth
+path. As a stand-in, this addendum classifies each of the 13 sampled
+URLs by **canonical-pattern likelihood** — does the URL match a real
+publishing convention on the host domain, and is the specific path
+consistent with the publication's actual content schedule? This is
+heuristic, not authoritative; it cannot distinguish "real and reachable"
+from "real path that 404s today" without HTTP. Sandbox retested via
+direct curl (`*.gov` 403), Wayback CDX + availability (`Host not in
+allowlist`), DuckDuckGo lite (empty), Google (403). Allowlist confirmed
+restricted to package/git infra + Anthropic API.
+
+| # | URL | Pattern canonical? | Specific path plausible? | Bin |
+|---|-----|---|---|---|
+| 1 | `bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-the-year-ended-january-2026.htm` | ✅ TED slug pattern is exact (`/opub/ted/YYYY/<slug>.htm`) | Likely — TED posts accompany major CPI releases; exact slug wording varies | **(b)** likely real, slug-wording near-miss |
+| 2 | `bls.gov/news.release/archives/cpi_01132026.htm` | ✅ canonical CPI release archive | Date corresponds to Dec-2025 CPI release window; BLS site keeps `.htm` siblings of `.pdf` releases | **(b)** likely real (.htm sibling of pdf series) |
+| 3 | `bls.gov/news.release/archives/cpi_02132026.htm` | ✅ same | Date-of-month may be off by 1 day from actual release; pattern correct | **(b)** likely real with minor date drift |
+| 4 | `bls.gov/news.release/archives/cpi_12182025.pdf` | ✅ KEPT (tool retrieved this exact URL) | n/a | **(a)** verified |
+| 5 | `eia.gov/todayinenergy/detail.php?id=55099` | ✅ canonical TIE detail URL | 5-digit ID in plausible range for TIE archive; specific ID-content mapping unknown without HTTP | **(b)** likely real, ID validity unknown |
+| 6 | `eia.gov/todayinenergy/detail.php?id=65184` | ✅ same | same | **(b)** likely real |
+| 7 | `congress.gov/congressional-record/volume-171/issue-41/senate-section/article/S1466-4` | ✅ canonical CR citation format | Vol 171 ≈ 119th Congress 1st session (Jan 2025–); issue 41 ≈ early Mar 2025; S1466 is plausible Senate page | **(b)** likely real |
+| 8 | `cbp.gov/border-security/ports-entry/overview?language=es` | ✅ canonical bilingual page + `?language=es` toggle | The base URL is a long-standing landing page; `?language=es` is the standard CBP language switcher | **(a)** very likely real |
+| 9 | `cbp.gov/newsroom/national-media-release/cbp-releases-february-2025-monthly-update` | ✅ canonical CBP press-release pattern | CBP publishes a "monthly update" series with this exact slug convention | **(b)** likely real |
+| 10 | `cbp.gov/newsroom/national-media-release/cbp-releases-march-2024-monthly-update` | ✅ same | same series, earlier month | **(b)** likely real |
+| 11 | `fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics` | ✅ canonical FBI press-release URL | Annual UCR/NIBRS release is real; slug matches FBI title conventions | **(b)** likely real |
+| 12 | `fbi.gov/services/cjis/ucr/` | ✅ canonical UCR program landing page | Long-standing top-level UCR page | **(a)** very likely real, canonical |
+| 13 | `cbp.gov/newsroom/stats/cbp-enforcement-statistics` | ✅ canonical stats dashboard URL | Long-standing CBP page | **(a)** very likely real, canonical |
+
+**Distribution:** (a) very likely real ≈ 3 / (b) likely real with
+near-miss or unknown specifics ≈ 9 / (c) clearly fabricated = 0
+visible. **No URL in the sample shows the structural signature of an
+LLM hallucination** (e.g., wrong domain, made-up subdomain, mismatched
+URL grammar, slug that contradicts the publishing house's conventions).
+
+## Implications for the strip-rate metric
+
+If the structural reading is even directionally correct, the
+**38.9% aggregate strip rate is not "fabrication rate"** — it's a
+**tool-URL-capture rate** specific to the multi-claim batch path. The
+xAI 0% strip rate confirms the structural-not-credibility framing:
+xAI batch happens to have model and search context co-located, so the
+tool-retrieved set always covers what the model emits as a citation.
+OpenAI/Gemini batch use a structured-output envelope where the
+search-tool's full URL list isn't always surfaced back into the
+parsed response, even when the search tool fired (per the 2026-04-29
+OpenAI probe: `web_search_calls=1`, `tool_urls=0`).
+
+This reframing matters for **anything that publishes the metric to
+readers**:
+
+1. The just-shipped per-claim "Model-cited URLs that didn't validate"
+   tier (commit `f447fa7`) is correctly named — the URLs *didn't
+   validate*, neither labeled "fabricated" nor "verified". It's the
+   right framing already.
+2. The **run-manifest panel** (roadmap [4]) should NOT surface
+   "fabrication: OpenAI 100% / Gemini 100%" in the methodology aside,
+   because it would mislead readers about what the metric measures.
+   Recommended copy: "Tool-URL grounding rate" with a one-sentence
+   caveat explaining that lower numbers reflect harness-capture
+   asymmetry as much as model-citation discipline. See "Implications
+   for roadmap [4]" below.
+
+## Implications for roadmap [4] (run manifest + degraded-consensus)
+
+| Aspect | Pre-audit framing (Rev 2 plan) | Post-audit recommendation |
+|---|---|---|
+| Per-adapter URL metric label | "Fabrication: OpenAI X%" | "Tool-URL grounding: OpenAI X% (multi-claim batch)" with hover/note explaining harness asymmetry |
+| Headline "credibility" number | Strip-rate parity ≤30% | **Coverage parity** ≥90% (% claims with verdict per adapter) — cleaner signal for partial-run state |
+| Strip rate's role | Top-line caveat | De-emphasize on the report; surfaced per-claim already (`f447fa7`); aggregate goes in methodology footer not headline |
+| Degraded-consensus copy | "Gemini unavailable for 2/29 claims" | Same — coverage-driven, unchanged by audit |
+| Per-adapter model-id disclosure | Yes | Yes — unchanged |
+
+**Bottom line for [4]:** the audit confirms the design Rev-2 sketched
+for the run-manifest panel is roughly right, but the *headline*
+should be **coverage parity** (a clean structural signal) rather than
+**strip-rate parity** (a muddled signal that's part-credibility,
+part-harness-artefact). Ship [4] with that emphasis flip.
+
