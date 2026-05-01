@@ -575,12 +575,17 @@ def test_openai_parse_multi_unions_all_url_surfaces() -> None:
     assert verdicts[0].stripped_source_count == 1
 
 
-def test_openai_parse_multi_strips_when_no_tool_urls_present() -> None:
-    """Sanity: when all ``web_search_call`` actions are pure ``search``
-    (no URLs anywhere) and the model still emits ``web_sources``, every
-    cited URL gets stripped. This is the strict-mode behavior that drove
-    the original 100% readout — preserve it for runs that genuinely
-    expose nothing groundable."""
+def test_openai_parse_multi_trusts_model_when_search_fired_but_extraction_empty() -> None:
+    """Trust-when-fired (2026-05-01): when ``web_search_call`` tools fired
+    (``tool_call_count > 0``) but every action was a pure ``search`` (no
+    URLs anywhere), the model's emitted ``web_sources`` are kept
+    rather than stripped. The strip-100% behavior was a harness artefact
+    of OpenAI's Responses API JSON-output mode (no inline url_citation
+    annotations), not genuine fabrication. xAI / Anthropic confirm 0%
+    strip is correct when extraction works. The reader-side
+    "Model-cited (unverified)" tier (publish/site.py) caveats anything
+    that would slip through. See
+    metrics/adapter_interpretability/strip_audit_2026-05.md."""
     adapter = OpenAIAdapter()
     claims = [_claim("A")]
     text = json.dumps(
@@ -591,16 +596,49 @@ def test_openai_parse_multi_strips_when_no_tool_urls_present() -> None:
                 "confidence": "High",
                 "explanation": "x",
                 "web_sources": [
-                    "https://example.com/cited-but-not-grounded",
+                    "https://www.bls.gov/news.release/cpi.htm",
                 ],
             },
         ]
     )
     raw = _openai_body(text, tool_calls=3)
     verdicts = adapter.parse_multi_batch_response(raw, claims)
+    # Trust-when-fired: tool ran (3 calls) but no URLs surfaced through
+    # the API surface → model's URL is kept, not stripped.
+    assert verdicts[0].web_sources == [
+        "https://www.bls.gov/news.release/cpi.htm"
+    ]
+    assert verdicts[0].model_reported_sources == verdicts[0].web_sources
+    assert verdicts[0].stripped_source_count == 0
+
+
+def test_openai_parse_multi_strips_when_tool_did_not_fire() -> None:
+    """Counter-test to trust-when-fired: when ``tool_call_count == 0`` —
+    e.g., the model declined to invoke web_search — strict intersection
+    against the empty tool set still strips. The fallback ONLY relaxes
+    intersection when tools actually ran; it does NOT weaken
+    anti-fabrication for runs where the tool never fired."""
+    adapter = OpenAIAdapter()
+    claims = [_claim("A")]
+    text = json.dumps(
+        [
+            {
+                "claim_id": claims[0].id,
+                "label": "True",
+                "confidence": "High",
+                "explanation": "x",
+                "web_sources": [
+                    "https://example.com/cited-without-grounding",
+                ],
+            },
+        ]
+    )
+    raw = _openai_body(text, tool_calls=0)  # tool never invoked
+    verdicts = adapter.parse_multi_batch_response(raw, claims)
+    # Strict strip stands when no tools fired.
     assert verdicts[0].web_sources == []
     assert verdicts[0].model_reported_sources == [
-        "https://example.com/cited-but-not-grounded"
+        "https://example.com/cited-without-grounding"
     ]
     assert verdicts[0].stripped_source_count == 1
 

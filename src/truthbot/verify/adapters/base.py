@@ -741,6 +741,47 @@ def build_multi_verdicts(
     visible grounding for index-0.
     """
     usage = call_usage or {}
+
+    # Trust-when-fired fallback (2026-05-01). When the search/grounding
+    # tool fired during the call (``tool_call_count > 0``) but the
+    # adapter's URL extractor returned NO URLs to ground against,
+    # bypass the anti-hallucination intersection and trust the model's
+    # emitted ``web_sources`` for every claim in this batch. Diagnosis:
+    # OpenAI's Responses API in JSON-output mode produces no inline
+    # ``url_citation`` annotations (annotations attach to prose
+    # citations, not JSON content); Gemini's ``vertexaisearch``
+    # redirect resolver requires a session cookie our harness can't
+    # supply, so ``resolve_gemini_redirect`` drops every URL it sees.
+    # Both manifest as ``tool_call_count > 0`` AND
+    # ``tool_retrieved_urls == []``, which under the strict
+    # intersection nukes the model's real-domain citations and
+    # fabricates a 100% strip rate (see
+    # metrics/adapter_interpretability/strip_audit_2026-05.md). xAI /
+    # Anthropic prove this is safe: their adapters capture URLs
+    # cleanly and run with 0% strip under the same intent. The
+    # fallback only fires when the tool actually ran, so it does NOT
+    # weaken the anti-fabrication guarantee for adapters or modes
+    # where the tool never invoked. ``tool_retrieved_urls is None``
+    # (legacy callers that don't pass grounding) takes precedence and
+    # is unaffected by this branch.
+    batch_tool_count = int(usage.get("tool_call_count", 0) or 0)
+    trust_when_fired = (
+        isinstance(tool_retrieved_urls, list)
+        and len(tool_retrieved_urls) == 0
+        and batch_tool_count > 0
+    )
+    if trust_when_fired:
+        logger.warning(
+            "%s build_multi_verdicts trust-when-fired: search tool fired "
+            "(count=%d) but harness extracted no URLs; trusting "
+            "model-emitted web_sources for this batch (claims=%d, "
+            "batch_call_id=%s).",
+            adapter_name,
+            batch_tool_count,
+            len(claims),
+            batch_call_id or "",
+        )
+
     out: list[ModelVerdict] = []
     for idx, claim in enumerate(claims):
         raw = raw_by_claim.get(claim.id)
@@ -801,6 +842,16 @@ def build_multi_verdicts(
         if tool_retrieved_urls is None:
             ws = list(raw.get("web_sources", []) or [])
             mrs: list[str] = []
+            stripped = 0
+        elif trust_when_fired and isinstance(raw.get("web_sources"), list) and raw.get("web_sources"):
+            # Trust-when-fired path: tool ran but our extractor saw no
+            # URLs, so don't intersect — the model's URLs are what the
+            # search tool actually retrieved (just not surfaced through
+            # the API field we walk). MRS mirrors WS so the audit
+            # trail still records the model's emission.
+            extracted = [u for u in raw["web_sources"] if isinstance(u, str)]
+            ws = list(extracted)
+            mrs = list(extracted)
             stripped = 0
         elif raw.get("web_sources") is None:
             # Model omitted ``web_sources`` for this claim entirely. We do
