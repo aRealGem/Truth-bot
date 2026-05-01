@@ -1,0 +1,46 @@
+{
+  "run_id": "8eed96b2-a2e0-4185-a1ed-17bdf0e4f3e2",
+  "total_calls": 23,
+  "total_cost_usd": 1.4387932700000001,
+  "by_adapter": {
+    "anthropic": 0.23769335,
+    "openai": 0.0823365,
+    "gemini": 0.00573442,
+    "xai": 1.113029
+  },
+  "by_tier": {
+    "triage": 1.17911152,
+    "frontier": 0.25968175000000004
+  },
+  "by_mode": {
+    "live": 1.39699802,
+    "batch": 0.041795250000000006
+  },
+  "fabrication": {
+    "model_reported_sources_total": 54,
+    "stripped_sources_total": 8,
+    "fabrication_rate": 0.14814814814814814,
+    "by_adapter": {
+      "anthropic": {
+        "reported": 34,
+        "stripped": 0,
+        "rate": 0.0
+      },
+      "openai": {
+        "reported": 8,
+        "stripped": 8,
+        "rate": 1.0
+      },
+      "gemini": {
+        "reported": 0,
+        "stripped": 0,
+        "rate": 0.0
+      },
+      "xai": {
+        "reported": 12,
+        "stripped": 0,
+        "rate": 0.0
+      }
+    }
+  }
+}
