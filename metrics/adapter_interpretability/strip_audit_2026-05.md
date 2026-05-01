@@ -221,3 +221,37 @@ should be **coverage parity** (a clean structural signal) rather than
 **strip-rate parity** (a muddled signal that's part-credibility,
 part-harness-artefact). Ship [4] with that emphasis flip.
 
+## Operator probe (2026-05-01)
+
+Live egress from operator machine (Cursor agent on MBP). For each URL:
+HEAD `curl -sI -L --max-time 15 -A "Mozilla/5.0" -o /dev/null -w "%{http_code}"`;
+if HEAD was `403`, `405`, or `429`, also `curl -s -L --range 0-1023 …` and record
+that status. Buckets: **(a)** `200` on HEAD (or on ranged GET when that is the
+success path); **(b)** HEAD blocked (`403`/`405`/`429`) but `200`/`206` on
+ranged GET; **(c)** `404` on HEAD (fabricated or dead path); **—** persistent
+`403` on ranged GET (bot-blocked from this probe; not classifiable as (a–c)
+without a browser or different egress).
+
+| # | HEAD | ranged | bucket | URL |
+|---|------|--------|--------|-----|
+| 1 | 403 | 403 | — | `https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-the-year-ended-january-2026.htm` |
+| 2 | 403 | 403 | — | `https://www.bls.gov/news.release/archives/cpi_01132026.htm` |
+| 3 | 403 | 403 | — | `https://www.bls.gov/news.release/archives/cpi_02132026.htm` |
+| 4 | 403 | 403 | — | `https://www.bls.gov/news.release/archives/cpi_12182025.pdf` |
+| 5 | 200 | — | (a) | `https://www.eia.gov/todayinenergy/detail.php?id=55099` |
+| 6 | 200 | — | (a) | `https://www.eia.gov/todayinenergy/detail.php?id=65184` |
+| 7 | 403 | 403 | — | `https://www.congress.gov/congressional-record/volume-171/issue-41/senate-section/article/S1466-4` |
+| 8 | 404 | — | (c) | `https://www.cbp.gov/border-security/ports-entry/overview?language=es` |
+| 9 | 200 | — | (a) | `https://www.cbp.gov/newsroom/national-media-release/cbp-releases-february-2025-monthly-update` |
+| 10 | 200 | — | (a) | `https://www.cbp.gov/newsroom/national-media-release/cbp-releases-march-2024-monthly-update` |
+| 11 | 403 | 403 | — | `https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics` |
+| 12 | 403 | 403 | — | `https://www.fbi.gov/services/cjis/ucr/` |
+| 13 | 200 | — | (a) | `https://www.cbp.gov/newsroom/stats/cbp-enforcement-statistics` |
+
+**Tally:** (a) five URLs, (b) zero on this probe, (c) one URL (`404` on the CBP
+ports overview with `?language=es`), seven URLs remain **—** because BLS /
+Congress / FBI returned `403` even on a short ranged GET (consistent with
+automated-request blocking, not with “HEAD-blocked but body reachable”).
+
+Raw transcript: [`metrics/ab_probe_20260501/arm_c/url_probe_2026-05-01.txt`](../ab_probe_20260501/arm_c/url_probe_2026-05-01.txt).
+

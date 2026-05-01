@@ -1,0 +1,33 @@
+403 https://www.bls.gov/opub/ted/2026/consumer-prices-up-2-4-percent-over-the-year-ended-january-2026.htm
+  ranged-GET: 403
+
+403 https://www.bls.gov/news.release/archives/cpi_01132026.htm
+  ranged-GET: 403
+
+403 https://www.bls.gov/news.release/archives/cpi_02132026.htm
+  ranged-GET: 403
+
+403 https://www.bls.gov/news.release/archives/cpi_12182025.pdf
+  ranged-GET: 403
+
+200 https://www.eia.gov/todayinenergy/detail.php?id=55099
+
+200 https://www.eia.gov/todayinenergy/detail.php?id=65184
+
+403 https://www.congress.gov/congressional-record/volume-171/issue-41/senate-section/article/S1466-4
+  ranged-GET: 403
+
+404 https://www.cbp.gov/border-security/ports-entry/overview?language=es
+
+200 https://www.cbp.gov/newsroom/national-media-release/cbp-releases-february-2025-monthly-update
+
+200 https://www.cbp.gov/newsroom/national-media-release/cbp-releases-march-2024-monthly-update
+
+403 https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics
+  ranged-GET: 403
+
+403 https://www.fbi.gov/services/cjis/ucr/
+  ranged-GET: 403
+
+200 https://www.cbp.gov/newsroom/stats/cbp-enforcement-statistics
+
