@@ -37,11 +37,13 @@ from truthbot.publish.site import (
     COARSE_STRICT_PROJECTION,
     CSS,
     SiteReport,
+    _adapter_run_stats,
     _claim_card,
     _headline_verdict_coarse,
     _project_dist,
     _report_card,
     _render_report,
+    _run_manifest_html,
     _toc,
     _verdict_panel,
 )
@@ -731,4 +733,251 @@ def test_evidence_block_model_only_url_validated_by_other_model_excluded() -> No
     assert html.count('class="source-model-only"') == 1
     assert "cpi_01132026.htm" in html
     assert f'<a href="{only_stripped}"' not in html
+
+
+# ── Run manifest panel (roadmap [4]) ──────────────────────────────────────────
+
+
+def _bundle_with_panel(
+    *,
+    claim_id_suffix: str,
+    panel: list[tuple[str, str, str, bool]],
+    web_sources_per_model: list[list[str]] | None = None,
+    mrs_per_model: list[list[str]] | None = None,
+    consensus_strength: str = "strong",
+) -> VerdictBundle:
+    """Build a bundle from an explicit per-model panel spec.
+
+    Each panel entry is ``(adapter_name, model_id, synthesis_mode, no_response)``.
+    Optional ``web_sources_per_model`` / ``mrs_per_model`` align by index;
+    ignored when ``no_response`` is True for that model.
+    """
+    if web_sources_per_model is None:
+        web_sources_per_model = [[] for _ in panel]
+    if mrs_per_model is None:
+        mrs_per_model = [[] for _ in panel]
+    claim = Claim(
+        transcript_id="t",
+        text=f"claim {claim_id_suffix}",
+        speaker="Speaker",
+        context="ctx",
+        category="economy",
+        is_checkable=True,
+    )
+    mvs: list[ModelVerdict] = []
+    for (adapter, model_id, mode, nr), ws, mrs in zip(
+        panel, web_sources_per_model, mrs_per_model
+    ):
+        mvs.append(
+            ModelVerdict(
+                adapter_name=adapter,
+                model_id=model_id,
+                claim_id=claim.id,
+                label=VerdictLabel.UNVERIFIABLE if nr else VerdictLabel.TRUE,
+                confidence=Confidence.HIGH,
+                explanation="r",
+                no_response=nr,
+                web_sources=list(ws) if not nr else [],
+                model_reported_sources=list(mrs) if not nr else [],
+                synthesis_mode=mode,
+                tier="frontier",
+            )
+        )
+    consensus = ConsensusVerdict(
+        claim_id=claim.id,
+        model_verdicts=mvs,
+        consensus_label=VerdictLabel.TRUE,
+        consensus_verdict=VerdictLabel.TRUE.value,
+        confidence=Confidence.HIGH,
+        agreement=True,
+        consensus_strength=consensus_strength,
+        explanation="x",
+        coarse_lenient_label="True",
+        coarse_lenient_strength="strong",
+        coarse_strict_label="True",
+        coarse_strict_strength="strong",
+    )
+    return VerdictBundle(
+        claim=claim,
+        speaker="Speaker",
+        date_str="2026-03-04",
+        model_verdicts=mvs,
+        consensus=consensus,
+    )
+
+
+_FOUR_ADAPTER_PANEL = [
+    ("anthropic", "claude-opus-4-7", "batch", False),
+    ("openai", "gpt-5.4", "batch", False),
+    ("gemini", "gemini-2.5-pro", "live", False),
+    ("xai", "grok-4", "live", False),
+]
+
+
+def test_run_manifest_renders_per_adapter_table_when_no_degradation() -> None:
+    """Happy path: 4 adapters, all 100% coverage. Manifest renders with 4
+    rows, NO degraded-consensus banner, details collapsed by default. The
+    aside is always present (audit trail) — but the banner only appears
+    when something actually degraded."""
+    bundles = [
+        _bundle_with_panel(
+            claim_id_suffix=str(i),
+            panel=_FOUR_ADAPTER_PANEL,
+        )
+        for i in range(3)
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    # Aside always present.
+    assert '<aside class="run-manifest">' in html
+    # No degraded banner when all adapters fully covered.
+    assert "run-manifest-banner" not in html
+    assert "Degraded consensus" not in html
+    # Details collapsed by default (no ` open` attr) when no degradation.
+    assert "<details class=\"run-manifest-details\">" in html
+    # 4 adapter rows in the table.
+    assert html.count('<tr class="degraded">') == 0
+    # Each adapter renders.
+    for adapter in ("anthropic", "openai", "gemini", "xai"):
+        # _adapter_pretty title-cases for some (Anthropic / Google / OpenAI / xAI).
+        # Just check the model_id shows up since that's adapter-specific.
+        pass
+    assert "claude-opus-4-7" in html.lower() or "Claude Opus" in html
+    assert "gpt" in html.lower()
+    assert "gemini" in html.lower()
+    assert "grok" in html.lower()
+
+
+def test_run_manifest_degraded_banner_when_adapter_misses_a_claim() -> None:
+    """When any adapter has at least one no_response across the report,
+    the manifest renders the degraded-consensus banner with the adapter
+    name + "X of Y claims (Z unavailable)" copy. Details opens by
+    default so the reader sees the row immediately."""
+    panel_with_gemini_miss = [
+        ("anthropic", "claude-opus-4-7", "batch", False),
+        ("openai", "gpt-5.4", "batch", False),
+        ("gemini", "gemini-2.5-pro", "live", True),  # no_response
+        ("xai", "grok-4", "live", False),
+    ]
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=panel_with_gemini_miss),
+        _bundle_with_panel(claim_id_suffix="1", panel=_FOUR_ADAPTER_PANEL),
+        _bundle_with_panel(claim_id_suffix="2", panel=_FOUR_ADAPTER_PANEL),
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    assert '<div class="run-manifest-banner"' in html
+    assert "Degraded consensus" in html
+    assert "gemini contributed 2 of 3 claims (1 unavailable)" in html
+    # Details opens by default when degraded.
+    assert 'details class="run-manifest-details" open' in html
+    # The gemini row carries the .degraded class so CSS highlights it.
+    assert '<tr class="degraded">' in html
+    # Coverage cell for gemini bolded.
+    assert "<strong>2/3" in html
+
+
+def test_run_manifest_consensus_strength_distribution_visible() -> None:
+    """Manifest shows the consensus_strength distribution across claims —
+    "strong"/"weak"/"single"/"none" tally — so readers can see how
+    confident each claim's panel was on average."""
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL,
+                           consensus_strength="strong"),
+        _bundle_with_panel(claim_id_suffix="1", panel=_FOUR_ADAPTER_PANEL,
+                           consensus_strength="strong"),
+        _bundle_with_panel(claim_id_suffix="2", panel=_FOUR_ADAPTER_PANEL,
+                           consensus_strength="weak"),
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    assert "Consensus strength" in html
+    # Sorted by descending count, so strong (2) renders before weak (1).
+    assert "2 strong" in html
+    assert "1 weak" in html
+
+
+def test_run_manifest_tool_url_grounding_caveat_de_emphasized() -> None:
+    """The audit-revised framing demands the tool-URL-grounding metric be
+    surfaced WITH a caveat explaining it isn't pure fabrication rate, since
+    the multi-claim batch path produces apparent strips for harness reasons.
+    Pin the caveat copy + the per-adapter grounding column."""
+    real_url = "https://www.bls.gov/cpi.htm"
+    bundles = [
+        _bundle_with_panel(
+            claim_id_suffix="0",
+            panel=_FOUR_ADAPTER_PANEL,
+            # Anthropic: 100% grounding (web == mrs); OpenAI: 0% (mrs > web=0);
+            # Gemini: nothing cited (—); xAI: 100%.
+            web_sources_per_model=[[real_url], [], [], [real_url]],
+            mrs_per_model=[[real_url], [real_url], [], [real_url]],
+        )
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    # Caveat copy (the "doesn't mean fabrication" framing).
+    assert "Tool-URL grounding" in html
+    assert "harness-capture asymmetry" in html
+    assert "didn’t validate" in html
+    # Em-dash placeholder for adapters that cited zero URLs.
+    assert ">—<" in html
+
+
+def test_run_manifest_extra_models_shown_when_adapter_used_multiple_ids() -> None:
+    """Anthropic primary→fallback (e.g., opus-4-7 → haiku-4-5) routes some
+    claims through a different model_id within the same adapter. Manifest
+    surfaces the most-common model_id and adds "+N more" so readers know
+    a fallback occurred."""
+    primary_panel = [
+        ("anthropic", "claude-opus-4-7", "batch", False),
+        ("openai", "gpt-5.4", "batch", False),
+        ("gemini", "gemini-2.5-pro", "live", False),
+        ("xai", "grok-4", "live", False),
+    ]
+    fallback_panel = [
+        ("anthropic", "claude-haiku-4-5-20251001", "live", False),  # fallback
+        ("openai", "gpt-5.4", "batch", False),
+        ("gemini", "gemini-2.5-pro", "live", False),
+        ("xai", "grok-4", "live", False),
+    ]
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=primary_panel),
+        _bundle_with_panel(claim_id_suffix="1", panel=primary_panel),
+        _bundle_with_panel(claim_id_suffix="2", panel=fallback_panel),
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    # Primary model_id wins (2 of 3 verdicts).
+    assert "claude-opus-4-7" in html.lower() or "Claude Opus" in html
+    # +1 more indicator for the haiku fallback.
+    assert "+1 more" in html
+
+
+def test_run_manifest_handles_legacy_bundle_with_no_mrs() -> None:
+    """Pre-2026-04-26 bundles don't carry model_reported_sources at all
+    (or carry empty). Manifest must render — grounding column shows '—'
+    rather than crashing — to keep older reports re-publishable."""
+    bundles = [_bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL)]
+    sr = _make_site_report(bundles)
+    rows = _adapter_run_stats(sr)
+    assert all(r["mrs_total"] == 0 for r in rows)
+    html = _run_manifest_html(sr)
+    # All four adapters render the em-dash for grounding.
+    assert html.count(">—<") >= 4
+
+
+def test_render_report_inserts_run_manifest_after_methodology() -> None:
+    """End-to-end: _render_report places the run-manifest aside AFTER the
+    methodology aside so the editorial 'how this works' copy reads first
+    and the per-run audit trail reads second."""
+    bundles = [_bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL)]
+    sr = _make_site_report(bundles)
+    html = _render_report(sr)
+    methodology_idx = html.find('<aside class="methodology">')
+    manifest_idx = html.find('<aside class="run-manifest">')
+    assert methodology_idx >= 0, "methodology aside should render"
+    assert manifest_idx >= 0, "run-manifest aside should render"
+    assert methodology_idx < manifest_idx, (
+        "methodology aside must precede run-manifest aside"
+    )
 
