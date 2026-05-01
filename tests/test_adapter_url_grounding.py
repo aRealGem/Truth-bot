@@ -526,3 +526,115 @@ class TestApplyUrlGroundingTrustWhenFired:
         assert ws == []
         assert mrs == []
         assert stripped == 0
+
+
+class TestApplyUrlGroundingStripNoKeepDiagnostic:
+    """Diagnostic WARNING fires when strip-everything happens — disambiguates
+    the two post-fallback paths that produce 100% strip rates: model didn't
+    search (tool_count=0), or model searched but emitted near-miss URLs the
+    harness didn't capture (tool_count>0, tool_retrieved non-empty, no
+    overlap). Behavior change: none. Log line: one per claim that hits the
+    case. Used to drive the next arm-D-style probe to clean attribution."""
+
+    def test_warning_fires_on_case_A_no_tool_call(self, caplog):
+        """Case (A): model emitted URLs without invoking search. Strict
+        anti-fabrication strip is correct; WARNING records ``tool_count=0``
+        so the operator sees this case and knows to fix it prompt-side."""
+        import logging
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": ["https://example.gov/no-search-cited"],
+        }
+        with caplog.at_level(logging.WARNING, logger="truthbot.verify.adapters.base"):
+            ws, mrs, stripped = apply_url_grounding(
+                raw, [], tool_call_count=0
+            )
+        assert ws == [] and stripped == 1
+        matches = [r for r in caplog.records if "strip-no-keep" in r.message]
+        assert len(matches) == 1
+        msg = matches[0].message
+        assert "tool_count=0" in msg
+        assert "retrieved=0" in msg
+        assert "reported=1" in msg
+        assert "example.gov/no-search-cited" in msg
+
+    def test_warning_fires_on_case_B_near_miss(self, caplog):
+        """Case (B): model invoked search and the harness captured URLs,
+        but the model's emitted citations don't match (.htm vs .pdf
+        same-release pattern). WARNING records both samples so the
+        operator can eyeball whether to fuzzy-match."""
+        import logging
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": [
+                "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+            ],
+        }
+        with caplog.at_level(logging.WARNING, logger="truthbot.verify.adapters.base"):
+            ws, mrs, stripped = apply_url_grounding(
+                raw,
+                ["https://www.bls.gov/news.release/archives/cpi_12182025.pdf"],
+                tool_call_count=2,
+            )
+        assert ws == [] and stripped == 1
+        matches = [r for r in caplog.records if "strip-no-keep" in r.message]
+        assert len(matches) == 1
+        msg = matches[0].message
+        assert "tool_count=2" in msg
+        assert "retrieved=1" in msg
+        assert "cpi_01132026.htm" in msg  # sample reported
+        assert "cpi_12182025.pdf" in msg  # sample retrieved
+
+    def test_warning_does_not_fire_on_partial_keep(self, caplog):
+        """Partial strips (some kept, some stripped) are less alarming —
+        harness is mostly working. The diagnostic only fires for the
+        strip-everything case to keep log noise down on healthy runs."""
+        import logging
+        kept_url = "https://example.gov/real"
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": [kept_url, "https://example.com/halluc"],
+        }
+        with caplog.at_level(logging.WARNING, logger="truthbot.verify.adapters.base"):
+            ws, mrs, stripped = apply_url_grounding(
+                raw, [kept_url], tool_call_count=2
+            )
+        assert ws == [kept_url] and stripped == 1
+        assert not [r for r in caplog.records if "strip-no-keep" in r.message]
+
+    def test_warning_does_not_fire_when_fallback_path_takes_over(self, caplog):
+        """Trust-when-fired path returns before the diagnostic check —
+        the model's URLs were trusted, so there's no strip to log."""
+        import logging
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": ["https://www.bls.gov/cpi.htm"],
+        }
+        with caplog.at_level(logging.WARNING, logger="truthbot.verify.adapters.base"):
+            ws, mrs, stripped = apply_url_grounding(
+                raw, [], tool_call_count=3
+            )
+        assert ws == ["https://www.bls.gov/cpi.htm"] and stripped == 0
+        assert not [r for r in caplog.records if "strip-no-keep" in r.message]
+
+    def test_warning_does_not_fire_when_model_emitted_nothing(self, caplog):
+        """``web_sources: []`` or omitted — no URLs to strip, no
+        diagnostic line. Healthy "model said nothing relevant" path."""
+        import logging
+        raw = {
+            "label": "Unverifiable",
+            "confidence": "Low",
+            "explanation": "x",
+            "web_sources": [],
+        }
+        with caplog.at_level(logging.WARNING, logger="truthbot.verify.adapters.base"):
+            apply_url_grounding(raw, [], tool_call_count=3)
+        assert not [r for r in caplog.records if "strip-no-keep" in r.message]

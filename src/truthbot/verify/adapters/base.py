@@ -684,6 +684,32 @@ def apply_url_grounding(
         # model has URLs to attest. Bypass intersection.
         return list(model_reported), list(model_reported), 0
     kept, stripped = ground_truth_web_sources(model_reported, tool_retrieved)
+    # Diagnostic for the "strip everything" case (kept=[] AND model_reported
+    # non-empty AND stripped > 0). Disambiguates the two ways this can
+    # happen post-fallback:
+    #   (A) tool_call_count == 0 — model declined to invoke search;
+    #       strict strip is correctly anti-fabrication. Fix path is
+    #       prompt-side ("tool_choice=required" or stricter copy).
+    #   (B) tool_call_count > 0 AND tool_retrieved non-empty but no
+    #       overlap with model_reported — URL near-miss (e.g.,
+    #       .htm vs .pdf same-release). Fix path is fuzzy intersection.
+    # The trust-when-fired branch above already handles the third case
+    # (tool fired + retrieved empty), so it doesn't appear here. Sample
+    # URLs are logged so operators can eyeball whether the model is
+    # citing real-but-non-matching URLs (case B) or pure assertion
+    # (case A). Diagnostic only — no behavior change.
+    if stripped > 0 and not kept and model_reported:
+        logger.warning(
+            "apply_url_grounding strip-no-keep: tool_count=%d "
+            "retrieved=%d reported=%d stripped=%d "
+            "sample_reported=%s sample_retrieved=%s",
+            tool_call_count,
+            len(tool_retrieved),
+            len(model_reported),
+            stripped,
+            model_reported[:2],
+            tool_retrieved[:2],
+        )
     return kept, model_reported, stripped
 
 
