@@ -211,6 +211,144 @@ class Pipeline:
         report.published_at = datetime.now(timezone.utc)
 
 
+def _print_tool_stats(
+    jsonl_path: str | None = None,
+    run_id: str | None = None,
+    adapter: str | None = None,
+) -> None:
+    """Print per-adapter tool-call distribution + URL-grounding rates.
+
+    Reads ``metrics/adapter_calls.jsonl`` and produces three tables for
+    post-mortem / arm-X probe analysis:
+
+    1. **Tool-call distribution** — per-adapter mean / p50 / p95 / max of
+       ``tool_call_count``, plus the share of records with zero tool
+       calls (the "search declined" signal — high for adapters that
+       answered from training data; low for adapters that grounded
+       every call).
+    2. **URL-grounding rates** — per-adapter totals of
+       ``model_reported_source_count`` and ``stripped_source_count``,
+       with the strip-rate ratio. Mirrors the ``fabrication`` block
+       in ``run_summary.json`` but reproducible from telemetry alone
+       and easier to slice by ``--run-id`` / ``--adapter``.
+    3. **Tool-call histogram** — record counts at each tool-call bin
+       (0, 1, 2, 3, 4+). Useful for spotting bi-modal patterns where
+       half the calls grounded heavily and half not at all.
+
+    Filter knobs:
+      * ``--run-id`` — only include records for one ``run_id``
+      * ``--adapter`` — only one adapter (anthropic / openai / gemini / xai)
+    """
+    import json
+    from collections import defaultdict
+    from pathlib import Path
+
+    if jsonl_path:
+        path = Path(jsonl_path)
+    else:
+        from truthbot.config import settings
+        path = settings.metrics_dir / "adapter_calls.jsonl"
+
+    if not path.exists():
+        print(f"No telemetry data found at {path}.")
+        return
+
+    # tool_counts[adapter] = list of per-record tool_call_count values
+    tool_counts: dict[str, list[int]] = defaultdict(list)
+    reported: dict[str, int] = defaultdict(int)
+    stripped: dict[str, int] = defaultdict(int)
+    retrieved: dict[str, int] = defaultdict(int)
+
+    rows_seen = 0
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if run_id and rec.get("run_id") != run_id:
+                continue
+            name = rec.get("adapter_name", "unknown")
+            if adapter and name != adapter:
+                continue
+            rows_seen += 1
+            tool_counts[name].append(int(rec.get("tool_call_count", 0) or 0))
+            reported[name] += int(rec.get("model_reported_source_count", 0) or 0)
+            stripped[name] += int(rec.get("stripped_source_count", 0) or 0)
+            retrieved[name] += int(rec.get("retrieved_url_count", 0) or 0)
+
+    if rows_seen == 0:
+        print("No telemetry records matched the filters.")
+        return
+
+    def _percentile(values: list[int], pct: float) -> float:
+        """Linear-interpolation percentile. ``values`` need not be sorted."""
+        if not values:
+            return 0.0
+        s = sorted(values)
+        if len(s) == 1:
+            return float(s[0])
+        k = (len(s) - 1) * pct
+        lo = int(k)
+        hi = min(lo + 1, len(s) - 1)
+        frac = k - lo
+        return s[lo] * (1 - frac) + s[hi] * frac
+
+    # ── Table 1: tool-call distribution ─────────────────────────────────────
+    fmt1 = "{:<12} {:>4} {:>6} {:>6} {:>6} {:>5} {:>14}"
+    print()
+    print(fmt1.format(
+        "Adapter", "n", "mean", "p50", "p95", "max", "zero-tool %"
+    ))
+    print("-" * 60)
+    total_records = 0
+    for name in sorted(tool_counts):
+        counts = tool_counts[name]
+        n = len(counts)
+        total_records += n
+        mean = sum(counts) / n if n else 0.0
+        p50 = _percentile(counts, 0.50)
+        p95 = _percentile(counts, 0.95)
+        mx = max(counts) if counts else 0
+        zero = sum(1 for c in counts if c == 0)
+        zero_pct = zero / n * 100 if n else 0.0
+        print(fmt1.format(
+            name, n, f"{mean:.2f}", f"{p50:.1f}",
+            f"{p95:.1f}", mx, f"{zero}/{n} ({zero_pct:.0f}%)",
+        ))
+    print("-" * 60)
+    print(fmt1.format("TOTAL", total_records, "", "", "", "", ""))
+
+    # ── Table 2: URL-grounding rates ────────────────────────────────────────
+    fmt2 = "{:<12} {:>10} {:>9} {:>11} {:>13}"
+    print()
+    print(fmt2.format(
+        "Adapter", "reported", "stripped", "strip rate", "tool URLs"
+    ))
+    print("-" * 60)
+    for name in sorted(tool_counts):
+        r = reported[name]
+        s = stripped[name]
+        rate = (s / r * 100) if r else 0.0
+        rate_str = f"{rate:.1f}%" if r else "—"
+        print(fmt2.format(name, r, s, rate_str, retrieved[name]))
+
+    # ── Table 3: tool-call histogram ────────────────────────────────────────
+    fmt3 = "{:<12} {:>4} {:>4} {:>4} {:>4} {:>5}"
+    print()
+    print(fmt3.format("Adapter", "0", "1", "2", "3", "4+"))
+    print("-" * 40)
+    for name in sorted(tool_counts):
+        bins = [0, 0, 0, 0, 0]  # 0, 1, 2, 3, 4+
+        for c in tool_counts[name]:
+            bins[min(c, 4)] += 1
+        print(fmt3.format(name, *bins))
+    print()
+
+
 def _print_metrics_summary(
     jsonl_path: str | None = None,
     run_id: str | None = None,
@@ -1104,6 +1242,29 @@ def main() -> None:
         help="Only include telemetry rows with this run_id (also prints tier cost table)",
     )
 
+    tool_stats_parser = metrics_sub.add_parser(
+        "tool-stats",
+        help=(
+            "Per-adapter tool-call distribution + URL-grounding rates "
+            "(post-mortem helper for arm-X probes)"
+        ),
+    )
+    tool_stats_parser.add_argument(
+        "--jsonl",
+        help="Path to adapter_calls.jsonl (default: settings.metrics_dir/adapter_calls.jsonl)",
+    )
+    tool_stats_parser.add_argument(
+        "--run-id",
+        dest="run_id",
+        default=None,
+        help="Only include telemetry rows with this run_id",
+    )
+    tool_stats_parser.add_argument(
+        "--adapter",
+        default=None,
+        help="Only include rows from this adapter (anthropic / openai / gemini / xai)",
+    )
+
     # publish subcommand — full pipeline + site generation
     pub_parser = subparsers.add_parser("publish", help="Run pipeline and generate static site")
     pub_parser.add_argument("--transcript", required=True, help="Path to transcript file (or - for stdin)")
@@ -1263,6 +1424,13 @@ def main() -> None:
             _print_metrics_summary(
                 getattr(args, "jsonl", None),
                 run_id=getattr(args, "run_id", None),
+            )
+            return
+        elif getattr(args, "metrics_cmd", None) == "tool-stats":
+            _print_tool_stats(
+                getattr(args, "jsonl", None),
+                run_id=getattr(args, "run_id", None),
+                adapter=getattr(args, "adapter", None),
             )
             return
         else:
