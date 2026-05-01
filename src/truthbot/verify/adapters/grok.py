@@ -40,6 +40,10 @@ _XAI_BASE_URL = "https://api.x.ai/v1"
 # ``TRUTHBOT_GROK_MAX_TOOL_CALLS`` for runs where higher recall justifies
 # the cost.
 _DEFAULT_MAX_TOOL_CALLS_PER_CLAIM = 8
+# Separate ceiling for cheap-tier triage (``telemetry_tier == "triage"``).
+# Keeps routing interpretable — triage was ~76% of SOTU spend (2026-04-26)
+# yet should not mimic frontier search depth per claim.
+_DEFAULT_TRIAGE_MAX_TOOL_CALLS_PER_CLAIM = 3
 
 
 def _max_tool_calls_per_claim() -> int:
@@ -54,6 +58,26 @@ def _max_tool_calls_per_claim() -> int:
     except (TypeError, ValueError):
         return _DEFAULT_MAX_TOOL_CALLS_PER_CLAIM
     return max(1, n)
+
+
+def _max_tool_calls_for_tier(telemetry_tier: str) -> int:
+    """Per-claim Grok ``max_tool_calls`` budget before multi-claim scaling.
+
+    Frontier (and unknown tiers): ``TRUTHBOT_GROK_MAX_TOOL_CALLS`` /
+    ``_DEFAULT_MAX_TOOL_CALLS_PER_CLAIM``.
+    Triage: ``TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS`` /
+    ``_DEFAULT_TRIAGE_MAX_TOOL_CALLS_PER_CLAIM`` — avoids spending frontier-
+    depth search on cheap routing.
+    """
+    if telemetry_tier == "triage":
+        raw = os.environ.get("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", "")
+        if raw.strip() == "":
+            return _DEFAULT_TRIAGE_MAX_TOOL_CALLS_PER_CLAIM
+        try:
+            return max(1, int(raw))
+        except (TypeError, ValueError):
+            return _DEFAULT_TRIAGE_MAX_TOOL_CALLS_PER_CLAIM
+    return _max_tool_calls_per_claim()
 
 
 def _parse_verdict_json(text: str) -> dict:
@@ -114,10 +138,17 @@ class GrokAdapter(LLMAdapter):
         ) as td:
             try:
                 client = openai.OpenAI(api_key=self._api_key, base_url=_XAI_BASE_URL)
+                cap = _max_tool_calls_for_tier(telemetry_tier)
+                logger.debug(
+                    "GrokAdapter.call: tier=%s model=%s max_tool_calls=%d",
+                    telemetry_tier,
+                    self._active_model,
+                    cap,
+                )
                 verdict_text, urls, tool_count, usage = self._call_with_search(
                     client,
                     user_msg,
-                    max_tool_calls=_max_tool_calls_per_claim(),
+                    max_tool_calls=cap,
                 )
 
                 if usage:
@@ -202,14 +233,15 @@ class GrokAdapter(LLMAdapter):
     ) -> list[ModelVerdict]:
         """Call Grok once for N claims; amortize SYNTHESIS_SYSTEM across the chunk.
 
-        xAI has no batch API. The web-search budget is now actively capped via
-        ``max_tool_calls = _max_tool_calls_per_claim() * n`` (default 8/claim),
-        passed as a kwarg to ``responses.create``. xAI's Responses endpoint
-        does not document this parameter as of 2026-04-26 — if the server
-        rejects the unknown kwarg, ``_call_with_search`` retries without it
-        and the call falls back to the legacy unbounded behavior. Token
-        budget scales linearly with N. Override the per-claim ceiling via
-        ``TRUTHBOT_GROK_MAX_TOOL_CALLS``.
+        xAI has no batch API.         The web-search budget is actively capped via
+        ``max_tool_calls = _max_tool_calls_for_tier(telemetry_tier) * n``
+        (frontier default 8/claim; triage default 3/claim), passed as a
+        kwarg to ``responses.create``. xAI's Responses endpoint does not
+        document this parameter as of 2026-04-26 — if the server rejects
+        the unknown kwarg, ``_call_with_search`` retries without it and the
+        call falls back to unbounded tool use. Override frontiers via
+        ``TRUTHBOT_GROK_MAX_TOOL_CALLS``; triage via
+        ``TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS``.
         """
         if not claims:
             return []
@@ -238,11 +270,19 @@ class GrokAdapter(LLMAdapter):
 
             try:
                 client = openai.OpenAI(api_key=self._api_key, base_url=_XAI_BASE_URL)
+                per_claim_cap = _max_tool_calls_for_tier(telemetry_tier)
+                logger.debug(
+                    "GrokAdapter.call_multi: tier=%s model=%s n=%d max_tool_calls=%d",
+                    telemetry_tier,
+                    self._active_model,
+                    n,
+                    per_claim_cap * n,
+                )
                 verdict_text, urls, tool_count, usage = self._call_with_search(
                     client,
                     user_msg,
                     max_output_tokens=2048 + 1024 * n,
-                    max_tool_calls=_max_tool_calls_per_claim() * n,
+                    max_tool_calls=per_claim_cap * n,
                 )
 
                 if usage:

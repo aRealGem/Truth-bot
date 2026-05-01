@@ -35,6 +35,43 @@ def _get(obj: Any, attr: str, default: Any = None) -> Any:
 
 logger = logging.getLogger(__name__)
 
+_OPENAI_PROBE_TRUTHY = frozenset({"1", "true", "yes", "on"})
+
+
+def _openai_responses_probe_enabled() -> bool:
+    return (
+        os.environ.get("TRUTHBOT_OPENAI_RESPONSES_PROBE", "").strip().lower()
+        in _OPENAI_PROBE_TRUTHY
+    )
+
+
+def _log_openai_responses_probe(
+    *,
+    context: str,
+    tier: str,
+    claim_id: str | None,
+    batch_call_id: str | None,
+    model_id: str,
+    web_search_calls: int,
+    tool_retrieved_url_count: int,
+    max_tool_calls_kwarg: int,
+) -> None:
+    """Structured stderr line when ``TRUTHBOT_OPENAI_RESPONSES_PROBE`` is truthy."""
+
+    logger.warning(
+        "OpenAIAdapter RESPONSES_PROBE context=%s tier=%s model=%s claim_id=%s "
+        "batch_call_id=%s web_search_calls=%d tool_urls=%d max_tool_calls_kwarg=%d",
+        context,
+        tier,
+        model_id,
+        claim_id or "",
+        batch_call_id or "",
+        web_search_calls,
+        tool_retrieved_url_count,
+        max_tool_calls_kwarg,
+    )
+
+
 _FALLBACK_MODEL = "gpt-4o"
 # Promoted from gpt-4.1 to gpt-5.4 (Phase 2a of fix-accuracy-sotu-v2).
 # Rationale: gpt-4.1 knowledge cutoff ~Oct 2024 produced training-data-only
@@ -375,6 +412,12 @@ class OpenAIAdapter(LLMAdapter):
                     user_msg,
                     max_output_tokens=max_output_tokens,
                     max_tool_calls=max_tool_calls,
+                    probe_meta={
+                        "context": "live_multi",
+                        "tier": telemetry_tier,
+                        "claim_id": claims[0].id if claims else None,
+                        "batch_call_id": batch_call_id,
+                    },
                 )
 
                 cached = 0
@@ -486,7 +529,14 @@ class OpenAIAdapter(LLMAdapter):
             try:
                 client = openai.OpenAI(api_key=self._api_key, timeout=60.0)
                 verdict_text, urls, tool_count, usage = self._call_with_search(
-                    client, user_msg
+                    client,
+                    user_msg,
+                    probe_meta={
+                        "context": "live_single",
+                        "tier": telemetry_tier,
+                        "claim_id": claim.id,
+                        "batch_call_id": None,
+                    },
                 )
 
                 if usage:
@@ -569,6 +619,7 @@ class OpenAIAdapter(LLMAdapter):
         *,
         max_output_tokens: int | None = None,
         max_tool_calls: int = 2,
+        probe_meta: dict[str, Any] | None = None,
     ):
         """Try Responses API first, fall back to Chat Completions.
 
@@ -576,6 +627,11 @@ class OpenAIAdapter(LLMAdapter):
         the live multi-claim path (``call_multi``) can scale both budgets
         with the chunk size N — same scaling rule as
         ``build_multi_batch_payload``.
+
+        Optional ``probe_meta`` (when ``TRUTHBOT_OPENAI_RESPONSES_PROBE`` is truthy):
+        emit one WARNING line listing web_search iteration count and URLs
+        retrieved for interpretability probes. Keys ``context``, ``tier``,
+        optional ``claim_id``, ``batch_call_id``.
         """
         import openai
 
@@ -638,6 +694,18 @@ class OpenAIAdapter(LLMAdapter):
                         getattr(response, "output", [])
                     )
                     usage = getattr(response, "usage", None)
+                    if _openai_responses_probe_enabled() and probe_meta:
+                        pm = probe_meta
+                        _log_openai_responses_probe(
+                            context=str(pm["context"]),
+                            tier=str(pm["tier"]),
+                            claim_id=pm.get("claim_id"),
+                            batch_call_id=pm.get("batch_call_id"),
+                            model_id=self._active_model,
+                            web_search_calls=tool_count,
+                            tool_retrieved_url_count=len(urls),
+                            max_tool_calls_kwarg=max_tool_calls,
+                        )
                     return text, urls, tool_count, usage
 
                 except (openai.NotFoundError, openai.BadRequestError) as exc:

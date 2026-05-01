@@ -1,0 +1,27 @@
+{
+  "adapter_name": "openai",
+  "model_id": "gpt-5.4",
+  "claim_id": "4a1fb786-6083-4074-8659-d0c3eecb08a4",
+  "label": "True",
+  "confidence": "High",
+  "explanation": "The claim is supported by White House primary sources from February 2026. A White House fact sheet dated February 5, 2026 says President Donald J. Trump launched TrumpRx.gov and describes it as bringing lower drug prices through \u201cMost-Favored-Nation\u201d pricing deals; it also states that the savings would be codified from his MFN pricing initiative. A second White House release dated February 6, 2026 likewise says Trump launched TrumpRx.gov and ties the site\u2019s discounts to the Most-Favored-Nation initiative. These dates align with the claim\u2019s timeframe that the White House announced TrumpRx.gov for MFN drug pricing in February 2026.",
+  "caveats": "",
+  "web_sources": [],
+  "scored_at": "2026-04-30T16:33:09.209116",
+  "no_response": false,
+  "tier": "frontier",
+  "synthesis_mode": "live",
+  "cached_input_tokens": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "batch_call_index": 0,
+  "batch_call_id": "",
+  "tool_call_count": 1,
+  "temporal_flags": [],
+  "model_reported_sources": [
+    "https://www.whitehouse.gov/fact-sheets/2026/02/fact-sheet-president-donald-j-trump-launches-trumprx-gov-to-bring-lower-drug-prices-to-american-patients/?query-11-page=3",
+    "https://www.whitehouse.gov/releases/2026/02/president-trump-launches-trumprx-gov-delivering-massive-immediate-savings-to-millions-of-americans/"
+  ],
+  "stripped_source_count": 2,
+  "url_classifications": {}
+}

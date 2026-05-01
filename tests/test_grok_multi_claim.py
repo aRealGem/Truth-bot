@@ -21,7 +21,6 @@ import pytest
 from truthbot.models import Claim, VerdictLabel
 from truthbot.verify.adapters.grok import GrokAdapter
 
-
 pytestmark = pytest.mark.skipif(
     GrokAdapter.max_claims_per_request < 2,
     reason="pending Phase E Grok live multi-claim override",
@@ -101,7 +100,12 @@ def test_grok_call_multi_returns_n_verdicts_for_n_claims(monkeypatch) -> None:
         [
             {"claim_id": claims[0].id, "label": "True", "confidence": "High", "explanation": "a"},
             {"claim_id": claims[1].id, "label": "False", "confidence": "High", "explanation": "b"},
-            {"claim_id": claims[2].id, "label": "Misleading", "confidence": "Medium", "explanation": "c"},
+            {
+                "claim_id": claims[2].id,
+                "label": "Misleading",
+                "confidence": "Medium",
+                "explanation": "c",
+            },
         ]
     )
     client = _patch_openai(monkeypatch, _fake_response(text))
@@ -297,6 +301,7 @@ def test_grok_call_multi_passes_default_max_tool_calls(monkeypatch) -> None:
     budget, which spent $2.92 / 70% of the 2026-04-25 10-claim rerun cost.
     """
     monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    monkeypatch.delenv("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", raising=False)
     claims = [_claim("A"), _claim("B"), _claim("C")]
     text = json.dumps(
         [
@@ -323,6 +328,7 @@ def test_grok_call_multi_passes_default_max_tool_calls(monkeypatch) -> None:
 def test_grok_call_multi_honors_env_override_for_max_tool_calls(monkeypatch) -> None:
     """``TRUTHBOT_GROK_MAX_TOOL_CALLS=4`` should produce ``max_tool_calls=4*N``."""
     monkeypatch.setenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", "4")
+    monkeypatch.delenv("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", raising=False)
     claims = [_claim("A"), _claim("B")]
     text = json.dumps(
         [
@@ -350,6 +356,7 @@ def test_grok_call_multi_falls_back_when_xai_rejects_max_tool_calls(monkeypatch)
     retry without it rather than failing the entire chunk.
     """
     monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    monkeypatch.delenv("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", raising=False)
     claims = [_claim("A"), _claim("B")]
     text = json.dumps(
         [
@@ -395,10 +402,11 @@ def test_grok_call_multi_falls_back_when_xai_rejects_max_tool_calls(monkeypatch)
 
 
 def test_grok_call_default_per_claim_max_tool_calls(monkeypatch) -> None:
-    """Single-claim ``call()`` path also passes the per-claim cap."""
+    """Single-claim ``call()`` path passes the frontier per-claim cap (default 8)."""
     from truthbot.models import Claim
 
     monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    monkeypatch.delenv("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", raising=False)
     claim = Claim(transcript_id="t1", text="ping", speaker="Test")
     text = json.dumps(
         {"label": "True", "confidence": "High", "explanation": "ok"}
@@ -406,8 +414,70 @@ def test_grok_call_default_per_claim_max_tool_calls(monkeypatch) -> None:
     client = _patch_openai(monkeypatch, _fake_response(text))
     adapter = GrokAdapter()
 
-    adapter.call(claim, [], inject_evidence=False)
+    adapter.call(claim, [], inject_evidence=False, telemetry_tier="frontier")
 
     kwargs = client.responses.last_kwargs
     assert kwargs is not None
     assert kwargs.get("max_tool_calls") == 8
+
+
+def test_grok_call_triage_tier_lower_default_cap(monkeypatch) -> None:
+    """Triage ``telemetry_tier`` uses a tighter default ``max_tool_calls`` (3/claim)."""
+    from truthbot.models import Claim
+
+    monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    monkeypatch.delenv("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", raising=False)
+    claim = Claim(transcript_id="t1", text="ping", speaker="Test")
+    text = json.dumps(
+        {"label": "True", "confidence": "High", "explanation": "ok"}
+    )
+    client = _patch_openai(monkeypatch, _fake_response(text))
+    adapter = GrokAdapter()
+
+    adapter.call(claim, [], inject_evidence=False, telemetry_tier="triage")
+
+    kwargs = client.responses.last_kwargs
+    assert kwargs is not None
+    assert kwargs.get("max_tool_calls") == 3
+
+
+def test_grok_call_triage_env_override(monkeypatch) -> None:
+    monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    monkeypatch.setenv("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", "2")
+    claim = Claim(transcript_id="t1", text="ping", speaker="Test")
+    text = json.dumps(
+        {"label": "True", "confidence": "High", "explanation": "ok"}
+    )
+    client = _patch_openai(monkeypatch, _fake_response(text))
+    adapter = GrokAdapter()
+
+    adapter.call(claim, [], inject_evidence=False, telemetry_tier="triage")
+
+    kwargs = client.responses.last_kwargs
+    assert kwargs is not None
+    assert kwargs.get("max_tool_calls") == 2
+
+
+def test_grok_call_multi_triage_scales_triaged_cap(monkeypatch) -> None:
+    monkeypatch.delenv("TRUTHBOT_GROK_MAX_TOOL_CALLS", raising=False)
+    monkeypatch.delenv("TRUTHBOT_GROK_TRIAGE_MAX_TOOL_CALLS", raising=False)
+    claims = [_claim("A"), _claim("B")]
+    text = json.dumps(
+        [
+            {"claim_id": claims[0].id, "label": "True", "confidence": "High"},
+            {"claim_id": claims[1].id, "label": "False", "confidence": "High"},
+        ]
+    )
+    client = _patch_openai(monkeypatch, _fake_response(text))
+    adapter = GrokAdapter()
+
+    adapter.call_multi(
+        claims,
+        {c.id: [] for c in claims},
+        inject_evidence=False,
+        telemetry_tier="triage",
+    )
+
+    kwargs = client.responses.last_kwargs
+    assert kwargs is not None
+    assert kwargs.get("max_tool_calls") == 3 * len(claims)

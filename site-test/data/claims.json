@@ -2310,5 +2310,685 @@
       }
     ],
     "url": "claims/d056d4aa-a5aa-4e32-b0d1-b877070f4e93.html"
+  },
+  {
+    "id": "e1153466-d40b-4c24-b4f7-034e8e8d2e1f",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "False",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "False",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/e1153466-d40b-4c24-b4f7-034e8e8d2e1f.html"
+  },
+  {
+    "id": "60c7552a-6301-4972-a2a5-4656a1fa6aa0",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims the flow of deadly fentanyl across the U.S. border is down by a record 56 percent in one year.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "coarse_lenient_label": "Truthy",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "Models split",
+    "coarse_strict_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/60c7552a-6301-4972-a2a5-4656a1fa6aa0.html"
+  },
+  {
+    "id": "a3bfdf9b-366d-4fba-80bc-8a2f976dff79",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims his administration drove core inflation down to the lowest level in more than five years within 12 months.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "False",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "False",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/a3bfdf9b-366d-4fba-80bc-8a2f976dff79.html"
+  },
+  {
+    "id": "a11e4bdb-acdd-43a4-b762-5998d92431de",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims that in the last three months of 2025, core inflation was down to 1.7 percent.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "False",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "False",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/a11e4bdb-acdd-43a4-b762-5998d92431de.html"
+  },
+  {
+    "id": "d056d4aa-a5aa-4e32-b0d1-b877070f4e93",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims gasoline reached a peak of over $6 a gallon in some states under his predecessor (Biden).",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/d056d4aa-a5aa-4e32-b0d1-b877070f4e93.html"
+  },
+  {
+    "id": "64007409-ad81-4c34-927c-2e506c1c8ce8",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "The 250th anniversary of American independence will occur in July 2026.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/64007409-ad81-4c34-927c-2e506c1c8ce8.html"
+  },
+  {
+    "id": "42ab09ef-8336-4da8-809b-6981271654f4",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims that when he last spoke in the chamber 12 months prior (February 2025), he had just inherited a nation with inflation at record levels.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "False",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "False",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/42ab09ef-8336-4da8-809b-6981271654f4.html"
+  },
+  {
+    "id": "3357ed06-e0ed-4056-b76e-af1b5bb32ed1",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims the murder rate saw its single largest decline in recorded history in the past year.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "Models split",
+    "coarse_lenient_strength": "none",
+    "coarse_strict_label": "Models split",
+    "coarse_strict_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/3357ed06-e0ed-4056-b76e-af1b5bb32ed1.html"
+  },
+  {
+    "id": "c9372137-8ec3-45f9-81e3-491780a390fd",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims the murder rate reached its lowest number in over 125 years, approximately back to year 1900.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "Models split",
+    "coarse_lenient_strength": "none",
+    "coarse_strict_label": "Unverifiable",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/c9372137-8ec3-45f9-81e3-491780a390fd.html"
+  },
+  {
+    "id": "630810cf-2bc4-4c78-a813-26068bc0eac0",
+    "report_id": "0209d60f-1d00-4c5e-b7ca-7a302451f55e",
+    "claim_text": "Trump claims the Biden administration and its allies in Congress gave the U.S. the worst inflation in the history of the country.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "False",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "False",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/630810cf-2bc4-4c78-a813-26068bc0eac0.html"
+  },
+  {
+    "id": "3c9fac14-9434-442b-9644-fd121ffad8ce",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "The 250th anniversary of American independence will occur less than five months from the date of this speech (February 24, 2026), on July 4, 2026.",
+    "consensus_verdict": "True",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/3c9fac14-9434-442b-9644-fd121ffad8ce.html"
+  },
+  {
+    "id": "ec85272a-2622-4485-8d22-31de27ec00de",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims that when he took office approximately one year prior, inflation was at record levels.",
+    "consensus_verdict": "False",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "False",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "False",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "False",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/ec85272a-2622-4485-8d22-31de27ec00de.html"
+  },
+  {
+    "id": "a271b130-b947-470e-baf6-5e0082df505c",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims he last spoke to Congress (State of the Union) 12 months before February 24, 2026.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "Truthy",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "Truthy",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Mostly True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/a271b130-b947-470e-baf6-5e0082df505c.html"
+  },
+  {
+    "id": "5fbfe50f-c9c9-400b-83c0-87ccfec77807",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "coarse_lenient_label": "Models split",
+    "coarse_lenient_strength": "none",
+    "coarse_strict_label": "Models split",
+    "coarse_strict_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Misleading",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/5fbfe50f-c9c9-400b-83c0-87ccfec77807.html"
+  },
+  {
+    "id": "85d4bce2-120c-4fad-b88d-60a5665859a5",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims the flow of deadly fentanyl across the U.S. border is down by a record 56 percent in one year.",
+    "consensus_verdict": "Models split",
+    "consensus_strength": "none",
+    "coarse_lenient_label": "Truthy",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "Models split",
+    "coarse_strict_strength": "none",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Exaggerated",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "url": "claims/85d4bce2-120c-4fad-b88d-60a5665859a5.html"
+  },
+  {
+    "id": "17a10bf1-97b1-42e6-a9f2-551bd967f6cb",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims that last year the murder rate saw its single largest decline in recorded history.",
+    "consensus_verdict": "Mostly True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "Truthy",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "Truthy",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/17a10bf1-97b1-42e6-a9f2-551bd967f6cb.html"
+  },
+  {
+    "id": "ce1a5f0f-cbaf-473a-afd4-d6b7945d1977",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims the murder rate is now at the lowest number in over 125 years, approximately since the year 1900.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "Unverifiable",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "Unverifiable",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "xai",
+        "label": "True",
+        "confidence": "Medium"
+      }
+    ],
+    "url": "claims/ce1a5f0f-cbaf-473a-afd4-d6b7945d1977.html"
+  },
+  {
+    "id": "c3727673-f0d6-4018-9680-6ad51cf1e969",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims his administration drove core inflation down to the lowest level in more than five years within 12 months.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "Unverifiable",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "Unverifiable",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Exaggerated",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      }
+    ],
+    "url": "claims/c3727673-f0d6-4018-9680-6ad51cf1e969.html"
+  },
+  {
+    "id": "0231c9de-fe74-4b3d-8855-9c4df2a03394",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims that in the last three months of 2025, core inflation was down to 1.7 percent.",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "strong",
+    "coarse_lenient_label": "Unverifiable",
+    "coarse_lenient_strength": "strong",
+    "coarse_strict_label": "Unverifiable",
+    "coarse_strict_strength": "strong",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "False",
+        "confidence": "High"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      }
+    ],
+    "url": "claims/0231c9de-fe74-4b3d-8855-9c4df2a03394.html"
+  },
+  {
+    "id": "45f8c4b7-44cd-4d1e-9f1f-cede938898bf",
+    "report_id": "484d2bcf-2a57-413d-bed1-e1d011912359",
+    "claim_text": "Trump claims gasoline reached a peak of over $6 a gallon in some states under his predecessor (President Biden).",
+    "consensus_verdict": "Unverifiable",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "Unverifiable",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "Unverifiable",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "anthropic",
+        "label": "True",
+        "confidence": "High"
+      },
+      {
+        "adapter": "gemini",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      },
+      {
+        "adapter": "openai",
+        "label": "Mostly True",
+        "confidence": "Medium"
+      },
+      {
+        "adapter": "xai",
+        "label": "Unverifiable",
+        "confidence": "Low"
+      }
+    ],
+    "url": "claims/45f8c4b7-44cd-4d1e-9f1f-cede938898bf.html"
   }
 ]

@@ -39,7 +39,7 @@
       <span class="lens-label">Lens:</span>
       <span class="lens-value">Strict</span>
     </button>
-    <span class="stamp">2026-04-30 00:27 UTC</span>
+    <span class="stamp">2026-04-30 20:01 UTC</span>
   </div>
 </div>
 <header class="masthead">
@@ -58,42 +58,42 @@
 <main class="wrap">
 <section class="prose">
   <h1>Model panel insights</h1>
-  <p class="insights-meta">40 distinct claims across 4 frontier models. All numbers update on every report publish.</p>
+  <p class="insights-meta">50 distinct claims across 4 frontier models. All numbers update on every report publish.</p>
   <h2>Per-model summary</h2>
   <table class="insights-summary">
     <thead><tr><th>Model</th><th class="num-cell">Claims</th><th class="num-cell">Dissents</th><th class="num-cell">Dissent %</th><th class="num-cell">Truthy bias</th><th class="num-cell">Lone &uarr;</th><th class="num-cell">Lone &darr;</th></tr></thead>
-    <tbody><tr><td><strong>Anthropic</strong></td><td class="num-cell">40</td><td class="num-cell">18</td><td class="num-cell">45%</td><td class="num-cell">+0.33</td><td class="num-cell">4</td><td class="num-cell">1</td></tr>
-<tr><td><strong>Google</strong></td><td class="num-cell">40</td><td class="num-cell">11</td><td class="num-cell">28%</td><td class="num-cell">+0.09</td><td class="num-cell">1</td><td class="num-cell">1</td></tr>
-<tr><td><strong>OpenAI</strong></td><td class="num-cell">40</td><td class="num-cell">20</td><td class="num-cell">50%</td><td class="num-cell">-0.44</td><td class="num-cell">1</td><td class="num-cell">2</td></tr>
-<tr><td><strong>xAI</strong></td><td class="num-cell">40</td><td class="num-cell">13</td><td class="num-cell">32%</td><td class="num-cell">+0.03</td><td class="num-cell">4</td><td class="num-cell">2</td></tr></tbody>
+    <tbody><tr><td><strong>Anthropic</strong></td><td class="num-cell">50</td><td class="num-cell">21</td><td class="num-cell">42%</td><td class="num-cell">+0.35</td><td class="num-cell">4</td><td class="num-cell">1</td></tr>
+<tr><td><strong>Google</strong></td><td class="num-cell">50</td><td class="num-cell">16</td><td class="num-cell">32%</td><td class="num-cell">+0.06</td><td class="num-cell">1</td><td class="num-cell">1</td></tr>
+<tr><td><strong>OpenAI</strong></td><td class="num-cell">50</td><td class="num-cell">23</td><td class="num-cell">46%</td><td class="num-cell">-0.45</td><td class="num-cell">1</td><td class="num-cell">3</td></tr>
+<tr><td><strong>xAI</strong></td><td class="num-cell">50</td><td class="num-cell">15</td><td class="num-cell">30%</td><td class="num-cell">+0.03</td><td class="num-cell">4</td><td class="num-cell">2</td></tr></tbody>
   </table>
   <h2>Truthy bias</h2>
   <p class="insights-meta">Average signed gap between this model&rsquo;s truthy-axis score and the panel mean, per claim. Positive = leaner toward Truthy; negative = stricter.</p>
   <div class="bias-chart"><div class="bias-row">  <div class="bias-row-label">Anthropic</div>
   <div class="bias-track" aria-hidden="true">
     <div class="bias-mid"></div>
-    <div class="bias-fill bias-fill-lenient" style="width:16.25%"></div>
+    <div class="bias-fill bias-fill-lenient" style="width:17.67%"></div>
   </div>
-  <div class="bias-row-figure" style="color:var(--v-truthy)">+0.33</div>
+  <div class="bias-row-figure" style="color:var(--v-truthy)">+0.35</div>
 </div>
 <div class="bias-row">  <div class="bias-row-label">Google</div>
   <div class="bias-track" aria-hidden="true">
     <div class="bias-mid"></div>
-    <div class="bias-fill bias-fill-lenient" style="width:4.58%"></div>
+    <div class="bias-fill bias-fill-lenient" style="width:3.00%"></div>
   </div>
-  <div class="bias-row-figure" style="color:var(--v-truthy)">+0.09</div>
+  <div class="bias-row-figure" style="color:var(--v-truthy)">+0.06</div>
 </div>
 <div class="bias-row">  <div class="bias-row-label">OpenAI</div>
   <div class="bias-track" aria-hidden="true">
     <div class="bias-mid"></div>
-    <div class="bias-fill bias-fill-strict" style="width:22.08%"></div>
+    <div class="bias-fill bias-fill-strict" style="width:22.33%"></div>
   </div>
-  <div class="bias-row-figure" style="color:var(--v-falsey)">-0.44</div>
+  <div class="bias-row-figure" style="color:var(--v-falsey)">-0.45</div>
 </div>
 <div class="bias-row">  <div class="bias-row-label">xAI</div>
   <div class="bias-track" aria-hidden="true">
     <div class="bias-mid"></div>
-    <div class="bias-fill bias-fill-lenient" style="width:1.25%"></div>
+    <div class="bias-fill bias-fill-lenient" style="width:1.67%"></div>
   </div>
   <div class="bias-row-figure" style="color:var(--v-truthy)">+0.03</div>
 </div></div>
@@ -101,7 +101,7 @@
   <p class="insights-meta">Share of co-checked claims where the two models cast identical fine-label verdicts.</p>
 <table class="agreement-matrix">
   <thead><tr><th></th><th scope="col">Anthropic</th><th scope="col">Google</th><th scope="col">OpenAI</th><th scope="col">xAI</th></tr></thead>
-  <tbody><tr><th scope="row">Anthropic</th><td class="agg-self">&mdash;</td><td class="agg-cell">38%<span class="agg-n">n=40</span></td><td class="agg-cell">32%<span class="agg-n">n=40</span></td><td class="agg-cell">38%<span class="agg-n">n=40</span></td></tr><tr><th scope="row">Google</th><td class="agg-cell">38%<span class="agg-n">n=40</span></td><td class="agg-self">&mdash;</td><td class="agg-cell">40%<span class="agg-n">n=40</span></td><td class="agg-cell">55%<span class="agg-n">n=40</span></td></tr><tr><th scope="row">OpenAI</th><td class="agg-cell">32%<span class="agg-n">n=40</span></td><td class="agg-cell">40%<span class="agg-n">n=40</span></td><td class="agg-self">&mdash;</td><td class="agg-cell">32%<span class="agg-n">n=40</span></td></tr><tr><th scope="row">xAI</th><td class="agg-cell">38%<span class="agg-n">n=40</span></td><td class="agg-cell">55%<span class="agg-n">n=40</span></td><td class="agg-cell">32%<span class="agg-n">n=40</span></td><td class="agg-self">&mdash;</td></tr></tbody>
+  <tbody><tr><th scope="row">Anthropic</th><td class="agg-self">&mdash;</td><td class="agg-cell">34%<span class="agg-n">n=50</span></td><td class="agg-cell">38%<span class="agg-n">n=50</span></td><td class="agg-cell">42%<span class="agg-n">n=50</span></td></tr><tr><th scope="row">Google</th><td class="agg-cell">34%<span class="agg-n">n=50</span></td><td class="agg-self">&mdash;</td><td class="agg-cell">38%<span class="agg-n">n=50</span></td><td class="agg-cell">54%<span class="agg-n">n=50</span></td></tr><tr><th scope="row">OpenAI</th><td class="agg-cell">38%<span class="agg-n">n=50</span></td><td class="agg-cell">38%<span class="agg-n">n=50</span></td><td class="agg-self">&mdash;</td><td class="agg-cell">36%<span class="agg-n">n=50</span></td></tr><tr><th scope="row">xAI</th><td class="agg-cell">42%<span class="agg-n">n=50</span></td><td class="agg-cell">54%<span class="agg-n">n=50</span></td><td class="agg-cell">36%<span class="agg-n">n=50</span></td><td class="agg-self">&mdash;</td></tr></tbody>
 </table>
 </section>
 <section class="prose insights-extremes">
@@ -174,19 +174,19 @@
 </article><article class="extreme-card">
   <header class="extreme-head">
     <span class="extreme-diff">&Delta;3</span>
+    <span class="extreme-odd">OpenAI as lone pessimist</span>
+    <span class="extreme-odd-label">False</span>
+  </header>
+  <p class="extreme-text"><a href="../claims/a271b130-b947-470e-baf6-5e0082df505c.html">Trump claims he last spoke to Congress (State of the Union) 12 months before February 24, 2026.</a></p>
+  <p class="extreme-meta">vs Anthropic: <strong>Mostly True</strong>, Google: <strong>Unverifiable</strong>, xAI: <strong>Mostly True</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
+</article><article class="extreme-card">
+  <header class="extreme-head">
+    <span class="extreme-diff">&Delta;3</span>
     <span class="extreme-odd">xAI as lone optimist</span>
     <span class="extreme-odd-label">True</span>
   </header>
   <p class="extreme-text"><a href="../claims/fb68e8a3-f9cf-460a-a567-68871cfcf68d.html">Trump claims the United States now has the strongest and most secure border in American history.</a></p>
   <p class="extreme-meta">vs Anthropic: <strong>Mostly True</strong>, OpenAI: <strong>Exaggerated</strong>, Google: <strong>Exaggerated</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
-</article><article class="extreme-card">
-  <header class="extreme-head">
-    <span class="extreme-diff">&Delta;3</span>
-    <span class="extreme-odd">xAI as lone pessimist</span>
-    <span class="extreme-odd-label">False</span>
-  </header>
-  <p class="extreme-text"><a href="../claims/8d82444f-2a4b-4026-bb81-0d086a37a440.html">Trump claims his administration has driven core inflation down to the lowest level in more than five years within 12 months.</a></p>
-  <p class="extreme-meta">vs Anthropic: <strong>Mostly True</strong>, OpenAI: <strong>Mostly True</strong>, Google: <strong>Mostly True</strong> &middot; <span class="extreme-speaker">Donald Trump &middot; 2026-02-24</span></p>
 </article></section>
 <section class="prose insights-method">
   <h2>Method</h2>

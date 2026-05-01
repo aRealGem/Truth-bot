@@ -1,0 +1,214 @@
+{
+  "run_id": "bd9e2552-befc-4643-9786-bfc8bf7def7c",
+  "status": "complete",
+  "transcript_meta": {
+    "speaker": "Donald Trump",
+    "role": "",
+    "date": "2026-02-24",
+    "venue": "State of the Union Address",
+    "source_url": "",
+    "site_root": "site-test",
+    "total_claims_extracted": 111,
+    "total_claims_checkable": 111,
+    "claims_verified_target": 10,
+    "claims_batched": 8,
+    "claims_triaged_auto": 2,
+    "triaged_claim_ids": [
+      "3c9fac14-9434-442b-9644-fd121ffad8ce",
+      "ec85272a-2622-4485-8d22-31de27ec00de"
+    ],
+    "triaged_claims": [
+      {
+        "id": "3c9fac14-9434-442b-9644-fd121ffad8ce",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "The 250th anniversary of American independence will occur less than five months from the date of this speech (February 24, 2026), on July 4, 2026.",
+        "speaker": "Donald Trump",
+        "context": "Less than five months from now, our country will celebrate an epic milestone of American history: the 250th anniversary of our glorious American independence. This July 4, we will mark two-and-a-half centuries of liberty and triumph.",
+        "category": "historical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467203"
+      },
+      {
+        "id": "ec85272a-2622-4485-8d22-31de27ec00de",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims that when he took office approximately one year prior, inflation was at record levels.",
+        "speaker": "Donald Trump",
+        "context": "When I last spoke in this chamber 12 months ago, I had just inherited a nation in crisis with a stagnant economy, inflation at record levels, a wide open border, horrendous recruitment for military and police.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467254"
+      }
+    ],
+    "max_claims_cap": 10,
+    "triage_enabled": true,
+    "adapters_batch": [
+      "anthropic"
+    ],
+    "adapters_sidecar": [
+      "openai",
+      "gemini",
+      "xai"
+    ],
+    "claims_per_request_requested": 5,
+    "claims_per_request_effective": {
+      "anthropic": 5
+    }
+  },
+  "work_units": [
+    {
+      "claim_id": "a271b130-b947-470e-baf6-5e0082df505c",
+      "claim": {
+        "id": "a271b130-b947-470e-baf6-5e0082df505c",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims he last spoke to Congress (State of the Union) 12 months before February 24, 2026.",
+        "speaker": "Donald Trump",
+        "context": "When I last spoke in this chamber 12 months ago, I had just inherited a nation in crisis with a stagnant economy, inflation at record levels, a wide open border.",
+        "category": "historical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467238"
+      },
+      "evidence_count": 0
+    },
+    {
+      "claim_id": "5fbfe50f-c9c9-400b-83c0-87ccfec77807",
+      "claim": {
+        "id": "5fbfe50f-c9c9-400b-83c0-87ccfec77807",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims that in the past nine months, zero illegal aliens have been admitted to the United States.",
+        "speaker": "Donald Trump",
+        "context": "After four years, in which millions and millions of illegal aliens poured across our borders totally unvetted and unchecked, we now have the strongest and most secure border in American history by far. In the past nine months, zero illegal aliens have been admitted to the United States.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467266"
+      },
+      "evidence_count": 0
+    },
+    {
+      "claim_id": "85d4bce2-120c-4fad-b88d-60a5665859a5",
+      "claim": {
+        "id": "85d4bce2-120c-4fad-b88d-60a5665859a5",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims the flow of deadly fentanyl across the U.S. border is down by a record 56 percent in one year.",
+        "speaker": "Donald Trump",
+        "context": "The flow of deadly fentanyl across our border is down by a record 56 percent, in one year. And last year, the murder rate saw its single largest decline in recorded history.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467277"
+      },
+      "evidence_count": 0
+    },
+    {
+      "claim_id": "17a10bf1-97b1-42e6-a9f2-551bd967f6cb",
+      "claim": {
+        "id": "17a10bf1-97b1-42e6-a9f2-551bd967f6cb",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims that last year the murder rate saw its single largest decline in recorded history.",
+        "speaker": "Donald Trump",
+        "context": "The flow of deadly fentanyl across our border is down by a record 56 percent, in one year. And last year, the murder rate saw its single largest decline in recorded history. This is the biggest decline, think of it, in recorded history.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467287"
+      },
+      "evidence_count": 0
+    },
+    {
+      "claim_id": "ce1a5f0f-cbaf-473a-afd4-d6b7945d1977",
+      "claim": {
+        "id": "ce1a5f0f-cbaf-473a-afd4-d6b7945d1977",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims the murder rate is now at the lowest number in over 125 years, approximately since the year 1900.",
+        "speaker": "Donald Trump",
+        "context": "And last year, the murder rate saw its single largest decline in recorded history. This is the biggest decline, think of it, in recorded history. The lowest number in over 125 years \u2014 year 1900.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467297"
+      },
+      "evidence_count": 0
+    },
+    {
+      "claim_id": "c3727673-f0d6-4018-9680-6ad51cf1e969",
+      "claim": {
+        "id": "c3727673-f0d6-4018-9680-6ad51cf1e969",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims his administration drove core inflation down to the lowest level in more than five years within 12 months.",
+        "speaker": "Donald Trump",
+        "context": "The Biden administration and its allies in Congress gave us the worst inflation in the history of our country. But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467311"
+      },
+      "evidence_count": 0
+    },
+    {
+      "claim_id": "0231c9de-fe74-4b3d-8855-9c4df2a03394",
+      "claim": {
+        "id": "0231c9de-fe74-4b3d-8855-9c4df2a03394",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims that in the last three months of 2025, core inflation was down to 1.7 percent.",
+        "speaker": "Donald Trump",
+        "context": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years. And in the last three months of 2025, it was down to 1.7 percent.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467322"
+      },
+      "evidence_count": 0
+    },
+    {
+      "claim_id": "45f8c4b7-44cd-4d1e-9f1f-cede938898bf",
+      "claim": {
+        "id": "45f8c4b7-44cd-4d1e-9f1f-cede938898bf",
+        "transcript_id": "81f1bd5b-be93-4bd5-a102-8a990da68d7f",
+        "text": "Trump claims gasoline reached a peak of over $6 a gallon in some states under his predecessor (President Biden).",
+        "speaker": "Donald Trump",
+        "context": "Gasoline, which reached a peak of over $6 a gallon in some states under my predecessor \u2014 it was quite honestly a disaster \u2014 is now below $2.30 a gallon in most states.",
+        "category": "statistical",
+        "is_checkable": true,
+        "speech_date": "2026-02-24T00:00:00",
+        "extracted_at": "2026-04-30T17:03:34.467332"
+      },
+      "evidence_count": 0
+    }
+  ],
+  "provider_jobs": {
+    "anthropic": {
+      "batch_id": "msgbatch_01P9f6rqKSPthAAoxtrzy6H9",
+      "model_id": "claude-opus-4-7",
+      "request_count": 2,
+      "status": "pending",
+      "chunk_size": 5,
+      "custom_id_to_claims": {
+        "anthropic__multi__50caff9839d24581": [
+          "a271b130-b947-470e-baf6-5e0082df505c",
+          "5fbfe50f-c9c9-400b-83c0-87ccfec77807",
+          "85d4bce2-120c-4fad-b88d-60a5665859a5",
+          "17a10bf1-97b1-42e6-a9f2-551bd967f6cb",
+          "ce1a5f0f-cbaf-473a-afd4-d6b7945d1977"
+        ],
+        "anthropic__multi__f62521eead9645e5": [
+          "c3727673-f0d6-4018-9680-6ad51cf1e969",
+          "0231c9de-fe74-4b3d-8855-9c4df2a03394",
+          "45f8c4b7-44cd-4d1e-9f1f-cede938898bf"
+        ]
+      },
+      "last_status": {
+        "status": "complete",
+        "raw_status": "ended",
+        "done": 2,
+        "total": 2
+      }
+    }
+  },
+  "sidecar_path": "/Users/jackiemartindale/CodeProjects/Truth-bot/metrics/ab_probe_20260430/arm_b/batch_sidecar/bd9e2552-befc-4643-9786-bfc8bf7def7c.jsonl",
+  "inject_evidence": false,
+  "claims_per_request_requested": 5,
+  "max_evidence_per_claim_in_batch": 5
+}
