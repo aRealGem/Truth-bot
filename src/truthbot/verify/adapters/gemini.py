@@ -275,7 +275,9 @@ class GeminiAdapter(LLMAdapter):
         usage = _get(raw_response, "usage_metadata", None)
         cached = _get(usage, "cached_content_token_count", 0) or 0
 
-        ws, mrs, stripped = apply_url_grounding(raw, urls)
+        ws, mrs, stripped = apply_url_grounding(
+            raw, urls, tool_call_count=int(search_query_count)
+        )
         verdict = ModelVerdict(
             adapter_name=self.adapter_name,
             model_id=model_id,
@@ -453,7 +455,9 @@ class GeminiAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
-                ws, mrs, stripped = apply_url_grounding(raw, urls)
+                ws, mrs, stripped = apply_url_grounding(
+                    raw, urls, tool_call_count=int(search_query_count)
+                )
                 td["model_reported_source_count"] = len(mrs)
                 td["stripped_source_count"] = stripped
                 verdict = ModelVerdict(

@@ -168,7 +168,9 @@ class GrokAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
-                ws, mrs, stripped = apply_url_grounding(raw, urls)
+                ws, mrs, stripped = apply_url_grounding(
+                    raw, urls, tool_call_count=int(tool_count)
+                )
                 td["model_reported_source_count"] = len(mrs)
                 td["stripped_source_count"] = stripped
                 verdict = ModelVerdict(

@@ -412,3 +412,117 @@ class TestGrokMultiVerdictGrounding:
         )
         assert verdicts[0].web_sources == ["https://www.bls.gov/cpi.htm"]
         assert verdicts[1].web_sources == []
+
+
+# ── Universal trust-when-fired fallback (2026-05-01) ─────────────────────────
+#
+# Direct coverage for the fallback now living inside apply_url_grounding so
+# every adapter benefits — not just OpenAI multi-claim batch through
+# build_multi_verdicts. The arm-C empirical run (4d6b204a) showed Gemini
+# stayed at 100% strip after the build_multi_verdicts-only fix because
+# Gemini's batch + live parsers call apply_url_grounding directly. Pushing
+# the fallback into apply_url_grounding fixes that universally. See
+# metrics/adapter_interpretability/strip_audit_2026-05.md.
+
+
+from truthbot.verify.adapters.base import apply_url_grounding  # noqa: E402
+
+
+class TestApplyUrlGroundingTrustWhenFired:
+    def test_fallback_fires_when_tool_count_positive_and_extraction_empty(self):
+        """Tool fired (count > 0) but extractor returned empty list — bypass
+        intersection, trust model. This is the path that fixes Gemini's 100%
+        strip rate (redirect resolver returns empty after vertexaisearch
+        cookie failure)."""
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": [
+                "https://www.bls.gov/news.release/cpi.htm",
+                "https://www.bls.gov/news.release/archives/cpi_12182025.pdf",
+            ],
+        }
+        ws, mrs, stripped = apply_url_grounding(raw, [], tool_call_count=3)
+        assert ws == [
+            "https://www.bls.gov/news.release/cpi.htm",
+            "https://www.bls.gov/news.release/archives/cpi_12182025.pdf",
+        ]
+        assert mrs == ws  # MRS mirrors WS so audit trail still records the model emission
+        assert stripped == 0
+
+    def test_fallback_does_not_fire_when_tool_count_zero(self):
+        """Strict intersection still strips when tools never fired —
+        anti-fabrication unchanged for runs where the model declined to
+        search. Default tool_call_count=0 (legacy callers) preserves the
+        prior strict-strip semantics."""
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": ["https://example.com/cited-without-search"],
+        }
+        ws, mrs, stripped = apply_url_grounding(raw, [], tool_call_count=0)
+        assert ws == []
+        assert mrs == ["https://example.com/cited-without-search"]
+        assert stripped == 1
+
+    def test_fallback_does_not_fire_when_extraction_non_empty(self):
+        """When the harness captured at least one URL, full intersection
+        runs — the fallback is exclusively for the harness-empty case.
+        Preserves anti-fabrication when capture worked (xAI / Anthropic
+        baseline)."""
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": [
+                "https://www.bls.gov/cpi.htm",
+                "https://halluc.example/fabricated",
+            ],
+        }
+        ws, mrs, stripped = apply_url_grounding(
+            raw, ["https://www.bls.gov/cpi.htm"], tool_call_count=2
+        )
+        assert ws == ["https://www.bls.gov/cpi.htm"]
+        assert "https://halluc.example/fabricated" in mrs
+        assert stripped == 1
+
+    def test_fallback_does_not_fire_when_model_omitted_web_sources(self):
+        """If the model omitted web_sources entirely, the existing
+        legacy backfill path (returns tool_retrieved as ws, empty mrs)
+        wins — there's nothing to trust on the model side."""
+        raw = {"label": "Unverifiable", "confidence": "Low", "explanation": "x"}
+        ws, mrs, stripped = apply_url_grounding(raw, [], tool_call_count=3)
+        assert ws == []
+        assert mrs == []
+        assert stripped == 0
+
+    def test_default_tool_call_count_param_preserves_legacy_behavior(self):
+        """Default ``tool_call_count=0`` keeps callers that don't pass the
+        kwarg on the strict-intersection path. Backward-compat regression
+        guard for any external/legacy caller of apply_url_grounding."""
+        raw = {
+            "label": "True",
+            "confidence": "High",
+            "explanation": "x",
+            "web_sources": ["https://www.bls.gov/cpi.htm"],
+        }
+        ws, mrs, stripped = apply_url_grounding(raw, [])  # no tool_call_count
+        assert ws == []
+        assert stripped == 1
+
+    def test_explicit_empty_web_sources_array_treated_as_no_citations(self):
+        """``web_sources: []`` (model said "nothing relevant") is NOT the
+        same as omitted web_sources. Strict semantics: no URLs to keep,
+        no URLs to strip — fallback has nothing to act on."""
+        raw = {
+            "label": "Unverifiable",
+            "confidence": "Low",
+            "explanation": "x",
+            "web_sources": [],
+        }
+        ws, mrs, stripped = apply_url_grounding(raw, [], tool_call_count=3)
+        assert ws == []
+        assert mrs == []
+        assert stripped == 0

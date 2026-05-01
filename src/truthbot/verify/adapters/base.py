@@ -629,6 +629,7 @@ def apply_url_grounding(
     tool_retrieved: Optional[list[str]],
     *,
     fallback_limit: int = 10,
+    tool_call_count: int = 0,
 ) -> tuple[list[str], list[str], int]:
     """Compute the three URL fields for a single ``ModelVerdict`` (Layer 1d).
 
@@ -640,21 +641,48 @@ def apply_url_grounding(
           failed the ground-truth intersection (fabrication-rate metric).
 
     Behavior:
-      * Model emitted ``web_sources`` (key present, value may be empty
-        list) → run :func:`ground_truth_web_sources` against
-        ``tool_retrieved``; respect the model's claim of "no sources"
-        when the list is empty.
       * Model omitted ``web_sources`` entirely → fall back to up to
         ``fallback_limit`` tool-retrieved URLs in ``web_sources``,
         empty ``model_reported_sources``, zero stripped count. These
         URLs are tool-grounded by definition so this is not a
         fabrication.
+      * Model emitted ``web_sources`` AND
+        ``tool_call_count > 0`` AND ``tool_retrieved`` is empty
+        (trust-when-fired) → bypass intersection and trust the
+        model. Search/grounding tool fired but the harness extractor
+        returned no URLs (e.g., OpenAI Responses API JSON-output mode
+        produces no inline ``url_citation`` annotations; Gemini's
+        ``vertexaisearch`` redirect resolver requires a session
+        cookie our harness can't supply, so
+        :func:`resolve_gemini_redirect` drops every URL it sees).
+        The model's emitted URLs are what the search tool returned
+        in-context; the strip would be a harness-attribution false
+        positive. xAI / Anthropic prove the relaxed semantics are
+        safe: their adapters capture URLs cleanly and run with 0%
+        strip under the same anti-fabrication intent. The fallback
+        only fires when the tool actually invoked, so it does NOT
+        weaken anti-fabrication for runs where the model declined to
+        search. Diagnosis +
+        evidence: ``metrics/adapter_interpretability/strip_audit_2026-05.md``.
+      * Model emitted ``web_sources`` and the harness captured at
+        least one tool URL → run :func:`ground_truth_web_sources`
+        intersection (strict mode); the survivor set becomes
+        ``web_sources``, the raw list stays on
+        ``model_reported_sources``, and the strip count is the
+        fabrication-rate metric (subject to harness-completeness
+        caveats — see docs).
+      * ``tool_call_count`` defaults to 0 so legacy callers see no
+        behavior change.
     """
     raw_ws = raw.get("web_sources", None)
     tool_retrieved = list(tool_retrieved or [])
     if raw_ws is None:
         return list(tool_retrieved[:fallback_limit]), [], 0
     model_reported = [u for u in (raw_ws or []) if isinstance(u, str)]
+    if tool_call_count > 0 and not tool_retrieved and model_reported:
+        # Trust-when-fired: harness saw nothing, tool actually ran,
+        # model has URLs to attest. Bypass intersection.
+        return list(model_reported), list(model_reported), 0
     kept, stripped = ground_truth_web_sources(model_reported, tool_retrieved)
     return kept, model_reported, stripped
 
@@ -742,35 +770,19 @@ def build_multi_verdicts(
     """
     usage = call_usage or {}
 
-    # Trust-when-fired fallback (2026-05-01). When the search/grounding
-    # tool fired during the call (``tool_call_count > 0``) but the
-    # adapter's URL extractor returned NO URLs to ground against,
-    # bypass the anti-hallucination intersection and trust the model's
-    # emitted ``web_sources`` for every claim in this batch. Diagnosis:
-    # OpenAI's Responses API in JSON-output mode produces no inline
-    # ``url_citation`` annotations (annotations attach to prose
-    # citations, not JSON content); Gemini's ``vertexaisearch``
-    # redirect resolver requires a session cookie our harness can't
-    # supply, so ``resolve_gemini_redirect`` drops every URL it sees.
-    # Both manifest as ``tool_call_count > 0`` AND
-    # ``tool_retrieved_urls == []``, which under the strict
-    # intersection nukes the model's real-domain citations and
-    # fabricates a 100% strip rate (see
-    # metrics/adapter_interpretability/strip_audit_2026-05.md). xAI /
-    # Anthropic prove this is safe: their adapters capture URLs
-    # cleanly and run with 0% strip under the same intent. The
-    # fallback only fires when the tool actually ran, so it does NOT
-    # weaken the anti-fabrication guarantee for adapters or modes
-    # where the tool never invoked. ``tool_retrieved_urls is None``
-    # (legacy callers that don't pass grounding) takes precedence and
-    # is unaffected by this branch.
+    # Batch-level trust-when-fired observability (2026-05-01). The actual
+    # fallback now lives inside :func:`apply_url_grounding` so it applies
+    # universally to every adapter that calls it (Anthropic / Gemini /
+    # Grok / OpenAI single batch + live, AND build_multi_verdicts here).
+    # We keep ONE WARNING per batch — not N per claim — so operators can
+    # spot the harness-gap signature in stderr without N-flooding the
+    # log. See metrics/adapter_interpretability/strip_audit_2026-05.md.
     batch_tool_count = int(usage.get("tool_call_count", 0) or 0)
-    trust_when_fired = (
+    if (
         isinstance(tool_retrieved_urls, list)
         and len(tool_retrieved_urls) == 0
         and batch_tool_count > 0
-    )
-    if trust_when_fired:
+    ):
         logger.warning(
             "%s build_multi_verdicts trust-when-fired: search tool fired "
             "(count=%d) but harness extracted no URLs; trusting "
@@ -843,16 +855,6 @@ def build_multi_verdicts(
             ws = list(raw.get("web_sources", []) or [])
             mrs: list[str] = []
             stripped = 0
-        elif trust_when_fired and isinstance(raw.get("web_sources"), list) and raw.get("web_sources"):
-            # Trust-when-fired path: tool ran but our extractor saw no
-            # URLs, so don't intersect — the model's URLs are what the
-            # search tool actually retrieved (just not surfaced through
-            # the API field we walk). MRS mirrors WS so the audit
-            # trail still records the model's emission.
-            extracted = [u for u in raw["web_sources"] if isinstance(u, str)]
-            ws = list(extracted)
-            mrs = list(extracted)
-            stripped = 0
         elif raw.get("web_sources") is None:
             # Model omitted ``web_sources`` for this claim entirely. We do
             # NOT fan tool URLs out to siblings' ``web_sources`` (publish-
@@ -871,8 +873,12 @@ def build_multi_verdicts(
             mrs = list(tool_urls)
             stripped = 0
         else:
+            # apply_url_grounding handles trust-when-fired internally
+            # when ``tool_call_count > 0`` and ``tool_retrieved_urls``
+            # is empty. Pass the BATCH-level tool count (not the
+            # idx==0-only attributed count) so siblings benefit too.
             ws, mrs, stripped = apply_url_grounding(
-                raw, tool_retrieved_urls
+                raw, tool_retrieved_urls, tool_call_count=batch_tool_count
             )
             # Same defensive backfill when the model emitted an explicit
             # empty ``web_sources: []`` array and the tool DID retrieve
