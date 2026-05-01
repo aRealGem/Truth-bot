@@ -638,3 +638,183 @@ class TestApplyUrlGroundingStripNoKeepDiagnostic:
         with caplog.at_level(logging.WARNING, logger="truthbot.verify.adapters.base"):
             apply_url_grounding(raw, [], tool_call_count=3)
         assert not [r for r in caplog.records if "strip-no-keep" in r.message]
+
+
+class TestApplyUrlGroundingTrackingParamStripping:
+    """Arm-E (run 5d78f4df) revealed OpenAI's web_search consistently
+    appends ``?utm_source=openai`` to retrieved URLs while the model
+    cites the canonical form. Under literal comparison, every such URL
+    flagged as a strip even though the model + tool retrieved the same
+    page. ``_normalize_url_for_compare`` now strips tracking/attribution
+    query params before comparison; values on real (non-tracking) query
+    params are preserved."""
+
+    def test_utm_source_openai_decoration_does_not_break_match(self):
+        from truthbot.verify.adapters.base import _normalize_url_for_compare
+        a = _normalize_url_for_compare("https://www.whitehouse.gov/freedom250/")
+        b = _normalize_url_for_compare(
+            "https://www.whitehouse.gov/freedom250/?utm_source=openai"
+        )
+        assert a == b
+        assert a  # non-empty
+
+    def test_full_utm_quintet_dropped(self):
+        from truthbot.verify.adapters.base import _normalize_url_for_compare
+        plain = _normalize_url_for_compare("https://example.com/article")
+        decorated = _normalize_url_for_compare(
+            "https://example.com/article"
+            "?utm_source=openai&utm_medium=email&utm_campaign=truth"
+            "&utm_content=cta&utm_term=fact"
+        )
+        assert plain == decorated
+
+    def test_click_id_trackers_dropped(self):
+        from truthbot.verify.adapters.base import _normalize_url_for_compare
+        plain = _normalize_url_for_compare("https://news.example/2026/cpi")
+        decorated = _normalize_url_for_compare(
+            "https://news.example/2026/cpi?gclid=AB123&fbclid=XY456&msclkid=Z9"
+        )
+        assert plain == decorated
+
+    def test_real_query_params_preserved_distinguish_urls(self):
+        """Non-tracking query params (e.g. resource IDs, page numbers)
+        must STILL distinguish two URLs — anti-fabrication intersection
+        depends on it. Locks in that the stripper is param-name-keyed,
+        not blanket."""
+        from truthbot.verify.adapters.base import _normalize_url_for_compare
+        a = _normalize_url_for_compare("https://eia.gov/todayinenergy/detail.php?id=55099")
+        b = _normalize_url_for_compare("https://eia.gov/todayinenergy/detail.php?id=65184")
+        assert a != b
+        # And both stay non-empty.
+        assert a and b
+
+    def test_mixed_tracking_and_real_params_keeps_only_real(self):
+        from truthbot.verify.adapters.base import _normalize_url_for_compare
+        a = _normalize_url_for_compare("https://example.com/x?id=42")
+        b = _normalize_url_for_compare(
+            "https://example.com/x?id=42&utm_source=openai&fbclid=ABC"
+        )
+        assert a == b
+
+    def test_param_name_match_is_case_insensitive(self):
+        """Real-world URLs sometimes have UTM_SOURCE in caps. Match on
+        param name should be case-insensitive."""
+        from truthbot.verify.adapters.base import _normalize_url_for_compare
+        plain = _normalize_url_for_compare("https://example.com/y")
+        decorated = _normalize_url_for_compare(
+            "https://example.com/y?UTM_SOURCE=openai&Fbclid=ABC"
+        )
+        assert plain == decorated
+
+    def test_ground_truth_intersection_now_keeps_utm_decorated_pair(self):
+        """End-to-end: model emits canonical URL, tool retrieves
+        utm-decorated form (the OpenAI pattern from arm-E). Intersection
+        keeps the model URL; strip count is 0. Pre-fix: 1 stripped."""
+        from truthbot.verify.adapters.base import ground_truth_web_sources
+        kept, stripped = ground_truth_web_sources(
+            ["https://www.whitehouse.gov/freedom250/"],
+            ["https://www.whitehouse.gov/freedom250/?utm_source=openai"],
+        )
+        assert kept == ["https://www.whitehouse.gov/freedom250/"]
+        assert stripped == 0
+
+
+class TestGeminiResolveModelReportedRedirects:
+    """Arm-E showed Gemini emits raw vertexaisearch redirect URLs in its
+    own ``web_sources`` JSON. The harness already resolves these on the
+    tool-retrieved side; without symmetric resolution on the model side,
+    the intersection can never overlap (resolved host vs raw redirect
+    token are different strings). Helper resolves in-place; unresolvable
+    redirects are dropped (they're opaque + session-cookied — useless
+    citations regardless)."""
+
+    @staticmethod
+    def _build_adapter(monkeypatch):
+        """Construct a GeminiAdapter without invoking the real client."""
+        monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+        from truthbot.verify.adapters.gemini import GeminiAdapter
+        return GeminiAdapter()
+
+    def test_resolves_redirect_to_underlying_url(self, monkeypatch):
+        """The canonical case: model emits a redirect URL, resolver
+        succeeds, redirect is replaced by the resolved URL in raw['web_sources']."""
+        adapter = self._build_adapter(monkeypatch)
+
+        from truthbot.verify.adapters import gemini as gemini_mod
+        def fake_resolve(url, *, cache=None, timeout=5.0):
+            # Resolve only the test redirect; pass others through.
+            if "grounding-api-redirect/RESOLVES" in url:
+                return "https://www.bls.gov/news.release/cpi.htm"
+            return None
+        monkeypatch.setattr(gemini_mod, "resolve_gemini_redirect", fake_resolve)
+
+        raw = {
+            "web_sources": [
+                "https://vertexaisearch.cloud.google.com/grounding-api-redirect/RESOLVES",
+                "https://www.bls.gov/cpi.htm",  # already canonical, pass-through
+            ]
+        }
+        adapter._resolve_model_reported_redirects(raw)
+        assert raw["web_sources"] == [
+            "https://www.bls.gov/news.release/cpi.htm",
+            "https://www.bls.gov/cpi.htm",
+        ]
+
+    def test_drops_unresolvable_redirect(self, monkeypatch):
+        """Redirects that can't be resolved (session-cookie failure,
+        timeout, etc.) are dropped — they're opaque tokens unusable as
+        citations and would only inflate the model_reported_sources
+        list with junk."""
+        adapter = self._build_adapter(monkeypatch)
+
+        from truthbot.verify.adapters import gemini as gemini_mod
+        monkeypatch.setattr(
+            gemini_mod, "resolve_gemini_redirect",
+            lambda url, *, cache=None, timeout=5.0: None,
+        )
+
+        raw = {
+            "web_sources": [
+                "https://vertexaisearch.cloud.google.com/grounding-api-redirect/UNRESOLVABLE",
+                "https://www.bls.gov/cpi.htm",
+            ]
+        }
+        adapter._resolve_model_reported_redirects(raw)
+        # The redirect is dropped; the canonical URL passes through.
+        assert raw["web_sources"] == ["https://www.bls.gov/cpi.htm"]
+
+    def test_no_op_when_web_sources_missing(self, monkeypatch):
+        adapter = self._build_adapter(monkeypatch)
+        raw = {"label": "Unverifiable"}  # no web_sources key
+        adapter._resolve_model_reported_redirects(raw)
+        assert "web_sources" not in raw
+
+    def test_no_op_when_no_redirects_present(self, monkeypatch):
+        adapter = self._build_adapter(monkeypatch)
+        # If no redirects, the resolver shouldn't even be called.
+        from truthbot.verify.adapters import gemini as gemini_mod
+        called = {"n": 0}
+
+        def spy(url, *, cache=None, timeout=5.0):
+            called["n"] += 1
+            return url
+
+        monkeypatch.setattr(gemini_mod, "resolve_gemini_redirect", spy)
+        raw = {
+            "web_sources": [
+                "https://www.bls.gov/cpi.htm",
+                "https://apnews.com/article/foo",
+            ]
+        }
+        adapter._resolve_model_reported_redirects(raw)
+        assert called["n"] == 0
+        assert raw["web_sources"] == [
+            "https://www.bls.gov/cpi.htm",
+            "https://apnews.com/article/foo",
+        ]
+
+    def test_skips_non_string_entries(self, monkeypatch):
+        adapter = self._build_adapter(monkeypatch)
+        raw = {"web_sources": ["https://x.com", None, 42, "https://y.com"]}
+        adapter._resolve_model_reported_redirects(raw)
+        assert raw["web_sources"] == ["https://x.com", "https://y.com"]

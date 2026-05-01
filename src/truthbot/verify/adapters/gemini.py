@@ -205,6 +205,44 @@ class GeminiAdapter(LLMAdapter):
             cls._url_cache = None
         return cls._url_cache
 
+    def _resolve_model_reported_redirects(self, raw: dict) -> None:
+        """In-place resolve any vertexaisearch redirect URLs in ``raw['web_sources']``.
+
+        Gemini routinely emits raw ``vertexaisearch.cloud.google.com/grounding-api-redirect/...``
+        URLs in its self-reported ``web_sources`` field — they're the same
+        opaque session-cookied tokens the harness already converts on the
+        tool-retrieved side via :func:`resolve_gemini_redirect`. Without
+        symmetric resolution on the model side, the anti-hallucination
+        intersection in :func:`apply_url_grounding` always fails (resolved
+        host vs raw redirect token never overlap), producing the 100%
+        Gemini strip rate observed in arm-E run ``5d78f4df-…``.
+
+        Behavior:
+          * URL is a recognized vertexaisearch redirect → run the resolver.
+            Append the resolved URL on success; drop on failure (the URL
+            is opaque + session-cookied, useless to a reader anyway).
+          * URL is anything else → pass through unchanged.
+          * ``raw['web_sources']`` not a list → no-op.
+
+        Mutates ``raw`` in place. Idempotent.
+        """
+        raw_ws = raw.get("web_sources")
+        if not isinstance(raw_ws, list):
+            return
+        cache = self._get_redirect_cache()
+        resolved: list[str] = []
+        for u in raw_ws:
+            if not isinstance(u, str):
+                continue
+            if u.startswith(_GEMINI_OPAQUE_URL_PREFIXES):
+                final = resolve_gemini_redirect(u, cache=cache)
+                if final:
+                    resolved.append(final)
+                # else: drop unresolvable redirect — opaque, can't be cited
+            else:
+                resolved.append(u)
+        raw["web_sources"] = resolved
+
     # ── Batch support (payload/parse only; submit/retrieve guarded above) ─────
 
     def build_batch_payload(
@@ -275,6 +313,10 @@ class GeminiAdapter(LLMAdapter):
         usage = _get(raw_response, "usage_metadata", None)
         cached = _get(usage, "cached_content_token_count", 0) or 0
 
+        # Resolve vertexaisearch redirects in the model's emitted
+        # web_sources so the intersection has matching forms on both
+        # sides. See _resolve_model_reported_redirects docstring.
+        self._resolve_model_reported_redirects(raw)
         ws, mrs, stripped = apply_url_grounding(
             raw, urls, tool_call_count=int(search_query_count)
         )
@@ -455,6 +497,10 @@ class GeminiAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
+                # Resolve vertexaisearch redirects in model-emitted
+                # web_sources so the intersection compares apples to
+                # apples. See _resolve_model_reported_redirects.
+                self._resolve_model_reported_redirects(raw)
                 ws, mrs, stripped = apply_url_grounding(
                     raw, urls, tool_call_count=int(search_query_count)
                 )

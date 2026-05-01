@@ -531,6 +531,15 @@ def _normalize_url_for_compare(url: str) -> str:
 
     Returns ``""`` for inputs that aren't a recognizable HTTP/HTTPS URL — the
     caller treats those as non-matching (i.e. stripped).
+
+    Tracking / attribution query params (``utm_*``, ``gclid``, ``fbclid``,
+    etc.) are stripped before comparison so that a model-emitted
+    canonical URL matches a tool-retrieved URL that picked up an
+    attribution decoration. Arm-E (run 5d78f4df) showed OpenAI's
+    web_search tool consistently appends ``?utm_source=openai`` to
+    retrieved URLs, which under the prior literal comparison flagged
+    every such URL as a strip even when the model cited the canonical
+    form correctly.
     """
     if not isinstance(url, str):
         return ""
@@ -558,7 +567,47 @@ def _normalize_url_for_compare(url: str) -> str:
         path = ""
     elif len(path) > 1 and path.endswith("/"):
         path = path[:-1]
-    return urlunparse((scheme, netloc, path, p.params or "", p.query or "", ""))
+    query = _strip_tracking_query_params(p.query or "")
+    return urlunparse((scheme, netloc, path, p.params or "", query, ""))
+
+
+# Tracking / attribution query params that should not affect URL identity for
+# the anti-hallucination intersection. Lower-cased; comparison is
+# case-insensitive on the parameter NAME (RFC 3986 leaves param-name case
+# undefined; in practice these tracking keys are always lowercase). Value
+# preserved on real query params (e.g. ``?id=42``).
+_TRACKING_QUERY_PARAM_NAMES: frozenset[str] = frozenset({
+    # Google Analytics / standard UTM
+    "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+    "utm_id", "utm_creative_format", "utm_marketing_tactic",
+    # Click identifiers
+    "gclid", "fbclid", "msclkid", "yclid", "dclid",
+    # Mailchimp
+    "mc_cid", "mc_eid",
+    # Generic referer/source flags
+    "ref", "ref_src", "_ga", "_gl",
+    # OpenAI-specific (observed in arm-E run 5d78f4df-…)
+    "_openai_referrer",
+})
+
+
+def _strip_tracking_query_params(query: str) -> str:
+    """Drop tracking/attribution query params from a URL query string.
+
+    Returns ``""`` if the query had only tracking params. Preserves order
+    and value of all surviving params. Param-name comparison is
+    case-insensitive (matches the convention all the listed trackers
+    use in the wild).
+    """
+    if not query:
+        return ""
+    from urllib.parse import parse_qsl, urlencode
+
+    pairs = parse_qsl(query, keep_blank_values=True)
+    filtered = [
+        (k, v) for k, v in pairs if k.lower() not in _TRACKING_QUERY_PARAM_NAMES
+    ]
+    return urlencode(filtered)
 
 
 def ground_truth_web_sources(
