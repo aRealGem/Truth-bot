@@ -1015,6 +1015,28 @@ details.reasoning[open] > summary::before { transform: rotate(90deg); }
   cursor: help;
 }
 
+/* Tier 4 (audit-trail) — model emitted a URL the search tool didn't
+   return for the same call. Domain-only, non-clickable, italic so
+   readers see the citation without us implying we vouched for it. */
+.evidence-model-only-header {
+  margin: 0.6rem 0 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.evidence-list.evidence-list-model-only li.source-model-only {
+  color: var(--ink-muted);
+}
+.evidence-list.evidence-list-model-only .ev-src-model-only {
+  font-style: italic;
+  color: var(--ink-muted);
+}
+.evidence-list.evidence-list-model-only .ev-mark {
+  color: #b07700;
+}
+
 
 /* [17] Report page — claim footer & methodology ──────────────────────── */
 .claim-foot {

@@ -706,6 +706,44 @@ def _evidence_list_html(
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
 
 
+def _model_cited_unverified_html(urls: list[str]) -> str:
+    """Render model-reported URLs that didn't survive the tool-grounding intersection.
+
+    A URL ends up here when the LLM emitted it as a citation but the search
+    tool's retrieved-URL set for the same call did not contain it. Could be
+    (a) a real URL the harness failed to capture, (b) a plausible URL the
+    model pattern-matched on a real domain (tool didn't visit that exact
+    path), or (c) outright fabrication. We surface host + path so readers
+    can verify each citation themselves, but render it italicized and
+    non-clickable to make clear we did NOT vouch for it.
+    """
+    if not urls:
+        return ''
+    items: list[str] = []
+    for url in urls[:10]:
+        # Same short-form transform as the verified tier so reader-side
+        # comparison stays apples-to-apples.
+        short = url.replace("https://", "").replace("http://", "")
+        if len(short) > 80:
+            short = short[:77] + "…"
+        items.append(
+            '<li class="source-model-only">'
+            '<span class="ev-mark">!</span>'
+            f'<span class="ev-src ev-src-model-only">{_esc(short)}</span>'
+            ' <span class="source-unverified-badge" title="'
+            'Model emitted this URL as a citation but the search tool did '
+            'not return it for this call. Could be a real URL the harness '
+            'failed to capture, a plausible URL the model pattern-matched '
+            'on a real domain, or fabrication. Verify before relying on it.'
+            '">didn’t validate</span></li>'
+        )
+    return (
+        '<p class="evidence-model-only-header">'
+        f'Model-cited URLs that didn’t validate ({len(urls)}):</p>'
+        f'<ul class="evidence-list evidence-list-model-only">{"".join(items)}</ul>'
+    )
+
+
 def _verdict_bar_html(
     dist: dict[str, int],
     bar_class: str = "vp-bar",
@@ -1589,16 +1627,42 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
                 existing, cls
             )
 
+    # Second pass — collect model-reported URLs that did NOT survive the
+    # tool-grounding intersection (apply_url_grounding) for ANY model. A
+    # URL validated by even one model is treated as validated and stays
+    # out of this list. Surfaced separately under the evidence block
+    # with a "didn't validate" caveat so readers see the audit trail
+    # without us implying we vouched for them.
+    unverified_urls: list[str] = []
+    seen_unverified: set[str] = set()
+    for mv in bundle.model_verdicts:
+        for url in (getattr(mv, 'model_reported_sources', None) or []):
+            if not url or url in seen_urls or url in seen_unverified:
+                continue
+            seen_unverified.add(url)
+            unverified_urls.append(url)
+
     total_models = len(bundle.model_verdicts)
     dissenting = total_models - agreeing
     dissent_note = f" · {dissenting} dissent{'s' if dissenting > 1 else ''}" if dissenting else ""
 
+    unverified_block = _model_cited_unverified_html(unverified_urls)
+    if all_urls:
+        evidence_inner = (
+            f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None)}'
+            f'{unverified_block}'
+        )
+    elif unverified_urls:
+        # Suppress the "No sources retrieved." note when the model DID
+        # cite URLs but none survived intersection — the unverified
+        # block is the audit trail in that case.
+        evidence_inner = unverified_block
+    else:
+        evidence_inner = _evidence_list_html([], classifications=None)
     evidence_html = (
         '<details class="evidence-details">'
         '  <summary class="evidence-summary">Combined evidence / sources list</summary>'
-        '  <div class="evidence">'
-        f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None)}'
-        '  </div>'
+        f'  <div class="evidence">{evidence_inner}</div>'
         '</details>'
     )
 

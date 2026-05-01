@@ -560,3 +560,175 @@ def test_compute_stats_populates_insights_when_claims_present() -> None:
     assert "insights" in stats
     assert stats["insights"] is not None
     assert stats["insights"].total_claims == 1
+
+
+# ── Model-cited (unverified) tier — strip-audit 2026-05 follow-up ─────────────
+
+
+def _bundle_with_sources(
+    *,
+    web_sources_per_model: list[list[str]],
+    mrs_per_model: list[list[str]],
+) -> VerdictBundle:
+    """Build a bundle with explicit per-model web_sources / model_reported_sources.
+
+    Both lists must have the same length. Each entry produces one
+    ModelVerdict on the bundle.
+    """
+    assert len(web_sources_per_model) == len(mrs_per_model)
+    claim = Claim(
+        transcript_id="t",
+        text="Test claim with sources.",
+        speaker="Speaker",
+        context="ctx",
+        category="economy",
+        is_checkable=True,
+    )
+    mvs: list[ModelVerdict] = []
+    for i, (ws, mrs) in enumerate(
+        zip(web_sources_per_model, mrs_per_model)
+    ):
+        mvs.append(
+            ModelVerdict(
+                adapter_name=f"adapter-{i}",
+                model_id=f"model-{i}",
+                claim_id=claim.id,
+                label=VerdictLabel.TRUE,
+                confidence=Confidence.HIGH,
+                explanation="r",
+                web_sources=list(ws),
+                model_reported_sources=list(mrs),
+                stripped_source_count=max(0, len(mrs) - len(ws)),
+            )
+        )
+    consensus = ConsensusVerdict(
+        claim_id=claim.id,
+        model_verdicts=mvs,
+        consensus_label=VerdictLabel.TRUE,
+        consensus_verdict=VerdictLabel.TRUE.value,
+        confidence=Confidence.HIGH,
+        agreement=True,
+        consensus_strength="strong",
+        explanation="x",
+        coarse_lenient_label="True",
+        coarse_lenient_strength="strong",
+        coarse_strict_label="True",
+        coarse_strict_strength="strong",
+    )
+    return VerdictBundle(
+        claim=claim,
+        speaker="Speaker",
+        date_str="2026-03-04",
+        model_verdicts=mvs,
+        consensus=consensus,
+    )
+
+
+def test_evidence_block_surfaces_model_cited_unverified_tier() -> None:
+    """When a model emits citations the tool didn't return (model_reported_sources
+    minus web_sources is non-empty), the rendered claim card MUST surface those
+    URLs as a separate "Model-cited URLs that didn't validate" sub-list under
+    the Combined evidence/sources block. Domain-only, non-clickable, with a
+    "didn't validate" badge so readers see the audit trail without us implying
+    we vouched for them. Mirrors the 2026-04-30 arm-B finding that OpenAI batch
+    stripped 25/26 URLs (all real *.gov domains)."""
+    kept = "https://www.bls.gov/news.release/archives/cpi_12182025.pdf"
+    stripped_a = "https://www.bls.gov/news.release/archives/cpi_12182025.htm"
+    stripped_b = "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[[kept], []],
+        mrs_per_model=[[kept, stripped_a, stripped_b], []],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # Kept URL renders in the existing verified evidence-list as a
+    # clickable link.
+    assert f'<a href="{kept}"' in html
+    # Stripped URLs render as host+path text (so readers can verify
+    # them) inside the new model-only sub-list — but MUST NOT be
+    # clickable, since we did not vouch for them.
+    assert "cpi_12182025.htm" in html
+    assert "cpi_01132026.htm" in html
+    assert f'<a href="{stripped_a}"' not in html
+    assert f'<a href="{stripped_b}"' not in html
+    # The unverified sub-list and header are present.
+    assert "evidence-list-model-only" in html
+    assert "Model-cited URLs that didn’t validate" in html
+    # Exactly 2 model-only items (the kept URL must NOT appear in the
+    # unverified list, even though its host shares a domain with the
+    # stripped URLs).
+    assert html.count('class="source-model-only"') == 2
+    # "didn't validate" caveat badge present.
+    assert "didn’t validate" in html
+
+
+def test_evidence_block_unverified_only_when_no_web_sources() -> None:
+    """Edge case: model emitted citations but tool returned NONE for any model
+    (web_sources empty across the panel). The card MUST suppress the legacy
+    "No sources retrieved." note and render only the unverified block — the
+    audit trail is the right answer in that case. Without this branch readers
+    would see "No sources retrieved." even though the model cited 4 URLs.
+    """
+    stripped = [
+        "https://www.cbp.gov/newsroom/national-media-release/cbp-releases-march-2024-monthly-update",
+        "https://www.cbp.gov/newsroom/stats/cbp-enforcement-statistics",
+        "https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics",
+        "https://www.fbi.gov/services/cjis/ucr/",
+    ]
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[[], []],
+        mrs_per_model=[stripped[:2], stripped[2:]],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # Legacy "No sources retrieved." note SUPPRESSED since the model
+    # did cite URLs — the unverified block is the audit trail.
+    assert "No sources retrieved." not in html
+    assert "evidence-list-model-only" in html
+    assert html.count('class="source-model-only"') == 4
+    # No clickable <a href> for any of the stripped URLs.
+    for u in stripped:
+        assert f'<a href="{u}"' not in html
+    # Hosts visible (host+path form may be truncated for long URLs but
+    # the domain is always intact).
+    assert "cbp.gov" in html
+    assert "fbi.gov" in html
+
+
+def test_evidence_block_no_unverified_when_model_reported_empty() -> None:
+    """Backward compat: legacy bundles without model_reported_sources (or with
+    everything already in web_sources) render unchanged — the new sub-list
+    must NOT appear. Avoids visual regression on cached pre-2026-04-26 reports
+    that don't carry the MRS field."""
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[
+            ["https://apnews.com/article/foo"],
+            ["https://www.reuters.com/world/bar"],
+        ],
+        mrs_per_model=[[], []],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert "evidence-list-model-only" not in html
+    assert "Model-cited URLs that didn’t validate" not in html
+    assert "didn’t validate" not in html
+
+
+def test_evidence_block_model_only_url_validated_by_other_model_excluded() -> None:
+    """A URL stripped on model A but validated (kept in web_sources) on model B
+    is treated as VALIDATED at the bundle level — the unverified block only
+    contains URLs no model successfully grounded. Ensures we don't surface
+    spurious doubt when at least one search tool returned the citation."""
+    shared = "https://www.bls.gov/news.release/cpi.htm"
+    only_stripped = "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[[shared], []],
+        mrs_per_model=[[shared, only_stripped], [shared]],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # Shared URL kept once as a clickable link.
+    assert f'<a href="{shared}"' in html
+    # Only the truly-stripped URL appears in the unverified sub-list,
+    # rendered with its path so the reader can verify it themselves.
+    assert "evidence-list-model-only" in html
+    assert html.count('class="source-model-only"') == 1
+    assert "cpi_01132026.htm" in html
+    assert f'<a href="{only_stripped}"' not in html
+
