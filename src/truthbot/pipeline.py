@@ -856,7 +856,7 @@ def _run_publish(args) -> None:
     # Claude Sonnet actually produced — resubmitting then costs nothing, not
     # another $0.50-ish extraction.
     run_id = str(uuid.uuid4())
-    _persist_extracted_claims(run_id, claims)
+    _persist_extracted_claims(run_id, claims, metrics_dir=settings.metrics_dir)
     all_checkable = [c for c in claims if c.is_checkable]
     # ``--max-claims 0`` means "no cap / verify every checkable claim". We always
     # preserve the full extracted/checkable counts in logs and telemetry even if
