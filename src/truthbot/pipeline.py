@@ -816,6 +816,7 @@ def _run_publish(args) -> None:
     """Full pipeline: ingest → extract → verify → publish site."""
     import os, uuid
     from datetime import datetime
+    from truthbot.config import settings
     from truthbot.extract.claims import ClaimExtractor
     from truthbot.ingest.transcript import TranscriptIngester
     from truthbot.verify.engine import VerificationEngine
@@ -877,7 +878,6 @@ def _run_publish(args) -> None:
     # ``run_id`` was already minted up-top so the extractions/<run_id>.jsonl
     # side-file matches whatever telemetry + batch descriptors use.
     mode = getattr(args, "mode", "live") or "live"
-    from truthbot.config import settings
     from truthbot.metrics.telemetry import finalize_run, telemetry_run_context
     from truthbot.verify.batch import BatchDispatcher
 
