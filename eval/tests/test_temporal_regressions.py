@@ -22,6 +22,7 @@ from temporal_regressions import (  # type: ignore[import]
     REGRESSIONS_PATH,
     RegressionCase,
     case_by_id,
+    find_matching_bundle,
     load_temporal_regressions,
 )
 
@@ -32,7 +33,7 @@ from temporal_regressions import (  # type: ignore[import]
 def test_data_file_exists_and_loads() -> None:
     assert REGRESSIONS_PATH.exists()
     metadata, cases = load_temporal_regressions()
-    assert metadata["schema_version"] == 1
+    assert metadata["schema_version"] == 2
     assert len(cases) == 4, (
         "Part A in findings-review.md is exactly 4 cases. If you added a "
         "fifth, update both this assertion and the docstring at the top "
@@ -57,7 +58,7 @@ def test_loader_raises_on_unknown_strict_label(tmp_path) -> None:
     import json as _json
     metadata, cases = load_temporal_regressions()
     bad = {
-        "schema_version": 1,
+        "schema_version": 2,
         "regressions": [
             {
                 "id": "x", "source_run_claim_id": 1, "topic": "t",
@@ -67,6 +68,7 @@ def test_loader_raises_on_unknown_strict_label(tmp_path) -> None:
                 "ground_truth_lenient": "Truthy",
                 "rationale": "r", "primary_source_pattern": "s",
                 "failure_mode": "m",
+                "match_keywords": ["x"],
                 "test_acceptance": {
                     "fine_label_in": ["True"],
                     "strict_label_in": ["True"],
@@ -84,7 +86,7 @@ def test_loader_raises_on_unknown_strict_label(tmp_path) -> None:
 def test_loader_raises_on_missing_required_field(tmp_path) -> None:
     import json as _json
     bad = {
-        "schema_version": 1,
+        "schema_version": 2,
         "regressions": [
             {"id": "x"}  # missing nearly everything
         ],
@@ -100,7 +102,7 @@ def test_loader_raises_on_wrong_schema_version(tmp_path) -> None:
     bad = {"schema_version": 99, "regressions": []}
     p = tmp_path / "bad.json"
     p.write_text(_json.dumps(bad))
-    with pytest.raises(ValueError, match="schema_version must be 1"):
+    with pytest.raises(ValueError, match="schema_version must be 2"):
         load_temporal_regressions(p)
 
 
@@ -183,3 +185,139 @@ def test_all_four_cases_have_truthy_or_better_strict_ground_truth() -> None:
 def test_case_by_id_raises_key_error_on_unknown_id() -> None:
     with pytest.raises(KeyError):
         case_by_id("nope-not-a-case")
+
+
+# ── match_keywords + find_matching_bundle (schema v2) ────────────────────────
+#
+# The 2026-05-01 live run of the regression set (run cbc335a1-…) showed the
+# runbook's first-30-char substring matcher failed on all 4 cases because the
+# extractor split compound sentences and normalized "100%" → "100 percent".
+# match_keywords + find_matching_bundle replace the brittle anchor with an
+# AND-match on case-insensitive substrings — robust to extractor splits and
+# common normalization passes.
+
+
+def test_each_case_has_non_empty_match_keywords() -> None:
+    """Schema v2 requires every regression case to carry a non-empty list of
+    match_keywords. Without these the runbook scorer can't reliably find the
+    bundle for a case after the extractor splits / rephrases the prompt."""
+    _, cases = load_temporal_regressions()
+    for c in cases:
+        assert c.match_keywords, f"case {c.id} has empty match_keywords"
+        assert all(isinstance(k, str) and k for k in c.match_keywords)
+
+
+def test_loader_raises_when_match_keywords_missing(tmp_path) -> None:
+    import json as _json
+    bad = {
+        "schema_version": 2,
+        "regressions": [
+            {
+                "id": "x", "source_run_claim_id": 1, "topic": "t",
+                "claim": "c", "published_label_2026_04": "False",
+                "verdict": "TRUE",
+                "ground_truth_strict": "True",
+                "ground_truth_lenient": "True",
+                "rationale": "r", "primary_source_pattern": "s",
+                "failure_mode": "m",
+                # match_keywords intentionally omitted
+                "test_acceptance": {
+                    "fine_label_in": ["True"],
+                    "strict_label_in": ["True"],
+                    "min_confidence": "Medium",
+                },
+            }
+        ],
+    }
+    p = tmp_path / "bad.json"
+    p.write_text(_json.dumps(bad))
+    with pytest.raises(ValueError, match="missing required fields"):
+        load_temporal_regressions(p)
+
+
+def test_loader_raises_when_match_keywords_empty(tmp_path) -> None:
+    import json as _json
+    bad = {
+        "schema_version": 2,
+        "regressions": [
+            {
+                "id": "x", "source_run_claim_id": 1, "topic": "t",
+                "claim": "c", "published_label_2026_04": "False",
+                "verdict": "TRUE",
+                "ground_truth_strict": "True",
+                "ground_truth_lenient": "True",
+                "rationale": "r", "primary_source_pattern": "s",
+                "failure_mode": "m",
+                "match_keywords": [],
+                "test_acceptance": {
+                    "fine_label_in": ["True"],
+                    "strict_label_in": ["True"],
+                    "min_confidence": "Medium",
+                },
+            }
+        ],
+    }
+    p = tmp_path / "bad.json"
+    p.write_text(_json.dumps(bad))
+    with pytest.raises(ValueError, match="match_keywords must be a non-empty list"):
+        load_temporal_regressions(p)
+
+
+def test_find_matching_bundle_handles_extractor_normalization() -> None:
+    """The 2026-05-01 live run produced bundles with claim text like:
+    'Marco Rubio received 100 percent of Senate confirmation votes...'
+    even though the runbook's mini-transcript wrote '100%'. The Rubio case
+    keywords ['rubio', '100', 'confirm'] should match this normalized text
+    without any string-equality."""
+    case = case_by_id("rubio-100-percent-2026")
+    bundles = [
+        {"claim": {"text": "Some unrelated claim about inflation."}},
+        {"claim": {"text": "Marco Rubio received 100 percent of Senate confirmation votes."}},
+        {"claim": {"text": "Trump announced TrumpRx.gov in February 2026."}},
+    ]
+    match = find_matching_bundle(case, bundles)
+    assert match is not None
+    assert "Rubio" in match["claim"]["text"]
+
+
+def test_find_matching_bundle_handles_compound_claim_splits() -> None:
+    """The TrumpRx pin's keywords ['trumprx', 'mfn'] should match the
+    extractor's split-out 'White House announced TrumpRx.gov ... MFN ...'
+    fragment even when the original mini-transcript bundled additional
+    qualifiers that were extracted into separate claims."""
+    case = case_by_id("trumprx-mfn-2026-02")
+    bundles = [
+        {"claim": {"text": "White House announced TrumpRx.gov in February 2026 with MFN drug pricing."}},
+        {"claim": {"text": "Drug-pricing reform was discussed."}},  # no trumprx
+    ]
+    match = find_matching_bundle(case, bundles)
+    assert match is not None
+    assert "TrumpRx" in match["claim"]["text"]
+
+
+def test_find_matching_bundle_returns_none_when_no_match() -> None:
+    case = case_by_id("helicoide-prisoner-release-2026")
+    bundles = [{"claim": {"text": "Something completely unrelated."}}]
+    assert find_matching_bundle(case, bundles) is None
+
+
+def test_find_matching_bundle_is_case_insensitive() -> None:
+    case = case_by_id("venezuela-russian-chinese-tech-2026")
+    bundles = [
+        {"claim": {"text": "VENEZUELA OPERATION INVOLVED RUSSIAN MILITARY EQUIPMENT."}},
+    ]
+    match = find_matching_bundle(case, bundles)
+    assert match is not None
+
+
+def test_find_matching_bundle_requires_all_keywords() -> None:
+    """AND-match: every keyword must appear. A bundle with only one keyword
+    of the case must NOT be returned (prevents Helicoide from matching a
+    Venezuela bundle that mentions 'prisoner' but not 'helicoide')."""
+    case = case_by_id("helicoide-prisoner-release-2026")
+    # Only the 'helicoide' keyword exists in the case (single-keyword case);
+    # confirm narrow-keyword case works correctly.
+    bundles = [
+        {"claim": {"text": "Hundreds of political prisoners were released."}},  # missing helicoide
+    ]
+    assert find_matching_bundle(case, bundles) is None

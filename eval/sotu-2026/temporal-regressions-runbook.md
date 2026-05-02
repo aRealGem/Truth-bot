@@ -124,66 +124,124 @@ temporal-dismissal handling.
 
 ## Scoring helper (snippet)
 
+Uses [`find_matching_bundle`](./temporal_regressions.py) (schema v2,
+2026-05-01) to AND-match the case's `match_keywords` against the
+bundle's claim text. Robust to extractor splits and "%" → "percent"
+normalization that broke the runbook's earlier first-30-char anchor.
+
 ```python
 import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path("eval/sotu-2026")))
-from temporal_regressions import load_temporal_regressions  # noqa: E402
+from temporal_regressions import (  # noqa: E402
+    find_matching_bundle, load_temporal_regressions,
+)
 
 CONFIDENCE_RANK = {"Low": 0, "Medium": 1, "High": 2}
 
 
-def score(claims_jsonl: Path) -> int:
+def score(bundles: "list[dict]") -> int:
     _, cases = load_temporal_regressions()
-    rows = [json.loads(l) for l in claims_jsonl.read_text().splitlines() if l.strip()]
     pass_count = 0
     for case in cases:
-        # Match on substring of claim text — claims are short enough that
-        # a substring-match against the first 30 chars is reliable.
-        anchor = case.claim[:30].lower()
-        match = next(
-            (r for r in rows if anchor in r["claim"]["text"].lower()),
-            None,
-        )
+        match = find_matching_bundle(case, bundles)
         if not match:
             print(f"FAIL  {case.id}: no matching claim in run output")
             continue
-        consensus = match["consensus"]
-        fine = consensus["consensus_label"]["value"]
+        consensus = match.get("consensus", {})
+        fine_label = consensus.get("consensus_label")
+        if isinstance(fine_label, dict):
+            fine = fine_label.get("value", "")
+        else:
+            fine = fine_label or ""
         strict = consensus.get("coarse_strict_label") or fine
         confidence = consensus.get("confidence", "Low")
+        if isinstance(confidence, dict):
+            confidence = confidence.get("value", "Low")
+
         ok_fine = fine in case.test_acceptance["fine_label_in"]
         ok_strict = strict in case.test_acceptance["strict_label_in"]
         ok_conf = (
             CONFIDENCE_RANK.get(confidence, 0)
             >= CONFIDENCE_RANK[case.test_acceptance["min_confidence"]]
         )
-        # Tool-call requirement
         ok_tools = True
         min_tools = case.test_acceptance.get("min_adapters_with_tool_calls")
         if min_tools is not None:
             with_tools = sum(
-                1 for mv in match["model_verdicts"]
+                1 for mv in match.get("model_verdicts", [])
                 if (mv.get("tool_call_count") or 0) > 0
             )
             ok_tools = with_tools >= min_tools
+
         passed = ok_fine and ok_strict and ok_conf and ok_tools
         pass_count += int(passed)
         marker = "PASS " if passed else "FAIL "
-        print(f"{marker}{case.id}  fine={fine}  strict={strict}  "
-              f"conf={confidence}  ok={passed}")
+        detail = f"fine={fine}  strict={strict}  conf={confidence}"
+        if min_tools is not None:
+            detail += f"  tools_OK={ok_tools}"
+        print(f"{marker}{case.id:40s}  {detail}")
     print(f"\n{pass_count} / {len(cases)} cases pass")
     return 0 if pass_count == len(cases) else 1
 
 
 if __name__ == "__main__":
-    sys.exit(score(Path(sys.argv[1])))
+    # bundles can come from claims.jsonl OR the diskcache bundle store.
+    src = Path(sys.argv[1])
+    if src.is_file():
+        bundles = [json.loads(l) for l in src.read_text().splitlines() if l.strip()]
+    else:
+        import diskcache
+        cache = diskcache.Cache(str(src / "bundles"))
+        bundles = []
+        for k in cache.iterkeys():
+            v = cache.get(k)
+            if v:
+                try:
+                    bundles.append(json.loads(v))
+                except Exception:
+                    pass
+        cache.close()
+    sys.exit(score(bundles))
 ```
 
-Save as `eval/sotu-2026/score_temporal_regressions.py` if you decide
-to keep it; this doc inlines it for now.
+## What the 2026-05-01 live run taught us
+
+Run `cbc335a1-…` (4-claim live, ~$0.40, 0% strip rate) scored **0/4**
+on the regression set. That's mixed news worth understanding:
+
+- **Harness work succeeded.** Strip rate 0.0%; P1 + P2 + universal
+  trust-when-fired are doing exactly what they were built to do.
+- **Substance work hasn't started.** The 0/4 came from:
+  - **Tool-firing on post-cutoff cases:** OpenAI / Gemini / xAI in
+    live mode emitted **0 model_reported URLs** between them on this
+    run. The models declined to invoke search for events they thought
+    they knew from training data. That's the C3 finding (temporal
+    dismissal), and it's a **prompt-side** fix, not a harness fix.
+  - **Adjudication on Rubio:** "Models split" + Low confidence. This
+    is the C4 finding — fine-axis tie-break can't capture directional
+    agreement when the model panel literally objects to "100% but
+    really 99-0". The family-aware dissent fix in `a006dd9` cleans up
+    the *display* of that disagreement, not the consensus *verdict*.
+
+So the regression set's purpose has shifted. It was originally
+designed to validate the fix-wave; it now serves as the **acceptance
+test for a separate substance-track work**:
+
+1. Stronger temporal-grounding prompt that forces tool invocation
+   for post-cutoff dates (or `tool_choice="required"` per-adapter).
+2. Adjudication discipline — likely a consensus rule that promotes
+   "Models split" → coarse-axis projection when the split is
+   intra-truthy / intra-falsey (the literal C4 fix the family-aware
+   dissent helper already builds the vocabulary for).
+3. Possibly per-adapter prompt tuning on Gemini's "speculative
+   fiction" framing for post-cutoff content.
+
+Those three items form the substance track. Until they ship, the
+regression set will read as 0/4 even on a clean harness. That's not
+failure of the fix-wave — it's the fix-wave hitting its design ceiling.
 
 ## Reporting back
 

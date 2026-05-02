@@ -48,6 +48,7 @@ class RegressionCase:
     primary_source_pattern: str
     failure_mode: str
     test_acceptance: dict
+    match_keywords: list[str]
 
 
 def _validate_case(raw: dict) -> RegressionCase:
@@ -56,7 +57,7 @@ def _validate_case(raw: dict) -> RegressionCase:
         "published_label_2026_04", "verdict",
         "ground_truth_strict", "ground_truth_lenient",
         "rationale", "primary_source_pattern", "failure_mode",
-        "test_acceptance",
+        "test_acceptance", "match_keywords",
     }
     missing = required - raw.keys()
     if missing:
@@ -76,6 +77,18 @@ def _validate_case(raw: dict) -> RegressionCase:
             f"case {raw['id']}: ground_truth_lenient "
             f"{raw['ground_truth_lenient']!r} is not a canonical Lenient "
             f"label (allowed: {sorted(_LENIENT_LABELS)})"
+        )
+
+    keywords = raw["match_keywords"]
+    if not isinstance(keywords, list) or not keywords:
+        raise ValueError(
+            f"case {raw['id']}: match_keywords must be a non-empty list "
+            f"(got {keywords!r})"
+        )
+    if not all(isinstance(k, str) and k for k in keywords):
+        raise ValueError(
+            f"case {raw['id']}: match_keywords must contain non-empty "
+            f"strings only"
         )
 
     acceptance = raw["test_acceptance"]
@@ -121,6 +134,7 @@ def _validate_case(raw: dict) -> RegressionCase:
         primary_source_pattern=raw["primary_source_pattern"],
         failure_mode=raw["failure_mode"],
         test_acceptance=acceptance,
+        match_keywords=list(keywords),
     )
 
 
@@ -143,9 +157,9 @@ def load_temporal_regressions(
         )
     if "regressions" not in raw or not isinstance(raw["regressions"], list):
         raise ValueError(f"{p} missing 'regressions' list")
-    if raw.get("schema_version") != 1:
+    if raw.get("schema_version") != 2:
         raise ValueError(
-            f"{p} schema_version must be 1 "
+            f"{p} schema_version must be 2 "
             f"(got {raw.get('schema_version')!r})"
         )
     cases = [_validate_case(c) for c in raw["regressions"]]
@@ -159,3 +173,28 @@ def case_by_id(case_id: str, *, path: Path | None = None) -> RegressionCase:
         if c.id == case_id:
             return c
     raise KeyError(case_id)
+
+
+def find_matching_bundle(
+    case: RegressionCase,
+    bundles: list[dict],
+) -> "dict | None":
+    """Find the bundle whose claim text contains all of ``case.match_keywords``.
+
+    Robust to extractor splits, punctuation differences ("100%" vs "100
+    percent"), and rephrased-but-equivalent claim text. The runbook's
+    earlier first-30-char substring matcher missed all four cases on the
+    2026-05-01 live run because the extractor split compound sentences
+    and normalized "%" to " percent" — keyword AND-match handles those
+    rephrases since each case carries 1-3 distinctive substrings that
+    survive both transforms.
+
+    Returns the first bundle that matches, or ``None`` if no bundle's
+    claim text contains every keyword. Comparison is case-insensitive.
+    """
+    keywords = [k.lower() for k in case.match_keywords]
+    for b in bundles:
+        text = (b.get("claim", {}).get("text") or "").lower()
+        if all(k in text for k in keywords):
+            return b
+    return None
