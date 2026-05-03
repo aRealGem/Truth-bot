@@ -37,8 +37,11 @@ htmlcov/
 # Caches
 .cache/
 truthbot_cache/
-truthbot_cache_p3*/
+truthbot_cache_*/
 *.cache
+
+# Claude Code session/worktree state
+.claude/
 
 # Reports (generated)
 /reports/
@@ -65,6 +68,8 @@ metrics/batch_sidecar/
 metrics/extractions/
 metrics/run_summaries/
 metrics/smoke/
+metrics/ab_probe_*/
+metrics/temporal_regressions_*/
 
 # UI reference drops (design specs, not site artifacts)
 ui-upgrade-ideas/*.zip
