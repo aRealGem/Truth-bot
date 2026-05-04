@@ -549,3 +549,197 @@ def test_build_multi_verdicts_backfill_caps_tool_urls_at_ten() -> None:
     assert len(out[0].model_reported_sources) == 10
     assert len(out[0].web_sources) == 10
     assert out[0].model_reported_sources == tool_urls[:10]
+
+
+# ── Trust-when-fired fallback (2026-05-01) ───────────────────────────────────
+#
+# Diagnosis (metrics/adapter_interpretability/strip_audit_2026-05.md):
+# OpenAI's Responses API in JSON-output mode produces no inline
+# url_citation annotations and Gemini's vertexaisearch redirector
+# requires a session cookie our harness can't supply. Both conditions
+# manifest as ``tool_retrieved_urls == []`` even when the search tool
+# clearly fired (``tool_call_count > 0``). Under the strict intersection
+# this nukes the model's real-domain citations and produces a 100%
+# strip rate that's a harness artefact, not a citation-discipline
+# signal. The fallback bypasses intersection in that exact case and
+# trusts the model's emitted web_sources.
+
+
+def test_trust_when_fired_fallback_trusts_model_when_tool_ran_but_extraction_empty() -> None:
+    """When tool_call_count > 0 but tool_retrieved_urls is empty (harness
+    extraction gap), the per-claim verdict's web_sources should be the
+    model's emitted URLs as-is — NOT stripped. Mirrors the OpenAI batch
+    arm-B failure mode (21 reported / 21 stripped → 21 / 0)."""
+    claims = [_claim("A"), _claim("B")]
+    raw_by_claim = {
+        claims[0].id: {
+            "label": "True", "confidence": "High", "explanation": "x",
+            "web_sources": [
+                "https://www.bls.gov/news.release/cpi.htm",
+                "https://www.bls.gov/news.release/archives/cpi_12182025.pdf",
+            ],
+        },
+        claims[1].id: {
+            "label": "True", "confidence": "High", "explanation": "x",
+            "web_sources": ["https://www.bls.gov/cpi.htm"],
+        },
+    }
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="openai",
+        model_id="gpt-5.4",
+        tool_retrieved_urls=[],  # extractor saw nothing
+        call_usage={"tool_call_count": 1},  # but tool fired
+    )
+    # Both claims trust their model-emitted URLs.
+    assert out[0].web_sources == [
+        "https://www.bls.gov/news.release/cpi.htm",
+        "https://www.bls.gov/news.release/archives/cpi_12182025.pdf",
+    ]
+    assert out[0].model_reported_sources == out[0].web_sources
+    assert out[0].stripped_source_count == 0
+    assert out[1].web_sources == ["https://www.bls.gov/cpi.htm"]
+    assert out[1].stripped_source_count == 0
+
+
+def test_trust_when_fired_does_not_fire_when_extractor_returned_urls() -> None:
+    """Normal case: tool fired AND extractor captured URLs. The strict
+    intersection still runs and strips fabricated URLs — the fallback
+    must not weaken anti-hallucination when capture worked."""
+    claims = [_claim("A")]
+    raw_by_claim = {
+        claims[0].id: {
+            "label": "True", "confidence": "High", "explanation": "x",
+            "web_sources": [
+                "https://real.example/yes",
+                "https://halluc.example/fabricated",
+            ],
+        },
+    }
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="openai",
+        model_id="gpt-5.4",
+        tool_retrieved_urls=["https://real.example/yes"],  # captured one
+        call_usage={"tool_call_count": 1},
+    )
+    # Real URL kept, fabricated stripped — full intersection semantics.
+    assert out[0].web_sources == ["https://real.example/yes"]
+    assert out[0].stripped_source_count == 1
+    assert "https://halluc.example/fabricated" in out[0].model_reported_sources
+
+
+def test_trust_when_fired_does_not_fire_when_tool_count_zero() -> None:
+    """Adapter-mode where the tool never invoked (e.g., the model
+    declined to search or evidence_injected=False). Strict intersection
+    against the empty tool set MUST still strip — without the
+    fired-the-tool signal, model URLs are pure assertion and the
+    anti-fabrication guarantee stands."""
+    claims = [_claim("A")]
+    raw_by_claim = {
+        claims[0].id: {
+            "label": "True", "confidence": "High", "explanation": "x",
+            "web_sources": ["https://www.bls.gov/cpi.htm"],
+        },
+    }
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="openai",
+        model_id="gpt-5.4",
+        tool_retrieved_urls=[],  # empty
+        call_usage={"tool_call_count": 0},  # AND tool never fired
+    )
+    # Strip stands — model cited a URL the tool didn't retrieve and
+    # didn't even fire.
+    assert out[0].web_sources == []
+    assert out[0].model_reported_sources == ["https://www.bls.gov/cpi.htm"]
+    assert out[0].stripped_source_count == 1
+
+
+def test_trust_when_fired_falls_through_to_existing_backfill_when_web_sources_omitted() -> None:
+    """If tool fired AND extraction empty AND model also omitted
+    web_sources entirely, the fallback shouldn't conjure URLs from
+    nothing. Existing "model omitted" backfill handles this case
+    (uses tool URLs from tool_retrieved_urls — also empty here, so
+    web_sources / model_reported_sources end up empty)."""
+    claims = [_claim("A")]
+    raw_by_claim = {
+        claims[0].id: {
+            "label": "Unverifiable", "confidence": "Low", "explanation": "x",
+            # web_sources omitted entirely (not a key)
+        },
+    }
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="openai",
+        model_id="gpt-5.4",
+        tool_retrieved_urls=[],
+        call_usage={"tool_call_count": 2},
+    )
+    # No fallback fires (no model URLs to trust); existing branch yields
+    # empty ws/mrs, no stripped count.
+    assert out[0].web_sources == []
+    assert out[0].model_reported_sources == []
+    assert out[0].stripped_source_count == 0
+
+
+def test_trust_when_fired_logs_warning_once_per_batch(caplog) -> None:
+    """The fallback emits exactly one WARNING per build_multi_verdicts
+    call (regardless of claim count) so operators can spot the
+    harness-gap signature in stderr without N-flooding the log."""
+    import logging
+    claims = [_claim("A"), _claim("B"), _claim("C")]
+    raw_by_claim = {
+        c.id: {
+            "label": "True", "confidence": "High", "explanation": "x",
+            "web_sources": ["https://www.bls.gov/cpi.htm"],
+        }
+        for c in claims
+    }
+    with caplog.at_level(logging.WARNING, logger="truthbot.verify.adapters.base"):
+        build_multi_verdicts(
+            claims,
+            raw_by_claim,
+            adapter_name="openai",
+            model_id="gpt-5.4",
+            tool_retrieved_urls=[],
+            call_usage={"tool_call_count": 4},
+            batch_call_id="resp_test_xyz",
+        )
+    # Exactly one WARNING line per batch.
+    matches = [r for r in caplog.records if "trust-when-fired" in r.message]
+    assert len(matches) == 1
+    msg = matches[0].message
+    assert "openai" in msg
+    assert "count=4" in msg
+    assert "claims=3" in msg
+    assert "resp_test_xyz" in msg
+
+
+def test_trust_when_fired_legacy_callers_unaffected() -> None:
+    """Backward-compat regression guard: callers passing
+    ``tool_retrieved_urls=None`` (legacy adapters that don't surface
+    grounding info) hit the existing first branch unchanged.
+    web_sources from raw, mrs=[], stripped=0."""
+    claims = [_claim("A")]
+    raw_by_claim = {
+        claims[0].id: {
+            "label": "True", "confidence": "High", "explanation": "x",
+            "web_sources": ["https://anything.example/whatever"],
+        },
+    }
+    out = build_multi_verdicts(
+        claims,
+        raw_by_claim,
+        adapter_name="legacy_adapter",
+        model_id="legacy",
+        tool_retrieved_urls=None,  # legacy
+        call_usage={"tool_call_count": 999},  # would trigger fallback if tool_retrieved_urls==[]
+    )
+    assert out[0].web_sources == ["https://anything.example/whatever"]
+    assert out[0].model_reported_sources == []
+    assert out[0].stripped_source_count == 0

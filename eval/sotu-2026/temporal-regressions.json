@@ -1,0 +1,93 @@
+{
+  "_comment": "Regression pin for the four materially-wrong final labels from the 2026-04 ~117-claim SOTU run, as catalogued in eval/sotu-2026/findings-review.md Part A. Each case was published as 'False' but ground truth lies in the [Truthy, True] band. The set exists to prove (or falsify) end-to-end accuracy gains from the 2026-04..05 fix wave: Phase 1 temporal grounding (commit 23bb092), Grok triage cap (a319480), Model-cited (unverified) tier (f447fa7), run-manifest panel (fab3a25), and trust-when-fired harness fallback (ea10e34). IMPORTANT: cached HTML cannot reproduce the OpenAI/Gemini temporal-dismissal failure mode per metrics/adapter_interpretability/gemini_temporal_spot_sample.md — runs against this set MUST be live (no truthbot_cache reuse). Operator runbook: eval/sotu-2026/temporal-regressions-runbook.md.",
+  "schema_version": 2,
+  "source_run": {
+    "report": "2026-02-24 Trump SOTU full ~117-claim run (run published before 2026-04-29 STATUS update)",
+    "findings_review": "eval/sotu-2026/findings-review.md (Part A)"
+  },
+  "regressions": [
+    {
+      "id": "rubio-100-percent-2026",
+      "source_run_claim_id": 99,
+      "topic": "Senate confirmations",
+      "claim": "Marco Rubio received 100% of Senate confirmation votes.",
+      "published_label_2026_04": "False",
+      "verdict": "PARTLY TRUE",
+      "ground_truth_strict": "Truthy",
+      "ground_truth_lenient": "Truthy",
+      "rationale": "Senate roll call: 99-0 in favor with one senator absent. 100% of *participating* senators voted yes; 99% of the full chamber. The published 'False' label was driven by literal-100% objection that the report's own caveat already conceded.",
+      "primary_source_pattern": "Senate.gov roll call vote record for Rubio's Secretary of State confirmation, 119th Congress, January 2025.",
+      "failure_mode": "literal-100-percent objection ignored own caveat (NOT a temporal-grounding case)",
+      "match_keywords": ["rubio", "100", "confirm"],
+      "test_acceptance": {
+        "fine_label_in": ["True", "Mostly True"],
+        "strict_label_in": ["True", "Truthy"],
+        "min_confidence": "Medium",
+        "notes": "Rubio confirmation vote details are pre-cutoff for all four adapter models, so this case tests adjudication discipline, not search/temporal grounding. Failure on this one would point at the consensus-tie-break or caveat-vs-verdict gap (findings-review C4)."
+      }
+    },
+    {
+      "id": "trumprx-mfn-2026-02",
+      "source_run_claim_id": 109,
+      "topic": "Drug pricing",
+      "claim": "MFN drug pricing is available to Americans via TrumpRx.gov.",
+      "published_label_2026_04": "False",
+      "verdict": "TRUE",
+      "ground_truth_strict": "True",
+      "ground_truth_lenient": "Truthy",
+      "rationale": "White House announced TrumpRx.gov on February 5-6, 2026 with Most-Favored-Nation pricing as the launch frame. The site exists and presents MFN pricing. The published 'False' conflated 'does the program work well' (out of scope for fact-check) with 'does the program exist as announced' (the actual claim).",
+      "primary_source_pattern": "WhiteHouse.gov fact sheet announcing TrumpRx.gov, dated 2026-02-05; second WhiteHouse.gov press release 2026-02-06; the live site at trumprx.gov.",
+      "failure_mode": "post-cutoff-event temporal-grounding failure — OpenAI under tool_call_count=0 in original run, Gemini probable temporal-dismissal per findings-review C3.",
+      "match_keywords": ["trumprx", "mfn"],
+      "test_acceptance": {
+        "fine_label_in": ["True", "Mostly True"],
+        "strict_label_in": ["True", "Truthy"],
+        "min_confidence": "Medium",
+        "min_adapters_with_tool_calls": 3,
+        "notes": "Most diagnostic of the four. Post-cutoff event for all 2024-2025-cutoff models — passing this case requires the trust-when-fired fallback (ea10e34) to surface OpenAI's URLs and either Gemini search to bypass temporal dismissal or other adapters to override. Failure would re-open Cursor's brief item 2."
+      }
+    },
+    {
+      "id": "venezuela-russian-chinese-tech-2026",
+      "source_run_claim_id": 107,
+      "topic": "Venezuela operation",
+      "claim": "The Venezuela raid involved Russian and Chinese military technology.",
+      "published_label_2026_04": "False",
+      "verdict": "PARTLY TRUE",
+      "ground_truth_strict": "Truthy",
+      "ground_truth_lenient": "Truthy",
+      "rationale": "Reuters reported Operation Absolute Resolve included China- and Russia-supplied Venezuelan military systems. The published 'False' treated the entire raid as fictional — catastrophic temporal-grounding failure where models classified post-cutoff reporting as speculation. The 'thousands of soldiers' modifier from the original speech is the only genuinely disputable element.",
+      "primary_source_pattern": "Reuters reporting on Operation Absolute Resolve and Venezuelan military equipment supplied by Russia/China; AP / major-wire confirmation of same.",
+      "failure_mode": "temporal-dismissal — Gemini explicitly framed real reporting as 'speculative fiction' per findings-review C3.",
+      "match_keywords": ["venezuela", "military"],
+      "test_acceptance": {
+        "fine_label_in": ["True", "Mostly True", "Exaggerated"],
+        "strict_label_in": ["True", "Truthy", "Falsey"],
+        "min_confidence": "Medium",
+        "min_adapters_with_tool_calls": 3,
+        "notes": "Falsey is acceptable on 'thousands of soldiers' grounds; we're pinning that the verdict isn't a flat 'False' that dismisses the operation as fictional. If any adapter still emits 'speculative fiction' framing in the reasoning text, that's a separate Phase-1-grounding regression to fix in the system prompt."
+      }
+    },
+    {
+      "id": "helicoide-prisoner-release-2026",
+      "source_run_claim_id": 108,
+      "topic": "Venezuela political prisoners",
+      "claim": "Helicoide prison was closed and hundreds of political prisoners were released.",
+      "published_label_2026_04": "False",
+      "verdict": "PARTLY TRUE",
+      "ground_truth_strict": "Truthy",
+      "ground_truth_lenient": "Truthy",
+      "rationale": "Reuters reported Delcy Rodríguez's announcement that Helicoide would be repurposed and hundreds of prisoners were in the release process post-Maduro capture. Same root cause as the Venezuela tech case (#107).",
+      "primary_source_pattern": "Reuters reporting on Helicoide repurposing announcement and prisoner-release process post-Maduro arrest.",
+      "failure_mode": "temporal-dismissal — same as #107.",
+      "match_keywords": ["helicoide"],
+      "test_acceptance": {
+        "fine_label_in": ["True", "Mostly True"],
+        "strict_label_in": ["True", "Truthy"],
+        "min_confidence": "Medium",
+        "min_adapters_with_tool_calls": 3,
+        "notes": "Pairs with #107 — both share the temporal-dismissal failure path. Passing one and failing the other would point at claim-text variance (e.g., 'hundreds' threshold) rather than the shared root cause."
+      }
+    }
+  ]
+}

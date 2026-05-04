@@ -164,7 +164,9 @@ class AnthropicAdapter(LLMAdapter):
 
         cache_read = _get(usage, "cache_read_input_tokens", 0) or 0
 
-        ws, mrs, stripped = apply_url_grounding(raw, retrieved_urls)
+        ws, mrs, stripped = apply_url_grounding(
+            raw, retrieved_urls, tool_call_count=int(tool_call_count)
+        )
         verdict = ModelVerdict(
             adapter_name=self.adapter_name,
             model_id=model_id,
@@ -345,7 +347,9 @@ class AnthropicAdapter(LLMAdapter):
                 label = normalize_verdict_label(raw["label"])
                 confidence = Confidence(raw["confidence"])
 
-                ws, mrs, stripped = apply_url_grounding(raw, retrieved_urls)
+                ws, mrs, stripped = apply_url_grounding(
+                    raw, retrieved_urls, tool_call_count=int(tool_call_count)
+                )
                 td["model_reported_source_count"] = len(mrs)
                 td["stripped_source_count"] = stripped
                 verdict = ModelVerdict(

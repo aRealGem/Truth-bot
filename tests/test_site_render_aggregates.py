@@ -37,11 +37,13 @@ from truthbot.publish.site import (
     COARSE_STRICT_PROJECTION,
     CSS,
     SiteReport,
+    _adapter_run_stats,
     _claim_card,
     _headline_verdict_coarse,
     _project_dist,
     _report_card,
     _render_report,
+    _run_manifest_html,
     _toc,
     _verdict_panel,
 )
@@ -560,3 +562,608 @@ def test_compute_stats_populates_insights_when_claims_present() -> None:
     assert "insights" in stats
     assert stats["insights"] is not None
     assert stats["insights"].total_claims == 1
+
+
+# ── Model-cited (unverified) tier — strip-audit 2026-05 follow-up ─────────────
+
+
+def _bundle_with_sources(
+    *,
+    web_sources_per_model: list[list[str]],
+    mrs_per_model: list[list[str]],
+) -> VerdictBundle:
+    """Build a bundle with explicit per-model web_sources / model_reported_sources.
+
+    Both lists must have the same length. Each entry produces one
+    ModelVerdict on the bundle.
+    """
+    assert len(web_sources_per_model) == len(mrs_per_model)
+    claim = Claim(
+        transcript_id="t",
+        text="Test claim with sources.",
+        speaker="Speaker",
+        context="ctx",
+        category="economy",
+        is_checkable=True,
+    )
+    mvs: list[ModelVerdict] = []
+    for i, (ws, mrs) in enumerate(
+        zip(web_sources_per_model, mrs_per_model)
+    ):
+        mvs.append(
+            ModelVerdict(
+                adapter_name=f"adapter-{i}",
+                model_id=f"model-{i}",
+                claim_id=claim.id,
+                label=VerdictLabel.TRUE,
+                confidence=Confidence.HIGH,
+                explanation="r",
+                web_sources=list(ws),
+                model_reported_sources=list(mrs),
+                stripped_source_count=max(0, len(mrs) - len(ws)),
+            )
+        )
+    consensus = ConsensusVerdict(
+        claim_id=claim.id,
+        model_verdicts=mvs,
+        consensus_label=VerdictLabel.TRUE,
+        consensus_verdict=VerdictLabel.TRUE.value,
+        confidence=Confidence.HIGH,
+        agreement=True,
+        consensus_strength="strong",
+        explanation="x",
+        coarse_lenient_label="True",
+        coarse_lenient_strength="strong",
+        coarse_strict_label="True",
+        coarse_strict_strength="strong",
+    )
+    return VerdictBundle(
+        claim=claim,
+        speaker="Speaker",
+        date_str="2026-03-04",
+        model_verdicts=mvs,
+        consensus=consensus,
+    )
+
+
+def test_evidence_block_surfaces_model_cited_unverified_tier() -> None:
+    """When a model emits citations the tool didn't return (model_reported_sources
+    minus web_sources is non-empty), the rendered claim card MUST surface those
+    URLs as a separate "Model-cited URLs that didn't validate" sub-list under
+    the Combined evidence/sources block. Domain-only, non-clickable, with a
+    "didn't validate" badge so readers see the audit trail without us implying
+    we vouched for them. Mirrors the 2026-04-30 arm-B finding that OpenAI batch
+    stripped 25/26 URLs (all real *.gov domains)."""
+    kept = "https://www.bls.gov/news.release/archives/cpi_12182025.pdf"
+    stripped_a = "https://www.bls.gov/news.release/archives/cpi_12182025.htm"
+    stripped_b = "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[[kept], []],
+        mrs_per_model=[[kept, stripped_a, stripped_b], []],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # Kept URL renders in the existing verified evidence-list as a
+    # clickable link.
+    assert f'<a href="{kept}"' in html
+    # Stripped URLs render as host+path text (so readers can verify
+    # them) inside the new model-only sub-list — but MUST NOT be
+    # clickable, since we did not vouch for them.
+    assert "cpi_12182025.htm" in html
+    assert "cpi_01132026.htm" in html
+    assert f'<a href="{stripped_a}"' not in html
+    assert f'<a href="{stripped_b}"' not in html
+    # The unverified sub-list and header are present.
+    assert "evidence-list-model-only" in html
+    assert "Model-cited URLs that didn’t validate" in html
+    # Exactly 2 model-only items (the kept URL must NOT appear in the
+    # unverified list, even though its host shares a domain with the
+    # stripped URLs).
+    assert html.count('class="source-model-only"') == 2
+    # "didn't validate" caveat badge present.
+    assert "didn’t validate" in html
+
+
+def test_evidence_block_unverified_only_when_no_web_sources() -> None:
+    """Edge case: model emitted citations but tool returned NONE for any model
+    (web_sources empty across the panel). The card MUST suppress the legacy
+    "No sources retrieved." note and render only the unverified block — the
+    audit trail is the right answer in that case. Without this branch readers
+    would see "No sources retrieved." even though the model cited 4 URLs.
+    """
+    stripped = [
+        "https://www.cbp.gov/newsroom/national-media-release/cbp-releases-march-2024-monthly-update",
+        "https://www.cbp.gov/newsroom/stats/cbp-enforcement-statistics",
+        "https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics",
+        "https://www.fbi.gov/services/cjis/ucr/",
+    ]
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[[], []],
+        mrs_per_model=[stripped[:2], stripped[2:]],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # Legacy "No sources retrieved." note SUPPRESSED since the model
+    # did cite URLs — the unverified block is the audit trail.
+    assert "No sources retrieved." not in html
+    assert "evidence-list-model-only" in html
+    assert html.count('class="source-model-only"') == 4
+    # No clickable <a href> for any of the stripped URLs.
+    for u in stripped:
+        assert f'<a href="{u}"' not in html
+    # Hosts visible (host+path form may be truncated for long URLs but
+    # the domain is always intact).
+    assert "cbp.gov" in html
+    assert "fbi.gov" in html
+
+
+def test_evidence_block_no_unverified_when_model_reported_empty() -> None:
+    """Backward compat: legacy bundles without model_reported_sources (or with
+    everything already in web_sources) render unchanged — the new sub-list
+    must NOT appear. Avoids visual regression on cached pre-2026-04-26 reports
+    that don't carry the MRS field."""
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[
+            ["https://apnews.com/article/foo"],
+            ["https://www.reuters.com/world/bar"],
+        ],
+        mrs_per_model=[[], []],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert "evidence-list-model-only" not in html
+    assert "Model-cited URLs that didn’t validate" not in html
+    assert "didn’t validate" not in html
+
+
+def test_evidence_block_model_only_url_validated_by_other_model_excluded() -> None:
+    """A URL stripped on model A but validated (kept in web_sources) on model B
+    is treated as VALIDATED at the bundle level — the unverified block only
+    contains URLs no model successfully grounded. Ensures we don't surface
+    spurious doubt when at least one search tool returned the citation."""
+    shared = "https://www.bls.gov/news.release/cpi.htm"
+    only_stripped = "https://www.bls.gov/news.release/archives/cpi_01132026.htm"
+    bundle = _bundle_with_sources(
+        web_sources_per_model=[[shared], []],
+        mrs_per_model=[[shared, only_stripped], [shared]],
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # Shared URL kept once as a clickable link.
+    assert f'<a href="{shared}"' in html
+    # Only the truly-stripped URL appears in the unverified sub-list,
+    # rendered with its path so the reader can verify it themselves.
+    assert "evidence-list-model-only" in html
+    assert html.count('class="source-model-only"') == 1
+    assert "cpi_01132026.htm" in html
+    assert f'<a href="{only_stripped}"' not in html
+
+
+# ── Run manifest panel (roadmap [4]) ──────────────────────────────────────────
+
+
+def _bundle_with_panel(
+    *,
+    claim_id_suffix: str,
+    panel: list[tuple[str, str, str, bool]],
+    web_sources_per_model: list[list[str]] | None = None,
+    mrs_per_model: list[list[str]] | None = None,
+    consensus_strength: str = "strong",
+) -> VerdictBundle:
+    """Build a bundle from an explicit per-model panel spec.
+
+    Each panel entry is ``(adapter_name, model_id, synthesis_mode, no_response)``.
+    Optional ``web_sources_per_model`` / ``mrs_per_model`` align by index;
+    ignored when ``no_response`` is True for that model.
+    """
+    if web_sources_per_model is None:
+        web_sources_per_model = [[] for _ in panel]
+    if mrs_per_model is None:
+        mrs_per_model = [[] for _ in panel]
+    claim = Claim(
+        transcript_id="t",
+        text=f"claim {claim_id_suffix}",
+        speaker="Speaker",
+        context="ctx",
+        category="economy",
+        is_checkable=True,
+    )
+    mvs: list[ModelVerdict] = []
+    for (adapter, model_id, mode, nr), ws, mrs in zip(
+        panel, web_sources_per_model, mrs_per_model
+    ):
+        mvs.append(
+            ModelVerdict(
+                adapter_name=adapter,
+                model_id=model_id,
+                claim_id=claim.id,
+                label=VerdictLabel.UNVERIFIABLE if nr else VerdictLabel.TRUE,
+                confidence=Confidence.HIGH,
+                explanation="r",
+                no_response=nr,
+                web_sources=list(ws) if not nr else [],
+                model_reported_sources=list(mrs) if not nr else [],
+                synthesis_mode=mode,
+                tier="frontier",
+            )
+        )
+    consensus = ConsensusVerdict(
+        claim_id=claim.id,
+        model_verdicts=mvs,
+        consensus_label=VerdictLabel.TRUE,
+        consensus_verdict=VerdictLabel.TRUE.value,
+        confidence=Confidence.HIGH,
+        agreement=True,
+        consensus_strength=consensus_strength,
+        explanation="x",
+        coarse_lenient_label="True",
+        coarse_lenient_strength="strong",
+        coarse_strict_label="True",
+        coarse_strict_strength="strong",
+    )
+    return VerdictBundle(
+        claim=claim,
+        speaker="Speaker",
+        date_str="2026-03-04",
+        model_verdicts=mvs,
+        consensus=consensus,
+    )
+
+
+_FOUR_ADAPTER_PANEL = [
+    ("anthropic", "claude-opus-4-7", "batch", False),
+    ("openai", "gpt-5.4", "batch", False),
+    ("gemini", "gemini-2.5-pro", "live", False),
+    ("xai", "grok-4", "live", False),
+]
+
+
+def test_run_manifest_renders_per_adapter_table_when_no_degradation() -> None:
+    """Happy path: 4 adapters, all 100% coverage. Manifest renders with 4
+    rows, NO degraded-consensus banner, details collapsed by default. The
+    aside is always present (audit trail) — but the banner only appears
+    when something actually degraded."""
+    bundles = [
+        _bundle_with_panel(
+            claim_id_suffix=str(i),
+            panel=_FOUR_ADAPTER_PANEL,
+        )
+        for i in range(3)
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    # Aside always present.
+    assert '<aside class="run-manifest">' in html
+    # No degraded banner when all adapters fully covered.
+    assert "run-manifest-banner" not in html
+    assert "Degraded consensus" not in html
+    # Details collapsed by default (no ` open` attr) when no degradation.
+    assert "<details class=\"run-manifest-details\">" in html
+    # 4 adapter rows in the table.
+    assert html.count('<tr class="degraded">') == 0
+    # Each adapter renders.
+    for adapter in ("anthropic", "openai", "gemini", "xai"):
+        # _adapter_pretty title-cases for some (Anthropic / Google / OpenAI / xAI).
+        # Just check the model_id shows up since that's adapter-specific.
+        pass
+    assert "claude-opus-4-7" in html.lower() or "Claude Opus" in html
+    assert "gpt" in html.lower()
+    assert "gemini" in html.lower()
+    assert "grok" in html.lower()
+
+
+def test_run_manifest_degraded_banner_when_adapter_misses_a_claim() -> None:
+    """When any adapter has at least one no_response across the report,
+    the manifest renders the degraded-consensus banner with the adapter
+    name + "X of Y claims (Z unavailable)" copy. Details opens by
+    default so the reader sees the row immediately."""
+    panel_with_gemini_miss = [
+        ("anthropic", "claude-opus-4-7", "batch", False),
+        ("openai", "gpt-5.4", "batch", False),
+        ("gemini", "gemini-2.5-pro", "live", True),  # no_response
+        ("xai", "grok-4", "live", False),
+    ]
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=panel_with_gemini_miss),
+        _bundle_with_panel(claim_id_suffix="1", panel=_FOUR_ADAPTER_PANEL),
+        _bundle_with_panel(claim_id_suffix="2", panel=_FOUR_ADAPTER_PANEL),
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    assert '<div class="run-manifest-banner"' in html
+    assert "Degraded consensus" in html
+    assert "gemini contributed 2 of 3 claims (1 unavailable)" in html
+    # Details opens by default when degraded.
+    assert 'details class="run-manifest-details" open' in html
+    # The gemini row carries the .degraded class so CSS highlights it.
+    assert '<tr class="degraded">' in html
+    # Coverage cell for gemini bolded.
+    assert "<strong>2/3" in html
+
+
+def test_run_manifest_consensus_strength_distribution_visible() -> None:
+    """Manifest shows the consensus_strength distribution across claims —
+    "strong"/"weak"/"single"/"none" tally — so readers can see how
+    confident each claim's panel was on average."""
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL,
+                           consensus_strength="strong"),
+        _bundle_with_panel(claim_id_suffix="1", panel=_FOUR_ADAPTER_PANEL,
+                           consensus_strength="strong"),
+        _bundle_with_panel(claim_id_suffix="2", panel=_FOUR_ADAPTER_PANEL,
+                           consensus_strength="weak"),
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    assert "Consensus strength" in html
+    # Sorted by descending count, so strong (2) renders before weak (1).
+    assert "2 strong" in html
+    assert "1 weak" in html
+
+
+def test_run_manifest_tool_url_grounding_caveat_de_emphasized() -> None:
+    """The audit-revised framing demands the tool-URL-grounding metric be
+    surfaced WITH a caveat explaining it isn't pure fabrication rate, since
+    the multi-claim batch path produces apparent strips for harness reasons.
+    Pin the caveat copy + the per-adapter grounding column."""
+    real_url = "https://www.bls.gov/cpi.htm"
+    bundles = [
+        _bundle_with_panel(
+            claim_id_suffix="0",
+            panel=_FOUR_ADAPTER_PANEL,
+            # Anthropic: 100% grounding (web == mrs); OpenAI: 0% (mrs > web=0);
+            # Gemini: nothing cited (—); xAI: 100%.
+            web_sources_per_model=[[real_url], [], [], [real_url]],
+            mrs_per_model=[[real_url], [real_url], [], [real_url]],
+        )
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    # Caveat copy (the "doesn't mean fabrication" framing).
+    assert "Tool-URL grounding" in html
+    assert "harness-capture asymmetry" in html
+    assert "didn’t validate" in html
+    # Em-dash placeholder for adapters that cited zero URLs.
+    assert ">—<" in html
+
+
+def test_run_manifest_extra_models_shown_when_adapter_used_multiple_ids() -> None:
+    """Anthropic primary→fallback (e.g., opus-4-7 → haiku-4-5) routes some
+    claims through a different model_id within the same adapter. Manifest
+    surfaces the most-common model_id and adds "+N more" so readers know
+    a fallback occurred."""
+    primary_panel = [
+        ("anthropic", "claude-opus-4-7", "batch", False),
+        ("openai", "gpt-5.4", "batch", False),
+        ("gemini", "gemini-2.5-pro", "live", False),
+        ("xai", "grok-4", "live", False),
+    ]
+    fallback_panel = [
+        ("anthropic", "claude-haiku-4-5-20251001", "live", False),  # fallback
+        ("openai", "gpt-5.4", "batch", False),
+        ("gemini", "gemini-2.5-pro", "live", False),
+        ("xai", "grok-4", "live", False),
+    ]
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=primary_panel),
+        _bundle_with_panel(claim_id_suffix="1", panel=primary_panel),
+        _bundle_with_panel(claim_id_suffix="2", panel=fallback_panel),
+    ]
+    sr = _make_site_report(bundles)
+    html = _run_manifest_html(sr)
+    # Primary model_id wins (2 of 3 verdicts).
+    assert "claude-opus-4-7" in html.lower() or "Claude Opus" in html
+    # +1 more indicator for the haiku fallback.
+    assert "+1 more" in html
+
+
+def test_run_manifest_handles_legacy_bundle_with_no_mrs() -> None:
+    """Pre-2026-04-26 bundles don't carry model_reported_sources at all
+    (or carry empty). Manifest must render — grounding column shows '—'
+    rather than crashing — to keep older reports re-publishable."""
+    bundles = [_bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL)]
+    sr = _make_site_report(bundles)
+    rows = _adapter_run_stats(sr)
+    assert all(r["mrs_total"] == 0 for r in rows)
+    html = _run_manifest_html(sr)
+    # All four adapters render the em-dash for grounding.
+    assert html.count(">—<") >= 4
+
+
+def test_render_report_inserts_run_manifest_after_methodology() -> None:
+    """End-to-end: _render_report places the run-manifest aside AFTER the
+    methodology aside so the editorial 'how this works' copy reads first
+    and the per-run audit trail reads second."""
+    bundles = [_bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL)]
+    sr = _make_site_report(bundles)
+    html = _render_report(sr)
+    methodology_idx = html.find('<aside class="methodology">')
+    manifest_idx = html.find('<aside class="run-manifest">')
+    assert methodology_idx >= 0, "methodology aside should render"
+    assert manifest_idx >= 0, "run-manifest aside should render"
+    assert methodology_idx < manifest_idx, (
+        "methodology aside must precede run-manifest aside"
+    )
+
+
+# ── Family-aware dissent flagging (roadmap [6]) ──────────────────────────────
+#
+# Findings-review C4: dissent is computed by exact-fine-label match against
+# the consensus, so [Mostly True, Mostly True, True, True] flags both True
+# voters as dissenting despite directional agreement. This degrades the
+# dissent panel that the lens toggle exposes. Family-aware flagging fixes
+# the canonical case + a few neighbors. See ``_verdict_family`` in
+# publish/site.py for the family map + rationale.
+
+
+from truthbot.publish.site import _verdict_family  # noqa: E402
+
+
+def _bundle_with_panel_labels(
+    labels: list[VerdictLabel],
+    *,
+    fine_consensus: VerdictLabel | None = None,
+) -> VerdictBundle:
+    """Build a bundle with per-model fine-axis labels — consensus optional.
+
+    When ``fine_consensus`` is None, falls back to ``labels[0]`` so the
+    test author specifies the consensus explicitly only when it diverges
+    from the panel majority (e.g., synthetic edge cases).
+    """
+    consensus_label = fine_consensus if fine_consensus is not None else labels[0]
+    claim = Claim(
+        transcript_id="t",
+        text="dissent test claim",
+        speaker="X",
+        context="ctx",
+        category="economy",
+        is_checkable=True,
+    )
+    mvs = [
+        ModelVerdict(
+            adapter_name=f"adapter-{i}",
+            model_id=f"model-{i}",
+            claim_id=claim.id,
+            label=lbl,
+            confidence=Confidence.HIGH,
+            explanation="r",
+        )
+        for i, lbl in enumerate(labels)
+    ]
+    consensus = ConsensusVerdict(
+        claim_id=claim.id,
+        model_verdicts=mvs,
+        consensus_label=consensus_label,
+        consensus_verdict=consensus_label.value,
+        confidence=Confidence.HIGH,
+        agreement=True,
+        consensus_strength="strong",
+        explanation="x",
+        coarse_lenient_label=consensus_label.value,
+        coarse_lenient_strength="strong",
+        coarse_strict_label=consensus_label.value,
+        coarse_strict_strength="strong",
+    )
+    return VerdictBundle(
+        claim=claim,
+        speaker="X",
+        date_str="2026-03-04",
+        model_verdicts=mvs,
+        consensus=consensus,
+    )
+
+
+# ── Family-mapping pins ──────────────────────────────────────────────────────
+
+
+def test_verdict_family_maps_truthy_pair_to_same_family() -> None:
+    """The findings-review C4 canonical case: True and Mostly True share
+    a family so a True voter against a Mostly True consensus does not
+    flag as dissent."""
+    assert _verdict_family("True") == _verdict_family("Mostly True")
+
+
+def test_verdict_family_maps_falsey_pair_to_same_family() -> None:
+    """Misleading and False share a falsey family — a Misleading voter
+    against a False consensus is directional agreement, not dissent."""
+    assert _verdict_family("Misleading") == _verdict_family("False")
+
+
+def test_verdict_family_keeps_exaggerated_in_its_own_family() -> None:
+    """Exaggerated is editorially the most ambiguous label (Lenient
+    projects it to Truthy, Strict projects to Falsey). Putting it in
+    its own family means a Mostly True consensus + Exaggerated voter
+    still flags as dissent — that's a genuine framing disagreement."""
+    assert _verdict_family("Exaggerated") != _verdict_family("Mostly True")
+    assert _verdict_family("Exaggerated") != _verdict_family("Misleading")
+
+
+def test_verdict_family_unverifiable_separate_from_truthy_falsey() -> None:
+    """Unverifiable stays its own family — defensive votes against a
+    confident consensus must still surface as dissent."""
+    assert _verdict_family("Unverifiable") not in {
+        _verdict_family("True"),
+        _verdict_family("Mostly True"),
+        _verdict_family("Misleading"),
+        _verdict_family("False"),
+        _verdict_family("Exaggerated"),
+    }
+
+
+# ── Render-level dissent pin: the canonical findings-review C4 case ──────────
+
+
+def test_panel_with_true_and_mostly_true_voters_shows_zero_dissents() -> None:
+    """The smoking-gun case from findings-review C4:
+    [Mostly True, Mostly True, True, True] → consensus Mostly True. The
+    two True voters are directionally aligned with the consensus, so the
+    rendered card MUST show "4 of 4 agree" with NO dissent flags. Pre-
+    fix: 2 dissents flagged (the True voters). Pin so this regression
+    can't return."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.MOSTLY_TRUE, VerdictLabel.MOSTLY_TRUE,
+         VerdictLabel.TRUE, VerdictLabel.TRUE],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert "4 of 4</span> agree" in html, (
+        "All four voters in the truthy family — must read as full agreement"
+    )
+    # No `class="model dissent"` (or with-leading-space variant) should appear.
+    assert 'class="model dissent"' not in html
+    # And no "N dissent..." copy in the agreement note.
+    assert " dissent" not in html.split("Model consensus")[1].split("</span>")[0]
+
+
+def test_panel_mixed_truthy_and_falsey_still_flags_dissent() -> None:
+    """Anti-regression on the family-aware fix: dissent must still flag
+    when a voter is in a different family than the consensus."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.MOSTLY_TRUE, VerdictLabel.MOSTLY_TRUE,
+         VerdictLabel.MOSTLY_TRUE, VerdictLabel.FALSE],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    # The False voter is in a different family → dissent flagged.
+    assert 'class="model dissent"' in html
+    assert "3 of 4</span> agree" in html
+
+
+def test_panel_with_exaggerated_voter_against_mostly_true_consensus_flags_dissent() -> None:
+    """Exaggerated is intentionally NOT collapsed with truthy (despite
+    Lenient projection grouping them) — it represents a genuine framing
+    disagreement that's worth surfacing on the dissent panel."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.MOSTLY_TRUE, VerdictLabel.MOSTLY_TRUE,
+         VerdictLabel.MOSTLY_TRUE, VerdictLabel.EXAGGERATED],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert 'class="model dissent"' in html
+    assert "3 of 4</span> agree" in html
+
+
+def test_panel_with_misleading_voter_against_false_consensus_shows_zero_dissents() -> None:
+    """Symmetric to the truthy case: Misleading and False share the
+    falsey family, so a Misleading voter against a False consensus is
+    directional agreement."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.FALSE, VerdictLabel.FALSE,
+         VerdictLabel.MISLEADING, VerdictLabel.MISLEADING],
+        fine_consensus=VerdictLabel.FALSE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert "4 of 4</span> agree" in html
+    assert 'class="model dissent"' not in html
+
+
+def test_panel_with_unverifiable_voter_against_truthy_consensus_flags_dissent() -> None:
+    """Unverifiable stays its own family. A defensive Unverifiable voter
+    against a confident truthy consensus must surface as dissent so
+    readers see the disagreement."""
+    bundle = _bundle_with_panel_labels(
+        [VerdictLabel.TRUE, VerdictLabel.TRUE,
+         VerdictLabel.MOSTLY_TRUE, VerdictLabel.UNVERIFIABLE],
+        fine_consensus=VerdictLabel.MOSTLY_TRUE,
+    )
+    html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
+    assert 'class="model dissent"' in html
+    assert "3 of 4</span> agree" in html
+
+

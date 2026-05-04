@@ -321,6 +321,51 @@ def _verdict_css(label_str: str) -> str:
     return VERDICT_CSS.get(label_str, "unverifiable")
 
 
+# Family map for per-model dissent flagging on a claim card. Two model
+# verdicts in the same family are NOT flagged as disagreeing with the
+# bundle consensus, even if their fine-axis labels differ. Families are
+# intentionally narrower than the publish-layer LENIENT/STRICT
+# projections because the projections are tuned for headline-pill
+# bucketing across the full panel, while dissent flagging is tuned for
+# "this voter is directionally aligned with the consensus."
+#
+# Specifically:
+#   * ``True`` and ``Mostly True`` are in the same family (truthy). The
+#     2026-04 SOTU run had ``[Mostly True, Mostly True, True, True]``
+#     → consensus Mostly True, both ``True`` voters flagged as dissent
+#     (findings-review C4). With family-aware flagging, the same panel
+#     shows zero dissents — directional agreement is honored.
+#   * ``Misleading`` and ``False`` are in the same family (falsey).
+#   * ``Exaggerated`` lives in its own family rather than collapsing
+#     with truthy or falsey because it's editorially the most
+#     ambiguous label (Lenient projects → Truthy, Strict projects →
+#     Falsey). A ``Mostly True`` consensus with one ``Exaggerated``
+#     voter SHOULD show dissent — that's a genuine framing
+#     disagreement worth surfacing.
+#   * ``Unverifiable`` and any unknown label each get their own
+#     family so a defensive vote of "Unverifiable" against a "True"
+#     consensus is still flagged.
+_VERDICT_FAMILY: dict[str, str] = {
+    "True": "truthy",
+    "Mostly True": "truthy",
+    "Exaggerated": "exaggerated",
+    "Misleading": "falsey",
+    "False": "falsey",
+    "Unverifiable": "unverifiable",
+}
+
+
+def _verdict_family(label_str: str) -> str:
+    """Map a fine-axis verdict label to its dissent-flagging family.
+
+    See ``_VERDICT_FAMILY`` for the full mapping + rationale. Unknown
+    labels (defensive — should never appear in production) get a unique
+    family keyed by the label itself, so every cross-label comparison
+    against an unknown stays "dissent."
+    """
+    return _VERDICT_FAMILY.get(label_str, f"unknown:{label_str}")
+
+
 # How many normalized leading characters of a caveat form its dedup key.
 # Different models often volunteer caveats that share the same opening
 # sentence but diverge in phrasing later; collapsing on a normalized prefix
@@ -704,6 +749,44 @@ def _evidence_list_html(
     if not items:
         return '<p style="font-size:0.88rem;color:var(--ink-muted)">No sources retrieved.</p>'
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
+
+
+def _model_cited_unverified_html(urls: list[str]) -> str:
+    """Render model-reported URLs that didn't survive the tool-grounding intersection.
+
+    A URL ends up here when the LLM emitted it as a citation but the search
+    tool's retrieved-URL set for the same call did not contain it. Could be
+    (a) a real URL the harness failed to capture, (b) a plausible URL the
+    model pattern-matched on a real domain (tool didn't visit that exact
+    path), or (c) outright fabrication. We surface host + path so readers
+    can verify each citation themselves, but render it italicized and
+    non-clickable to make clear we did NOT vouch for it.
+    """
+    if not urls:
+        return ''
+    items: list[str] = []
+    for url in urls[:10]:
+        # Same short-form transform as the verified tier so reader-side
+        # comparison stays apples-to-apples.
+        short = url.replace("https://", "").replace("http://", "")
+        if len(short) > 80:
+            short = short[:77] + "…"
+        items.append(
+            '<li class="source-model-only">'
+            '<span class="ev-mark">!</span>'
+            f'<span class="ev-src ev-src-model-only">{_esc(short)}</span>'
+            ' <span class="source-unverified-badge" title="'
+            'Model emitted this URL as a citation but the search tool did '
+            'not return it for this call. Could be a real URL the harness '
+            'failed to capture, a plausible URL the model pattern-matched '
+            'on a real domain, or fabrication. Verify before relying on it.'
+            '">didn’t validate</span></li>'
+        )
+    return (
+        '<p class="evidence-model-only-header">'
+        f'Model-cited URLs that didn’t validate ({len(urls)}):</p>'
+        f'<ul class="evidence-list evidence-list-model-only">{"".join(items)}</ul>'
+    )
 
 
 def _verdict_bar_html(
@@ -1204,6 +1287,270 @@ def _verdict_panel(site_report) -> str:
     )
 
 
+# ── Run manifest panel (roadmap [4]) ──────────────────────────────────────────
+#
+# Per-run provenance + degraded-consensus disclosure on every report.
+# Surfaces (a) actual model-id used per adapter (catches gpt-5.4 vs
+# gpt-4.1 fallback / opus-vs-fallback-to-sonnet etc.), (b) per-adapter
+# coverage (% of claims that produced a non-failed verdict), (c) the
+# tool-URL grounding rate (model_reported_sources → web_sources
+# survival rate), and (d) the consensus-strength distribution across
+# claims.
+#
+# Editorial framing follows the 2026-05-01 strip-audit findings: lead
+# the manifest with COVERAGE PARITY as the credibility signal — a
+# clean structural number that tells the reader whether the panel was
+# whole at run time. Tool-URL grounding rate goes in a footer caveat,
+# de-emphasized, because the metric mixes harness-capture artefacts
+# with citation-discipline differences and isn't reliably interpreted
+# as "fabrication rate" (see metrics/adapter_interpretability/strip_audit_2026-05.md).
+#
+# A degraded-consensus banner surfaces above the manifest body when
+# any adapter failed to produce a verdict on at least one claim;
+# threshold for banner is 1+ no_response on any adapter regardless of
+# total. Coverage column highlights the same row(s) for visual
+# consistency.
+
+_DEGRADED_COVERAGE_THRESHOLD = 1.0  # any miss flips the banner
+
+
+def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
+    """Aggregate per-adapter stats across all checkable bundles in a report.
+
+    Returns one dict per unique adapter, sorted by adapter_name, with
+    coverage / model-id / mode / tool-URL grounding / no_response
+    counters. Coverage denominator is ``len(checkable_bundles)`` —
+    every bundle is expected to carry one verdict per registered
+    adapter; missing or ``no_response`` rows count against coverage.
+    """
+    from collections import defaultdict
+    bundles = list(site_report.checkable_bundles)
+    total_claims = len(bundles) or 1
+
+    per_adapter: "dict[str, dict[str, Any]]" = defaultdict(
+        lambda: {
+            "name": "",
+            "model_ids": defaultdict(int),
+            "modes": defaultdict(int),
+            "tiers": defaultdict(int),
+            "verdicts_total": 0,
+            "no_response": 0,
+            "mrs_total": 0,
+            "web_total": 0,
+        }
+    )
+
+    # Each bundle ought to contribute one verdict per adapter; we track
+    # per-bundle adapter coverage so a missing adapter row (no MV at
+    # all on that bundle) counts as a no_response too.
+    seen_per_bundle: "dict[str, set[str]]" = defaultdict(set)
+
+    for bundle in bundles:
+        for mv in bundle.model_verdicts:
+            a = mv.adapter_name
+            slot = per_adapter[a]
+            slot["name"] = a
+            slot["verdicts_total"] += 1
+            seen_per_bundle[bundle.claim.id].add(a)
+            if getattr(mv, "no_response", False):
+                slot["no_response"] += 1
+                continue
+            slot["model_ids"][mv.model_id or "?"] += 1
+            mode = getattr(mv, "synthesis_mode", "") or "unknown"
+            slot["modes"][mode] += 1
+            tier = getattr(mv, "tier", "") or "unknown"
+            slot["tiers"][tier] += 1
+            slot["mrs_total"] += len(getattr(mv, "model_reported_sources", None) or [])
+            slot["web_total"] += len(mv.web_sources or [])
+
+    # Backfill no_response when an adapter produced ZERO verdicts on a
+    # bundle (rare but possible if engine skipped it entirely). For
+    # every adapter present at all, count missing-bundle rows as
+    # no_response so coverage = (total_claims - missing) / total_claims.
+    all_adapters = set(per_adapter.keys())
+    for bundle in bundles:
+        present = seen_per_bundle.get(bundle.claim.id, set())
+        for missing in all_adapters - present:
+            per_adapter[missing]["no_response"] += 1
+
+    rows: "list[dict[str, Any]]" = []
+    for name in sorted(per_adapter):
+        slot = per_adapter[name]
+        present = total_claims - slot["no_response"]
+        coverage_pct = present / total_claims if total_claims else 1.0
+        # Most-common model_id (ties broken by alphabetical order for
+        # determinism in tests).
+        model_ids = slot["model_ids"]
+        if model_ids:
+            top_count = max(model_ids.values())
+            model_id_top = sorted(
+                [m for m, c in model_ids.items() if c == top_count]
+            )[0]
+            extra_models = len(model_ids) - 1
+        else:
+            model_id_top = ""
+            extra_models = 0
+        modes = slot["modes"]
+        modes_str = " + ".join(sorted(modes.keys())) if modes else ""
+        mrs_total = slot["mrs_total"]
+        web_total = slot["web_total"]
+        if mrs_total > 0:
+            grounding_pct = web_total / mrs_total
+        else:
+            grounding_pct = None  # nothing to ground — render as "—"
+        rows.append(
+            {
+                "name": name,
+                "coverage_present": present,
+                "coverage_total": total_claims,
+                "coverage_pct": coverage_pct,
+                "model_id": model_id_top,
+                "extra_models": extra_models,
+                "modes_str": modes_str,
+                "mrs_total": mrs_total,
+                "web_total": web_total,
+                "grounding_pct": grounding_pct,
+                "degraded": coverage_pct < _DEGRADED_COVERAGE_THRESHOLD,
+            }
+        )
+    return rows
+
+
+def _consensus_strength_distribution(site_report) -> "dict[str, int]":
+    """Tally consensus_strength values across all checkable bundles."""
+    from collections import defaultdict
+    counts: "dict[str, int]" = defaultdict(int)
+    for bundle in site_report.checkable_bundles:
+        s = (getattr(bundle.consensus, "consensus_strength", "") or "none").lower()
+        counts[s] += 1
+    return dict(counts)
+
+
+def _run_manifest_html(site_report) -> str:
+    """Render the per-run provenance + degraded-consensus aside.
+
+    Empty when there are no checkable bundles (degenerate report).
+    Otherwise always renders — the panel doubles as an audit-trail
+    even when no adapter degraded.
+    """
+    rows = _adapter_run_stats(site_report)
+    if not rows:
+        return ""
+
+    total_claims = rows[0]["coverage_total"]
+    degraded_rows = [r for r in rows if r["degraded"]]
+
+    banner_html = ""
+    if degraded_rows:
+        bits = []
+        for r in degraded_rows:
+            missing = r["coverage_total"] - r["coverage_present"]
+            bits.append(
+                f"{_esc(r['name'])} contributed "
+                f"{r['coverage_present']} of {r['coverage_total']} claims "
+                f"({missing} unavailable)"
+            )
+        banner_html = (
+            '<div class="run-manifest-banner" role="status" '
+            'aria-live="polite">'
+            '<span class="run-manifest-banner-icon" aria-hidden="true">!</span>'
+            '<span class="run-manifest-banner-text"><strong>Degraded consensus.</strong> '
+            + ' · '.join(bits) + '.</span>'
+            '</div>'
+        )
+
+    body_rows = []
+    for r in rows:
+        model_label = _pretty_model_label(r["name"], r["model_id"]) if r["model_id"] else "—"
+        if r["extra_models"] > 0:
+            model_label += f" <span class=\"run-manifest-extra\">+{r['extra_models']} more</span>"
+        cov_pct_int = int(round(r["coverage_pct"] * 100))
+        cov_text = (
+            f'{r["coverage_present"]}/{r["coverage_total"]} '
+            f'<span class="run-manifest-pct">({cov_pct_int}%)</span>'
+        )
+        if r["degraded"]:
+            cov_text = f'<strong>{cov_text}</strong>'
+        if r["grounding_pct"] is None:
+            grounding_text = '<span class="run-manifest-pct">—</span>'
+        else:
+            g_int = int(round(r["grounding_pct"] * 100))
+            grounding_text = (
+                f'{r["web_total"]}/{r["mrs_total"]} '
+                f'<span class="run-manifest-pct">({g_int}%)</span>'
+            )
+        row_class = ' class="degraded"' if r["degraded"] else ''
+        body_rows.append(
+            f'<tr{row_class}>'
+            f'<td>{_esc(_adapter_pretty(r["name"]))}</td>'
+            f'<td>{model_label}</td>'
+            f'<td>{_esc(r["modes_str"])}</td>'
+            f'<td>{cov_text}</td>'
+            f'<td>{grounding_text}</td>'
+            '</tr>'
+        )
+
+    strength_dist = _consensus_strength_distribution(site_report)
+    strength_pretty = {
+        "strong": "strong",
+        "weak": "weak",
+        "single": "single-vote",
+        "none": "no-consensus",
+    }
+    strength_parts = [
+        f'{count} {strength_pretty.get(k, k)}'
+        for k, count in sorted(strength_dist.items(), key=lambda kv: -kv[1])
+        if count > 0
+    ]
+    strength_html = ""
+    if strength_parts:
+        strength_html = (
+            '<p class="run-manifest-meta">'
+            '<span class="run-manifest-meta-label">Consensus strength:</span> '
+            + ' · '.join(strength_parts)
+            + '</p>'
+        )
+
+    summary_text = (
+        f'Run manifest · {len(rows)} model{"s" if len(rows) != 1 else ""} '
+        f'· {total_claims} claim{"s" if total_claims != 1 else ""}'
+    )
+    if degraded_rows:
+        summary_text += f' · {len(degraded_rows)} degraded'
+
+    return (
+        '<aside class="run-manifest">'
+        + banner_html
+        + '<details class="run-manifest-details"'
+        + (' open' if degraded_rows else '')
+        + '>'
+        + f'<summary class="run-manifest-summary">{_esc(summary_text)}</summary>'
+        + '<div class="run-manifest-body">'
+        + '<table class="run-manifest-table">'
+        + '<thead><tr>'
+        + '<th>Adapter</th>'
+        + '<th>Model</th>'
+        + '<th>Mode</th>'
+        + '<th>Coverage</th>'
+        + '<th>Tool-URL grounding</th>'
+        + '</tr></thead>'
+        + '<tbody>' + ''.join(body_rows) + '</tbody>'
+        + '</table>'
+        + strength_html
+        + '<p class="run-manifest-caveat">'
+        + '<strong>Tool-URL grounding</strong> is the share of model-emitted '
+        + 'citation URLs that intersected the search tool’s retrieved-URL '
+        + 'set for the same call. Lower numbers can reflect harness-capture '
+        + 'asymmetry in the multi-claim batch path as much as model-citation '
+        + 'discipline; URLs that didn’t intersect appear per-claim with '
+        + 'a “didn’t validate” caveat.'
+        + '</p>'
+        + '</div>'
+        + '</details>'
+        + '</aside>'
+    )
+
+
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
@@ -1507,10 +1854,16 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
 
     caveat_html = _render_caveat_block(bundle.model_verdicts)
 
-    # Dissent is computed on the fine 6-bucket axis (the per-model strip
-    # also stays fine-axis), even though the headline pill renders on the
-    # coarse axis. This keeps "N of M agree" consistent with the strip.
+    # Dissent is computed on the *family* axis (2026-05-01 follow-up to
+    # findings-review C4): {True, Mostly True} share a family, as do
+    # {Misleading, False}; Exaggerated and Unverifiable each stand
+    # alone. A True voter against a Mostly True consensus is no longer
+    # flagged — directional agreement is honored. The per-model strip
+    # still RENDERS the fine-axis label; only the dissent CSS class
+    # (and the "N of M agree" tally) reads on the family axis. See
+    # ``_verdict_family`` for the full mapping + rationale.
     majority_label = fine_label
+    majority_family = _verdict_family(majority_label)
 
     triage_badge = ""
     if getattr(bundle, "triage_skipped_frontier", False):
@@ -1544,7 +1897,11 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
                 '</div>'
             )
         else:
-            dissent = " dissent" if mv_label != majority_label else ""
+            dissent = (
+                " dissent"
+                if _verdict_family(mv_label) != majority_family
+                else ""
+            )
             if not dissent:
                 agreeing += 1
             reasoning_html = ""
@@ -1589,16 +1946,42 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
                 existing, cls
             )
 
+    # Second pass — collect model-reported URLs that did NOT survive the
+    # tool-grounding intersection (apply_url_grounding) for ANY model. A
+    # URL validated by even one model is treated as validated and stays
+    # out of this list. Surfaced separately under the evidence block
+    # with a "didn't validate" caveat so readers see the audit trail
+    # without us implying we vouched for them.
+    unverified_urls: list[str] = []
+    seen_unverified: set[str] = set()
+    for mv in bundle.model_verdicts:
+        for url in (getattr(mv, 'model_reported_sources', None) or []):
+            if not url or url in seen_urls or url in seen_unverified:
+                continue
+            seen_unverified.add(url)
+            unverified_urls.append(url)
+
     total_models = len(bundle.model_verdicts)
     dissenting = total_models - agreeing
     dissent_note = f" · {dissenting} dissent{'s' if dissenting > 1 else ''}" if dissenting else ""
 
+    unverified_block = _model_cited_unverified_html(unverified_urls)
+    if all_urls:
+        evidence_inner = (
+            f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None)}'
+            f'{unverified_block}'
+        )
+    elif unverified_urls:
+        # Suppress the "No sources retrieved." note when the model DID
+        # cite URLs but none survived intersection — the unverified
+        # block is the audit trail in that case.
+        evidence_inner = unverified_block
+    else:
+        evidence_inner = _evidence_list_html([], classifications=None)
     evidence_html = (
         '<details class="evidence-details">'
         '  <summary class="evidence-summary">Combined evidence / sources list</summary>'
-        '  <div class="evidence">'
-        f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None)}'
-        '  </div>'
+        f'  <div class="evidence">{evidence_inner}</div>'
         '</details>'
     )
 
@@ -5065,6 +5448,7 @@ def _render_report(site_report: SiteReport) -> str:
         + '</div>'
         + claim_blocks
         + methodology_html
+        + _run_manifest_html(site_report)
     )
     footer = (
         '<span>truth-bot · pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML + '</span>'

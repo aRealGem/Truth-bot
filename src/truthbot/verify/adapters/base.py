@@ -531,6 +531,15 @@ def _normalize_url_for_compare(url: str) -> str:
 
     Returns ``""`` for inputs that aren't a recognizable HTTP/HTTPS URL — the
     caller treats those as non-matching (i.e. stripped).
+
+    Tracking / attribution query params (``utm_*``, ``gclid``, ``fbclid``,
+    etc.) are stripped before comparison so that a model-emitted
+    canonical URL matches a tool-retrieved URL that picked up an
+    attribution decoration. Arm-E (run 5d78f4df) showed OpenAI's
+    web_search tool consistently appends ``?utm_source=openai`` to
+    retrieved URLs, which under the prior literal comparison flagged
+    every such URL as a strip even when the model cited the canonical
+    form correctly.
     """
     if not isinstance(url, str):
         return ""
@@ -558,7 +567,47 @@ def _normalize_url_for_compare(url: str) -> str:
         path = ""
     elif len(path) > 1 and path.endswith("/"):
         path = path[:-1]
-    return urlunparse((scheme, netloc, path, p.params or "", p.query or "", ""))
+    query = _strip_tracking_query_params(p.query or "")
+    return urlunparse((scheme, netloc, path, p.params or "", query, ""))
+
+
+# Tracking / attribution query params that should not affect URL identity for
+# the anti-hallucination intersection. Lower-cased; comparison is
+# case-insensitive on the parameter NAME (RFC 3986 leaves param-name case
+# undefined; in practice these tracking keys are always lowercase). Value
+# preserved on real query params (e.g. ``?id=42``).
+_TRACKING_QUERY_PARAM_NAMES: frozenset[str] = frozenset({
+    # Google Analytics / standard UTM
+    "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+    "utm_id", "utm_creative_format", "utm_marketing_tactic",
+    # Click identifiers
+    "gclid", "fbclid", "msclkid", "yclid", "dclid",
+    # Mailchimp
+    "mc_cid", "mc_eid",
+    # Generic referer/source flags
+    "ref", "ref_src", "_ga", "_gl",
+    # OpenAI-specific (observed in arm-E run 5d78f4df-…)
+    "_openai_referrer",
+})
+
+
+def _strip_tracking_query_params(query: str) -> str:
+    """Drop tracking/attribution query params from a URL query string.
+
+    Returns ``""`` if the query had only tracking params. Preserves order
+    and value of all surviving params. Param-name comparison is
+    case-insensitive (matches the convention all the listed trackers
+    use in the wild).
+    """
+    if not query:
+        return ""
+    from urllib.parse import parse_qsl, urlencode
+
+    pairs = parse_qsl(query, keep_blank_values=True)
+    filtered = [
+        (k, v) for k, v in pairs if k.lower() not in _TRACKING_QUERY_PARAM_NAMES
+    ]
+    return urlencode(filtered)
 
 
 def ground_truth_web_sources(
@@ -629,6 +678,7 @@ def apply_url_grounding(
     tool_retrieved: Optional[list[str]],
     *,
     fallback_limit: int = 10,
+    tool_call_count: int = 0,
 ) -> tuple[list[str], list[str], int]:
     """Compute the three URL fields for a single ``ModelVerdict`` (Layer 1d).
 
@@ -640,22 +690,75 @@ def apply_url_grounding(
           failed the ground-truth intersection (fabrication-rate metric).
 
     Behavior:
-      * Model emitted ``web_sources`` (key present, value may be empty
-        list) → run :func:`ground_truth_web_sources` against
-        ``tool_retrieved``; respect the model's claim of "no sources"
-        when the list is empty.
       * Model omitted ``web_sources`` entirely → fall back to up to
         ``fallback_limit`` tool-retrieved URLs in ``web_sources``,
         empty ``model_reported_sources``, zero stripped count. These
         URLs are tool-grounded by definition so this is not a
         fabrication.
+      * Model emitted ``web_sources`` AND
+        ``tool_call_count > 0`` AND ``tool_retrieved`` is empty
+        (trust-when-fired) → bypass intersection and trust the
+        model. Search/grounding tool fired but the harness extractor
+        returned no URLs (e.g., OpenAI Responses API JSON-output mode
+        produces no inline ``url_citation`` annotations; Gemini's
+        ``vertexaisearch`` redirect resolver requires a session
+        cookie our harness can't supply, so
+        :func:`resolve_gemini_redirect` drops every URL it sees).
+        The model's emitted URLs are what the search tool returned
+        in-context; the strip would be a harness-attribution false
+        positive. xAI / Anthropic prove the relaxed semantics are
+        safe: their adapters capture URLs cleanly and run with 0%
+        strip under the same anti-fabrication intent. The fallback
+        only fires when the tool actually invoked, so it does NOT
+        weaken anti-fabrication for runs where the model declined to
+        search. Diagnosis +
+        evidence: ``metrics/adapter_interpretability/strip_audit_2026-05.md``.
+      * Model emitted ``web_sources`` and the harness captured at
+        least one tool URL → run :func:`ground_truth_web_sources`
+        intersection (strict mode); the survivor set becomes
+        ``web_sources``, the raw list stays on
+        ``model_reported_sources``, and the strip count is the
+        fabrication-rate metric (subject to harness-completeness
+        caveats — see docs).
+      * ``tool_call_count`` defaults to 0 so legacy callers see no
+        behavior change.
     """
     raw_ws = raw.get("web_sources", None)
     tool_retrieved = list(tool_retrieved or [])
     if raw_ws is None:
         return list(tool_retrieved[:fallback_limit]), [], 0
     model_reported = [u for u in (raw_ws or []) if isinstance(u, str)]
+    if tool_call_count > 0 and not tool_retrieved and model_reported:
+        # Trust-when-fired: harness saw nothing, tool actually ran,
+        # model has URLs to attest. Bypass intersection.
+        return list(model_reported), list(model_reported), 0
     kept, stripped = ground_truth_web_sources(model_reported, tool_retrieved)
+    # Diagnostic for the "strip everything" case (kept=[] AND model_reported
+    # non-empty AND stripped > 0). Disambiguates the two ways this can
+    # happen post-fallback:
+    #   (A) tool_call_count == 0 — model declined to invoke search;
+    #       strict strip is correctly anti-fabrication. Fix path is
+    #       prompt-side ("tool_choice=required" or stricter copy).
+    #   (B) tool_call_count > 0 AND tool_retrieved non-empty but no
+    #       overlap with model_reported — URL near-miss (e.g.,
+    #       .htm vs .pdf same-release). Fix path is fuzzy intersection.
+    # The trust-when-fired branch above already handles the third case
+    # (tool fired + retrieved empty), so it doesn't appear here. Sample
+    # URLs are logged so operators can eyeball whether the model is
+    # citing real-but-non-matching URLs (case B) or pure assertion
+    # (case A). Diagnostic only — no behavior change.
+    if stripped > 0 and not kept and model_reported:
+        logger.warning(
+            "apply_url_grounding strip-no-keep: tool_count=%d "
+            "retrieved=%d reported=%d stripped=%d "
+            "sample_reported=%s sample_retrieved=%s",
+            tool_call_count,
+            len(tool_retrieved),
+            len(model_reported),
+            stripped,
+            model_reported[:2],
+            tool_retrieved[:2],
+        )
     return kept, model_reported, stripped
 
 
@@ -741,6 +844,31 @@ def build_multi_verdicts(
     visible grounding for index-0.
     """
     usage = call_usage or {}
+
+    # Batch-level trust-when-fired observability (2026-05-01). The actual
+    # fallback now lives inside :func:`apply_url_grounding` so it applies
+    # universally to every adapter that calls it (Anthropic / Gemini /
+    # Grok / OpenAI single batch + live, AND build_multi_verdicts here).
+    # We keep ONE WARNING per batch — not N per claim — so operators can
+    # spot the harness-gap signature in stderr without N-flooding the
+    # log. See metrics/adapter_interpretability/strip_audit_2026-05.md.
+    batch_tool_count = int(usage.get("tool_call_count", 0) or 0)
+    if (
+        isinstance(tool_retrieved_urls, list)
+        and len(tool_retrieved_urls) == 0
+        and batch_tool_count > 0
+    ):
+        logger.warning(
+            "%s build_multi_verdicts trust-when-fired: search tool fired "
+            "(count=%d) but harness extracted no URLs; trusting "
+            "model-emitted web_sources for this batch (claims=%d, "
+            "batch_call_id=%s).",
+            adapter_name,
+            batch_tool_count,
+            len(claims),
+            batch_call_id or "",
+        )
+
     out: list[ModelVerdict] = []
     for idx, claim in enumerate(claims):
         raw = raw_by_claim.get(claim.id)
@@ -820,8 +948,12 @@ def build_multi_verdicts(
             mrs = list(tool_urls)
             stripped = 0
         else:
+            # apply_url_grounding handles trust-when-fired internally
+            # when ``tool_call_count > 0`` and ``tool_retrieved_urls``
+            # is empty. Pass the BATCH-level tool count (not the
+            # idx==0-only attributed count) so siblings benefit too.
             ws, mrs, stripped = apply_url_grounding(
-                raw, tool_retrieved_urls
+                raw, tool_retrieved_urls, tool_call_count=batch_tool_count
             )
             # Same defensive backfill when the model emitted an explicit
             # empty ``web_sources: []`` array and the tool DID retrieve
