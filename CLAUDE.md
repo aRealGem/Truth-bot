@@ -23,6 +23,14 @@ In rough order of how often you'll need them:
 5. [**`eval/sotu-2026/`**](eval/sotu-2026/) — current canonical eval set + runbooks. The temporal-regressions runbook ([`temporal-regressions-runbook.md`](eval/sotu-2026/temporal-regressions-runbook.md)) is the live-validation playbook for accuracy regressions; **it costs real API budget to run.**
 6. [**`metrics/adapter_interpretability/`**](metrics/adapter_interpretability/) — ad-hoc audit notes (e.g., [`strip_audit_2026-05.md`](metrics/adapter_interpretability/strip_audit_2026-05.md)) explaining what the harness's metrics actually mean. Read these before drawing conclusions from `metrics/run_summaries/*`.
 
+## External tracking — P67
+
+Truth-bot is tracked as **card `P67`** in the user's external cass-wip kanban (CSV-backed, accessed via the `dokuwiki` MCP server tools: `mcp__dokuwiki__csv_get`, `csv_list`, `csv_append_note`). P67 is the high-level, user-facing status surface — independent of this repo's `PROJECT_BOARD.md`, which remains the source of truth for in-repo work tracking.
+
+When something notable happens (a PR merges, regression-set scoring shifts, a blocker is hit or cleared, a sub-project spins up), append a dated entry to P67's Notes via `csv_append_note(card_id="P67", text="…")`. The text gets auto-prefixed with the UTC date.
+
+If a sub-project warrants its own card (a substantial workstream that should appear at the same kanban level as P67), discover the convention with `csv_list(area="Project")` and create the card via the appropriate `csv_*` tool — but default to extending P67 rather than fragmenting unless the work is genuinely independent.
+
 ## Conventions
 
 - **Tests**: `uv run pytest -q`. Live tests are gated behind a `live` pytest marker and excluded by default — never opt in (`-m live`) without explicit user confirmation; they spend real API money.
