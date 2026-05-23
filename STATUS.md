@@ -1,4 +1,55 @@
-# Truth-bot Status — 2026-04-30
+# Truth-bot Status — 2026-05-23
+
+## Session note — 2026-05-23 (Substance-track kickoff: tool_choice + Gemini temporal-anchoring prompt)
+
+Picking up after a 3-week quiet period. PR #10 (Rev-2 reliability checkpoint —
+URL grounding, harness, audit) was squash-merged to `main` on 2026-05-04 as
+commit `b06dddf`; the follow-up `9a1edff` (CLAUDE.md P67 convention) landed the
+same day. Working tree is clean and `main` is up to date with `origin/main`.
+786 tests pass on the merged state.
+
+### What's open after PR #10
+
+The first live run of the 4-case temporal-regressions set (run `cbc335a1-…`,
+~$0.40, 0% strip rate) scored **0/4** — but **not because of harness
+regression**. The harness work succeeded (strip rate 0.0%; trust-when-fired is
+doing exactly what it was built to do). The 0/4 came from two distinct
+substance issues catalogued in
+[`eval/sotu-2026/temporal-regressions-runbook.md`](eval/sotu-2026/temporal-regressions-runbook.md):
+
+1. **Temporal dismissal** (3 of 4 cases: TrumpRx, Venezuela, Helicoide). OpenAI
+   and Gemini in live mode emitted 0 model-reported URLs between them — the
+   models declined to invoke search for events they thought they knew from
+   training data, even though the event dates are now post-cutoff and the
+   events did happen.
+2. **Intra-family adjudication** (1 of 4: Rubio). Models split into
+   "Models split" + Low confidence on a 99-0-with-one-absent vote because the
+   panel objects to literal "100%" without family-aware tie-break to resolve.
+
+Three P0 rows tagged `(NEW 2026-05-04)` in `PROJECT_BOARD.md` track these:
+`tool_choice=required` on temporal-dismissal-prone calls, Gemini temporal-
+dismissal prompt revision, and intra-family consensus tie-break.
+
+### This session's deliverable
+
+Tightest scope first: the **two prompt-side / payload-side fixes** that address
+the 3-case temporal-dismissal mode. Tie-break is **deferred** to a follow-up
+PR because it touches the consensus engine and needs its own family-precedence
+design pass.
+
+- OpenAI `tool_choice` forcing `web_search` at every payload-builder site.
+- Gemini `tool_config.function_calling_config.mode=ANY` at every Gemini call
+  site (batch, live, multi-claim, cached-content branch).
+- Shared `SYNTHESIS_SYSTEM` temporal-anchoring revision with runtime date
+  injection + explicit "verify rather than dismiss" instruction.
+- Validation: live regression-set rerun (cost ~$0.40-0.60). Expected 3/4 pass
+  (Rubio still fails until the tie-break ships).
+
+Plan: [.cursor/plans/temporal-tool-choice_fix_+_status_sweep_e63c6e57.plan.md](.cursor/plans/temporal-tool-choice_fix_+_status_sweep_e63c6e57.plan.md).
+Board: the two relevant P0 rows move WIP this session; the intra-family
+tie-break P0 row stays in Backlog.
+
+---
 
 ## Session note — 2026-04-30 (Round 4 polish: Truthy audio fix, lens-labeled bars, Strict default, headline frames)
 
