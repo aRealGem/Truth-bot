@@ -188,6 +188,11 @@ class OpenAIAdapter(LLMAdapter):
             # (e.g. ``external_web_access``). See
             # developers.openai.com/api/docs/guides/tools-web-search.
             "tools": [{"type": "web_search"}],
+            # 2026-05-23: force the model to invoke web_search instead of
+            # answering from priors. Catches the temporal-dismissal failure
+            # mode where post-cutoff events get returned as Unverifiable
+            # without a single search query firing. Bounded by max_tool_calls.
+            "tool_choice": "required",
             "input": [
                 {
                     "role": "system",
@@ -285,6 +290,8 @@ class OpenAIAdapter(LLMAdapter):
             "model": self.model_id,
             # Phase 2.5a: use GA ``web_search`` for multi-claim batches too.
             "tools": [{"type": "web_search"}],
+            # 2026-05-23: force web_search per build_batch_payload rationale.
+            "tool_choice": "required",
             "input": [
                 {
                     "role": "system",
@@ -668,6 +675,9 @@ class OpenAIAdapter(LLMAdapter):
                         model=model,
                         # Phase 2.5a: live Responses API also uses GA ``web_search``.
                         tools=[{"type": "web_search"}],
+                        # 2026-05-23: force web_search invocation on the
+                        # live path too — temporal-dismissal fix.
+                        tool_choice="required",
                         input=input_blocks,
                         max_tool_calls=max_tool_calls,
                         max_output_tokens=max_out,

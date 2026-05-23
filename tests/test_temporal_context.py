@@ -138,6 +138,51 @@ class TestTemporalPreamble:
         preamble = build_temporal_preamble(claim, today=date(2026, 4, 24))
         assert preamble.endswith("\n")
 
+    # ── 2026-05-23 substance-track additions ────────────────────────────────
+    # Pin the "verify, don't dismiss" + "invoke search before deciding" rules
+    # that were added in response to the temporal-regressions 0/4 first run.
+    # The 0/4 came from OpenAI + Gemini returning Unverifiable on post-cutoff
+    # claims without ever invoking search. Rules 5 and 6 close that loophole.
+
+    def test_preamble_pins_verify_dont_dismiss_rule(self) -> None:
+        """Rule 5: a claim's date being past training cutoff is NOT grounds
+        for Unverifiable. Pinned because removing it would silently re-open
+        the temporal-dismissal regression.
+        """
+        claim = _sotu_claim(datetime(2026, 2, 24))
+        preamble = build_temporal_preamble(claim, today=date(2026, 4, 24))
+        assert "VERIFY, DON'T DISMISS" in preamble
+        assert "is NOT grounds for 'Unverifiable'" in preamble
+
+    def test_preamble_pins_unverifiable_reserved_for(self) -> None:
+        """Rule 5 also enumerates what Unverifiable IS legitimately for —
+        so the model doesn't read 'don't dismiss' as 'never return Unverifiable'.
+        """
+        claim = _sotu_claim(datetime(2026, 2, 24))
+        preamble = build_temporal_preamble(claim, today=date(2026, 4, 24))
+        assert "reserved for claims the" in preamble
+        assert "web genuinely cannot resolve" in preamble
+
+    def test_preamble_pins_concrete_failure_mode_example(self) -> None:
+        """Rule 5 carries a worked example using today's date. The example
+        wording is the most likely surface to drift; pin both the framing
+        and that today's date appears inside it (proves it's not a constant).
+        """
+        claim = _sotu_claim(datetime(2026, 2, 24))
+        preamble = build_temporal_preamble(claim, today=date(2026, 4, 24))
+        assert "2026-04-24" in preamble
+        assert "future event" in preamble  # the wrong reasoning we're naming
+
+    def test_preamble_pins_invoke_search_before_deciding_rule(self) -> None:
+        """Rule 6: a 'humble' Unverifiable without having invoked search is
+        a contract violation. This is the single most direct counter to the
+        regression-set's 0-tool-calls failure mode.
+        """
+        claim = _sotu_claim(datetime(2026, 2, 24))
+        preamble = build_temporal_preamble(claim, today=date(2026, 4, 24))
+        assert "INVOKE SEARCH BEFORE DECIDING" in preamble
+        assert "contract violation" in preamble
+
 
 # ── validator (scan_text + apply_temporal_flags) ─────────────────────────────
 

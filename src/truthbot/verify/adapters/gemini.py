@@ -259,6 +259,12 @@ class GeminiAdapter(LLMAdapter):
             "contents": user_msg,
             "system_instruction": SYNTHESIS_SYSTEM,
             "tools": [{"google_search": {}}],
+            # 2026-05-23: nudge the model to invoke the grounding tool on
+            # every call. Pairs with the SYNTHESIS_SYSTEM temporal-anchoring
+            # revision; together they target the temporal-dismissal failure
+            # mode where post-cutoff events were returned as Unverifiable
+            # without firing a single search query.
+            "tool_config": {"function_calling_config": {"mode": "ANY"}},
         }
 
     def parse_batch_response(
@@ -378,10 +384,19 @@ class GeminiAdapter(LLMAdapter):
             return cached_name
         try:
             tools = [types.Tool(google_search=types.GoogleSearch())]
+            # 2026-05-23: bind tool_config (force-tool-use nudge) onto the
+            # cache so cache-hit paths inherit it. Per Google's API contract
+            # (see test_gemini_cache.py), tool_config on a per-request
+            # GenerateContentConfig is rejected when cached_content is set —
+            # so the only valid spot for it is here on the CachedContent.
+            tool_config = types.ToolConfig(
+                function_calling_config=types.FunctionCallingConfig(mode="ANY"),
+            )
             create_config = types.CreateCachedContentConfig(
                 display_name=f"truthbot-synthesis-rubric-{model}",
                 system_instruction=SYNTHESIS_SYSTEM,
                 tools=tools,
+                tool_config=tool_config,
                 ttl="14400s",
             )
             cached = client.caches.create(
@@ -428,18 +443,26 @@ class GeminiAdapter(LLMAdapter):
 
                 cache_name = self._get_or_create_cached_content(client, types)
                 if cache_name:
-                    # system_instruction + tools live on the CachedContent; passing
-                    # either here is a hard API error ("CachedContent can not be
-                    # used with GenerateContent request setting system_instruction,
-                    # tools or tool_config").
+                    # system_instruction + tools + tool_config live on the
+                    # CachedContent; passing any of them here is a hard API
+                    # error ("CachedContent can not be used with
+                    # GenerateContent request setting system_instruction,
+                    # tools or tool_config"). See test_gemini_cache.py.
                     gen_config = types.GenerateContentConfig(
                         cached_content=cache_name,
                     )
                 else:
                     tools = [types.Tool(google_search=types.GoogleSearch())]
+                    # 2026-05-23: force-tool-use nudge mirrored on the
+                    # non-cached fallback path so behavior is consistent
+                    # whether or not the CachedContent handle is active.
+                    tool_config = types.ToolConfig(
+                        function_calling_config=types.FunctionCallingConfig(mode="ANY"),
+                    )
                     gen_config = types.GenerateContentConfig(
                         system_instruction=SYNTHESIS_SYSTEM,
                         tools=tools,
+                        tool_config=tool_config,
                     )
 
                 response = client.models.generate_content(
@@ -607,15 +630,23 @@ class GeminiAdapter(LLMAdapter):
                 cache_name = self._get_or_create_cached_content(client, types)
                 if cache_name:
                     # Regression guard: cached_content + system_instruction /
-                    # tools is a hard Google API error. See test_gemini_cache.py.
+                    # tools / tool_config is a hard Google API error. See
+                    # test_gemini_cache.py. The force-tool-use nudge lives on
+                    # the CachedContent itself.
                     gen_config = types.GenerateContentConfig(
                         cached_content=cache_name,
                     )
                 else:
                     tools = [types.Tool(google_search=types.GoogleSearch())]
+                    # 2026-05-23: force-tool-use nudge mirrored on the
+                    # non-cached multi-claim fallback path.
+                    tool_config = types.ToolConfig(
+                        function_calling_config=types.FunctionCallingConfig(mode="ANY"),
+                    )
                     gen_config = types.GenerateContentConfig(
                         system_instruction=SYNTHESIS_SYSTEM,
                         tools=tools,
+                        tool_config=tool_config,
                     )
 
                 response = client.models.generate_content(
