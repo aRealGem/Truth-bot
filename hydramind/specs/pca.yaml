@@ -11,5 +11,8 @@ flow:
 gate_threshold: 0.25
 tie_policy: flag_disagreement          # invariant — never silent tie-break
 evidence: {mode: closed_book, escalate_via: layer_c_request, integrity: symmetric}
-batch: {eligible_waves: [wave1, wave2], min_lot: 20}
-cost: {ceiling_usd: 5.00, on_breach: halt_and_flag}
+# escalation stub — trigger fires wave2 (arbiter); frontier_confidence_threshold
+# is a placeholder for a future "escalate to a stronger frontier arbiter" rung.
+escalation: {trigger: on_split, frontier_confidence_threshold: null}
+batch: {eligible_waves: [wave1, wave2], min_lot: 100}   # V4 provisional
+cost: {ceiling_usd: 2.00, on_breach: halt_and_flag}     # V4 provisional soft $2/run

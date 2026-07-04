@@ -30,7 +30,28 @@ TIER_MODELS: dict[tuple[str, str], str] = {
 # Family tokens used to detect silent fallback: the returned `model` must carry
 # the requested alias's family token, else the proxy served something else.
 _FAMILY_TOKENS = ("haiku", "sonnet", "opus", "gpt-4o", "gpt", "gemini",
-                  "grok", "deepseek", "mistral")
+                  "grok", "deepseek", "dsv4", "mistral")
+
+# Alias → (provider, tier). Aliases are the proxy model_names (verified live
+# 2026-07-04). Used to build a ModelBinding directly from a roster seat alias.
+ALIAS_META: dict[str, tuple[str, str]] = {
+    "claude-haiku": ("anthropic", "cheap"),
+    "claude-sonnet": ("anthropic", "standard"),
+    "claude-opus": ("anthropic", "frontier"),
+    "gpt-4o-mini": ("openai", "standard"),
+    "gpt-4o": ("openai", "frontier"),
+    "gemini-flash": ("gemini", "cheap"),
+    "gemini-pro": ("gemini", "standard"),
+    "grok": ("xai", "standard"),
+    "mistral": ("deepinfra", "standard"),
+    "dsv4-flash": ("deepinfra", "cheap"),
+}
+
+
+def binding_from_alias(alias: str) -> ModelBinding:
+    """Build a ModelBinding from a proxy model alias (roster seat value)."""
+    provider, tier = ALIAS_META.get(alias, ("unknown", "standard"))
+    return ModelBinding(provider=provider, model=alias, tier=tier)
 
 
 def resolve_model(provider: str, tier: str) -> str:

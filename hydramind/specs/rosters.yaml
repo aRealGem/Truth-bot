@@ -1,0 +1,13 @@
+# PCA seat rosters. Seats: proposer (P), critic (C), arbiter (A).
+# roles_allowed guard (hydramind/rosters.py): grok=critic-only, dsv4-flash=critic-only.
+dev:
+  proposer: mistral
+  critic: dsv4-flash
+  arbiter: claude-haiku
+
+# prod is intentionally incomplete (TBD seats) — loads + validates the concrete
+# critic pool, but is not runnable until P/A are filled (prod-roster task).
+prod:
+  proposer: TBD
+  critic: [grok, dsv4-flash]
+  arbiter: TBD

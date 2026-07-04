@@ -53,12 +53,17 @@ class HydraMind:
     # convenience alias matching the design snippet
     load = from_specs_dir
 
-    def resolve_spec(self, strategy: str, tune: Optional[dict]) -> Spec:
+    def resolve_spec(self, strategy: str, tune: Optional[dict],
+                     roster: Optional[str] = None) -> Spec:
         if strategy not in self.registry:
             raise KeyError(f"unknown strategy '{strategy}'")
         raw = copy.deepcopy(self.registry[strategy].raw)
         for path, val in (tune or {}).items():
             _set_by_path(raw, path, val)
+        if roster:
+            from .rosters import get_roster       # validates roles_allowed + completeness
+            raw["roster_resolved"] = get_roster(roster).seats
+            raw["roster_name"] = roster
         return build_spec(raw)   # re-validates I1/I3 on the tuned spec
 
     def explain(self, strategy: str, tune: Optional[dict] = None) -> dict:
@@ -68,9 +73,10 @@ class HydraMind:
                 "knobs": sorted(_knobs(spec.raw))}
 
     def run(self, task: str, items: list, strategy: str,
-            tune: Optional[dict] = None, rc_id: Optional[str] = None
+            tune: Optional[dict] = None, rc_id: Optional[str] = None,
+            roster: Optional[str] = None
             ) -> tuple[StrategyResult, RunManifest]:
-        spec = self.resolve_spec(strategy, tune)
+        spec = self.resolve_spec(strategy, tune, roster=roster)
         strat = STRATEGY_CLASSES[strategy]()
 
         bundle = TaskBundle(task=task, items=[_coerce_item(i) for i in items])

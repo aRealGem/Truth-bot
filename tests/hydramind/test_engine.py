@@ -151,16 +151,16 @@ def test_tune_injecting_grok_proposer_refails():
 # ── transport lane selection + batch reconciliation ────────────────────────────
 
 def test_lane_selects_batch_when_lot_and_eligible():
-    # 60 items, single min_lot=50, wave1 eligible → L-B
-    items = [TaskItem(f"s{i}", {"text": "t"}) for i in range(60)]
-    outs = {f"solo:s{i}": {"label": "opinion"} for i in range(60)}
+    # 100 items, single min_lot=100, wave1 eligible → L-B
+    items = [TaskItem(f"s{i}", {"text": "t"}) for i in range(100)]
+    outs = {f"solo:s{i}": {"label": "opinion"} for i in range(100)}
     fb = FakeBatch(outs)
     hm = make_hm(scripted(outs), batch_backend=fb)
     result, manifest = hm.run("classify", items, "single")
-    assert fb.calls_seen == 60
-    assert manifest.lane_tally.get("L-B") == 60
+    assert fb.calls_seen == 100
+    assert manifest.lane_tally.get("L-B") == 100
     assert manifest.lane_tally.get("L-P") is None
-    assert len(result.items) == 60
+    assert len(result.items) == 100
 
 
 def test_lane_stays_proxy_below_min_lot():

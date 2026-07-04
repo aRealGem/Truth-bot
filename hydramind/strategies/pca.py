@@ -1,12 +1,17 @@
 """
-`pca` strategy — proposer → critic → (gate) → arbiter (design §3.3).
+`pca` strategy — proposer → critic(s) → (split gate) → arbiter (design §3.3, V4 build 7).
 
-- wave1: per item, proposer + critic in parallel.
-- gate: material_disagreement (label mismatch OR |Δconf| ≥ gate_threshold).
-- wave2: rotated arbiter on the gated subset only.
-- reduce: plurality vote; a material tie with no plurality ⇒ disagreement_flagged
-  (I2 — never a silent tie-break). Winning verdict's citations are checked
-  against the evidence pack (I4).
+Single-claim state machine P→C→A. Seats are bound either from a named ROSTER
+(spec.raw["roster_resolved"], seat→[aliases]) or, absent a roster, from the YAML
+provider pools (back-compat). A critic may be a panel (list of aliases).
+
+Split detection (logged): a P/C **material disagreement** = proposer verdict ≠ any
+critic verdict, OR |Δconfidence| ≥ gate_threshold for any critic. Split items
+escalate to the arbiter (escalation stub; frontier threshold is a placeholder).
+
+reduce: plurality across all seats; a material tie with no plurality ⇒
+disagreement_flagged (I2). Winning verdict's citations checked against the pack (I4).
+Per-seat model/lane/cost/returned_model land in the run manifest's cost_records.
 """
 from __future__ import annotations
 
@@ -14,13 +19,14 @@ from collections import Counter
 from typing import Optional
 
 from ..types import (
-    Call, Wave, TaskBundle, RunState, Spec, PromptRef, Cap,
+    Wave, Call, TaskBundle, RunState, Spec, PromptRef, Cap,
     StrategyResult, ItemResult, StrategyResultKind, CallResult,
 )
 from .base import resolve_binding
+from ..models import binding_from_alias
 from .. import invariants as inv
 
-_PROPOSER_TMPL = "{input}"   # real templates injected via spec.raw["prompts"]
+_DEFAULT_TMPL = "{input}"
 
 
 def _label(cr: CallResult) -> Optional[str]:
@@ -29,7 +35,10 @@ def _label(cr: CallResult) -> Optional[str]:
 
 def _conf(cr: CallResult) -> Optional[float]:
     v = cr.output.get("confidence") if cr else None
-    return float(v) if v is not None else None
+    try:
+        return float(v) if v is not None else None
+    except (TypeError, ValueError):
+        return None
 
 
 class PcaStrategy:
@@ -37,56 +46,67 @@ class PcaStrategy:
     caps = frozenset({Cap.BATCH, Cap.MULTI_ROUND})
 
     def _prompt(self, spec: Spec, role: str) -> PromptRef:
-        tmpl = (spec.raw.get("prompts", {}) or {}).get(role, _PROPOSER_TMPL)
+        tmpl = (spec.raw.get("prompts", {}) or {}).get(role, _DEFAULT_TMPL)
         return PromptRef.of(f"{spec.name}:{role}", tmpl)
+
+    def _seat_bindings(self, spec: Spec, role: str):
+        """Return list of ModelBindings for a seat: from roster if present, else pool."""
+        roster = spec.raw.get("roster_resolved")
+        if roster:
+            return [binding_from_alias(a) for a in roster.get(role, [])]
+        return [resolve_binding(spec.roles[role])]
 
     def first(self, task: TaskBundle, spec: Spec) -> Wave:
         calls = []
         for item in task.items:
-            for role in spec.flow["wave1"]:
-                calls.append(Call(
-                    role=role,
-                    item_id=item.item_id,
-                    prompt=self._prompt(spec, role),
-                    binding=resolve_binding(spec.roles[role]),
-                    inputs=item.payload,
-                ))
+            for role in spec.flow["wave1"]:            # [proposer, critic]
+                for b in self._seat_bindings(spec, role):
+                    calls.append(Call(role=role, item_id=item.item_id,
+                                      prompt=self._prompt(spec, role),
+                                      binding=b, inputs=item.payload))
         return Wave(calls=calls, batchable=True, tag="wave1")
 
     def next(self, st: RunState) -> Optional[Wave]:
         if st.scratch.get("phase") == "wave2":
-            return None  # arbiter wave already absorbed
-        # We've absorbed wave1: compute the gate.
+            return None
         threshold = st.spec.gate_threshold
         gate_mode = st.spec.flow.get("gate", "material_disagreement")
+        st.scratch["split_criterion"] = (
+            "proposer.verdict != any critic.verdict OR "
+            f"|Δconfidence| >= {threshold} for any critic")
         by_item = st.by_item()
-        gated: list[str] = []
+        gated, split_items = [], []
         for item_id, results in by_item.items():
-            if gate_mode == "always":               # forced arbitration (audit runs)
-                gated.append(item_id)
-                continue
             prop = next((r for r in results if r.call.role == "proposer"), None)
-            crit = next((r for r in results if r.call.role == "critic"), None)
-            if inv.is_material_disagreement(
-                _label(prop), _label(crit), _conf(prop), _conf(crit), threshold
-            ):
+            crits = [r for r in results if r.call.role == "critic"]
+            split = any(inv.is_material_disagreement(
+                _label(prop), _label(c), _conf(prop), _conf(c), threshold) for c in crits)
+            if split:
+                split_items.append(item_id)
+            if gate_mode == "always" or split:
                 gated.append(item_id)
         st.scratch["gated"] = gated
+        st.scratch["split_items"] = split_items
         st.scratch["phase"] = "wave2"
+
+        # escalation stub: split ⇒ escalate to arbiter. frontier threshold is a
+        # placeholder for a future "escalate to a stronger frontier arbiter" rung.
+        esc = st.spec.raw.get("escalation", {}) or {}
+        st.scratch["escalation"] = {
+            "trigger": esc.get("trigger", "on_split"),
+            "frontier_confidence_threshold": esc.get("frontier_confidence_threshold", None),
+            "escalated_items": list(gated),
+        }
         if not gated:
             return None
-        arb_spec = st.spec.roles["arbiter"]
         payloads = {i.item_id: i.payload for i in st.task.items}
-        calls = [
-            Call(
-                role="arbiter",
-                item_id=item_id,
-                prompt=self._prompt(st.spec, "arbiter"),
-                binding=resolve_binding(arb_spec, rotation_index=idx),
-                inputs=payloads[item_id],
-            )
-            for idx, item_id in enumerate(gated)
-        ]
+        arb_bindings = self._seat_bindings(st.spec, "arbiter")
+        calls = []
+        for idx, item_id in enumerate(gated):
+            b = arb_bindings[idx % len(arb_bindings)]     # rotate if pool
+            calls.append(Call(role="arbiter", item_id=item_id,
+                              prompt=self._prompt(st.spec, "arbiter"),
+                              binding=b, inputs=payloads[item_id]))
         return Wave(calls=calls, batchable=True, tag="wave2")
 
     def reduce(self, st: RunState) -> StrategyResult:
@@ -94,43 +114,38 @@ class PcaStrategy:
         out_items = []
         for item_id, results in st.by_item().items():
             votes = [(_label(r), _conf(r), r) for r in results if _label(r) is not None]
-            labels = [v[0] for v in votes]
-            counts = Counter(labels)
-
+            counts = Counter(v[0] for v in votes)
             if not counts:
-                out_items.append(ItemResult(
-                    item_id, StrategyResultKind.DISAGREEMENT_FLAGGED,
-                    {"reason": "no_labels"}, {"votes": {}}))
+                out_items.append(ItemResult(item_id, StrategyResultKind.DISAGREEMENT_FLAGGED,
+                                            {"reason": "no_labels"}, {"votes": {}}))
                 continue
-
             top = counts.most_common()
             winner, wcount = top[0]
             tie = len(top) > 1 and top[1][1] == wcount
-
-            agreement = {"votes": dict(counts), "n": len(labels)}
-
+            agreement = {"votes": dict(counts), "n": len(votes),
+                         "split": item_id in st.scratch.get("split_items", []),
+                         "escalated": item_id in st.scratch.get("gated", [])}
             if tie:
-                # I2: material tie, no plurality ⇒ flag, never silent break.
-                out_items.append(ItemResult(
-                    item_id, StrategyResultKind.DISAGREEMENT_FLAGGED,
-                    {"labels": dict(counts)}, agreement))
+                out_items.append(ItemResult(item_id, StrategyResultKind.DISAGREEMENT_FLAGGED,
+                                            {"labels": dict(counts)}, agreement))
                 continue
-
-            # Winning verdict: prefer arbiter's, else the winning-label voter.
             winning_cr = next(
                 (v[2] for v in votes if v[2].call.role == "arbiter" and v[0] == winner),
-                next(v[2] for v in votes if v[0] == winner),
-            )
+                next(v[2] for v in votes if v[0] == winner))
             citations = list(winning_cr.output.get("citations", []))
-            pack_ids = payloads.get(item_id, {}).get("evidence_pack_ids", [])
-            # I4: hard fail if a citation is outside the evidence pack.
-            inv.check_i4_citations(citations, pack_ids)
-
+            inv.check_i4_citations(citations, payloads.get(item_id, {}).get("evidence_pack_ids", []))
             confs = [v[1] for v in votes if v[0] == winner and v[1] is not None]
-            out_items.append(ItemResult(
-                item_id, StrategyResultKind.RESOLVED,
-                {"verdict": winner,
-                 "citations": citations,
-                 "confidence": (sum(confs) / len(confs)) if confs else None},
-                agreement))
-        return StrategyResult(items=out_items)
+            out_items.append(ItemResult(item_id, StrategyResultKind.RESOLVED,
+                {"verdict": winner, "citations": citations,
+                 "confidence": (sum(confs) / len(confs)) if confs else None}, agreement))
+
+        n = len(out_items)
+        notes = {
+            "split_criterion": st.scratch.get("split_criterion"),
+            "split_rate": len(st.scratch.get("split_items", [])) / n if n else 0.0,
+            "escalation_rate": len(st.scratch.get("gated", [])) / n if n else 0.0,
+            "escalation": st.scratch.get("escalation"),
+            "flagged": sum(1 for r in out_items
+                           if r.kind == StrategyResultKind.DISAGREEMENT_FLAGGED),
+        }
+        return StrategyResult(items=out_items, notes=notes)

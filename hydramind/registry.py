@@ -76,8 +76,12 @@ def load_spec_file(path: str | Path) -> Spec:
 def load_registry(specs_dir: str | Path = SPECS_DIR) -> dict[str, Spec]:
     """Load every *.yaml in specs_dir. Any single invalid spec fails the whole
     load (fail closed — a bad spec must not be silently skipped)."""
+    # Non-strategy YAML that lives in specs/ (e.g. roster definitions).
+    _NOT_STRATEGY = {"rosters.yaml"}
     specs: dict[str, Spec] = {}
     for p in sorted(Path(specs_dir).glob("*.yaml")):
+        if p.name in _NOT_STRATEGY:
+            continue
         spec = load_spec_file(p)
         if spec.name in specs:
             raise ValueError(f"duplicate spec name '{spec.name}' ({p})")
