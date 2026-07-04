@@ -103,6 +103,7 @@ class CallResult:
     cost_usd: float = 0.0
     tokens_in: int = 0
     tokens_out: int = 0
+    returned_model: str = ""     # model id reported by the provider/proxy (fallback detection)
     raw: Any = None
 
 

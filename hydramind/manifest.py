@@ -25,6 +25,7 @@ class CostRecord:
     lane: str
     provider: str
     model: str
+    returned_model: str
     prompt_version: str
     tokens_in: int
     tokens_out: int
@@ -60,6 +61,7 @@ class RunManifest:
                 call_key=call_key(r.call),
                 role=r.call.role, item_id=r.call.item_id, lane=r.lane.value,
                 provider=r.call.binding.provider, model=r.call.binding.model,
+                returned_model=r.returned_model,
                 prompt_version=r.call.prompt.version,
                 tokens_in=r.tokens_in, tokens_out=r.tokens_out, cost_usd=r.cost_usd,
             ))
@@ -67,6 +69,17 @@ class RunManifest:
             self.total_cost_usd += r.cost_usd
             self.total_tokens_in += r.tokens_in
             self.total_tokens_out += r.tokens_out
+
+    def model_mismatches(self) -> list[dict]:
+        """Cost records where the returned model isn't the requested family —
+        silent-fallback / unregistered-model detection (fail G5/equivalence)."""
+        from .models import returned_ok
+        out = []
+        for c in self.cost_records:
+            if not returned_ok(c.model, c.returned_model):
+                out.append({"item_id": c.item_id, "role": c.role,
+                            "requested": c.model, "returned": c.returned_model})
+        return out
 
     def to_spend_records(self) -> list[dict]:
         """Lane-level spend rows for the P80 add_spend path (one per lane)."""

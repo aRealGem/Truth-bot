@@ -85,16 +85,31 @@ class ProxyCompletion:
             tokens_in=usage.get("prompt_tokens", 0),
             tokens_out=usage.get("completion_tokens", 0),
             cost_usd=float(usage.get("response_cost", 0.0) or 0.0),
+            returned_model=data.get("model", ""),
             raw=data,
         )
 
 
+import re as _re
+_FENCE_RX = _re.compile(r"```(?:json)?\s*(.*?)\s*```", _re.DOTALL)
+_OBJ_RX = _re.compile(r"\{.*\}", _re.DOTALL)
+
+
 def _loads_or_text(s: str) -> dict:
-    try:
-        v = json.loads(s)
-        return v if isinstance(v, dict) else {"text": s}
-    except Exception:
-        return {"text": s}
+    """Parse a model reply into a dict, tolerating markdown fences and prose
+    around the JSON object (models don't always honor 'JSON only')."""
+    for candidate in (s,
+                      (_FENCE_RX.search(s).group(1) if _FENCE_RX.search(s) else None),
+                      (_OBJ_RX.search(s).group(0) if _OBJ_RX.search(s) else None)):
+        if not candidate:
+            continue
+        try:
+            v = json.loads(candidate)
+            if isinstance(v, dict):
+                return v
+        except Exception:
+            continue
+    return {"text": s}
 
 
 # ── L-T / L-W: not built in C1 ────────────────────────────────────────────────

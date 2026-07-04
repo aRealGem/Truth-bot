@@ -76,19 +76,79 @@ def a1_train():
     print("#   HELDOUT NOT READ (sealed for the A1+A2 composed RC run — I6).")
 
 
-def composed(rc_id):
+_LABELS = ["check-worthy", "opinion", "unimportant"]
+
+
+def _metrics(pairs):
+    """pairs: list[(gold, pred)] -> (accuracy, per-class PRF, macro_f1, confusion)."""
+    conf = {g: {p: 0 for p in _LABELS} for g in _LABELS}
+    for g, p in pairs:
+        conf[g][p] = conf[g].get(p, 0) + 1
+    n = len(pairs)
+    correct = sum(conf[l][l] for l in _LABELS)
+    prf = {}
+    f1s = []
+    for l in _LABELS:
+        tp = conf[l][l]
+        fp = sum(conf[g][l] for g in _LABELS) - tp
+        fn = sum(conf[l][p] for p in _LABELS) - tp
+        prec = tp / (tp + fp) if (tp + fp) else 0.0
+        rec = tp / (tp + fn) if (tp + fn) else 0.0
+        f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
+        prf[l] = (prec, rec, f1)
+        f1s.append(f1)
+    return correct / n, prf, sum(f1s) / len(f1s), conf
+
+
+def composed(rc_id, tau_high=0.65):
+    import os
+    from hydramind import HydraMind
+    from hydramind.transport import Transport, ProxyCompletion
+    from truthbot.checkworthy import classifier, prefilter
+
     guard = HeldoutGuard()
     try:
-        guard.read("claim_set.heldout", rc_id)
+        guard.read("claim_set.heldout", rc_id)      # I6 — once per RC
     except I6HeldoutReuseError as e:
         print(f"REFUSED: {e}"); return
-    print("BLOCKED: composed A1+A2 heldout run needs A2 live (proxy virtual key "
-          "from the repo .env / CW-12). Heldout intentionally not opened here.\n"
-          "When the key is present:\n"
-          "  from truthbot.checkworthy import classifier, pipeline\n"
-          "  hm = HydraMind.load(); res = pipeline.run_layer_a(heldout, \n"
-          "       classify_fn=lambda ss: classifier.classify(hm, ss)[0], full_speech=True)\n"
-          "  then score with scorer/score.py claims.")
+    if not os.environ.get("LITELLM_KEY"):
+        print("BLOCKED: LITELLM_KEY not in env; source the repo .env first."); return
+
+    rows = load(HELDOUT)
+    sents = [{"sid": r["sid"], "text": r["text"], "context": r.get("context", "")} for r in rows]
+    gold = {r["sid"]: r["label"] for r in rows}
+
+    hm = HydraMind.from_specs_dir(transport=Transport(
+        completion_fn=ProxyCompletion(response_parser=classifier.parse_a2)))
+    a2, manifest = classifier.classify(hm, sents)          # A2 on all (full 3-way labels)
+    a2_label = {v["sid"]: v["label"] for v in a2}
+
+    # composed = A1 PASS forces check-worthy (budget path); else A2's label.
+    a1_pass = {s["sid"]: (prefilter.score(s["text"]) >= tau_high) for s in sents}
+    composed_pred = {sid: ("check-worthy" if a1_pass[sid] else a2_label[sid]) for sid in gold}
+
+    mism = manifest.model_mismatches()
+    print(f"# G1 composed A1+A2 on HELDOUT (RC={rc_id}, n={len(gold)}) — read once (I6)")
+    if mism:
+        print(f"!! MODEL FALLBACK DETECTED (fails G5/equivalence): {mism[:5]}")
+    else:
+        print("# model-fallback guard: PASS (all calls returned the requested family)")
+
+    for name, pred in [("A2-only", a2_label), ("composed(A1+A2)", composed_pred)]:
+        pairs = [(gold[s], pred[s]) for s in gold]
+        acc, prf, macro, conf = _metrics(pairs)
+        print(f"\n## {name}: acc={acc:.3f}  macro-F1={macro:.3f}  "
+              f"recall_cw={prf['check-worthy'][1]:.3f}  prec_cw={prf['check-worthy'][0]:.3f}")
+        print("   confusion (gold→pred):")
+        print("             " + "  ".join(f"{l[:5]:>7}" for l in _LABELS))
+        for g in _LABELS:
+            print(f"   {g:12} " + "  ".join(f"{conf[g][p]:7d}" for p in _LABELS))
+
+    print(f"\n# provisional bars: recall_cw ≥ 0.90, macro-F1 ≥ 0.75 (record, don't chase)")
+    print(f"# lane tally: {manifest.lane_tally}  tokens_in={manifest.total_tokens_in} "
+          f"tokens_out={manifest.total_tokens_out}")
+    Path(HERE / "examples" / "manifest.heldout.json").write_text(manifest.to_json())
+    print(f"# manifest → examples/manifest.heldout.json")
 
 
 def main():

@@ -1,29 +1,41 @@
 """
-Logical tier→provider→model alias table. These are *aliases* the LiteLLM proxy
-(L-P) and the native SDKs (L-B) resolve to concrete upstreams; HydraMind never
-hard-codes a raw upstream model id in strategy code.
+Logical tier→provider→model alias table. These aliases MUST match model_name
+entries registered on the LiteLLM proxy (L-P), otherwise a call 400s or silently
+falls back — the "Flash-registration gap" class of bug. Verified against the
+proxy config 2026-07-04: anthropic = claude-{haiku,sonnet,opus}; openai =
+gpt-4o{,-mini}; gemini = gemini-{flash,pro}; grok = grok.
+
+NOTE: `mistral` (the decided cross-vendor critic for pca) has NO registered
+alias on the proxy yet — a pca/Layer-B live run needs it added first. Flagged;
+not needed for the Layer-A `single` runs (builds 5–6).
 """
 from __future__ import annotations
 
 from .types import ModelBinding
 
 TIER_MODELS: dict[tuple[str, str], str] = {
-    ("anthropic", "cheap"): "claude-haiku-4-5",
-    ("anthropic", "standard"): "claude-sonnet-4-6",
-    ("anthropic", "frontier"): "claude-opus-4-8",
-    ("openai", "standard"): "gpt-5.4",
-    ("openai", "frontier"): "gpt-5.4",
-    ("gemini", "standard"): "gemini-2.5-pro",
-    ("gemini", "frontier"): "gemini-2.5-pro",
-    ("mistral", "standard"): "mistral-large-latest",
-    ("grok", "standard"): "grok-4",
+    ("anthropic", "cheap"): "claude-haiku",
+    ("anthropic", "standard"): "claude-sonnet",
+    ("anthropic", "frontier"): "claude-opus",
+    ("openai", "cheap"): "gpt-4o-mini",
+    ("openai", "standard"): "gpt-4o-mini",
+    ("openai", "frontier"): "gpt-4o",
+    ("gemini", "cheap"): "gemini-flash",
+    ("gemini", "standard"): "gemini-pro",
+    ("gemini", "frontier"): "gemini-pro",
+    ("grok", "standard"): "grok",
+    # mistral intentionally absent — unregistered on the proxy (see module note).
 }
+
+# Family tokens used to detect silent fallback: the returned `model` must carry
+# the requested alias's family token, else the proxy served something else.
+_FAMILY_TOKENS = ("haiku", "sonnet", "opus", "gpt-4o", "gpt", "gemini",
+                  "grok", "deepseek", "mistral")
 
 
 def resolve_model(provider: str, tier: str) -> str:
     m = TIER_MODELS.get((provider, tier))
     if m is None:
-        # Fall back to the provider's richest tier we know, else a synthetic id.
         for t in ("frontier", "standard", "cheap"):
             if (provider, t) in TIER_MODELS:
                 return TIER_MODELS[(provider, t)]
@@ -33,3 +45,23 @@ def resolve_model(provider: str, tier: str) -> str:
 
 def binding_for(provider: str, tier: str) -> ModelBinding:
     return ModelBinding(provider=provider, model=resolve_model(provider, tier), tier=tier)
+
+
+def _family(name: str) -> str | None:
+    name = (name or "").lower()
+    for tok in _FAMILY_TOKENS:
+        if tok in name:
+            return tok
+    return None
+
+
+def returned_ok(requested_alias: str, returned_model: str) -> bool:
+    """True if `returned_model` plausibly IS the requested alias (same family).
+    A False here means a silent fallback / unregistered-model reroute — callers
+    (equivalence, G5) must fail on it."""
+    if not returned_model:
+        return True                     # nothing reported; can't judge here
+    rf, gf = _family(requested_alias), _family(returned_model)
+    if rf is None:
+        return True
+    return rf == gf
