@@ -1,0 +1,390 @@
+[
+  {
+    "sid": "trump_2026:0616",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.8,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 2
+      },
+      "n": 2,
+      "split": false,
+      "escalated": false
+    }
+  },
+  {
+    "sid": "biden_2022:0025",
+    "kind": "resolved",
+    "verdict": "TRUE",
+    "citations": [],
+    "confidence": 0.925,
+    "agreement": {
+      "votes": {
+        "TRUE": 2
+      },
+      "n": 2,
+      "split": false,
+      "escalated": false
+    }
+  },
+  {
+    "sid": "trump_2026:0656",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.2333333333333333,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0256",
+    "kind": "resolved",
+    "verdict": "TRUE",
+    "citations": [],
+    "confidence": 0.875,
+    "agreement": {
+      "votes": {
+        "TRUE": 2,
+        "UNVERIFIABLE": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "biden_2022:0030",
+    "kind": "disagreement_flagged",
+    "labels": {
+      "UNVERIFIABLE": 1,
+      "TRUE": 1,
+      "MISLEADING": 1
+    },
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 1,
+        "TRUE": 1,
+        "MISLEADING": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "biden_2022:0045",
+    "kind": "resolved",
+    "verdict": "MISLEADING",
+    "citations": [],
+    "confidence": 0.7,
+    "agreement": {
+      "votes": {
+        "MISLEADING": 2
+      },
+      "n": 2,
+      "split": false,
+      "escalated": false
+    }
+  },
+  {
+    "sid": "trump_2026:0436",
+    "kind": "resolved",
+    "verdict": "FALSE",
+    "citations": [],
+    "confidence": 0.9450000000000001,
+    "agreement": {
+      "votes": {
+        "FALSE": 2,
+        "UNVERIFIABLE": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0620",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.5833333333333334,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0184",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.0,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 2
+      },
+      "n": 2,
+      "split": false,
+      "escalated": false
+    }
+  },
+  {
+    "sid": "trump_2026:0356",
+    "kind": "resolved",
+    "verdict": "MISLEADING",
+    "citations": [],
+    "confidence": 0.7,
+    "agreement": {
+      "votes": {
+        "MISLEADING": 2
+      },
+      "n": 2,
+      "split": false,
+      "escalated": false
+    }
+  },
+  {
+    "sid": "trump_2026:0024",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.4,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 2,
+        "MISLEADING": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0056",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.4,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 2,
+        "FALSE": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "biden_2022:0245",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.625,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 2,
+        "MISLEADING": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0652",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.26666666666666666,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0020",
+    "kind": "resolved",
+    "verdict": "FALSE",
+    "citations": [],
+    "confidence": 0.925,
+    "agreement": {
+      "votes": {
+        "FALSE": 2
+      },
+      "n": 2,
+      "split": false,
+      "escalated": false
+    }
+  },
+  {
+    "sid": "trump_2026:0400",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.2833333333333333,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0564",
+    "kind": "resolved",
+    "verdict": "MISLEADING",
+    "citations": [],
+    "confidence": 0.825,
+    "agreement": {
+      "votes": {
+        "MISLEADING": 2,
+        "UNVERIFIABLE": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0172",
+    "kind": "resolved",
+    "verdict": "MISLEADING",
+    "citations": [],
+    "confidence": 0.825,
+    "agreement": {
+      "votes": {
+        "MISLEADING": 2,
+        "UNVERIFIABLE": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "biden_2022:0325",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.26666666666666666,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0452",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.3,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0544",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.2333333333333333,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0312",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.5833333333333334,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "biden_2022:0305",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.5,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 2,
+        "MISLEADING": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "biden_2022:0040",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.5,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 2,
+        "TRUE": 1
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  },
+  {
+    "sid": "trump_2026:0232",
+    "kind": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "citations": [],
+    "confidence": 0.5499999999999999,
+    "agreement": {
+      "votes": {
+        "UNVERIFIABLE": 3
+      },
+      "n": 3,
+      "split": true,
+      "escalated": true
+    }
+  }
+]

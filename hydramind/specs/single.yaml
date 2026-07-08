@@ -1,0 +1,6 @@
+name: single
+caps: [batch]
+roles: {solo: {tier: cheap, providers: [anthropic]}}
+flow: {wave1: [solo]}
+batch: {eligible_waves: [wave1], min_lot: 100}   # V4 provisional
+cost: {ceiling_usd: 2.00, on_breach: halt_and_flag}

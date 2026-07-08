@@ -1,0 +1,83 @@
+{
+  "cost_records": [
+    {
+      "call_key": "solo:trump_2026:0520",
+      "cost_usd": 0.00012,
+      "item_id": "trump_2026:0520",
+      "lane": "L-P",
+      "model": "claude-haiku-4-5",
+      "prompt_version": "6f458b2d030b",
+      "provider": "anthropic",
+      "role": "solo",
+      "tokens_in": 180,
+      "tokens_out": 24
+    },
+    {
+      "call_key": "solo:trump_2026:0136",
+      "cost_usd": 0.00012,
+      "item_id": "trump_2026:0136",
+      "lane": "L-P",
+      "model": "claude-haiku-4-5",
+      "prompt_version": "6f458b2d030b",
+      "provider": "anthropic",
+      "role": "solo",
+      "tokens_in": 180,
+      "tokens_out": 24
+    },
+    {
+      "call_key": "solo:biden_2022:0470",
+      "cost_usd": 0.00012,
+      "item_id": "biden_2022:0470",
+      "lane": "L-P",
+      "model": "claude-haiku-4-5",
+      "prompt_version": "6f458b2d030b",
+      "provider": "anthropic",
+      "role": "solo",
+      "tokens_in": 180,
+      "tokens_out": 24
+    }
+  ],
+  "dataset_hash": "b92a14763a6e8c040f5ed38ace0d317418dfd12d2d6eccd99edf0ba801a0af5c",
+  "halt_reason": "SYNTHETIC DRY-RUN \u2014 fake lane, costs are illustrative not billed",
+  "halted": false,
+  "lane_tally": {
+    "L-P": 3
+  },
+  "n_items": 3,
+  "project": "hydramind",
+  "resolved_spec": {
+    "batch": {
+      "eligible_waves": [
+        "wave1"
+      ],
+      "min_lot": 50
+    },
+    "caps": [
+      "batch"
+    ],
+    "cost": {
+      "ceiling_usd": 2.0,
+      "on_breach": "halt_and_flag"
+    },
+    "flow": {
+      "wave1": [
+        "solo"
+      ]
+    },
+    "name": "single",
+    "prompt": "You classify a single sentence from a political transcript for a fact-checking pipeline. Decide whether it should be verified. Output EXACTLY one label:\n\n- \"check-worthy\": a factual, verifiable assertion of public importance (statistic, historical event, quantitative comparison, causal attribution, or a claim about what someone/some entity did or said). Also return claim_type in {statistical, historical, attribution, comparison, other}.\n- \"opinion\": opinion, value judgment, rhetoric, aspiration, promise, or a prediction about the future. claim_type=null.\n- \"unimportant\": literally factual but trivial (greeting, ceremony, procedure, personal aside, truism), not worth a fact-check budget. claim_type=null.\n\nJudge only the proposition and its speech-act form. Do NOT consider who the speaker is.\n\nReturn JSON only: {\"label\": \"...\", \"claim_type\": \"... or null\", \"confidence\": 0.0-1.0, \"rationale\": \"one clause\"}",
+    "roles": {
+      "solo": {
+        "providers": [
+          "anthropic"
+        ],
+        "tier": "cheap"
+      }
+    }
+  },
+  "strategy": "single",
+  "task": "classify",
+  "total_cost_usd": 0.00036,
+  "total_tokens_in": 540,
+  "total_tokens_out": 72
+}

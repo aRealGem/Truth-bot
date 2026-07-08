@@ -1,0 +1,18 @@
+name: pca
+caps: [batch, multi_round]
+roles:
+  proposer: {tier: standard, providers: [anthropic, openai, gemini]}
+  critic:   {tier: standard, providers: [mistral, anthropic, openai, grok]}  # Mistral = decided x-vendor critic (P96.0)
+  arbiter:  {tier: frontier, providers: [anthropic, openai, gemini], rotation: round_robin}
+flow:
+  wave1: [proposer, critic]            # per item, parallel
+  gate:  material_disagreement         # label mismatch OR |Δconfidence| ≥ threshold
+  wave2: [arbiter]                     # gated subset only
+gate_threshold: 0.25
+tie_policy: flag_disagreement          # invariant — never silent tie-break
+evidence: {mode: closed_book, escalate_via: layer_c_request, integrity: symmetric}
+# escalation stub — trigger fires wave2 (arbiter); frontier_confidence_threshold
+# is a placeholder for a future "escalate to a stronger frontier arbiter" rung.
+escalation: {trigger: on_split, frontier_confidence_threshold: null}
+batch: {eligible_waves: [wave1, wave2], min_lot: 100}   # V4 provisional
+cost: {ceiling_usd: 2.00, on_breach: halt_and_flag}     # V4 provisional soft $2/run
