@@ -11,6 +11,8 @@ not needed for the Layer-A `single` runs (builds 5–6).
 """
 from __future__ import annotations
 
+from typing import Optional
+
 from .types import ModelBinding
 
 TIER_MODELS: dict[tuple[str, str], str] = {
@@ -86,3 +88,31 @@ def returned_ok(requested_alias: str, returned_model: str) -> bool:
     if rf is None:
         return True
     return rf == gf
+
+
+# ── fallback cost rate table (P96.2.1) ────────────────────────────────────────
+# USD per 1M tokens, (input, output). This is a FALLBACK only: the LiteLLM
+# proxy-reported cost is always preferred (cost_source="proxy"); the table is
+# consulted only when the proxy reports nothing (cost_source="table"), e.g. an
+# L-B lane response or a proxy without cost-tracking configured.
+#
+# Seats named by the task and used by roster.dev (P=mistral, C=dsv4-flash,
+# A=claude-haiku). Values are PROVISIONAL list-price approximations — treat a
+# table-sourced total as an estimate and reconcile against the proxy's reported
+# cost before any budget decision leans on it. Models absent here resolve to
+# cost_source="none" (0.0) rather than a guessed rate.
+RATE_TABLE_USD_PER_MTOK: dict[str, tuple[float, float]] = {
+    "claude-haiku": (0.80, 4.00),
+    "mistral":      (0.20, 0.60),
+    "dsv4-flash":   (0.30, 0.88),
+}
+
+
+def cost_from_table(model: str, tokens_in: int, tokens_out: int) -> Optional[float]:
+    """Estimate a call's USD cost from captured tokens and the local rate table.
+    Returns None when the model has no table entry (caller records "none")."""
+    rates = RATE_TABLE_USD_PER_MTOK.get(model)
+    if rates is None:
+        return None
+    r_in, r_out = rates
+    return ((tokens_in or 0) * r_in + (tokens_out or 0) * r_out) / 1_000_000.0

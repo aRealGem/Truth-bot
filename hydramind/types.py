@@ -105,6 +105,7 @@ class CallResult:
     tokens_out: int = 0
     returned_model: str = ""     # model id reported by the provider/proxy (fallback detection)
     raw: Any = None
+    cost_source: str = "none"    # provenance of cost_usd: "proxy" | "table" | "none"
 
 
 class StrategyResultKind(enum.Enum):

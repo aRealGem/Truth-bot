@@ -11,8 +11,16 @@ flow:
 gate_threshold: 0.25
 tie_policy: flag_disagreement          # invariant — never silent tie-break
 evidence: {mode: closed_book, escalate_via: layer_c_request, integrity: symmetric}
-# escalation stub — trigger fires wave2 (arbiter); frontier_confidence_threshold
-# is a placeholder for a future "escalate to a stronger frontier arbiter" rung.
-escalation: {trigger: on_split, frontier_confidence_threshold: null}
+# escalation — trigger fires wave2 (arbiter). criterion is the NAMED decided rule
+# (P96.2.1): escalate iff proposer.verdict != critic.verdict — confidence is NOT
+# part of the trigger (behavior-preserving vs the prior implicit label-mismatch
+# gate). frontier_confidence_threshold stays a placeholder for a future
+# "escalate to a stronger frontier arbiter" rung. monitor.rate_watermark is an
+# advisory flag on escalated/total — it never gates (tunable).
+escalation:
+  trigger: on_split
+  criterion: label_mismatch
+  frontier_confidence_threshold: null
+  monitor: {rate_watermark: 0.50}
 batch: {eligible_waves: [wave1, wave2], min_lot: 100}   # V4 provisional
 cost: {ceiling_usd: 2.00, on_breach: halt_and_flag}     # V4 provisional soft $2/run

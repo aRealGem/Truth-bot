@@ -19,6 +19,7 @@ import time
 from typing import Optional
 
 from .types import Call, CallResult, Lane
+from .models import cost_from_table
 from .transport import call_key, _loads_or_text
 
 # Anthropic batch custom_id must match ^[a-zA-Z0-9_-]{1,64}$ — our call_keys
@@ -103,12 +104,18 @@ class AnthropicBatchBackend:
             msg = entry.result.message
             text = "".join(blk.text for blk in msg.content if blk.type == "text")
             usage = getattr(msg, "usage", None)
+            t_in = getattr(usage, "input_tokens", 0) if usage else 0
+            t_out = getattr(usage, "output_tokens", 0) if usage else 0
+            # L-B has no LiteLLM cost surface, so cost is the rate-table estimate on
+            # the captured tokens (cost_source="table"; "none" for untabled models).
+            est = cost_from_table(call.binding.model, t_in, t_out)
             out[key] = CallResult(
                 call=call,
                 output=self.response_parser(_loads_or_text(text)),
                 lane=Lane.L_B,
-                tokens_in=getattr(usage, "input_tokens", 0) if usage else 0,
-                tokens_out=getattr(usage, "output_tokens", 0) if usage else 0,
+                tokens_in=t_in, tokens_out=t_out,
+                cost_usd=est or 0.0,
+                cost_source=("table" if est is not None else "none"),
                 returned_model=getattr(msg, "model", ""),
                 raw=entry,
             )
