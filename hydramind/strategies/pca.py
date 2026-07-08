@@ -76,16 +76,18 @@ class PcaStrategy:
             return None
         threshold = st.spec.gate_threshold
         gate_mode = st.spec.flow.get("gate", "material_disagreement")
-        st.scratch["split_criterion"] = (
-            "proposer.verdict != any critic.verdict OR "
-            f"|Δconfidence| >= {threshold} for any critic")
+        # NAMED escalation criterion (P96.2.1); default preserves the legacy rule.
+        esc_cfg = st.spec.raw.get("escalation", {}) or {}
+        criterion = esc_cfg.get("criterion", "material_disagreement")
+        st.scratch["split_criterion"] = criterion
         by_item = st.by_item()
         gated, split_items = [], []
         for item_id, results in by_item.items():
             prop = next((r for r in results if r.call.role == "proposer"), None)
             crits = [r for r in results if r.call.role == "critic"]
-            split = any(inv.is_material_disagreement(
-                _label(prop), _label(c), _conf(prop), _conf(c), threshold) for c in crits)
+            split = any(inv.is_escalation_split(
+                criterion, _label(prop), _label(c), _conf(prop), _conf(c), threshold)
+                for c in crits)
             if split:
                 split_items.append(item_id)
             if gate_mode == "always" or split:
@@ -94,12 +96,14 @@ class PcaStrategy:
         st.scratch["split_items"] = split_items
         st.scratch["phase"] = "wave2"
 
-        # escalation stub: split ⇒ escalate to arbiter. frontier threshold is a
-        # placeholder for a future "escalate to a stronger frontier arbiter" rung.
-        esc = st.spec.raw.get("escalation", {}) or {}
+        # split ⇒ escalate to arbiter, per the NAMED criterion above. frontier
+        # threshold stays a placeholder for a future stronger-frontier rung.
+        monitor = esc_cfg.get("monitor", {}) or {}
         st.scratch["escalation"] = {
-            "trigger": esc.get("trigger", "on_split"),
-            "frontier_confidence_threshold": esc.get("frontier_confidence_threshold", None),
+            "trigger": esc_cfg.get("trigger", "on_split"),
+            "criterion": criterion,
+            "frontier_confidence_threshold": esc_cfg.get("frontier_confidence_threshold", None),
+            "rate_watermark": monitor.get("rate_watermark", 0.50),
             "escalated_items": list(gated),
         }
         if not gated:

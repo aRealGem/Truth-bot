@@ -101,6 +101,11 @@ class HydraMind:
                     break
             wave = strat.next(st)
 
+        # advisory escalation-rate monitor (flags, never gates)
+        watermark = (((spec.raw.get("escalation") or {}).get("monitor") or {})
+                     .get("rate_watermark", 0.50))
+        manifest.compute_escalation(float(watermark))
+
         result = strat.reduce(st)
         self.spend_sink.push(manifest.to_spend_records())
         return result, manifest

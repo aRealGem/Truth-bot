@@ -71,9 +71,15 @@ def classify(hm: HydraMind, sentences: list[dict], tune: Optional[dict] = None):
     run_tune = {"prompt": A2_SYSTEM, "roles.solo.tier": "cheap"}
     run_tune.update(tune or {})
     result, manifest = hm.run("classify", items, "single", tune=run_tune)
+    by_sid = {s["sid"]: s for s in sentences}
     out = []
     for r in result.items:
         norm = parse_a2(r.value)
         norm["sid"] = r.item_id
+        # Carry the claim text (and context) through so Layer B can consume the
+        # check-worthy queue directly — run_layer_b needs {"sid","text"} per row.
+        src = by_sid.get(r.item_id, {})
+        norm["text"] = src.get("text", "")
+        norm["context"] = src.get("context", "")
         out.append(norm)
     return out, manifest

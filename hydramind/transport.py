@@ -76,18 +76,68 @@ class ProxyCompletion:
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
+            body = resp.read().decode("utf-8")
+            headers = {k.lower(): v for k, v in resp.headers.items()}
+        data = json.loads(body)
         content = data["choices"][0]["message"]["content"]
         usage = data.get("usage", {})
+        tokens_in = usage.get("prompt_tokens", 0)
+        tokens_out = usage.get("completion_tokens", 0)
         parsed = self.response_parser(_loads_or_text(content))
+        cost_usd, cost_source = extract_cost(
+            data, headers, usage, tokens_in, tokens_out, call.binding.model)
         return CallResult(
             call=call, output=parsed, lane=Lane.L_P,
-            tokens_in=usage.get("prompt_tokens", 0),
-            tokens_out=usage.get("completion_tokens", 0),
-            cost_usd=float(usage.get("response_cost", 0.0) or 0.0),
+            tokens_in=tokens_in, tokens_out=tokens_out,
+            cost_usd=cost_usd, cost_source=cost_source,
             returned_model=data.get("model", ""),
             raw=data,
         )
+
+
+def _to_float(v) -> Optional[float]:
+    if v is None:
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def extract_cost(data: dict, headers: dict, usage: dict,
+                 tokens_in: int, tokens_out: int, model: str) -> tuple[float, str]:
+    """Resolve a call's (cost_usd, cost_source) from a LiteLLM proxy reply.
+
+    LiteLLM exposes the computed cost of a request in more than one place; over
+    the HTTP proxy the canonical surface is the `x-litellm-response-cost`
+    response header, with `_hidden_params.response_cost` and a usage-embedded
+    cost as body-side fallbacks (the shape varies by proxy version, so we probe
+    all three before falling back to the local rate table). Preference order:
+
+      1. `x-litellm-response-cost` header      -> "proxy"
+      2. `_hidden_params.response_cost` (body) -> "proxy"
+      3. `usage.{response_cost,cost,total_cost}`-> "proxy"
+      4. local rate table on captured tokens   -> "table"
+      5. nothing resolvable                     -> "none" (0.0)
+
+    A proxy-reported 0.0 is honored as "proxy" (it is what the proxy said), not
+    downgraded to a table estimate."""
+    c = _to_float(headers.get("x-litellm-response-cost"))
+    if c is not None:
+        return c, "proxy"
+    hidden = data.get("_hidden_params") or {}
+    c = _to_float(hidden.get("response_cost"))
+    if c is not None:
+        return c, "proxy"
+    for key in ("response_cost", "cost", "total_cost"):
+        c = _to_float(usage.get(key))
+        if c is not None:
+            return c, "proxy"
+    from .models import cost_from_table
+    c = cost_from_table(model, tokens_in, tokens_out)
+    if c is not None:
+        return c, "table"
+    return 0.0, "none"
 
 
 import re as _re

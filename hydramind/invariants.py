@@ -138,6 +138,32 @@ def is_material_disagreement(
     return False
 
 
+# Named escalation criteria (pca.yaml `escalation.criterion`). Making the rule a
+# named policy keeps it explicit in the spec + manifest instead of implicit in the
+# gate code. `label_mismatch` is the DECIDED pca policy (P96.2.1): escalate iff the
+# proposer and a critic disagree on the LABEL — confidence is NOT part of the
+# trigger. `material_disagreement` is the legacy label-OR-|Δconf| rule.
+ESCALATION_CRITERIA = ("label_mismatch", "material_disagreement")
+
+
+def is_escalation_split(
+    criterion: str,
+    prop_label: Optional[str],
+    crit_label: Optional[str],
+    prop_conf: Optional[float],
+    crit_conf: Optional[float],
+    threshold: float,
+) -> bool:
+    """Does this proposer/critic pair trip the named escalation criterion?
+
+    `label_mismatch`: label disagreement only (confidence ignored) — the decided
+    policy. Anything else defers to `is_material_disagreement` (label OR |Δconf|)."""
+    if criterion == "label_mismatch":
+        return (prop_label is not None and crit_label is not None
+                and prop_label != crit_label)
+    return is_material_disagreement(prop_label, crit_label, prop_conf, crit_conf, threshold)
+
+
 # ── I4: verdict citations ⊆ evidence pack ─────────────────────────────────────
 
 def check_i4_citations(citations: Iterable[str], pack_item_ids: Iterable[str]) -> None:

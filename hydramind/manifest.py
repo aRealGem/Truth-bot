@@ -30,6 +30,7 @@ class CostRecord:
     tokens_in: int
     tokens_out: int
     cost_usd: float
+    cost_source: str = "none"   # "proxy" | "table" | "none" — provenance of cost_usd
 
 
 @dataclass
@@ -40,12 +41,14 @@ class RunManifest:
     dataset_hash: str
     cost_records: list[CostRecord] = field(default_factory=list)
     lane_tally: dict = field(default_factory=dict)
+    cost_source_tally: dict = field(default_factory=dict)
     total_cost_usd: float = 0.0
     total_tokens_in: int = 0
     total_tokens_out: int = 0
     n_items: int = 0
     halted: bool = False
     halt_reason: Optional[str] = None
+    escalation: dict = field(default_factory=dict)
     project: str = "hydramind"
 
     @classmethod
@@ -64,8 +67,11 @@ class RunManifest:
                 returned_model=r.returned_model,
                 prompt_version=r.call.prompt.version,
                 tokens_in=r.tokens_in, tokens_out=r.tokens_out, cost_usd=r.cost_usd,
+                cost_source=r.cost_source,
             ))
             self.lane_tally[r.lane.value] = self.lane_tally.get(r.lane.value, 0) + 1
+            self.cost_source_tally[r.cost_source] = (
+                self.cost_source_tally.get(r.cost_source, 0) + 1)
             self.total_cost_usd += r.cost_usd
             self.total_tokens_in += r.tokens_in
             self.total_tokens_out += r.tokens_out
@@ -80,6 +86,32 @@ class RunManifest:
                 out.append({"item_id": c.item_id, "role": c.role,
                             "requested": c.model, "returned": c.returned_model})
         return out
+
+    def cost_source_coverage(self) -> dict:
+        """Per-source call counts (proxy | table | none). A high table/none share
+        means the accumulated cost — and thus the ceiling check — is running on
+        estimates rather than proxy-reported truth."""
+        cov: dict[str, int] = {}
+        for c in self.cost_records:
+            cov[c.cost_source] = cov.get(c.cost_source, 0) + 1
+        return cov
+
+    def compute_escalation(self, watermark: float = 0.50) -> dict:
+        """Advisory escalation-rate monitor (P96.2.1): escalated / total items,
+        where an escalated item is one that produced an arbiter call (wave2).
+        Stores and returns the monitor dict. `over_watermark` FLAGS only — it
+        never gates a run (the ceiling is the only hard stop)."""
+        escalated_items = {c.item_id for c in self.cost_records if c.role == "arbiter"}
+        total = self.n_items
+        rate = (len(escalated_items) / total) if total else 0.0
+        self.escalation = {
+            "escalated": len(escalated_items),
+            "total": total,
+            "rate": rate,
+            "watermark": watermark,
+            "over_watermark": rate > watermark,
+        }
+        return self.escalation
 
     def to_spend_records(self) -> list[dict]:
         """Lane-level spend rows for the P80 add_spend path (one per lane)."""
