@@ -49,12 +49,17 @@ class PcaStrategy:
         tmpl = (spec.raw.get("prompts", {}) or {}).get(role, _DEFAULT_TMPL)
         return PromptRef.of(f"{spec.name}:{role}", tmpl)
 
-    def _seat_bindings(self, spec: Spec, role: str):
-        """Return list of ModelBindings for a seat: from roster if present, else pool."""
+    def _seat_bindings(self, spec: Spec, role: str, rotation_index: int = 0):
+        """Return list of ModelBindings for a seat: from roster if present, else pool.
+
+        rotation_index rotates a round_robin pool role across its providers — the
+        arbiter uses this so gated items spread across frontier providers instead of
+        every item landing on providers[0]. Ignored for a non-rotating pool (single
+        default) and for roster seats (which rotate across the panel by list index)."""
         roster = spec.raw.get("roster_resolved")
         if roster:
             return [binding_from_alias(a) for a in roster.get(role, [])]
-        return [resolve_binding(spec.roles[role])]
+        return [resolve_binding(spec.roles[role], rotation_index=rotation_index)]
 
     def first(self, task: TaskBundle, spec: Spec) -> Wave:
         calls = []
@@ -100,10 +105,12 @@ class PcaStrategy:
         if not gated:
             return None
         payloads = {i.item_id: i.payload for i in st.task.items}
-        arb_bindings = self._seat_bindings(st.spec, "arbiter")
         calls = []
         for idx, item_id in enumerate(gated):
-            b = arb_bindings[idx % len(arb_bindings)]     # rotate if pool
+            # round_robin pool → rotate providers per gated item (resolve_binding);
+            # roster panel → rotate across the panel aliases by list index.
+            arb_bindings = self._seat_bindings(st.spec, "arbiter", rotation_index=idx)
+            b = arb_bindings[idx % len(arb_bindings)]
             calls.append(Call(role="arbiter", item_id=item_id,
                               prompt=self._prompt(st.spec, "arbiter"),
                               binding=b, inputs=payloads[item_id]))
