@@ -28,29 +28,35 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+sys.path.insert(0, str(Path(__file__).parent))       # sibling helpers
 from hydramind import HydraMind
 from hydramind.transport import Transport, ProxyCompletion
 from hydramind.registry import load_registry
 from hydramind.manifest import NullSpendSink
 from truthbot.verdict import adjudicator
+import proxy_client
+import ledger as run_ledger
 
 HERE = Path(__file__).parent
 TRAIN = HERE / "claim-set" / "claim_set.train.jsonl"
+LEDGER = Path(__file__).resolve().parents[2] / "metrics" / "spend_ledger" / "truthbot.jsonl"
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 25
 
 
 def main():
-    if not os.environ.get("LITELLM_PCA_KEY"):
-        print("BLOCKED: LITELLM_PCA_KEY not in env; source repo .env. No spend attempted.")
+    if not proxy_client.key_present():
+        print(proxy_client.BLOCKED_MSG)
         return
     rows = [json.loads(l) for l in TRAIN.read_text().splitlines() if l.strip()]
     claims = [{"sid": r["sid"], "text": r["text"], "context": r.get("context", "")}
               for r in rows if r["label"] == "check-worthy"][:N]
 
     hm = HydraMind(load_registry(), Transport(
-        completion_fn=ProxyCompletion(key_env="LITELLM_PCA_KEY",
+        completion_fn=ProxyCompletion(key_env=proxy_client.resolve_key_env(),
+                                      base_url=proxy_client.base_url(),
                                       response_parser=adjudicator.parse_verdict)),
-        spend_sink=NullSpendSink())     # print spend rows; do NOT auto-push to P80
+        spend_sink=NullSpendSink(),      # print spend rows; do NOT auto-push to P80
+        project=proxy_client.CLIENT)     # truth-bot — the client, not the pca strategy
 
     verdicts, manifest, notes = adjudicator.adjudicate(hm, claims, roster="dev")
 
@@ -86,6 +92,12 @@ def main():
     (out / "layerb-devlot-verdicts.json").write_text(json.dumps(verdicts, indent=2))
     print("# manifest → examples/manifest.layerb-devlot.json ; "
           "verdicts → examples/layerb-devlot-verdicts.json")
+
+    rec = run_ledger.append_run(
+        LEDGER, manifest, notes=notes,
+        config={"key_label": proxy_client.KEY_LABEL, "base_url": proxy_client.base_url()})
+    print(f"# ledger ← run {rec['run_id']} (client={rec['client']}, "
+          f"${rec['cost']['total_cost_usd']:.4f}, cost_source={rec['cost']['cost_source_tally']})")
 
 
 if __name__ == "__main__":

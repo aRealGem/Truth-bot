@@ -70,6 +70,7 @@ metrics/run_summaries/
 metrics/smoke/
 metrics/ab_probe_*/
 metrics/temporal_regressions_*/
+metrics/spend_ledger/*.jsonl
 
 # UI reference drops (design specs, not site artifacts)
 ui-upgrade-ideas/*.zip
