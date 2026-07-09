@@ -94,17 +94,20 @@ def returned_ok(requested_alias: str, returned_model: str) -> bool:
 # USD per 1M tokens, (input, output). This is a FALLBACK only: the LiteLLM
 # proxy-reported cost is always preferred (cost_source="proxy"); the table is
 # consulted only when the proxy reports nothing (cost_source="table"), e.g. an
-# L-B lane response or a proxy without cost-tracking configured.
+# L-B lane response or a model the proxy has no price for.
 #
-# Seats named by the task and used by roster.dev (P=mistral, C=dsv4-flash,
-# A=claude-haiku). Values are PROVISIONAL list-price approximations — treat a
-# table-sourced total as an estimate and reconcile against the proxy's reported
-# cost before any budget decision leans on it. Models absent here resolve to
-# cost_source="none" (0.0) rather than a guessed rate.
+# roster.dev seats (P=mistral, C=dsv4-flash, A=claude-haiku). The two DeepInfra
+# rates are the published list prices (deepinfra.com, verified 2026-07-09) — the
+# live dev-lot found the proxy prices claude-haiku + mistral but NOT dsv4-flash,
+# so dsv4-flash actually rides this table; its rate must be right. claude-haiku
+# (Anthropic) is proxy-priced in practice, so its entry is a rough fallback only.
+# NOTE: DeepInfra also bills *cached* input cheaper (dsv4-flash $0.018/Mtok); this
+# flat (in,out) table ignores caching — fine for closed-book (≈0 cache), revisit
+# if a shared-context prod roster leans on prompt caching.
 RATE_TABLE_USD_PER_MTOK: dict[str, tuple[float, float]] = {
-    "claude-haiku": (0.80, 4.00),
-    "mistral":      (0.20, 0.60),
-    "dsv4-flash":   (0.30, 0.88),
+    "claude-haiku": (0.80, 4.00),    # Anthropic; proxy-priced in practice (fallback est.)
+    "mistral":      (0.075, 0.20),   # DeepInfra Mistral-Small-3.2-24B (list, 2026-07-09)
+    "dsv4-flash":   (0.09, 0.18),    # DeepInfra DeepSeek-V4-Flash (list, 2026-07-09)
 }
 
 
