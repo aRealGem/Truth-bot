@@ -14,12 +14,16 @@ Classification (heuristic; raw reply snippet kept for human review):
 - template   : answers but with evasive official-line boilerplate, no specifics
 - substantive: engages with concrete, checkable facts
 
-Env: source repo .env (LITELLM_PCA_KEY has dsv4-flash in scope), LITELLM_BASE_URL.
+Env: source repo .env (the truth-bot client key LITELLM_TRUTHBOT_KEY has dsv4-flash
+in scope; legacy LITELLM_PCA_KEY/LITELLM_KEY also accepted), LITELLM_BASE_URL.
 Usage: probe_cn_sensitivity.py [model_alias]
 """
 from __future__ import annotations
 import json, os, sys, urllib.request, urllib.error
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # eval/benchmarks helpers
+import proxy_client
 
 HERE = Path(__file__).parent
 MODEL = sys.argv[1] if len(sys.argv) > 1 else "dsv4-flash"
@@ -62,10 +66,10 @@ def ask(model, prompt, base, key):
 
 
 def main():
-    base = os.environ.get("LITELLM_BASE_URL", "http://127.0.0.1:4141")
-    key = os.environ.get("LITELLM_PCA_KEY") or os.environ.get("LITELLM_KEY")
+    base = proxy_client.base_url()
+    key = os.environ.get(proxy_client.resolve_key_env()) if proxy_client.key_present() else None
     if not key:
-        print("BLOCKED: no LITELLM_PCA_KEY/LITELLM_KEY in env."); return
+        print(proxy_client.BLOCKED_MSG); return
     prompts = json.loads((HERE / "cn_probe_prompts.json").read_text())
     rows, counts = [], {"refusal": 0, "template": 0, "substantive": 0}
     for p in prompts:

@@ -15,14 +15,18 @@ import json, os, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+sys.path.insert(0, str(Path(__file__).parent))       # sibling helpers
 from hydramind import HydraMind, Wave, Call, Kind, PromptRef, ModelBinding
 from hydramind.transport import Transport, ProxyCompletion
 from hydramind.anthropic_batch import AnthropicBatchBackend
 from hydramind.registry import load_registry, SPECS_DIR
 from hydramind.manifest import NullSpendSink
+import proxy_client
+import ledger as run_ledger
 
 HERE = Path(__file__).parent
 TRAIN = HERE / "claim-set" / "claim_set.train.jsonl"
+LEDGER = Path(__file__).resolve().parents[2] / "metrics" / "spend_ledger" / "truthbot.jsonl"
 N = 25
 
 _VERDICTS = "TRUE | FALSE | MISLEADING | UNVERIFIABLE"
@@ -70,8 +74,8 @@ def assert_routing():
 
 
 def main():
-    if not os.environ.get("LITELLM_PCA_KEY"):
-        print("BLOCKED: LITELLM_PCA_KEY not in env; source repo .env."); return
+    if not proxy_client.key_present():
+        print(proxy_client.BLOCKED_MSG); return
     rows = [json.loads(l) for l in TRAIN.read_text().splitlines() if l.strip()]
     claims = [r for r in rows if r["label"] == "check-worthy"][:N]
     items = [{"item_id": r["sid"],
@@ -82,8 +86,10 @@ def main():
     print(f"# routing assertion PASS: {routing}")
 
     hm = HydraMind(load_registry(), Transport(
-        completion_fn=ProxyCompletion(key_env="LITELLM_PCA_KEY", response_parser=parse_verdict)),
-        spend_sink=NullSpendSink())
+        completion_fn=ProxyCompletion(key_env=proxy_client.resolve_key_env(),
+                                      base_url=proxy_client.base_url(),
+                                      response_parser=parse_verdict)),
+        spend_sink=NullSpendSink(), project=proxy_client.CLIENT)
     result, manifest = hm.run("verdict", items, "pca", roster="dev",
                               tune={"prompts": PROMPTS})
 
@@ -112,6 +118,12 @@ def main():
     Path(HERE / "examples" / "pca-devlot-verdicts.json").write_text(json.dumps(
         [{"sid": r.item_id, "kind": r.kind.value, **r.value, "agreement": r.agreement}
          for r in result.items], indent=2))
+
+    rec = run_ledger.append_run(
+        LEDGER, manifest, notes=result.notes,
+        config={"key_label": proxy_client.KEY_LABEL, "base_url": proxy_client.base_url()})
+    print(f"# ledger ← run {rec['run_id']} (client={rec['client']}, "
+          f"${rec['cost']['total_cost_usd']:.4f}, cost_source={rec['cost']['cost_source_tally']})")
 
 
 if __name__ == "__main__":
