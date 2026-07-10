@@ -1,0 +1,440 @@
+{
+  "biden2022-01": {
+    "claim_id": "biden2022-01",
+    "resolved_sid": "biden_2022:0025",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 15,
+    "char_end": 70,
+    "matched_text": "That’s why the NATO Alliance was created to secure peace and stability in Europe after World War 2.",
+    "anchor_offsets": {
+      "NATO": [
+        15,
+        19
+      ],
+      "Alliance": [
+        20,
+        28
+      ],
+      "created": [
+        33,
+        40
+      ],
+      "peace": [
+        51,
+        56
+      ],
+      "stability": [
+        61,
+        70
+      ]
+    }
+  },
+  "biden2022-02": {
+    "claim_id": "biden2022-02",
+    "resolved_sid": "biden_2022:0245",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 35,
+    "char_end": 93,
+    "matched_text": "The only president ever to cut the deficit by more than one trillion dollars in a single year.",
+    "anchor_offsets": {
+      "deficit": [
+        35,
+        42
+      ],
+      "one trillion": [
+        56,
+        68
+      ],
+      "single": [
+        82,
+        88
+      ],
+      "year": [
+        89,
+        93
+      ]
+    }
+  },
+  "biden2022-03": {
+    "claim_id": "biden2022-03",
+    "resolved_sid": "biden_2022:0305",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 9,
+    "char_end": 87,
+    "matched_text": "And with 75 percent of adult Americans fully vaccinated and hospitalizations down by 77 percent, most Americans can remove their masks, return to work, stay in the classroom, and move forward safely.",
+    "anchor_offsets": {
+      "75 percent": [
+        9,
+        19
+      ],
+      "vaccinated": [
+        45,
+        55
+      ],
+      "hospitalizations": [
+        60,
+        76
+      ],
+      "77": [
+        85,
+        87
+      ]
+    }
+  },
+  "biden2022-04": {
+    "claim_id": "biden2022-04",
+    "resolved_sid": "biden_2022:0040",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 3,
+    "char_end": 117,
+    "matched_text": "We shared with the world in advance what we knew Putin was planning and precisely how he would try to falsely justify his aggression.",
+    "anchor_offsets": {
+      "shared": [
+        3,
+        9
+      ],
+      "world": [
+        19,
+        24
+      ],
+      "advance": [
+        28,
+        35
+      ],
+      "falsely": [
+        102,
+        109
+      ],
+      "justify": [
+        110,
+        117
+      ]
+    }
+  },
+  "biden2022-05": {
+    "claim_id": "biden2022-05",
+    "resolved_sid": "biden_2022:0115",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 30,
+    "char_end": 92,
+    "matched_text": "Our economy grew at a rate of 5.7 percent last year, the strongest growth in nearly 40 years, the first step in bringing fundamental change to an economy that hasn’t worked for the working people of this nation for too long.",
+    "anchor_offsets": {
+      "5.7": [
+        30,
+        33
+      ],
+      "strongest": [
+        57,
+        66
+      ],
+      "40 years": [
+        84,
+        92
+      ]
+    }
+  },
+  "biden2022-06": {
+    "claim_id": "biden2022-06",
+    "resolved_sid": "biden_2022:0125",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 8,
+    "char_end": 37,
+    "matched_text": "Now our infrastructure is ranked 13th in the world.",
+    "anchor_offsets": {
+      "infrastructure": [
+        8,
+        22
+      ],
+      "ranked": [
+        26,
+        32
+      ],
+      "13th": [
+        33,
+        37
+      ]
+    }
+  },
+  "biden2022-07": {
+    "claim_id": "biden2022-07",
+    "resolved_sid": "biden_2022:0140",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 15,
+    "char_end": 75,
+    "matched_text": "There’s been a law on the books for almost a century to make sure taxpayers’ dollars support American jobs and businesses.",
+    "anchor_offsets": {
+      "law": [
+        15,
+        18
+      ],
+      "books": [
+        26,
+        31
+      ],
+      "century": [
+        45,
+        52
+      ],
+      "taxpayers": [
+        66,
+        75
+      ]
+    }
+  },
+  "biden2022-08": {
+    "claim_id": "biden2022-08",
+    "resolved_sid": "biden_2022:0200",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 0,
+    "char_end": 38,
+    "matched_text": "Insulin costs about $10 a vial to make.",
+    "anchor_offsets": {
+      "insulin": [
+        0,
+        7
+      ],
+      "10": [
+        21,
+        23
+      ],
+      "vial": [
+        26,
+        30
+      ],
+      "make": [
+        34,
+        38
+      ]
+    }
+  },
+  "biden2022-09": {
+    "claim_id": "biden2022-09",
+    "resolved_sid": "biden_2022:0210",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 26,
+    "char_end": 93,
+    "matched_text": "And while we’re at it let Medicare negotiate lower prices for prescription drugs, like the VA already does.",
+    "anchor_offsets": {
+      "Medicare": [
+        26,
+        34
+      ],
+      "negotiate": [
+        35,
+        44
+      ],
+      "VA": [
+        91,
+        93
+      ]
+    }
+  },
+  "biden2022-10": {
+    "claim_id": "biden2022-10",
+    "resolved_sid": "biden_2022:0400",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "biden_2022",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 4,
+    "char_end": 104,
+    "matched_text": "The American Rescue Plan gave schools money to hire teachers and help students make up for lost learning.",
+    "anchor_offsets": {
+      "American Rescue Plan": [
+        4,
+        24
+      ],
+      "schools": [
+        30,
+        37
+      ],
+      "teachers": [
+        52,
+        60
+      ],
+      "lost learning": [
+        91,
+        104
+      ]
+    }
+  },
+  "trump2026-01": {
+    "claim_id": "trump2026-01",
+    "resolved_sid": "trump_2026:0132",
+    "resolved_speech": "trump_2026",
+    "declared_speech": "trump_2026",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 4,
+    "char_end": 113,
+    "matched_text": "All Democrats, every single one of them, voted against these really important and very necessary massive tax cuts.",
+    "anchor_offsets": {
+      "Democrats": [
+        4,
+        13
+      ],
+      "every single": [
+        15,
+        27
+      ],
+      "voted against": [
+        41,
+        54
+      ],
+      "tax cuts": [
+        105,
+        113
+      ]
+    }
+  },
+  "trump2026-02": {
+    "claim_id": "trump2026-02",
+    "resolved_sid": "trump_2026:0208",
+    "resolved_speech": "trump_2026",
+    "declared_speech": "trump_2026",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 4,
+    "char_end": 65,
+    "matched_text": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+    "anchor_offsets": {
+      "record-setting": [
+        4,
+        18
+      ],
+      "inflation": [
+        19,
+        28
+      ],
+      "typical family": [
+        43,
+        57
+      ],
+      "34,000": [
+        59,
+        65
+      ]
+    }
+  },
+  "trump2026-03": {
+    "claim_id": "trump2026-03",
+    "resolved_sid": "trump_2026:0699",
+    "resolved_speech": "trump_2026",
+    "declared_speech": "trump_2026",
+    "in_declared_speech": true,
+    "resolution_level": "paragraph",
+    "resolved_field": "context",
+    "char_start": 257,
+    "char_end": 361,
+    "matched_text": "250 years is a long time in the life of a nation, but in another sense, it's really a mere moment in the eye of history. || Two of the gentlemen we met in the gallery this evening took their first breaths one century ago, 100 years before that on July 4th, 1826, the author of the Declaration of Independence, brilliant. || Thomas Jefferson drew his last breath.",
+    "anchor_offsets": {
+      "Jefferson": [
+        331,
+        340
+      ],
+      "1826": [
+        257,
+        261
+      ],
+      "last breath": [
+        350,
+        361
+      ]
+    }
+  },
+  "trump2026-04": {
+    "claim_id": "trump2026-04",
+    "resolved_sid": "trump_2026:0256",
+    "resolved_speech": "trump_2026",
+    "declared_speech": "trump_2026",
+    "in_declared_speech": true,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 4,
+    "char_end": 42,
+    "matched_text": "One drug has been costing Catherine $4,000 to purchase.",
+    "anchor_offsets": {
+      "Catherine": [
+        26,
+        35
+      ],
+      "4,000": [
+        37,
+        42
+      ],
+      "drug": [
+        4,
+        8
+      ]
+    }
+  },
+  "trump2026-05": {
+    "claim_id": "trump2026-05",
+    "resolved_sid": "biden_2022:0325",
+    "resolved_speech": "biden_2022",
+    "declared_speech": "trump_2026",
+    "in_declared_speech": false,
+    "resolution_level": "sentence",
+    "resolved_field": "text",
+    "char_start": 5,
+    "char_end": 105,
+    "matched_text": "Both Dominican Americans who’d grown up on the same streets they later chose to patrol as police officers.",
+    "anchor_offsets": {
+      "Dominican Americans": [
+        5,
+        24
+      ],
+      "streets": [
+        52,
+        59
+      ],
+      "patrol": [
+        80,
+        86
+      ],
+      "officers": [
+        97,
+        105
+      ]
+    }
+  }
+}
