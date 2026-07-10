@@ -23,16 +23,29 @@ _VALID_CLAIM_TYPES = {"statistical", "historical", "attribution", "comparison", 
 A2_SYSTEM = """You classify a single sentence from a political transcript for a fact-checking \
 pipeline. Decide whether it should be verified. Output EXACTLY one label:
 
-- "check-worthy": a factual, verifiable assertion of public importance (statistic, historical \
-event, quantitative comparison, causal attribution, or a claim about what someone/some entity \
-did or said). Also return claim_type in \
+- "check-worthy": a NON-OBVIOUS, verifiable factual assertion of public consequence that a \
+reasonable person could dispute (statistic, historical event, quantitative comparison, causal \
+attribution, or a claim about what someone/some entity did or said). Also return claim_type in \
 {statistical, historical, attribution, comparison, other}.
-- "opinion": opinion, value judgment, rhetoric, aspiration, promise, or a prediction about the \
-future. claim_type=null.
-- "unimportant": literally factual but trivial (greeting, ceremony, procedure, personal aside, \
-truism), not worth a fact-check budget. claim_type=null.
+- "opinion": an opinion, value judgment, rhetoric, aspiration, promise, prediction, or a \
+PROPOSAL/recommendation ("we should...", "let's...", "let X do Y"). Choose opinion when the \
+sentence's MAIN speech-act is normative or advocacy, EVEN IF it embeds a factual premise — the \
+premise is context, not the claim being asserted. claim_type=null.
+- "unimportant": literally factual but not worth a fact-check budget — a greeting, ceremony, \
+procedure, personal aside, or a TRUISM (a universally accepted, undisputed fact such as a \
+well-known historical date or a ceremonial statement). If essentially no one would dispute it, \
+it is unimportant, not check-worthy. claim_type=null.
 
-Judge only the proposition and its speech-act form. Do NOT consider who the speaker is.
+Judge the DOMINANT speech-act, and whether the proposition is non-obvious and consequential. \
+Do NOT consider who the speaker is.
+
+Examples:
+- "Core inflation fell to 1.7 percent in the last quarter." -> check-worthy (disputable statistic)
+- "Let Medicare negotiate lower drug prices, like the VA already does." -> opinion (main act is a \
+policy proposal; the "VA already does" premise is incidental, not the assertion)
+- "Thomas Jefferson drew his last breath." -> unimportant (undisputed historical truism / ceremonial)
+- "We must protect our democracy." -> opinion (aspiration / value)
+- "Unemployment hit a 50-year low last year." -> check-worthy (verifiable, disputable, consequential)
 
 Return JSON only: {"label": "...", "claim_type": "... or null", "confidence": 0.0-1.0, \
 "rationale": "one clause"}"""

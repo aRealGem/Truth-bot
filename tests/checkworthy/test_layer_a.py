@@ -59,3 +59,16 @@ def test_pipeline_parks_ambiguous_when_no_classifier():
     parked = [r for r in res.characterization_stream if r.get("label") == "needs_a2"]
     # with a wide ambiguous band and no classifier, it parks rather than guesses
     assert res.n_to_a2 >= 0 and (parked or res.check_worthy_queue or res.characterization_stream)
+
+
+def test_a2_prompt_pins_dominant_speech_act_and_truism_guidance():
+    """Regression pins for the 2026-07-10 Layer A misfires: a normative proposal with
+    an embedded true premise ('let Medicare negotiate ... like the VA already does')
+    was labeled check-worthy, and an undisputed truism ('Thomas Jefferson drew his last
+    breath') too. The prompt must now carry the dominant-speech-act + truism/importance
+    guidance and the failure-case examples. Behavioral validation is the live Layer A eval."""
+    p = classifier.A2_SYSTEM.lower()
+    assert "dominant" in p and "speech-act" in p          # judge the main speech-act
+    assert "premise" in p and "truism" in p               # the two failure modes named
+    assert "let medicare negotiate" in p                  # normative+premise -> opinion
+    assert "thomas jefferson drew his last breath" in p   # truism -> unimportant
