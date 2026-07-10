@@ -72,11 +72,24 @@ Real and useful but not the optimization target right now.
 
 ## WIP
 
+_v2 (HydraMind / truth-bot v2) is tracked externally as **P67 / P96** on the cass-wip board; the rows below are the in-repo view._
+
 | Item | Plan | PR |
 |------|------|-----|
+| **HydraMind cost model + proxy pricing audit (v2)** | [`eval/benchmarks/COST_MODEL.md`](eval/benchmarks/COST_MODEL.md) · [`eval/benchmarks/PROXY_PRICING_AUDIT.md`](eval/benchmarks/PROXY_PRICING_AUDIT.md) | [#20](https://github.com/aRealGem/Truth-bot/pull/20) (open) |
 | **Rev-2 reliability — URL grounding + harness + audit (checkpoint)** | [`eval/sotu-2026/temporal-regressions-runbook.md`](eval/sotu-2026/temporal-regressions-runbook.md) · [`metrics/adapter_interpretability/strip_audit_2026-05.md`](metrics/adapter_interpretability/strip_audit_2026-05.md) | [#10](https://github.com/aRealGem/Truth-bot/pull/10) (draft). 18 commits, 786 tests passing. Verify-side: universal trust-when-fired URL grounding (`0b8a16f` + `ea10e34`), Gemini grounding-redirect resolution (`2e42909`), live Gemini adapter dep (`0c457ca`), pipeline correctness fixes (`9c85b45`, `ffd28a2`). Publish-side: run-manifest panel + degraded-consensus disclosure (`fab3a25`, roadmap [4]); audit-trail tier for model-cited unverified URLs (`f447fa7`); family-aware dissent flagging (`a006dd9`, roadmap [6]). Eval/harness: pinned 4-case temporal-regressions set (`399beb5`, roadmap [5]); `match_keywords` + harness-vs-substance findings, schema v2 (`230a629`). Diagnostics: `truthbot metrics tool-stats` subcommand (`6c0ec34`, roadmap [7]); arm-D/E/F probe artifacts (`f6175fb`, `7ef90bb`, `a3f46c6`). **Gating un-draft: the three `(NEW 2026-05-04)` P0 substance-track rows above** — first live regression run scored 0/4 due to those substance issues, not harness regression. |
 
 ## Done
+
+### HydraMind v2 (2026-07)
+
+| Item | Plan | PR |
+|------|------|-----|
+| **truth-bot v2 on HydraMind L2 — engine, invariants, Layers A/B (PCA proposer→critic→arbiter)** | P96.2 / P67 (external) · [`STATUS.md`](STATUS.md) 2026-07-08/09 | [#12](https://github.com/aRealGem/Truth-bot/pull/12)–[#16](https://github.com/aRealGem/Truth-bot/pull/16) |
+| **P96.2.1 cost telemetry — proxy per-call cost + `$2` ceiling, validated live to the penny; named `label_mismatch` escalation criterion** | [`eval/benchmarks/COST_MODEL.md`](eval/benchmarks/COST_MODEL.md) | [#16](https://github.com/aRealGem/Truth-bot/pull/16), [#18](https://github.com/aRealGem/Truth-bot/pull/18) |
+| **truth-bot client key + independent run ledger + DeepInfra rate/env docs** | [`metrics/spend_ledger/SCHEMA.md`](metrics/spend_ledger/SCHEMA.md) · [`eval/benchmarks/PROVISIONING.md`](eval/benchmarks/PROVISIONING.md) | [#17](https://github.com/aRealGem/Truth-bot/pull/17), [#19](https://github.com/aRealGem/Truth-bot/pull/19) |
+
+### v1 pipeline
 
 | Item | Plan | PR |
 |------|------|-----|
