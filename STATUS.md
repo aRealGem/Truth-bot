@@ -1,4 +1,30 @@
-# Truth-bot Status — 2026-04-30
+# Truth-bot Status — 2026-07-09
+
+## Session note — 2026-07-08/09 (truth-bot v2 on HydraMind L2: cost telemetry validated live)
+
+The v2 pipeline (HydraMind L2 engine + Layers A/B) landed in `main` — PRs **#12–#19**,
+tracked externally as P67 / P96.2 / P96.2.1. Suite 861→865 green.
+
+- **Cost telemetry (P96.2.1) — the headline.** `ProxyCompletion` now reads per-call cost
+  from the LiteLLM proxy (`x-litellm-response-cost` header) with a rate-table fallback;
+  every call records `cost_source = proxy|table|none`; the pca `$2` ceiling runs on real
+  cost (was blind at `$0`). **Validated live** on the closed-book dev-lot: proxy-reported
+  cost reconciled to the LiteLLM server-side key spend *to the penny*. All three dev seats
+  (mistral, dsv4-flash, claude-haiku) are proxy-authoritative after pricing dsv4-flash in
+  the proxy config; rate-table fallback corrected to DeepInfra list prices.
+- **Client identity + ledger.** The proxy virtual key is now a *client* key (`truth-bot`,
+  env `LITELLM_TRUTHBOT_KEY`), not the pca strategy; runs attribute `project=truth-bot` and
+  append to an independent ledger `metrics/spend_ledger/truthbot.jsonl`.
+- **Named escalation criterion** `label_mismatch` (confidence not a trigger) + advisory
+  escalation-rate monitor. Layer A→B text-carry fix.
+- **Real economics** (`eval/benchmarks/COST_MODEL.md`): ~$0.04 per 100-claim speech on the
+  dev roster; prod ~$1.50–4.00 per 10 speeches — the old $120 hypothesis is ~30–80× high.
+- **Follow-ups:** proxy pricing audit staged (`eval/benchmarks/PROXY_PRICING_AUDIT.md` —
+  Cass's deepseek models are unpriced, blinding its cost-guard); verdict-gold expansion so
+  Layer B is accuracy-scorable; prod roster P/A seats still TBD in `rosters.yaml`.
+
+> The infra notes below (v1 pipeline: publish/site, consensus, temporal regressions) predate
+> v2 and are unchanged. v2 lives under `hydramind/` + `src/truthbot/{checkworthy,verdict}/`.
 
 ## Session note — 2026-04-30 (Round 4 polish: Truthy audio fix, lens-labeled bars, Strict default, headline frames)
 
