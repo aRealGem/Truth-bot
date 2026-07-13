@@ -45,12 +45,35 @@ def test_pipeline_two_sinks_with_fake_a2():
         return [{"sid": s["sid"], "label": "opinion", "claim_type": None,
                  "confidence": 0.6, "rationale": "x"} for s in items]
 
-    res = pipeline.run_layer_a(sents, classify_fn=fake_a2, tau_low=0.45, tau_high=0.60)
+    # confirm_pass=False keeps the old shortcut (A1-PASS -> queue) this test was written for
+    res = pipeline.run_layer_a(sents, classify_fn=fake_a2, tau_low=0.45, tau_high=0.60,
+                               confirm_pass=False)
     all_sids = {r["sid"] for r in res.check_worthy_queue} | \
                {r["sid"] for r in res.characterization_stream}
     assert all_sids == {"a", "b", "c"}         # nothing lost
     # every check-worthy queue entry is labeled check-worthy
     assert all(r["label"] == "check-worthy" for r in res.check_worthy_queue)
+
+
+def test_confirm_pass_sends_a1_pass_through_a2_which_can_veto():
+    """The 2026-07-13 fix: with confirm_pass (default), an A1-PASS sentence is routed to
+    A2, so A2 can VETO a lexical false positive before it reaches the check-worthy queue."""
+    sents = [{"sid": "x", "text": "Some sentence.", "context": ""}]
+
+    def veto_a2(items):   # A2 disagrees with A1's pass, calls it opinion
+        return [{"sid": s["sid"], "label": "opinion", "claim_type": None,
+                 "confidence": 0.9, "rationale": "x"} for s in items]
+
+    # tau_high=0.0 forces A1=pass for any sentence
+    res = pipeline.run_layer_a(sents, classify_fn=veto_a2, tau_low=-1.0, tau_high=0.0)
+    assert res.a1_routes["x"] == "pass"
+    assert not res.check_worthy_queue                          # A2 vetoed the A1-pass
+    vetoed = [r for r in res.characterization_stream if r["sid"] == "x"]
+    assert vetoed and vetoed[0]["label"] == "opinion" and vetoed[0]["a1_pass"] is True
+    # confirm_pass=False: same A1-pass shortcuts straight to the queue (old behavior)
+    res2 = pipeline.run_layer_a(sents, classify_fn=veto_a2, tau_low=-1.0, tau_high=0.0,
+                                confirm_pass=False)
+    assert [r["sid"] for r in res2.check_worthy_queue] == ["x"]
 
 
 def test_pipeline_parks_ambiguous_when_no_classifier():
@@ -76,3 +99,26 @@ def test_a2_prompt_pins_dominant_speech_act_and_truism_guidance():
     # check-worthy even when well known / dramatically phrased.
     assert "specific and consequential" in p
     assert "well known" in p
+
+
+def test_classify_escalating_reclassifies_only_low_confidence(monkeypatch):
+    """Two-tier A2: confident cheap-tier labels stand; low-confidence ones are re-labeled by
+    the stronger tier, and only that subset pays the higher cost."""
+    calls = []
+
+    def fake_classify(hm, sents, tune=None, tier="cheap"):
+        calls.append((tier, [s["sid"] for s in sents]))
+        if tier == "cheap":                    # base pass: s1 confident, s2 uncertain
+            return ([{"sid": "s1", "label": "opinion", "confidence": 0.9, "text": "a"},
+                     {"sid": "s2", "label": "check-worthy", "confidence": 0.4, "text": "b"}],
+                    "M_base")
+        return ([{"sid": "s2", "label": "unimportant", "confidence": 0.95, "text": "b"}], "M_esc")
+
+    monkeypatch.setattr(classifier, "classify", fake_classify)
+    out, info = classifier.classify_escalating(
+        None, [{"sid": "s1", "text": "a"}, {"sid": "s2", "text": "b"}], conf_threshold=0.7)
+    by = {r["sid"]: r for r in out}
+    assert by["s1"]["escalated"] is False and by["s1"]["label"] == "opinion"   # untouched
+    assert by["s2"]["escalated"] is True and by["s2"]["label"] == "unimportant"  # strong tier won
+    assert info["n_escalated"] == 1 and info["escalate_rate"] == 0.5
+    assert calls[0][0] == "cheap" and calls[1] == ("standard", ["s2"])         # only s2 escalated

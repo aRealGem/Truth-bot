@@ -80,13 +80,15 @@ def parse_a2(raw: dict) -> dict:
             "rationale": raw.get("rationale", "")}
 
 
-def classify(hm: HydraMind, sentences: list[dict], tune: Optional[dict] = None):
+def classify(hm: HydraMind, sentences: list[dict], tune: Optional[dict] = None,
+             tier: str = "cheap"):
     """sentences: [{"sid","text","context"}]. Returns (list[normalized], manifest).
-    Requires a live L-P/L-B lane (proxy virtual key from repo .env)."""
+    `tier` picks the A2 model (cheap=haiku, standard=sonnet, frontier=opus). Requires a
+    live L-P/L-B lane (proxy virtual key from repo .env)."""
     items = [TaskItem(item_id=s["sid"],
                       payload={"sentence": s["text"], "context": s.get("context", "")})
              for s in sentences]
-    run_tune = {"prompt": A2_SYSTEM, "roles.solo.tier": "cheap"}
+    run_tune = {"prompt": A2_SYSTEM, "roles.solo.tier": tier}
     run_tune.update(tune or {})
     result, manifest = hm.run("classify", items, "single", tune=run_tune)
     by_sid = {s["sid"]: s for s in sentences}
@@ -101,3 +103,35 @@ def classify(hm: HydraMind, sentences: list[dict], tune: Optional[dict] = None):
         norm["context"] = src.get("context", "")
         out.append(norm)
     return out, manifest
+
+
+def classify_escalating(hm: HydraMind, sentences: list[dict], *,
+                        conf_threshold: float = 0.7, base_tier: str = "cheap",
+                        escalate_tier: str = "standard", tune: Optional[dict] = None):
+    """Two-tier A2 (design follow-up to P96.2.1 Layer A eval): label every sentence with the
+    cheap tier, then RE-label only the low-confidence ones (< conf_threshold, or missing
+    confidence) with the stronger tier. The strong model pays only on the uncertain subset —
+    which is where the cheap model was found to wobble (e.g. dramatic-but-specific factual
+    claims). Each row carries `escalated: bool`. Returns (rows, info).
+
+    Note: A2 already runs only on the A1-ambiguous band in run_layer_a, so this escalates a
+    subset of an already-narrow set — cost stays bounded."""
+    base, m_base = classify(hm, sentences, tune=tune, tier=base_tier)
+    by_sid = {s["sid"]: s for s in sentences}
+    uncertain = [by_sid[r["sid"]] for r in base
+                 if (r.get("confidence") or 0.0) < conf_threshold]
+    escalated, m_esc = {}, None
+    if uncertain:
+        esc_rows, m_esc = classify(hm, uncertain, tune=tune, tier=escalate_tier)
+        escalated = {r["sid"]: r for r in esc_rows}
+    out = []
+    for r in base:
+        if r["sid"] in escalated:
+            out.append({**escalated[r["sid"]], "escalated": True})
+        else:
+            out.append({**r, "escalated": False})
+    info = {"n": len(base), "n_escalated": len(uncertain),
+            "escalate_rate": len(uncertain) / len(base) if base else 0.0,
+            "base_tier": base_tier, "escalate_tier": escalate_tier,
+            "manifest_base": m_base, "manifest_escalate": m_esc}
+    return out, info
