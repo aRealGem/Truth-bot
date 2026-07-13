@@ -23,16 +23,34 @@ _VALID_CLAIM_TYPES = {"statistical", "historical", "attribution", "comparison", 
 A2_SYSTEM = """You classify a single sentence from a political transcript for a fact-checking \
 pipeline. Decide whether it should be verified. Output EXACTLY one label:
 
-- "check-worthy": a factual, verifiable assertion of public importance (statistic, historical \
-event, quantitative comparison, causal attribution, or a claim about what someone/some entity \
-did or said). Also return claim_type in \
-{statistical, historical, attribution, comparison, other}.
-- "opinion": opinion, value judgment, rhetoric, aspiration, promise, or a prediction about the \
-future. claim_type=null.
-- "unimportant": literally factual but trivial (greeting, ceremony, procedure, personal aside, \
-truism), not worth a fact-check budget. claim_type=null.
+- "check-worthy": a SPECIFIC, verifiable factual assertion of public consequence — a statistic, \
+a historical or current event, a quantitative comparison or superlative, a causal claim, or a \
+claim about what a person/entity did, said, or funded. Keep it check-worthy even if the fact is \
+well known or dramatically phrased, as long as the assertion is specific and consequential. Also \
+return claim_type in {statistical, historical, attribution, comparison, other}.
+- "opinion": label opinion when the sentence's MAIN speech-act is a value judgment, rhetoric, \
+aspiration, promise, prediction, or a proposal/recommendation ("we should...", "let's...", \
+"let X do Y", "I think..."). It stays opinion even if it embeds a factual premise — the premise \
+is context, not the claim being asserted. claim_type=null.
+- "unimportant": factual but with no public stakes — a greeting, thanks, ceremony, procedure, \
+personal aside, sentence fragment, sports score, or a trivial undisputed truism (e.g. a famous \
+death date). If the content is specific and consequential, it is check-worthy, not unimportant. \
+claim_type=null.
 
-Judge only the proposition and its speech-act form. Do NOT consider who the speaker is.
+Judge the DOMINANT speech-act, and whether the checkable content is specific and consequential. \
+Do NOT consider who the speaker is.
+
+Examples:
+- "Core inflation fell to 1.7 percent in the last quarter." -> check-worthy (specific statistic)
+- "Our forces overwhelmed all defenses and defeated the enemy to end the dictator's reign." -> \
+check-worthy (specific consequential event, even if dramatically phrased)
+- "There has been a law on the books for almost a century supporting American jobs." -> \
+check-worthy (specific historical/legal claim, even though well known)
+- "Let Medicare negotiate lower drug prices, like the VA already does." -> opinion (main act is a \
+policy proposal; the "VA already does" premise is incidental, not the assertion)
+- "I think he's a nice guy." -> opinion (value judgment)
+- "Thomas Jefferson drew his last breath." -> unimportant (undisputed truism, no public stakes)
+- "Thank you all for being here tonight." -> unimportant (greeting)
 
 Return JSON only: {"label": "...", "claim_type": "... or null", "confidence": 0.0-1.0, \
 "rationale": "one clause"}"""
