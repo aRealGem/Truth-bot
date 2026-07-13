@@ -31,6 +31,25 @@ SPLIT_ADJ = {
     "biden_2022:0090": ("unimportant",  "vague filler ('going to take time')"),
     "biden_2022:0035": ("unimportant",  "sentence fragment ('We were ready')"),
     "biden_2022:0060": ("unimportant",  "list fragment ('Economic assistance.')"),
+    # round 2 (53 -> 150 expansion): trump splits, mostly the opinion/unimportant boundary
+    "trump_2026:0048": ("opinion",      "superlative w/ no measurable referent ('hottest country') — rhetoric"),
+    "trump_2026:0076": ("unimportant",  "personal sports anecdote + subjective praise of a goalie, no public stakes"),
+    "trump_2026:0084": ("unimportant",  "procedural detail of a personal award anecdote ('I did take a vote')"),
+    "trump_2026:0120": ("unimportant",  "live ceremonial medal presentation — ceremonial address, no fact-check stakes"),
+    "trump_2026:0152": ("opinion",      "bare value judgment about persons ('great people')"),
+    "trump_2026:0164": ("opinion",      "promotional call-to-action (visit a website) — exhortation"),
+    "trump_2026:0180": ("opinion",      "vague unquantified magnitude ('a lot of money') — emphatic, not a checkable figure"),
+    "trump_2026:0236": ("opinion",      "subjective characterization ('so simple, so big')"),
+    "trump_2026:0292": ("opinion",      "emphatic reaction ('a lot of money'), no checkable content of its own"),
+    "trump_2026:0312": ("opinion",      "vague comparative ('even worse') with no defined metric — rhetorical amplification"),
+    "trump_2026:0408": ("opinion",      "rhetorical counterfactual about the past, not a verifiable assertion"),
+    "trump_2026:0484": ("opinion",      "subjective personal reaction ('never seen anything like it'), unfalsifiable"),
+    "trump_2026:0536": ("opinion",      "self-quoted prediction ('going to be tough'), personal anecdote"),
+    "trump_2026:0544": ("check-worthy", "specific checkable outcome ('found all 28') — quantitative hostage/remains recovery, consequential"),
+    "trump_2026:0600": ("unimportant",  "anecdotal specific figure ($1,775) w/ negligible public stakes (setup for a '$1,776' pun)"),
+    "trump_2026:0604": ("opinion",      "non-verifiable personal claim about his own conduct — anecdote"),
+    "trump_2026:0624": ("opinion",      "deliberately unattributable anecdote ('won't tell you who') of vague praise — self-promotional"),
+    "trump_2026:0688": ("unimportant",  "ceremonial honoring of a guest; 'recognition he deserves' is value-laden"),
 }
 # unanimous but the adjudicator wants a human second look (kept the panel label)
 REVIEW_FLAG = {
@@ -40,6 +59,19 @@ REVIEW_FLAG = {
 
 
 def main():
+    # a split (sonnet != mistral) with no adjudicator call yet cannot be scored;
+    # emit a worklist and refuse to write a partial gold rather than KeyError.
+    missing = [sid for sid, v in PANEL.items()
+               if v["claude-sonnet"] != v["mistral"] and sid not in SPLIT_ADJ]
+    if missing:
+        work = {sid: {"text": PANEL[sid]["text"],
+                      "claude-sonnet": PANEL[sid]["claude-sonnet"],
+                      "mistral": PANEL[sid]["mistral"]} for sid in sorted(missing)}
+        p = HERE / "_unadjudicated_splits.json"
+        p.write_text(json.dumps(work, indent=2, ensure_ascii=False))
+        print(f"BLOCKED: {len(missing)} split(s) need adjudication -> {p.name}")
+        print("  add each sid to SPLIT_ADJ with (label, reasoning), then re-run.")
+        return
     out = []
     for sid, v in PANEL.items():
         s, m = v["claude-sonnet"], v["mistral"]
