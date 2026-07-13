@@ -72,3 +72,7 @@ def test_a2_prompt_pins_dominant_speech_act_and_truism_guidance():
     assert "premise" in p and "truism" in p               # the two failure modes named
     assert "let medicare negotiate" in p                  # normative+premise -> opinion
     assert "thomas jefferson drew his last breath" in p   # truism -> unimportant
+    # v2 guard (against the overshoot the gold caught): a specific, consequential fact stays
+    # check-worthy even when well known / dramatically phrased.
+    assert "specific and consequential" in p
+    assert "well known" in p
