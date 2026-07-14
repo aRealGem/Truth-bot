@@ -23,6 +23,7 @@ from typing import Optional
 
 from hydramind import HydraMind, ItemResult, StrategyResultKind
 
+from . import speech_context
 from .prompts import PROMPTS
 
 _VALID_VERDICTS = {"TRUE", "FALSE", "MISLEADING", "UNVERIFIABLE"}
@@ -80,19 +81,29 @@ def normalize(item: ItemResult, *, closed_book: bool = True) -> dict:
 
 
 def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
-               tune: Optional[dict] = None, rc_id: Optional[str] = None):
+               tune: Optional[dict] = None, rc_id: Optional[str] = None,
+               today=None):
     """claims: [{"sid","text","context"}]. Returns (rows, manifest, notes).
 
     Runs each claim through the pca panel closed-book (evidence_pack_ids=[] ⇒ I4
     requires citations==[]) and normalizes to verdict-contract rows. Requires a live
     L-P/L-B lane (proxy virtual key from repo .env). Mirrors classifier.classify.
 
+    Charter (temporal veracity): each claim's context is prefixed with a speaker-blind
+    temporal preamble (utterance date + expected evidence window + today-authoritative)
+    so the panel judges as-of when the claim was made and does not dismiss post-cutoff
+    events. A claim may carry an optional 'reference_period' for the span it is about.
+
     Pass rc_id ONLY for a scored heldout pass (I6 read-once); leave None for TRAIN
     iteration."""
-    items = [{"item_id": c["sid"],
-              "payload": {"claim": c["text"], "context": c.get("context", ""),
-                          "evidence_pack_ids": []}}
-             for c in claims]
+    items = []
+    for c in claims:
+        preamble = speech_context.build_temporal_preamble(
+            c["sid"], reference_period=c.get("reference_period"), today=today)
+        items.append({"item_id": c["sid"],
+                      "payload": {"claim": c["text"],
+                                  "context": preamble + c.get("context", ""),
+                                  "evidence_pack_ids": []}})
     run_tune = {"prompts": PROMPTS}
     run_tune.update(tune or {})
     result, manifest = hm.run("verdict", items, "pca", roster=roster,

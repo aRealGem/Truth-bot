@@ -3,7 +3,7 @@
     "sid": "biden_2022:0025",
     "status": "resolved",
     "verdict": "TRUE",
-    "confidence": 0.925,
+    "confidence": 0.95,
     "citations": [],
     "votes": {
       "TRUE": 2
@@ -14,11 +14,11 @@
   {
     "sid": "biden_2022:0040",
     "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.35,
+    "verdict": "TRUE",
+    "confidence": 0.8500000000000001,
     "citations": [],
     "votes": {
-      "UNVERIFIABLE": 2
+      "TRUE": 2
     },
     "split": false,
     "escalated": false
@@ -26,32 +26,34 @@
   {
     "sid": "biden_2022:0115",
     "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.4,
+    "verdict": "TRUE",
+    "confidence": 0.925,
     "citations": [],
     "votes": {
-      "UNVERIFIABLE": 2
+      "UNVERIFIABLE": 1,
+      "TRUE": 2
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "biden_2022:0125",
     "status": "resolved",
     "verdict": "UNVERIFIABLE",
-    "confidence": 0.8500000000000001,
+    "confidence": 0.625,
     "citations": [],
     "votes": {
-      "UNVERIFIABLE": 2
+      "UNVERIFIABLE": 2,
+      "TRUE": 1
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "biden_2022:0140",
     "status": "resolved",
     "verdict": "TRUE",
-    "confidence": 0.8,
+    "confidence": 0.8500000000000001,
     "citations": [],
     "votes": {
       "TRUE": 2
@@ -62,46 +64,46 @@
   {
     "sid": "biden_2022:0200",
     "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.5,
+    "verdict": "TRUE",
+    "confidence": 0.825,
     "citations": [],
     "votes": {
-      "TRUE": 1,
-      "UNVERIFIABLE": 2
-    },
-    "split": true,
-    "escalated": true
-  },
-  {
-    "sid": "biden_2022:0245",
-    "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.35,
-    "citations": [],
-    "votes": {
-      "UNVERIFIABLE": 2
+      "TRUE": 2
     },
     "split": false,
     "escalated": false
   },
   {
-    "sid": "biden_2022:0305",
-    "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.55,
+    "sid": "biden_2022:0245",
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
     "citations": [],
     "votes": {
-      "UNVERIFIABLE": 2,
+      "UNVERIFIABLE": 1,
+      "TRUE": 1,
       "MISLEADING": 1
     },
     "split": true,
     "escalated": true
   },
   {
+    "sid": "biden_2022:0305",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.8500000000000001,
+    "citations": [],
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
     "sid": "biden_2022:0325",
     "status": "resolved",
     "verdict": "UNVERIFIABLE",
-    "confidence": 0.4,
+    "confidence": 0.8500000000000001,
     "citations": [],
     "votes": {
       "UNVERIFIABLE": 2
@@ -125,20 +127,19 @@
     "sid": "trump_2026:0020",
     "status": "resolved",
     "verdict": "FALSE",
-    "confidence": 0.925,
+    "confidence": 0.95,
     "citations": [],
     "votes": {
-      "FALSE": 2,
-      "UNVERIFIABLE": 1
+      "FALSE": 2
     },
-    "split": true,
-    "escalated": true
+    "split": false,
+    "escalated": false
   },
   {
     "sid": "trump_2026:0040",
     "status": "resolved",
     "verdict": "UNVERIFIABLE",
-    "confidence": 0.25,
+    "confidence": 0.9,
     "citations": [],
     "votes": {
       "UNVERIFIABLE": 2
@@ -149,11 +150,11 @@
   {
     "sid": "trump_2026:0052",
     "status": "resolved",
-    "verdict": "MISLEADING",
-    "confidence": 0.825,
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.9,
     "citations": [],
     "votes": {
-      "MISLEADING": 2
+      "UNVERIFIABLE": 2
     },
     "split": false,
     "escalated": false
@@ -162,7 +163,7 @@
     "sid": "trump_2026:0056",
     "status": "resolved",
     "verdict": "UNVERIFIABLE",
-    "confidence": 0.4,
+    "confidence": 0.8500000000000001,
     "citations": [],
     "votes": {
       "UNVERIFIABLE": 2
@@ -172,39 +173,41 @@
   },
   {
     "sid": "trump_2026:0132",
-    "status": "resolved",
-    "verdict": "MISLEADING",
-    "confidence": 0.8500000000000001,
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
     "citations": [],
     "votes": {
-      "MISLEADING": 2
+      "MISLEADING": 1,
+      "UNVERIFIABLE": 1,
+      "FALSE": 1
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "trump_2026:0208",
     "status": "resolved",
     "verdict": "MISLEADING",
-    "confidence": 0.8500000000000001,
+    "confidence": 0.85,
     "citations": [],
     "votes": {
+      "UNVERIFIABLE": 1,
       "MISLEADING": 2
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "trump_2026:0256",
     "status": "resolved",
-    "verdict": "TRUE",
-    "confidence": 0.875,
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.8500000000000001,
     "citations": [],
     "votes": {
-      "TRUE": 2,
-      "UNVERIFIABLE": 1
+      "UNVERIFIABLE": 2
     },
-    "split": true,
-    "escalated": true
+    "split": false,
+    "escalated": false
   }
 ]
