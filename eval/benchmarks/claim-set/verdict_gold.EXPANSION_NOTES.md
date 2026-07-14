@@ -1,47 +1,47 @@
 # Verdict-gold expansion — 2026-07-14 (Phase 3 gate #1)
 
-Expands the canonical verdict-gold **17 → 22 rows** to tighten the Layer B / Layer C
-accuracy estimate. All new rows `needs_review: true`, `annotator: claude-expand` —
-**verdict calls are for jackie to adjudicate** (political; per the no-auto-merge-verdicts
-rule). Every decidable row carries ≥1 authoritative source per the schema.
+Expands the canonical verdict-gold **17 → 21 rows** to tighten the Layer B / Layer C
+accuracy estimate and close the "FALSE is Trump-only" gap. Verdicts here were
+**adjudicated by jackie** (2026-07-14); rows she signed off are `needs_review: false`.
+Every decidable row carries ≥1 authoritative source per the schema.
 
-## Rows added
+## Rows added / changed (this expansion)
 
-| sid | verdict | why |
+| sid | verdict | notes |
 |---|---|---|
-| `biden_2022:0030` | TRUE | Putin's invasion premeditated + unprovoked — Nov–Dec 2021 buildup + accurate US pre-invasion intel; widely characterized unprovoked. |
-| `trump_2026:0556` | MISLEADING* | "Obliterated Iran's nuclear program" (Op. Midnight Hammer, Jun 2025) — DIA/NBC assessments: one of three sites destroyed, program set back months, not eliminated. *FALSE-leaning — jackie to arbitrate FALSE vs MISLEADING. |
-| `trump_2026:0592` | MISLEADING | Ukraine aid "through NATO, they pay us in full" — PURL mechanism is real (allies finance the "vast majority") but "everything/in full" overstates; large prior US direct aid unrepaid. |
-| `trump_2026:0600` | UNVERIFIABLE | Out-of-context private payment detail ($1,775 needing approval); no authoritative source. |
-| `trump_2026:0100` | UNVERIFIABLE | Individual honoree's WWII combat wound (Luzon) — private biography, no public source. |
+| `biden_2022:0030` | TRUE | Putin invasion premeditated + unprovoked — Nov–Dec 2021 buildup + accurate US pre-invasion intel. |
+| `biden_2022:0342` | **FALSE** | **Gun-liability line — the new Biden FALSE (see fixture rev below).** PolitiFact rates it False; gun makers CAN be sued (PLCAA has 6 exceptions) and are not the "only" protected industry (e.g. vaccine makers, NCVIA). |
+| `trump_2026:0556` | **FALSE** | "Obliterated Iran's nuclear program" — DIA/NBC: one of three sites destroyed, program set back months. jackie's call (I had MISLEADING, FALSE-leaning). |
+| `trump_2026:0592` | MISLEADING | Ukraine aid "through NATO, pay us in full" — PURL is real but "everything/in full" overstates; prior US direct aid unrepaid. |
+| ~~`trump_2026:0600`~~ | — | **Dropped.** Context-poor fragment ("$1,775 … wanted my approval") — too under-specified to be a reliable gold item, even as UNVERIFIABLE. |
+| ~~`trump_2026:0100`~~ | — | **Dropped.** "Luzon wound" is verifiable *in principle* but only with the honoree's identity (not in the claim) — under-specified for a standalone item. |
 
-New distribution: **TRUE 10 · MISLEADING 7 · FALSE 2 · UNVERIFIABLE 3** (n=22).
+Final distribution: **TRUE 10 · MISLEADING 6 · FALSE 4 · UNVERIFIABLE 1** (n=21).
+By speaker: `biden` TRUE 9 · MISLEADING 2 · FALSE 1 · `trump` TRUE 1 · MISLEADING 4 · FALSE 3 · UNVERIFIABLE 1.
 
-## Structural finding — the class gaps are FIXTURE-limited, not annotation-limited
+## Fixture rev (jackie-approved option a) — the Biden FALSE
 
-The Phase 3 card (P67.2) named two gaps: **FALSE is Trump-only** and **UNVERIFIABLE was n=1**.
-UNVERIFIABLE is now n=3. But the deeper confound persists and **cannot be fixed by
-annotation alone**:
+The "FALSE is Trump-only" gap was **fixture-limited, not annotation-limited**: none of the
+14 check-worthy `biden_2022` claims in the frozen fixture is cleanly FALSE. The obvious
+one — the gun-liability line — existed in `_sentences.jsonl` as **`biden_2022:0342`** but
+was never sampled into `claim_set.jsonl` (train *or* heldout).
 
-```
-biden_2022: TRUE 9 · MISLEADING 2                 (no FALSE, no UNVERIFIABLE)
-trump_2026: TRUE 1 · MISLEADING 5 · FALSE 2 · UNVERIFIABLE 3
-```
+Per jackie's decision, `biden_2022:0342` was **manually injected into `claim_set.train.jsonl`**
+(label `check-worthy`; verbatim text/context from `_sentences.jsonl`) and given a sourced
+FALSE verdict-gold row. It is I6-clean (never in heldout) and **pinned to TRAIN**.
 
-FALSE and UNVERIFIABLE are **entirely Trump-side**. I checked every check-worthy
-`biden_2022` claim in the frozen TRAIN fixture (14 total): **none is cleanly FALSE.**
-The obvious Biden-2022 FALSE — the gun-liability line ("gun manufacturers … the only
-industry that can't be sued", which FactCheck.org/PolitiFact rate false) — **is not in
-the frozen claim set**, and the schema forbids editing that fixture. `biden_2022:0210`
-(let Medicare negotiate…) is normative and already excluded; `0135` (EV chargers/lead
-pipes) is labeled `opinion` and never reaches Layer B.
+⚠️ **Reproducibility:** the injection is a post-build patch — `build_claim_set.py` does
+*not* regenerate 0342 (it's not in `_candidates.jsonl`). A rebuild-from-scratch must
+re-inject it (a NOTE in `build_claim_set.py` records this).
 
-**Why it matters for Phase 3:** with FALSE speaker-locked to Trump, a model that keys on
-speaker (or on Trump-era topics) could score well on FALSE for the wrong reason, and the
-severity-softening signal (FALSE→MISLEADING) can't be measured on a non-Trump speaker.
+## Remaining gap
 
-**Recommendation (jackie's call):** to get a Biden FALSE we need a **fixture decision**,
-not more labeling — either (a) add the gun-liability sentence (and similar) to a future
-`biden_2022` fixture rev, or (b) add a second non-Trump speech fixture with fact-checked
-false claims. Until then, treat FALSE/UNVERIFIABLE accuracy as Trump-conditional in any
-Phase 3 analysis.
+FALSE is now cross-speaker (biden 1 · trump 3) — the primary confound is fixed. But
+**UNVERIFIABLE is still n=1 and Trump-only**: the two UNVERIFIABLE candidates in the first
+draft (0600, 0100) were dropped as under-specified. A clean UNVERIFIABLE row needs a claim
+that is genuinely unadjudicable *even with evidence* (not merely context-poor) — still open.
+
+## Provenance
+
+`annotator` records `claude-expand;jackie-adjudicated` (or `;jackie-directed` for 0342).
+TRAIN-only (I6-safe); heldout untouched. No proxy spend (web research only).
