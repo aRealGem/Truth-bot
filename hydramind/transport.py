@@ -16,10 +16,16 @@ from __future__ import annotations
 
 import json
 import os
+import time
+import urllib.error
 import urllib.request
 from typing import Callable, Optional, Protocol
 
 from .types import Call, Wave, Lane, Kind, CallResult, Spec
+
+# Proxy HTTP statuses worth retrying: 429 (rate limit) + transient 5xx. A 4xx
+# other than 429 is a caller error (bad key/model/body) — fail fast, don't retry.
+_RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 
 
 # ── lane backends (injectable for tests) ──────────────────────────────────────
@@ -49,11 +55,53 @@ class ProxyCompletion:
 
     def __init__(self, base_url: str = "http://127.0.0.1:4141",
                  key_env: str = "LITELLM_KEY", timeout: float = 60.0,
-                 response_parser: Optional[Callable[[dict], dict]] = None):
+                 response_parser: Optional[Callable[[dict], dict]] = None,
+                 max_retries: int = 3, backoff_base: float = 0.5,
+                 backoff_cap: float = 30.0,
+                 sleep_fn: Callable[[float], None] = time.sleep):
         self.base_url = base_url.rstrip("/")
         self.key_env = key_env
         self.timeout = timeout
         self.response_parser = response_parser or (lambda d: d)
+        # Bounded exponential backoff on a rate-limited/transient proxy: a burst of
+        # 429s (e.g. back-to-back runs sharing one virtual key) shouldn't kill a live
+        # run mid-flight. Honors Retry-After when the proxy sends it. sleep_fn is
+        # injectable so tests don't actually sleep.
+        self.max_retries = max_retries
+        self.backoff_base = backoff_base
+        self.backoff_cap = backoff_cap
+        self._sleep = sleep_fn
+
+    def _retry_delay(self, err: urllib.error.HTTPError, attempt: int) -> float:
+        """Seconds to wait before retry ``attempt`` (0-based). Prefers the proxy's
+        Retry-After (integer seconds); else exponential backoff capped."""
+        retry_after = err.headers.get("Retry-After") if err.headers else None
+        if retry_after:
+            try:
+                return min(float(int(retry_after)), self.backoff_cap)
+            except (TypeError, ValueError):
+                pass    # HTTP-date form or garbage → fall through to backoff
+        return min(self.backoff_base * (2 ** attempt), self.backoff_cap)
+
+    def _post(self, req: urllib.request.Request) -> tuple[str, dict]:
+        """POST with bounded retry on rate-limit/transient errors. Returns
+        (body_text, lowercased_headers); re-raises after exhausting retries."""
+        for attempt in range(self.max_retries + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                    return (resp.read().decode("utf-8"),
+                            {k.lower(): v for k, v in resp.headers.items()})
+            except urllib.error.HTTPError as err:
+                if err.code not in _RETRYABLE_STATUS or attempt >= self.max_retries:
+                    raise
+                self._sleep(self._retry_delay(err, attempt))
+            except urllib.error.URLError:
+                # Connection-level blip (proxy restarting, transient network) — retry
+                # with plain backoff; a persistent failure still raises after the cap.
+                if attempt >= self.max_retries:
+                    raise
+                self._sleep(min(self.backoff_base * (2 ** attempt), self.backoff_cap))
+        raise RuntimeError("unreachable: _post retry loop exited without return/raise")
 
     def __call__(self, call: Call) -> CallResult:
         key = os.environ.get(self.key_env)
@@ -75,9 +123,7 @@ class ProxyCompletion:
             headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-            body = resp.read().decode("utf-8")
-            headers = {k.lower(): v for k, v in resp.headers.items()}
+        body, headers = self._post(req)
         data = json.loads(body)
         content = data["choices"][0]["message"]["content"]
         usage = data.get("usage", {})
