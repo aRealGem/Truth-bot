@@ -27,6 +27,14 @@ MANUAL = {
     }
 }
 
+# NOTE (2026-07-14, jackie-authorized fixture rev): biden_2022:0342 (the gun-liability
+# "only industry that can't be sued" line) is a MANUAL TRAIN-pinned addition applied to
+# claim_set.train.jsonl AFTER this build — it is NOT in _candidates.jsonl, so re-running
+# this script will NOT regenerate it (it would silently drop). It backs the only cleanly
+# FALSE check-worthy biden_2022 verdict-gold row; pinned to TRAIN (never heldout) to avoid
+# an I6 conflict. See verdict_gold.EXPANSION_NOTES.md. If this set is rebuilt from scratch,
+# re-inject 0342 verbatim from _sentences.jsonl into train.
+
 # Defense-in-depth: scan final text for anything that looks like a leaked
 # secret/PII even though SOTU transcripts are public.
 SECRET_RX = [
