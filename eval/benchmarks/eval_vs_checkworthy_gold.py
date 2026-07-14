@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Score Layer A configs against the adjudicated checkworthy_gold.jsonl (the answer key).
 
-Compares v1 prompt (cached: ab_result/sonnet_result) vs v2 prompt (live) on both haiku and
-sonnet, over the 53-sentence gold. Reports 3-way accuracy + the GATE metric: check-worthy
-precision/recall/F1 (v1 overshot -> low recall). Also a high-confidence-only view (drops the
-17 needs_review rows) and the 4-anchor scorecard."""
+Compares v1 prompt (cached: ab_result/sonnet_result, which cover the full corpus) vs v2
+prompt (live) on both haiku and sonnet, over the adjudicated gold (now 150 rows). Reports
+3-way accuracy + the GATE metric: check-worthy precision/recall/F1 (v1 overshot -> low
+recall). Also a high-confidence-only view (drops the needs_review rows) and the 4-anchor
+scorecard."""
 from __future__ import annotations
 import json, sys
 from pathlib import Path
