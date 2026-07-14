@@ -10,15 +10,50 @@ API docs: https://api.search.brave.com/
 
 from __future__ import annotations
 
+import html
 import logging
+import re
+from datetime import date
 from typing import Optional
 
 from truthbot.models import Claim, Evidence, SourceTier
-from truthbot.verify.sources.base import SourceConnector
+from truthbot.verify.sources.base import SourceConnector, TimeWindow
 
 logger = logging.getLogger(__name__)
 
 _BRAVE_SEARCH_URL = "https://api.search.brave.com/res/v1/web/search"
+
+
+def _freshness_for(window: TimeWindow) -> str:
+    """Brave ``freshness`` param for a Layer C window.
+
+    A window ``(start, end)`` becomes Brave's date-range form
+    ``YYYY-MM-DDtoYYYY-MM-DD`` so results are scoped to the claim's era; absent a
+    window we keep the legacy ``py`` (past year) default."""
+    if not window:
+        return "py"
+    start, end = window
+    return f"{start.isoformat()}to{end.isoformat()}"
+
+
+_TAG_RX = re.compile(r"<[^>]+>")
+
+
+def _clean_snippet(text: str) -> str:
+    """Strip HTML tags and unescape entities from a Brave description — the panel
+    reads the snippet verbatim, so ``<strong>``/``&quot;`` noise shouldn't leak in."""
+    return html.unescape(_TAG_RX.sub("", text or "")).strip()
+
+
+def _result_date(result: dict) -> str:
+    """Best-effort publication date (``YYYY-MM-DD``) from a Brave result, or ''.
+
+    Brave returns ``page_age`` (ISO timestamp) and/or a human ``age``; we keep only
+    the date part of ``page_age`` when present — it is the reliable machine field."""
+    page_age = result.get("page_age")
+    if isinstance(page_age, str) and len(page_age) >= 10 and page_age[4] == "-":
+        return page_age[:10]
+    return ""
 
 
 class BraveSearchConnector(SourceConnector):
@@ -76,10 +111,18 @@ class BraveSearchConnector(SourceConnector):
             logger.debug("BraveSearchConnector: no API key configured, skipping.")
             return []
 
-        query = self._build_query(claim)
+        return self.search_windowed(claim, None)
 
+    def search_windowed(self, claim: Claim, window: TimeWindow = None) -> list[Evidence]:
+        """Time-scoped Brave search: ``window`` narrows ``freshness`` to the claim's
+        era (Layer C). ``window=None`` reproduces the legacy past-year search."""
+        if not self.is_available():
+            logger.debug("BraveSearchConnector: no API key configured, skipping.")
+            return []
+
+        query = self._build_query(claim)
         try:
-            return self._fetch(claim, query)
+            return self._fetch(claim, query, _freshness_for(window))
         except Exception as exc:
             logger.error("Brave search failed for claim %s: %s", claim.id, exc)
             return []
@@ -92,8 +135,9 @@ class BraveSearchConnector(SourceConnector):
             prefix = "data statistics "
         return f"{prefix}{claim.text}"[:200]
 
-    def _fetch(self, claim: Claim, query: str) -> list[Evidence]:
-        """Make the HTTP request and parse results."""
+    def _fetch(self, claim: Claim, query: str, freshness: str = "py") -> list[Evidence]:
+        """Make the HTTP request and parse results. ``freshness`` is Brave's recency
+        filter (``py`` or a ``YYYY-MM-DDtoYYYY-MM-DD`` date range from the window)."""
         import httpx
 
         headers = {
@@ -106,7 +150,7 @@ class BraveSearchConnector(SourceConnector):
             "count": self.max_results,
             "search_lang": "en",
             "country": "us",
-            "freshness": "py",  # past year
+            "freshness": freshness,
         }
 
         resp = httpx.get(
@@ -122,12 +166,18 @@ class BraveSearchConnector(SourceConnector):
         evidence = []
         for r in results[: self.max_results]:
             tier = self._classify_tier(r.get("url", ""))
+            snippet = _clean_snippet(r.get("description", ""))[:500]
+            published = _result_date(r)
+            if published:
+                # Fold the publication date into the snippet so it survives into the
+                # payload the panel sees — recency is signal for as-of-utterance judging.
+                snippet = f"[{published}] {snippet}"
             ev = Evidence(
                 claim_id=claim.id,
                 source_name=r.get("profile", {}).get("name", r.get("meta_url", {}).get("hostname", "Unknown")),
                 source_url=r.get("url", ""),
                 source_tier=tier,
-                snippet=r.get("description", "")[:500],
+                snippet=snippet,
                 retrieved_at=__import__("datetime").datetime.utcnow(),
             )
             evidence.append(ev)
