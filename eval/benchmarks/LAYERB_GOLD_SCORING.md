@@ -36,9 +36,28 @@ UNVERIFIABLE (1) → TRUE 1
     testimony) — the panel committed where it should abstain. A small closed-book calibration
     signal, not a gold problem.
 
+## Layer C Phase 1 — temporal grounding (2026-07-14, +$0.0098)
+
+Prepending a speaker-blind temporal preamble (utterance date + expected evidence window +
+today-authoritative; `verdict/speech_context.py`) to each claim's context — still closed-book,
+no evidence yet — already improves the panel:
+
+| metric | closed-book baseline | + temporal grounding |
+|---|---|---|
+| decided-accuracy | 0.75 (6/8) | **0.78 (7/9)** |
+| coverage | 0.47 | **0.53** |
+| abstain_gap | 9 | **7** |
+| abstain_ok | 0 | **1** |
+
+The clean qualitative win: `trump_2026:0256` (gold UNVERIFIABLE) now **abstains** instead of
+over-committing TRUE — the "judge as-of utterance, reserve UNVERIFIABLE for what evidence can't
+settle" grounding working. TRUE recall rose (5 vs 3), no regressions. This is the foundation for
+Phase 2 (Connector evidence injected into the pack → open-book, closing the abstain_gap).
+
 ## Caveats
 
 - Gold rows are all `needs_review` (single-annotator); decided-accuracy will shift with a
   multi-annotator adjudication pass.
-- n=17 is small — treat these as a shape check, not a settled accuracy number. Expanding the
-  gold (more FALSE/UNVERIFIABLE, speaker balance) tightens the estimate.
+- n=17 is small, and the panel has cross-provider nondeterminism — treat these as a shape
+  check, not settled numbers. Expanding the gold (more FALSE/UNVERIFIABLE, speaker balance)
+  tightens the estimate.
