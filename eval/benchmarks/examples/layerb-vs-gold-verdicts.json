@@ -1,0 +1,210 @@
+[
+  {
+    "sid": "biden_2022:0025",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [],
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0040",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.35,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0115",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.4,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0125",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.8500000000000001,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0140",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.8,
+    "citations": [],
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0200",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.5,
+    "citations": [],
+    "votes": {
+      "TRUE": 1,
+      "UNVERIFIABLE": 2
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "biden_2022:0245",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.35,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0305",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.55,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2,
+      "MISLEADING": 1
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "biden_2022:0325",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.4,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0400",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [],
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0020",
+    "status": "resolved",
+    "verdict": "FALSE",
+    "confidence": 0.925,
+    "citations": [],
+    "votes": {
+      "FALSE": 2,
+      "UNVERIFIABLE": 1
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "trump_2026:0040",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.25,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0052",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.825,
+    "citations": [],
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0056",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.4,
+    "citations": [],
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0132",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.8500000000000001,
+    "citations": [],
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0208",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.8500000000000001,
+    "citations": [],
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0256",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.875,
+    "citations": [],
+    "votes": {
+      "TRUE": 2,
+      "UNVERIFIABLE": 1
+    },
+    "split": true,
+    "escalated": true
+  }
+]
