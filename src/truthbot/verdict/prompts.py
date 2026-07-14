@@ -38,6 +38,35 @@ PROMPTS = {
     "arbiter":  "You are the ARBITER. Adjudicate the claim decisively. " + _CONTRACT,
 }
 
+# ── Open-book (Layer C) contract ──────────────────────────────────────────────
+# Evidence is supplied in the payload under "evidence" as a list of items, each
+# with an "id" (E1, E2, ...). The panel grounds the verdict in that evidence and
+# cites the ids it relied on. I4 (pca.reduce) enforces citations ⊆ provided ids, so
+# a cite must reference a supplied item — never a fabricated URL. If the evidence is
+# absent or insufficient to settle the claim, the verdict is UNVERIFIABLE with
+# citations []. Still speaker-blind (linted below).
+_OPEN_CONTRACT = (
+    'Evidence items are provided in the input under "evidence"; each has an "id" '
+    '(E1, E2, ...), a source, a trust tier, and a dated snippet. Ground your verdict '
+    'in that evidence and judge the claim as of its utterance date. '
+    'Return JSON only: {"verdict": "%s", "confidence": 0.0-1.0, '
+    '"citations": ["E1", ...], "reasoning": "one clause"}. Set "citations" to the '
+    'ids of the evidence items you relied on — cite ONLY provided ids, never a bare '
+    'URL or an id not in the evidence list. Weigh higher-trust tiers (Government, '
+    'Wire) above lower ones on conflict. If the provided evidence is absent or '
+    'insufficient to settle the claim, verdict=UNVERIFIABLE with citations [].'
+    % VERDICTS
+)
+
+OPEN_BOOK_PROMPTS = {
+    "proposer": "You are the PROPOSER. Assess the factual claim and draft a verdict. " + _OPEN_CONTRACT,
+    "critic":   "You are the CRITIC. Independently and skeptically assess the same claim "
+                "against the SAME evidence; try to find why a naive verdict could be wrong. "
+                + _OPEN_CONTRACT,
+    "arbiter":  "You are the ARBITER. Adjudicate the claim decisively on the evidence. "
+                + _OPEN_CONTRACT,
+}
+
 # I3 guard at load — a speaker/source conditional in any seat prompt fails the import.
-for _role, _tmpl in PROMPTS.items():
+for _role, _tmpl in {**PROMPTS, **OPEN_BOOK_PROMPTS}.items():
     lint_template_for_speaker_conditionals(f"PCA_{_role.upper()}", _tmpl)

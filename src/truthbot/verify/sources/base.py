@@ -10,9 +10,14 @@ mocked freely.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from datetime import date
 from typing import Optional
 
 from truthbot.models import Claim, Evidence, SourceTier
+
+#: A closed date window ``[start, end]`` an evidence fetch should be scoped to
+#: (Layer C: the claim's utterance/reference era). ``None`` means "no scoping".
+TimeWindow = Optional[tuple[date, date]]
 
 
 class SourceConnector(ABC):
@@ -58,6 +63,22 @@ class SourceConnector(ABC):
             is unavailable, return an empty list and log the error.
         """
         ...
+
+    def search_windowed(self, claim: Claim, window: TimeWindow = None) -> list[Evidence]:
+        """
+        Search for evidence, optionally TIME-SCOPED to ``window`` (Layer C).
+
+        Backward-compatible seam: the base implementation ignores ``window`` and
+        delegates to :meth:`search`, so existing connectors keep working unchanged.
+        Connectors that can scope by date (e.g. Brave) override this to narrow the
+        query to the claim's utterance/reference era; the charter requires evidence
+        to cover both the utterance date and the claim's reference period, and a
+        window keeps stale or anachronistic hits out of the pack.
+
+        Callers that care about temporal grounding should prefer this over
+        :meth:`search`; ``window=None`` is exactly the legacy behaviour.
+        """
+        return self.search(claim)
 
     def is_available(self) -> bool:
         """
