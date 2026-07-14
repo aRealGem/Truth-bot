@@ -63,7 +63,10 @@ def test_seed_gold_scores_against_devlot_artifact():
     """The committed 3-row seed against the committed dev-lot verdicts: the model
     decides the general-knowledge historical claim (NATO) and abstains on the two
     that need statistical/contextual evidence — the expected closed-book shape."""
-    gold = sv.load_gold()
+    # pinned to the 3-row seed specifically, so expanding verdict_gold doesn't break it
+    _SEED = {"biden_2022:0025", "biden_2022:0245", "biden_2022:0305"}
+    gold = {sid: v for sid, v in sv.load_gold().items() if sid in _SEED}
+    assert len(gold) == 3              # seed rows are still present in the gold file
     artifact = _ROOT / "eval" / "benchmarks" / "examples" / "layerb-devlot-verdicts.json"
     if not artifact.exists():          # artifact only exists after a live dev-lot run
         return

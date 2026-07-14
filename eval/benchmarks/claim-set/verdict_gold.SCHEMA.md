@@ -89,7 +89,34 @@ is the *expected* shape, and rising coverage is the Layer C win condition.
 
 ## Status
 
-`verdict_gold.train.jsonl` currently holds a **3-row sourced seed** (Biden-2022
-claims, chosen because they are past and well-documented) that exercises the scorer
-end-to-end. Expanding to a full, adjudicated set is the tracked follow-up — ideally
-multi-annotator and evidence-assisted once Layer C lands.
+`verdict_gold.train.jsonl` holds **17 sourced rows** (10 Biden-2022, 7 Trump-2026),
+the reconciliation of the earlier PR #22 verdict-gold and the PR #23 SOTU fixture into
+one canonical Layer-B gold. Distribution: **TRUE 9 · MISLEADING 5 · FALSE 2 ·
+UNVERIFIABLE 1**. All rows are `needs_review: true` — single-annotator, evidence-assisted;
+a multi-annotator adjudication pass (mirroring Layer A's `_labels_*` → adjudication) is
+the tracked follow-up before any row is treated as settled.
+
+### Reconciliation decisions (2026-07-14, jackie-approved)
+- **4-label canonical** (matches Layer B's output contract). `mostly_true`/`exaggerated`
+  from the #23 fixture fold into TRUE / MISLEADING per the rubric above.
+- **Conflicts resolved:** `biden_2022:0200` (insulin) → MISLEADING; `biden_2022:0325`
+  (slain NYPD officers) → TRUE — #23 sourced what #22 left UNVERIFIABLE.
+- **`biden_2022:0305`** (vax/hospitalizations) → TRUE with a `true_at_utterance` caveat.
+- **Excluded from the scored gold** (recorded in the #23 fixture for provenance):
+  `biden_2022:0210` "Medicare *should* negotiate…" (normative — not a veracity claim), and
+  the Thomas Jefferson death claim (true, but Layer A routes it to `unimportant`, so it
+  never reaches Layer B — a scoring gold holds only check-worthy claims).
+- **FALSE class seeded** from the fact-checked 2026 SOTU (Feb 24 2026): `trump_2026:0020`
+  ("zero illegal aliens admitted") and `trump_2026:0056` ("we ended DEI"), plus MISLEADING
+  `trump_2026:0040` (stock-market record highs) and `0052` (oil +600k b/d). Every row cites
+  a major fact-checker / primary source.
+
+### Known gaps (follow-ups)
+- UNVERIFIABLE class is thin (1 row); FALSE rows are Trump-only — add well-sourced FALSE
+  from Biden-2022 and more UNVERIFIABLE for speaker/label balance.
+- `#23` proposed primary URLs marked ⚠️ (CDC Feb-2022 snapshot, BLS series id, State.gov
+  permalink, WEF profile) still need exact-slug confirmation before they replace secondary
+  sources on those rows.
+- Span offsets (`sotu_gold_fixture_2026-07-10.offsets.json`) + the 277/277 attribution
+  audit (`resolve_fixture_spans.py`) are carried as provenance; wiring the audit into CI is
+  a proposed follow-up (see the #23 HANDOFF).
