@@ -48,8 +48,10 @@ def _build_open_book_provider():
 
 def main():
     open_book = "--open-book" in sys.argv
-    calib = "--calib" in sys.argv       # Phase 3: calibrated open-book prompt A/B (P67.2)
-    crm114 = "--crm114" in sys.argv     # Phase 3: two-stage FALSE-vs-MISLEADING discriminator
+    calib = "--calib" in sys.argv           # Phase 3: calibrated open-book prompt A/B (P67.2)
+    # CRM-114 sonnet stage-2 discriminator is the ADOPTED open-book default; --no-crm114
+    # runs the plain single-stage panel (for A/B against the discriminator).
+    crm114 = "--no-crm114" not in sys.argv
     if not proxy_client.key_present():
         print(proxy_client.BLOCKED_MSG); return
     provider = _build_open_book_provider() if open_book else None
@@ -61,8 +63,7 @@ def main():
             print("BLOCKED --calib: only meaningful with --open-book."); return
         from truthbot.verdict.prompts import CALIBRATED_OPEN_BOOK_PROMPTS
         tune = {"prompts": CALIBRATED_OPEN_BOOK_PROMPTS}
-    if crm114 and provider is None:
-        print("BLOCKED --crm114: only meaningful with --open-book."); return
+    crm114 = crm114 and provider is not None    # stage-2 is open-book only; no-op closed-book
     mode = "closed-book"
     if provider is not None:
         mode = "open-book" + ("+calib" if calib else "") + ("+crm114" if crm114 else "")

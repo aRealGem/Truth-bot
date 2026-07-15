@@ -88,9 +88,10 @@ disagreement is where the FALSE/MISLEADING line is legitimately fuzzy.
   bulk, one stronger judge adjudicates the ~7 hard claims. It's the only lever that improved
   decided-accuracy without breaking another category, and its errors sit on genuinely
   ambiguous claims.
-- Opt-in via `--crm114` (stage-2 tier defaults to sonnet, `disc_tier`). **Default open-book
-  is still unchanged** — adopting CRM-114-sonnet as the default is jackie's call (it changes
-  verdict behavior and adds a little sonnet cost on the adverse bucket).
+- **ADOPTED (jackie, 2026-07-15): CRM-114-sonnet is now the open-book default** —
+  `adjudicate()` runs the sonnet stage-2 discriminator whenever open-book (`two_stage=True`,
+  `disc_tier="standard"`). `score_layerb_vs_gold.py --no-crm114` runs the plain single-stage
+  panel for A/B. Cost is small (sonnet only fires on the adverse bucket, ~7 claims).
 - Caveats: n=21, single-annotator; the +0.05 within-run gain is modest and real but not
   a large sample. Bigger, multi-annotator gold would sharpen it — and would clarify the
   borderline FALSE/MISLEADING rows the discriminator "misses".

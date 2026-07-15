@@ -117,7 +117,7 @@ def build_items(claims: list[dict], *, evidence_provider: Optional[EvidenceProvi
 def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
                tune: Optional[dict] = None, rc_id: Optional[str] = None,
                evidence_provider: Optional[EvidenceProvider] = None,
-               max_items: int = DEFAULT_MAX_ITEMS, two_stage: bool = False,
+               max_items: int = DEFAULT_MAX_ITEMS, two_stage: bool = True,
                disc_tier: str = "standard", today=None):
     """claims: [{"sid","text","context"}]. Returns (rows, manifest, notes).
 
