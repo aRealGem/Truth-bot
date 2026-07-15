@@ -24,7 +24,7 @@ from typing import Optional
 
 from hydramind import HydraMind, ItemResult, StrategyResultKind
 
-from . import evidence_pack, speech_context
+from . import discriminator, evidence_pack, speech_context
 from .evidence_pack import DEFAULT_MAX_ITEMS, EvidencePack
 from .prompts import OPEN_BOOK_PROMPTS, PROMPTS
 from truthbot.verify.evidence_provider import EvidenceProvider
@@ -117,7 +117,8 @@ def build_items(claims: list[dict], *, evidence_provider: Optional[EvidenceProvi
 def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
                tune: Optional[dict] = None, rc_id: Optional[str] = None,
                evidence_provider: Optional[EvidenceProvider] = None,
-               max_items: int = DEFAULT_MAX_ITEMS, today=None):
+               max_items: int = DEFAULT_MAX_ITEMS, two_stage: bool = True,
+               disc_tier: str = "standard", today=None):
     """claims: [{"sid","text","context"}]. Returns (rows, manifest, notes).
 
     Runs each claim through the pca panel and normalizes to verdict-contract rows.
@@ -149,6 +150,20 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
     rows = [normalize(r, closed_book=not open_book) for r in result.items]
     notes = dict(result.notes or {})
     notes["open_book"] = open_book
+
+    # Stage 2 (CRM-114): re-decide the FALSE-vs-MISLEADING boundary on the adverse
+    # bucket with a focused binary discriminator, on the SAME evidence packs. Open-book
+    # only — the discriminator judges on evidence, not parametric knowledge.
+    if two_stage and open_book:
+        adverse = {r["sid"] for r in rows
+                   if r["status"] == "resolved" and r["verdict"] in ("FALSE", "MISLEADING")}
+        disc_items = [it for it in items if it["item_id"] in adverse]
+        disc = discriminator.discriminate(hm, disc_items, tier=disc_tier)
+        discriminator.apply_discrimination(rows, disc)
+        notes["two_stage"] = True
+        notes["disc_tier"] = disc_tier
+        notes["crm114_overrides"] = {r["sid"]: r["crm114"] for r in rows if r.get("crm114")}
+
     if open_book:
         notes["evidence_counts"] = {sid: len(p.items) for sid, p in packs.items()}
     return rows, manifest, notes
