@@ -67,6 +67,42 @@ OPEN_BOOK_PROMPTS = {
                 + _OPEN_CONTRACT,
 }
 
+# ── Calibrated open-book variant (Phase 3 experiment, P67.2) ───────────────────
+# Gate-2 diagnosis: given open-book evidence the seats UNANIMOUSLY soften severity
+# — FALSE→MISLEADING (a false core claim with a kernel of truth) and MISLEADING→TRUE
+# (a distorted-but-supported claim). The softening is model-level, so the fix has to
+# move the seats' own judgment. This is a DECISION PROCEDURE keyed on the claim's CORE
+# assertion (not a definition list — that A/B abstained more without fixing the bug).
+# It targets BOTH softening directions and is careful NOT to induce abstention (which
+# would inflate decided-accuracy via a denominator effect). Speaker-blind (linted).
+_CALIB_PROCEDURE = (
+    'Classify by the claim\'s CORE assertion, judged against the evidence: '
+    '(1) State the single central factual assertion, ignoring rhetoric. '
+    '(2) FALSE if the evidence CONTRADICTS the core assertion — the stated fact did not '
+    'happen, or the reverse is true — even when a peripheral detail is accurate. Do not '
+    'soften a contradicted core to MISLEADING because it contains a kernel of truth. '
+    '(3) MISLEADING if the core is REAL but the evidence shows it is exaggerated, '
+    'cherry-picked, stripped of context, or spun to create a false impression. '
+    'Overstating or distorting a true underlying fact is MISLEADING — NOT FALSE; reserve '
+    'FALSE for a core the evidence actually contradicts. Also do NOT call such a claim TRUE. '
+    '(4) TRUE only when the evidence supports the core assertion without material '
+    'exaggeration or distortion. '
+    '(5) UNVERIFIABLE only when the provided evidence cannot settle the core assertion — '
+    'not as a hedge when a label is uncomfortable. '
+    'Distinguish contradiction (FALSE) from overstatement of a real fact (MISLEADING); '
+    'pick the label the evidence warrants, and do not default toward the middle. '
+)
+
+CALIBRATED_OPEN_BOOK_PROMPTS = {
+    "proposer": "You are the PROPOSER. Assess the factual claim and draft a verdict. "
+                + _CALIB_PROCEDURE + _OPEN_CONTRACT,
+    "critic":   "You are the CRITIC. Independently and skeptically assess the same claim "
+                "against the SAME evidence; test whether the core assertion is actually "
+                "FALSE rather than merely misleading. " + _CALIB_PROCEDURE + _OPEN_CONTRACT,
+    "arbiter":  "You are the ARBITER. Adjudicate the claim decisively on the evidence. "
+                + _CALIB_PROCEDURE + _OPEN_CONTRACT,
+}
+
 # I3 guard at load — a speaker/source conditional in any seat prompt fails the import.
-for _role, _tmpl in {**PROMPTS, **OPEN_BOOK_PROMPTS}.items():
+for _role, _tmpl in {**PROMPTS, **OPEN_BOOK_PROMPTS, **CALIBRATED_OPEN_BOOK_PROMPTS}.items():
     lint_template_for_speaker_conditionals(f"PCA_{_role.upper()}", _tmpl)

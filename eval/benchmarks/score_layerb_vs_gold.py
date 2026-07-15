@@ -48,12 +48,19 @@ def _build_open_book_provider():
 
 def main():
     open_book = "--open-book" in sys.argv
+    calib = "--calib" in sys.argv     # Phase 3: calibrated open-book prompt A/B (P67.2)
     if not proxy_client.key_present():
         print(proxy_client.BLOCKED_MSG); return
     provider = _build_open_book_provider() if open_book else None
     if open_book and provider is None:
         return    # keyless open-book run is a no-op, not a silent closed-book pass
-    mode = "open-book" if provider is not None else "closed-book"
+    tune = None
+    if calib:
+        if provider is None:
+            print("BLOCKED --calib: only meaningful with --open-book."); return
+        from truthbot.verdict.prompts import CALIBRATED_OPEN_BOOK_PROMPTS
+        tune = {"prompts": CALIBRATED_OPEN_BOOK_PROMPTS}
+    mode = ("open-book+calib" if calib else "open-book") if provider is not None else "closed-book"
     gold = {json.loads(l)["sid"]: json.loads(l)["gold_verdict"]
             for l in GOLD.read_text().splitlines() if l.strip()}
     train = {json.loads(l)["sid"]: json.loads(l)
@@ -72,7 +79,7 @@ def main():
                                       response_parser=adjudicator.parse_verdict)),
         spend_sink=NullSpendSink(), project=proxy_client.CLIENT)
     verdicts, manifest, notes = adjudicator.adjudicate(
-        hm, claims, roster="dev", evidence_provider=provider)
+        hm, claims, roster="dev", evidence_provider=provider, tune=tune)
     leaked = [v["sid"] for v in verdicts if v["citations"]]
     if provider is None:
         assert not leaked, f"I4 violation — closed-book citations leaked: {leaked}"
@@ -87,7 +94,7 @@ def main():
     rep = sv.score_verdicts({s: gold[s] for s in sids}, preds)
 
     (HERE / "examples").mkdir(exist_ok=True)
-    suffix = "-openbook" if provider is not None else ""
+    suffix = ("-openbook-calib" if calib else "-openbook") if provider is not None else ""
     (HERE / "examples" / f"layerb-vs-gold-verdicts{suffix}.json").write_text(json.dumps(verdicts, indent=2))
 
     cost = manifest.total_cost_usd
