@@ -71,8 +71,9 @@ def test_discriminate_keeps_only_binary_labels():
     items = [{"item_id": s, "payload": {}} for s in ("a", "b", "c", "d")]
     out = discriminate(hm, items)
     assert out == {"a": "FALSE", "b": "MISLEADING"}          # c/d dropped
-    assert hm.called_with[1] == "pca"                        # rides a mini pca panel
-    assert hm.called_with[3]["prompts"]["proposer"] == CRM114_SYSTEM
+    assert hm.called_with[1] == "single"                     # single strong seat
+    assert hm.called_with[3]["prompt"] == CRM114_SYSTEM
+    assert hm.called_with[3]["roles.solo.tier"] == "standard"   # sonnet by default
 
 
 def test_discriminate_empty_is_noop():

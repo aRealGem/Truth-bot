@@ -117,7 +117,8 @@ def build_items(claims: list[dict], *, evidence_provider: Optional[EvidenceProvi
 def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
                tune: Optional[dict] = None, rc_id: Optional[str] = None,
                evidence_provider: Optional[EvidenceProvider] = None,
-               max_items: int = DEFAULT_MAX_ITEMS, two_stage: bool = False, today=None):
+               max_items: int = DEFAULT_MAX_ITEMS, two_stage: bool = False,
+               disc_tier: str = "standard", today=None):
     """claims: [{"sid","text","context"}]. Returns (rows, manifest, notes).
 
     Runs each claim through the pca panel and normalizes to verdict-contract rows.
@@ -157,9 +158,10 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
         adverse = {r["sid"] for r in rows
                    if r["status"] == "resolved" and r["verdict"] in ("FALSE", "MISLEADING")}
         disc_items = [it for it in items if it["item_id"] in adverse]
-        disc = discriminator.discriminate(hm, disc_items)
+        disc = discriminator.discriminate(hm, disc_items, tier=disc_tier)
         discriminator.apply_discrimination(rows, disc)
         notes["two_stage"] = True
+        notes["disc_tier"] = disc_tier
         notes["crm114_overrides"] = {r["sid"]: r["crm114"] for r in rows if r.get("crm114")}
 
     if open_book:

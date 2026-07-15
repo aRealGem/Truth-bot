@@ -8,14 +8,17 @@ panel; stage 2 re-decides ONLY the claims the panel put in the FALSE-or-MISLEADI
 bucket, asking a single focused question — is the core assertion CONTRADICTED (FALSE)
 or merely OVERSTATED (MISLEADING)?
 
-Rides a mini ``pca`` panel (roster.dev) on the BINARY question — a 3-seat vote, not a
-single cheap seat: the v1 single-haiku discriminator under-flipped (it carries the same
-MISLEADING bias the full panel showed), so the boundary gets a vote. Because the choice
-is binary (no TRUE/UNVERIFIABLE escape), the panel cannot hedge to a milder non-adverse
-label. Speaker-blind (I3): linted at import. The discriminator only re-labels within
-{FALSE, MISLEADING}; it never invents TRUE/UNVERIFIABLE and never touches a claim the
-panel resolved as TRUE or abstained on — stage-1 citations are preserved. A binary
-disagreement with no plurality leaves the stage-1 label untouched.
+Rides the ``single`` strategy with a STRONGER seat (default sonnet, tier=standard) on
+the BINARY question — the economical shape: stage 1 (the cheap 3-seat panel) runs over
+every claim, but stage 2 fires only on the small FALSE-or-MISLEADING bucket, so paying
+for one stronger judge there costs almost nothing in aggregate. Prior tries with cheap
+seats failed: a single cheap seat under-flipped (net-zero), and a cheap 3-seat vote was
+worse still (voting amplifies the seats' shared MISLEADING bias). The fix is a better
+judge, not more cheap votes. Because the choice is binary (no TRUE/UNVERIFIABLE escape),
+the seat cannot hedge to a milder non-adverse label. Speaker-blind (I3): linted at
+import. The discriminator only re-labels within {FALSE, MISLEADING}; it never invents
+TRUE/UNVERIFIABLE and never touches a claim the panel resolved as TRUE or abstained on —
+stage-1 citations are preserved.
 """
 from __future__ import annotations
 
@@ -48,21 +51,22 @@ CRM114_SYSTEM = (
 lint_template_for_speaker_conditionals("CRM114", CRM114_SYSTEM)
 
 
-def discriminate(hm: HydraMind, items: list[dict], *, roster: str = "dev",
+def discriminate(hm: HydraMind, items: list[dict], *, tier: str = "standard",
                  tune: Optional[dict] = None) -> dict[str, str]:
-    """Run the binary discriminator over ``items`` ([{item_id, payload}], the same
-    evidence-pack payloads stage 1 used) as a mini pca panel. Returns
-    {sid: "FALSE"|"MISLEADING"} for items the panel resolved to a valid binary label;
-    an item that came back TRUE/UNVERIFIABLE or disagreement-flagged is omitted (caller
-    keeps the stage-1 label). Requires a live proxy lane."""
+    """Run the single-seat binary discriminator over ``items`` ([{item_id, payload}],
+    the same evidence-pack payloads stage 1 used). ``tier`` picks the anthropic seat
+    strength — "standard" = sonnet (default), "cheap" = haiku (the failed v1). Returns
+    {sid: "FALSE"|"MISLEADING"} for items that came back a valid binary label; an item
+    the seat labeled TRUE/UNVERIFIABLE is omitted (caller keeps the stage-1 label).
+    Requires a live proxy lane."""
     if not items:
         return {}
-    run_tune = {"prompts": {r: CRM114_SYSTEM for r in ("proposer", "critic", "arbiter")}}
+    run_tune = {"prompt": CRM114_SYSTEM, "roles.solo.tier": tier}
     run_tune.update(tune or {})
-    result, _manifest = hm.run("discriminate", items, "pca", roster=roster, tune=run_tune)
+    result, _manifest = hm.run("discriminate", items, "single", tune=run_tune)
     out: dict[str, str] = {}
     for r in result.items:
-        v = ((r.value or {}).get("verdict") or "").strip().upper()   # {} for disagreement
+        v = ((r.value or {}).get("verdict") or "").strip().upper()
         if v in _ADVERSE:
             out[r.item_id] = v
     return out
