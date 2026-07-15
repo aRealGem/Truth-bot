@@ -48,7 +48,8 @@ def _build_open_book_provider():
 
 def main():
     open_book = "--open-book" in sys.argv
-    calib = "--calib" in sys.argv     # Phase 3: calibrated open-book prompt A/B (P67.2)
+    calib = "--calib" in sys.argv       # Phase 3: calibrated open-book prompt A/B (P67.2)
+    crm114 = "--crm114" in sys.argv     # Phase 3: two-stage FALSE-vs-MISLEADING discriminator
     if not proxy_client.key_present():
         print(proxy_client.BLOCKED_MSG); return
     provider = _build_open_book_provider() if open_book else None
@@ -60,7 +61,11 @@ def main():
             print("BLOCKED --calib: only meaningful with --open-book."); return
         from truthbot.verdict.prompts import CALIBRATED_OPEN_BOOK_PROMPTS
         tune = {"prompts": CALIBRATED_OPEN_BOOK_PROMPTS}
-    mode = ("open-book+calib" if calib else "open-book") if provider is not None else "closed-book"
+    if crm114 and provider is None:
+        print("BLOCKED --crm114: only meaningful with --open-book."); return
+    mode = "closed-book"
+    if provider is not None:
+        mode = "open-book" + ("+calib" if calib else "") + ("+crm114" if crm114 else "")
     gold = {json.loads(l)["sid"]: json.loads(l)["gold_verdict"]
             for l in GOLD.read_text().splitlines() if l.strip()}
     train = {json.loads(l)["sid"]: json.loads(l)
@@ -79,7 +84,7 @@ def main():
                                       response_parser=adjudicator.parse_verdict)),
         spend_sink=NullSpendSink(), project=proxy_client.CLIENT)
     verdicts, manifest, notes = adjudicator.adjudicate(
-        hm, claims, roster="dev", evidence_provider=provider, tune=tune)
+        hm, claims, roster="dev", evidence_provider=provider, tune=tune, two_stage=crm114)
     leaked = [v["sid"] for v in verdicts if v["citations"]]
     if provider is None:
         assert not leaked, f"I4 violation — closed-book citations leaked: {leaked}"
@@ -89,12 +94,18 @@ def main():
         print(f"  evidence: {sum(ev_counts.values())} items over {len(ev_counts)} claims "
               f"({sum(1 for n in ev_counts.values() if n)} with ≥1); "
               f"{len(leaked)} verdicts carry citations")
+        if crm114:
+            ov = notes.get("crm114_overrides", {})
+            print(f"  crm114: {len(ov)} stage-1 labels flipped by the discriminator: "
+                  + ", ".join(f"{s}({d['stage1']}→{d['final']})" for s, d in ov.items()))
 
     preds = {v["sid"]: v for v in verdicts}
     rep = sv.score_verdicts({s: gold[s] for s in sids}, preds)
 
     (HERE / "examples").mkdir(exist_ok=True)
-    suffix = ("-openbook-calib" if calib else "-openbook") if provider is not None else ""
+    suffix = ""
+    if provider is not None:
+        suffix = "-openbook" + ("-calib" if calib else "") + ("-crm114" if crm114 else "")
     (HERE / "examples" / f"layerb-vs-gold-verdicts{suffix}.json").write_text(json.dumps(verdicts, indent=2))
 
     cost = manifest.total_cost_usd
