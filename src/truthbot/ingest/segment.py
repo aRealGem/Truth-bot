@@ -48,10 +48,20 @@ def _unmask(text: str) -> str:
     return text.replace(_MASK, ".")
 
 
+def _strip_header_lines(text: str) -> str:
+    """Drop ``#``-prefixed metadata lines (title / source URL) that the canonical
+    Miller-Center-format transcripts carry above the speech body. Mirrors the eval
+    ``segment_sotu._read_body`` filter so a raw transcript file can be fed directly
+    without its header becoming bogus sentences."""
+    return "\n".join(ln for ln in (text or "").splitlines()
+                     if not ln.lstrip().startswith("#"))
+
+
 def split_sentences(text: str) -> list[str]:
-    """Segment raw transcript text into sentence strings (stage cues stripped,
-    abbreviations protected, sub-8-char / alpha-free fragments dropped)."""
-    body = _STAGE.sub(" ", text or "")
+    """Segment raw transcript text into sentence strings (``#`` header lines and
+    stage cues stripped, abbreviations protected, sub-8-char / alpha-free fragments
+    dropped)."""
+    body = _STAGE.sub(" ", _strip_header_lines(text))
     body = re.sub(r"\s+", " ", body).strip()
     if not body:
         return []

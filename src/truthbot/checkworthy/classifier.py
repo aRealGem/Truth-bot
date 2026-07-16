@@ -12,10 +12,13 @@ at import — a violation fails the module load, not a run.
 from __future__ import annotations
 
 import json
+import logging
 from typing import Optional
 
 from hydramind import HydraMind, TaskItem
 from hydramind.invariants import lint_template_for_speaker_conditionals
+
+logger = logging.getLogger(__name__)
 
 _VALID_LABELS = {"check-worthy", "opinion", "unimportant"}
 _VALID_CLAIM_TYPES = {"statistical", "historical", "attribution", "comparison", "other", None}
@@ -81,10 +84,18 @@ def parse_a2(raw: dict) -> dict:
 
 
 def classify(hm: HydraMind, sentences: list[dict], tune: Optional[dict] = None,
-             tier: str = "cheap"):
+             tier: str = "cheap", on_parse_error: str = "raise"):
     """sentences: [{"sid","text","context"}]. Returns (list[normalized], manifest).
     `tier` picks the A2 model (cheap=haiku, standard=sonnet, frontier=opus). Requires a
-    live L-P/L-B lane (proxy virtual key from repo .env)."""
+    live L-P/L-B lane (proxy virtual key from repo .env).
+
+    `on_parse_error` controls what happens when a single seat's output fails parse_a2
+    (an out-of-contract label, or an empty response). Default "raise" preserves the
+    fail-closed contract (surface a bad model output loudly). "default" is the tolerant
+    mode for at-scale production runs (a whole-speech Layer A is hundreds of cheap-tier
+    calls; one hallucinated label — e.g. "attribution" — must not sink the run): the
+    offending sentence falls back to a safe non-check-worthy "unimportant" label so it
+    routes to characterization, never the verify queue, and the run continues."""
     items = [TaskItem(item_id=s["sid"],
                       payload={"sentence": s["text"], "context": s.get("context", "")})
              for s in sentences]
@@ -94,7 +105,14 @@ def classify(hm: HydraMind, sentences: list[dict], tune: Optional[dict] = None,
     by_sid = {s["sid"]: s for s in sentences}
     out = []
     for r in result.items:
-        norm = parse_a2(r.value)
+        try:
+            norm = parse_a2(r.value)
+        except (ValueError, AttributeError, TypeError) as exc:
+            if on_parse_error != "default":
+                raise
+            logger.warning("A2 parse fallback for %s → unimportant (%s)", r.item_id, exc)
+            norm = {"label": "unimportant", "claim_type": None,
+                    "confidence": None, "rationale": f"A2 parse fallback: {exc}"}
         norm["sid"] = r.item_id
         # Carry the claim text (and context) through so Layer B can consume the
         # check-worthy queue directly — run_layer_b needs {"sid","text"} per row.

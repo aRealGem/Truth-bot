@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="truth-bot 0.2.0 (beta)">
+  <meta name="theme-color" content="#fafaf9">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="truth-bot">
+  <meta property="og:title" content="Model panel insights — truth-bot">
+  <meta property="og:description" content="How frontier models agree, dissent, and skew on truth-bot's fact-check panel — pairwise agreement, truthy bias, lone-outlier splits.">
+  <meta property="og:image" content="./assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Model panel insights — truth-bot">
+  <meta name="twitter:description" content="How frontier models agree, dissent, and skew on truth-bot's fact-check panel — pairwise agreement, truthy bias, lone-outlier splits.">
+  <meta name="twitter:image" content="./assets/social-card.png">
+  <meta name="twitter:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
+  <title>Model panel insights — truth-bot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400;6..72,1,500&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+<div class="status-bar">
+  <div class="row">
+    <span class="live">Operational</span>
+    <span>Pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></span>
+    <span>Multi-model</span>
+    <button type="button" class="editorial-lens" data-lens="strict" hidden title="Toggle the headline pill between the Strict (Exaggerated + Misleading → Falsey) and Lenient (Mostly True + Exaggerated → Truthy) projections. Per-model strip stays 6-bucket.">
+      <span class="lens-label">Lens:</span>
+      <span class="lens-value">Strict</span>
+    </button>
+    <span class="stamp">2026-07-16 17:58 UTC</span>
+  </div>
+</div>
+<header class="masthead">
+  <div class="wrap masthead-row">
+    <div>
+      <div class="wordmark"><a href="./index.html" style="color:inherit;text-decoration:none">truth-bot<span class="dot">.</span></a></div>
+      <p class="tagline">Automated political fact-checking with multi-model consensus analysis.</p>
+    </div>
+    <nav class="top-nav">
+      <a href="./index.html">Reports</a>
+      <a href="./about.html">About</a>
+      <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<section class="prose">
+  <h1>Model panel insights</h1>
+  <p class="insights-meta">281 distinct claims across 1 frontier models. All numbers update on every report publish.</p>
+  <h2>Per-model summary</h2>
+  <table class="insights-summary">
+    <thead><tr><th>Model</th><th class="num-cell">Claims</th><th class="num-cell">Dissents</th><th class="num-cell">Dissent %</th><th class="num-cell">Truthy bias</th><th class="num-cell">Lone &uarr;</th><th class="num-cell">Lone &darr;</th></tr></thead>
+    <tbody><tr><td><strong>Hydramind-Pca</strong></td><td class="num-cell">274</td><td class="num-cell">0</td><td class="num-cell">0%</td><td class="num-cell">+0.00</td><td class="num-cell">0</td><td class="num-cell">0</td></tr></tbody>
+  </table>
+  <h2>Truthy bias</h2>
+  <p class="insights-meta">Average signed gap between this model&rsquo;s truthy-axis score and the panel mean, per claim. Positive = leaner toward Truthy; negative = stricter.</p>
+  <div class="bias-chart"><div class="bias-row">  <div class="bias-row-label">Hydramind-Pca</div>
+  <div class="bias-track" aria-hidden="true">
+    <div class="bias-mid"></div>
+    <div class="bias-fill bias-fill-lenient" style="width:0.00%"></div>
+  </div>
+  <div class="bias-row-figure" style="color:var(--ink)">+0.00</div>
+</div></div>
+  <h2>Pairwise agreement</h2>
+  <p class="insights-meta">Share of co-checked claims where the two models cast identical fine-label verdicts.</p>
+<table class="agreement-matrix">
+  <thead><tr><th></th><th scope="col">Hydramind-Pca</th></tr></thead>
+  <tbody><tr><th scope="row">Hydramind-Pca</th><td class="agg-self">&mdash;</td></tr></tbody>
+</table>
+</section>
+<section class="prose insights-method">
+  <h2>Method</h2>
+  <p>Truthy-axis scores: True (+2), Mostly True (+1), Unverifiable (0), Exaggerated/Misleading (-1), False (-2). Dissents are counted against the published consensus verdict for each claim. Pairwise agreement uses the full 6-bucket fine label, not the projected 5-bucket Truthy scale, so it&rsquo;s a strict measurement of label identity.</p>
+  <p>The <a href="https://github.com/truth-bot/truth-bot/blob/main/eval/opus_vs_rest_scan.py">Opus-vs-rest scan</a> is the standalone variant that inspired this page; both share their constants via <code>truthbot.publish.insights.LABEL_SCORE</code>.</p>
+  <p><a href="./about.html">&larr; About this site</a></p>
+</section>
+
+</main>
+<footer class="foot wrap">
+<span><a href="./index.html">Back to reports</a></span><span>Pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span> &middot; Prompt <a class="footer-hash" href="./about.html#prompt">7c462496</a> &middot; <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">GitHub</a></span>
+</footer>
+<script src="./assets/truthbot.js"></script>
+</body>
+</html>

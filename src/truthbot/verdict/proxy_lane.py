@@ -49,13 +49,28 @@ def base_url(environ: Optional[Mapping[str, str]] = None) -> str:
     return _env(environ).get(BASE_URL_ENV, DEFAULT_BASE_URL)
 
 
-def build_hydramind(*, response_parser: Callable[[Any], dict]) -> Any:
+def build_hydramind(*, response_parser: Optional[Callable[[Any], dict]] = None) -> Any:
     """Construct the HydraMind engine bound to the truth-bot proxy lane.
 
-    ``response_parser`` is the per-call raw-JSON parser (``adjudicator.parse_verdict``
-    for the verdict panel). Raises the same way the transport would if the proxy is
-    unreachable — the caller should have checked ``key_present`` first and printed
-    ``BLOCKED_MSG`` to fail loudly rather than silently spend."""
+    ``response_parser`` is the per-call response transform the transport applies to
+    each model's JSON. The two v2 lanes need DIFFERENT parsers, so build one engine
+    per lane:
+      * Layer A classify → ``None`` (identity): ``classifier.parse_a2`` reads the raw
+        ``{"label", "claim_type", …}`` JSON itself.
+      * Layer B/CRM-114 verdict → ``adjudicator.parse_verdict``: the panel/normalizer
+        read ``{"verdict", "confidence", "citations", "reasoning"}``.
+    Passing the verdict parser to the classify lane (or vice-versa) yields a dict with
+    the wrong keys and a fail-closed parse error downstream.
+
+    Raises the same way the transport would if the proxy is unreachable — the caller
+    should have checked ``key_present`` first and printed ``BLOCKED_MSG`` to fail
+    loudly rather than silently spend.
+
+    Uses the transport's stock retry defaults (3×/0.5–30 s). A sustained proxy 429 is
+    almost always the virtual key's LiteLLM budget cap (a permanent BudgetExceededError,
+    not a per-minute RPM window) — retrying that harder only delays an inevitable
+    failure, so the burst is bounded on the client side by Layer A pacing
+    (``build_pca_lane_fns``) instead."""
     from hydramind import HydraMind
     from hydramind.manifest import NullSpendSink
     from hydramind.registry import load_registry
@@ -66,7 +81,7 @@ def build_hydramind(*, response_parser: Callable[[Any], dict]) -> Any:
         Transport(completion_fn=ProxyCompletion(
             key_env=resolve_key_env(),
             base_url=base_url(),
-            response_parser=response_parser,
+            response_parser=response_parser,   # None → transport's identity passthrough
         )),
         spend_sink=NullSpendSink(),
         project=CLIENT,

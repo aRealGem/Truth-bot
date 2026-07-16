@@ -119,12 +119,14 @@ def test_lane_factory_folds_cost_and_toggles_crm114(monkeypatch):
     class _Manifest:
         total_cost_usd = 0.42
 
-    def fake_classify(hm, sentences, tier="cheap"):
+    def fake_classify(hm, sentences, tier="cheap", on_parse_error="raise"):
         captured["a2_tier"] = tier
+        captured["classify_hm"] = hm
         return [{"sid": s["sid"], "label": "check-worthy"} for s in sentences], _Manifest()
 
     def fake_adjudicate(hm, claims, **kwargs):
         captured["adj_kwargs"] = kwargs
+        captured["adj_hm"] = hm
         rows = [{"sid": c["sid"], "status": "resolved", "verdict": "TRUE",
                  "confidence": 0.8, "citations": [], "reasoning": "", "votes": {"TRUE": 3}}
                 for c in claims]
@@ -133,9 +135,10 @@ def test_lane_factory_folds_cost_and_toggles_crm114(monkeypatch):
     monkeypatch.setattr(classifier, "classify", fake_classify)
     monkeypatch.setattr(adjudicator, "adjudicate", fake_adjudicate)
 
+    hm_classify, hm_verdict = object(), object()
     # provider=None → closed-book → two_stage must be forced off
     layer_a_fn, adjudicate_fn = pp.build_pca_lane_fns(
-        hm=object(), provider=None, crm114=True, roster="dev", a2_tier="standard")
+        hm_classify, hm_verdict, provider=None, crm114=True, roster="dev", a2_tier="standard")
 
     a2_rows = layer_a_fn([{"sid": "sp:0000", "text": "t", "context": "c"}])
     assert a2_rows[0]["label"] == "check-worthy"
@@ -146,6 +149,35 @@ def test_lane_factory_folds_cost_and_toggles_crm114(monkeypatch):
     assert notes["cost_usd"] == 0.42                 # manifest cost folded in
     assert captured["adj_kwargs"]["two_stage"] is False   # no provider → no CRM-114
     assert captured["adj_kwargs"]["roster"] == "dev"
+    # each lane is routed to its own engine (classify=identity parser, verdict=parse_verdict)
+    assert captured["classify_hm"] is hm_classify
+    assert captured["adj_hm"] is hm_verdict
+
+
+def test_lane_factory_paces_layer_a_in_batches(monkeypatch):
+    from truthbot.checkworthy import classifier
+
+    class _M:
+        total_cost_usd = 0.0
+
+    calls = []
+    naps = []
+
+    def fake_classify(hm, sentences, tier="cheap", on_parse_error="raise"):
+        calls.append([s["sid"] for s in sentences])
+        return [{"sid": s["sid"], "label": "check-worthy"} for s in sentences], _M()
+
+    monkeypatch.setattr(classifier, "classify", fake_classify)
+    layer_a_fn, _ = pp.build_pca_lane_fns(
+        object(), object(), provider=None, layer_a_batch=2, layer_a_pause_s=0.5,
+        sleep_fn=lambda s: naps.append(s))
+
+    sents = [{"sid": f"s:{i}", "text": "t", "context": "c"} for i in range(5)]
+    rows = layer_a_fn(sents)
+    # 5 sentences, batch 2 → 3 classify calls (2,2,1), 2 inter-batch pauses
+    assert [len(c) for c in calls] == [2, 2, 1]
+    assert naps == [0.5, 0.5]                 # paused between batches, not after the last
+    assert len(rows) == 5
 
 
 def test_lane_factory_enables_crm114_with_provider(monkeypatch):
@@ -162,7 +194,7 @@ def test_lane_factory_enables_crm114_with_provider(monkeypatch):
 
     monkeypatch.setattr(adjudicator, "adjudicate", fake_adjudicate)
     _, adjudicate_fn = pp.build_pca_lane_fns(
-        hm=object(), provider=object(), crm114=True)
+        object(), object(), provider=object(), crm114=True)
     adjudicate_fn([])
     assert captured["adj_kwargs"]["two_stage"] is True
     assert captured["adj_kwargs"]["evidence_provider"] is not None
