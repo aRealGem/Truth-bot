@@ -1,0 +1,175 @@
+"""v2 (HydraMind PCA) publish path — Layer A → adjudicate → bridge → VerdictBundles.
+
+This is the orchestration that lets the new PCA verdict stack (Layer A check-worthy
+filter + open-book PCA panel + CRM-114 stage-2) drive the EXISTING publisher, in
+place of the legacy ``VerificationEngine``. It is deliberately a pure router with
+INJECTED lane functions (``layer_a_fn``, ``adjudicate_fn``) — the same discipline as
+``checkworthy.pipeline.run_layer_a`` / ``verdict.pipeline.run_layer_b`` — so the
+whole flow is unit-testable offline with fakes. The live HydraMind + evidence
+provider are constructed by the caller (the ``publish`` CLI) and closed over by the
+two functions; nothing here talks to a network.
+
+Flow (per ``run_pca_verify``):
+  1. Layer A over the segmented sentences → a check-worthy queue (everything else
+     goes to the characterization stream, which the publisher can surface later).
+  2. Chunk the check-worthy claims into rate-limit-aware batches and adjudicate each
+     chunk through the PCA panel (open-book + CRM-114 when the caller wired a
+     provider). Chunking is the concession to the proxy's 429 ceiling — one small
+     batch per ``adjudicate_fn`` call, sequential, leaning on the bounded backoff
+     already in ``ProxyCompletion``.
+  3. Bridge the accumulated rows + evidence packs → ``VerdictBundle`` list via
+     ``verdict.bridge`` (offline), preserving check-worthy order.
+
+Speaker-blind (I3) all the way through Layer A/B; the speaker is attached only at
+bridge/publish time (cosmetic, post-verdict).
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import date
+from typing import Callable, Optional
+
+from truthbot.checkworthy.pipeline import run_layer_a
+from truthbot.models import Evidence, VerdictBundle
+from truthbot.verdict import bridge as bridge_mod
+from truthbot.verdict.evidence_pack import EvidencePack
+from truthbot.verdict.speech_context import register_speech_date
+
+# layer_a_fn: (sentences[{"sid","text","context"}]) -> A2 rows (classifier.classify's
+#             first return value). None → no A2 lane (A1 lexical routing only).
+LayerAFn = Callable[[list[dict]], list[dict]]
+
+# adjudicate_fn: (claims chunk [{"sid","text","context"}]) -> (rows, notes).
+#                Wraps adjudicator.adjudicate (dropping the manifest, or folding its
+#                cost into notes["cost_usd"] — the caller decides).
+AdjudicateFn = Callable[[list[dict]], tuple[list[dict], dict]]
+
+
+@dataclass
+class PcaVerifyResult:
+    """Everything the publisher (and telemetry) needs from a v2 verify pass."""
+
+    bundles: list[VerdictBundle] = field(default_factory=list)
+    evidence: dict[str, list[Evidence]] = field(default_factory=dict)
+    characterization: list[dict] = field(default_factory=list)  # non-check-worthy stream
+    n_sentences: int = 0
+    n_check_worthy: int = 0
+    n_chunks: int = 0
+    cost_usd: float = 0.0
+
+
+def _chunk(items: list, size: int) -> list[list]:
+    size = max(1, int(size))
+    return [items[i:i + size] for i in range(0, len(items), size)]
+
+
+def run_pca_verify(
+    sentences: list[dict],
+    *,
+    layer_a_fn: Optional[LayerAFn] = None,
+    adjudicate_fn: AdjudicateFn,
+    chunk_size: int = 6,
+    confirm_pass: bool = True,
+    on_progress: Optional[Callable[[int, int, list[dict]], None]] = None,
+) -> PcaVerifyResult:
+    """Segmented sentences → published-ready ``VerdictBundle``s via the PCA stack.
+
+    Args:
+      sentences:    Layer A input, ``[{"sid","text","context"}]`` (see ``ingest.segment``).
+      layer_a_fn:   A2 classify lane (live). None runs A1-only routing (A1-PASS →
+                    queue, ambiguous parked) — useful for offline tests.
+      adjudicate_fn: per-chunk PCA lane (live), returns ``(rows, notes)`` where
+                    ``notes["packs"]`` (open-book) maps sid → EvidencePack and an
+                    optional ``notes["cost_usd"]`` is summed into the result.
+      chunk_size:   check-worthy claims per adjudicate call (rate-limit control).
+      confirm_pass: pass through to Layer A (A2 confirms the A1-PASS band).
+      on_progress:  optional callback(chunk_idx, n_chunks, chunk_rows) for CLI logging.
+
+    Returns a ``PcaVerifyResult``. Pure/offline given offline ``*_fn``s.
+    """
+    layer_a = run_layer_a(sentences, classify_fn=layer_a_fn, confirm_pass=confirm_pass)
+    queue = layer_a.check_worthy_queue
+
+    result = PcaVerifyResult(
+        characterization=layer_a.characterization_stream,
+        n_sentences=len(sentences),
+        n_check_worthy=len(queue),
+    )
+    if not queue:
+        return result
+
+    # Claims for adjudicate + the bridge's Claim reconstruction. The check-worthy
+    # rows already carry sid/text/context; that's all adjudicate needs.
+    claims = [{"sid": r["sid"], "text": r.get("text", ""),
+               "context": r.get("context", "")} for r in queue]
+    chunks = _chunk(claims, chunk_size)
+    result.n_chunks = len(chunks)
+
+    all_rows: list[dict] = []
+    packs: dict[str, EvidencePack] = {}
+    for idx, chunk in enumerate(chunks, 1):
+        rows, notes = adjudicate_fn(chunk)
+        all_rows.extend(rows)
+        for sid, pack in (notes.get("packs") or {}).items():
+            packs[sid] = pack
+        result.cost_usd += float(notes.get("cost_usd", 0.0) or 0.0)
+        if on_progress is not None:
+            on_progress(idx, len(chunks), rows)
+
+    out = bridge_mod.bridge(all_rows, claims, packs)
+    result.bundles = out.bundles
+    result.evidence = out.evidence
+    return result
+
+
+def build_pca_lane_fns(
+    hm,
+    provider,
+    *,
+    crm114: bool = True,
+    roster: str = "dev",
+    a2_tier: str = "cheap",
+    disc_tier: str = "standard",
+) -> tuple[LayerAFn, AdjudicateFn]:
+    """Bind the live HydraMind lane into the ``(layer_a_fn, adjudicate_fn)`` pair
+    ``run_pca_verify`` expects.
+
+    ``layer_a_fn`` runs the A2 classifier; ``adjudicate_fn`` runs the PCA panel
+    (open-book + CRM-114 stage-2 when ``provider`` is set — the discriminator is
+    evidence-only, so it's forced off closed-book) and folds the run manifest's
+    cost into ``notes["cost_usd"]`` so the orchestrator can total spend. Imports
+    are local so offline importers of this module don't pull the classifier."""
+    from truthbot.checkworthy import classifier
+    from truthbot.verdict import adjudicator
+
+    two_stage = bool(crm114) and provider is not None
+
+    def layer_a_fn(sentences: list[dict]) -> list[dict]:
+        rows, _manifest = classifier.classify(hm, sentences, tier=a2_tier)
+        return rows
+
+    def adjudicate_fn(chunk: list[dict]) -> tuple[list[dict], dict]:
+        rows, manifest, notes = adjudicator.adjudicate(
+            hm, chunk, roster=roster, evidence_provider=provider,
+            two_stage=two_stage, disc_tier=disc_tier)
+        notes = dict(notes or {})
+        try:
+            notes["cost_usd"] = float(getattr(manifest, "total_cost_usd", 0.0) or 0.0)
+        except (TypeError, ValueError):
+            notes["cost_usd"] = 0.0
+        return rows, notes
+
+    return layer_a_fn, adjudicate_fn
+
+
+def prepare_speech(text: str, speech_id: str, utterance: date) -> list[dict]:
+    """Segment a transcript and register its utterance date for temporal grounding.
+
+    Convenience for the CLI: registers ``speech_id → utterance`` (so the temporal
+    preamble + evidence window resolve even for a non-fixture speech) and returns
+    the Layer A sentence inventory. Import kept local so ``ingest`` isn't pulled in
+    when only ``run_pca_verify`` is used (offline tests)."""
+    from truthbot.ingest.segment import segment
+
+    register_speech_date(speech_id, utterance)
+    return segment(text, speech_id)
