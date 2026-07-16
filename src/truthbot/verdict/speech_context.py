@@ -32,6 +32,15 @@ def speech_date_for(sid: str) -> Optional[date]:
     return SPEECH_DATE.get(sid.split(":", 1)[0]) if sid else None
 
 
+def register_speech_date(speech_id: str, utterance: date) -> None:
+    """Register a speech-prefix → utterance date so the temporal preamble and
+    Layer C evidence window resolve for a transcript that isn't a pinned eval
+    fixture. Used by the v2 publish path to thread the CLI ``--date`` into
+    temporal grounding for an arbitrary speech_id. Idempotent; last write wins
+    (a per-process CLI run adjudicates one speech)."""
+    SPEECH_DATE[speech_id] = utterance
+
+
 def build_temporal_preamble(sid: str, *, reference_period: Optional[str] = None,
                             today: Optional[date] = None) -> str:
     """Speaker-blind temporal block to prepend to a claim's context. Empty string if

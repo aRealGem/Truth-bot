@@ -950,6 +950,150 @@ def _preflight_key_sanity() -> None:
         )
 
 
+def _default_speech_id(speaker: str, date) -> str:
+    """Fallback sid prefix from speaker + year when --speech-id is omitted.
+
+    The prefix only needs to be stable and registrable — ``prepare_speech``
+    registers it against the CLI ``--date`` so temporal grounding resolves. For the
+    pinned SOTU fixtures pass ``--speech-id trump_2026`` / ``biden_2022`` to reuse
+    the registered utterance dates exactly."""
+    import re
+
+    slug = re.sub(r"[^a-z0-9]+", "_", (speaker or "speech").lower()).strip("_") or "speech"
+    return f"{slug}_{date.year}"
+
+
+def _build_open_book_provider():
+    """Layer C evidence provider: Brave + FactCheck connectors (both keyed on
+    BRAVE_API_KEY), time-scoped per claim inside adjudicate. Returns None (→
+    closed-book) when no key is set, so the run degrades loudly rather than
+    silently faking evidence. Mirrors the eval driver's provider builder."""
+    import os
+
+    if not os.environ.get("BRAVE_API_KEY"):
+        return None
+    from truthbot.verify.evidence_provider import build_evidence_provider
+    from truthbot.verify.sources.brave import BraveSearchConnector
+    from truthbot.verify.sources.factcheck import FactCheckConnector
+
+    connectors = [BraveSearchConnector(max_results=5), FactCheckConnector(max_results=3)]
+    return build_evidence_provider(source="connectors", connectors=connectors)
+
+
+def _publish_bundles(args, bundles: list, date, source_url: str) -> None:
+    """Shared publish tail: bundles → SiteReport → static site (+ link/JSON checks).
+
+    Used by both the legacy and the v2 (PCA) verify paths so they emit byte-identical
+    site structure from the same ``VerdictBundle`` list."""
+    import json
+    import uuid
+
+    from truthbot.publish.site import SitePublisher, SiteReport
+
+    site_report = SiteReport(
+        report_id=str(uuid.uuid4()),
+        speaker=args.speaker,
+        role=getattr(args, "role", "") or "",
+        date=date,
+        venue=getattr(args, "venue", "") or "",
+        transcript_source_url=source_url,
+        bundles=bundles,
+    )
+    site_root = getattr(args, "site_root", None)
+    publisher = SitePublisher(site_root=site_root)
+    report_path = publisher.publish(site_report)
+    site_url = publisher.site_url(site_report)
+    stats = publisher.summary()
+
+    print()
+    print(f"Site generated: {stats['root']}")
+    print(f"Report page:    {report_path}")
+    print(f"Served at:      {site_url}")
+    print(f"Summary:        {stats['reports']} report(s), {stats['claims']} claim(s), "
+          f"{stats['total_kb']} KB total")
+
+    issues = []
+    for b in bundles:
+        claim_rel = Path("claims") / f"{b.claim.id}.html"
+        if not (Path(stats['root']) / claim_rel).exists():
+            issues.append(str(claim_rel))
+    if issues:
+        print(f"WARNING: {len(issues)} claim page(s) missing")
+    else:
+        print("All internal links verified OK")
+
+    for fname in ("data/reports.json", "data/claims.json"):
+        p = Path(stats['root']) / fname
+        try:
+            json.loads(p.read_text(encoding="utf-8"))
+            print(f"{fname}: valid JSON")
+        except Exception as e:
+            print(f"{fname}: INVALID - {e}")
+
+
+def _run_publish_pca(args) -> None:
+    """v2 publish path: segment → Layer A → chunked PCA adjudicate → bridge → site.
+
+    Uses the HydraMind PCA stack over the truth-bot proxy lane instead of the legacy
+    per-provider ``VerificationEngine``. Open-book (Brave/FactCheck + CRM-114) when
+    BRAVE_API_KEY is set; degrades loudly to closed-book otherwise. Costs real proxy
+    spend — this is the live path PR-D exercises end-to-end."""
+    from collections import Counter
+    from datetime import datetime
+
+    from truthbot.verdict import adjudicator, proxy_lane, publish_pipeline
+
+    if not proxy_lane.key_present():
+        print(proxy_lane.BLOCKED_MSG)
+        sys.exit(1)
+
+    src = args.transcript
+    if src == "-":
+        text = sys.stdin.read()
+    else:
+        text = Path(src).read_text(encoding="utf-8")
+    date = datetime.strptime(args.date, "%Y-%m-%d")
+    source_url = getattr(args, "source_url", "") or ""
+
+    speech_id = getattr(args, "speech_id", None) or _default_speech_id(args.speaker, date)
+    sentences = publish_pipeline.prepare_speech(text, speech_id, date.date())
+    print(f"Segmented {len(sentences)} sentence(s) (speech_id={speech_id}, "
+          f"utterance={date.date().isoformat()})")
+
+    provider = _build_open_book_provider()
+    if provider is None:
+        print("WARNING: BRAVE_API_KEY not set — running CLOSED-BOOK "
+              "(no evidence, CRM-114 disabled).")
+
+    crm114 = not bool(getattr(args, "no_crm114", False))
+    hm = proxy_lane.build_hydramind(response_parser=adjudicator.parse_verdict)
+    layer_a_fn, adjudicate_fn = publish_pipeline.build_pca_lane_fns(
+        hm, provider, crm114=crm114,
+        roster=getattr(args, "roster", "dev") or "dev",
+        a2_tier=getattr(args, "a2_tier", "cheap") or "cheap",
+    )
+    chunk_size = int(getattr(args, "chunk_size", 6) or 6)
+
+    def _on_progress(i: int, n: int, rows: list) -> None:
+        dist = Counter(r.get("verdict") or r.get("status") for r in rows)
+        print(f"  adjudicate chunk {i}/{n}: {dict(dist)}")
+
+    print(f"Verifying via PCA (roster={getattr(args, 'roster', 'dev')}, "
+          f"chunk_size={chunk_size}, "
+          f"mode={'open-book+crm114' if provider is not None and crm114 else ('open-book' if provider is not None else 'closed-book')})...")
+    result = publish_pipeline.run_pca_verify(
+        sentences,
+        layer_a_fn=layer_a_fn,
+        adjudicate_fn=adjudicate_fn,
+        chunk_size=chunk_size,
+        on_progress=_on_progress,
+    )
+    print(f"Layer A: {result.n_check_worthy}/{result.n_sentences} check-worthy; "
+          f"adjudicated in {result.n_chunks} chunk(s); spend ${result.cost_usd:.4f}")
+
+    _publish_bundles(args, result.bundles, date, source_url)
+
+
 def _run_publish(args) -> None:
     """Full pipeline: ingest → extract → verify → publish site."""
     import os, uuid
@@ -959,6 +1103,11 @@ def _run_publish(args) -> None:
     from truthbot.ingest.transcript import TranscriptIngester
     from truthbot.verify.engine import VerificationEngine
     from truthbot.publish.site import SitePublisher, SiteReport
+
+    # v2 (HydraMind PCA) verify path — behind --engine pca; legacy engine is default.
+    if getattr(args, "engine", "legacy") == "pca":
+        _run_publish_pca(args)
+        return
 
     _preflight_key_sanity()
 
@@ -1289,6 +1438,51 @@ def main() -> None:
         choices=("live", "batch"),
         default="live",
         help="Verification billing mode: live API calls (default) or batch descriptor + same live verify for now",
+    )
+    pub_parser.add_argument(
+        "--engine",
+        choices=("legacy", "pca"),
+        default="legacy",
+        help=(
+            "Verification engine. 'legacy' (default) = the per-provider "
+            "VerificationEngine. 'pca' = the v2 HydraMind stack (segment → Layer A "
+            "check-worthy → open-book PCA + CRM-114 → bridge), over the truth-bot "
+            "proxy lane. --engine pca ignores --mode/--triage/--claims-per-request."
+        ),
+    )
+    pub_parser.add_argument(
+        "--speech-id",
+        dest="speech_id",
+        default=None,
+        help=(
+            "sid prefix for the PCA path (temporal-grounding key). Use the pinned "
+            "fixture slug (trump_2026 / biden_2022) to reuse its registered utterance "
+            "date; omitted → derived from speaker+year and registered against --date."
+        ),
+    )
+    pub_parser.add_argument(
+        "--chunk-size",
+        dest="chunk_size",
+        type=int,
+        default=6,
+        help="PCA path: check-worthy claims per adjudicate call (proxy rate-limit control; default 6).",
+    )
+    pub_parser.add_argument(
+        "--roster",
+        default="dev",
+        help="PCA path: HydraMind roster (default 'dev' = cheap tiers).",
+    )
+    pub_parser.add_argument(
+        "--a2-tier",
+        dest="a2_tier",
+        default="cheap",
+        help="PCA path: Layer A A2 classifier tier (cheap=haiku / standard=sonnet / frontier=opus).",
+    )
+    pub_parser.add_argument(
+        "--no-crm114",
+        dest="no_crm114",
+        action="store_true",
+        help="PCA path: disable the CRM-114 FALSE-vs-MISLEADING stage-2 discriminator (open-book only).",
     )
     pub_parser.add_argument(
         "--claims-per-request",
