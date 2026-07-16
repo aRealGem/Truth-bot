@@ -43,7 +43,8 @@ def parse_verdict(raw: dict) -> dict:
         c = float(c)
     except (TypeError, ValueError):
         c = None
-    return {"verdict": v, "confidence": c, "citations": list(raw.get("citations", []))}
+    return {"verdict": v, "confidence": c, "citations": list(raw.get("citations", [])),
+            "reasoning": (raw.get("reasoning") or "").strip()}
 
 
 def normalize(item: ItemResult, *, closed_book: bool = True) -> dict:
@@ -59,6 +60,7 @@ def normalize(item: ItemResult, *, closed_book: bool = True) -> dict:
         "verdict": None,
         "confidence": None,
         "citations": [],
+        "reasoning": "",
         "votes": ag.get("votes", {}),
         "split": bool(ag.get("split", False)),
         "escalated": bool(ag.get("escalated", False)),
@@ -75,7 +77,8 @@ def normalize(item: ItemResult, *, closed_book: bool = True) -> dict:
                 f"closed-book verdict for {item.item_id} carries citations "
                 f"{citations!r} — I4 violation")
         row.update(status="resolved", verdict=v,
-                   confidence=item.value.get("confidence"), citations=citations)
+                   confidence=item.value.get("confidence"), citations=citations,
+                   reasoning=(item.value.get("reasoning") or "").strip())
         return row
 
     # DISAGREEMENT_FLAGGED — distinguish "no seat produced a label" from a material tie.
@@ -166,4 +169,5 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
 
     if open_book:
         notes["evidence_counts"] = {sid: len(p.items) for sid, p in packs.items()}
+        notes["packs"] = packs   # sid → EvidencePack, for the publish bridge (in-process)
     return rows, manifest, notes

@@ -25,7 +25,10 @@ def _resolved(sid, verdict, citations=(), conf=0.8, **ag):
 
 def test_parse_verdict_coerces_and_casts():
     assert adjudicator.parse_verdict({"verdict": "true", "confidence": "0.9"}) == {
-        "verdict": "TRUE", "confidence": 0.9, "citations": []}
+        "verdict": "TRUE", "confidence": 0.9, "citations": [], "reasoning": ""}
+    # reasoning is carried through (for the publish bridge's explanation)
+    assert adjudicator.parse_verdict({"verdict": "FALSE", "reasoning": " off by 3x "})[
+        "reasoning"] == "off by 3x"
     # unrecognized label is a fail-SAFE UNVERIFIABLE vote, not a raise
     assert adjudicator.parse_verdict({"verdict": "kinda-true"})["verdict"] == "UNVERIFIABLE"
     assert adjudicator.parse_verdict({"confidence": None})["confidence"] is None
@@ -39,6 +42,14 @@ def test_normalize_resolved():
     assert row["status"] == "resolved" and row["verdict"] == "TRUE"
     assert row["citations"] == [] and row["confidence"] == 0.8
     assert row["sid"] == "c1"
+    assert row["reasoning"] == ""            # empty when the seat gave none
+
+
+def test_normalize_carries_reasoning():
+    item = ItemResult("c1", StrategyResultKind.RESOLVED,
+                      {"verdict": "FALSE", "citations": [], "reasoning": "contradicted by BLS"},
+                      {"votes": {"FALSE": 3}})
+    assert adjudicator.normalize(item)["reasoning"] == "contradicted by BLS"
 
 
 def test_normalize_bad_verdict_fails_closed():
