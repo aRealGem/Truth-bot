@@ -1,5 +1,53 @@
 [
   {
+    "id": "90050c1b-5fc0-4b57-b1ba-d615b7222082",
+    "date": "2022-03-01",
+    "speaker": "Joe Biden",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 113,
+    "verdict_distribution": {
+      "True": 96,
+      "Mostly True": 0,
+      "Misleading": 7,
+      "Exaggerated": 0,
+      "False": 0,
+      "Unverifiable": 10,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_lenient": {
+      "True": 96,
+      "Truthy": 0,
+      "Unverifiable": 8,
+      "Falsey": 7,
+      "False": 0,
+      "Models split": 2
+    },
+    "verdict_distribution_strict": {
+      "True": 96,
+      "Truthy": 0,
+      "Unverifiable": 8,
+      "Falsey": 7,
+      "False": 0,
+      "Models split": 2
+    },
+    "model_agreement_rate": 0.876,
+    "url": "reports/2022-03-01-joe-biden-90050c.html",
+    "tier_counts": {
+      "gov": 53,
+      "wire": 11,
+      "news": 53,
+      "fc": 72,
+      "other": 126
+    },
+    "source_of_claims": "Joe Biden",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
     "id": "c460cf3a-024a-4e1f-9a1c-74b844bca0e8",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
