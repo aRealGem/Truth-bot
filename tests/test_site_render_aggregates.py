@@ -62,8 +62,14 @@ def _make_bundle(
     coarse_lenient: str = "",
     coarse_strict: str = "",
     model_labels: list[VerdictLabel] | None = None,
+    consensus_verdict: str | None = None,
 ) -> VerdictBundle:
-    """Build a minimal VerdictBundle suitable for renderer assertions."""
+    """Build a minimal VerdictBundle suitable for renderer assertions.
+
+    ``consensus_verdict`` overrides the display verdict text (defaults to the fine
+    label's value); pass "Models split" to model a PCA split claim, which carries
+    ``consensus_label=UNVERIFIABLE`` but its own headline bucket.
+    """
     if model_labels is None:
         # A 4-model panel that's unanimous on the fine label keeps the
         # renderer focused on aggregates rather than dissent paths.
@@ -91,7 +97,7 @@ def _make_bundle(
         claim_id=claim.id,
         model_verdicts=mvs,
         consensus_label=fine_label,
-        consensus_verdict=fine_label.value,
+        consensus_verdict=fine_label.value if consensus_verdict is None else consensus_verdict,
         confidence=Confidence.HIGH,
         agreement=True,
         consensus_strength="strong",
@@ -124,6 +130,24 @@ def _make_site_report(bundles: list[VerdictBundle]) -> SiteReport:
         event="Test Event",
         channel="",
     )
+
+
+# ── Fine distribution: split claims get their own bucket ──────────────────────
+
+
+def test_verdict_distribution_gives_models_split_its_own_bucket() -> None:
+    # A genuine Unverifiable and a PCA "Models split" both carry
+    # consensus_label=UNVERIFIABLE. They must NOT be merged: the split gets its
+    # own headline bucket, matching the coarse distributions.
+    bundles = [
+        _make_bundle(VerdictLabel.UNVERIFIABLE),
+        _make_bundle(VerdictLabel.UNVERIFIABLE, consensus_verdict="Models split"),
+        _make_bundle(VerdictLabel.TRUE),
+    ]
+    dist = _make_site_report(bundles).verdict_distribution
+    assert dist["Unverifiable"] == 1
+    assert dist["Models split"] == 1
+    assert dist["True"] == 1
 
 
 # ── Projection mapping invariants ─────────────────────────────────────────────

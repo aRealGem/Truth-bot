@@ -358,6 +358,31 @@ class ModelVerdict(BaseModel):
     )
 
 
+class VerdictProvenance(BaseModel):
+    """Pipeline provenance for a PCA (single reconciled-judge) verdict.
+
+    The PCA lane collapses a rich adjudication row to one reconciled ``ModelVerdict``
+    for display; this record preserves the structured evidence that collapse would
+    otherwise discard, so per-claim agreement and the Layer A→panel→CRM-114 chain are
+    reconstructable from the published bundle (see docs/pca-provenance-single-judge.md).
+
+    All fields default empty so bundles that predate this layer — and legacy
+    multi-adapter bundles that never had a PCA row — deserialize cleanly; the renderer
+    treats an empty ``panel_votes`` as "not PCA mode" and falls back to the classic
+    per-model strip.
+    """
+    layer_a_label: str = Field(default="", description="Check-worthy routing label, e.g. 'check-worthy'")
+    layer_a_source: str = Field(default="", description="Which Layer A stage routed the claim: 'A1' | 'A2'")
+    panel_votes: dict[str, int] = Field(
+        default_factory=dict,
+        description="Per-label seat tally from the PCA panel, e.g. {'True': 2, 'Misleading': 1}",
+    )
+    panel_split: bool = Field(default=False, description="Panel reached no plurality (genuine split)")
+    panel_escalated: bool = Field(default=False, description="Escalated to the arbiter seat")
+    crm114_stage1: str = Field(default="", description="CRM-114 stage-1 label (pre-override)")
+    crm114_final: str = Field(default="", description="CRM-114 final label (post stage-2 override)")
+
+
 class ConsensusVerdict(BaseModel):
     """Aggregated verdict across all active adapters."""
     claim_id: str
@@ -405,6 +430,11 @@ class ConsensusVerdict(BaseModel):
         default="none",
         description="strong | weak | none | single — strength on the Strict projected axis",
     )
+
+    # ── PCA pipeline provenance ───────────────────────────────────────────────
+    # Populated by the bridge for PCA (reconciled-judge) bundles; empty on legacy
+    # multi-adapter bundles. See VerdictProvenance.
+    provenance: VerdictProvenance = Field(default_factory=VerdictProvenance)
 
     @property
     def dissenting_models(self) -> list[str]:

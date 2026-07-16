@@ -60,6 +60,7 @@ from truthbot.models import (
     ModelVerdict,
     VerdictBundle,
     VerdictLabel,
+    VerdictProvenance,
 )
 from truthbot.verdict.evidence_pack import EvidencePack
 from truthbot.verify.engine import LENIENT_PROJECTION, STRICT_PROJECTION
@@ -179,10 +180,50 @@ def _build_claim(sid: str, claim_src: Optional[dict]) -> Claim:
     )
 
 
+def _normalize_votes(votes: Optional[dict]) -> dict[str, int]:
+    """PCA seat tally with keys normalized to ``VerdictLabel`` display values.
+
+    Vote keys arrive as the 4-label uppercase contract (``TRUE``/``FALSE``/…); map
+    them to the enum's display casing (``True``/``False``/…) so the tally reads the
+    same as the verdict pills. Unmappable keys pass through verbatim rather than being
+    dropped — a stray key is a display curiosity, not worth losing a vote over."""
+    out: dict[str, int] = {}
+    for k, v in (votes or {}).items():
+        lbl = _LABEL_MAP.get(str(k).strip().upper())
+        key = lbl.value if lbl is not None else str(k)
+        try:
+            out[key] = out.get(key, 0) + int(v)
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance:
+    """Capture the pipeline provenance the reconciled-judge collapse would discard.
+
+    Everything here already exists on the adjudication row (``votes``/``split``/
+    ``escalated``/``crm114``) or on the originating claim dict (``layer_a``, threaded
+    by ``run_pca_verify`` from the check-worthy queue). We record it structurally so
+    per-claim agreement and the Layer A→panel→CRM-114 chain survive into the bundle."""
+    src = claim_src or {}
+    la = src.get("layer_a") or {}
+    crm = row.get("crm114") or {}
+    return VerdictProvenance(
+        layer_a_label=str(la.get("label") or ""),
+        layer_a_source=str(la.get("source") or ""),
+        panel_votes=_normalize_votes(row.get("votes")),
+        panel_split=bool(row.get("split", False)),
+        panel_escalated=bool(row.get("escalated", False)),
+        crm114_stage1=str(crm.get("stage1") or ""),
+        crm114_final=str(crm.get("final") or ""),
+    )
+
+
 def _consensus_and_panel(
-    sid: str, row: dict, cited_urls: list[str],
+    sid: str, row: dict, cited_urls: list[str], claim_src: Optional[dict] = None,
 ) -> tuple[ConsensusVerdict, list[ModelVerdict]]:
     """Build the ConsensusVerdict + the single reconciled ModelVerdict for a row."""
+    provenance = _build_provenance(row, claim_src)
     status = row.get("status")
     votes = row.get("votes") or {}
     strength = strength_from_votes(votes)
@@ -229,6 +270,7 @@ def _consensus_and_panel(
             coarse_lenient_strength=strength,
             coarse_strict_label=coarse_strict,
             coarse_strict_strength=strength,
+            provenance=provenance,
         )
         return consensus, [mv]
 
@@ -254,6 +296,7 @@ def _consensus_and_panel(
         coarse_lenient_strength="none",
         coarse_strict_label="Models split",
         coarse_strict_strength="none",
+        provenance=provenance,
     )
     return consensus, []
 
@@ -268,7 +311,7 @@ def row_to_bundle(
     sid = row["sid"]
     claim = _build_claim(sid, claim_src)
     cited = _cited_urls(row, pack)
-    consensus, model_verdicts = _consensus_and_panel(sid, row, cited)
+    consensus, model_verdicts = _consensus_and_panel(sid, row, cited, claim_src)
 
     return VerdictBundle(
         claim=claim,

@@ -207,3 +207,52 @@ def test_out_of_contract_resolved_raises():
     row = _row("x:0", verdict="MOSTLY_TRUE", confidence=0.9, votes={"MOSTLY_TRUE": 3})
     with pytest.raises(ValueError):
         bridge.bridge([row], [_claim("x:0")])
+
+
+# ── provenance capture (reporting + replay) ─────────────────────────────────
+
+def test_provenance_captured_on_resolved_row():
+    row = _row("p:0", verdict="FALSE", confidence=0.8,
+               votes={"MISLEADING": 2, "FALSE": 1}, escalated=True,
+               crm114={"stage1": "MISLEADING", "final": "FALSE"})
+    out = bridge.bridge(
+        [row],
+        [_claim("p:0", layer_a={"label": "check-worthy", "source": "A2"})],
+    )
+    prov = out.bundles[0].consensus.provenance
+    # votes normalized from the 4-label contract to VerdictLabel display casing
+    assert prov.panel_votes == {"Misleading": 2, "False": 1}
+    assert prov.panel_escalated is True
+    assert prov.panel_split is False
+    assert prov.layer_a_label == "check-worthy"
+    assert prov.layer_a_source == "A2"
+    assert prov.crm114_stage1 == "MISLEADING"
+    assert prov.crm114_final == "FALSE"
+
+
+def test_provenance_captured_on_split_row():
+    # The split claims render with zero model cards — provenance is the ONLY
+    # place their disagreeing tally survives.
+    row = _row("p:1", status="disagreement", split=True,
+               votes={"TRUE": 1, "FALSE": 1})
+    out = bridge.bridge(
+        [row],
+        [_claim("p:1", layer_a={"label": "check-worthy", "source": "A1"})],
+    )
+    b = out.bundles[0]
+    assert b.model_verdicts == []            # no cards, as before
+    prov = b.consensus.provenance
+    assert prov.panel_split is True
+    assert prov.panel_votes == {"True": 1, "False": 1}
+    assert prov.layer_a_source == "A1"
+
+
+def test_provenance_defaults_empty_without_layer_a_or_votes():
+    # Legacy-style row with no votes/layer_a still bridges; provenance is empty,
+    # which the renderer treats as "not PCA mode".
+    row = _row("p:2", verdict="TRUE", confidence=0.9)
+    out = bridge.bridge([row], [_claim("p:2")])
+    prov = out.bundles[0].consensus.provenance
+    assert prov.panel_votes == {}
+    assert prov.layer_a_label == ""
+    assert prov.crm114_final == ""

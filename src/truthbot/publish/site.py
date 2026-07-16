@@ -211,7 +211,14 @@ class SiteReport:
     def verdict_distribution(self) -> dict[str, int]:
         dist: dict[str, int] = {v: 0 for v in VERDICT_CSS}
         for b in self.checkable_bundles:
-            label = b.consensus.consensus_label.value
+            # PCA split claims carry consensus_label=UNVERIFIABLE (never silently
+            # dropped) but a "Models split" verdict. Count them in their own bucket
+            # rather than folding them into Unverifiable — the coarse distributions
+            # already keep the two distinct, and the headline should match.
+            if b.consensus.consensus_verdict == "Models split":
+                label = "Models split"
+            else:
+                label = b.consensus.consensus_label.value
             dist[label] = dist.get(label, 0) + 1
         return dist
 
@@ -1826,6 +1833,62 @@ def _page_truthy(
 # ── Claim + report building blocks ───────────────────────────────────────────
 
 
+def _is_pca_bundle(bundle: VerdictBundle) -> bool:
+    """A PCA (single reconciled-judge) bundle: at most one card AND a recorded
+    panel vote tally. Legacy multi-adapter bundles have >1 card and empty
+    provenance, so they take the classic per-model-agreement path unchanged."""
+    prov = getattr(bundle.consensus, "provenance", None)
+    return bool(prov and prov.panel_votes) and len(bundle.model_verdicts) <= 1
+
+
+def _pca_vote_tally(votes: dict) -> str:
+    """``{'True': 2, 'Misleading': 1}`` → ``'True ×2, Misleading ×1'`` (count desc)."""
+    items = sorted(votes.items(), key=lambda kv: (-kv[1], kv[0]))
+    return ", ".join(f"{lbl} ×{n}" for lbl, n in items)
+
+
+def _pca_agreement_summary(bundle: VerdictBundle) -> str:
+    """Reconciled-judge replacement for the "N of M agree" tally.
+
+    Speaks panel-vote vocabulary honestly instead of the vacuous "1 of 1 agree":
+    a resolved claim reports how many seats backed the winning label; a split
+    claim (which renders zero cards) reports the tie instead of a blank strip."""
+    prov = bundle.consensus.provenance
+    votes = prov.panel_votes
+    total = sum(votes.values())
+    if prov.panel_split or bundle.consensus.consensus_verdict == "Models split":
+        return f'Panel split &mdash; {_esc(_pca_vote_tally(votes))}'
+    top = max(votes.values()) if votes else 0
+    seats = "seat" if total == 1 else "seats"
+    return f'<span class="num">{top} of {total}</span> {seats} agree'
+
+
+def _pca_provenance_strip(bundle: VerdictBundle) -> str:
+    """The Layer A → PCA panel → CRM-114 chain, rendered as a compact strip.
+
+    Surfaces provenance that used to live only as buried reasoning text (CRM-114)
+    or nowhere at all (Layer A label, per-seat tally)."""
+    prov = bundle.consensus.provenance
+    parts: list[str] = []
+    if prov.layer_a_label:
+        src = f" ({prov.layer_a_source})" if prov.layer_a_source else ""
+        parts.append(f"Layer A: {prov.layer_a_label}{src}")
+    if prov.panel_votes:
+        parts.append(f"PCA panel: {_pca_vote_tally(prov.panel_votes)}")
+    if prov.crm114_final:
+        stage1 = prov.crm114_stage1 or "?"
+        parts.append(f"CRM-114: {stage1}→{prov.crm114_final}")
+    if not parts:
+        return ""
+    chain = _esc(" → ".join(parts))
+    return (
+        '<div class="pca-provenance" '
+        'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
+        'tally, and any CRM-114 stage-2 override.">'
+        f'{chain}</div>'
+    )
+
+
 def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", standalone: bool = False) -> str:
     claim = bundle.claim
     consensus = bundle.consensus
@@ -1965,6 +2028,40 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     dissenting = total_models - agreeing
     dissent_note = f" · {dissenting} dissent{'s' if dissenting > 1 else ''}" if dissenting else ""
 
+    # PCA (reconciled-judge) bundles speak panel-vote vocabulary + a provenance
+    # strip instead of the legacy "N of M agree" per-adapter tally; a split claim
+    # (zero cards) shows its tie rather than a blank strip. Legacy multi-adapter
+    # bundles are untouched.
+    if _is_pca_bundle(bundle):
+        grid_html = (
+            f'<div class="model-grid">{"".join(model_cards)}</div>'
+            if model_cards
+            else '<div class="model-grid model-grid-empty">'
+                 '<div class="model no-response">'
+                 '<div class="model-verdict" style="color:var(--ink-faint)">'
+                 'No single verdict — panel did not converge</div></div></div>'
+        )
+        models_block = (
+            '<div class="models">'
+            '  <div class="models-head">'
+            '    <span class="models-label">Reconciled judgment</span>'
+            f'    <span class="models-agreement">{_pca_agreement_summary(bundle)}</span>'
+            '  </div>'
+            f'  {_pca_provenance_strip(bundle)}'
+            f'  {grid_html}'
+            '</div>'
+        )
+    else:
+        models_block = (
+            '<div class="models">'
+            '  <div class="models-head">'
+            '    <span class="models-label">Model consensus</span>'
+            f'    <span class="models-agreement"><span class="num">{agreeing} of {total_models}</span> agree{_esc(dissent_note)}</span>'
+            '  </div>'
+            f'  <div class="model-grid">{"".join(model_cards)}</div>'
+            '</div>'
+        )
+
     unverified_block = _model_cited_unverified_html(unverified_urls)
     if all_urls:
         evidence_inner = (
@@ -2020,13 +2117,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         f'  <blockquote class="claim-quote">"{_esc(claim.text)}"</blockquote>'
         f'  {context_html}'
         f'  {caveat_html}'
-        '  <div class="models">'
-        '    <div class="models-head">'
-        '      <span class="models-label">Model consensus</span>'
-        f'      <span class="models-agreement"><span class="num">{agreeing} of {total_models}</span> agree{_esc(dissent_note)}</span>'
-        '    </div>'
-        f'    <div class="model-grid">{"".join(model_cards)}</div>'
-        '  </div>'
+        f'  {models_block}'
         f'  {evidence_html}'
         '  <div class="claim-foot">'
         f'    <a href="#claim-{idx}" class="permalink">claim-{idx}</a>'
@@ -3284,6 +3375,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+.pca-provenance {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+  word-break: break-word;
 }
 .model-grid {
   display: grid;
@@ -6208,6 +6307,18 @@ class SitePublisher:
                  "confidence": mv.confidence.value}
                 for mv in bundle.model_verdicts
             ],
+            # PCA pipeline provenance (empty on legacy multi-adapter bundles). Lets
+            # downstream consumers reconstruct per-claim panel agreement — the tally
+            # the reconciled-judge card collapses away. See VerdictProvenance.
+            "provenance": {
+                "layer_a_label":   bundle.consensus.provenance.layer_a_label,
+                "layer_a_source":  bundle.consensus.provenance.layer_a_source,
+                "panel_votes":     dict(bundle.consensus.provenance.panel_votes),
+                "panel_split":     bundle.consensus.provenance.panel_split,
+                "panel_escalated": bundle.consensus.provenance.panel_escalated,
+                "crm114_stage1":   bundle.consensus.provenance.crm114_stage1,
+                "crm114_final":    bundle.consensus.provenance.crm114_final,
+            },
             "url": f"claims/{bundle.claim.id}.html",
         }
 

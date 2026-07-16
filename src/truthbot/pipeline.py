@@ -915,6 +915,48 @@ def _persist_extracted_claims(
         return Path(metrics_dir) / "extractions" / f"{run_id}.jsonl"
 
 
+def _persist_pca_run(
+    run_id: str,
+    result,
+    *,
+    meta: dict,
+    metrics_dir: str | Path = "metrics",
+) -> Path:
+    """Write a PCA run's replay artifact to ``metrics/pca_runs/<run_id>.json``.
+
+    Holds ``{meta, claims, rows, characterization}`` — the raw adjudication rows
+    plus the claim dicts (with Layer A provenance) that were fed to the bridge. This
+    is the minimum needed to re-bridge and re-publish OFFLINE, with no LLM spend: the
+    live PCA run is ~1hr of proxy calls, so a persisted row set is the difference
+    between a free re-render and a full re-run (mirrors ``_persist_extracted_claims``).
+
+    Best-effort: verification has already succeeded, so a persistence failure logs a
+    warning rather than aborting the publish. Returns the (intended) path.
+    """
+    import json as _json
+
+    pca_runs_dir = Path(metrics_dir) / "pca_runs"
+    path = pca_runs_dir / f"{run_id}.json"
+    try:
+        pca_runs_dir.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "run_id": run_id,
+            "meta": meta,
+            "claims": list(getattr(result, "claims", []) or []),
+            "rows": list(getattr(result, "rows", []) or []),
+            "characterization": list(getattr(result, "characterization", []) or []),
+        }
+        path.write_text(_json.dumps(payload, default=str, ensure_ascii=False), encoding="utf-8")
+        logger.info(
+            "Persisted PCA replay artifact (%d rows) to %s",
+            len(payload["rows"]),
+            path,
+        )
+    except Exception as exc:
+        logger.warning("Failed to persist PCA replay artifact: %s", exc)
+    return path
+
+
 def _preflight_key_sanity() -> None:
     """Validate any set API keys before any spend.
 
@@ -1093,6 +1135,27 @@ def _run_publish_pca(args) -> None:
     )
     print(f"Layer A: {result.n_check_worthy}/{result.n_sentences} check-worthy; "
           f"adjudicated in {result.n_chunks} chunk(s); spend ${result.cost_usd:.4f}")
+
+    # Persist the raw rows + claims BEFORE publishing so a re-render never needs
+    # another live run. run_id ties the artifact to this speech/run.
+    import uuid
+    from truthbot.config import settings as _settings
+    run_id = str(uuid.uuid4())
+    _persist_pca_run(
+        run_id,
+        result,
+        meta={
+            "speaker": args.speaker,
+            "date": args.date,
+            "speech_id": speech_id,
+            "venue": getattr(args, "venue", "") or "",
+            "roster": getattr(args, "roster", "dev") or "dev",
+            "n_sentences": result.n_sentences,
+            "n_check_worthy": result.n_check_worthy,
+            "cost_usd": result.cost_usd,
+        },
+        metrics_dir=_settings.metrics_dir,
+    )
 
     _publish_bundles(args, result.bundles, date, source_url)
 
