@@ -116,14 +116,17 @@ Emit `panel_votes`, `split`, `layer_a_label`, `crm114_*` alongside `model_verdic
 per-claim agreement is reconstructable from published data (the thing that was unrecoverable on
 2026-07-16).
 
-### 5. Publisher — reconciled-judge render mode (`site.py`)
+### 5. Publisher — reconciled-judge render mode (`site.py`) — **DONE**
 
-Detect PCA mode (`len(model_verdicts) <= 1 and provenance.panel_votes`). In that mode:
-- Replace `"N of M agree"` with a panel-vote line: **"Panel: 2 of 3 seats → True"**, or
-  **"Panel split (1–1)"** for split claims (currently blank).
-- Add a provenance strip under the pill:
-  **`Layer A: check-worthy (A2) → PCA panel: True ×2, Misleading ×1 → CRM-114: MISLEADING→FALSE`**.
-- Leave the legacy N-of-M path unchanged when `len(model_verdicts) >= 2`.
+Detect PCA mode (`_is_pca_bundle`: `len(model_verdicts) <= 1 and provenance.panel_votes`).
+In that mode:
+- Replaced `"N of M agree"` with a panel-vote line: **"2 of 3 seats agree"** for resolved,
+  **"Panel split — False ×1, True ×1"** for splits (previously blank).
+- Added a provenance strip under the header:
+  **`Layer A: check-worthy (A2) → PCA panel: Misleading ×2, False ×1 → CRM-114: MISLEADING→FALSE`**.
+- Split claims (zero cards) now render a "No single verdict — panel did not converge"
+  placeholder instead of an empty grid.
+- Legacy N-of-M path unchanged when `len(model_verdicts) >= 2` (empty provenance).
 
 ### 6. Adjacent bug — report distribution folds "Models split" into "Unverifiable"
 
