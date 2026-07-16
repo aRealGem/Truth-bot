@@ -37,6 +37,19 @@ def test_segment_protects_abbreviations():
     assert recs[0]["text"] == "The U.S. economy is strong."
 
 
+def test_segment_strips_hash_header_lines():
+    # Miller-Center-format transcripts carry `#` title/source header lines above the
+    # body; they must not become sentences.
+    text = ("# State of the Union — Biden 2022\n"
+            "# Source: https://millercenter.org/x\n\n"
+            "The deficit fell by half. Growth was strong.")
+    recs = segment.segment(text, "biden_2022")
+    texts = [r["text"] for r in recs]
+    assert not any(t.startswith("#") for t in texts)
+    assert not any("millercenter" in t for t in texts)
+    assert texts == ["The deficit fell by half.", "Growth was strong."]
+
+
 def test_segment_empty_text():
     assert segment.segment("", "s_2026") == []
     assert segment.split_sentences("   ") == []

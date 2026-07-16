@@ -1066,9 +1066,12 @@ def _run_publish_pca(args) -> None:
               "(no evidence, CRM-114 disabled).")
 
     crm114 = not bool(getattr(args, "no_crm114", False))
-    hm = proxy_lane.build_hydramind(response_parser=adjudicator.parse_verdict)
+    # Two engines: Layer A classify needs the raw/identity parser (parse_a2 reads the
+    # {"label", …} JSON itself); the verdict panel + CRM-114 need parse_verdict.
+    hm_classify = proxy_lane.build_hydramind()
+    hm_verdict = proxy_lane.build_hydramind(response_parser=adjudicator.parse_verdict)
     layer_a_fn, adjudicate_fn = publish_pipeline.build_pca_lane_fns(
-        hm, provider, crm114=crm114,
+        hm_classify, hm_verdict, provider, crm114=crm114,
         roster=getattr(args, "roster", "dev") or "dev",
         a2_tier=getattr(args, "a2_tier", "cheap") or "cheap",
     )
@@ -1104,8 +1107,14 @@ def _run_publish(args) -> None:
     from truthbot.verify.engine import VerificationEngine
     from truthbot.publish.site import SitePublisher, SiteReport
 
-    # v2 (HydraMind PCA) verify path — behind --engine pca; legacy engine is default.
-    if getattr(args, "engine", "legacy") == "pca":
+    # v2 (HydraMind PCA) verify path is the default; --engine legacy selects the
+    # per-provider VerificationEngine. Batch mode is legacy-only, so a pca+batch
+    # request falls back to the legacy batch path rather than silently ignoring --mode.
+    engine = getattr(args, "engine", "pca")
+    if engine == "pca" and getattr(args, "mode", "live") == "batch":
+        print("NOTE: --mode batch is legacy-only; using --engine legacy for this run.")
+        engine = "legacy"
+    if engine == "pca":
         _run_publish_pca(args)
         return
 
@@ -1442,12 +1451,12 @@ def main() -> None:
     pub_parser.add_argument(
         "--engine",
         choices=("legacy", "pca"),
-        default="legacy",
+        default="pca",
         help=(
-            "Verification engine. 'legacy' (default) = the per-provider "
-            "VerificationEngine. 'pca' = the v2 HydraMind stack (segment → Layer A "
-            "check-worthy → open-book PCA + CRM-114 → bridge), over the truth-bot "
-            "proxy lane. --engine pca ignores --mode/--triage/--claims-per-request."
+            "Verification engine. 'pca' (default) = the v2 HydraMind stack (segment → "
+            "Layer A check-worthy → open-book PCA + CRM-114 → bridge), over the "
+            "truth-bot proxy lane; ignores --mode/--triage/--claims-per-request. "
+            "'legacy' = the per-provider VerificationEngine (required for --mode batch)."
         ),
     )
     pub_parser.add_argument(

@@ -26,6 +26,37 @@ def test_a2_parse_contract():
         classifier.parse_a2({"label": "bogus"})
 
 
+def test_classify_tolerant_mode_defaults_bad_label():
+    # A fake HydraMind whose seat emits one out-of-contract label ("attribution").
+    class _R:
+        def __init__(self, item_id, value):
+            self.item_id, self.value = item_id, value
+
+    class _Result:
+        def __init__(self, items):
+            self.items = items
+
+    class _FakeHM:
+        def __init__(self, values):
+            self._values = values
+
+        def run(self, task, items, strat, tune=None):
+            return _Result([_R(it.item_id, self._values[i]) for i, it in enumerate(items)]), object()
+
+    sents = [{"sid": "s:0", "text": "The deficit fell.", "context": ""},
+             {"sid": "s:1", "text": "Some line.", "context": ""}]
+    hm = _FakeHM([{"label": "check-worthy", "claim_type": "statistical", "confidence": 0.9},
+                 {"label": "attribution"}])   # second seat hallucinates a label
+
+    # default (raise) preserves fail-closed
+    with pytest.raises(ValueError):
+        classifier.classify(hm, sents)
+    # tolerant mode: bad label → safe "unimportant", run continues
+    out, _ = classifier.classify(hm, sents, on_parse_error="default")
+    assert [r["label"] for r in out] == ["check-worthy", "unimportant"]
+    assert out[1]["sid"] == "s:1"
+
+
 def test_a2_template_is_speaker_blind():
     # importing classifier already lint-checked A2_SYSTEM (I3); assert no speaker word leaks
     assert "speaker" not in classifier.A2_SYSTEM.lower().split("who the speaker is")[0][:200] or True

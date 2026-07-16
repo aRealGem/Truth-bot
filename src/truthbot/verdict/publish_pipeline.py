@@ -123,34 +123,57 @@ def run_pca_verify(
 
 
 def build_pca_lane_fns(
-    hm,
+    hm_classify,
+    hm_verdict,
     provider,
     *,
     crm114: bool = True,
     roster: str = "dev",
     a2_tier: str = "cheap",
     disc_tier: str = "standard",
+    layer_a_batch: int = 25,
+    layer_a_pause_s: float = 1.0,
+    sleep_fn=None,
 ) -> tuple[LayerAFn, AdjudicateFn]:
-    """Bind the live HydraMind lane into the ``(layer_a_fn, adjudicate_fn)`` pair
+    """Bind the live HydraMind lanes into the ``(layer_a_fn, adjudicate_fn)`` pair
     ``run_pca_verify`` expects.
 
-    ``layer_a_fn`` runs the A2 classifier; ``adjudicate_fn`` runs the PCA panel
-    (open-book + CRM-114 stage-2 when ``provider`` is set — the discriminator is
-    evidence-only, so it's forced off closed-book) and folds the run manifest's
+    Takes TWO engines because the lanes parse responses differently (see
+    ``proxy_lane.build_hydramind``): ``hm_classify`` (identity parser) drives Layer A's
+    ``parse_a2``; ``hm_verdict`` (``parse_verdict`` parser) drives the PCA panel + CRM-114.
+
+    ``layer_a_fn`` runs the A2 classifier in paced batches; ``adjudicate_fn`` runs the
+    PCA panel (open-book + CRM-114 stage-2 when ``provider`` is set — the discriminator
+    is evidence-only, so it's forced off closed-book) and folds the run manifest's
     cost into ``notes["cost_usd"]`` so the orchestrator can total spend. Imports
-    are local so offline importers of this module don't pull the classifier."""
+    are local so offline importers of this module don't pull the classifier.
+
+    Layer A over a full speech is hundreds of A2 calls; ``classifier.classify`` dispatches
+    a batch as one unpaced burst. We split it into ``layer_a_batch``-sized calls with a
+    ``layer_a_pause_s`` gap between them to bound the burst on a shared proxy."""
+    import time
+
     from truthbot.checkworthy import classifier
     from truthbot.verdict import adjudicator
 
     two_stage = bool(crm114) and provider is not None
+    _sleep = sleep_fn or time.sleep
 
     def layer_a_fn(sentences: list[dict]) -> list[dict]:
-        rows, _manifest = classifier.classify(hm, sentences, tier=a2_tier)
+        batch = max(1, int(layer_a_batch))
+        rows: list[dict] = []
+        n = len(sentences)
+        for i in range(0, n, batch):
+            batch_rows, _manifest = classifier.classify(
+                hm_classify, sentences[i:i + batch], tier=a2_tier, on_parse_error="default")
+            rows.extend(batch_rows)
+            if layer_a_pause_s and i + batch < n:
+                _sleep(layer_a_pause_s)
         return rows
 
     def adjudicate_fn(chunk: list[dict]) -> tuple[list[dict], dict]:
         rows, manifest, notes = adjudicator.adjudicate(
-            hm, chunk, roster=roster, evidence_provider=provider,
+            hm_verdict, chunk, roster=roster, evidence_provider=provider,
             two_stage=two_stage, disc_tier=disc_tier)
         notes = dict(notes or {})
         try:
