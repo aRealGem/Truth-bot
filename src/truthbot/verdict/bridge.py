@@ -1,0 +1,313 @@
+"""Layer C → publish bridge (PR-B).
+
+The HydraMind PCA verdict stack (Layer B/C) speaks in *adjudicate rows* — the
+verdict-contract dicts ``adjudicator.normalize`` emits — plus an in-process
+``notes["packs"]`` map of ``sid → EvidencePack``. The publisher
+(``publish/site.py``) speaks in ``VerdictBundle`` objects (the output unit of the
+legacy ``VerificationEngine``). This module is the pure, **offline** adapter
+between the two: rows + packs + the originating claims → ``VerdictBundle`` list,
+with the cited evidence surfaced alongside. No network, no LLM, no spend — it is
+fully unit-testable and carries no live dependency.
+
+Design decisions (why this shape and not another):
+
+  * **PCA is one reconciled judge.** The panel is proposer→critic→arbiter
+    *internally*; a row is its single reconciled verdict, not four independent
+    provider verdicts. So each bundle gets ONE ``ModelVerdict``
+    (``adapter_name = "hydramind-pca"``) carrying the resolved label, the panel's
+    one-clause reasoning, and the URLs it cited. We do NOT fabricate one model
+    card per seat-vote — the panel's internal agreement is a scalar
+    (``consensus_strength``), which is exactly how the row exposes it (``votes``).
+
+  * **The resolved label is authoritative.** ``consensus_label`` and the coarse
+    projection come from the row's ``verdict`` (post-CRM-114 stage-2 override),
+    NOT from the raw ``votes`` plurality. ``votes`` drives only
+    ``consensus_strength``. This keeps the published top-line identical to the
+    verdict the pipeline actually resolved, even when CRM-114 flipped the
+    stage-1 plurality (FALSE↔MISLEADING).
+
+  * **Coarse projection reuses the canonical tables.** We map the resolved label
+    through ``engine.LENIENT_PROJECTION`` / ``STRICT_PROJECTION`` (the Truthy
+    5-bucket scale). The PCA 4-label contract (TRUE/FALSE/MISLEADING/
+    UNVERIFIABLE) maps 1:1 onto distinct coarse buckets — MOSTLY_TRUE /
+    EXAGGERATED are unused, so no two labels collide into one bucket and the
+    projection is deterministic from the label. That means the coarse strength
+    equals the fine strength (no hidden-agreement collapse to reconcile), so we
+    reuse the single ``consensus_strength`` for both axes.
+
+  * **Non-resolved rows are kept, not dropped.** A ``disagreement`` / ``no_label``
+    / ``needs_verdict`` row becomes an UNVERIFIABLE bundle with an explicit
+    "Models split" / "No verdict" consensus. Silently dropping claims from a
+    published report is a correctness bug, not a simplification.
+
+Mapping summary (plan PR-B):
+  4-label ``verdict``     → ``VerdictLabel``      (direct; MOSTLY_TRUE/EXAGGERATED unused)
+  float ``confidence``    → ``Confidence``        (>=0.85 High, >=0.55 Medium, else Low)
+  ``reasoning``           → ``ConsensusVerdict.explanation`` / ``ModelVerdict.explanation``
+  ``votes``               → ``consensus_strength``
+  cited pack items        → ``ModelVerdict.web_sources`` (+ full pack → ``Evidence``)
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Optional
+
+from truthbot.models import (
+    Claim,
+    Confidence,
+    ConsensusVerdict,
+    Evidence,
+    ModelVerdict,
+    VerdictBundle,
+    VerdictLabel,
+)
+from truthbot.verdict.evidence_pack import EvidencePack
+from truthbot.verify.engine import LENIENT_PROJECTION, STRICT_PROJECTION
+
+# PCA closed-book/open-book 4-label contract → the 6-bucket VerdictLabel enum.
+# MOSTLY_TRUE and EXAGGERATED are never produced by the PCA panel, so they have
+# no source label here (Layer C intentionally judges on 4 buckets).
+_LABEL_MAP: dict[str, VerdictLabel] = {
+    "TRUE": VerdictLabel.TRUE,
+    "FALSE": VerdictLabel.FALSE,
+    "MISLEADING": VerdictLabel.MISLEADING,
+    "UNVERIFIABLE": VerdictLabel.UNVERIFIABLE,
+}
+
+# The single reconciled-judge identity every PCA bundle presents to the publisher.
+PANEL_ADAPTER = "hydramind-pca"
+PANEL_MODEL_ID = "pca"
+
+
+@dataclass
+class BridgeOutput:
+    """Result of bridging one adjudicate batch to the publish layer.
+
+    ``bundles`` is the primary output (one per input row, in input order).
+    ``evidence`` maps ``sid → [Evidence]`` for the *full* retrieved pack (not just
+    the cited subset) so PR-C can assemble a ``Report.evidence`` corpus; the
+    cited subset is already reflected on each bundle's ``ModelVerdict.web_sources``.
+    """
+
+    bundles: list[VerdictBundle] = field(default_factory=list)
+    evidence: dict[str, list[Evidence]] = field(default_factory=dict)
+
+
+def confidence_from_float(c: Optional[float]) -> Confidence:
+    """Map a 0–1 confidence to the coarse ``Confidence`` enum.
+
+    Thresholds are the inverse of ``verify.triage.confidence_numeric`` anchors
+    (High=1.0, Medium=0.7, Low=0.4): the High/Medium cut sits at 0.85 and the
+    Medium/Low cut at 0.55. A missing confidence fails to Low."""
+    if c is None:
+        return Confidence.LOW
+    if c >= 0.85:
+        return Confidence.HIGH
+    if c >= 0.55:
+        return Confidence.MEDIUM
+    return Confidence.LOW
+
+
+def strength_from_votes(votes: Optional[dict]) -> str:
+    """Panel agreement → ``consensus_strength`` string.
+
+    Mirrors ``engine._build_consensus``: single (1 seat) / strong (≥3 agree on the
+    top label) / weak (exactly 2 agree) / none (no plurality — a genuine split)."""
+    if not votes:
+        return "none"
+    counts = [int(v) for v in votes.values()]
+    total = sum(counts)
+    if total == 0:
+        return "none"
+    if total == 1:
+        return "single"
+    top = max(counts)
+    if top >= 3:
+        return "strong"
+    if top == 2:
+        return "weak"
+    return "none"
+
+
+def _cited_urls(row: dict, pack: Optional[EvidencePack]) -> list[str]:
+    """URLs for the pack ids the panel cited (``E1``…), in citation order.
+
+    Unknown ids (shouldn't happen post-I4) are skipped rather than raised — the
+    bridge is a display adapter, not an invariant checkpoint."""
+    if pack is None:
+        return []
+    by_id = {it.pack_id: it for it in pack.items}
+    urls: list[str] = []
+    for cid in row.get("citations", []) or []:
+        it = by_id.get(cid)
+        if it is not None and it.source_url:
+            urls.append(it.source_url)
+    return urls
+
+
+def _pack_to_evidence(sid: str, pack: Optional[EvidencePack]) -> list[Evidence]:
+    """Full retrieved pack → ``Evidence`` list (provenance preserved)."""
+    if pack is None:
+        return []
+    out: list[Evidence] = []
+    for it in pack.items:
+        out.append(Evidence(
+            claim_id=sid,
+            source_name=it.source_name,
+            source_url=it.source_url,
+            source_tier=it.tier,
+            snippet=it.snippet,
+        ))
+    return out
+
+
+def _build_claim(sid: str, claim_src: Optional[dict]) -> Claim:
+    """Reconstruct the ``Claim`` for a bundle from the originating claim dict.
+
+    ``transcript_id`` is the sid prefix before the first ':' (the same convention
+    ``evidence_pack.build_evidence_pack`` uses). Falls back to a minimal claim if
+    the source dict is missing (keeps the bridge total)."""
+    src = claim_src or {}
+    text = (src.get("text") or "").strip() or "(claim text unavailable)"
+    return Claim(
+        transcript_id=sid.split(":", 1)[0],
+        text=text,
+        speaker=src.get("speaker") or "Unknown",
+        context=src.get("context") or None,
+        category=src.get("category"),
+        speech_date=src.get("date") or src.get("speech_date"),
+    )
+
+
+def _consensus_and_panel(
+    sid: str, row: dict, cited_urls: list[str],
+) -> tuple[ConsensusVerdict, list[ModelVerdict]]:
+    """Build the ConsensusVerdict + the single reconciled ModelVerdict for a row."""
+    status = row.get("status")
+    votes = row.get("votes") or {}
+    strength = strength_from_votes(votes)
+    reasoning = (row.get("reasoning") or "").strip()
+    conf = confidence_from_float(row.get("confidence"))
+
+    if status == "resolved":
+        raw = (row.get("verdict") or "").strip().upper()
+        label = _LABEL_MAP.get(raw)
+        if label is None:
+            # normalize() fails closed on out-of-contract verdicts, so a resolved
+            # row is guaranteed in-contract; guard anyway rather than KeyError.
+            raise ValueError(f"bridge: resolved row {sid} carries unmapped verdict {raw!r}")
+
+        # CRM-114 stage-2 may have flipped the label away from the vote plurality.
+        crm = row.get("crm114")
+        expl = reasoning or f"PCA panel resolved {label.value}."
+        if crm:
+            expl = f"{expl} (CRM-114: {crm.get('stage1')}→{crm.get('final')})".strip()
+
+        mv = ModelVerdict(
+            adapter_name=PANEL_ADAPTER,
+            model_id=PANEL_MODEL_ID,
+            claim_id=sid,
+            label=label,
+            confidence=conf,
+            explanation=expl,
+            web_sources=list(cited_urls),
+            model_reported_sources=list(cited_urls),
+        )
+        agreement = len(votes) == 1  # one distinct label across the panel
+        coarse_lenient = LENIENT_PROJECTION[label]
+        coarse_strict = STRICT_PROJECTION[label]
+        consensus = ConsensusVerdict(
+            claim_id=sid,
+            model_verdicts=[mv],
+            consensus_label=label,
+            consensus_verdict=label.value,
+            confidence=conf,
+            agreement=agreement,
+            consensus_strength=strength,
+            explanation=expl,
+            coarse_lenient_label=coarse_lenient,
+            coarse_lenient_strength=strength,
+            coarse_strict_label=coarse_strict,
+            coarse_strict_strength=strength,
+        )
+        return consensus, [mv]
+
+    # ── Non-resolved: disagreement / no_label / needs_verdict ────────────────
+    # Kept in the report as an explicit UNVERIFIABLE, never silently dropped.
+    if status == "disagreement":
+        verdict_text = "Models split"
+        expl = reasoning or "Panel split — no consensus verdict."
+    else:  # no_label / needs_verdict / anything unexpected
+        verdict_text = "No verdict"
+        expl = reasoning or "No verdict produced for this claim."
+
+    consensus = ConsensusVerdict(
+        claim_id=sid,
+        model_verdicts=[],
+        consensus_label=VerdictLabel.UNVERIFIABLE,
+        consensus_verdict=verdict_text,
+        confidence=Confidence.LOW,
+        agreement=False,
+        consensus_strength="none",
+        explanation=expl,
+        coarse_lenient_label="Models split",
+        coarse_lenient_strength="none",
+        coarse_strict_label="Models split",
+        coarse_strict_strength="none",
+    )
+    return consensus, []
+
+
+def row_to_bundle(
+    row: dict,
+    *,
+    claim_src: Optional[dict] = None,
+    pack: Optional[EvidencePack] = None,
+) -> VerdictBundle:
+    """Bridge one adjudicate row (+ its claim dict and evidence pack) to a bundle."""
+    sid = row["sid"]
+    claim = _build_claim(sid, claim_src)
+    cited = _cited_urls(row, pack)
+    consensus, model_verdicts = _consensus_and_panel(sid, row, cited)
+
+    return VerdictBundle(
+        claim=claim,
+        speaker=(claim_src or {}).get("speaker") or claim.speaker or "",
+        date_str=(claim_src or {}).get("date_str") or "",
+        model_verdicts=model_verdicts,
+        consensus=consensus,
+        evidence_count=len(pack.items) if pack is not None else 0,
+        cache_hit=False,
+    )
+
+
+def bridge(
+    rows: list[dict],
+    claims: list[dict],
+    packs: Optional[dict[str, EvidencePack]] = None,
+) -> BridgeOutput:
+    """Bridge an ``adjudicate`` batch to the publish layer.
+
+    Args:
+      rows:   verdict-contract rows from ``adjudicator.adjudicate`` (or the
+              Layer B pipeline). Each carries at least ``sid`` and ``status``.
+      claims: the originating claim dicts (``{"sid","text","context",...}``) —
+              the source of each bundle's ``Claim``. Indexed by ``sid``; a row
+              with no matching claim still bridges (minimal claim).
+      packs:  ``notes["packs"]`` (``sid → EvidencePack``) from an open-book run,
+              or ``None``/empty for closed-book (no evidence, no citations).
+
+    Returns a ``BridgeOutput`` (bundles in row order + per-sid evidence corpus).
+    Pure and offline — safe to call in unit tests with hand-built rows.
+    """
+    packs = packs or {}
+    claim_by_sid = {c["sid"]: c for c in claims if "sid" in c}
+
+    out = BridgeOutput()
+    for row in rows:
+        sid = row["sid"]
+        pack = packs.get(sid)
+        bundle = row_to_bundle(row, claim_src=claim_by_sid.get(sid), pack=pack)
+        out.bundles.append(bundle)
+        out.evidence[sid] = _pack_to_evidence(sid, pack)
+    return out

@@ -148,7 +148,8 @@ class PcaStrategy:
             confs = [v[1] for v in votes if v[0] == winner and v[1] is not None]
             out_items.append(ItemResult(item_id, StrategyResultKind.RESOLVED,
                 {"verdict": winner, "citations": citations,
-                 "confidence": (sum(confs) / len(confs)) if confs else None}, agreement))
+                 "confidence": (sum(confs) / len(confs)) if confs else None,
+                 "reasoning": winning_cr.output.get("reasoning", "")}, agreement))
 
         n = len(out_items)
         notes = {
