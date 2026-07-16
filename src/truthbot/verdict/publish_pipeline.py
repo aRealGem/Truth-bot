@@ -52,6 +52,11 @@ class PcaVerifyResult:
     bundles: list[VerdictBundle] = field(default_factory=list)
     evidence: dict[str, list[Evidence]] = field(default_factory=dict)
     characterization: list[dict] = field(default_factory=list)  # non-check-worthy stream
+    # Raw adjudication rows + the claim dicts fed to the bridge. Retained so the
+    # orchestrator can persist a replay artifact — re-bridging {rows, claims} in
+    # offline reproduces the bundles with no LLM spend (see _run_publish_pca).
+    rows: list[dict] = field(default_factory=list)
+    claims: list[dict] = field(default_factory=list)
     n_sentences: int = 0
     n_check_worthy: int = 0
     n_chunks: int = 0
@@ -99,9 +104,14 @@ def run_pca_verify(
         return result
 
     # Claims for adjudicate + the bridge's Claim reconstruction. The check-worthy
-    # rows already carry sid/text/context; that's all adjudicate needs.
+    # rows already carry sid/text/context; that's all adjudicate needs. We also
+    # attach each claim's Layer A routing provenance (label + which stage passed
+    # it) so the bridge can record it on the bundle — the queue row is the only
+    # place that survives.
     claims = [{"sid": r["sid"], "text": r.get("text", ""),
-               "context": r.get("context", "")} for r in queue]
+               "context": r.get("context", ""),
+               "layer_a": {"label": r.get("label", ""), "source": r.get("source", "")}}
+              for r in queue]
     chunks = _chunk(claims, chunk_size)
     result.n_chunks = len(chunks)
 
@@ -119,6 +129,8 @@ def run_pca_verify(
     out = bridge_mod.bridge(all_rows, claims, packs)
     result.bundles = out.bundles
     result.evidence = out.evidence
+    result.rows = all_rows
+    result.claims = claims
     return result
 
 

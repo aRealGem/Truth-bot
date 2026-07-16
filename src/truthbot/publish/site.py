@@ -211,7 +211,14 @@ class SiteReport:
     def verdict_distribution(self) -> dict[str, int]:
         dist: dict[str, int] = {v: 0 for v in VERDICT_CSS}
         for b in self.checkable_bundles:
-            label = b.consensus.consensus_label.value
+            # PCA split claims carry consensus_label=UNVERIFIABLE (never silently
+            # dropped) but a "Models split" verdict. Count them in their own bucket
+            # rather than folding them into Unverifiable — the coarse distributions
+            # already keep the two distinct, and the headline should match.
+            if b.consensus.consensus_verdict == "Models split":
+                label = "Models split"
+            else:
+                label = b.consensus.consensus_label.value
             dist[label] = dist.get(label, 0) + 1
         return dist
 
@@ -6208,6 +6215,18 @@ class SitePublisher:
                  "confidence": mv.confidence.value}
                 for mv in bundle.model_verdicts
             ],
+            # PCA pipeline provenance (empty on legacy multi-adapter bundles). Lets
+            # downstream consumers reconstruct per-claim panel agreement — the tally
+            # the reconciled-judge card collapses away. See VerdictProvenance.
+            "provenance": {
+                "layer_a_label":   bundle.consensus.provenance.layer_a_label,
+                "layer_a_source":  bundle.consensus.provenance.layer_a_source,
+                "panel_votes":     dict(bundle.consensus.provenance.panel_votes),
+                "panel_split":     bundle.consensus.provenance.panel_split,
+                "panel_escalated": bundle.consensus.provenance.panel_escalated,
+                "crm114_stage1":   bundle.consensus.provenance.crm114_stage1,
+                "crm114_final":    bundle.consensus.provenance.crm114_final,
+            },
             "url": f"claims/{bundle.claim.id}.html",
         }
 
