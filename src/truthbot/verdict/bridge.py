@@ -146,6 +146,17 @@ def _cited_urls(row: dict, pack: Optional[EvidencePack]) -> list[str]:
     return urls
 
 
+def _pack_sources(pack: Optional[EvidencePack]) -> list[dict]:
+    """Full retrieved pack -> render-ready source dicts (all items, not just cited)."""
+    if pack is None:
+        return []
+    return [
+        {"id": it.pack_id, "source": it.source_name, "url": it.source_url,
+         "tier": it.tier.value, "snippet": it.snippet}
+        for it in pack.items
+    ]
+
+
 def _pack_to_evidence(sid: str, pack: Optional[EvidencePack]) -> list[Evidence]:
     """Full retrieved pack → ``Evidence`` list (provenance preserved)."""
     if pack is None:
@@ -320,6 +331,7 @@ def row_to_bundle(
         model_verdicts=model_verdicts,
         consensus=consensus,
         evidence_count=len(pack.items) if pack is not None else 0,
+        sources_consulted=_pack_sources(pack),
         cache_hit=False,
     )
 

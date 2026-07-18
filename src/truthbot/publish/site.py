@@ -194,6 +194,14 @@ class SiteReport:
     source_of_claims_professional_public_title: str = ""
     event: str = ""    # event name (e.g. "State of the Union Address")
     channel: str = ""  # medium (e.g. "Twitter/X", "Press Release")
+    # Non-check-worthy sentence stream from Layer A characterization (Statement
+    # Triage). Each record: {sid, speech, idx, text, context, label, source,
+    # a1_score}. Default empty → legacy-clean (no triage page rendered).
+    characterization: list[dict] = field(default_factory=list)
+    # PCA panel composition for this run: {"name": <roster>, "seats": {seat: [alias]}}.
+    # A per-RUN fact (one roster judges the whole run), rendered once in the report
+    # provenance. Default empty → legacy-clean (no composition block rendered).
+    panel_roster: dict = field(default_factory=dict)
 
     @property
     def date_str(self) -> str:
@@ -283,6 +291,11 @@ class SiteReport:
     @property
     def report_url(self) -> str:
         return f"reports/{self.report_slug}.html"
+
+    @property
+    def triage_slug(self) -> str:
+        """Filename stem for this report's Statement Triage page (under reports/)."""
+        return f"{self.report_slug}-triage"
 
     @property
     def truthy_verdict(self):
@@ -755,6 +768,42 @@ def _evidence_list_html(
         )
     if not items:
         return '<p style="font-size:0.88rem;color:var(--ink-muted)">No sources retrieved.</p>'
+    return f'<ul class="evidence-list">{"".join(items)}</ul>'
+
+
+def _sources_consulted_html(sources: list[dict]) -> str:
+    """Render the FULL retrieved evidence pack (all items, not just cited).
+
+    Independent of what the verdict cited: a claim can have a non-empty pack
+    yet zero citations (e.g. Unverifiable), and this list still surfaces every
+    source that was consulted. Reuses the ``evidence-list`` / tier styling.
+    """
+    if not sources:
+        return ""
+    items: list[str] = []
+    for src in sources:
+        url = (src.get("url") or "").strip()
+        if not url:
+            continue
+        name = (src.get("source") or "").strip()
+        tier = (src.get("tier") or "").strip()
+        snippet = (src.get("snippet") or "").strip()
+        badge = _tier_badge(url)
+        short = url.replace("https://", "").replace("http://", "")
+        if len(short) > 80:
+            short = short[:77] + "…"
+        name_html = f'<span class="ev-src">{_esc(name)}</span>' if name else ""
+        tier_html = f'<span class="ev-src">{_esc(tier)}</span>' if tier else ""
+        snippet_html = (
+            f'<div class="source-snippet">{_esc(snippet)}</div>' if snippet else ""
+        )
+        items.append(
+            f'<li class="source-verified"><span class="ev-mark">→</span>{badge}'
+            f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
+            f'{name_html}{tier_html}{snippet_html}</li>'
+        )
+    if not items:
+        return ""
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
 
 
@@ -1558,6 +1607,70 @@ def _run_manifest_html(site_report) -> str:
     )
 
 
+# Seat display order + reader-facing labels for the PCA panel composition.
+# The panel is proposer → critic → arbiter; unknown seats fall through in
+# roster order after these three.
+_PCA_SEAT_ORDER = ("proposer", "critic", "arbiter")
+_PCA_SEAT_LABELS = {
+    "proposer": "Proposer",
+    "critic": "Critic",
+    "arbiter": "Arbiter",
+}
+
+
+def _panel_composition_html(site_report) -> str:
+    """Render the "PCA panel composition" block once per report.
+
+    A per-RUN provenance fact: which model fills each PCA seat
+    (proposer/critic/arbiter). Reads ``site_report.panel_roster`` —
+    ``{"name": <roster>, "seats": {seat: [alias, …]}}``. Renders nothing when
+    the roster is absent or carries no seats (legacy-clean).
+
+    Note: this surfaces roster COMPOSITION only. Per-seat vote attribution
+    ("model X voted False") is discarded at panel collapse and is not shown here.
+    """
+    roster = getattr(site_report, "panel_roster", None) or {}
+    seats = roster.get("seats") or {}
+    # Only seats with at least one concrete alias are worth rendering.
+    filled = {s: [a for a in (aliases or []) if a] for s, aliases in seats.items()}
+    filled = {s: a for s, a in filled.items() if a}
+    if not filled:
+        return ""
+
+    # Ordered seats: proposer/critic/arbiter first, then any extras in roster order.
+    ordered = [s for s in _PCA_SEAT_ORDER if s in filled]
+    ordered += [s for s in filled if s not in _PCA_SEAT_ORDER]
+
+    seat_rows = []
+    for seat in ordered:
+        label = _PCA_SEAT_LABELS.get(seat, seat.replace("_", " ").title())
+        models_str = ", ".join(_esc(a) for a in filled[seat])
+        seat_rows.append(
+            '<li class="panel-composition-seat">'
+            f'<span class="panel-composition-role">{_esc(label)}</span>'
+            f'<span class="panel-composition-model">{models_str}</span>'
+            '</li>'
+        )
+
+    name = roster.get("name") or ""
+    name_html = (
+        f'<span class="panel-composition-roster">roster: {_esc(name)}</span>'
+        if name else ""
+    )
+
+    return (
+        '<aside class="panel-composition">'
+        '<div class="panel-composition-head">'
+        '<span class="panel-composition-title">PCA panel composition</span>'
+        + name_html
+        + '</div>'
+        + '<ul class="panel-composition-list">'
+        + ''.join(seat_rows)
+        + '</ul>'
+        '</aside>'
+    )
+
+
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
@@ -1877,14 +1990,14 @@ def _pca_provenance_strip(bundle: VerdictBundle) -> str:
         parts.append(f"PCA panel: {_pca_vote_tally(prov.panel_votes)}")
     if prov.crm114_final:
         stage1 = prov.crm114_stage1 or "?"
-        parts.append(f"CRM-114: {stage1}→{prov.crm114_final}")
+        parts.append(f"Severity Classifier: {stage1}→{prov.crm114_final}")
     if not parts:
         return ""
     chain = _esc(" → ".join(parts))
     return (
         '<div class="pca-provenance" '
         'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
-        'tally, and any CRM-114 stage-2 override.">'
+        'tally, and any Severity Classifier stage-2 override.">'
         f'{chain}</div>'
     )
 
@@ -1938,6 +2051,10 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     def _reasoning_paragraphs(text: str) -> str:
         if not text:
             return ""
+        # Display-time only: the bridge annotates overrides in the explanation as
+        # "CRM-114: ..." for internal audit; readers see "Severity Classifier".
+        # (Stored explanation and internal identifiers are left untouched.)
+        text = text.replace("CRM-114", "Severity Classifier")
         parts = [seg.strip() for seg in re.split(r"\n\s*\n", text.strip()) if seg.strip()]
         if not parts:
             return ""
@@ -2062,6 +2179,21 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
             '</div>'
         )
 
+    # Full retrieved pack (ALL items, not just cited) — rides on the bundle so
+    # a claim with a non-empty pack but zero citations still shows its real
+    # sources rather than a bare "No sources retrieved."
+    consulted = list(getattr(bundle, "sources_consulted", None) or [])
+    consulted_html = ""
+    if consulted:
+        consulted_inner = _sources_consulted_html(consulted)
+        if consulted_inner:
+            consulted_html = (
+                '<details class="evidence-details" open>'
+                f'  <summary class="evidence-summary">Sources consulted ({len(consulted)})</summary>'
+                f'  <div class="evidence">{consulted_inner}</div>'
+                '</details>'
+            )
+
     unverified_block = _model_cited_unverified_html(unverified_urls)
     if all_urls:
         evidence_inner = (
@@ -2073,6 +2205,15 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         # cite URLs but none survived intersection — the unverified
         # block is the audit trail in that case.
         evidence_inner = unverified_block
+    elif consulted_html:
+        # Pack was retrieved but nothing was cited (e.g. Unverifiable). Point
+        # the reader at the "Sources consulted" section instead of asserting
+        # "No sources retrieved." as if the search came back empty.
+        evidence_inner = (
+            '<p style="font-size:0.88rem;color:var(--ink-muted)">'
+            'No sources were cited for this verdict — see '
+            '<em>Sources consulted</em> below for the full retrieved pack.</p>'
+        )
     else:
         evidence_inner = _evidence_list_html([], classifications=None)
     evidence_html = (
@@ -2119,6 +2260,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
         f'  {caveat_html}'
         f'  {models_block}'
         f'  {evidence_html}'
+        f'  {consulted_html}'
         '  <div class="claim-foot">'
         f'    <a href="#claim-{idx}" class="permalink">claim-{idx}</a>'
         + back_links_html
@@ -3384,6 +3526,37 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   line-height: 1.5;
   word-break: break-word;
 }
+/* Statement Triage — set-aside (non-check-worthy) sentence stream */
+.triage-group { margin: 0 0 1.5rem; }
+.triage-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+.triage-item {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.triage-text { line-height: 1.5; }
+.triage-meta {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+}
+.triage-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-right: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 .model-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3561,6 +3734,14 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .tier-news  { background: #4a148c; }
 .tier-fc    { background: #e65100; }
 .tier-other { background: #546e7a; }
+.evidence-list .source-snippet {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
 
 
 /* Collapsible evidence/sources (native <details>) */
@@ -3637,6 +3818,56 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
 }
+
+/* PCA panel composition — which model fills each seat, once per run. */
+.panel-composition {
+  margin-top: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+.panel-composition-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.panel-composition-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+.panel-composition-roster {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+.panel-composition-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+}
+.panel-composition-seat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.panel-composition-role {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+.panel-composition-model { color: var(--ink); }
 
 
 /* [18] Footer ────────────────────────────────────────────────────────── */
@@ -5536,6 +5767,20 @@ def _render_report(site_report: SiteReport) -> str:
     _hero_parts.append('</section>')
     hero_html = '\n'.join(_hero_parts)
 
+    # Statement Triage cross-link — only when the non-check-worthy stream exists.
+    triage_link_html = ""
+    if site_report.characterization:
+        _n_triage = len(site_report.characterization)
+        triage_link_html = (
+            '<aside class="methodology">'
+            '<strong>Statement Triage.</strong> Of the sentences in this speech, '
+            + str(_n_triage) + ' were set aside as non-check-worthy '
+            '(pleasantries, opinion, or otherwise unimportant) before fact-checking. '
+            '<a href="' + _esc(site_report.triage_slug) + '.html">'
+            'See what we set aside and why →</a>'
+            '</aside>'
+        )
+
     body = (
         hero_html
         + _verdict_panel(site_report)
@@ -5547,7 +5792,9 @@ def _render_report(site_report: SiteReport) -> str:
         + '</div>'
         + claim_blocks
         + methodology_html
+        + triage_link_html
         + _run_manifest_html(site_report)
+        + _panel_composition_html(site_report)
     )
     footer = (
         '<span>truth-bot · pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML + '</span>'
@@ -5571,6 +5818,115 @@ def _render_report(site_report: SiteReport) -> str:
         footer=footer,
         og_title=_report_og_title,
         og_description=_report_og_desc,
+        og_type="article",
+    )
+
+
+# Human-readable descriptions for the stage that set a sentence aside.
+_TRIAGE_SOURCE_LABELS = {
+    "A1": "Lexical prefilter (Stage A1)",
+    "A2": "Check-worthiness classifier (Stage A2)",
+}
+
+
+def _render_statement_triage(site_report: SiteReport) -> str:
+    """Render the Statement Triage page — the non-check-worthy sentences that the
+    pipeline recorded but never published, grouped by the stage that set them aside.
+
+    Returns "" when ``site_report.characterization`` is empty (legacy-clean: no
+    page should be written in that case)."""
+    records = site_report.characterization
+    if not records:
+        return ""
+
+    total = len(records)
+    # Group by source stage (A1 lexical prefilter vs A2 classifier). Unknown
+    # sources fall into their own bucket rather than being dropped.
+    groups: dict[str, list[dict]] = {}
+    for rec in records:
+        src = str(rec.get("source") or "other")
+        groups.setdefault(src, []).append(rec)
+
+    report_url = f"../reports/{site_report.report_slug}.html"
+    breadcrumb = (
+        '<div class="breadcrumb">'
+        '<a href="../index.html">Reports</a> › '
+        f'<a href="{report_url}">{_esc(site_report.speaker)} — '
+        f'{_esc(site_report.display_date)}</a> › Statement Triage</div>'
+    )
+
+    intro = (
+        '<section class="hero" id="top">'
+        '<h1 class="speaker-name">Statement Triage</h1>'
+        f'<div class="speech-title">{_esc(site_report.speaker)} — '
+        f'{_esc(site_report.display_date)}</div>'
+        '</section>'
+        '<aside class="methodology">'
+        '<strong>What we set aside.</strong> The pipeline reads every sentence of '
+        'the speech, but only fact-checks the ones that assert a verifiable claim. '
+        f'The {total} sentence' + ('s' if total != 1 else '') + ' below were '
+        'recorded as <em>non-check-worthy</em> — pleasantries, opinion, or '
+        'otherwise unimportant — and set aside before verification. We surface '
+        'them here so it is clear what was excluded and which stage excluded it.'
+        '</aside>'
+    )
+
+    # Deterministic stage order: A1 first, then A2, then any others alphabetically.
+    def _stage_key(s: str) -> tuple[int, str]:
+        order = {"A1": 0, "A2": 1}
+        return (order.get(s, 2), s)
+
+    sections: list[str] = []
+    for src in sorted(groups, key=_stage_key):
+        recs = groups[src]
+        stage_label = _TRIAGE_SOURCE_LABELS.get(src, f"Stage {src}")
+        rows: list[str] = []
+        for rec in recs:
+            text = _esc(str(rec.get("text", "")))
+            label = _esc(str(rec.get("label", "")))
+            a1 = rec.get("a1_score")
+            try:
+                a1_str = f"{float(a1):.2f}"
+            except (TypeError, ValueError):
+                a1_str = "—"
+            meta = (
+                f'<span class="triage-tag">{_esc(src)}</span>'
+                f'label: {label} · a1_score: {a1_str}'
+            )
+            rows.append(
+                '<li class="triage-item">'
+                f'<div class="triage-text">{text}</div>'
+                f'<div class="triage-meta">{meta}</div>'
+                '</li>'
+            )
+        sections.append(
+            '<div class="triage-group">'
+            '<div class="section-head">'
+            f'<span>{_esc(stage_label)}</span>'
+            f'<span class="sub">{len(recs)} set aside</span>'
+            '</div>'
+            '<ul class="triage-list">' + "".join(rows) + '</ul>'
+            '</div>'
+        )
+
+    body = breadcrumb + intro + "".join(sections)
+
+    phash = _prompt_hash()
+    footer = (
+        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
+        f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a></span>'
+        f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
+        f'github.com/aRealGem/Truth-bot</a></span>'
+    )
+    return _page_report(
+        f"Statement Triage — {_esc(site_report.speaker)} — {_esc(site_report.display_date)}",
+        body,
+        footer=footer,
+        og_title=f"Statement Triage — {site_report.speaker} — {site_report.display_date} — truth-bot",
+        og_description=(
+            f"{total} non-check-worthy sentences set aside from {site_report.speaker}'s "
+            f"{site_report.display_date} remarks, and the pipeline stage that excluded each."
+        ),
         og_type="article",
     )
 
@@ -6146,6 +6502,14 @@ class SitePublisher:
         report_path = self._root / "reports" / f"{site_report.report_slug}.html"
         self._write(report_path, report_html)
 
+        # Write Statement Triage page (non-check-worthy sentence stream). Only
+        # emitted when the report carries a characterization list — legacy
+        # reports (empty list) render no triage page and no cross-link.
+        triage_html = _render_statement_triage(site_report)
+        if triage_html:
+            triage_path = self._root / "reports" / f"{site_report.triage_slug}.html"
+            self._write(triage_path, triage_html)
+
         # Write per-claim pages
         for bundle in site_report.checkable_bundles:
             claim_html = _render_claim_page(bundle, site_report)
@@ -6452,3 +6816,165 @@ class SitePublisher:
             "total_kb": round(total_bytes / 1024, 1),
             "root":    str(self._root.resolve()),
         }
+
+
+# ── Offline Statement-Triage backfill ─────────────────────────────────────────
+# The immediate $0 win for the CURRENT live site: read a persisted PCA replay
+# artifact (metrics/pca_runs/<run_id>.json), build a SiteReport from its meta +
+# characterization stream, and render ONLY the Statement Triage page into an
+# existing site root — no bundles, no LLM spend, no full re-publish.
+
+
+def _site_report_from_artifact(artifact: dict) -> SiteReport:
+    """Build a minimal SiteReport (meta + characterization only) from a persisted
+    ``metrics/pca_runs/<run_id>.json`` artifact dict. Bundles are empty — this
+    report is only ever used to render the Statement Triage page."""
+    from datetime import datetime
+
+    meta = artifact.get("meta", {}) or {}
+    date_val = None
+    if meta.get("date"):
+        try:
+            date_val = datetime.strptime(str(meta["date"]), "%Y-%m-%d")
+        except Exception:
+            date_val = None
+    return SiteReport(
+        report_id=str(artifact.get("run_id", "") or ""),
+        speaker=meta.get("speaker", "") or "",
+        role=meta.get("role", "") or "",
+        date=date_val,
+        venue=meta.get("venue", "") or "",
+        transcript_source_url=meta.get("source_url", "") or "",
+        bundles=[],
+        characterization=list(artifact.get("characterization", []) or []),
+    )
+
+
+def _match_existing_report_slug(site_root: Path, speaker: str, date_str: str) -> Optional[str]:
+    """Find the published report slug for a speaker+date in an existing site root,
+    by consulting data/reports.json. Returns None if no match / no index."""
+    idx_path = site_root / "data" / "reports.json"
+    if not idx_path.exists():
+        return None
+    try:
+        reports = json.loads(idx_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    for r in reports:
+        r_speaker = r.get("source_of_claims") or r.get("speaker") or ""
+        r_date = r.get("date_str") or r.get("date") or ""
+        if r_speaker == speaker and str(r_date) == str(date_str):
+            # slug is the report url stem: reports/<slug>.html
+            url = r.get("url") or r.get("report_url") or ""
+            stem = Path(str(url)).name
+            if stem.endswith(".html"):
+                return stem[: -len(".html")]
+            if r.get("slug"):
+                return str(r["slug"])
+    return None
+
+
+def backfill_statement_triage(
+    artifact_path: str | Path,
+    site_root: str | Path,
+    *,
+    report_slug: Optional[str] = None,
+) -> Optional[Path]:
+    """Render the Statement Triage page for a persisted PCA run into an existing site.
+
+    Parameters
+    ----------
+    artifact_path:
+        Path to a ``metrics/pca_runs/<run_id>.json`` replay artifact.
+    site_root:
+        Existing published site root (e.g. ``site-pca/``). The triage page is
+        written under ``<site_root>/reports/``.
+    report_slug:
+        Filename stem of the already-published report page (without ``.html``),
+        so the triage page is named ``<report_slug>-triage.html`` and its
+        breadcrumb links back correctly. When omitted, it is looked up from the
+        site's ``data/reports.json`` by matching speaker + date; if that fails,
+        it falls back to the slug derived from the artifact's own run_id.
+
+    Returns the path to the written triage page, or ``None`` when the artifact
+    carries no characterization stream (nothing to render)."""
+    artifact = json.loads(Path(artifact_path).read_text(encoding="utf-8"))
+    site_root = Path(site_root)
+    sr = _site_report_from_artifact(artifact)
+    if not sr.characterization:
+        return None
+
+    # Resolve the slug the existing report page uses, so links line up.
+    slug = report_slug or _match_existing_report_slug(site_root, sr.speaker, sr.date_str)
+    if slug:
+        # Point the SiteReport's derived slugs at the existing report by faking
+        # report_id so report_slug == slug (report_slug = "<date>-<speaker>-<id[:6]>").
+        # Simplest robust path: render with an explicit slug override.
+        html = _render_statement_triage_with_slug(sr, slug)
+        triage_stem = f"{slug}-triage"
+    else:
+        html = _render_statement_triage(sr)
+        triage_stem = sr.triage_slug
+
+    out_dir = site_root / "reports"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"{triage_stem}.html"
+    out_path.write_text(html, encoding="utf-8")
+    return out_path.resolve()
+
+
+def _render_statement_triage_with_slug(site_report: SiteReport, report_slug: str) -> str:
+    """Same as :func:`_render_statement_triage`, but the breadcrumb back-link
+    targets an explicit existing ``report_slug`` rather than the one derived from
+    the SiteReport's own (possibly mismatched) report_id."""
+    class _Proxy:
+        # Lightweight shim: forwards everything to site_report, overrides report_slug.
+        def __init__(self, base, slug):
+            object.__setattr__(self, "_base", base)
+            object.__setattr__(self, "_slug", slug)
+
+        def __getattr__(self, name):
+            if name == "report_slug":
+                return object.__getattribute__(self, "_slug")
+            return getattr(object.__getattribute__(self, "_base"), name)
+
+    return _render_statement_triage(_Proxy(site_report, report_slug))
+
+
+def _cli_backfill_statement_triage(argv: Optional[list[str]] = None) -> int:
+    """CLI: render a Statement Triage page from a persisted artifact into a site.
+
+    Usage:
+        python -m truthbot.publish.site \\
+            --artifact metrics/pca_runs/<run_id>.json \\
+            --site-root site-pca/ \\
+            [--report-slug 2026-02-24-donald-trump-0c33d1]
+    """
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="truthbot.publish.site",
+        description="Offline Statement-Triage backfill (renders one page, no re-run).",
+    )
+    parser.add_argument("--artifact", required=True,
+                        help="Path to metrics/pca_runs/<run_id>.json")
+    parser.add_argument("--site-root", required=True,
+                        help="Existing site root (e.g. site-pca/)")
+    parser.add_argument("--report-slug", default=None,
+                        help="Slug of the published report page (without .html). "
+                             "Auto-detected from data/reports.json if omitted.")
+    args = parser.parse_args(argv)
+
+    out = backfill_statement_triage(
+        args.artifact, args.site_root, report_slug=args.report_slug
+    )
+    if out is None:
+        print("No characterization stream in artifact; nothing to render.")
+        return 1
+    print(f"Wrote Statement Triage page: {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys as _sys
+    _sys.exit(_cli_backfill_statement_triage())

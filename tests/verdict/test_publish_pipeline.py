@@ -75,6 +75,36 @@ def test_run_pca_verify_chunks_bridges_and_totals_cost():
     assert abs(res.cost_usd - 0.3) < 1e-9
 
 
+def test_run_pca_verify_captures_roster_once():
+    # The panel roster is identical across chunks; run_pca_verify captures the
+    # first non-empty notes["roster"] and never overwrites it.
+    def adj_with_roster(chunk):
+        rows = [{"sid": c["sid"], "status": "resolved", "verdict": "TRUE",
+                 "confidence": 0.9, "citations": [], "reasoning": "ok",
+                 "votes": {"TRUE": 3}} for c in chunk]
+        return rows, {"packs": {}, "cost_usd": 0.0,
+                      "roster": {"name": "dev", "seats": {"proposer": ["mistral"]}}}
+
+    res = pp.run_pca_verify(
+        _sentences(3),
+        layer_a_fn=_fake_classify_all_checkworthy,
+        adjudicate_fn=adj_with_roster,
+        chunk_size=1,
+    )
+    assert res.roster == {"name": "dev", "seats": {"proposer": ["mistral"]}}
+
+
+def test_run_pca_verify_roster_defaults_none_when_absent():
+    # Legacy/offline adjudicate that emits no roster note → result.roster stays None.
+    res = pp.run_pca_verify(
+        _sentences(2),
+        layer_a_fn=_fake_classify_all_checkworthy,
+        adjudicate_fn=_make_fake_adjudicate([]),
+        chunk_size=1,
+    )
+    assert res.roster is None
+
+
 def test_run_pca_verify_progress_callback():
     seen = []
     pp.run_pca_verify(
@@ -149,6 +179,12 @@ def test_lane_factory_folds_cost_and_toggles_crm114(monkeypatch):
     assert notes["cost_usd"] == 0.42                 # manifest cost folded in
     assert captured["adj_kwargs"]["two_stage"] is False   # no provider → no CRM-114
     assert captured["adj_kwargs"]["roster"] == "dev"
+    # PCA panel composition captured in notes: roster name + real "dev" seats.
+    assert notes["roster"]["name"] == "dev"
+    seats = notes["roster"]["seats"]
+    assert seats["proposer"] == ["mistral"]
+    assert seats["critic"] == ["dsv4-flash"]
+    assert seats["arbiter"] == ["claude-haiku"]
     # each lane is routed to its own engine (classify=identity parser, verdict=parse_verdict)
     assert captured["classify_hm"] is hm_classify
     assert captured["adj_hm"] is hm_verdict

@@ -126,6 +126,35 @@ def test_resolved_open_book_wires_citations_and_evidence():
     assert all(e.claim_id == "t1:1" for e in ev)
 
 
+def test_sources_consulted_holds_full_pack_even_with_zero_citations():
+    # A non-empty pack + a verdict that cites NOTHING (unverifiable/split).
+    # sources_consulted must carry the FULL pack; web_sources stays empty.
+    pack = _pack(
+        "u:0",
+        ("E1", "https://bls.gov/a", SourceTier.GOVERNMENT, "gov snippet"),
+        ("E2", "https://ap.org/b", SourceTier.WIRE, "wire snippet"),
+    )
+    row = _row("u:0", status="disagreement", citations=[], votes={"TRUE": 1, "FALSE": 1})
+    out = bridge.bridge([row], [_claim("u:0")], {"u:0": pack})
+    b = out.bundles[0]
+    # verdict cited nothing
+    assert b.model_verdicts == []
+    # but the full retrieved pack rides on the bundle
+    assert len(b.sources_consulted) == 2
+    assert [s["url"] for s in b.sources_consulted] == [
+        "https://bls.gov/a", "https://ap.org/b"]
+    assert b.sources_consulted[0]["id"] == "E1"
+    assert b.sources_consulted[0]["tier"] == "Government"
+    assert b.sources_consulted[0]["source"] == "src-E1"
+    assert b.sources_consulted[0]["snippet"] == "gov snippet"
+
+
+def test_sources_consulted_empty_without_pack():
+    row = _row("np:0", verdict="TRUE", confidence=0.9, votes={"TRUE": 3})
+    out = bridge.bridge([row], [_claim("np:0")])  # no packs
+    assert out.bundles[0].sources_consulted == []
+
+
 def test_misleading_projection():
     row = _row("m:0", verdict="MISLEADING", confidence=0.6, votes={"MISLEADING": 3})
     out = bridge.bridge([row], [_claim("m:0")])

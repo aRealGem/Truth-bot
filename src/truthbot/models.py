@@ -454,6 +454,10 @@ class VerdictBundle(BaseModel):
     model_verdicts: list[ModelVerdict]
     consensus: ConsensusVerdict
     evidence_count: int = Field(default=0)
+    sources_consulted: list[dict] = Field(
+        default_factory=list,
+        description="Full retrieved evidence pack (ALL items, not just cited): each {id, source, url, tier, snippet}",
+    )
     cache_hit: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     triage_skipped_frontier: bool = Field(

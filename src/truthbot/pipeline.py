@@ -945,6 +945,14 @@ def _persist_pca_run(
             "claims": list(getattr(result, "claims", []) or []),
             "rows": list(getattr(result, "rows", []) or []),
             "characterization": list(getattr(result, "characterization", []) or []),
+            "roster": getattr(result, "roster", None),
+            "evidence": {
+                sid: [
+                    ev.model_dump(mode="json") if hasattr(ev, "model_dump") else dict(ev)
+                    for ev in evs
+                ]
+                for sid, evs in (getattr(result, "evidence", {}) or {}).items()
+            },
         }
         path.write_text(_json.dumps(payload, default=str, ensure_ascii=False), encoding="utf-8")
         logger.info(
@@ -1022,7 +1030,9 @@ def _build_open_book_provider():
     return build_evidence_provider(source="connectors", connectors=connectors)
 
 
-def _publish_bundles(args, bundles: list, date, source_url: str) -> None:
+def _publish_bundles(args, bundles: list, date, source_url: str,
+                     characterization: Optional[list] = None,
+                     panel_roster: Optional[dict] = None) -> None:
     """Shared publish tail: bundles → SiteReport → static site (+ link/JSON checks).
 
     Used by both the legacy and the v2 (PCA) verify paths so they emit byte-identical
@@ -1040,6 +1050,8 @@ def _publish_bundles(args, bundles: list, date, source_url: str) -> None:
         venue=getattr(args, "venue", "") or "",
         transcript_source_url=source_url,
         bundles=bundles,
+        characterization=list(characterization or []),
+        panel_roster=dict(panel_roster or {}),
     )
     site_root = getattr(args, "site_root", None)
     publisher = SitePublisher(site_root=site_root)
@@ -1157,7 +1169,9 @@ def _run_publish_pca(args) -> None:
         metrics_dir=_settings.metrics_dir,
     )
 
-    _publish_bundles(args, result.bundles, date, source_url)
+    _publish_bundles(args, result.bundles, date, source_url,
+                     characterization=getattr(result, "characterization", None),
+                     panel_roster=getattr(result, "roster", None))
 
 
 def _run_publish(args) -> None:

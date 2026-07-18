@@ -61,6 +61,10 @@ class PcaVerifyResult:
     n_check_worthy: int = 0
     n_chunks: int = 0
     cost_usd: float = 0.0
+    # PCA panel composition for THIS run: {"name": <roster>, "seats": {seat: [alias]}}.
+    # Per-RUN fact (the whole run uses one roster), captured once from the first
+    # non-empty adjudicate notes. Empty → legacy-clean (no composition rendered).
+    roster: Optional[dict] = None
 
 
 def _chunk(items: list, size: int) -> list[list]:
@@ -123,6 +127,12 @@ def run_pca_verify(
         for sid, pack in (notes.get("packs") or {}).items():
             packs[sid] = pack
         result.cost_usd += float(notes.get("cost_usd", 0.0) or 0.0)
+        # Capture the PCA roster composition once — it's identical across chunks,
+        # so take the first non-empty one and never overwrite it.
+        if result.roster is None:
+            roster_note = notes.get("roster")
+            if roster_note:
+                result.roster = roster_note
         if on_progress is not None:
             on_progress(idx, len(chunks), rows)
 
@@ -192,6 +202,14 @@ def build_pca_lane_fns(
             notes["cost_usd"] = float(getattr(manifest, "total_cost_usd", 0.0) or 0.0)
         except (TypeError, ValueError):
             notes["cost_usd"] = 0.0
+        # Record the PCA panel composition (roster name + seat→alias map) so the
+        # publisher can surface WHICH models judged the run. Guarded: a bad roster
+        # name must never break a live run (fall back to name-only, empty seats).
+        try:
+            from hydramind.rosters import get_roster
+            notes["roster"] = {"name": roster, "seats": dict(get_roster(roster).seats)}
+        except Exception:
+            notes["roster"] = {"name": roster, "seats": {}}
         return rows, notes
 
     return layer_a_fn, adjudicate_fn
