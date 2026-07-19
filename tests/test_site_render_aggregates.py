@@ -221,24 +221,35 @@ def test_site_report_falls_back_to_projection_for_legacy_bundles() -> None:
 # ── _headline_verdict_coarse ──────────────────────────────────────────────────
 
 
-def test_headline_verdict_coarse_speaks_truthy_scale_vocabulary() -> None:
-    # 4 of 5 Truthy → "Truthy" (already-qualified; no "Mostly" prefix).
+def test_headline_verdict_coarse_family_aggregation() -> None:
+    # 2026-07-19 editorial (jackie): headlines aggregate FAMILIES over decided
+    # claims — a spread of adverse buckets must read as false-leaning, not
+    # "Mixed" because no single bucket dominates.
+    # 5/5 true-family (True + Truthy) → Largely True.
     label, cls = _headline_verdict_coarse(
         {"True": 1, "Truthy": 4, "Unverifiable": 0, "Falsey": 0, "False": 0,
-         "Models split": 0}
-    )
-    assert label == "Truthy"
-    assert cls == "vt-truthy"
-
-    # 4 True out of 5 → "Largely True"
-    label, cls = _headline_verdict_coarse(
-        {"True": 4, "Truthy": 0, "Unverifiable": 0, "Falsey": 1, "False": 0,
          "Models split": 0}
     )
     assert label == "Largely True"
     assert cls == "vt-true"
 
-    # Tie → Mixed verdict
+    # The Trump-2026 shape: adverse spread (Falsey 51 + False 44) vs True 37
+    # → 72% false-leaning of decided → Largely False (was "Mixed verdict").
+    label, cls = _headline_verdict_coarse(
+        {"True": 37, "Truthy": 0, "Unverifiable": 28, "Falsey": 51, "False": 44,
+         "Models split": 7}
+    )
+    assert label == "Largely False"
+    assert cls == "vt-false"
+
+    # 60% adverse → Mostly False ("<40% true is damning", not Mixed).
+    label, cls = _headline_verdict_coarse(
+        {"True": 4, "Truthy": 0, "Unverifiable": 0, "Falsey": 6, "False": 0,
+         "Models split": 0}
+    )
+    assert label == "Mostly False"
+
+    # Genuine coin-flip → Mixed verdict.
     label, cls = _headline_verdict_coarse(
         {"True": 0, "Truthy": 2, "Unverifiable": 0, "Falsey": 2, "False": 0,
          "Models split": 0}
@@ -247,14 +258,20 @@ def test_headline_verdict_coarse_speaks_truthy_scale_vocabulary() -> None:
     assert cls == "neutral"
 
 
-def test_headline_verdict_coarse_dominant_models_split_reads_as_mixed() -> None:
-    """A panel that's mostly Models-split shouldn't read as "Mostly Models
-    split" — that's nonsense English. Surface it as Mixed verdict."""
+def test_headline_verdict_coarse_dominant_models_split_is_abstention() -> None:
+    """Models-split rows are abstentions: excluded from the decided denominator
+    (like Unverifiable), never headlined. The decided remainder speaks."""
     label, cls = _headline_verdict_coarse(
         {"True": 1, "Truthy": 0, "Unverifiable": 0, "Falsey": 0, "False": 0,
          "Models split": 4}
     )
-    assert label == "Mixed verdict"
+    assert label == "Largely True"          # 1/1 decided
+    # nothing decided at all → Unverifiable headline, not nonsense English
+    label, cls = _headline_verdict_coarse(
+        {"True": 0, "Truthy": 0, "Unverifiable": 1, "Falsey": 0, "False": 0,
+         "Models split": 4}
+    )
+    assert label == "Unverifiable"
     assert cls == "neutral"
 
 
@@ -298,21 +315,19 @@ def test_verdict_panel_bar_blocks_carry_lens_caption() -> None:
     assert html.index("Strict lens") < html.index("Lenient lens")
 
 
-def test_verdict_panel_uses_coarse_labels_in_headline() -> None:
+def test_verdict_panel_uses_family_labels_in_headline() -> None:
     """The 6-bucket label (e.g. "Exaggerated") should NOT appear as the
-    headline anymore. We only ever speak the Truthy scale on aggregates."""
+    headline; aggregates speak the family vocabulary (2026-07-19: Largely/
+    Mostly True/False over decided claims). All-Truthy under Lenient →
+    Largely True; all-Falsey under Strict → Largely False."""
     bundles = [_make_bundle(VerdictLabel.EXAGGERATED,
                              coarse_lenient="Truthy", coarse_strict="Falsey")] * 3
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
-    # Truthy reads as headline under Lenient; Falsey under Strict. Neither
-    # axis should leak the fine "Exaggerated" string into the headline pill.
-    # (Other places — e.g. an aria-label inside the verdict bar — may still
-    # contain it, so we scope the assertion to the .vp-verdict block.)
     import re
     headlines = re.findall(r'<div class="vp-verdict[^"]*">([^<]+)</div>', html)
-    assert any("Truthy" in h for h in headlines)
-    assert any("Falsey" in h for h in headlines)
+    assert any("Largely True" in h for h in headlines)
+    assert any("Largely False" in h for h in headlines)
     assert not any("Exaggerated" in h for h in headlines)
 
 
