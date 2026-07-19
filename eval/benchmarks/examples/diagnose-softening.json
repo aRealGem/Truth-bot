@@ -1,0 +1,469 @@
+{
+  "table": {
+    "frontier-openbook-calib-crm114": {
+      "HARSHER": 5,
+      "CORRECT": 8,
+      "ABSTAIN": 3,
+      "CRM114_RESCUE": 1,
+      "UNANIMOUS_SOFT": 3
+    },
+    "frontier-openbook-crm114": {
+      "HARSHER": 6,
+      "CORRECT": 9,
+      "ABSTAIN": 2,
+      "UNANIMOUS_SOFT": 3
+    },
+    "openbook-calib-crm114": {
+      "HARSHER": 3,
+      "CORRECT": 7,
+      "ARBITER_RESCUE": 2,
+      "ARBITER_SOFT": 3,
+      "ABSTAIN": 3,
+      "UNANIMOUS_SOFT": 1,
+      "TIE_ABSTAIN": 1
+    },
+    "openbook-crm114": {
+      "CORRECT": 9,
+      "ABSTAIN": 2,
+      "UNANIMOUS_SOFT": 6,
+      "HARSHER": 2,
+      "TIE_ABSTAIN": 1
+    },
+    "closedbook": {
+      "CORRECT": 5,
+      "ARBITER_RESCUE": 2,
+      "ABSTAIN": 6,
+      "UNANIMOUS_SOFT": 1,
+      "HARSHER": 1,
+      "TIE_ABSTAIN": 1
+    },
+    "fullrun-trump_2026": {
+      "TIE_ABSTAIN": 1,
+      "UNANIMOUS_SOFT": 3,
+      "CORRECT": 2,
+      "HARSHER": 1
+    },
+    "fullrun-biden_2022": {
+      "CORRECT": 6,
+      "ABSTAIN": 1,
+      "UNANIMOUS_SOFT": 2,
+      "HARSHER": 1
+    }
+  },
+  "gold_false": [
+    "biden_2022:0342",
+    "trump_2026:0020",
+    "trump_2026:0056",
+    "trump_2026:0556"
+  ],
+  "assignments": {
+    "frontier-openbook-calib-crm114": {
+      "trump_2026:0020": "CRM114_RESCUE",
+      "trump_2026:0056": "UNANIMOUS_SOFT",
+      "trump_2026:0556": "UNANIMOUS_SOFT",
+      "biden_2022:0342": "UNANIMOUS_SOFT"
+    },
+    "frontier-openbook-crm114": {
+      "trump_2026:0020": "CORRECT",
+      "trump_2026:0056": "UNANIMOUS_SOFT",
+      "trump_2026:0556": "UNANIMOUS_SOFT",
+      "biden_2022:0342": "UNANIMOUS_SOFT"
+    },
+    "openbook-calib-crm114": {
+      "biden_2022:0200": "ARBITER_SOFT",
+      "trump_2026:0020": "CORRECT",
+      "trump_2026:0056": "UNANIMOUS_SOFT",
+      "trump_2026:0556": "ARBITER_SOFT",
+      "biden_2022:0342": "ARBITER_SOFT"
+    },
+    "openbook-crm114": {
+      "biden_2022:0200": "UNANIMOUS_SOFT",
+      "biden_2022:0245": "UNANIMOUS_SOFT",
+      "trump_2026:0020": "TIE_ABSTAIN",
+      "trump_2026:0040": "UNANIMOUS_SOFT",
+      "trump_2026:0056": "UNANIMOUS_SOFT",
+      "trump_2026:0556": "UNANIMOUS_SOFT",
+      "biden_2022:0342": "UNANIMOUS_SOFT"
+    },
+    "closedbook": {
+      "biden_2022:0200": "UNANIMOUS_SOFT",
+      "trump_2026:0020": "CORRECT",
+      "trump_2026:0056": "ABSTAIN"
+    },
+    "fullrun-trump_2026": {
+      "trump_2026:0020": "TIE_ABSTAIN",
+      "trump_2026:0040": "UNANIMOUS_SOFT",
+      "trump_2026:0056": "UNANIMOUS_SOFT",
+      "trump_2026:0556": "UNANIMOUS_SOFT"
+    },
+    "fullrun-biden_2022": {
+      "biden_2022:0200": "UNANIMOUS_SOFT",
+      "biden_2022:0245": "UNANIMOUS_SOFT"
+    }
+  },
+  "details": {
+    "frontier-openbook-calib-crm114": {
+      "trump_2026:0020": {
+        "gold": "FALSE",
+        "bucket": "CRM114_RESCUE",
+        "status": "resolved",
+        "verdict": "FALSE",
+        "votes": {
+          "MISLEADING": 2,
+          "FALSE": 1
+        },
+        "escalated": true,
+        "crm114": {
+          "stage1": "MISLEADING",
+          "final": "FALSE"
+        }
+      },
+      "trump_2026:0056": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0556": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "biden_2022:0342": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      }
+    },
+    "frontier-openbook-crm114": {
+      "trump_2026:0020": {
+        "gold": "FALSE",
+        "bucket": "CORRECT",
+        "status": "resolved",
+        "verdict": "FALSE",
+        "votes": {
+          "FALSE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0056": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0556": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "biden_2022:0342": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      }
+    },
+    "openbook-calib-crm114": {
+      "biden_2022:0200": {
+        "gold": "MISLEADING",
+        "bucket": "ARBITER_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "MISLEADING": 1,
+          "TRUE": 2
+        },
+        "escalated": true,
+        "crm114": null
+      },
+      "trump_2026:0020": {
+        "gold": "FALSE",
+        "bucket": "CORRECT",
+        "status": "resolved",
+        "verdict": "FALSE",
+        "votes": {
+          "FALSE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0056": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0556": {
+        "gold": "FALSE",
+        "bucket": "ARBITER_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2,
+          "FALSE": 1
+        },
+        "escalated": true,
+        "crm114": null
+      },
+      "biden_2022:0342": {
+        "gold": "FALSE",
+        "bucket": "ARBITER_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2,
+          "FALSE": 1
+        },
+        "escalated": true,
+        "crm114": null
+      }
+    },
+    "openbook-crm114": {
+      "biden_2022:0200": {
+        "gold": "MISLEADING",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "TRUE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "biden_2022:0245": {
+        "gold": "MISLEADING",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "TRUE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0020": {
+        "gold": "FALSE",
+        "bucket": "TIE_ABSTAIN",
+        "status": "disagreement",
+        "verdict": null,
+        "votes": {
+          "MISLEADING": 1,
+          "FALSE": 1,
+          "UNVERIFIABLE": 1
+        },
+        "escalated": true,
+        "crm114": null
+      },
+      "trump_2026:0040": {
+        "gold": "MISLEADING",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "TRUE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0056": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0556": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "biden_2022:0342": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      }
+    },
+    "closedbook": {
+      "biden_2022:0200": {
+        "gold": "MISLEADING",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "TRUE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0020": {
+        "gold": "FALSE",
+        "bucket": "CORRECT",
+        "status": "resolved",
+        "verdict": "FALSE",
+        "votes": {
+          "FALSE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0056": {
+        "gold": "FALSE",
+        "bucket": "ABSTAIN",
+        "status": "resolved",
+        "verdict": "UNVERIFIABLE",
+        "votes": {
+          "UNVERIFIABLE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      }
+    },
+    "fullrun-trump_2026": {
+      "trump_2026:0020": {
+        "gold": "FALSE",
+        "bucket": "TIE_ABSTAIN",
+        "status": "disagreement",
+        "verdict": null,
+        "votes": {
+          "MISLEADING": 1,
+          "FALSE": 1,
+          "UNVERIFIABLE": 1
+        },
+        "escalated": true,
+        "crm114": null
+      },
+      "trump_2026:0040": {
+        "gold": "MISLEADING",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "TRUE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0056": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "trump_2026:0556": {
+        "gold": "FALSE",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "MISLEADING",
+        "votes": {
+          "MISLEADING": 2
+        },
+        "escalated": false,
+        "crm114": null
+      }
+    },
+    "fullrun-biden_2022": {
+      "biden_2022:0200": {
+        "gold": "MISLEADING",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "TRUE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      },
+      "biden_2022:0245": {
+        "gold": "MISLEADING",
+        "bucket": "UNANIMOUS_SOFT",
+        "status": "resolved",
+        "verdict": "TRUE",
+        "votes": {
+          "TRUE": 2
+        },
+        "escalated": false,
+        "crm114": null
+      }
+    }
+  },
+  "join_report": {
+    "fullrun-trump_2026": {
+      "gold_rows_for_speech": 9,
+      "text_matched": 8,
+      "unmatched_gold_sids": [
+        "trump_2026:0052"
+      ],
+      "sid_drift": []
+    },
+    "fullrun-biden_2022": {
+      "gold_rows_for_speech": 12,
+      "text_matched": 10,
+      "unmatched_gold_sids": [
+        "biden_2022:0325",
+        "biden_2022:0342"
+      ],
+      "sid_drift": []
+    }
+  }
+}
