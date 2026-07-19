@@ -1172,7 +1172,7 @@ def _verdict_panel(site_report) -> str:
     svg_state = "state-" + state_map.get(mood, "iffy")
 
     claim_count = len(site_report.checkable_bundles)
-    model_count = len({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
+    model_count, model_hint = _models_engaged(site_report)
     agree_rate  = site_report.model_agreement_rate
     # 5-bucket Truthy-scale aggregates rendered side-by-side; the Lens
     # chip swaps them in lockstep with the per-claim headline pills.
@@ -1275,7 +1275,7 @@ def _verdict_panel(site_report) -> str:
         + _icon_svg(_ICON_BODY_CLAIMS, size=32)
         + '<div class="num">' + str(claim_count) + '</div>'
         + '<div class="lbl">Claims Checked</div></div>\n'
-        '    <div class="stat">'
+        '    <div class="stat" title="' + _esc(model_hint) + '">'
         + _icon_svg(_ICON_BODY_MODELS_ENGAGED, size=32)
         + '<div class="num">' + str(model_count) + '</div>'
         + '<div class="lbl">Models Engaged</div></div>\n'
@@ -1668,6 +1668,33 @@ def _panel_composition_html(site_report) -> str:
         + '</ul>'
         '</aside>'
     )
+
+
+def _models_engaged(site_report) -> tuple[int, str]:
+    """Distinct models that actually touched verdicts for this report.
+
+    PCA reports (panel_roster present): the distinct models across the
+    proposer/critic/arbiter seats, plus the Severity Classifier when any claim
+    carries a stage-2 override. Counting adapter names under-reports a 3-model
+    panel as 1 — the bridge emits ONE reconciled ModelVerdict per claim
+    (2026-07-19 review find). Display-only: consensus always comes from the
+    panel votes, never from this counter. Legacy reports keep the
+    adapter-name count. Returns (count, composition hint)."""
+    roster = getattr(site_report, "panel_roster", None) or {}
+    seats = roster.get("seats") or {}
+    if seats:
+        models = {m for ms in seats.values() for m in (ms or [])}
+        crm_engaged = any(
+            getattr(getattr(b.consensus, "provenance", None), "crm114_final", "")
+            for b in site_report.checkable_bundles
+        )
+        if crm_engaged:
+            return len(models) + 1, (
+                f"{len(models)} panel seat models "
+                f"({', '.join(sorted(models))}) + the Severity Classifier")
+        return len(models), f"{len(models)} panel seat models ({', '.join(sorted(models))})"
+    n = len({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
+    return n, f"{n} model adapter{'s' if n != 1 else ''}"
 
 
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
@@ -5770,19 +5797,37 @@ def _render_report(site_report: SiteReport) -> str:
             + '</div>'
         )
 
-    _model_count = len({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
-    _model_word = str(_model_count) + ' frontier language model' + ('s' if _model_count != 1 else '')
-    methodology_html = (
-        '<aside class="methodology">'
-        '<strong>How this report was generated.</strong> truth-bot extracts factual claims '
-        'from the source transcript, submits each independently to ' + _model_word + ' '
-        'with the instruction to verify against publicly cited sources, and aggregates '
-        'verdicts using a simple majority rule. Caveats are surfaced when models flag '
-        'ambiguity or framing concerns. Truthy McTruthface\u2019s mood reflects the aggregate '
-        'score across all claims. '
-        '<a href="../about.html">Read the full methodology \u2192</a>'
-        '</aside>'
-    )
+    _model_count, _model_hint = _models_engaged(site_report)
+    _roster_seats = (getattr(site_report, "panel_roster", None) or {}).get("seats") or {}
+    if _roster_seats:
+        _comp = " / ".join(
+            f"{role}={', '.join(ms or [])}" for role, ms in _roster_seats.items())
+        methodology_html = (
+            '<aside class="methodology">'
+            '<strong>How this report was generated.</strong> truth-bot extracts factual '
+            'claims from the source transcript, screens them for check-worthiness, and '
+            'routes each checkable claim to a proposer \u2192 critic \u2192 arbiter panel '
+            'of language models (' + _esc(_comp) + '), grounded in a retrieved evidence '
+            'pack cited per claim. Label disagreements escalate to the arbiter; a '
+            'dedicated Severity Classifier model re-examines the False-vs-Misleading '
+            'boundary. Verdicts, seat votes, and sources are shown on every claim page. '
+            'Truthy McTruthface\u2019s mood reflects the aggregate score across all claims. '
+            '<a href="../about.html">Read the full methodology \u2192</a>'
+            '</aside>'
+        )
+    else:
+        _model_word = str(_model_count) + ' frontier language model' + ('s' if _model_count != 1 else '')
+        methodology_html = (
+            '<aside class="methodology">'
+            '<strong>How this report was generated.</strong> truth-bot extracts factual claims '
+            'from the source transcript, submits each independently to ' + _model_word + ' '
+            'with the instruction to verify against publicly cited sources, and aggregates '
+            'verdicts using a simple majority rule. Caveats are surfaced when models flag '
+            'ambiguity or framing concerns. Truthy McTruthface\u2019s mood reflects the aggregate '
+            'score across all claims. '
+            '<a href="../about.html">Read the full methodology \u2192</a>'
+            '</aside>'
+        )
 
     # Build hero elements conditionally (omit empty fields per spec)
     # Prefer new decomposed fields; fall back to legacy fields for backward compat.
