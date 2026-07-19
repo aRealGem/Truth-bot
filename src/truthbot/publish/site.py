@@ -797,8 +797,13 @@ def _sources_consulted_html(sources: list[dict]) -> str:
         snippet_html = (
             f'<div class="source-snippet">{_esc(snippet)}</div>' if snippet else ""
         )
+        # The pack id (E1, E2, …) is what model reasoning cites — render it so
+        # "E5 confirms…" in the write-up is traceable to a concrete source
+        # (2026-07-19 review: the ids were captured but never displayed).
+        pack_id = (src.get("id") or "").strip()
+        id_html = f'<span class="ev-id">[{_esc(pack_id)}]</span>' if pack_id else ""
         items.append(
-            f'<li class="source-verified"><span class="ev-mark">→</span>{badge}'
+            f'<li class="source-verified"><span class="ev-mark">→</span>{id_html}{badge}'
             f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
             f'{name_html}{tier_html}{snippet_html}</li>'
         )
@@ -3740,6 +3745,13 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
   font-family: var(--mono);
   color: var(--ink-faint);
   font-size: 0.75rem;
+}
+.evidence-list .ev-id {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin: 0 0.35rem 0 0.15rem;
 }
 .evidence-list a {
   color: var(--ink);

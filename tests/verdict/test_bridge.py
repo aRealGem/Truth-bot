@@ -160,9 +160,11 @@ def test_misleading_projection():
     out = bridge.bridge([row], [_claim("m:0")])
     c = out.bundles[0].consensus
     assert c.consensus_label is VerdictLabel.MISLEADING
-    # Lenient and Strict both send MISLEADING → Falsey
-    assert c.coarse_lenient_label == "Falsey"
-    assert c.coarse_strict_label == "Falsey"
+    # 2026-07-19 review: PCA carries the coarse fields as the FINE label — the
+    # Truthy/Falsey umbrellas fold the legacy 6-bucket scale, and projecting a
+    # panel Misleading into a "Falsey" chip overstated the panel's own call.
+    assert c.coarse_lenient_label == "Misleading"
+    assert c.coarse_strict_label == "Misleading"
 
 
 def test_crm114_override_annotated_and_final_label_wins():

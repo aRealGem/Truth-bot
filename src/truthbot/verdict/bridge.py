@@ -283,8 +283,14 @@ def _consensus_and_panel(
             model_reported_sources=list(cited_urls),
         )
         agreement = len(votes) == 1  # one distinct label across the panel
-        coarse_lenient = LENIENT_PROJECTION[label]
-        coarse_strict = STRICT_PROJECTION[label]
+        # PCA carries the coarse fields as the FINE label itself (2026-07-19
+        # review): the Truthy/Falsey umbrellas exist to fold the legacy 6-bucket
+        # scale (Mostly True/Exaggerated) — the PCA 4-label set has nothing to
+        # fold, and projecting Misleading into a "Falsey" chip overstated the
+        # panel's own call on every downstream surface (chip, toggle attrs,
+        # distribution, claims.json).
+        coarse_lenient = label.value
+        coarse_strict = label.value
         consensus = ConsensusVerdict(
             claim_id=sid,
             model_verdicts=[mv],
