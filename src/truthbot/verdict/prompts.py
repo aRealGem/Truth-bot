@@ -67,7 +67,12 @@ OPEN_BOOK_PROMPTS = {
                 + _OPEN_CONTRACT,
 }
 
-# ── Calibrated open-book variant (Phase 3 experiment, P67.2) ───────────────────
+# ── Calibrated open-book prompts (ADOPTED open-book default — P67 Track B) ─────
+# Adopted 2026-07-19 after the Track B matched-prompt eval: dev+calib decided-acc
+# 0.5625 vs plain 0.50 and vs the frontier panel 0.474-0.50; also the only config
+# that correctly abstains on the unverifiable row. adjudicator.adjudicate uses this
+# set whenever an evidence provider is present; OPEN_BOOK_PROMPTS is retained as the
+# plain A/B baseline (score_layerb_vs_gold.py --plain).
 # Gate-2 diagnosis: given open-book evidence the seats UNANIMOUSLY soften severity
 # — FALSE→MISLEADING (a false core claim with a kernel of truth) and MISLEADING→TRUE
 # (a distorted-but-supported claim). The softening is model-level, so the fix has to
@@ -81,10 +86,17 @@ _CALIB_PROCEDURE = (
     '(2) FALSE if the evidence CONTRADICTS the core assertion — the stated fact did not '
     'happen, or the reverse is true — even when a peripheral detail is accurate. Do not '
     'soften a contradicted core to MISLEADING because it contains a kernel of truth. '
+    '(2b) ABSOLUTE-CLAIM RULE: when the core assertion is an absolute or universal — '
+    'zero, none, only, all, every, ended, eliminated, completely stopped or destroyed, '
+    'biggest/lowest in history — evidence of material counterexamples CONTRADICTS that '
+    'core, and the verdict is FALSE. The underlying trend or event being real does NOT '
+    'soften an absolute to MISLEADING: "we ended X" is FALSE when X demonstrably '
+    'continues, even if X was substantially reduced. '
     '(3) MISLEADING if the core is REAL but the evidence shows it is exaggerated, '
     'cherry-picked, stripped of context, or spun to create a false impression. '
-    'Overstating or distorting a true underlying fact is MISLEADING — NOT FALSE; reserve '
-    'FALSE for a core the evidence actually contradicts. Also do NOT call such a claim TRUE. '
+    'Overstating or distorting a true underlying fact is MISLEADING — NOT FALSE (unless '
+    'the claim states an absolute; see 2b); reserve FALSE for a core the evidence '
+    'actually contradicts. Also do NOT call such a claim TRUE. '
     '(4) TRUE only when the evidence supports the core assertion without material '
     'exaggeration or distortion. '
     '(5) UNVERIFIABLE only when the provided evidence cannot settle the core assertion — '

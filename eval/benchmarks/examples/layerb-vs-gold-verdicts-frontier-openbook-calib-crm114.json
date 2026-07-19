@@ -1,0 +1,370 @@
+[
+  {
+    "sid": "biden_2022:0025",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.82,
+    "citations": [
+      "E1",
+      "E3",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "NATO was indeed created after World War II with peace and stability in Europe as goals, but the evidence consistently shows its core purpose was specifically to counter Soviet aggression and communist expansion \u2014 a critical context the claim omits, creating a misleadingly benign and incomplete picture of NATO's founding rationale.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0040",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.85,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E6"
+    ],
+    "reasoning": "Biden's exact claim is confirmed verbatim in the State of the Union transcript (E2) and echoed in government media (E1); the surrounding evidence corroborates that the U.S. publicly pre-disclosed Russian invasion plans and anticipated Putin's false justifications (denazification, self-defense narratives) which Russia indeed used and which fact-checkers confirmed were fabricated (E3, E4, E6), supporting the core assertion without material contradiction or exaggeration.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0115",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.935,
+    "citations": [
+      "E1",
+      "E2",
+      "E6"
+    ],
+    "reasoning": "The 5.7% GDP growth figure for 2021 and the characterization as the strongest growth in nearly 40 years (since Reagan's presidency) are confirmed by NBC News, the Washington Post, and CNN's contemporaneous reporting of Biden's SOTU address, all consistent with BEA data available at the utterance date of 2022-03-01.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0125",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.85,
+    "citations": [
+      "E1",
+      "E2",
+      "E6"
+    ],
+    "reasoning": "The 13th-place ranking is real (confirmed by the White House citing WEF data and FactCheck.org), but E6 notes it actually represents an improvement over a prior 2011-12 ranking, and E2 clarifies the U.S. ranks 2nd overall but falls behind specifically on transportation and utility infrastructure \u2014 meaning the '13th in the world' figure is cherry-picked from a subcategory or specific report year and presented without the context that it reflects improvement, not decline, making the claim misleading rather than straightforwardly false or true.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0140",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.85,
+    "citations": [
+      "E3"
+    ],
+    "reasoning": "The Buy American Act of 1933 \u2014 approximately 89 years old as of the March 2022 utterance date \u2014 is a real law requiring federal procurement to prefer American-made goods, directly matching the claim of a law 'almost a century' old ensuring taxpayer dollars support American jobs; E3 corroborates the existence of Buy America rules tying tax dollars to American manufacturing jobs.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0200",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.82,
+    "citations": [
+      "E1",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The core claim that insulin costs 'about $10 a vial to make' is directionally real \u2014 production costs are low \u2014 but the evidence consistently places manufacturing costs between ~$2 and $6.16 per vial (E5, E6), with one study cited by NBC News saying 'less than $10' (E1); the $10 figure overstates the best available estimates by roughly 60\u2013400%, making it an exaggeration of a true underlying fact rather than a fabrication.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0245",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.87,
+    "citations": [
+      "E1",
+      "E2",
+      "E3"
+    ],
+    "reasoning": "The core numerical claim is real \u2014 the White House itself projects a $1.3 trillion deficit reduction in FY2022, the largest single-year decline in U.S. history \u2014 but fact-checkers found it misleading because the vast majority of that reduction resulted from the automatic expiration of emergency pandemic-era spending enacted under Trump, not from Biden's policy choices, making the framing that Biden 'cut' the deficit by that amount a distortion of a true underlying fact rather than an outright falsehood.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0305",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.72,
+    "citations": [
+      "E3",
+      "E4"
+    ],
+    "reasoning": "FactCheck.org found the adult vaccination rate was ~73.6% as of mid-January 2022 \u2014 slightly below Biden's claimed 75% \u2014 making the core statistic a modest overstatement of a real underlying fact, while the 77% hospitalization reduction figure cannot be verified from the provided evidence.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0325",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.7,
+    "citations": [],
+    "reasoning": "The evidence pack contains no reporting on the two specific officers referenced in the claim (likely NYPD Officers Rivera and another Dominican American officer killed in early 2022), so the assertion that both were Dominican Americans who grew up on the streets they later patrolled cannot be confirmed or contradicted by the provided evidence.",
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0400",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.95,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E6"
+    ],
+    "reasoning": "Multiple government and fact-check sources confirm the American Rescue Plan provided over $130 billion to K-12 schools for purposes including hiring staff, safely reopening, and combating learning loss, directly supporting the core assertion.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0020",
+    "status": "resolved",
+    "verdict": "FALSE",
+    "confidence": 0.765,
+    "citations": [
+      "E1",
+      "E3"
+    ],
+    "reasoning": "The core claim of zero illegal border admissions is a distortion of a real sharp decline in border crossings, spun into an absolute figure the evidence does not substantiate; \"admitted\" conflates lawful admission with illegal entry.",
+    "votes": {
+      "MISLEADING": 2,
+      "FALSE": 1
+    },
+    "split": true,
+    "escalated": true,
+    "crm114": {
+      "stage1": "MISLEADING",
+      "final": "FALSE"
+    }
+  },
+  {
+    "sid": "trump_2026:0040",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.5,
+    "citations": [
+      "E1",
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "While multiple sources confirm Trump made this claim at the State of the Union, the evidence snippets that appear to fact-check the specific count of '53' all-time record highs (E4, E6 from Hearst's National Investigative Unit) are truncated before revealing their findings, and no other provided evidence either confirms or contradicts the precise figure, leaving the core numerical assertion unsettled by the available evidence.",
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0052",
+    "status": "resolved",
+    "verdict": "FALSE",
+    "confidence": 0.6699999999999999,
+    "citations": [
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The 80-million-barrel Venezuela figure is reported as real but E5's reference to a 'seized' tanker undercuts the 'new friend and partner' framing, suggesting the oil was taken rather than received through a cooperative partnership; the 600,000 b/d production increase figure is presented in E4 as misleading in how it characterizes the change, making the compound claim an overstatement or distortion of underlying facts rather than an outright fabrication.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false,
+    "crm114": {
+      "stage1": "MISLEADING",
+      "final": "FALSE"
+    }
+  },
+  {
+    "sid": "trump_2026:0056",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.92,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E5"
+    ],
+    "reasoning": "The Trump administration did take significant real actions against DEI \u2014 revoking decades-old affirmative action executive orders, terminating federal DEI offices and positions, and creating a chilling effect on corporate DEI programs \u2014 but the claim that DEI was 'ended in America' is a material overstatement: legal challenges were ongoing (with a lawsuit filed and the administration appealing as of the utterance date), DEI programs in private companies and universities were not legally abolished, and Fast Company's contemporaneous fact-check confirms the core assertion is exaggerated relative to what the executive orders actually accomplished.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0132",
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
+    "citations": [],
+    "reasoning": "",
+    "votes": {
+      "TRUE": 1,
+      "MISLEADING": 1,
+      "UNVERIFIABLE": 1
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "trump_2026:0208",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.82,
+    "citations": [
+      "E3",
+      "E4",
+      "E5"
+    ],
+    "reasoning": "While inflation did impose real costs on American families, the $34,000 figure is a contested Republican-calculated estimate that grew from $28,000 (as cited by Trump in September 2024) without clear methodological justification, relies on calculations PolitiFact flagged as ambiguous regarding household composition, and strips away the multi-causal nature of the inflation surge (pandemic supply chains, Russia's Ukraine invasion), making it an exaggeration and distortion of a real underlying fact rather than an outright fabrication.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0256",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.92,
+    "citations": [
+      "E6",
+      "E4"
+    ],
+    "reasoning": "E6 directly quotes the claim as stated at the SOTU on 2026-02-24, confirming that one drug was costing Catherine $4,000, and E4 corroborates the context of fertility drug pricing (Gonal-F) being highlighted in Trump's drug pricing announcements around the same period.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0030",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.82,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "Multiple government and established sources confirm the invasion was characterized as premeditated (Biden's own words per E2/E3/E4) and unprovoked (E1/E4); Russia's pre-invasion denials of any invasion plan (E5) support the premeditation framing, and while Putin offered self-serving justifications (E6), those rationales \u2014 NATO expansion concerns \u2014 are widely assessed as pretextual rather than genuine provocation, making the core assertion well-supported by the evidence as of the utterance date.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0556",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.92,
+    "citations": [
+      "E1",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "Operation Midnight Hammer was a real U.S. military strike on Iranian nuclear facilities in June 2025, so the core event occurred, but Trump's claim that it 'obliterated' Iran's nuclear weapons program is an overstatement contradicted by intelligence assessments: the strikes 'significantly degraded' rather than obliterated the program, some deeper facilities survived, and experts confirmed the sites were damaged but not completely destroyed \u2014 making the 'obliterated' characterization a material exaggeration of a real underlying fact.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0592",
+    "status": "resolved",
+    "verdict": "FALSE",
+    "confidence": 0.88,
+    "citations": [
+      "E2",
+      "E3",
+      "E6"
+    ],
+    "reasoning": "The core assertions \u2014 that all U.S. aid to Ukraine is routed through NATO and that NATO pays the U.S. in full \u2014 are contradicted by evidence: NATO does not directly purchase or supply arms itself (E2), U.S. aid historically went through multiple channels not controlled by NATO (E3), and even Trump's own July 2025 reframing of the arrangement (E6) describes a new policy rather than an established reality, while NATO as an institution lacks the mechanism to 'pay in full' for weapons transfers.",
+    "votes": {
+      "FALSE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0342",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.9,
+    "citations": [
+      "E1",
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The PLCAA does provide substantial liability protections to gun manufacturers (a real fact), but the claim that they are 'the only industry in America that can't be sued' is a material overstatement: the PLCAA contains multiple exceptions under which manufacturers can and have been sued, and other industries (e.g., vaccine makers, general aviation) also enjoy statutory liability shields, making the 'only industry' framing factually inaccurate and misleading.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  }
+]

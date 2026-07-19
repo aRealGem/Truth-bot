@@ -26,7 +26,7 @@ from hydramind import HydraMind, ItemResult, StrategyResultKind
 
 from . import discriminator, evidence_pack, speech_context
 from .evidence_pack import DEFAULT_MAX_ITEMS, EvidencePack
-from .prompts import OPEN_BOOK_PROMPTS, PROMPTS
+from .prompts import CALIBRATED_OPEN_BOOK_PROMPTS, PROMPTS
 from truthbot.verify.evidence_provider import EvidenceProvider
 
 _VALID_VERDICTS = {"TRUE", "FALSE", "MISLEADING", "UNVERIFIABLE"}
@@ -62,6 +62,7 @@ def normalize(item: ItemResult, *, closed_book: bool = True) -> dict:
         "citations": [],
         "reasoning": "",
         "votes": ag.get("votes", {}),
+        "by_role": ag.get("by_role", {}),   # role → [labels]; critics may be a panel
         "split": bool(ag.get("split", False)),
         "escalated": bool(ag.get("escalated", False)),
     }
@@ -146,7 +147,9 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
     open_book = evidence_provider is not None
     items, packs = build_items(claims, evidence_provider=evidence_provider,
                                today=today, max_items=max_items)
-    run_tune = {"prompts": OPEN_BOOK_PROMPTS if open_book else PROMPTS}
+    # Open-book default is the CALIBRATED prompt set (adopted 2026-07-19, P67 Track B:
+    # +0.06 decided-acc over plain at equal cost; plain remains available via tune).
+    run_tune = {"prompts": CALIBRATED_OPEN_BOOK_PROMPTS if open_book else PROMPTS}
     run_tune.update(tune or {})
     result, manifest = hm.run("verdict", items, "pca", roster=roster,
                               tune=run_tune, rc_id=rc_id)
@@ -160,11 +163,23 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
     if two_stage and open_book:
         adverse = {r["sid"] for r in rows
                    if r["status"] == "resolved" and r["verdict"] in ("FALSE", "MISLEADING")}
-        disc_items = [it for it in items if it["item_id"] in adverse]
+        # TIE_ABSTAIN routing (P67 Phase 3, closes the F1 bypass): a DISAGREEMENT-
+        # flagged row whose vote set is within {FALSE, MISLEADING, UNVERIFIABLE} is an
+        # adverse-severity tie, not a genuine can't-decide — a correct FALSE vote was
+        # dying in the tie because stage 2 only saw resolved rows. Route it to the
+        # discriminator; ties involving a TRUE vote stay flagged (binary F/M would be
+        # the wrong question). The override is recorded on the row (crm114 + status),
+        # so this is an explicit stage-2 adjudication, not a silent tie-break (I2).
+        tie_routed = {r["sid"] for r in rows
+                      if r["status"] == "disagreement" and r["votes"]
+                      and set(r["votes"]) <= {"FALSE", "MISLEADING", "UNVERIFIABLE"}}
+        disc_items = [it for it in items if it["item_id"] in adverse | tie_routed]
         disc = discriminator.discriminate(hm, disc_items, tier=disc_tier)
         discriminator.apply_discrimination(rows, disc)
+        discriminator.apply_tie_routing(rows, disc)
         notes["two_stage"] = True
         notes["disc_tier"] = disc_tier
+        notes["crm114_tie_routed"] = sorted(tie_routed)
         notes["crm114_overrides"] = {r["sid"]: r["crm114"] for r in rows if r.get("crm114")}
 
     if open_book:

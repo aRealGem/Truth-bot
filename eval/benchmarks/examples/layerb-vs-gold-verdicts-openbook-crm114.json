@@ -1,0 +1,363 @@
+[
+  {
+    "sid": "biden_2022:0025",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E2",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "NATO was indeed created to secure peace and stability in Europe after World War II, primarily to counter Soviet and communist expansion.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0040",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "Multiple sources confirm that the U.S. shared information about Putin's plans and justifications for aggression, and evidence shows Putin's false justifications.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0115",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E6"
+    ],
+    "reasoning": "The U.S. economy grew at a rate of 5.7% in 2021, as reported by NBC News and CNN, which aligns with the claim made on 2022-03-01.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0125",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E2"
+    ],
+    "reasoning": "The White House and Washington Post both confirm the U.S. infrastructure ranking as 13th as of 2021, which aligns with the claim made in 2022.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0140",
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
+    "citations": [],
+    "reasoning": "",
+    "votes": {
+      "TRUE": 1,
+      "UNVERIFIABLE": 1,
+      "MISLEADING": 1
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "biden_2022:0200",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.9,
+    "citations": [
+      "E1",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "Multiple sources confirm that the production cost of insulin is around $10 per vial, with some estimates ranging from $2 to $6.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0245",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E5"
+    ],
+    "reasoning": "The White House and FactCheck.org both confirm that the deficit was projected to decrease by more than $1.3 trillion in a single year, the largest one-year decline in U.S. history.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0305",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.8500000000000001,
+    "citations": [
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The claim that 75 percent of adult Americans were fully vaccinated is slightly exaggerated, as the actual figure was 73.6 percent as of the utterance date.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0325",
+    "status": "resolved",
+    "verdict": "UNVERIFIABLE",
+    "confidence": 0.8,
+    "citations": [],
+    "reasoning": "The provided evidence does not contain specific information about two Dominican Americans who grew up on the same streets and later chose to patrol those streets as police officers.",
+    "votes": {
+      "UNVERIFIABLE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0400",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E6"
+    ],
+    "reasoning": "Multiple sources confirm that the American Rescue Plan allocated funds to schools for hiring teachers and addressing learning loss.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0020",
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
+    "citations": [],
+    "reasoning": "",
+    "votes": {
+      "MISLEADING": 1,
+      "FALSE": 1,
+      "UNVERIFIABLE": 1
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "trump_2026:0040",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "Multiple sources, including FactCheck.org and other news outlets, confirm the claim that the stock market set 53 all-time record highs since the election, as stated in the State of the Union address on 2026-02-24.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0052",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.8500000000000001,
+    "citations": [
+      "E2",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The claim about receiving 80 million barrels of oil from Venezuela is misleading as it implies a recent and substantial transaction, but the evidence suggests it refers to oil seized or captured rather than a new partnership or trade deal.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0056",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.8500000000000001,
+    "citations": [
+      "E2",
+      "E3",
+      "E5"
+    ],
+    "reasoning": "The evidence shows that the Trump administration took significant steps to revoke and terminate DEI initiatives, particularly in the federal government and among federal contractors, but the claim that DEI was entirely ended in America is an overstatement, as DEI efforts in the private sector were not completely eradicated.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0132",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E2",
+      "E6"
+    ],
+    "reasoning": "Multiple high-trust sources confirm that all Democrats voted against the tax cuts as of the utterance date.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0208",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.8,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+    ],
+    "reasoning": "The claim of $34,000 cost to the typical family due to inflation is not fully supported by the evidence, as PolitiFact and other sources cite a figure of $28,000, and the calculations have been criticized for not clearly defining household size.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0256",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E6"
+    ],
+    "reasoning": "E6, dated 2026-02-25 (one day after the utterance date of 2026-02-24), directly quotes the claim verbatim as a statement made by a public figure identifying a specific person named Catherine and a drug costing $4,000 that was reduced to under $500 via an online platform. The evidence confirms the claim was made and reported contemporaneously. E4 corroborates that fertility drugs like Gonal-F were among those highlighted for low-cost pricing deals around this timeframe, consistent with the context that Catherine was undergoing IVF treatment.",
+    "votes": {
+      "TRUE": 2,
+      "UNVERIFIABLE": 1
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "biden_2022:0030",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "Multiple high-trust sources confirm that Putin's attack on Ukraine was premeditated and unprovoked, with evidence from government statements, established news outlets, and fact-checking organizations.",
+    "votes": {
+      "TRUE": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0556",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.875,
+    "citations": [
+      "E1",
+      "E4",
+      "E5"
+    ],
+    "reasoning": "The evidence indicates that while Operation Midnight Hammer significantly damaged Iran's nuclear facilities, it did not completely obliterate Iran's nuclear weapons program as claimed.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "trump_2026:0592",
+    "status": "resolved",
+    "verdict": "FALSE",
+    "confidence": 0.8500000000000001,
+    "citations": [
+      "E1",
+      "E2",
+      "E3"
+    ],
+    "reasoning": "While the claim suggests that NATO directly pays for weapons sent to Ukraine, evidence indicates that NATO coordinates donations but does not directly purchase or supply arms, and some aid goes to activities not directly in Ukraine.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false,
+    "crm114": {
+      "stage1": "MISLEADING",
+      "final": "FALSE"
+    }
+  },
+  {
+    "sid": "biden_2022:0342",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.875,
+    "citations": [
+      "E1",
+      "E2",
+      "E3"
+    ],
+    "reasoning": "The claim that gun manufacturers are the only industry in America that can't be sued is misleading, as the Protection of Lawful Commerce in Arms Act (PLCAA) does not grant absolute immunity but rather limits certain types of lawsuits.",
+    "votes": {
+      "MISLEADING": 2
+    },
+    "split": false,
+    "escalated": false
+  }
+]

@@ -5,7 +5,8 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 from truthbot.verdict import discriminator
-from truthbot.verdict.discriminator import CRM114_SYSTEM, apply_discrimination, discriminate
+from truthbot.verdict.discriminator import (
+    CRM114_SYSTEM, apply_discrimination, apply_tie_routing, discriminate)
 
 
 # ── prompt ────────────────────────────────────────────────────────────────────
@@ -15,6 +16,9 @@ def test_crm114_prompt_is_speaker_blind_and_binary():
     assert "speaker" not in t.lower()
     assert "FALSE" in t and "MISLEADING" in t
     assert "CORE assertion" in t and "contradiction" in t.lower()
+    # P67 Phase 3: the absolute-claim rule must be present — counterexamples
+    # contradict an absolute core (zero/only/ended/...) ⇒ FALSE, not MISLEADING.
+    assert "ABSOLUTE-CLAIM RULE" in t
 
 
 # ── apply_discrimination: only re-labels resolved adverse rows ─────────────────
@@ -49,6 +53,33 @@ def test_override_ignores_invalid_disc_label():
     rows = [_row("a", verdict="FALSE")]
     apply_discrimination(rows, {"a": "TRUE"})   # discriminator must stay binary
     assert rows[0]["verdict"] == "FALSE" and "crm114" not in rows[0]
+
+
+# ── apply_tie_routing: resolves adverse-severity ties, explicitly (I2) ─────────
+
+def test_tie_routing_resolves_flagged_row_and_records():
+    rows = [dict(_row("d", status="disagreement"),
+                 votes={"MISLEADING": 1, "FALSE": 1, "UNVERIFIABLE": 1})]
+    apply_tie_routing(rows, {"d": "FALSE"})
+    assert rows[0]["status"] == "resolved" and rows[0]["verdict"] == "FALSE"
+    assert rows[0]["crm114"] == {"stage1": "DISAGREEMENT", "final": "FALSE"}
+    assert rows[0]["votes"] == {"MISLEADING": 1, "FALSE": 1, "UNVERIFIABLE": 1}  # tie stays readable
+
+
+def test_tie_routing_leaves_unrouted_and_resolved_rows_alone():
+    rows = [
+        dict(_row("d", status="disagreement"), votes={"TRUE": 1, "MISLEADING": 1}),  # not routed
+        _row("r", verdict="MISLEADING"),                                             # resolved
+    ]
+    apply_tie_routing(rows, {"r": "FALSE"})    # disc entry for a resolved row is ignored here
+    assert rows[0]["status"] == "disagreement" and rows[0]["verdict"] is None
+    assert rows[1]["status"] == "resolved" and rows[1]["verdict"] == "MISLEADING"
+
+
+def test_tie_routing_ignores_invalid_disc_label():
+    rows = [dict(_row("d", status="disagreement"), votes={"MISLEADING": 1, "FALSE": 1})]
+    apply_tie_routing(rows, {"d": "TRUE"})
+    assert rows[0]["status"] == "disagreement" and "crm114" not in rows[0]
 
 
 # ── discriminate: parses a valid binary label, drops the rest ─────────────────
