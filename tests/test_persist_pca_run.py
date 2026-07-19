@@ -12,6 +12,7 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from truthbot.models import Evidence, SourceTier
 from truthbot.pipeline import _persist_pca_run
 from truthbot.verdict import bridge
 
@@ -22,6 +23,8 @@ class _FakeResult:
     rows: list = field(default_factory=list)
     claims: list = field(default_factory=list)
     characterization: list = field(default_factory=list)
+    evidence: dict = field(default_factory=dict)
+    roster: dict | None = None
 
 
 def _resolved_row(sid, verdict, votes, **extra):
@@ -87,6 +90,57 @@ class TestPersistPcaRun:
         assert split.consensus_verdict == "Models split"
         assert split.provenance.panel_split is True
         assert split.provenance.panel_votes == {"True": 1, "False": 1}
+
+    def test_persists_evidence_pack(self, tmp_path):
+        result = _FakeResult(
+            rows=[_resolved_row("s:0", "TRUE", {"TRUE": 3})],
+            claims=[_claim("s:0", "A2")],
+            evidence={
+                "s:0": [
+                    Evidence(
+                        claim_id="s:0", source_name="BLS",
+                        source_url="https://bls.gov/a",
+                        source_tier=SourceTier.GOVERNMENT, snippet="gov snippet",
+                    ),
+                    Evidence(
+                        claim_id="s:0", source_name="AP",
+                        source_url="https://ap.org/b",
+                        source_tier=SourceTier.WIRE, snippet="wire snippet",
+                    ),
+                ]
+            },
+        )
+        path = _persist_pca_run("run-ev", result, meta={}, metrics_dir=tmp_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        assert "evidence" in payload
+        evs = payload["evidence"]["s:0"]
+        assert len(evs) == 2
+        assert [e["source_url"] for e in evs] == [
+            "https://bls.gov/a", "https://ap.org/b"]
+        assert evs[0]["source_name"] == "BLS"
+        assert evs[0]["source_tier"] == "Government"
+
+    def test_persists_panel_roster(self, tmp_path):
+        # The PCA panel composition (which model fills each seat) is a per-run
+        # fact and must survive into the replay artifact for offline re-render.
+        result = _FakeResult(
+            rows=[_resolved_row("s:0", "TRUE", {"TRUE": 3})],
+            claims=[_claim("s:0", "A2")],
+            roster={"name": "dev", "seats": {
+                "proposer": ["mistral"], "critic": ["dsv4-flash"],
+                "arbiter": ["claude-haiku"]}},
+        )
+        path = _persist_pca_run("run-roster", result, meta={}, metrics_dir=tmp_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        assert payload["roster"]["name"] == "dev"
+        assert payload["roster"]["seats"]["proposer"] == ["mistral"]
+        assert payload["roster"]["seats"]["arbiter"] == ["claude-haiku"]
+
+    def test_persist_roster_absent_is_null(self, tmp_path):
+        # Legacy-clean: a result with no roster persists a null (not a crash).
+        path = _persist_pca_run("run-noroster", _FakeResult(), meta={}, metrics_dir=tmp_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        assert payload["roster"] is None
 
     def test_persistence_failure_does_not_raise(self, tmp_path, monkeypatch):
         def boom(*args, **kwargs):

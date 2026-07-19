@@ -1055,6 +1055,37 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   line-height: 1.5;
   word-break: break-word;
 }
+/* Statement Triage — set-aside (non-check-worthy) sentence stream */
+.triage-group { margin: 0 0 1.5rem; }
+.triage-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+.triage-item {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.triage-text { line-height: 1.5; }
+.triage-meta {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+}
+.triage-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-right: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 .model-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1232,6 +1263,14 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .tier-news  { background: #4a148c; }
 .tier-fc    { background: #e65100; }
 .tier-other { background: #546e7a; }
+.evidence-list .source-snippet {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
 
 
 /* Collapsible evidence/sources (native <details>) */
@@ -1308,6 +1347,56 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
 }
+
+/* PCA panel composition — which model fills each seat, once per run. */
+.panel-composition {
+  margin-top: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+.panel-composition-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.panel-composition-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+.panel-composition-roster {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+.panel-composition-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+}
+.panel-composition-seat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.panel-composition-role {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+.panel-composition-model { color: var(--ink); }
 
 
 /* [18] Footer ────────────────────────────────────────────────────────── */
