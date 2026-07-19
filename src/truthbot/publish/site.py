@@ -538,13 +538,17 @@ _ADVERSE_FAMILY: frozenset[str] = frozenset(
 
 
 def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """Family-aggregated headline for a verdict distribution.
+    """Family-aggregated GRADED headline (the Strict lens; 2026-07-19 lens
+    semantics: Strict = graded bands, Lenient = the simple Truthy/Falsey lean
+    from ``_binary_verdict`` — same numbers, two presentations).
 
     Returns (label_text, css_class, ratio_text). Bands over the dominant
-    family's share of decided claims:
-      ≥ 70%  → 'Largely True/False'
-      ≥ 55%  → 'Mostly True/False'
-      else   → 'Mixed verdict'
+    family's share s of decided claims — s ∈ [0.5, 1] by construction
+    (two families partition decided), and the bands partition that domain,
+    so they are mutually exclusive and exhaustive:
+      s ∈ [0.70, 1.00]  → 'Largely True/False'
+      s ∈ [0.55, 0.70)  → 'Mostly True/False'
+      s ∈ [0.50, 0.55)  → 'Mixed verdict'   (incl. exact ties, s = 0.5)
     A report with claims but zero decided verdicts headlines 'Unverifiable'.
     """
     total = sum(dist.values())
@@ -567,6 +571,30 @@ def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
     if share >= 0.55:
         return f"Mostly {word}", f"vt-{css}", ratio
     return "Mixed verdict", "neutral", ratio
+
+
+def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
+    """The SIMPLE headline (the Lenient lens): overall Truthy/Falsey lean.
+
+    Jackie's rule (2026-07-19): true-family strictly greater than the adverse
+    family → 'Truthy'; otherwise → 'Falsey' (an exact tie reads Falsey — the
+    benefit of the doubt is not extended). Mutually exclusive and exhaustive
+    over decided > 0; zero decided → 'Unverifiable'. Same families and same
+    decided-claims denominator as ``_family_verdict`` so the two lenses are
+    two presentations of one computation, never two answers."""
+    total = sum(dist.values())
+    if total == 0:
+        return "No claims evaluated", "neutral", "0 claims checked"
+    t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
+    f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
+    decided = t + f
+    if decided == 0:
+        return "Unverifiable", "neutral", f"{total} claims checked"
+    if t > f:
+        return ("Truthy", f"vt-{_verdict_css('Truthy')}",
+                f"{t} of {decided} decided claims true-leaning")
+    return ("Falsey", f"vt-{_verdict_css('Falsey')}",
+            f"{f} of {decided} decided claims false-leaning")
 
 
 def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
@@ -1151,17 +1179,10 @@ def _verdict_panel(site_report) -> str:
     # Strict is the published default (matches the per-claim pill + lens chip).
     dist_lenient = site_report.verdict_distribution_lenient
     dist_strict  = site_report.verdict_distribution_strict
-    headline_lenient, hcls_lenient = _headline_verdict_coarse(dist_lenient)
-    headline_strict,  hcls_strict  = _headline_verdict_coarse(dist_strict)
-
-    def _ratio_text(d: dict[str, int]) -> str:
-        # Family-consistent with the headline (see _family_verdict): the count
-        # backs the headline's family, over decided claims.
-        _label, _css, ratio = _family_verdict(d)
-        return ratio
-
-    ratio_text_lenient = _ratio_text(dist_lenient)
-    ratio_text_strict  = _ratio_text(dist_strict)
+    # Lens semantics (2026-07-19): Lenient = the simple Truthy/Falsey lean,
+    # Strict = the graded family bands — two presentations of one computation.
+    headline_lenient, hcls_lenient, ratio_text_lenient = _binary_verdict(dist_lenient)
+    headline_strict,  hcls_strict,  ratio_text_strict  = _family_verdict(dist_strict)
 
     bubble_text, bubble_cls = _initial_bubble(mood, claim_count)
 
@@ -1658,9 +1679,10 @@ def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     # claim pills to flip.
     lens_chip = (
         '    <button type="button" class="editorial-lens" data-lens="strict" hidden '
-        'title="Toggle the headline pill between the Strict (Exaggerated + Misleading → Falsey) '
-        'and Lenient (Mostly True + Exaggerated → Truthy) projections. '
-        'Per-model strip stays 6-bucket.">\n'
+        'title="Toggle the report verdict between the Strict lens (graded: Largely/Mostly '
+        'True/False over decided claims, Mixed for coin-flips) and the Lenient lens '
+        '(simple overall lean: Truthy or Falsey). Same claims, same counts — two '
+        'presentations.">\n'
         '      <span class="lens-label">Lens:</span>\n'
         '      <span class="lens-value">Strict</span>\n'
         '    </button>\n'
@@ -2332,9 +2354,13 @@ def _report_card(r: dict) -> str:
         fine_dist, COARSE_STRICT_PROJECTION
     )
 
-    def _card_axis_html(d: dict[str, int]) -> tuple[str, str, str, str]:
-        """Return (headline_html, ratio_text, segs_html, counts_html) for one axis."""
-        headline, cls, ratio_text = _family_verdict(d)
+    def _card_axis_html(d: dict[str, int], axis: str = "strict") -> tuple[str, str, str, str]:
+        """Return (headline_html, ratio_text, segs_html, counts_html) for one axis.
+        Strict lens = graded family bands; Lenient lens = simple Truthy/Falsey."""
+        if axis == "lenient":
+            headline, cls, ratio_text = _binary_verdict(d)
+        else:
+            headline, cls, ratio_text = _family_verdict(d)
         named = {k: v for k, v in d.items() if k != "Models split"}
         total_named = sum(named.values()) or 1
         segs_inner: list[str] = []
@@ -2357,8 +2383,8 @@ def _report_card(r: dict) -> str:
         )
         return head_html, ratio_text, "".join(segs_inner), "".join(counts_inner)
 
-    head_lenient, _ratio_lenient, segs_lenient, counts_lenient = _card_axis_html(dist_lenient)
-    head_strict,  _ratio_strict,  segs_strict,  counts_strict  = _card_axis_html(dist_strict)
+    head_lenient, _ratio_lenient, segs_lenient, counts_lenient = _card_axis_html(dist_lenient, axis="lenient")
+    head_strict,  _ratio_strict,  segs_strict,  counts_strict  = _card_axis_html(dist_strict, axis="strict")
 
     meta_bits = []
     if r.get("date"):

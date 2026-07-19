@@ -315,20 +315,35 @@ def test_verdict_panel_bar_blocks_carry_lens_caption() -> None:
     assert html.index("Strict lens") < html.index("Lenient lens")
 
 
-def test_verdict_panel_uses_family_labels_in_headline() -> None:
-    """The 6-bucket label (e.g. "Exaggerated") should NOT appear as the
-    headline; aggregates speak the family vocabulary (2026-07-19: Largely/
-    Mostly True/False over decided claims). All-Truthy under Lenient →
-    Largely True; all-Falsey under Strict → Largely False."""
+def test_verdict_panel_lens_semantics_binary_vs_graded() -> None:
+    """2026-07-19 lens semantics: Lenient = simple Truthy/Falsey lean,
+    Strict = graded family bands. The 6-bucket label (e.g. "Exaggerated")
+    never appears as a headline. Here: all-Truthy under Lenient → 'Truthy';
+    all-Falsey under Strict → 'Largely False'."""
     bundles = [_make_bundle(VerdictLabel.EXAGGERATED,
                              coarse_lenient="Truthy", coarse_strict="Falsey")] * 3
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
     import re
     headlines = re.findall(r'<div class="vp-verdict[^"]*">([^<]+)</div>', html)
-    assert any("Largely True" in h for h in headlines)
-    assert any("Largely False" in h for h in headlines)
+    assert any(h.strip() == "Truthy" for h in headlines)          # lenient/simple
+    assert any("Largely False" in h for h in headlines)           # strict/graded
     assert not any("Exaggerated" in h for h in headlines)
+
+
+def test_binary_verdict_simple_lean() -> None:
+    """The Lenient-lens rule: t > f → Truthy, otherwise Falsey (ties read
+    Falsey); abstentions out of the denominator; same families as the graded
+    lens so the two lenses never disagree on the underlying numbers."""
+    from truthbot.publish.site import _binary_verdict
+    label, cls, ratio = _binary_verdict({"True": 3, "Falsey": 2, "Unverifiable": 4})
+    assert label == "Truthy" and ratio == "3 of 5 decided claims true-leaning"
+    label, _cls, _r = _binary_verdict({"True": 2, "Misleading": 2})
+    assert label == "Falsey"                                       # exact tie
+    label, _cls, _r = _binary_verdict({"Unverifiable": 3, "Models split": 1})
+    assert label == "Unverifiable"
+    label, _cls, _r = _binary_verdict({})
+    assert label == "No claims evaluated"
 
 
 # ── TOC mini-pill carries lens-pill class + both data attrs ──────────────────
