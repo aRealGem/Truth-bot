@@ -161,8 +161,17 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
     # bucket with a focused binary discriminator, on the SAME evidence packs. Open-book
     # only — the discriminator judges on evidence, not parametric knowledge.
     if two_stage and open_book:
+        # Unanimous-FALSE guard (P67 Phase 4): a row every seat voted FALSE is settled —
+        # the binary discriminator could only confirm it (no-op) or soften it, and the
+        # one soften-flip ever observed (trump_2026:0556, 35-row scoring 2026-07-19)
+        # undid a correct unanimous panel FALSE. Skipping the row entirely both blocks
+        # that override and saves the stage-2 call. Split rows (FALSE in a mixed tally)
+        # still route — there the discriminator adds real information.
+        def _unanimous_false(r):
+            return r["verdict"] == "FALSE" and set(r.get("votes") or {}) == {"FALSE"}
         adverse = {r["sid"] for r in rows
-                   if r["status"] == "resolved" and r["verdict"] in ("FALSE", "MISLEADING")}
+                   if r["status"] == "resolved" and r["verdict"] in ("FALSE", "MISLEADING")
+                   and not _unanimous_false(r)}
         # TIE_ABSTAIN routing (P67 Phase 3, closes the F1 bypass): a DISAGREEMENT-
         # flagged row whose vote set is within {FALSE, MISLEADING, UNVERIFIABLE} is an
         # adverse-severity tie, not a genuine can't-decide — a correct FALSE vote was
@@ -180,6 +189,8 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
         notes["two_stage"] = True
         notes["disc_tier"] = disc_tier
         notes["crm114_tie_routed"] = sorted(tie_routed)
+        notes["crm114_unanimous_false_skipped"] = sorted(
+            r["sid"] for r in rows if r["status"] == "resolved" and _unanimous_false(r))
         notes["crm114_overrides"] = {r["sid"]: r["crm114"] for r in rows if r.get("crm114")}
 
     if open_book:
