@@ -1,46 +1,46 @@
 [
   {
-    "id": "1fd3e2f7-be72-4c98-84ed-5895d79a4cfa",
+    "id": "8c252c12-5537-4e91-a564-dbbe0ec11303",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
-    "claim_count": 110,
+    "claim_count": 111,
     "verdict_distribution": {
-      "True": 90,
+      "True": 73,
       "Mostly True": 0,
-      "Misleading": 7,
+      "Misleading": 20,
       "Exaggerated": 0,
-      "False": 0,
-      "Unverifiable": 11,
+      "False": 2,
+      "Unverifiable": 8,
       "Truthy": 0,
       "Falsey": 0,
-      "Models split": 2
+      "Models split": 8
     },
     "verdict_distribution_lenient": {
-      "True": 90,
+      "True": 73,
       "Truthy": 0,
-      "Unverifiable": 11,
-      "Falsey": 7,
-      "False": 0,
-      "Models split": 2
+      "Unverifiable": 8,
+      "Falsey": 20,
+      "False": 2,
+      "Models split": 8
     },
     "verdict_distribution_strict": {
-      "True": 90,
+      "True": 73,
       "Truthy": 0,
-      "Unverifiable": 11,
-      "Falsey": 7,
-      "False": 0,
-      "Models split": 2
+      "Unverifiable": 8,
+      "Falsey": 20,
+      "False": 2,
+      "Models split": 8
     },
-    "model_agreement_rate": 0.873,
-    "url": "reports/2022-03-01-joe-biden-1fd3e2.html",
+    "model_agreement_rate": 0.685,
+    "url": "reports/2022-03-01-joe-biden-8c252c.html",
     "tier_counts": {
-      "gov": 53,
-      "wire": 13,
-      "news": 52,
-      "fc": 73,
-      "other": 114
+      "gov": 54,
+      "wire": 9,
+      "news": 53,
+      "fc": 72,
+      "other": 112
     },
     "source_of_claims": "Joe Biden",
     "source_of_claims_professional_public_title": "President",
@@ -48,47 +48,47 @@
     "channel": ""
   },
   {
-    "id": "0c33d1c9-f99d-4f31-9233-73c76f32fe1f",
+    "id": "e4fc1b25-9937-47c1-8d12-06dcb1d9e7b1",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "U.S. Capitol",
-    "claim_count": 166,
+    "claim_count": 167,
     "verdict_distribution": {
-      "True": 66,
+      "True": 37,
       "Mostly True": 0,
-      "Misleading": 53,
+      "Misleading": 51,
       "Exaggerated": 0,
-      "False": 18,
-      "Unverifiable": 23,
+      "False": 44,
+      "Unverifiable": 28,
       "Truthy": 0,
       "Falsey": 0,
-      "Models split": 6
+      "Models split": 7
     },
     "verdict_distribution_lenient": {
-      "True": 66,
+      "True": 37,
       "Truthy": 0,
-      "Unverifiable": 23,
-      "Falsey": 53,
-      "False": 18,
-      "Models split": 6
+      "Unverifiable": 28,
+      "Falsey": 51,
+      "False": 44,
+      "Models split": 7
     },
     "verdict_distribution_strict": {
-      "True": 66,
+      "True": 37,
       "Truthy": 0,
-      "Unverifiable": 23,
-      "Falsey": 53,
-      "False": 18,
-      "Models split": 6
+      "Unverifiable": 28,
+      "Falsey": 51,
+      "False": 44,
+      "Models split": 7
     },
-    "model_agreement_rate": 0.705,
-    "url": "reports/2026-02-24-donald-trump-0c33d1.html",
+    "model_agreement_rate": 0.503,
+    "url": "reports/2026-02-24-donald-trump-e4fc1b.html",
     "tier_counts": {
-      "gov": 45,
-      "wire": 8,
-      "news": 48,
-      "fc": 104,
-      "other": 149
+      "gov": 36,
+      "wire": 9,
+      "news": 45,
+      "fc": 112,
+      "other": 134
     },
     "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
