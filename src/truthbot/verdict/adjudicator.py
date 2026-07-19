@@ -26,7 +26,7 @@ from hydramind import HydraMind, ItemResult, StrategyResultKind
 
 from . import discriminator, evidence_pack, speech_context
 from .evidence_pack import DEFAULT_MAX_ITEMS, EvidencePack
-from .prompts import OPEN_BOOK_PROMPTS, PROMPTS
+from .prompts import CALIBRATED_OPEN_BOOK_PROMPTS, PROMPTS
 from truthbot.verify.evidence_provider import EvidenceProvider
 
 _VALID_VERDICTS = {"TRUE", "FALSE", "MISLEADING", "UNVERIFIABLE"}
@@ -146,7 +146,9 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
     open_book = evidence_provider is not None
     items, packs = build_items(claims, evidence_provider=evidence_provider,
                                today=today, max_items=max_items)
-    run_tune = {"prompts": OPEN_BOOK_PROMPTS if open_book else PROMPTS}
+    # Open-book default is the CALIBRATED prompt set (adopted 2026-07-19, P67 Track B:
+    # +0.06 decided-acc over plain at equal cost; plain remains available via tune).
+    run_tune = {"prompts": CALIBRATED_OPEN_BOOK_PROMPTS if open_book else PROMPTS}
     run_tune.update(tune or {})
     result, manifest = hm.run("verdict", items, "pca", roster=roster,
                               tune=run_tune, rc_id=rc_id)

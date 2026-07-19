@@ -67,7 +67,12 @@ OPEN_BOOK_PROMPTS = {
                 + _OPEN_CONTRACT,
 }
 
-# ── Calibrated open-book variant (Phase 3 experiment, P67.2) ───────────────────
+# ── Calibrated open-book prompts (ADOPTED open-book default — P67 Track B) ─────
+# Adopted 2026-07-19 after the Track B matched-prompt eval: dev+calib decided-acc
+# 0.5625 vs plain 0.50 and vs the frontier panel 0.474-0.50; also the only config
+# that correctly abstains on the unverifiable row. adjudicator.adjudicate uses this
+# set whenever an evidence provider is present; OPEN_BOOK_PROMPTS is retained as the
+# plain A/B baseline (score_layerb_vs_gold.py --plain).
 # Gate-2 diagnosis: given open-book evidence the seats UNANIMOUSLY soften severity
 # — FALSE→MISLEADING (a false core claim with a kernel of truth) and MISLEADING→TRUE
 # (a distorted-but-supported claim). The softening is model-level, so the fix has to
