@@ -48,7 +48,11 @@ def _build_open_book_provider():
 
 def main():
     open_book = "--open-book" in sys.argv
-    calib = "--calib" in sys.argv           # Phase 3: calibrated open-book prompt A/B (P67.2)
+    # Calibrated open-book prompts are the ADOPTED default (P67 Track B, 2026-07-19);
+    # --plain runs the pre-calibration OPEN_BOOK_PROMPTS baseline for A/B (--calib is
+    # still accepted as a no-op for back-compat with earlier run commands).
+    plain = "--plain" in sys.argv
+    calib = open_book and not plain
     # CRM-114 sonnet stage-2 discriminator is the ADOPTED open-book default; --no-crm114
     # runs the plain single-stage panel (for A/B against the discriminator).
     crm114 = "--no-crm114" not in sys.argv
@@ -65,11 +69,11 @@ def main():
     if open_book and provider is None:
         return    # keyless open-book run is a no-op, not a silent closed-book pass
     tune = None
-    if calib:
+    if plain:
         if provider is None:
-            print("BLOCKED --calib: only meaningful with --open-book."); return
-        from truthbot.verdict.prompts import CALIBRATED_OPEN_BOOK_PROMPTS
-        tune = {"prompts": CALIBRATED_OPEN_BOOK_PROMPTS}
+            print("BLOCKED --plain: only meaningful with --open-book."); return
+        from truthbot.verdict.prompts import OPEN_BOOK_PROMPTS
+        tune = {"prompts": OPEN_BOOK_PROMPTS}   # override the adopted calib default
     crm114 = crm114 and provider is not None    # stage-2 is open-book only; no-op closed-book
     mode = "closed-book"
     if provider is not None:

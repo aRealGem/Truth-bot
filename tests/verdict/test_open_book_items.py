@@ -45,3 +45,34 @@ def test_open_book_prompts_are_speaker_blind_and_cite_by_id():
         assert '"citations"' in tmpl and "provided ids" in tmpl
         # open-book must NOT carry the closed-book "cite nothing" instruction
         assert "citations must be []" not in tmpl
+
+
+class _StubResult:
+    items = []
+    notes = None
+
+
+class _StubHM:
+    """Captures the tune adjudicate passes to hm.run; never touches a live lane."""
+    def __init__(self):
+        self.tune = None
+
+    def run(self, task, items, strategy, *, roster=None, tune=None, rc_id=None):
+        self.tune = tune
+        return _StubResult(), None
+
+
+def test_adjudicate_default_prompts_calib_open_book_plain_closed_book():
+    # Open-book default is the ADOPTED calibrated set (P67 Track B, 2026-07-19)...
+    hm = _StubHM()
+    adjudicator.adjudicate(hm, _CLAIMS, evidence_provider=_FakeProvider(), two_stage=False)
+    assert hm.tune["prompts"] is prompts.CALIBRATED_OPEN_BOOK_PROMPTS
+    # ...closed-book stays on the frozen closed-book set...
+    hm = _StubHM()
+    adjudicator.adjudicate(hm, _CLAIMS, two_stage=False)
+    assert hm.tune["prompts"] is prompts.PROMPTS
+    # ...and an explicit tune still overrides (the --plain A/B path).
+    hm = _StubHM()
+    adjudicator.adjudicate(hm, _CLAIMS, evidence_provider=_FakeProvider(), two_stage=False,
+                           tune={"prompts": prompts.OPEN_BOOK_PROMPTS})
+    assert hm.tune["prompts"] is prompts.OPEN_BOOK_PROMPTS
