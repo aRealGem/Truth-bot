@@ -526,48 +526,54 @@ def _pretty_model_label(adapter: str, model_id: str = "") -> str:
     return " ".join(pieces) or adapter or "model"
 
 
-# Categories whose display labels already contain a qualifier word.
-# Never prepend "Mostly" or "Largely" to these — it reads as double-qualified.
-_ALREADY_QUALIFIED: frozenset[str] = frozenset({"Mostly True"})
+# Family aggregation for headline verdicts (2026-07-19 editorial review):
+# a report that is 72% False+Misleading must headline "Largely False", not
+# "Mixed verdict" just because no single adverse bucket crossed a threshold.
+# True-leaning and false-leaning labels aggregate into two families over
+# DECIDED claims; Unverifiable / Models split / No verdict are abstentions
+# and stay out of the denominator.
+_TRUE_FAMILY: frozenset[str] = frozenset({"True", "Mostly True", "Truthy"})
+_ADVERSE_FAMILY: frozenset[str] = frozenset(
+    {"False", "Falsey", "Misleading", "Exaggerated"})
 
 
-def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
-    """
-    Compute the headline verdict label and CSS class for a report.
-    Returns (label_text, css_class).
+def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
+    """Family-aggregated headline for a verdict distribution.
 
-    Rules (applied in order):
-      - 0 claims                    → 'No claims evaluated' / neutral
-      - 2+ categories tie for max   → 'Mixed verdict' / neutral
-      - dominant ≥ 60%              → 'Largely {label}' / vt-{slug}
-      - dominant ≥ 40%              → label (if already qualified) or 'Mostly {label}'
-      - otherwise                   → 'Mixed verdict' / neutral
-
-    The tie check prevents max() from silently picking a winner when the data
-    is genuinely split (e.g. 2 True + 2 False).  The ALREADY_QUALIFIED guard
-    prevents double-prefixing labels like "Mostly True" into "Mostly Mostly True".
+    Returns (label_text, css_class, ratio_text). Bands over the dominant
+    family's share of decided claims:
+      ≥ 70%  → 'Largely True/False'
+      ≥ 55%  → 'Mostly True/False'
+      else   → 'Mixed verdict'
+    A report with claims but zero decided verdicts headlines 'Unverifiable'.
     """
     total = sum(dist.values())
     if total == 0:
-        return "No claims evaluated", "neutral"
-    max_count = max(dist.values())
-    # Tie: two or more categories share the top count → always Mixed
-    if sum(1 for v in dist.values() if v == max_count) > 1:
-        return "Mixed verdict", "neutral"
-    max_label = max(dist, key=lambda k: dist[k])
-    max_pct = max_count / total
-    css = _verdict_css(max_label)
-    if max_label in _ALREADY_QUALIFIED:
-        # Label is self-descriptive; only apply it if it genuinely dominates
-        if max_pct >= 0.40:
-            return max_label, f"vt-{css}"
-        return "Mixed verdict", "neutral"
-    if max_pct >= 0.60:
-        return f"Largely {max_label}", f"vt-{css}"
-    elif max_pct >= 0.40:
-        return f"Mostly {max_label}", f"vt-{css}"
+        return "No claims evaluated", "neutral", "0 claims checked"
+    t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
+    f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
+    decided = t + f
+    if decided == 0:
+        return "Unverifiable", "neutral", f"{total} claims checked"
+    if t >= f:
+        fam_count, word, css = t, "True", _verdict_css("True")
     else:
-        return "Mixed verdict", "neutral"
+        fam_count, word, css = f, "False", _verdict_css("False")
+    share = fam_count / decided
+    lean = "true-leaning" if word == "True" else "false-leaning"
+    ratio = f"{fam_count} of {decided} decided claims {lean}"
+    if share >= 0.70:
+        return f"Largely {word}", f"vt-{css}", ratio
+    if share >= 0.55:
+        return f"Mostly {word}", f"vt-{css}", ratio
+    return "Mixed verdict", "neutral", ratio
+
+
+def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
+    """Headline verdict label + CSS class for a report (family-aggregated —
+    see ``_family_verdict`` for the bands and rationale)."""
+    label, css, _ratio = _family_verdict(dist)
+    return label, css
 
 
 # Coarse-axis labels that read naturally on their own and shouldn't get
@@ -576,41 +582,13 @@ _COARSE_ALREADY_QUALIFIED: frozenset[str] = frozenset({"Truthy", "Falsey"})
 
 
 def _headline_verdict_coarse(dist: dict[str, int]) -> tuple[str, str]:
-    """Headline verdict + CSS class for a 5-bucket coarse-axis distribution.
+    """Headline verdict + CSS class for a coarse-axis distribution.
 
-    Mirrors :func:`_headline_verdict` but speaks the Truthy-scale vocabulary
-    (True / Truthy / Unverifiable / Falsey / False, plus "Models split"
-    from the projection guardrail). "Truthy" and "Falsey" are already
-    qualified — we don't say "Mostly Truthy" because Truthy already means
-    "directionally correct with caveats", which is exactly what "Mostly" is
-    trying to convey.
-
-    Tie / split rules: a "Models split" bucket that ties with another
-    label is treated like a normal tie → Mixed verdict. A dominant
-    "Models split" reads as Mixed verdict (we never say "Mostly Models
-    split").
-    """
-    total = sum(dist.values())
-    if total == 0:
-        return "No claims evaluated", "neutral"
-    max_count = max(dist.values())
-    if sum(1 for v in dist.values() if v == max_count) > 1:
-        return "Mixed verdict", "neutral"
-    max_label = max(dist, key=lambda k: dist[k])
-    max_pct = max_count / total
-    if max_label == "Models split":
-        return "Mixed verdict", "neutral"
-    css = _verdict_css(max_label)
-    if max_label in _COARSE_ALREADY_QUALIFIED:
-        if max_pct >= 0.40:
-            return max_label, f"vt-{css}"
-        return "Mixed verdict", "neutral"
-    if max_pct >= 0.60:
-        return f"Largely {max_label}", f"vt-{css}"
-    elif max_pct >= 0.40:
-        return f"Mostly {max_label}", f"vt-{css}"
-    else:
-        return "Mixed verdict", "neutral"
+    Family-aggregated like :func:`_headline_verdict` — the coarse buckets
+    (True/Truthy vs Falsey/False) fold into the same two families, and
+    "Models split" counts as an abstention alongside Unverifiable."""
+    label, css, _ratio = _family_verdict(dist)
+    return label, css
 
 
 def _tier_bucket(url: str) -> str:
@@ -1177,15 +1155,10 @@ def _verdict_panel(site_report) -> str:
     headline_strict,  hcls_strict  = _headline_verdict_coarse(dist_strict)
 
     def _ratio_text(d: dict[str, int]) -> str:
-        # Exclude "Models split" from the dominant-label search so the ratio
-        # text always names a real verdict bucket. If everything is split,
-        # fall back to a generic count.
-        named = {k: v for k, v in d.items() if k != "Models split"}
-        total = sum(named.values()) or 1
-        if not any(named.values()):
-            return f"{sum(d.values())} claims checked"
-        max_lbl = max(named, key=lambda k: named[k])
-        return f"{named.get(max_lbl, 0)} of {total} claims rated {max_lbl.lower()}"
+        # Family-consistent with the headline (see _family_verdict): the count
+        # backs the headline's family, over decided claims.
+        _label, _css, ratio = _family_verdict(d)
+        return ratio
 
     ratio_text_lenient = _ratio_text(dist_lenient)
     ratio_text_strict  = _ratio_text(dist_strict)
@@ -2361,14 +2334,9 @@ def _report_card(r: dict) -> str:
 
     def _card_axis_html(d: dict[str, int]) -> tuple[str, str, str, str]:
         """Return (headline_html, ratio_text, segs_html, counts_html) for one axis."""
-        headline, cls = _headline_verdict_coarse(d)
+        headline, cls, ratio_text = _family_verdict(d)
         named = {k: v for k, v in d.items() if k != "Models split"}
         total_named = sum(named.values()) or 1
-        max_label = max(named, key=lambda k: named[k]) if any(named.values()) else ""
-        ratio_text = (
-            f"{named.get(max_label, 0)} of {total_named} claims"
-            if max_label else f"{claim_count} claims"
-        )
         segs_inner: list[str] = []
         counts_inner: list[str] = []
         for label in COARSE_VERDICT_ORDER:
