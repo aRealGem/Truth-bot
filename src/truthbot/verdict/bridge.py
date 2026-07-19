@@ -219,6 +219,13 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
     src = claim_src or {}
     la = src.get("layer_a") or {}
     crm = row.get("crm114") or {}
+    by_role: dict[str, list[str]] = {}
+    for role, labels in (row.get("by_role") or {}).items():
+        norm = []
+        for raw in labels if isinstance(labels, list) else [labels]:
+            lbl = _LABEL_MAP.get(str(raw).strip().upper())
+            norm.append(lbl.value if lbl is not None else str(raw))
+        by_role[str(role)] = norm
     return VerdictProvenance(
         layer_a_label=str(la.get("label") or ""),
         layer_a_source=str(la.get("source") or ""),
@@ -227,6 +234,7 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         panel_escalated=bool(row.get("escalated", False)),
         crm114_stage1=str(crm.get("stage1") or ""),
         crm114_final=str(crm.get("final") or ""),
+        panel_by_role=by_role,
     )
 
 
@@ -251,9 +259,18 @@ def _consensus_and_panel(
 
         # CRM-114 stage-2 may have flipped the label away from the vote plurality.
         crm = row.get("crm114")
-        expl = reasoning or f"PCA panel resolved {label.value}."
-        if crm:
-            expl = f"{expl} (CRM-114: {crm.get('stage1')}→{crm.get('final')})".strip()
+        if crm and crm.get("stage1") == "DISAGREEMENT":
+            # Tie-routed row: the panel reached NO plurality and the stage-2
+            # discriminator resolved the adverse-severity tie — say that, rather
+            # than the false "PCA panel resolved X."
+            expl = reasoning or (
+                f"Panel split with no plurality; the Severity Classifier resolved "
+                f"{label.value} on the same evidence pack.")
+            expl = f"{expl} (CRM-114: DISAGREEMENT→{crm.get('final')})".strip()
+        else:
+            expl = reasoning or f"PCA panel resolved {label.value}."
+            if crm:
+                expl = f"{expl} (CRM-114: {crm.get('stage1')}→{crm.get('final')})".strip()
 
         mv = ModelVerdict(
             adapter_name=PANEL_ADAPTER,

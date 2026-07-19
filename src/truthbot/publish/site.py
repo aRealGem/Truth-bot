@@ -1976,11 +1976,35 @@ def _pca_agreement_summary(bundle: VerdictBundle) -> str:
     return f'<span class="num">{top} of {total}</span> {seats} agree'
 
 
-def _pca_provenance_strip(bundle: VerdictBundle) -> str:
+_SEAT_ORDER = ("proposer", "critic", "arbiter")
+
+
+def _pca_seat_line(prov, roster: Optional[dict] = None) -> str:
+    """Per-seat predictions: 'proposer (mistral): Misleading · critic (dsv4-flash):
+    False · …'. Uses provenance.panel_by_role (captured since 2026-07-19); seat →
+    model names come from the report-level roster when available. Empty string for
+    older bundles with no by_role — the tally line still renders."""
+    by_role = getattr(prov, "panel_by_role", None) or {}
+    if not by_role:
+        return ""
+    seats = dict((roster or {}).get("seats") or {})
+    ordered = [r for r in _SEAT_ORDER if r in by_role] + sorted(
+        r for r in by_role if r not in _SEAT_ORDER)
+    bits = []
+    for role in ordered:
+        labels = "/".join(by_role[role])
+        models = ", ".join(seats.get(role) or [])
+        who = f"{role} ({models})" if models else role
+        bits.append(f"{who}: {labels}")
+    return " · ".join(bits)
+
+
+def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None) -> str:
     """The Layer A → PCA panel → CRM-114 chain, rendered as a compact strip.
 
     Surfaces provenance that used to live only as buried reasoning text (CRM-114)
-    or nowhere at all (Layer A label, per-seat tally)."""
+    or nowhere at all (Layer A label, per-seat tally). When per-seat labels were
+    captured (panel_by_role), a second line names what each seat predicted."""
     prov = bundle.consensus.provenance
     parts: list[str] = []
     if prov.layer_a_label:
@@ -1994,15 +2018,21 @@ def _pca_provenance_strip(bundle: VerdictBundle) -> str:
     if not parts:
         return ""
     chain = _esc(" → ".join(parts))
+    seat_line = _pca_seat_line(prov, roster)
+    seat_html = (
+        f'<div class="pca-seats">{_esc(seat_line)}</div>' if seat_line else ""
+    )
     return (
         '<div class="pca-provenance" '
         'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
-        'tally, and any Severity Classifier stage-2 override.">'
-        f'{chain}</div>'
+        'tally, each seat&#39;s own prediction, and any Severity Classifier '
+        'stage-2 override.">'
+        f'{chain}{seat_html}</div>'
     )
 
 
-def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", standalone: bool = False) -> str:
+def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
+                standalone: bool = False, panel_roster: Optional[dict] = None) -> str:
     claim = bundle.claim
     consensus = bundle.consensus
     fine_label = consensus.consensus_label.value
@@ -2164,7 +2194,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
             '    <span class="models-label">Reconciled judgment</span>'
             f'    <span class="models-agreement">{_pca_agreement_summary(bundle)}</span>'
             '  </div>'
-            f'  {_pca_provenance_strip(bundle)}'
+            f'  {_pca_provenance_strip(bundle, panel_roster)}'
             f'  {grid_html}'
             '</div>'
         )
@@ -2187,8 +2217,10 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../", s
     if consulted:
         consulted_inner = _sources_consulted_html(consulted)
         if consulted_inner:
+            # Collapsed by default (2026-07-19 review): the snippet verbiage is
+            # audit detail, not first-read content — one click away, not in the way.
             consulted_html = (
-                '<details class="evidence-details" open>'
+                '<details class="evidence-details">'
                 f'  <summary class="evidence-summary">Sources consulted ({len(consulted)})</summary>'
                 f'  <div class="evidence">{consulted_inner}</div>'
                 '</details>'
@@ -3525,6 +3557,10 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-bottom: 0.6rem;
   line-height: 1.5;
   word-break: break-word;
+}
+.pca-seats {
+  margin-top: 0.15rem;
+  color: var(--ink-faint);
 }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
@@ -5706,7 +5742,8 @@ def _render_report(site_report: SiteReport) -> str:
     toc_html = _toc(site_report.checkable_bundles) if len(site_report.checkable_bundles) > 2 else ""
 
     claim_blocks = "\n".join(
-        _claim_card(b, i, len(site_report.checkable_bundles), rel="../")
+        _claim_card(b, i, len(site_report.checkable_bundles), rel="../",
+                    panel_roster=getattr(site_report, "panel_roster", None))
         for i, b in enumerate(site_report.checkable_bundles, 1)
     )
 
@@ -5939,7 +5976,7 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
         f'<a href="../index.html">Reports</a> › '
         f'<a href="{report_url}">{_esc(site_report.speaker)} — '
         f'{_esc(site_report.display_date)}</a> › Claim</div>'
-        f'{_claim_card(bundle, 1, 1, rel="../", standalone=True)}'
+        f'{_claim_card(bundle, 1, 1, rel="../", standalone=True, panel_roster=getattr(site_report, "panel_roster", None))}'
     )
     phash = _prompt_hash()
     gen_ts = site_report.generated_at.strftime("%Y-%m-%d %H:%M UTC")
@@ -6682,6 +6719,9 @@ class SitePublisher:
                 "panel_escalated": bundle.consensus.provenance.panel_escalated,
                 "crm114_stage1":   bundle.consensus.provenance.crm114_stage1,
                 "crm114_final":    bundle.consensus.provenance.crm114_final,
+                "panel_by_role":   {k: list(v) for k, v in
+                                    getattr(bundle.consensus.provenance,
+                                            "panel_by_role", {}).items()},
             },
             "url": f"claims/{bundle.claim.id}.html",
         }
