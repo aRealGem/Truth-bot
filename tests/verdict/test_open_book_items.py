@@ -92,6 +92,10 @@ class _TwoStageStubHM:
                 out.append(ItemResult(sid, StrategyResultKind.DISAGREEMENT_FLAGGED,
                                       {"labels": {}},
                                       {"votes": {"TRUE": 1, "MISLEADING": 1}}))
+            elif sid.endswith("unanimous_false"):  # settled — stage 2 must not see it
+                out.append(ItemResult(sid, StrategyResultKind.RESOLVED,
+                                      {"verdict": "FALSE", "citations": [], "confidence": 0.9},
+                                      {"votes": {"FALSE": 2}}))
             else:                                # resolved adverse → normal stage-2 path
                 out.append(ItemResult(sid, StrategyResultKind.RESOLVED,
                                       {"verdict": "MISLEADING", "citations": [], "confidence": 0.8},
@@ -102,11 +106,15 @@ class _TwoStageStubHM:
 def test_adjudicate_routes_adverse_ties_to_crm114():
     hm = _TwoStageStubHM()
     claims = [{"sid": s, "text": "x", "context": ""}
-              for s in ("s_resolved", "s_adverse_tie", "s_true_tie")]
+              for s in ("s_resolved", "s_adverse_tie", "s_true_tie", "s_unanimous_false")]
     rows, _m, notes = adjudicator.adjudicate(
         hm, claims, evidence_provider=_FakeProvider(), two_stage=True)
-    # the discriminator saw the resolved-adverse row AND the F/M/U tie — not the TRUE tie
+    # the discriminator saw the resolved-adverse row AND the F/M/U tie — but NOT the
+    # TRUE tie, and NOT the unanimous panel FALSE (settled; guard skips the call)
     assert hm.disc_item_ids == ["s_adverse_tie", "s_resolved"]
+    uf = {r["sid"]: r for r in rows}["s_unanimous_false"]
+    assert uf["verdict"] == "FALSE" and "crm114" not in uf
+    assert notes["crm114_unanimous_false_skipped"] == ["s_unanimous_false"]
     by_sid = {r["sid"]: r for r in rows}
     tie = by_sid["s_adverse_tie"]
     assert tie["status"] == "resolved" and tie["verdict"] == "FALSE"
