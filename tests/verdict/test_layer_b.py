@@ -65,6 +65,13 @@ def test_normalize_closed_book_citation_is_i4_violation():
     assert row["citations"] == ["http://x"]
 
 
+def test_normalize_passes_by_role_through():
+    item = _resolved("c1", "TRUE", by_role={"proposer": ["TRUE"], "critic": ["TRUE"]})
+    assert adjudicator.normalize(item)["by_role"] == {"proposer": ["TRUE"], "critic": ["TRUE"]}
+    # absent (older artifacts / strategies without it) → empty dict, not KeyError
+    assert adjudicator.normalize(_resolved("c2", "TRUE"))["by_role"] == {}
+
+
 def test_normalize_disagreement_carries_status_not_verdict():
     tie = ItemResult("c2", StrategyResultKind.DISAGREEMENT_FLAGGED,
                      {"labels": {"TRUE": 1, "FALSE": 1}},
