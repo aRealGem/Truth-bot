@@ -331,6 +331,28 @@ def test_verdict_panel_lens_semantics_binary_vs_graded() -> None:
     assert not any("Exaggerated" in h for h in headlines)
 
 
+def test_models_engaged_counts_panel_seats_not_reconciled_cards() -> None:
+    """2026-07-19 review find: 'Models Engaged' was stuck at 1 on PCA reports
+    because the bridge emits one reconciled ModelVerdict — the count must come
+    from the roster seats (+ the Severity Classifier when it fired)."""
+    from truthbot.publish.site import _models_engaged
+    bundles = [_make_bundle(VerdictLabel.TRUE, coarse_lenient="True", coarse_strict="True")]
+    sr = _make_site_report(bundles)
+    sr.panel_roster = {"name": "dev", "seats": {"proposer": ["mistral"],
+                                                "critic": ["dsv4-flash"],
+                                                "arbiter": ["claude-haiku"]}}
+    n, hint = _models_engaged(sr)
+    assert n == 3 and "mistral" in hint
+    # a stage-2 override anywhere in the report adds the Severity Classifier
+    bundles[0].consensus.provenance.crm114_final = "FALSE"
+    n, hint = _models_engaged(sr)
+    assert n == 4 and "Severity Classifier" in hint
+    # legacy (no roster): distinct adapter names as before
+    sr.panel_roster = {}
+    n, _hint = _models_engaged(sr)
+    assert n == len({mv.adapter_name for b in bundles for mv in b.model_verdicts})
+
+
 def test_binary_verdict_simple_lean() -> None:
     """The Lenient-lens rule: t > f → Truthy, otherwise Falsey (ties read
     Falsey); abstentions out of the denominator; same families as the graded
