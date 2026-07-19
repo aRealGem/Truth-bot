@@ -52,6 +52,13 @@ def main():
     # CRM-114 sonnet stage-2 discriminator is the ADOPTED open-book default; --no-crm114
     # runs the plain single-stage panel (for A/B against the discriminator).
     crm114 = "--no-crm114" not in sys.argv
+
+    def _opt(flag, default=None):
+        return (sys.argv[sys.argv.index(flag) + 1]
+                if flag in sys.argv and sys.argv.index(flag) + 1 < len(sys.argv) else default)
+    roster = _opt("--roster", "dev")        # Track B: --roster frontier for the All-Anthropic panel
+    limit = _opt("--limit")                 # dry-run cost calibration over the first N gold sids
+
     if not proxy_client.key_present():
         print(proxy_client.BLOCKED_MSG); return
     provider = _build_open_book_provider() if open_book else None
@@ -75,9 +82,11 @@ def main():
     if missing:
         print(f"WARN {len(missing)} gold sids not in TRAIN (skipped, I6-safe): {missing}")
     sids = [s for s in gold if s in train]
+    if limit:
+        sids = sids[:int(limit)]
     claims = [{"sid": s, "text": train[s]["text"], "context": train[s].get("context", "")}
               for s in sids]
-    print(f"scoring Layer B over {len(claims)} gold claims (roster.dev, {mode})")
+    print(f"scoring Layer B over {len(claims)} gold claims (roster.{roster}, {mode})")
 
     hm = HydraMind(load_registry(), Transport(
         completion_fn=ProxyCompletion(key_env=proxy_client.resolve_key_env(),
@@ -85,7 +94,7 @@ def main():
                                       response_parser=adjudicator.parse_verdict)),
         spend_sink=NullSpendSink(), project=proxy_client.CLIENT)
     verdicts, manifest, notes = adjudicator.adjudicate(
-        hm, claims, roster="dev", evidence_provider=provider, tune=tune, two_stage=crm114)
+        hm, claims, roster=roster, evidence_provider=provider, tune=tune, two_stage=crm114)
     leaked = [v["sid"] for v in verdicts if v["citations"]]
     if provider is None:
         assert not leaked, f"I4 violation — closed-book citations leaked: {leaked}"
@@ -104,9 +113,9 @@ def main():
     rep = sv.score_verdicts({s: gold[s] for s in sids}, preds)
 
     (HERE / "examples").mkdir(exist_ok=True)
-    suffix = ""
+    suffix = "" if roster == "dev" else f"-{roster}"
     if provider is not None:
-        suffix = "-openbook" + ("-calib" if calib else "") + ("-crm114" if crm114 else "")
+        suffix += "-openbook" + ("-calib" if calib else "") + ("-crm114" if crm114 else "")
     (HERE / "examples" / f"layerb-vs-gold-verdicts{suffix}.json").write_text(json.dumps(verdicts, indent=2))
 
     cost = manifest.total_cost_usd
