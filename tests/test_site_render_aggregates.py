@@ -353,15 +353,22 @@ def test_models_engaged_counts_panel_seats_not_reconciled_cards() -> None:
     assert n == len({mv.adapter_name for b in bundles for mv in b.model_verdicts})
 
 
-def test_binary_verdict_simple_lean() -> None:
-    """The Lenient-lens rule: t > f → Truthy, otherwise Falsey (ties read
-    Falsey); abstentions out of the denominator; same families as the graded
-    lens so the two lenses never disagree on the underlying numbers."""
+def test_binary_verdict_simple_lean_with_mixed_band() -> None:
+    """The Lenient-lens rule: Truthy/Falsey by dominant family, with the SAME
+    Mixed band as the graded lens (dominant share < 0.55 → Mixed) so the two
+    lenses always agree on when a report is a toss-up. Abstentions stay out of
+    the denominator."""
     from truthbot.publish.site import _binary_verdict
-    label, cls, ratio = _binary_verdict({"True": 3, "Falsey": 2, "Unverifiable": 4})
-    assert label == "Truthy" and ratio == "3 of 5 decided claims true-leaning"
+    label, cls, ratio = _binary_verdict({"True": 3, "Falsey": 1, "Unverifiable": 4})
+    assert label == "Truthy" and ratio == "3 of 4 decided claims true-leaning"
+    label, _cls, _r = _binary_verdict({"True": 1, "Misleading": 3})
+    assert label == "Falsey"
     label, _cls, _r = _binary_verdict({"True": 2, "Misleading": 2})
-    assert label == "Falsey"                                       # exact tie
+    assert label == "Mixed verdict"                    # exact tie → Mixed
+    label, _cls, _r = _binary_verdict({"True": 10, "Falsey": 9})   # 52.6%
+    assert label == "Mixed verdict"                    # coin-flip band
+    label, _cls, _r = _binary_verdict({"True": 11, "Falsey": 9})   # 55%
+    assert label == "Truthy"                           # band edge is exclusive
     label, _cls, _r = _binary_verdict({"Unverifiable": 3, "Models split": 1})
     assert label == "Unverifiable"
     label, _cls, _r = _binary_verdict({})

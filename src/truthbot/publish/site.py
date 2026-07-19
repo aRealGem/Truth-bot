@@ -574,14 +574,16 @@ def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
 
 
 def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """The SIMPLE headline (the Lenient lens): overall Truthy/Falsey lean.
+    """The SIMPLE headline (the Lenient lens): overall Truthy/Falsey lean,
+    with 'Mixed verdict' for genuine coin-flips (jackie, 2026-07-19).
 
-    Jackie's rule (2026-07-19): true-family strictly greater than the adverse
-    family → 'Truthy'; otherwise → 'Falsey' (an exact tie reads Falsey — the
-    benefit of the doubt is not extended). Mutually exclusive and exhaustive
-    over decided > 0; zero decided → 'Unverifiable'. Same families and same
-    decided-claims denominator as ``_family_verdict`` so the two lenses are
-    two presentations of one computation, never two answers."""
+    Uses the SAME Mixed band as the graded lens — dominant family share
+    s < 0.55 → 'Mixed verdict' — so the two lenses always agree on when a
+    report is a toss-up; above the band the dominant family reads Truthy or
+    Falsey. Bands partition s ∈ [0.5, 1]: mutually exclusive and exhaustive.
+    Same families and same decided-claims denominator as ``_family_verdict``
+    — two presentations of one computation, never two answers.
+    Zero decided → 'Unverifiable'."""
     total = sum(dist.values())
     if total == 0:
         return "No claims evaluated", "neutral", "0 claims checked"
@@ -590,6 +592,11 @@ def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
     decided = t + f
     if decided == 0:
         return "Unverifiable", "neutral", f"{total} claims checked"
+    share = max(t, f) / decided
+    if share < 0.55:
+        lean = "true" if t >= f else "false"
+        return ("Mixed verdict", "neutral",
+                f"{max(t, f)} of {decided} decided claims {lean}-leaning")
     if t > f:
         return ("Truthy", f"vt-{_verdict_css('Truthy')}",
                 f"{t} of {decided} decided claims true-leaning")
