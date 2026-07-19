@@ -37,10 +37,14 @@ CRM114_SYSTEM = (
     "job is to decide which, by the claim's CORE assertion:\n"
     "- FALSE: the evidence CONTRADICTS the core assertion — the stated fact did not "
     "happen, or the reverse is true. A contradicted core is FALSE even if some peripheral "
-    "detail is accurate.\n"
+    "detail is accurate. ABSOLUTE-CLAIM RULE: when the core assertion is an absolute or "
+    "universal (zero, none, only, all, every, ended, eliminated, completely stopped or "
+    "destroyed, biggest/lowest in history), evidence of material counterexamples "
+    "contradicts that core and the verdict is FALSE — a real underlying trend does not "
+    "soften an absolute.\n"
     "- MISLEADING: the core assertion is REAL but exaggerated, cherry-picked, stripped of "
     "context, or spun to create a false impression. Overstating a true underlying fact is "
-    "MISLEADING, not FALSE.\n"
+    "MISLEADING, not FALSE — unless the claim states an absolute (rule above).\n"
     'Evidence items are provided under "evidence" (each with an id, source, trust tier, '
     "and a dated snippet); weigh higher-trust tiers above lower ones. Distinguish "
     "contradiction (FALSE) from overstatement of a real fact (MISLEADING); do not default "
@@ -70,6 +74,25 @@ def discriminate(hm: HydraMind, items: list[dict], *, tier: str = "standard",
         if v in _ADVERSE:
             out[r.item_id] = v
     return out
+
+
+def apply_tie_routing(rows: list[dict], disc: dict[str, str]) -> list[dict]:
+    """Resolve DISAGREEMENT-flagged adverse-severity ties with the discriminator's
+    binary call (in place). Only fires for rows the caller routed (i.e. present in
+    ``disc``); the row becomes resolved with ``crm114 = {"stage1": "DISAGREEMENT",
+    "final": ...}`` and its vote tally intact, so the tie and its adjudication are
+    both readable from the artifact — an explicit stage-2 decision, never a silent
+    tie-break (I2). Confidence stays None (no seat consensus to average) and
+    citations stay [] (the tie had no winning seat to take citations from)."""
+    for row in rows:
+        if row.get("status") != "disagreement":
+            continue
+        final = disc.get(row["sid"])
+        if final in _ADVERSE:
+            row["crm114"] = {"stage1": "DISAGREEMENT", "final": final}
+            row["status"] = "resolved"
+            row["verdict"] = final
+    return rows
 
 
 def apply_discrimination(rows: list[dict], disc: dict[str, str]) -> list[dict]:

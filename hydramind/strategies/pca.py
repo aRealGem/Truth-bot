@@ -126,14 +126,20 @@ class PcaStrategy:
         for item_id, results in st.by_item().items():
             votes = [(_label(r), _conf(r), r) for r in results if _label(r) is not None]
             counts = Counter(v[0] for v in votes)
+            # Per-seat attribution (P67 Phase 3): role → [labels] (a critic may be a
+            # panel, hence lists). Kills the 2-1 tally ambiguity — the arbiter's own
+            # label is readable from the artifact instead of provable-by-theorem.
+            by_role: dict[str, list[str]] = {}
+            for label, _c, cr in votes:
+                by_role.setdefault(cr.call.role, []).append(label)
             if not counts:
                 out_items.append(ItemResult(item_id, StrategyResultKind.DISAGREEMENT_FLAGGED,
-                                            {"reason": "no_labels"}, {"votes": {}}))
+                                            {"reason": "no_labels"}, {"votes": {}, "by_role": {}}))
                 continue
             top = counts.most_common()
             winner, wcount = top[0]
             tie = len(top) > 1 and top[1][1] == wcount
-            agreement = {"votes": dict(counts), "n": len(votes),
+            agreement = {"votes": dict(counts), "n": len(votes), "by_role": by_role,
                          "split": item_id in st.scratch.get("split_items", []),
                          "escalated": item_id in st.scratch.get("gated", [])}
             if tie:
