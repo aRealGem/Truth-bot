@@ -1,6 +1,6 @@
 [
   {
-    "id": "30c0c4af-a4d3-4fa6-9608-8ed02b8afb89",
+    "id": "15354db5-3322-4895-953b-81fdbf584c75",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
@@ -21,20 +21,22 @@
       "True": 37,
       "Truthy": 0,
       "Unverifiable": 28,
-      "Falsey": 51,
+      "Falsey": 0,
       "False": 44,
-      "Models split": 7
+      "Models split": 7,
+      "Misleading": 51
     },
     "verdict_distribution_strict": {
       "True": 37,
       "Truthy": 0,
       "Unverifiable": 28,
-      "Falsey": 51,
+      "Falsey": 0,
       "False": 44,
-      "Models split": 7
+      "Models split": 7,
+      "Misleading": 51
     },
     "model_agreement_rate": 0.503,
-    "url": "reports/2026-02-24-donald-trump-30c0c4.html",
+    "url": "reports/2026-02-24-donald-trump-15354d.html",
     "tier_counts": {
       "gov": 36,
       "wire": 9,
@@ -48,7 +50,7 @@
     "channel": ""
   },
   {
-    "id": "4d31d6a8-e666-4b7e-b2f5-fd2554c23e91",
+    "id": "0615e856-b6a2-4841-9464-e7a31eb87102",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
@@ -69,20 +71,22 @@
       "True": 73,
       "Truthy": 0,
       "Unverifiable": 8,
-      "Falsey": 20,
+      "Falsey": 0,
       "False": 2,
-      "Models split": 8
+      "Models split": 8,
+      "Misleading": 20
     },
     "verdict_distribution_strict": {
       "True": 73,
       "Truthy": 0,
       "Unverifiable": 8,
-      "Falsey": 20,
+      "Falsey": 0,
       "False": 2,
-      "Models split": 8
+      "Models split": 8,
+      "Misleading": 20
     },
     "model_agreement_rate": 0.685,
-    "url": "reports/2022-03-01-joe-biden-4d31d6.html",
+    "url": "reports/2022-03-01-joe-biden-0615e8.html",
     "tier_counts": {
       "gov": 54,
       "wire": 9,

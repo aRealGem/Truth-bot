@@ -129,6 +129,49 @@ def test_per_seat_predictions_render_with_models_and_collapse_default():
     assert "proposer: Misleading" in html2
 
 
+def test_pca_chip_shows_fine_label_not_falsey_umbrella():
+    # 2026-07-19 review: a Misleading panel verdict rendered under a "Falsey"
+    # headline chip (the legacy Truthy-scale strict projection). PCA cards must
+    # headline the panel's own 4-label verdict; umbrella buckets are legacy-only.
+    row = {"sid": "s:6", "status": "resolved", "verdict": "MISLEADING",
+           "confidence": 0.8, "citations": [], "reasoning": "r",
+           "votes": {"MISLEADING": 2, "TRUE": 1},
+           "by_role": {"proposer": ["MISLEADING"], "critic": ["TRUE"],
+                       "arbiter": ["MISLEADING"]},
+           "split": True, "escalated": True}
+    html = _card(row, _claim("s:6", "New laws subvert elections.", "A2"))
+    assert "Falsey" not in html
+    assert 'data-coarse-lenient="Misleading"' in html
+    assert 'data-coarse-strict="Misleading"' in html
+
+
+def test_sources_consulted_shows_pack_ids():
+    # Model reasoning cites E1/E2/…; the sources list must render those ids so
+    # the citations are traceable (ids were captured but never displayed).
+    from truthbot.verdict.evidence_pack import EvidencePack, PackItem
+    from truthbot.models import SourceTier
+
+    pack = EvidencePack(
+        sid="s:7", window=None,
+        items=[PackItem(pack_id="E1", source_name="BLS",
+                        source_url="https://bls.gov/data",
+                        tier=SourceTier.GOVERNMENT, snippet="s",
+                        retrieved_at="2026-01-01T00:00:00+00:00", sha256="a"),
+               PackItem(pack_id="E2", source_name="AP",
+                        source_url="https://apnews.com/story",
+                        tier=SourceTier.WIRE, snippet="s",
+                        retrieved_at="2026-01-01T00:00:00+00:00", sha256="b")],
+    )
+    row = {"sid": "s:7", "status": "resolved", "verdict": "TRUE", "confidence": 0.9,
+           "citations": ["E2"], "reasoning": "E2 confirms it.",
+           "votes": {"TRUE": 2}, "split": False, "escalated": False}
+    b = bridge.bridge([row], [_claim("s:7", "A claim.", "A2")], {"s:7": pack}).bundles[0]
+    b.claim.is_checkable = True
+    html = site._claim_card(b, 0, 5, standalone=True)
+    assert '<span class="ev-id">[E1]</span>' in html
+    assert '<span class="ev-id">[E2]</span>' in html
+
+
 def test_tie_routed_card_copy_names_the_severity_classifier():
     # A DISAGREEMENT tie resolved by the stage-2 discriminator must not claim
     # "PCA panel resolved X" — the panel did not resolve; the classifier did.
