@@ -1,0 +1,542 @@
+{
+  "trump_2026:0020": {
+    "claim": "In the past nine months, zero illegal aliens have been admitted to the United States.",
+    "gold": "FALSE",
+    "window": [
+      "2024-01-01",
+      "2026-05-01"
+    ],
+    "pack": [
+      {
+        "source": "NYTimes",
+        "tier": "Established",
+        "url": "https://www.nytimes.com/live/2026/02/25/us/fact-check-state-of-the-union-trump/illegal-immigration-border",
+        "snippet": "[2026-02-25] Trump\u2019s positive comments about legal immigrants, he has taken steps to severely restrict lawful immigration. He has drastically cut the number of refugees the United States admits, to the lowest level in the history of the program. He has reserved a limited number of slots mostly for white Afrikaner South Africans.",
+        "pack_id": "E1"
+      },
+      {
+        "source": "Snopes",
+        "tier": "FactCheck",
+        "url": "https://www.snopes.com/news/2026/02/26/trump-state-of-the-union-immigration/",
+        "snippet": "During his February 2026 State ... in American history,&quot; <strong>U.S. President Donald Trump said (archived), &quot;In the past nine months, zero illegal aliens have been admitted to the United States.&quot;</strong>...",
+        "pack_id": "E2"
+      },
+      {
+        "source": "PolitiFact",
+        "tier": "FactCheck",
+        "url": "https://www.politifact.com/article/2026/feb/27/Trump-legal-immigration-restrict-state-union/",
+        "snippet": "&quot;In the past nine months, zero illegal aliens have been admitted to the United States,&quot; <strong>Trump said Feb 24.</strong>",
+        "pack_id": "E3"
+      },
+      {
+        "source": "PolitiFact",
+        "tier": "FactCheck",
+        "url": "https://www.politifact.com/article/2026/feb/25/Donald-trump-state-union-green/",
+        "snippet": "&quot;<strong>In the past nine months, zero illegal aliens have been admitted to the United States.&quot;</strong>",
+        "pack_id": "E4"
+      },
+      {
+        "source": "Al Jazeera",
+        "tier": "Other",
+        "url": "https://www.aljazeera.com/news/2026/2/25/fact-checking-donald-trumps-state-of-the-union-address",
+        "snippet": "[2026-02-25] \u201cIn the past nine months, zero illegal aliens have been admitted to the United States,\u201d Trump declared, referring to undocumented immigrants.",
+        "pack_id": "E5"
+      },
+      {
+        "source": "ABC7",
+        "tier": "Other",
+        "url": "https://abc7.com/live-updates/state-union-2026-live-updates-president-donald-trump-address/18639619/entry/18646818/",
+        "snippet": "[2026-02-25] TRUMP CLAIM: \"In the past nine months, zero illegal aliens have been admitted to the United States.\"",
+        "pack_id": "E6"
+      }
+    ],
+    "dropped_by_cap": [
+      {
+        "source": "PBS NewsHour",
+        "tier": "Other",
+        "url": "https://www.pbs.org/newshour/politics/fact-checking-trumps-state-of-the-union-claims-on-the-economy-immigration-and-crime",
+        "snippet": "[2026-02-25] \"In the past nine months, zero illegal aliens have been admitted to the United States.\""
+      }
+    ],
+    "probes": {
+      "systematic: In the past nine months, zero illegal aliens have been admitted to the United States. fals": [
+        {
+          "source": "ABC13 Houston",
+          "tier": "Other",
+          "url": "https://abc13.com/live-updates/state-union-2026-live-updates-president-donald-trump-address/18639619/entry/18646818/",
+          "snippet": "[2026-02-25] ABC News is live fact-checking some of the president's statements that may be exaggerated, need more context or are false. Go here for a look at the full fact check from ABC News. President Donald Trump delivers the State of the Union address to a joint session of Congress in the House chamber at the U.S. Capitol in Washington, Tuesday, Feb. 24, 2026. ... TRUMP CLAIM: \"In the past nin"
+        }
+      ],
+      "systematic: In the past nine months, zero illegal aliens have been admitted to the United States. debu": [
+        {
+          "source": "PBS NewsHour",
+          "tier": "Other",
+          "url": "https://www.pbs.org/newshour/politics/fact-checking-trumps-state-of-the-union-claims-on-the-economy-immigration-and-crime",
+          "snippet": "[2026-02-25] \"In the past nine months, zero illegal aliens have been admitted to the United States.\""
+        }
+      ],
+      "gist: illegal border crossings gotaways 2025 numbers": [
+        {
+          "source": "NewsNation",
+          "tier": "Other",
+          "url": "https://www.newsnationnow.com/us-news/immigration/gotaways-border-vulnerabilities-dhs/",
+          "snippet": "[2026-04-22] Customs and Border Protection data sent to Congress shows that between 70,000 and 73,000 immigrants known as \u201cgotaways\u201d crossed into the U.S. illegally during fiscal year 2025."
+        },
+        {
+          "source": "Homeland Security",
+          "tier": "Government",
+          "url": "https://www.dhs.gov/news/2025/06/24/dhs-immigration-enforcement-los-angeles-began-border-crossings-continue-plummet",
+          "snippet": "[2025-06-24] From February 1 to June 22 of this year, apprehensions totaled only 37,518, while just one year ago nearly 600,000 apprehensions were made during the same time. Gotaways showed a similar decrease with 11,867 between February and June in 2025, ..."
+        },
+        {
+          "source": "The Center Square",
+          "tier": "Other",
+          "url": "https://www.thecentersquare.com/texas/article_d931d2dc-8464-4971-99ed-045e70d700e9.html",
+          "snippet": "[2025-12-27] They also represent roughly 10% ... data obtained by The Center Square. In fiscal 2025, 259,878 illegal border crossers were apprehended in Texas, excluding gotaways, by Border Patrol and CBP officers, according to year-end ..."
+        },
+        {
+          "source": "Homeland Security",
+          "tier": "Government",
+          "url": "https://www.dhs.gov/news/2025/07/02/dhs-shatters-nationwide-border-records-once-again-delivering-most-secure-border",
+          "snippet": "[2025-07-02] Along the Southwest Border, USBP apprehensions dropped to 6,070, a 15% decline from March 2025. Last year, in just the first two days of June, Border Patrol had more than 7,000 Southwest Border apprehensions. Notably, on June 28, Border Patrol recorded only 137 apprehensions across the entire Southwest Border\u2014the lowest single-day total in a quarter of a century. Gotaways fell 90% com"
+        },
+        {
+          "source": "Factually",
+          "tier": "Other",
+          "url": "https://factually.co/fact-checks/politics/information-on-illegal-border-crossings-3cba2a",
+          "snippet": "[2026-02-25] Numbers jumped sharply after pandemic ... levels through 2021\u20132024 there were notable reductions beginning in late 2024 and into 2025, with daily averages falling in early 2025 \u2014 trends officials attributed to a mix of enforcement changes and policy shifts [3][9]. At the same ..."
+        }
+      ],
+      "gist: zero illegal aliens admitted claim fact check": [
+        {
+          "source": "CBS News",
+          "tier": "Established",
+          "url": "https://www.cbsnews.com/news/fact-check-state-of-the-union-2026/",
+          "snippet": "[2026-02-25] \"In the past nine months, zero illegal aliens have been admitted to the United States.\" Details: Mr. Trump is likely referring to the number of migrants released by Border Patrol after crossing the U.S.-Mexico border illegally."
+        }
+      ]
+    }
+  },
+  "trump_2026:0056": {
+    "claim": "We ended DEI in America.",
+    "gold": "FALSE",
+    "window": [
+      "2024-01-01",
+      "2026-05-01"
+    ],
+    "pack": [
+      {
+        "source": "PolitiFact",
+        "tier": "FactCheck",
+        "url": "https://www.politifact.com/truth-o-meter/promises/maga-meter-tracking-donald-trumps-2024-promises/promise/1675/revoke-federal-initiatives-on-diversity-equity-and/article/3153/",
+        "snippet": "Legal organization Democracy Forward, which has frequently challenged the Trump administration, filed the lawsuit on behalf of the National Association of Diversity Officers in Higher Education, American Association of University Professors, Restaurant Opportunities Centers United, and the city of Baltimore. Trump&#x27;s administration appealed Feb. 24. Before that, he overstated his order&#x27;s ",
+        "pack_id": "E1"
+      },
+      {
+        "source": "Snopes",
+        "tier": "FactCheck",
+        "url": "https://www.snopes.com/fact-check/trump-revokes-1965-dei-executive-order/",
+        "snippet": "<strong>Trump revoked a decades-old executive order saying federal contractors must take affirmative action to avoid discrimination in hiring and employment</strong>.",
+        "pack_id": "E2"
+      },
+      {
+        "source": "FactCheck.org",
+        "tier": "FactCheck",
+        "url": "https://www.factcheck.org/2025/09/trump-project-2025-and-the-dismantling-of-the-administrative-state/",
+        "snippet": "Once in office, Trump and Vought were quick to act. On his first day, the president issued executive orders pausing foreign aid funding, and \u201cterminating\u201d funding for the \u201cGreen New Deal,\u201d meaning clean energy projects, and \u201call DEI, DEIA, and \u2018environmental justice\u2019 offices and positions.\u201d",
+        "pack_id": "E3"
+      },
+      {
+        "source": "Fast Company",
+        "tier": "Other",
+        "url": "https://www.fastcompany.com/91498722/trump-said-he-ended-dei-in-america-heres-why-hes-wrong",
+        "snippet": "[2026-02-25] \u201cI\u2019ve ended all of the so-called diversity, equity, and inclusion programs across the entire federal government and the private sector, and notified every single government DEI officer that their job has been deleted,\u201d Trump said in a speech last year at the Conservative Political Action Conference. \u201cThey\u2019re gone. They\u2019re fired.\u201d \u00b7 It\u2019s true that the Trump administration\u2019s repeated at",
+        "pack_id": "E4"
+      },
+      {
+        "source": "ABC30",
+        "tier": "Other",
+        "url": "https://abc30.com/live-updates/state-union-2026-live-updates-president-donald-trump-address/18639619/entry/18646811/",
+        "snippet": "[2026-02-25] While touting his accomplishments, Trump said, \"We ended DEI in America.\"",
+        "pack_id": "E5"
+      },
+      {
+        "source": "ABC7",
+        "tier": "Other",
+        "url": "https://abc7.com/live-updates/state-union-2026-live-updates-president-donald-trump-address/18639619/entry/18646811/",
+        "snippet": "[2026-02-25] While touting his accomplishments, Trump said, \"We ended DEI in America.\"",
+        "pack_id": "E6"
+      }
+    ],
+    "dropped_by_cap": [
+      {
+        "source": "ABC7 Chicago",
+        "tier": "Other",
+        "url": "https://abc7chicago.com/live-updates/state-union-2026-live-updates-president-donald-trump-address/18639619/entry/18646811/",
+        "snippet": "[2026-02-25] While touting his accomplishments, Trump said, \"We ended DEI in America.\""
+      },
+      {
+        "source": "HR Brew",
+        "tier": "Other",
+        "url": "https://www.hr-brew.com/stories/2026/02/25/president-trump-claims-we-ended-dei-but-that-s-not-quite-true",
+        "snippet": "[2026-02-25] President Donald Trump claimed during his Feb. 24 State of the Union address that \u201cwe ended DEI in America,\u201d but research indicates that\u2019s not quite accurate."
+      }
+    ],
+    "probes": {
+      "systematic: We ended DEI in America. false": [
+        {
+          "source": "HR Brew",
+          "tier": "Other",
+          "url": "https://www.hr-brew.com/stories/2026/02/25/president-trump-claims-we-ended-dei-but-that-s-not-quite-true",
+          "snippet": "[2026-02-25] President Donald Trump claimed during his Feb. 24 State of the Union address that \u201cwe ended DEI in America,\u201d but research indicates that\u2019s not quite accurate."
+        },
+        {
+          "source": "ABC11",
+          "tier": "Other",
+          "url": "https://abc11.com/live-updates/state-union-2026-live-updates-president-donald-trump-address/18639619/entry/18646811/",
+          "snippet": "[2026-02-25] Just over a year into his second term, President Donald Trump is delivering the State of the Union address, making his case for sweeping policy changes and executive actions that have come to define America's current moment. ABC News is live fact-checking some of the president's statements that may be exaggerated, need more context or are false. Go here for a look at the full fact che"
+        }
+      ],
+      "systematic: We ended DEI in America. debunked": [
+        {
+          "source": "HR Brew",
+          "tier": "Other",
+          "url": "https://www.hr-brew.com/stories/2026/02/25/president-trump-claims-we-ended-dei-but-that-s-not-quite-true",
+          "snippet": "[2026-02-25] President Donald Trump claimed during his Feb. 24 State of the Union address that \u201cwe ended DEI in America,\u201d but research indicates that\u2019s not quite accurate."
+        },
+        {
+          "source": "Axios",
+          "tier": "Other",
+          "url": "https://www.axios.com/2026/02/28/trump-says-he-ended-dei-courts-disagree",
+          "snippet": "[2026-02-28] By leaving the term as an undefined \"boogeyman,\" she added, the administration has been able to \"kill\" lawful DEI efforts that otherwise might not withstand court challenges. In courtrooms across the country, judges are weighing in on cases ..."
+        },
+        {
+          "source": "YW Boston",
+          "tier": "Other",
+          "url": "https://www.ywboston.org/didnt-earn-it-and-other-lies-dei-myths-debunked/",
+          "snippet": "[2024-12-10] As we inch closer to the 2024 presidential election, conservative attacks on diversity, equity, and inclusion (DEI) initiatives have intensified, particularly in political and legislative arenas. Over the weekend, conservative media outlet the New York Post published a racist article about Vice President Kamala Harris with a headline that read, \u201cAmerica may soon be subjected to the co"
+        }
+      ],
+      "gist: DEI programs still exist companies 2025": [
+        {
+          "source": "Diversity",
+          "tier": "Other",
+          "url": "https://diversity.com/post/is-dei-still-relevant-in-2025-heres-why-the-answer-is-yes",
+          "snippet": "[2025-06-12] But even if the headlines have shifted, the need for DEI has not gone away. In fact, it's more urgent now than ever. According to a May 2025 survey by Resume.org, only 19% of companies have actually cut DEI funding."
+        },
+        {
+          "source": "Forbes",
+          "tier": "Other",
+          "url": "https://www.forbes.com/sites/conormurray/2025/04/11/ibm-reportedly-walks-back-diversity-policies-citing-inherent-tensions-here-are-all-the-companies-rolling-back-dei-programs/",
+          "snippet": "[2025-04-11] Following Trump's lead, organizations including Walmart, Lowe\u2019s and Meta have announced they would scale back their commitments to diversity, equity and inclusion programs."
+        },
+        {
+          "source": "Employdiversitynetwork",
+          "tier": "Other",
+          "url": "https://employdiversitynetwork.com/blog/2025/3/7/10-employers-still-committed-to-diversity-equity-and-inclusion-dei-in-2025",
+          "snippet": "[2025-03-08] Riding on a wave of anti-DEI ... programs in the government sector. This has led to several corporations such as Target, Walmart, and Amazon likewise rolling back their own DEI programs in an attempt to appease members of ..."
+        },
+        {
+          "source": "Buildremote",
+          "tier": "Other",
+          "url": "https://buildremote.co/companies/keeping-dei/",
+          "snippet": "[2026-02-04] Story: \u201cPATTISON Outdoor (a division of Jim Pattison Group) opened applications for its 2025 Elevating Voices DEI grant, awarding up to $1 million in media value to nonprofits advancing diversity, equity, and inclusion.\u201d ... Story: \u201cFrom ..."
+        },
+        {
+          "source": "The Advocate",
+          "tier": "Other",
+          "url": "https://www.advocate.com/news/companies-keeping-dei",
+          "snippet": "[2025-12-23] While others like Target, Amazon, Walmart, and McDonald's have backpedaled under political pressure, these businesses have stood firm. These are the companies committed to recognizing that diversity isn\u2019t a liability \u2014 it\u2019s a strength."
+        }
+      ],
+      "gist: ended DEI in America fact check": [
+        {
+          "source": "The White House",
+          "tier": "Government",
+          "url": "https://www.whitehouse.gov/fact-sheets/2025/03/fact-sheet-president-donald-j-trump-removes-dei-from-the-foreign-service/",
+          "snippet": "[2025-03-19] SERVING AMERICA, NOT IDEOLOGICAL AGENDAS: President Trump is restoring fairness and accountability in federal hiring, and terminating DEI across the federal government. In his first week in office, President Trump signed an Executive Order restoring ..."
+        },
+        {
+          "source": "The White House",
+          "tier": "Government",
+          "url": "https://www.whitehouse.gov/fact-sheets/2026/03/fact-sheet-president-donald-j-trump-addresses-dei-discrimination-by-federal-contractors/",
+          "snippet": "[2026-03-26] In January 2025, President Trump signed an Executive Order to ban the use of discriminatory race- or sex-based preferences by any element of the Armed Forces, the Department of War, or the Department of Homeland Security and abolish any remnant ..."
+        },
+        {
+          "source": "Higher Ed Dive",
+          "tier": "Other",
+          "url": "https://www.highereddive.com/news/trump-end-dei-state-of-the-union/813091/",
+          "snippet": "[2026-02-25] The president\u2019s declaration follows a yearlong attack on DEI during which some employers rolled back their initiatives, while others stayed the course. Published Feb. 25, 2026 ... President Donald Trump applauds during his State of the Union address during a Joint Session of Congress at the U.S. Capitol on Feb. 24, 2026, in Washington, D.C. The president said during his speech that hi"
+        }
+      ]
+    }
+  },
+  "trump_2026:0556": {
+    "claim": "That's why in a breakthrough operation last June, the United States military obliterated Iran's nuclear weapons program with an attack on Iranian soil, known as Operation Midnight Hammer.",
+    "gold": "FALSE",
+    "window": [
+      "2024-01-01",
+      "2026-05-01"
+    ],
+    "pack": [
+      {
+        "source": "NYTimes",
+        "tier": "Established",
+        "url": "https://www.nytimes.com/live/2026/02/25/us/fact-check-state-of-the-union-trump/in-a-breakthrough-operation-last-june-the-united-states-military-obliterated-irans-nuclear-weapons-program-with-an-attack-on-ira",
+        "snippet": "[2026-02-25] Trump reiterated that the military campaign had \u201cobliterated\u201d Iran\u2019s nuclear enrichment capacity. The main strategy document, however, is far more circumspect, declaring only that the strikes, called Operation Midnight Hammer, \u201csignificantly degraded Iran\u2019s nuclear program.\u201d \u00b7 U.S. officials briefed on the intelligence have said that the strikes destroyed some underground facilities, ",
+        "pack_id": "E1"
+      },
+      {
+        "source": "FactCheck.org",
+        "tier": "FactCheck",
+        "url": "https://www.factcheck.org/2026/04/factchecking-trumps-prime-time-address-on-iran/",
+        "snippet": "In her prepared remarks for the March 18 congressional hearing, Gabbard said: \u201cAs a result of Operation Midnight Hammer, Iran\u2019s nuclear enrichment program was obliterated. There has been no efforts since then to try to rebuild their enrichment capability. The entrances to the underground facilities that were bombed have been buried and shuttered with cement. We continue to monitor for any early in",
+        "pack_id": "E2"
+      },
+      {
+        "source": "FactCheck.org",
+        "tier": "FactCheck",
+        "url": "https://www.factcheck.org/2025/06/iranian-nuclear-program-damaged-not-obliterated-by-u-s-attack/",
+        "snippet": "The bombing of three Iranian nuclear facilities on June 21 by American B-2 aircraft damaged the sites and set back Iran&#x27;s nuclear enrichment program, but didn&#x27;t completely destroy the sites or Iran&#x27;s nuclear capabilities, according to experts we spoke with and a classified U.S. intelligence report released on June 24.",
+        "pack_id": "E3"
+      },
+      {
+        "source": "PolitiFact",
+        "tier": "FactCheck",
+        "url": "https://www.politifact.com/article/2025/jun/23/iranian-nuclear-obliterated-trump-bomb-damage/",
+        "snippet": "In those, he said the raids took &quot;the \u2018bomb\u2019 right out of their hands&quot; and that &quot;obliteration is an accurate term!&quot; Then, on June 23, Trump posted to Truth Social, &quot;The sites that we hit in Iran were totally destroyed, and everyone knows it. Only the Fake News would say anything different.&quot; It\u2019s not yet clear how severely the U.S. strikes damaged Iran\u2019s nuclear facili",
+        "pack_id": "E4"
+      },
+      {
+        "source": "Center for Strategic and International Studies",
+        "tier": "Other",
+        "url": "https://www.csis.org/analysis/what-operation-midnight-hammer-means-future-irans-nuclear-ambitions",
+        "snippet": "[2025-08-13] Immediately after the strikes, on June 21 at 10:00 p.m., President Donald Trump issued a statement calling the attacks \u201ca spectacular military success\u201d and emphasizing that \u201cIran\u2019s key nuclear enrichment facilities have been completely and totally obliterated.\u201d \u00b7 On June 22, Secretary of Defense Pete Hegseth stated in a Pentagon press conference that it was \u201can incredible and overwhel",
+        "pack_id": "E5"
+      },
+      {
+        "source": "Council on Foreign Relations",
+        "tier": "Other",
+        "url": "https://www.cfr.org/articles/us-israel-attack-iranian-nuclear-targets-assessing-damage",
+        "snippet": "[2025-06-25] U.S. President Donald Trump announced on June 21 that the United States had struck three major nuclear sites inside Iran as part of what he called \u201cOperation Midnight Hammer.\u201d With the attack, the United States joined Israel\u2019s bombing ...",
+        "pack_id": "E6"
+      }
+    ],
+    "dropped_by_cap": [
+      {
+        "source": "ABC News",
+        "tier": "Other",
+        "url": "https://abcnews.com/US/months-after-operation-midnight-hammer-us-strikes-iran/story?id=130599531",
+        "snippet": "[2026-03-02] June 22, 2025: U.S. launches Operation Midnight Hammer, with more than 100 planes, including seven B-2 stealth bombers, targeting three nuclear sites in Iran. In the wake of the strike, Defense Secretary Pete Hegseth said the country's nuclear ambitions were \"obliterated.\"..."
+      }
+    ],
+    "probes": {
+      "systematic: That's why in a breakthrough operation last June, the United States military obliterated I": [
+        {
+          "source": "Af",
+          "tier": "Government",
+          "url": "https://www.doctrine.af.mil/Portals/61/Jul-25-Doctrine%20Paragon-Operation%20Midnight%20Hammer.pdf",
+          "snippet": "[2025-07-31] On 22 June 2025, the United States executed a strategic attack against Iran named \u00b7 Operation MIDNIGHT HAMMER. The attack was a joint force effort that synchronized \u00b7 unprecedented execution between strategic bomber forces and submarines to deliver \u00b7 rapid, decisive effects designed to punish ..."
+        }
+      ],
+      "gist: Iran nuclear sites strike damage assessment intelligence set back": [
+        {
+          "source": "AP News",
+          "tier": "Wire",
+          "url": "https://apnews.com/article/iran-nuclear-program-military-strikes-trump-f0fc085a2605e7da3e2f47ff9ac0e01d",
+          "snippet": "[2025-09-10] WASHINGTON (AP) \u2014 A U.S. intelligence ... only a few months after U.S. strikes and was not \u201ccompletely and fully obliterated\u201d as President Donald Trump has said, according to two people familiar with the early assessment. The report issued by the Defense Intelligence Agency on Monday contradicts statements from Trump and Israeli Prime Minister Benjamin Netanyahu about the status of Ir"
+        },
+        {
+          "source": "ABC News",
+          "tier": "Other",
+          "url": "https://abcnews.com/Politics/early-us-intel-assessment-finds-us-strikes-set/story?id=123169267",
+          "snippet": "[2025-06-25] The U.S. military strikes President Donald Trump ordered on Iran's nuclear facilities last weekend did not completely destroy the country's nuclear program but likely set it back by a few months, according to two people familiar with an early ..."
+        },
+        {
+          "source": "CNN",
+          "tier": "Other",
+          "url": "https://www.cnn.com/2025/06/24/politics/intel-assessment-us-strikes-iran-nuclear-sites",
+          "snippet": "[2025-06-25] The US military strikes on three of Iran\u2019s nuclear facilities last weekend did not destroy the core components of the country\u2019s nuclear program and likely only set it back by months, according to an early US intelligence assessment that ..."
+        },
+        {
+          "source": "Al Jazeera",
+          "tier": "Other",
+          "url": "https://www.aljazeera.com/news/2025/6/25/us-didnt-destroy-irans-nuclear-programme-heres-what-new-intel-says",
+          "snippet": "[2025-06-25] The United States\u2019 strikes on three key Iranian nuclear sites on Sunday failed to destroy underground facilities, and set Tehran\u2019s nuclear programme back only by a few months, according to an assessment of a confidential American intelligence ..."
+        }
+      ],
+      "gist: obliterated Iran nuclear facilities fact check": [
+        {
+          "source": "White House",
+          "tier": "Government",
+          "url": "https://www.whitehouse.gov/releases/2025/06/irans-nuclear-facilities-have-been-obliterated-and-suggestions-otherwise-are-fake-news/",
+          "snippet": "[2025-06-25] That was the objective of the mission, to destroy that Fordow nuclear site, and of course, do some damage to the other sites as well, but we feel very confident that the Fordow nuclear site was substantially set back, and that was our goal.\u201d \u00b7 Secretary of Defense Pete Hegseth: \u201cBased on everything we have seen \u2014 and I\u2019ve seen it all \u2014 our bombing campaign obliterated Iran\u2019s ability t"
+        },
+        {
+          "source": "White House",
+          "tier": "Government",
+          "url": "https://www.whitehouse.gov/releases/2025/06/experts-agree-irans-nuclear-facilities-have-been-obliterated/",
+          "snippet": "[2025-06-26] Director of National Intelligence Tulsi Gabbard: \u201cNew intelligence confirms what @POTUS has stated numerous times: Iran\u2019s nuclear facilities have been destroyed. If the Iranians chose to rebuild, they would have to rebuild all three facilities (Natanz, Fordow, Esfahan) entirely, which would likely take years to do. The propaganda media has deployed their usual tactic: selectively rele"
+        },
+        {
+          "source": "Factually",
+          "tier": "Other",
+          "url": "https://factually.co/fact-checks/politics/iran-nuclear-capabilities-2025-destruction-claim-b0155e",
+          "snippet": "[2026-04-07] 5. Bottom line: obliterated? No; heavily damaged and set back? Yes \u00b7 The most defensible conclusion from the public record is that Iran\u2019s key enrichment facilities were heavily damaged and its near\u2011term enrichment capacity was significantly set back \u2014 perhaps by months to a couple of years \u2014 but the strikes did not universally destroy every element required for nuclear breakout and di"
+        }
+      ]
+    }
+  },
+  "biden_2022:0342": {
+    "claim": "Repeal the liability shield that makes gun manufacturers the only industry in America that can\u2019t be sued.",
+    "gold": "FALSE",
+    "window": [
+      "2020-01-01",
+      "2022-06-01"
+    ],
+    "pack": [
+      {
+        "source": "FactCheck.org",
+        "tier": "FactCheck",
+        "url": "https://www.factcheck.org/2022/02/biden-repeats-false-claims-at-gun-violence-meeting/",
+        "snippet": "[2022-02-07] \u201cBut Congress needs to do its part too: pass universal background checks, ban assault weapons and high-capacity magazines, close loopholes, and keep out of the hands of domestic abusers \u2014 weapons, repeal the liability shield for gun ...",
+        "pack_id": "E1"
+      },
+      {
+        "source": "PolitiFact",
+        "tier": "FactCheck",
+        "url": "https://www.politifact.com/factchecks/2022/jun/08/joe-biden/biden-wrong-claim-about-gun-manufacturers-and-liab/",
+        "snippet": "... In the wake of the deadly ... liability immunity. &quot;<strong>We should repeal the liability shield that often protects gun manufacturers from being sued for the death and destruction caused by their weapons</strong>,&quot; Biden wrote in a June ...",
+        "pack_id": "E2"
+      },
+      {
+        "source": "Snopes",
+        "tier": "FactCheck",
+        "url": "https://www.snopes.com/fact-check/gun-manufacturers-crimes-products/",
+        "snippet": "<strong>The PLCAA</strong> was passed in response to an increasing number of lawsuits as a way to protect the industry. In a 2005 statement, George W. Bush explained his support for the bill: Our laws should punish criminals who use guns to commit crimes, not ...",
+        "pack_id": "E3"
+      },
+      {
+        "source": "Roanoke Times",
+        "tier": "Other",
+        "url": "https://roanoke.com/lifestyles/technology/ap-fact-check-bidens-claims-in-his-state-of-union-address/article_101acd56-93f4-5652-974e-e3d5383d57dc.html",
+        "snippet": "[2022-03-12] BIDEN, asking Congress to pass measures he said would reduce gun violence: \u201cRepeal the liability shield that makes gun manufacturers the only industry in America that can\u2019t be sued, the only one.\u201d",
+        "pack_id": "E4"
+      },
+      {
+        "source": "Rutland Herald",
+        "tier": "Other",
+        "url": "https://www.rutlandherald.com/news/business/ap-fact-check-bidens-claims-in-his-state-of-union-address/article_5e666499-4345-5762-9e9e-b7748f871227.html",
+        "snippet": "[2022-03-02] ... BIDEN, asking Congress to pass measures he said would reduce gun violence: \u201cRepeal the liability shield that makes gun manufacturers the only industry in America that can\u2019t be sued, the only one.\u201d",
+        "pack_id": "E5"
+      },
+      {
+        "source": "Omaha World-Herald",
+        "tier": "Other",
+        "url": "https://omaha.com/lifestyles/technology/ap-fact-check-bidens-claims-in-his-state-of-union-address/article_cecb5a8f-2bde-5841-8a25-6fe9cc571ebe.html",
+        "snippet": "[2022-03-06] BIDEN, asking Congress to pass measures he said would reduce gun violence: \u201cRepeal the liability shield that makes gun manufacturers the only industry in America that can\u2019t be sued, the only one.\u201d",
+        "pack_id": "E6"
+      }
+    ],
+    "dropped_by_cap": [
+      {
+        "source": "Daily Mail",
+        "tier": "Other",
+        "url": "https://www.dailymail.co.uk/news/article-10569505/Fact-check-Bidens-SOTU-includes-false-claim-suing-gun-makers-climate-change-taxes.html",
+        "snippet": "[2022-03-02] This sweeping statement is FALSE, because gun manufacturers can be sued and there are other industries in the U.S. that do have certain liability protections that prevent them from being sued."
+      }
+    ],
+    "probes": {
+      "systematic: Repeal the liability shield that makes gun manufacturers the only industry in America that": [
+        {
+          "source": "Daily Mail",
+          "tier": "Other",
+          "url": "https://www.dailymail.co.uk/news/article-10569505/Fact-check-Bidens-SOTU-includes-false-claim-suing-gun-makers-climate-change-taxes.html",
+          "snippet": "[2022-03-02] This sweeping statement is FALSE, because gun manufacturers can be sued and there are other industries in the U.S. that do have certain liability protections that prevent them from being sued."
+        },
+        {
+          "source": "The Trace",
+          "tier": "Other",
+          "url": "https://www.thetrace.org/2022/03/president-biden-gun-manufacturers-plcaa-lawsuit-protection/",
+          "snippet": "[2022-03-11] In 2020, a Pennsylvania Superior Court panel found the liability shield to be an unconstitutional violation of the 10th Amendment and an invalid application of the Commerce Clause."
+        },
+        {
+          "source": "Children's Health Defense",
+          "tier": "Other",
+          "url": "https://childrenshealthdefense.org/defender/biden-gun-makers-liability-covid-vaccine-makers/",
+          "snippet": "[2022-03-06] President Biden during Tuesday\u2019s ... that can\u2019t be sued \u2014 when in fact, vaccine makers in the U.S. have total liability protection for injuries or deaths caused by COVID vaccines...."
+        },
+        {
+          "source": "CNN",
+          "tier": "Other",
+          "url": "https://www.cnn.com/politics/live-news/biden-state-of-the-union-2022/h_3e4165f613031309d495f43f000a0c72",
+          "snippet": "[2022-03-02] Addressing gun control, President Biden repeated his claim that \u201cgun manufacturers (are) the only industry in America that can't be sued.\u201d \u00b7 CNN has previously fact checked this claim. Here\u2019s what we found: Facts First: This is false. Gun ..."
+        }
+      ],
+      "gist: PLCAA gun manufacturers liability immunity exceptions fact check": [
+        {
+          "source": "Efsgv",
+          "tier": "Other",
+          "url": "https://efsgv.org/learn/policies/gun-industry-immunity/",
+          "snippet": "[2021-07-27] The court held that D.C.\u2019s Strict Liability Act did not satisfy the necessary criteria for the predicate exception of PLCAA because the manufacturer \u201ccannot be said to have violated the [Act] simply by lawfully selling a gun\u201d to a gun retailer.32 Since the estate could not sufficiently argue that the manufacturer violated either a federal or state law pertaining to the sale or marketi"
+        },
+        {
+          "source": "Berkshire Eagle",
+          "tier": "Other",
+          "url": "https://www.berkshireeagle.com/ap/factcheck/despite-biden-s-claim-gun-makers-can-indeed-be-sued/article_005ac0c0-8da8-11ec-a6dd-1300a0e2c4f3.html",
+          "snippet": "[2022-02-14] The 2005 Protection of Lawful Commerce in Arms Act, or PLCAA, gives immunity to gun makers so they can\u2019t be held liable for injuries caused by criminal misuse of their weapons, Adam Winkler, a law professor at UCLA School of Law, told the AP in an email. He said Congress feared liability could put firearm sellers and manufacturers out of business."
+        },
+        {
+          "source": "The New Republic",
+          "tier": "Other",
+          "url": "https://newrepublic.com/article/134526/sandy-hook-lawsuit-hold-gun-makers-liable-mass-shootings",
+          "snippet": "[2021-05-11] Under the PLCAA, no court may hold a seller of a gun \u2013 whether a retailer or a manufacturer \u2013 liable for an injury arising from the criminal misuse of a weapon. Congress created a number of exceptions to this grant of immunity."
+        },
+        {
+          "source": "Reuters",
+          "tier": "Wire",
+          "url": "https://www.reuters.com/world/us/can-us-gunmakers-be-liable-mass-shooting-2022-05-25/",
+          "snippet": "[2022-05-26] May 25 (Reuters) - An 18-year-old gunman stormed a Texas elementary school on Tuesday and killed 19 children and two teachers, reigniting a debate in the United States over gun control and the potential legal liability for manufacturers of firearms. Below is a look at attempts to use the courts to hold manufacturers liable for mass shootings. Sign up here. Since 2005, the Protection o"
+        },
+        {
+          "source": "Bloomberg Tax",
+          "tier": "Other",
+          "url": "https://news.bloombergtax.com/esg/sandy-hook-gun-settlement-marks-a-turning-point",
+          "snippet": "[2022-02-28] That settlement comes less than ... of Lawful Commerce in Arms Act (PLCAA), does not immunize manufacturers from claims that wrongful advertising resulted in injury or death...."
+        }
+      ],
+      "gist: industries with legal liability immunity vaccine manufacturers": [
+        {
+          "source": "Newsweek",
+          "tier": "Other",
+          "url": "https://www.newsweek.com/fact-check-are-pharmaceutical-companies-immune-covid-19-vaccine-lawsuits-1562793",
+          "snippet": "[2021-01-19] HHS Secretary Alex Azar invoked PREP in February in response to the pandemic, declaring COVID-19 to be \"a public health emergency warranting liability protections for covered countermeasures.\" This means that companies like Moderna and Pfizer are ..."
+        },
+        {
+          "source": "WUSA9",
+          "tier": "Other",
+          "url": "https://www.wusa9.com/article/news/verify/adverse-effects-side-effects-covid-19-can-vaccine-comapnies-be-sued-for-complications-from-symptoms-verify-fact-check/65-ae9305ac-1193-4b7a-a90f-eb8536f06058",
+          "snippet": "[2021-03-02] RELATED: VERIFY: Yes, COVID vaccines do meet the definition of a vaccine \u00b7 However, both experts emphasized that this is not complete immunity. A company can still be sued if there's willful misconduct.' \"They can't mislead,\" said Gostin. \"Deceive, be fraudulent, or hide information.\" The basis for this partial immunity is a law called the \"Public Readiness and Emergency Preparedness\""
+        },
+        {
+          "source": "Full Fact",
+          "tier": "FactCheck",
+          "url": "https://fullfact.org/health/unlicensed-vaccine-manufacturers-are-immune-some-not-all-civil-liability/",
+          "snippet": "[2020-09-04] However, the government consultation document also states that the law \u201cdoes not provide complete immunity from civil liability.\u201d \u00b7 If the product is not found to meet safety standards or is defective, then there is a liability. One of the scientists working on a potential vaccine has stated that, while processes have been sped up, this doesn\u2019t mean steps to ensure safety have been mi"
+        },
+        {
+          "source": "The Weycer Law Firm",
+          "tier": "Other",
+          "url": "https://weycerlawfirm.com/blog/drug-companies-get-immunity-more-often-than-consumer-product-companies/",
+          "snippet": "[2021-08-09] There\u2019s a long-standing federal statute that states: No vaccine manufacturer shall be liable in a civil action for damages arising from a vaccine-related injury or death associated with the administration of a vaccine after October 1, 1988, if ..."
+        },
+        {
+          "source": "Congress",
+          "tier": "Government",
+          "url": "https://crsreports.congress.gov/product/pdf/IF/IF11905",
+          "snippet": "[2021-08-19] Examples: \"Trade Relations\", \"Export Controls\" \u00b7 Examples: hr5, h.r.5, sjres8, sa2, pl116-21, 86Stat1326"
+        }
+      ]
+    }
+  }
+}
