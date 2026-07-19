@@ -45,3 +45,35 @@ that is genuinely unadjudicable *even with evidence* (not merely context-poor) �
 
 `annotator` records `claude-expand;jackie-adjudicated` (or `;jackie-directed` for 0342).
 TRAIN-only (I6-safe); heldout untouched. No proxy spend (web research only).
+
+---
+
+# Expansion 3 — P67 Phase 2 boundary rows (2026-07-19, PR pending jackie review)
+
++14 rows, 21 → 35: **TRUE 11 / MISLEADING 11 / FALSE 11 / UNVERIFIABLE 2**. Purpose:
+make the FALSE→MISLEADING severity-softening fix measurable — at n=4 gold-FALSE each
+row was a 25% swing; at n=11 it's ~9%. Rows were deliberately selected on the
+FALSE/MISLEADING boundary (absolute quantifiers, superlatives, exaggerated numbers)
+per the Phase-1 diagnosis (`eval/benchmarks/SOFTENING_DIAGNOSIS.md`): the panel's
+systematic miss is absolute claims wrapping a real underlying event.
+
+- New FALSE (7): trump 0616 (drugs "virtually stopped completely" by sea), 0172
+  ("biggest turnaround in history" — BEA shows deceleration), 0356 (shutdown "2
+  points on GDP" — BEA says 1), 0252 (300–600% price differences — mathematically
+  impossible as savings), 0312 (state fraud "even worse" than MN — off by orders of
+  magnitude), 0568 (Iran missiles "soon reach the US" — DIA says ≥2035 if pursued),
+  0452 (killer "came in through open borders" — born in Charlotte).
+- New MISLEADING (5): trump 0024 (125-year murder-low superlative), 0248 (MFN
+  "lowest price anywhere"), 0564 (Iran "32,000 protesters killed" as floor), 0400
+  (Sage story agency inversion), 0620 (El Mencho credit-attribution).
+- biden_2022:0385 TRUE (80 bipartisan bills — verified against the PL 117 list) and
+  biden_2022:0045 UNVERIFIABLE (rhetorical superlative all checkers skipped —
+  closes part of the UNVERIFIABLE gap noted above).
+
+All rows `needs_review: true`, annotator `claude-expand-p67` — **verdict judgments
+gated on jackie's adjudication** (no-auto-merge-verdicts rule). Several are marked
+med confidence with the FALSE-vs-MISLEADING tension recorded in the rationale
+(0172, 0356, 0252, 0568 lean FALSE per the schema's absolute-claim rule where
+fact-checkers used the "misleading/overstated" register — flag if you disagree).
+Claim text copied verbatim from `claim_set.train.jsonl` (exact sid+text join;
+TRAIN-only, I6-safe). Sources: every URL fetched during research; spot-checked 200.
