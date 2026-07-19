@@ -91,6 +91,61 @@ def test_sources_consulted_rendered_when_pack_nonempty_but_nothing_cited():
     assert "No sources retrieved." not in html
 
 
+def test_per_seat_predictions_render_with_models_and_collapse_default():
+    # P67 review round A (2026-07-19): when by_role was captured, the provenance
+    # strip names what each seat predicted (with the seat's model when the report
+    # roster is provided), and the Sources consulted block is COLLAPSED by default.
+    from truthbot.verdict.evidence_pack import EvidencePack, PackItem
+    from truthbot.models import SourceTier
+
+    pack = EvidencePack(
+        sid="s:4", window=None,
+        items=[PackItem(pack_id="E1", source_name="BLS",
+                        source_url="https://bls.gov/data",
+                        tier=SourceTier.GOVERNMENT, snippet="Unemployment 3.9%",
+                        retrieved_at="2026-01-01T00:00:00+00:00", sha256="a")],
+    )
+    row = {"sid": "s:4", "status": "resolved", "verdict": "MISLEADING",
+           "confidence": 0.8, "citations": ["E1"], "reasoning": "r",
+           "votes": {"MISLEADING": 2, "FALSE": 1},
+           "by_role": {"proposer": ["MISLEADING"], "critic": ["FALSE"],
+                       "arbiter": ["MISLEADING"]},
+           "split": False, "escalated": True}
+    b = bridge.bridge([row], [_claim("s:4", "A claim.", "A2")], {"s:4": pack}).bundles[0]
+    b.claim.is_checkable = True
+    roster = {"name": "dev", "seats": {"proposer": ["mistral"],
+                                       "critic": ["dsv4-flash"],
+                                       "arbiter": ["claude-haiku"]}}
+    html = site._claim_card(b, 0, 5, standalone=True, panel_roster=roster)
+
+    assert "proposer (mistral): Misleading" in html
+    assert "critic (dsv4-flash): False" in html
+    assert "arbiter (claude-haiku): Misleading" in html
+    # collapsed by default — no `open` attribute on the sources details element
+    assert '<details class="evidence-details" open>' not in html
+    assert "Sources consulted (1)" in html
+    # without a roster, seats still render by role name alone
+    html2 = site._claim_card(b, 0, 5, standalone=True)
+    assert "proposer: Misleading" in html2
+
+
+def test_tie_routed_card_copy_names_the_severity_classifier():
+    # A DISAGREEMENT tie resolved by the stage-2 discriminator must not claim
+    # "PCA panel resolved X" — the panel did not resolve; the classifier did.
+    row = {"sid": "s:5", "status": "resolved", "verdict": "FALSE", "confidence": None,
+           "citations": [], "reasoning": "",
+           "votes": {"FALSE": 1, "MISLEADING": 1, "UNVERIFIABLE": 1},
+           "by_role": {"proposer": ["FALSE"], "critic": ["MISLEADING"],
+                       "arbiter": ["UNVERIFIABLE"]},
+           "split": True, "escalated": True,
+           "crm114": {"stage1": "DISAGREEMENT", "final": "FALSE"}}
+    html = _card(row, _claim("s:5", "A tie claim.", "A2"))
+    assert "Panel split with no plurality" in html
+    assert "Severity Classifier resolved False" in html
+    assert "PCA panel resolved" not in html
+    assert "CRM-114" not in html          # reader-facing rename holds
+
+
 def test_legacy_multi_adapter_card_unchanged():
     # >1 model verdict + empty provenance => classic "Model consensus" path.
     from datetime import datetime, timezone

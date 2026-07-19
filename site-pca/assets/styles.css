@@ -1055,6 +1055,10 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   line-height: 1.5;
   word-break: break-word;
 }
+.pca-seats {
+  margin-top: 0.15rem;
+  color: var(--ink-faint);
+}
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {

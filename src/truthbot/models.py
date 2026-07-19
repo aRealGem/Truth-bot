@@ -381,6 +381,13 @@ class VerdictProvenance(BaseModel):
     panel_escalated: bool = Field(default=False, description="Escalated to the arbiter seat")
     crm114_stage1: str = Field(default="", description="CRM-114 stage-1 label (pre-override)")
     crm114_final: str = Field(default="", description="CRM-114 final label (post stage-2 override)")
+    panel_by_role: dict[str, list[str]] = Field(
+        default_factory=dict,
+        description="Per-seat labels by role, e.g. {'proposer': ['Misleading'], "
+                    "'critic': ['False']} (a critic may be a panel, hence lists). "
+                    "Default empty — bundles from runs predating by_role capture "
+                    "deserialize cleanly and the renderer falls back to the tally.",
+    )
 
 
 class ConsensusVerdict(BaseModel):
