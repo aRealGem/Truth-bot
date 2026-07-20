@@ -172,6 +172,35 @@ def test_sources_consulted_shows_pack_ids():
     assert '<span class="ev-id">[E2]</span>' in html
 
 
+def test_reasoning_eids_link_to_sources_consulted_anchors():
+    # P67 Round B follow-up: an E-id mentioned in reasoning becomes a jump link
+    # to the matching Sources-consulted item; ids not in the pack stay plain.
+    from truthbot.verdict.evidence_pack import EvidencePack, PackItem
+    from truthbot.models import SourceTier
+
+    pack = EvidencePack(
+        sid="s:8", window=None,
+        items=[PackItem(pack_id="E1", source_name="BLS",
+                        source_url="https://bls.gov/data",
+                        tier=SourceTier.GOVERNMENT, snippet="s",
+                        retrieved_at="2026-01-01T00:00:00+00:00", sha256="a")],
+    )
+    row = {"sid": "s:8", "status": "resolved", "verdict": "TRUE", "confidence": 0.9,
+           "citations": ["E1"], "reasoning": "E1 confirms it; E9 does not exist.",
+           "votes": {"TRUE": 2}, "split": False, "escalated": False}
+    b = bridge.bridge([row], [_claim("s:8", "A claim.", "A2")], {"s:8": pack}).bundles[0]
+    b.claim.is_checkable = True
+    html = site._claim_card(b, 0, 5, standalone=True)
+
+    import re as _re
+    m = _re.search(r'href="#(ev-[A-Za-z0-9_-]+)-E1"', html)
+    assert m, "reasoning E1 must render as an anchor link"
+    anchor = f'id="{m.group(1)}-E1"'
+    assert anchor in html                      # the pack item carries the target id
+    assert 'class="ev-ref"' in html
+    assert 'href="#' + m.group(1) + '-E9"' not in html   # unknown id stays plain text
+
+
 def test_tie_routed_card_copy_names_the_severity_classifier():
     # A DISAGREEMENT tie resolved by the stage-2 discriminator must not claim
     # "PCA panel resolved X" — the panel did not resolve; the classifier did.

@@ -791,12 +791,16 @@ def _evidence_list_html(
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
 
 
-def _sources_consulted_html(sources: list[dict]) -> str:
+def _sources_consulted_html(sources: list[dict], anchor_base: str = "") -> str:
     """Render the FULL retrieved evidence pack (all items, not just cited).
 
     Independent of what the verdict cited: a claim can have a non-empty pack
     yet zero citations (e.g. Unverifiable), and this list still surfaces every
     source that was consulted. Reuses the ``evidence-list`` / tier styling.
+
+    ``anchor_base`` (per-claim unique) makes each pack item a link target
+    (``id="{anchor_base}-E5"``) so E-id mentions in model reasoning can jump
+    here (2026-07-19 review follow-up).
     """
     if not sources:
         return ""
@@ -822,8 +826,9 @@ def _sources_consulted_html(sources: list[dict]) -> str:
         # (2026-07-19 review: the ids were captured but never displayed).
         pack_id = (src.get("id") or "").strip()
         id_html = f'<span class="ev-id">[{_esc(pack_id)}]</span>' if pack_id else ""
+        li_anchor = f' id="{_esc(anchor_base)}-{_esc(pack_id)}"' if anchor_base and pack_id else ""
         items.append(
-            f'<li class="source-verified"><span class="ev-mark">→</span>{id_html}{badge}'
+            f'<li class="source-verified"{li_anchor}><span class="ev-mark">→</span>{id_html}{badge}'
             f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
             f'{name_html}{tier_html}{snippet_html}</li>'
         )
@@ -2119,6 +2124,23 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
             'title="Unanimous high-confidence triage; frontier models were skipped">Triage</span>'
         )
 
+    # E-id anchor plumbing (2026-07-19 review follow-up): pack ids mentioned in
+    # reasoning ("E5 confirms…") become links to the matching "Sources consulted"
+    # item. Only ids actually present in the retrieved pack are linkified.
+    _anchor_base = "ev-" + re.sub(r"[^A-Za-z0-9_-]", "-", str(bundle.claim.id))
+    _pack_ids = {str(s.get("id") or "").strip()
+                 for s in (getattr(bundle, "sources_consulted", None) or [])}
+    _pack_ids.discard("")
+
+    def _link_pack_ids(escaped: str) -> str:
+        if not _pack_ids:
+            return escaped
+        return re.sub(
+            r"\bE\d{1,3}\b",
+            lambda m: (f'<a class="ev-ref" href="#{_anchor_base}-{m.group(0)}">{m.group(0)}</a>'
+                       if m.group(0) in _pack_ids else m.group(0)),
+            escaped)
+
     def _reasoning_paragraphs(text: str) -> str:
         if not text:
             return ""
@@ -2129,7 +2151,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         parts = [seg.strip() for seg in re.split(r"\n\s*\n", text.strip()) if seg.strip()]
         if not parts:
             return ""
-        return "".join(f'<p>{_esc(seg)}</p>' for seg in parts)
+        return "".join(f'<p>{_link_pack_ids(_esc(seg))}</p>' for seg in parts)
 
     model_cards = []
     agreeing = 0
@@ -2256,7 +2278,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     consulted = list(getattr(bundle, "sources_consulted", None) or [])
     consulted_html = ""
     if consulted:
-        consulted_inner = _sources_consulted_html(consulted)
+        consulted_inner = _sources_consulted_html(consulted, anchor_base=_anchor_base)
         if consulted_inner:
             # Collapsed by default (2026-07-19 review): the snippet verbiage is
             # audit detail, not first-read content — one click away, not in the way.
@@ -3788,6 +3810,17 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
   color: var(--ink-muted);
   margin: 0 0.35rem 0 0.15rem;
 }
+/* E-id references inside model reasoning → jump links to the pack item. */
+.model-reasoning-body a.ev-ref {
+  font-family: var(--mono);
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px dashed var(--border-strong);
+}
+.model-reasoning-body a.ev-ref:hover { border-bottom-style: solid; }
+/* Briefly spotlight the pack item a clicked E-id lands on. */
+.evidence-list li:target { background: var(--surface-raised, rgba(0,0,0,0.05)); }
 .evidence-list a {
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
@@ -5238,6 +5271,30 @@ JS = """\
   }
 })();
 
+/* ── E-id jump links: reveal targets hidden inside collapsed <details> ──
+   Reasoning cites pack ids as anchors into "Sources consulted", which is
+   collapsed by default; plain fragment navigation won't open a closed
+   <details>, so open every ancestor before the browser scrolls. */
+(function() {
+  'use strict';
+  function revealHashTarget() {
+    var id = location.hash && location.hash.slice(1);
+    var el = id && document.getElementById(id);
+    if (!el || !el.closest) return;
+    var d = el.closest('details');
+    while (d) {
+      d.open = true;
+      d = d.parentElement ? d.parentElement.closest('details') : null;
+    }
+    el.scrollIntoView({block: 'center'});
+  }
+  window.addEventListener('hashchange', revealHashTarget);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', revealHashTarget);
+  } else {
+    revealHashTarget();
+  }
+})();
 """
 
 # ── Page renderers ──────────────────────────────────────────────────────────
