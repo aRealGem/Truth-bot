@@ -54,3 +54,37 @@ def url_matches_any(url: str, patterns: tuple[str, ...] | list[str]) -> bool:
     """True when the URL's hostname matches any pattern (see ``host_matches``)."""
     host = url_host(url)
     return any(host_matches(host, p) for p in patterns)
+
+
+#: Query params that mark a listing/pagination/search page rather than an article.
+_LISTING_QUERY_KEYS = frozenset({"pagenum", "page", "paged", "s", "q", "query", "search"})
+
+
+def is_substantive_url(url: str) -> bool:
+    """False for homepages, section indexes, and pagination/search listings —
+    URLs that can never BE evidence, only point at a site.
+
+    Empirical driver (jackie, 2026-07-20, trump_2026:0107): the FactCheck
+    connector's ``site:``-scoped queries return ``snopes.com/`` (the homepage)
+    and ``snopes.com/fact-check/?pagenum=3`` (a listing index) when Brave has
+    no article-level match, and the domain filter happily passed both into a
+    cap-6 evidence pack. Rules: a URL with an empty path is a homepage; a
+    shallow path (single segment) carrying a listing/pagination/search query
+    param is an index page. Real articles (``/fact-check/<slug>``, deep dated
+    paths, even single-segment slug articles without listing params) pass."""
+    from urllib.parse import parse_qs
+
+    if not url_host(url):
+        return False
+    try:
+        parts = urlsplit(url if "://" in url else f"//{url}")
+    except ValueError:
+        return False
+    path = parts.path.strip("/")
+    if not path:
+        return False                                   # bare homepage
+    if len(path.split("/")) <= 1:
+        q = parse_qs(parts.query)
+        if any(k in q for k in _LISTING_QUERY_KEYS):
+            return False                               # section listing / search page
+    return True

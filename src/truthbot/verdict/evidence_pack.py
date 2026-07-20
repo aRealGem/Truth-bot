@@ -30,6 +30,7 @@ from datetime import date, datetime, timezone
 from typing import Optional
 
 from hydramind.invariants import check_i5_provenance
+from truthbot.domains import is_substantive_url
 from truthbot.models import Claim, Evidence, SourceTier
 from truthbot.verify.evidence_provider import EvidenceProvider
 from truthbot.verify.sources.base import TimeWindow
@@ -154,6 +155,10 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
     for ev in evidence:
         url = (ev.source_url or "").strip()
         if not url:
+            continue
+        if not is_substantive_url(url):
+            # A homepage or listing index can never BE evidence — it only
+            # points at a site (the snopes.com/?pagenum=3 pack-slot bug).
             continue
         key = url.lower().rstrip("/")
         if key in seen:

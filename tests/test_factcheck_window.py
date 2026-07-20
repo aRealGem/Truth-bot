@@ -118,6 +118,31 @@ def test_pack_drops_dated_items_outside_era_window():
 
 
 def test_pack_keeps_dated_items_when_window_unknown():
-    p = _Provider([_ev("https://a", datetime(2026, 2, 9))])
+    p = _Provider([_ev("https://a/x", datetime(2026, 2, 9))])
     pack = build_evidence_pack("mystery_2099:1", "c", p)   # no registered speech date
-    assert [it.source_url for it in pack.items] == ["https://a"]
+    assert [it.source_url for it in pack.items] == ["https://a/x"]
+
+
+def test_pack_drops_homepage_and_listing_urls():
+    # trump_2026:0107 (jackie): snopes.com homepage + a ?pagenum listing page
+    # occupied 2 of 6 pack slots. Non-substantive URLs never enter the pack.
+    p = _Provider([
+        _ev("https://www.snopes.com/"),
+        _ev("https://www.snopes.com/fact-check/?pagenum=3"),
+        _ev("https://www.snopes.com/fact-check/texas-flood-camp/"),
+    ])
+    pack = build_evidence_pack("trump_2026:0107", "c", p)
+    assert [it.source_url for it in pack.items] == [
+        "https://www.snopes.com/fact-check/texas-flood-camp/"]
+
+
+def test_factcheck_connector_drops_listing_results(monkeypatch):
+    cap = {}
+    _patch_httpx(monkeypatch, cap, [
+        {"url": "https://www.snopes.com/", "description": "The definitive reference."},
+        {"url": "https://www.snopes.com/fact-check/?pagenum=3", "description": "Rumors."},
+        {"url": "https://www.snopes.com/fact-check/real-article/", "description": "d"},
+    ])
+    conn = FactCheckConnector(brave_api_key="k")
+    got = [e.source_url for e in conn.search_windowed(_claim(), WINDOW)]
+    assert got == ["https://www.snopes.com/fact-check/real-article/"]

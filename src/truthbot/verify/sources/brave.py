@@ -16,7 +16,7 @@ import re
 from datetime import date, datetime
 from typing import Optional
 
-from truthbot.domains import url_matches_any
+from truthbot.domains import is_substantive_url, url_matches_any
 from truthbot.models import Claim, Evidence, SourceTier
 from truthbot.verify.sources.base import SourceConnector, TimeWindow
 
@@ -178,6 +178,8 @@ class BraveSearchConnector(SourceConnector):
         results = data.get("web", {}).get("results", [])
         evidence = []
         for r in results[: self.max_results]:
+            if not is_substantive_url(r.get("url", "")):
+                continue    # homepages / listing indexes are not evidence
             tier = self._classify_tier(r.get("url", ""))
             snippet = _clean_snippet(r.get("description", ""))[:500]
             published = _result_date(r)

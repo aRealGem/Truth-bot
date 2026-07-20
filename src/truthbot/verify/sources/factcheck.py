@@ -18,7 +18,7 @@ from datetime import datetime
 from typing import Optional
 from urllib.parse import urlsplit
 
-from truthbot.domains import host_matches, url_host
+from truthbot.domains import host_matches, is_substantive_url, url_host
 from truthbot.models import Claim, Evidence, SourceTier
 from truthbot.verify.sources.base import SourceConnector, TimeWindow
 from truthbot.verify.sources.brave import _clean_snippet, _freshness_for, _result_date
@@ -139,6 +139,10 @@ class FactCheckConnector(SourceConnector):
             url = r.get("url", "")
             if not self._is_factcheck_url(url):
                 continue  # filter to only actual fact-check domains
+            if not is_substantive_url(url):
+                # site: queries return the domain homepage / listing indexes
+                # when no article matches — those are not evidence.
+                continue
             snippet = _clean_snippet(r.get("description", ""))[:400]
             published = _result_date(r)
             if published:
