@@ -1,6 +1,6 @@
 [
   {
-    "id": "ba161b08-9679-47e1-bbc3-1612f52bf7f1",
+    "id": "ceff245f-1267-44bf-ba30-2e14c0823414",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
@@ -36,13 +36,13 @@
       "Misleading": 51
     },
     "model_agreement_rate": 0.503,
-    "url": "reports/2026-02-24-donald-trump-ba161b.html",
+    "url": "reports/2026-02-24-donald-trump-ceff24.html",
     "tier_counts": {
-      "gov": 36,
+      "gov": 33,
       "wire": 9,
       "news": 45,
       "fc": 112,
-      "other": 134
+      "other": 137
     },
     "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
@@ -50,7 +50,7 @@
     "channel": ""
   },
   {
-    "id": "9f7c8497-24df-4c1b-a586-2f206e4ffa4a",
+    "id": "5f7ef2bf-7e9f-414a-8098-3aee7f41b414",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
@@ -86,13 +86,13 @@
       "Misleading": 20
     },
     "model_agreement_rate": 0.685,
-    "url": "reports/2022-03-01-joe-biden-9f7c84.html",
+    "url": "reports/2022-03-01-joe-biden-5f7ef2.html",
     "tier_counts": {
-      "gov": 54,
+      "gov": 49,
       "wire": 9,
       "news": 53,
       "fc": 72,
-      "other": 112
+      "other": 117
     },
     "source_of_claims": "Joe Biden",
     "source_of_claims_professional_public_title": "President",
