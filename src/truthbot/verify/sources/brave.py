@@ -13,7 +13,7 @@ from __future__ import annotations
 import html
 import logging
 import re
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
 
 from truthbot.domains import url_matches_any
@@ -179,7 +179,8 @@ class BraveSearchConnector(SourceConnector):
                 source_url=r.get("url", ""),
                 source_tier=tier,
                 snippet=snippet,
-                retrieved_at=__import__("datetime").datetime.utcnow(),
+                retrieved_at=datetime.utcnow(),
+                published_at=datetime.fromisoformat(published) if published else None,
             )
             evidence.append(ev)
 

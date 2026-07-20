@@ -14,10 +14,14 @@ not as definitive verdicts.
 from __future__ import annotations
 
 import logging
+from datetime import datetime
 from typing import Optional
+from urllib.parse import urlsplit
 
+from truthbot.domains import host_matches, url_host
 from truthbot.models import Claim, Evidence, SourceTier
-from truthbot.verify.sources.base import SourceConnector
+from truthbot.verify.sources.base import SourceConnector, TimeWindow
+from truthbot.verify.sources.brave import _clean_snippet, _freshness_for, _result_date
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +83,13 @@ class FactCheckConnector(SourceConnector):
         list[Evidence]
             Evidence from known fact-check organizations.
         """
+        return self.search_windowed(claim, None)
+
+    def search_windowed(self, claim: Claim, window: TimeWindow = None) -> list[Evidence]:
+        """Time-scoped fact-check lookup (Layer C): ``window`` narrows Brave's
+        ``freshness`` to the claim's era, so a ruling published years after the
+        utterance can't land in the pack (how a 2026-02 PolitiFact piece ended up
+        in a Biden-2022 pack). ``window=None`` is the legacy unscoped search."""
         if not self.is_available():
             logger.debug("FactCheckConnector: no API key, skipping.")
             return []
@@ -86,7 +97,7 @@ class FactCheckConnector(SourceConnector):
         query = self._build_query(claim)
 
         try:
-            return self._fetch(claim, query)
+            return self._fetch(claim, query, window)
         except Exception as exc:
             logger.error("FactCheckConnector search failed for claim %s: %s", claim.id, exc)
             return []
@@ -96,8 +107,10 @@ class FactCheckConnector(SourceConnector):
         site_filter = " OR ".join(f"site:{d}" for d in self._FACTCHECK_DOMAINS[:3])
         return f"({site_filter}) {claim.text}"[:250]
 
-    def _fetch(self, claim: Claim, query: str) -> list[Evidence]:
-        """Call Brave Search scoped to fact-check domains."""
+    def _fetch(self, claim: Claim, query: str, window: TimeWindow = None) -> list[Evidence]:
+        """Call Brave Search scoped to fact-check domains. A ``window`` becomes
+        Brave's date-range ``freshness`` filter; None sends no recency filter
+        (legacy behavior)."""
         import httpx
 
         headers = {
@@ -109,6 +122,8 @@ class FactCheckConnector(SourceConnector):
             "count": self.max_results,
             "search_lang": "en",
         }
+        if window is not None:
+            params["freshness"] = _freshness_for(window)
 
         resp = httpx.get(
             "https://api.search.brave.com/res/v1/web/search",
@@ -122,18 +137,39 @@ class FactCheckConnector(SourceConnector):
         evidence = []
         for r in data.get("web", {}).get("results", []):
             url = r.get("url", "")
-            if not any(d in url for d in self._FACTCHECK_DOMAINS):
+            if not self._is_factcheck_url(url):
                 continue  # filter to only actual fact-check domains
+            snippet = _clean_snippet(r.get("description", ""))[:400]
+            published = _result_date(r)
+            if published:
+                snippet = f"[{published}] {snippet}"
             ev = self._make_evidence(
                 claim,
                 source_url=url,
-                snippet=r.get("description", "")[:400],
+                snippet=snippet,
                 source_name=self._domain_name(url),
                 relevance_score=0.8,
             )
+            if published:
+                ev.published_at = datetime.fromisoformat(published)
             evidence.append(ev)
 
         return evidence[: self.max_results]
+
+    def _is_factcheck_url(self, url: str) -> bool:
+        """Registered-domain filter (not substring — a lookalike host or a URL
+        merely *mentioning* politifact.com in its path must not pass). Entries
+        with a path component (the AP fact-check hub) also require the path
+        prefix to match."""
+        host = url_host(url)
+        for entry in self._FACTCHECK_DOMAINS:
+            if "/" in entry:
+                domain, _, path_prefix = entry.partition("/")
+                if host_matches(host, domain) and urlsplit(url).path.lstrip("/").startswith(path_prefix):
+                    return True
+            elif host_matches(host, entry):
+                return True
+        return False
 
     def _domain_name(self, url: str) -> str:
         """Map URL to a human-readable source name."""
@@ -144,7 +180,8 @@ class FactCheckConnector(SourceConnector):
             "fullfact.org": "Full Fact",
             "apnews.com": "AP Fact Check",
         }
+        host = url_host(url)
         for domain, name in mapping.items():
-            if domain in url:
+            if host_matches(host, domain):
                 return name
         return "Fact-Check Outlet"

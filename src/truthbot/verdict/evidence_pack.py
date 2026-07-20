@@ -128,6 +128,17 @@ def _retrieved_iso(ev: Evidence) -> str:
     return ra.isoformat()
 
 
+def _within_window(ev: Evidence, window: TimeWindow) -> bool:
+    """Era filter: a DATED item outside the claim's window is dropped; undated
+    items pass (the window can't adjudicate them). Belt-and-suspenders behind the
+    connectors' freshness scoping — Brave's filter is advisory, and a fact-check
+    ruling published years after the utterance must not enter the pack."""
+    if window is None or ev.published_at is None:
+        return True
+    start, end = window
+    return start <= ev.published_at.date() <= end
+
+
 def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
     """Drop duplicate URLs (first wins), stably rank by source trust, then cap.
 
@@ -165,6 +176,7 @@ def build_evidence_pack(
     window = window_for(sid, today=today)
     claim = Claim(transcript_id=sid.split(":", 1)[0], text=claim_text, context=context or None)
     raw = provider.get_evidence(claim, window=window)
+    raw = [ev for ev in raw if _within_window(ev, window)]
     kept = _dedup_rank_cap(raw, max_items)
 
     items: list[PackItem] = []

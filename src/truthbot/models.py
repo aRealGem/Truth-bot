@@ -129,6 +129,15 @@ class Evidence(BaseModel):
     source_tier: SourceTier = Field(SourceTier.OTHER)
     snippet: str = Field(..., description="Relevant excerpt or summary")
     retrieved_at: datetime = Field(default_factory=datetime.utcnow)
+    published_at: Optional[datetime] = Field(
+        None,
+        description=(
+            "Publication date of the source, when the connector could determine "
+            "one (e.g. Brave's page_age). None = undated. Used at pack build to "
+            "drop dated items outside the claim's era window (Layer C) — how a "
+            "2026 PolitiFact piece stops landing in a 2022 evidence pack."
+        ),
+    )
     supports_claim: Optional[bool] = Field(
         None,
         description="True=supports, False=contradicts, None=ambiguous",
