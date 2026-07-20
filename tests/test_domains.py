@@ -70,3 +70,24 @@ def test_site_tier_bucket_rejects_lookalike_gov():
 def test_site_tier_badge_rejects_lookalike_gov():
     assert "T6" in _tier_badge("https://www.govtech.com/some-article")
     assert "T1·Gov" in _tier_badge("https://www.census.gov/data")
+
+
+# ── is_substantive_url (jackie 2026-07-20, trump_2026:0107) ───────────────────
+
+def test_substantive_rejects_homepages_and_listing_pages():
+    from truthbot.domains import is_substantive_url
+    assert not is_substantive_url("https://www.snopes.com/")            # E2: homepage
+    assert not is_substantive_url("https://www.snopes.com")
+    assert not is_substantive_url("https://www.snopes.com/fact-check/?pagenum=3")  # E4: listing
+    assert not is_substantive_url("https://www.politifact.com/factchecks/?page=2")
+    assert not is_substantive_url("https://example.com/?s=flood")       # search page
+    assert not is_substantive_url("")
+
+
+def test_substantive_accepts_articles():
+    from truthbot.domains import is_substantive_url
+    assert is_substantive_url("https://www.snopes.com/fact-check/texas-flood-camp/")
+    assert is_substantive_url("https://www.politifact.com/factchecks/2021/feb/09/x/")
+    assert is_substantive_url("https://example.com/single-segment-article-slug")
+    # deep path with a pagination-looking param is still an article
+    assert is_substantive_url("https://site.com/2025/07/05/camp-flood-report?page=2")

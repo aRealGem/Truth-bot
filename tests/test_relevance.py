@@ -151,15 +151,15 @@ def test_provider_falls_back_to_legacy_query_when_generation_fails():
 # ── pack ranking: relevance-then-tier ─────────────────────────────────────────
 
 def test_rank_relevance_beats_tier():
-    gov_offtopic = _ev("https://pompeo-speech.gov", tier=SourceTier.GOVERNMENT, relevance=0.2)
-    other_ontopic = _ev("https://ontopic.example.com", tier=SourceTier.OTHER, relevance=0.9)
+    gov_offtopic = _ev("https://pompeo-speech.gov/remarks", tier=SourceTier.GOVERNMENT, relevance=0.2)
+    other_ontopic = _ev("https://ontopic.example.com/article", tier=SourceTier.OTHER, relevance=0.9)
     ranked = _dedup_rank_cap([gov_offtopic, other_ontopic], 6)
-    assert [e.source_url for e in ranked] == ["https://ontopic.example.com",
-                                              "https://pompeo-speech.gov"]
+    assert [e.source_url for e in ranked] == ["https://ontopic.example.com/article",
+                                              "https://pompeo-speech.gov/remarks"]
 
 
 def test_rank_ties_on_relevance_fall_back_to_tier():
-    other = _ev("https://other", tier=SourceTier.OTHER)
-    gov = _ev("https://gov", tier=SourceTier.GOVERNMENT)
+    other = _ev("https://other.com/page", tier=SourceTier.OTHER)
+    gov = _ev("https://bls.gov/report", tier=SourceTier.GOVERNMENT)
     ranked = _dedup_rank_cap([other, gov], 6)
-    assert [e.source_url for e in ranked] == ["https://gov", "https://other"]
+    assert [e.source_url for e in ranked] == ["https://bls.gov/report", "https://other.com/page"]

@@ -49,14 +49,14 @@ def test_window_for_unknown_sid_is_none():
 # ── build_evidence_pack: fetch → dedup → rank → cap → provenance ──────────────
 
 def test_pack_passes_window_to_provider():
-    p = FakeProvider([_ev("https://a")])
+    p = FakeProvider([_ev("https://a/x")])
     build_evidence_pack("trump_2026:3", "claim text", p)
     assert p.calls == 1
     assert p.seen_window == (date(2024, 1, 1), date(2026, 5, 1))
 
 
 def test_pack_assigns_stable_ids_and_provenance():
-    p = FakeProvider([_ev("https://a", "alpha"), _ev("https://b", "beta")])
+    p = FakeProvider([_ev("https://a/x", "alpha"), _ev("https://b/y", "beta")])
     pack = build_evidence_pack("trump_2026:3", "c", p)
     assert pack.ids == ["E1", "E2"]
     it = pack.items[0]
@@ -67,26 +67,26 @@ def test_pack_assigns_stable_ids_and_provenance():
 
 
 def test_pack_dedupes_urls_case_and_trailing_slash():
-    p = FakeProvider([_ev("https://a/"), _ev("https://A"), _ev("https://b")])
+    p = FakeProvider([_ev("https://a/x/"), _ev("https://A/X"), _ev("https://b/y")])
     pack = build_evidence_pack("trump_2026:3", "c", p)
-    assert [it.source_url for it in pack.items] == ["https://a/", "https://b"]
+    assert [it.source_url for it in pack.items] == ["https://a/x/", "https://b/y"]
 
 
 def test_pack_drops_urlless_evidence():
-    p = FakeProvider([_ev("", "no url"), _ev("https://b", "ok")])
+    p = FakeProvider([_ev("", "no url"), _ev("https://b/y", "ok")])
     pack = build_evidence_pack("trump_2026:3", "c", p)
-    assert [it.source_url for it in pack.items] == ["https://b"]
+    assert [it.source_url for it in pack.items] == ["https://b/y"]
 
 
 def test_pack_ranks_government_above_other():
-    p = FakeProvider([_ev("https://other", tier=SourceTier.OTHER),
-                      _ev("https://gov", tier=SourceTier.GOVERNMENT)])
+    p = FakeProvider([_ev("https://other/page", tier=SourceTier.OTHER),
+                      _ev("https://gov.example.gov/report", tier=SourceTier.GOVERNMENT)])
     pack = build_evidence_pack("trump_2026:3", "c", p)
-    assert pack.items[0].source_url == "https://gov"   # trust rank wins over order
+    assert pack.items[0].source_url == "https://gov.example.gov/report"   # trust rank wins over order
 
 
 def test_pack_caps_to_max_items():
-    p = FakeProvider([_ev(f"https://{i}") for i in range(10)])
+    p = FakeProvider([_ev(f"https://site{i}.com/article") for i in range(10)])
     pack = build_evidence_pack("trump_2026:3", "c", p, max_items=3)
     assert len(pack.items) == 3 and pack.ids == ["E1", "E2", "E3"]
 
@@ -98,7 +98,7 @@ def test_empty_pack_renders_empty_and_has_no_ids():
 
 
 def test_pack_render_contains_ids_and_snippets():
-    p = FakeProvider([_ev("https://a", "alpha snippet", name="GovDept",
+    p = FakeProvider([_ev("https://a/x", "alpha snippet", name="GovDept",
                           tier=SourceTier.GOVERNMENT)])
     r = build_evidence_pack("trump_2026:3", "c", p).render()
     assert "[E1]" in r and "alpha snippet" in r and "Government" in r
@@ -112,4 +112,4 @@ def test_pack_enforces_i5_on_malformed_evidence(monkeypatch):
     # Force a blank sha256 so the I5 record is incomplete.
     monkeypatch.setattr(evidence_pack, "_sha256", lambda url, snip: "")
     with pytest.raises(I5ProvenanceError):
-        build_evidence_pack("trump_2026:3", "c", FakeProvider([_ev("https://a")]))
+        build_evidence_pack("trump_2026:3", "c", FakeProvider([_ev("https://a/x")]))
