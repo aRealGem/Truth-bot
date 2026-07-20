@@ -1350,12 +1350,26 @@ def _verdict_panel(site_report) -> str:
     src_row_parts.append('<span><span class="lab">Models:</span>' + _esc(model_str) + '</span>')
     source_row_html = '<div class="source-row">' + ''.join(src_row_parts) + '</div>\n'
 
+    # Guest-anecdote footnote: break out how much of the Unverifiable bucket is
+    # the anecdote genre (no public record to check) vs data claims the
+    # evidence failed to settle.
+    n_anecdote = sum(1 for b in site_report.checkable_bundles if _is_anecdote_unverifiable(b))
+    anecdote_note_html = ""
+    if n_anecdote:
+        noun = "claims are guest anecdotes" if n_anecdote != 1 else "claim is a guest anecdote"
+        anecdote_note_html = (
+            '<p class="vp-anecdote-note" style="font-size:0.85rem;color:var(--ink-muted)">'
+            f'{n_anecdote} of the Unverifiable {noun} — private individuals\' stories '
+            'with no independent public record to check.</p>\n'
+        )
+
     return (
         '<section class="verdict-panel">\n'
         + '  <div class="vp-headline">' + text_col + widget + '</div>\n'
         + headline_stats_html
         + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
+        + anecdote_note_html
         + source_row_html
         + '</section>\n'
     )
@@ -2045,6 +2059,28 @@ def _pca_seat_line(prov, roster: Optional[dict] = None) -> str:
     return " · ".join(bits)
 
 
+#: Pill text + reader-facing copy for the guest-anecdote treatment. A private
+#: person's story that comes back Unverifiable is a GENRE limit (no independent
+#: public record exists to check), not a failed verification — so it gets its
+#: own pill instead of the same Unverifiable used for data claims the evidence
+#: couldn't settle (2026-07-20, jackie review).
+ANECDOTE_PILL = "Anecdote"
+ANECDOTE_TITLE = (
+    "Guest anecdote — a private individual's personal story. No independent "
+    "public record exists to check it against, so truth-bot does not rate it. "
+    "This is a limit of the genre, not a failed verification."
+)
+
+
+def _is_anecdote_unverifiable(bundle: VerdictBundle) -> bool:
+    """True when this claim is a personal-anecdote that came back Unverifiable —
+    the case that renders with the Anecdote pill. An anecdote the evidence CAN
+    settle (e.g. press independently investigated it) keeps its real verdict."""
+    prov = bundle.consensus.provenance
+    return (prov.layer_a_claim_type == "personal-anecdote"
+            and bundle.consensus.consensus_label == VerdictLabel.UNVERIFIABLE)
+
+
 def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None) -> str:
     """The Layer A → PCA panel → CRM-114 chain, rendered as a compact strip.
 
@@ -2054,7 +2090,8 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None) 
     prov = bundle.consensus.provenance
     parts: list[str] = []
     if prov.layer_a_label:
-        src = f" ({prov.layer_a_source})" if prov.layer_a_source else ""
+        qualifiers = ", ".join(q for q in (prov.layer_a_source, prov.layer_a_claim_type) if q)
+        src = f" ({qualifiers})" if qualifiers else ""
         parts.append(f"Layer A: {prov.layer_a_label}{src}")
     if prov.panel_votes:
         parts.append(f"PCA panel: {_pca_vote_tally(prov.panel_votes)}")
@@ -2098,6 +2135,17 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     strict_attr = coarse_strict or fine_label
     lenient_css = _verdict_css(lenient_attr)
     strict_css = _verdict_css(strict_attr)
+    # Guest-anecdote treatment: swap the pill TEXT on both lens axes (so the
+    # Lenient/Strict toggle can't restore "Unverifiable") but keep the
+    # Unverifiable color family; the dashed pill border marks the genre.
+    anecdote = _is_anecdote_unverifiable(bundle)
+    pill_title = ("Headline shows the 5-bucket coarse projection. Per-model strip below uses "
+                  "the 6-bucket fine scale. Use the Editorial lens chip to toggle Lenient/Strict.")
+    anecdote_cls = ""
+    if anecdote:
+        label = lenient_attr = strict_attr = ANECDOTE_PILL
+        pill_title = ANECDOTE_TITLE
+        anecdote_cls = " pill-anecdote"
     n = str(idx).zfill(2)
 
     context_html = ''
@@ -2341,11 +2389,11 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="claim-head-icon")
         + f'    <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
         '  </span>'
-        f'  <span class="claim-pill claim-pill-headline lens-pill v-{css}"'
+        f'  <span class="claim-pill claim-pill-headline lens-pill v-{css}{anecdote_cls}"'
         f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
         f' data-coarse-lenient="{_esc(lenient_attr)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
         f' data-coarse-strict="{_esc(strict_attr)}" data-coarse-strict-css="{_esc(strict_css)}"'
-        ' title="Headline shows the 5-bucket coarse projection. Per-model strip below uses the 6-bucket fine scale. Use the Editorial lens chip to toggle Lenient/Strict.">'
+        f' title="{_esc(pill_title)}">'
         f'{_esc(label)}</span>'
         f'  {triage_badge}'
         '</div>'
@@ -2388,10 +2436,15 @@ def _toc(bundles: list[VerdictBundle]) -> str:
         fine_css      = _verdict_css(fine_label)
         lenient_css   = _verdict_css(coarse_lenient)
         strict_css    = _verdict_css(coarse_strict)
+        toc_anecdote_cls = ""
+        if _is_anecdote_unverifiable(b):
+            # Mirror the claim card's guest-anecdote pill on both lens axes.
+            default_label = coarse_lenient = coarse_strict = ANECDOTE_PILL
+            toc_anecdote_cls = " pill-anecdote"
         items.append(
             f'<a class="toc-item" href="#claim-{i}">'
             f'  <span class="toc-num">{str(i).zfill(2)}</span>'
-            f'  <span class="toc-pill lens-pill v-{default_css}"'
+            f'  <span class="toc-pill lens-pill v-{default_css}{toc_anecdote_cls}"'
             f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
             f' data-coarse-lenient="{_esc(coarse_lenient)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
             f' data-coarse-strict="{_esc(coarse_strict)}" data-coarse-strict-css="{_esc(strict_css)}">'
@@ -3512,6 +3565,12 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   padding: 0.25rem 0.7rem;
   border-radius: 2px;
   font-weight: 500;
+}
+/* Guest-anecdote genre marker: keeps the Unverifiable color family but a
+   dashed outline signals "no public record exists", not "we failed". */
+.claim-pill.pill-anecdote, .toc-pill.pill-anecdote {
+  outline: 1.5px dashed rgba(255,255,255,0.65);
+  outline-offset: -3.5px;
 }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {

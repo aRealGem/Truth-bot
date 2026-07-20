@@ -114,7 +114,8 @@ def run_pca_verify(
     # place that survives.
     claims = [{"sid": r["sid"], "text": r.get("text", ""),
                "context": r.get("context", ""),
-               "layer_a": {"label": r.get("label", ""), "source": r.get("source", "")}}
+               "layer_a": {"label": r.get("label", ""), "source": r.get("source", ""),
+                           "claim_type": r.get("claim_type") or ""}}
               for r in queue]
     chunks = _chunk(claims, chunk_size)
     result.n_chunks = len(chunks)

@@ -257,8 +257,19 @@ def test_provenance_captured_on_resolved_row():
     assert prov.panel_split is False
     assert prov.layer_a_label == "check-worthy"
     assert prov.layer_a_source == "A2"
+    assert prov.layer_a_claim_type == ""          # not threaded → empty, legacy-clean
     assert prov.crm114_stage1 == "MISLEADING"
     assert prov.crm114_final == "FALSE"
+
+
+def test_provenance_captures_layer_a_claim_type():
+    row = _row("p:1", verdict="UNVERIFIABLE", confidence=0.6)
+    out = bridge.bridge(
+        [row],
+        [_claim("p:1", layer_a={"label": "check-worthy", "source": "A2",
+                                "claim_type": "personal-anecdote"})],
+    )
+    assert out.bundles[0].consensus.provenance.layer_a_claim_type == "personal-anecdote"
 
 
 def test_provenance_captured_on_split_row():

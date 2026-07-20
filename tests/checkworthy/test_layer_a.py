@@ -19,6 +19,9 @@ def test_a2_parse_contract():
     v = classifier.parse_a2({"label": "check-worthy", "claim_type": "statistical",
                              "confidence": 0.8})
     assert v["label"] == "check-worthy" and v["claim_type"] == "statistical"
+    # personal-anecdote is a valid claim_type (guest-story genre, P67 2026-07-20)
+    va = classifier.parse_a2({"label": "check-worthy", "claim_type": "personal-anecdote"})
+    assert va["claim_type"] == "personal-anecdote"
     # non-check-worthy forces claim_type null
     v2 = classifier.parse_a2({"label": "opinion", "claim_type": "statistical"})
     assert v2["claim_type"] is None
