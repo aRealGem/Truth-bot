@@ -938,6 +938,31 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
   font-variant-numeric: tabular-nums;
 }
+/* Family rail — brackets the Truthy/Falsey family groups above a verdict bar
+   at the same widths as the segments, so the headline's "N of M decided
+   claims X-leaning" totals are visibly derivable from the graph. */
+.vp-family-rail, .report-family-rail {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.vp-family-rail .fam, .report-family-rail .fam {
+  border-top: 2px solid;
+  padding-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.vp-family-rail .fam .n, .report-family-rail .fam .n { font-weight: 700; }
+.fam.fam-true    { border-color: var(--v-truthy); color: var(--v-true); }
+.fam.fam-false   { border-color: var(--v-falsey); color: var(--v-false); text-align: right; }
+.fam.fam-abstain { border-color: var(--border-strong, #d6d3d1); color: var(--ink-faint); text-align: center; border-top-style: dashed; }
+
 .claim-pill {
   font-family: var(--mono);
   font-size: 0.7rem;

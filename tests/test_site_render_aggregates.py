@@ -1250,3 +1250,53 @@ def test_panel_with_unverifiable_voter_against_truthy_consensus_flags_dissent() 
     assert "3 of 4</span> agree" in html
 
 
+
+
+def test_family_rail_ties_leaning_totals_to_the_bar() -> None:
+    """2026-07-20 (jackie): the headline says "N of M decided claims
+    X-leaning" but the bar showed only per-bucket segments — the family
+    totals weren't visibly derivable. The rail brackets the family groups
+    with the same totals the headline uses."""
+    bundles = (
+        [_make_bundle(VerdictLabel.TRUE, coarse_lenient="True", coarse_strict="True")] * 2
+        + [_make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy")] * 3
+        + [_make_bundle(VerdictLabel.FALSE, coarse_lenient="False", coarse_strict="False")] * 2
+        + [_make_bundle(VerdictLabel.UNVERIFIABLE, coarse_lenient="Unverifiable",
+                        coarse_strict="Unverifiable")] * 1
+    )
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    assert 'class="vp-family-rail"' in html
+    # True family = 2 True + 3 Truthy = 5; adverse = 2 False; decided = 7.
+    assert "Truthy-leaning <span class=\"n\">5</span>" in html
+    assert "Falsey-leaning <span class=\"n\">2</span>" in html
+    assert "5 of 7 decided claims true-leaning" in html
+    assert "1 undecided" in html
+
+
+def test_family_rail_absent_when_nothing_decided() -> None:
+    bundles = [_make_bundle(VerdictLabel.UNVERIFIABLE, coarse_lenient="Unverifiable",
+                            coarse_strict="Unverifiable")]
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    assert 'class="vp-family-rail"' not in html
+
+
+def test_aggregate_bar_includes_fine_labels_and_rail_matches_headline() -> None:
+    """Regression (jackie, 2026-07-20): PCA claims keep fine labels
+    (Misleading etc.), and the aggregate bar iterated the coarse order only —
+    Misleading claims vanished from the graph while the headline counted them
+    ("95 of 132 false-leaning" with only 44 visible). The bar order now unions
+    both axes and the rail totals equal the headline's family totals."""
+    bundles = (
+        [_make_bundle(VerdictLabel.TRUE, coarse_lenient="True", coarse_strict="True")] * 3
+        + [_make_bundle(VerdictLabel.MISLEADING, coarse_lenient="Misleading",
+                        coarse_strict="Misleading")] * 5
+        + [_make_bundle(VerdictLabel.FALSE, coarse_lenient="False", coarse_strict="False")] * 4
+    )
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    assert 'title="Misleading: 5"' in html            # Misleading is ON the bar again
+    # adverse family = 5 Misleading + 4 False = 9; decided = 12.
+    assert "Falsey-leaning <span class=\"n\">9</span>" in html
+    assert "9 of 12 decided claims false-leaning" in html
