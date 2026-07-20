@@ -140,7 +140,12 @@ def _within_window(ev: Evidence, window: TimeWindow) -> bool:
 
 
 def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
-    """Drop duplicate URLs (first wins), stably rank by source trust, then cap.
+    """Drop duplicate URLs (first wins), stably rank relevance-then-tier, cap.
+
+    Relevance beats tier (P67 Round B item 3): tier-first is how an off-topic
+    .gov speech topped an on-topic pack. Unscored evidence carries the neutral
+    default (0.5), so a pack with no relevance layer ties on relevance and
+    falls through to the old trust-tier ordering unchanged.
 
     Items without a URL are dropped — I5 requires a url, and an unaddressable
     snippet cannot be cited or re-verified."""
@@ -155,7 +160,8 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
             continue
         seen.add(key)
         unique.append(ev)
-    unique.sort(key=lambda e: _TIER_RANK.get(e.source_tier, 99))  # stable
+    unique.sort(key=lambda e: (-(e.relevance_score if e.relevance_score is not None else 0.5),
+                               _TIER_RANK.get(e.source_tier, 99)))  # stable
     return unique[:max_items]
 
 
