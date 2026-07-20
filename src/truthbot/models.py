@@ -382,6 +382,16 @@ class VerdictProvenance(BaseModel):
     """
     layer_a_label: str = Field(default="", description="Check-worthy routing label, e.g. 'check-worthy'")
     layer_a_source: str = Field(default="", description="Which Layer A stage routed the claim: 'A1' | 'A2'")
+    layer_a_claim_type: str = Field(
+        default="",
+        description=(
+            "A2 claim_type for check-worthy rows (statistical | historical | "
+            "attribution | comparison | personal-anecdote | other). Empty on "
+            "A1-routed rows and pre-capture bundles. 'personal-anecdote' drives "
+            "the distinct render treatment for private-person guest stories "
+            "that come back Unverifiable (no independent public record)."
+        ),
+    )
     panel_votes: dict[str, int] = Field(
         default_factory=dict,
         description="Per-label seat tally from the PCA panel, e.g. {'True': 2, 'Misleading': 1}",

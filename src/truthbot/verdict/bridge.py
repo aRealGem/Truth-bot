@@ -229,6 +229,7 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
     return VerdictProvenance(
         layer_a_label=str(la.get("label") or ""),
         layer_a_source=str(la.get("source") or ""),
+        layer_a_claim_type=str(la.get("claim_type") or ""),
         panel_votes=_normalize_votes(row.get("votes")),
         panel_split=bool(row.get("split", False)),
         panel_escalated=bool(row.get("escalated", False)),

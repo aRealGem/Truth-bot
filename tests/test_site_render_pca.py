@@ -201,6 +201,53 @@ def test_reasoning_eids_link_to_sources_consulted_anchors():
     assert 'href="#' + m.group(1) + '-E9"' not in html   # unknown id stays plain text
 
 
+def test_anecdote_unverifiable_renders_anecdote_pill():
+    # P67 2026-07-20 (jackie): a private person's story that comes back
+    # Unverifiable is a GENRE limit, not a failed verification — distinct pill
+    # on both lens axes, genre in the Layer A provenance line.
+    row = {"sid": "s:9", "status": "resolved", "verdict": "UNVERIFIABLE",
+           "confidence": 0.6, "citations": [], "reasoning": "No public record.",
+           "votes": {"UNVERIFIABLE": 2, "TRUE": 1}, "split": False, "escalated": True}
+    claim = {"sid": "s:9", "text": "At 17, our guest served in the Pacific.",
+             "speaker": "X", "date_str": "2026-02-24",
+             "layer_a": {"label": "check-worthy", "source": "A2",
+                         "claim_type": "personal-anecdote"}}
+    html = _card(row, claim)
+
+    assert ">Anecdote</span>" in html
+    assert "pill-anecdote" in html
+    assert 'data-coarse-lenient="Anecdote"' in html   # lens toggle can't restore Unverifiable
+    assert 'data-coarse-strict="Anecdote"' in html
+    assert "Layer A: check-worthy (A2, personal-anecdote)" in html
+    assert "no independent" in html.lower()           # reader-facing genre copy
+
+
+def test_anecdote_with_real_verdict_keeps_normal_pill():
+    # An anecdote the evidence CAN settle (e.g. press independently
+    # investigated it) renders its real verdict, not the Anecdote pill.
+    row = {"sid": "s:10", "status": "resolved", "verdict": "FALSE",
+           "confidence": 0.9, "citations": [], "reasoning": "Contradicted.",
+           "votes": {"FALSE": 3}, "split": False, "escalated": False}
+    claim = {"sid": "s:10", "text": "Our guest founded the hospital in 1990.",
+             "speaker": "X", "date_str": "2026-02-24",
+             "layer_a": {"label": "check-worthy", "source": "A2",
+                         "claim_type": "personal-anecdote"}}
+    html = _card(row, claim)
+    assert ">Anecdote</span>" not in html
+    assert "pill-anecdote" not in html
+
+
+def test_plain_unverifiable_keeps_unverifiable_pill():
+    # Non-anecdote Unverifiable (a data claim the evidence failed to settle)
+    # is untouched by the genre treatment.
+    row = {"sid": "s:11", "status": "resolved", "verdict": "UNVERIFIABLE",
+           "confidence": 0.5, "citations": [], "reasoning": "Cannot settle.",
+           "votes": {"UNVERIFIABLE": 2}, "split": False, "escalated": False}
+    html = _card(row, _claim("s:11", "Spending is about $600 billion.", "A2"))
+    assert ">Anecdote</span>" not in html
+    assert "pill-anecdote" not in html
+
+
 def test_tie_routed_card_copy_names_the_severity_classifier():
     # A DISAGREEMENT tie resolved by the stage-2 discriminator must not claim
     # "PCA panel resolved X" — the panel did not resolve; the classifier did.
