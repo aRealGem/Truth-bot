@@ -1245,6 +1245,17 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
   color: var(--ink-muted);
   margin: 0 0.35rem 0 0.15rem;
 }
+/* E-id references inside model reasoning → jump links to the pack item. */
+.model-reasoning-body a.ev-ref {
+  font-family: var(--mono);
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px dashed var(--border-strong);
+}
+.model-reasoning-body a.ev-ref:hover { border-bottom-style: solid; }
+/* Briefly spotlight the pack item a clicked E-id lands on. */
+.evidence-list li:target { background: var(--surface-raised, rgba(0,0,0,0.05)); }
 .evidence-list a {
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);

@@ -2,28 +2,32 @@
   {
     "sid": "biden_2022:0025",
     "status": "resolved",
-    "verdict": "TRUE",
-    "confidence": 0.925,
+    "verdict": "MISLEADING",
+    "confidence": 0.91,
     "citations": [
       "E1",
-      "E3",
-      "E5",
-      "E6"
+      "E2",
+      "E4",
+      "E5"
     ],
-    "reasoning": "The evidence supports the core assertion that NATO was created to secure peace and stability in Europe after World War 2, specifically to counter Soviet and communist expansion.",
+    "reasoning": "The core assertion\u2014that NATO was created to secure peace and stability in Europe after WWII\u2014is partially true but materially incomplete and misleading. Evidence shows NATO's primary purpose was defensive deterrence against a specific threat: Soviet expansion and Communist spread (E1, E2, E4, E5). The claim omits this crucial context, presenting a generic peace-and-stability rationale that obscures NATO's actual founding mission as a counter to Soviet power. While preserving democratic Europe (E3) was part of the aim, the dominant and defining purpose was containment of the Soviet threat, not general peace-building. Stating only the broader aspiration without the specific geopolitical driver distorts the historical record.",
     "votes": {
-      "TRUE": 2
+      "MISLEADING": 2,
+      "TRUE": 1
     },
     "by_role": {
       "proposer": [
-        "TRUE"
+        "MISLEADING"
       ],
       "critic": [
         "TRUE"
+      ],
+      "arbiter": [
+        "MISLEADING"
       ]
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "biden_2022:0040",
@@ -38,7 +42,7 @@
       "E5",
       "E6"
     ],
-    "reasoning": "The evidence supports the core assertion that the U.S. shared in advance what it knew about Putin's plans and how he would justify his aggression, as indicated by multiple sources.",
+    "reasoning": "The evidence consistently supports the claim that the U.S. shared intelligence in advance about Russia's invasion plans and the false pretexts Putin would use to justify the aggression.",
     "votes": {
       "TRUE": 2
     },
@@ -57,25 +61,32 @@
     "sid": "biden_2022:0115",
     "status": "resolved",
     "verdict": "TRUE",
-    "confidence": 0.925,
+    "confidence": 0.99,
     "citations": [
       "E1",
-      "E6"
+      "E2",
+      "E3",
+      "E4",
+      "E5"
     ],
-    "reasoning": "The evidence supports the core assertion that the U.S. economy grew at a rate of 5.7 percent in 2021, which was the strongest growth in nearly 40 years.",
+    "reasoning": "The core assertion\u2014that the economy grew at 5.7 percent in 2021 and achieved the strongest growth in nearly 40 years\u2014is directly supported by multiple authoritative sources. E1 (NBC News) confirms 5.7% GDP expansion in 2021. E2 (USA Today) states 5.7% growth, fastest in 37 years. E3 (PBS) reports 5.7% growth, best since 1984 (38 years prior to 2022). E4 (White House, Government tier) confirms GDP grew faster than any year since 1984. E5 (Reuters, Wire tier) corroborates strongest growth in nearly four decades in 2021. The phrase 'nearly 40 years' is accurate: 1984 to 2021 is 37 years, which rounds to nearly 40. The rhetorical framing about 'fundamental change' and working people is opinion/aspiration, not a falsifiable factual claim. The core factual assertions are verified.",
     "votes": {
+      "MISLEADING": 1,
       "TRUE": 2
     },
     "by_role": {
       "proposer": [
-        "TRUE"
+        "MISLEADING"
       ],
       "critic": [
         "TRUE"
+      ],
+      "arbiter": [
+        "TRUE"
       ]
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "biden_2022:0125",
@@ -84,9 +95,11 @@
     "confidence": 0.925,
     "citations": [
       "E1",
-      "E2"
+      "E2",
+      "E3",
+      "E4"
     ],
-    "reasoning": "The White House and Washington Post both confirm that the U.S. infrastructure was ranked 13th in the world as of 2021, which aligns with the claim made in 2022.",
+    "reasoning": "Multiple sources confirm that the United States was ranked 13th in the world for infrastructure as of 2021, which aligns with the claim made in 2022.",
     "votes": {
       "TRUE": 2
     },
@@ -105,12 +118,13 @@
     "sid": "biden_2022:0140",
     "status": "resolved",
     "verdict": "TRUE",
-    "confidence": 0.9,
+    "confidence": 0.925,
     "citations": [
+      "E2",
       "E3",
       "E4"
     ],
-    "reasoning": "The evidence shows that there are indeed laws aimed at ensuring taxpayer dollars support American jobs and businesses, such as the Buy American rules and the No Tax Breaks for Outsourcing Act.",
+    "reasoning": "The evidence confirms that the Buy American Act of 1933, a law ensuring taxpayer dollars support American jobs and businesses, has been in effect for nearly a century.",
     "votes": {
       "TRUE": 2
     },
@@ -132,10 +146,9 @@
     "confidence": 0.8500000000000001,
     "citations": [
       "E1",
-      "E5",
-      "E6"
+      "E2"
     ],
-    "reasoning": "The core assertion is that insulin costs about $10 a vial to make. While E1 supports this claim, E5 and E6 provide evidence that the production cost is actually between $2 and $6.16 per vial, indicating an overstatement in the claim.",
+    "reasoning": "The core assertion is that insulin costs about $10 a vial to make. The evidence shows that the actual cost to produce a vial of insulin is between $2.28 and $6.16, which is lower than the claimed $10. Therefore, the claim is an overstatement of the true production cost, making it misleading.",
     "votes": {
       "MISLEADING": 2
     },
@@ -179,21 +192,48 @@
   {
     "sid": "biden_2022:0305",
     "status": "resolved",
-    "verdict": "TRUE",
-    "confidence": 0.935,
+    "verdict": "MISLEADING",
+    "confidence": 0.875,
     "citations": [
-      "E4",
+      "E1",
+      "E2",
       "E5",
       "E6"
     ],
-    "reasoning": "The core assertion comprises two factual claims: (1) 75% of adult Americans were fully vaccinated, and (2) hospitalizations were down by 77%. The evidence directly confirms both figures were stated by the president on 2022-03-04, matching the utterance date of 2022-03-01 (within the expected evidence window). E4, E5, and E6 all quote the identical statement with these specific metrics. The claim's logical conclusion\u2014that most Americans could safely remove masks and return to normal activities\u2014follows reasonably from those premises as public health guidance at that time. No evidence contradicts the vaccination rate or hospitalization reduction figures cited. The claim is factually accurate as of its utterance date.",
+    "reasoning": "The core assertion is that 75% of adult Americans were fully vaccinated and hospitalizations were down by 77%, allowing most Americans to remove their masks and return to normal activities. While hospitalizations were indeed low as of 2022-04-01 (E6), the vaccination rate for adults was slightly lower at 73.6% (E1), and the total U.S. population vaccination rate was 63% (E1). The claim overstates the vaccination rate and omits the total population rate, creating a misleading impression.",
     "votes": {
-      "MISLEADING": 1,
-      "TRUE": 2
+      "MISLEADING": 2
     },
     "by_role": {
       "proposer": [
         "MISLEADING"
+      ],
+      "critic": [
+        "MISLEADING"
+      ]
+    },
+    "split": false,
+    "escalated": false
+  },
+  {
+    "sid": "biden_2022:0325",
+    "status": "resolved",
+    "verdict": "TRUE",
+    "confidence": 0.935,
+    "citations": [
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The core assertion is that both officers (Jason Rivera and Wilbert Mora) were Dominican Americans who grew up in the neighborhoods they later patrolled. E4 confirms both were Dominican American officers; E5 confirms Rivera was a child of Dominican Republic immigrants; E3 establishes Rivera grew up in a heavily Dominican neighborhood where he later served; E6 indicates Rivera was familiar with tensions in the communities he policed, consistent with having grown up there. The evidence supports the claim's factual core without material contradiction, though specific confirmation that Mora also grew up in his patrol area is not explicitly stated in the provided evidence.",
+    "votes": {
+      "UNVERIFIABLE": 1,
+      "TRUE": 2
+    },
+    "by_role": {
+      "proposer": [
+        "UNVERIFIABLE"
       ],
       "critic": [
         "TRUE"
@@ -206,27 +246,6 @@
     "escalated": true
   },
   {
-    "sid": "biden_2022:0325",
-    "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.4,
-    "citations": [],
-    "reasoning": "The provided evidence does not contain any information that directly supports or contradicts the core assertion about two Dominican Americans growing up on the same streets they later patrolled as police officers.",
-    "votes": {
-      "UNVERIFIABLE": 2
-    },
-    "by_role": {
-      "proposer": [
-        "UNVERIFIABLE"
-      ],
-      "critic": [
-        "UNVERIFIABLE"
-      ]
-    },
-    "split": false,
-    "escalated": false
-  },
-  {
     "sid": "biden_2022:0400",
     "status": "resolved",
     "verdict": "TRUE",
@@ -236,9 +255,10 @@
       "E2",
       "E3",
       "E4",
+      "E5",
       "E6"
     ],
-    "reasoning": "The American Rescue Plan allocated $130 billion to K-12 schools to help them reopen safely and address learning loss, which includes hiring teachers and providing resources to help students make up for lost learning.",
+    "reasoning": "The evidence shows that the American Rescue Plan provided funding to schools for hiring teachers and addressing lost learning, as required by the plan and documented by official sources.",
     "votes": {
       "TRUE": 2
     },
@@ -259,14 +279,12 @@
     "verdict": "FALSE",
     "confidence": 0.925,
     "citations": [
-      "E1",
-      "E2",
       "E3",
       "E4",
       "E5",
       "E6"
     ],
-    "reasoning": "The claim asserts an absolute (zero illegal aliens admitted in the past nine months), which is contradicted by evidence of continued illegal border crossings during the relevant period.",
+    "reasoning": "The evidence shows that there were significant numbers of illegal border crossings and apprehensions during the relevant period, contradicting the claim of zero illegal aliens being admitted.",
     "votes": {
       "FALSE": 2
     },
@@ -284,29 +302,32 @@
   {
     "sid": "trump_2026:0040",
     "status": "resolved",
-    "verdict": "FALSE",
-    "confidence": 0.925,
+    "verdict": "MISLEADING",
+    "confidence": 0.825,
     "citations": [
       "E1",
-      "E2",
       "E4",
       "E5",
       "E6"
     ],
-    "reasoning": "The claim states an absolute number of record highs (53), but the evidence does not support this specific count as of the utterance date.",
+    "reasoning": "The claim states 53 all-time record highs since the election (Nov 2024). E1 confirms Trump made this exact claim on 2026-02-27. However, E4 reports the S&P 500 set 57 records in all of 2024 (through year-end), E5 reports 56 records through Dec 4, 2024, and E6 reports 47 records through Oct 21, 2024. Since the election was Nov 5, 2024, the number of records set post-election in 2024 alone would be substantially fewer than 57 (roughly 40-50 depending on exact post-election date). The claim of exactly 53 appears to conflate or cherry-pick a specific count, and the evidence suggests the actual post-election count through early 2025 may differ materially. The core assertion\u2014that the market set 53 record highs post-election\u2014is presented as a precise fact, but the evidence shows the market set 56-57 records in 2024 overall, making the post-election subset count uncertain and likely lower than stated. This is an exaggeration or misrepresentation of the underlying bullish market trend.",
     "votes": {
-      "FALSE": 2
+      "MISLEADING": 2,
+      "FALSE": 1
     },
     "by_role": {
       "proposer": [
-        "FALSE"
+        "MISLEADING"
       ],
       "critic": [
         "FALSE"
+      ],
+      "arbiter": [
+        "MISLEADING"
       ]
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "trump_2026:0052",
@@ -314,12 +335,11 @@
     "verdict": "FALSE",
     "confidence": 0.925,
     "citations": [
-      "E2",
-      "E4",
-      "E5",
+      "E1",
+      "E3",
       "E6"
     ],
-    "reasoning": "The claim that the U.S. received more than 80 million barrels of oil from Venezuela is contradicted by the evidence, which shows that the U.S. had seized Venezuelan oil, not received it as a partner.",
+    "reasoning": "The claim that American oil production is up by more than 600,000 barrels a day is contradicted by evidence showing an increase of 270,000 barrels per day in 2024 and 280,000 barrels per day in the Permian Basin from 2024 to 2025.",
     "votes": {
       "FALSE": 2
     },
@@ -343,9 +363,11 @@
       "E1",
       "E2",
       "E3",
-      "E5"
+      "E4",
+      "E5",
+      "E6"
     ],
-    "reasoning": "The core assertion is that DEI was completely ended in America, which is contradicted by evidence showing that while significant actions were taken, DEI efforts continued in various sectors.",
+    "reasoning": "The evidence shows that while significant actions were taken to end DEI programs within the federal government, the claim that 'we ended DEI in America' is an absolute assertion that is contradicted by the fact that DEI initiatives continue to exist in the private sector and other areas, as indicated by the ongoing efforts and the broader societal context.",
     "votes": {
       "FALSE": 2
     },
@@ -364,44 +386,41 @@
     "sid": "trump_2026:0132",
     "status": "resolved",
     "verdict": "FALSE",
-    "confidence": null,
-    "citations": [],
-    "reasoning": "",
+    "confidence": 0.95,
+    "citations": [
+      "E1",
+      "E2",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The core assertion is that all Democrats voted against the tax cuts, but evidence shows two Republicans also voted against it, making the claim of universal Democratic opposition false.",
     "votes": {
-      "FALSE": 1,
-      "UNVERIFIABLE": 1,
-      "MISLEADING": 1
+      "FALSE": 2
     },
     "by_role": {
       "proposer": [
         "FALSE"
       ],
       "critic": [
-        "UNVERIFIABLE"
-      ],
-      "arbiter": [
-        "MISLEADING"
+        "FALSE"
       ]
     },
-    "split": true,
-    "escalated": true,
-    "crm114": {
-      "stage1": "DISAGREEMENT",
-      "final": "FALSE"
-    }
+    "split": false,
+    "escalated": false
   },
   {
     "sid": "trump_2026:0208",
     "status": "resolved",
     "verdict": "MISLEADING",
-    "confidence": 0.825,
+    "confidence": 0.8600000000000001,
     "citations": [
-      "E1",
-      "E4",
+      "E2",
+      "E3",
       "E5",
       "E6"
     ],
-    "reasoning": "The core assertion is that inflation cost the typical family $34,000. The claim is real\u2014inflation did occur and households did experience cumulative cost increases\u2014but the $34,000 figure represents a material escalation from Trump's own earlier claim of $28,000 (E1, September 2024), suggesting either exaggeration over time or a different calculation methodology not explained. The underlying inflation event is documented (E3), but the specific dollar figure lacks transparent methodology and appears inflated compared to Trump's own prior statements on the same topic, making the claim an overstatement of a real phenomenon rather than a direct falsehood.",
+    "reasoning": "The core assertion is that record-setting inflation cost the typical family $34,000. Evidence shows cumulative inflation costs ranging from $11,400\u2013$17,000 annually (E1, E2) and $2,329 in the first Biden year (E5), with one independent estimate of $905 monthly (E3). The $34,000 figure appears to conflate multiple years or cherry-pick an outlier calculation not supported by the provided evidence. The underlying fact\u2014significant inflation-driven cost increases\u2014is real and documented, but the $34,000 claim substantially overstates the documented per-family burden, making it a distorted representation of a true phenomenon.",
     "votes": {
       "MISLEADING": 2,
       "FALSE": 1
@@ -422,24 +441,29 @@
   },
   {
     "sid": "trump_2026:0256",
-    "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.8500000000000001,
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
     "citations": [],
-    "reasoning": "The provided evidence does not include specific information about the cost of a drug for Catherine as of the utterance date 2026-02-24.",
+    "reasoning": "",
     "votes": {
-      "UNVERIFIABLE": 2
+      "TRUE": 1,
+      "MISLEADING": 1,
+      "UNVERIFIABLE": 1
     },
     "by_role": {
       "proposer": [
-        "UNVERIFIABLE"
+        "TRUE"
       ],
       "critic": [
+        "MISLEADING"
+      ],
+      "arbiter": [
         "UNVERIFIABLE"
       ]
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true
   },
   {
     "sid": "biden_2022:0030",
@@ -449,12 +473,11 @@
     "citations": [
       "E1",
       "E2",
-      "E3",
       "E4",
       "E5",
       "E6"
     ],
-    "reasoning": "Multiple high-trust sources confirm that Putin's attack on Ukraine was premeditated and unprovoked, with evidence of Russian leaders denying invasion plans and blaming others for tension.",
+    "reasoning": "The evidence supports the core assertion that Putin's attack on Ukraine was premeditated and unprovoked, with multiple sources confirming the premeditation and lack of provocation.",
     "votes": {
       "TRUE": 2
     },
@@ -476,10 +499,10 @@
     "confidence": 0.925,
     "citations": [
       "E1",
-      "E4",
-      "E5"
+      "E2",
+      "E6"
     ],
-    "reasoning": "The core assertion is that the U.S. military 'obliterated Iran's nuclear weapons program' with an attack on Iranian soil, known as Operation Midnight Hammer. The evidence contradicts this core assertion, as it shows that the strikes 'damaged the sites and set back Iran's nuclear enrichment program, but didn't completely destroy the sites or Iran's nuclear capabilities' (E4). Additionally, U.S. officials briefed on the intelligence have said that the strikes destroyed some underground facilities, but that other, deeper laboratories survived (E1).",
+    "reasoning": "The core assertion is that the U.S. military obliterated Iran's nuclear weapons program with an attack on Iranian soil, known as Operation Midnight Hammer. Evidence E2 and E6 contradict this core assertion, stating that the attack damaged the sites and set back Iran's nuclear enrichment program but did not completely destroy the sites or Iran's nuclear capabilities.",
     "votes": {
       "FALSE": 2
     },
@@ -500,43 +523,11 @@
     "verdict": "FALSE",
     "confidence": 0.925,
     "citations": [
-      "E1",
       "E2",
-      "E6"
-    ],
-    "reasoning": "The core assertion is that everything sent to Ukraine goes through NATO and NATO pays in full. E2 (NYTimes, Established tier) directly contradicts this: 'NATO coordinates weapons donations for Ukraine, but it does not directly buy or supply arms itself.' E1 and E6 show the speaker's claim that NATO pays 100%, but E2 clarifies NATO does not directly purchase or supply arms\u2014it coordinates donations. The claim that all aid flows through NATO and NATO pays in full is factually incorrect; NATO is a coordinator, not a purchaser or direct supplier, and does not pay for weapons sent to Ukraine.",
-    "votes": {
-      "FALSE": 2,
-      "UNVERIFIABLE": 1
-    },
-    "by_role": {
-      "proposer": [
-        "FALSE"
-      ],
-      "critic": [
-        "UNVERIFIABLE"
-      ],
-      "arbiter": [
-        "FALSE"
-      ]
-    },
-    "split": true,
-    "escalated": true
-  },
-  {
-    "sid": "biden_2022:0342",
-    "status": "resolved",
-    "verdict": "FALSE",
-    "confidence": 0.925,
-    "citations": [
-      "E1",
-      "E2",
-      "E3",
       "E4",
-      "E5",
-      "E6"
+      "E5"
     ],
-    "reasoning": "The claim states that gun manufacturers are the only industry in America that can't be sued, which is contradicted by evidence showing that the Protection of Lawful Commerce in Arms Act (PLCAA) does not grant absolute immunity but rather limits lawsuits to specific cases involving criminal or negligent actions.",
+    "reasoning": "The core assertion is that all aid sent to Ukraine is sent through NATO and Ukraine pays the U.S. in full. Evidence shows that not all aid goes through NATO (E2) and that a significant portion of the aid is provided by European Allies and Canada (E4, E5), contradicting the claim that everything is sent through NATO and paid for by Ukraine.",
     "votes": {
       "FALSE": 2
     },
@@ -552,6 +543,32 @@
     "escalated": false
   },
   {
+    "sid": "biden_2022:0342",
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
+    "citations": [],
+    "reasoning": "",
+    "votes": {
+      "MISLEADING": 1,
+      "FALSE": 1,
+      "TRUE": 1
+    },
+    "by_role": {
+      "proposer": [
+        "MISLEADING"
+      ],
+      "critic": [
+        "FALSE"
+      ],
+      "arbiter": [
+        "TRUE"
+      ]
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
     "sid": "trump_2026:0616",
     "status": "resolved",
     "verdict": "FALSE",
@@ -564,7 +581,7 @@
       "E5",
       "E6"
     ],
-    "reasoning": "The claim asserts that the new military campaign has 'virtually stopped it completely coming in by water or sea,' which is an absolute claim. The evidence shows a 97% reduction in drugs entering by sea, not a complete stop, contradicting the core assertion.",
+    "reasoning": "The claim asserts that the new military campaign has 'virtually stopped it completely' coming in by water or sea, an absolute claim that is contradicted by evidence showing significant drug seizures and reductions rather than complete cessation.",
     "votes": {
       "FALSE": 2
     },
@@ -585,10 +602,11 @@
     "verdict": "MISLEADING",
     "confidence": 0.8500000000000001,
     "citations": [
+      "E3",
       "E4",
       "E6"
     ],
-    "reasoning": "The evidence supports that the 2025 drop in the murder rate was the largest one-year decline ever recorded, but the claim that it was the lowest number in over 125 years is an exaggeration.",
+    "reasoning": "The claim asserts an absolute, the largest decline and lowest number in over 125 years, but the evidence shows this is an overstatement; while the decline was substantial, the lowest rate claim is less certain and not definitively proven as of the utterance date.",
     "votes": {
       "MISLEADING": 2
     },
@@ -607,60 +625,55 @@
     "sid": "trump_2026:0172",
     "status": "resolved",
     "verdict": "MISLEADING",
-    "confidence": 0.825,
+    "confidence": 0.8500000000000001,
     "citations": [
       "E1",
       "E2",
       "E3",
-      "E4"
+      "E4",
+      "E5"
     ],
-    "reasoning": "The core assertion has two parts: (1) the Dow and S&P reached those milestones ahead of schedule\u2014SUPPORTED by evidence (E3 confirms Feb. 13 statement that Dow reached 50,000 in early February, matching the 4-year timeline from 2024 election); (2) tariffs were 'one of the primary reasons' for this turnaround\u2014UNSUPPORTED and MISLEADING. E3-E4 document the claim but do not substantiate the causal link to tariffs. E3 notes the Dow 'has since dropped' after reaching 50,000, undermining the framing of a sustained 'turnaround.' The claim attributes a complex macroeconomic outcome to a single policy lever without evidence of tariffs' relative contribution versus other factors (Fed policy, corporate earnings, market sentiment, etc.). The absolute framing ('primary reasons') overstates a contested causal claim that the evidence does not support.",
+    "reasoning": "The claim correctly states that the Dow Jones broke 50,000 and the S&P hit 7,000, but it overstates the role of tariffs in this economic turnaround without substantial evidence supporting that assertion.",
     "votes": {
-      "MISLEADING": 2,
-      "FALSE": 1
+      "MISLEADING": 2
     },
     "by_role": {
       "proposer": [
         "MISLEADING"
       ],
       "critic": [
-        "FALSE"
-      ],
-      "arbiter": [
         "MISLEADING"
       ]
     },
-    "split": true,
-    "escalated": true
+    "split": false,
+    "escalated": false
   },
   {
     "sid": "trump_2026:0356",
     "status": "resolved",
     "verdict": "MISLEADING",
-    "confidence": 0.825,
+    "confidence": 0.8500000000000001,
     "citations": [
       "E1",
       "E3",
+      "E4",
+      "E5",
       "E6"
     ],
-    "reasoning": "The core assertion\u2014that a prior 'Democrat shutdown' cost 2 points on GDP\u2014is partially supported but materially exaggerated. E1 shows Trump made multiple conflicting claims (1.25 points, 1.5 points, 2 points) about the same 43-day shutdown, with the 2-point figure appearing only in E6 (2/20/26) and E3 (fact-check context). E3 explicitly notes Trump claimed 2 points while Q4 2025 growth was only 1.4%, suggesting the 2-point figure is an overestimate of the shutdown's isolated impact. E1 documents Trump's own statements ranged from 1.25 to 1.5 points, contradicting the definitive 2-point claim. The shutdown did occur and did harm GDP (real underlying fact), but the specific 2-point quantification is inconsistent across Trump's own statements and fact-checkers flag it as exaggerated relative to actual Q4 growth data. The claim of 'another' shutdown is not contradicted by provided evidence but cannot be fully verified from this pack.",
+    "reasoning": "The claim that the first shutdown cost 2 points on GDP is exaggerated; evidence shows the impact was closer to 1.2-2.4 points for a full quarter, and the actual shutdown was shorter.",
     "votes": {
-      "MISLEADING": 2,
-      "FALSE": 1
+      "MISLEADING": 2
     },
     "by_role": {
       "proposer": [
         "MISLEADING"
       ],
       "critic": [
-        "FALSE"
-      ],
-      "arbiter": [
         "MISLEADING"
       ]
     },
-    "split": true,
-    "escalated": true
+    "split": false,
+    "escalated": false
   },
   {
     "sid": "trump_2026:0248",
@@ -668,11 +681,13 @@
     "verdict": "MISLEADING",
     "confidence": 0.8600000000000001,
     "citations": [
+      "E1",
       "E2",
-      "E4",
-      "E5"
+      "E3",
+      "E5",
+      "E6"
     ],
-    "reasoning": "The core assertion is that Americans will now pay 'the lowest price anywhere in the world for drugs' under MFN agreements. E2 (Government, Dec 2025) states agreements aim to bring prices 'in line with the lowest prices paid by other developed nations'\u2014not lower than all nations. E4 (FactCheck, Feb 2026, the utterance date) explicitly flags this as misleading: Trump claims Americans will pay 'the lowest price anywhere in the world,' but the actual policy targets alignment with other developed nations' prices, not a global minimum. E5 shows Trump claimed 50-80-90% reductions on some drugs, but this describes partial discounts on selected medications, not universal lowest-price status. The claim overstates the scope and absoluteness of the MFN policy: it targets parity with developed nations' prices (a real policy), not global price leadership for all drugs. This is exaggeration of a true underlying initiative, not a contradicted core fact.",
+    "reasoning": "The core assertion is that under 'just enacted' MFN agreements, Americans will now pay 'the lowest price anywhere in the world' for drugs. The evidence confirms MFN agreements were enacted (E3, E4, E5) and that the stated goal is to align US prices with the lowest paid by other developed OECD nations (E5, E6). However, the claim makes an absolute assertion\u2014'the lowest price anywhere in the world'\u2014while the evidence consistently describes the actual policy as matching 'the lowest prices paid by other developed nations' (E3, E5, E6), not the absolute lowest globally. The White House video (E1) echoes the 'lowest anywhere in the world' language, but FactCheck.org (E2) flags this as misleading. The policy targets OECD countries' prices, not all nations worldwide, which is a material narrowing of the absolute claim. This is exaggeration of a real policy achievement, not a contradiction of whether agreements exist, making it MISLEADING rather than FALSE.",
     "votes": {
       "MISLEADING": 2,
       "FALSE": 1
@@ -695,7 +710,37 @@
     "sid": "trump_2026:0252",
     "status": "resolved",
     "verdict": "FALSE",
-    "confidence": 0.925,
+    "confidence": 0.95,
+    "citations": [
+      "E1",
+      "E2",
+      "E4",
+      "E5"
+    ],
+    "reasoning": "The core assertion claims the website is called 'trump.gov,' but evidence shows the actual website is 'TrumpRx.gov' (E1, E4, E5). This is a direct factual error in the website name. While the claim about price differences of 300-600% and the existence of a new website are referenced in the evidence, the specific website name stated in the claim is demonstrably incorrect. E2 also notes the mathematical impossibility of price reductions exceeding 100%, further undermining the credibility of the stated figures.",
+    "votes": {
+      "MISLEADING": 1,
+      "FALSE": 2
+    },
+    "by_role": {
+      "proposer": [
+        "MISLEADING"
+      ],
+      "critic": [
+        "FALSE"
+      ],
+      "arbiter": [
+        "FALSE"
+      ]
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "trump_2026:0312",
+    "status": "resolved",
+    "verdict": "MISLEADING",
+    "confidence": 0.825,
     "citations": [
       "E1",
       "E2",
@@ -704,33 +749,37 @@
       "E5",
       "E6"
     ],
-    "reasoning": "The core assertion is that the website trump.gov (or TrumpRX.gov) offers price differences of 300, 400, 500, 600 percent and more for prescription drugs. The evidence shows that while the website offers discounts, the claim of such extreme percentage differences is mathematically impossible and contradicted by fact-checking sources.",
+    "reasoning": "The evidence supports that California, Massachusetts, and Maine have significant corruption issues, but the claim that they are 'even worse' than others is exaggerated and lacks specific comparative data to substantiate the assertion as of 2026-02-24.",
     "votes": {
-      "FALSE": 2
+      "MISLEADING": 2
     },
     "by_role": {
       "proposer": [
-        "FALSE"
+        "MISLEADING"
       ],
       "critic": [
-        "FALSE"
+        "MISLEADING"
       ]
     },
     "split": false,
     "escalated": false
   },
   {
-    "sid": "trump_2026:0312",
+    "sid": "trump_2026:0564",
     "status": "resolved",
-    "verdict": "UNVERIFIABLE",
-    "confidence": 0.6,
+    "verdict": "MISLEADING",
+    "confidence": 0.825,
     "citations": [
-      "E4"
+      "E1",
+      "E2",
+      "E3",
+      "E5",
+      "E6"
     ],
-    "reasoning": "The claim 'California, Massachusetts, Maine, and many other states are even worse' lacks a clear referent\u2014worse at what? E4 confirms the speaker made this statement on 2026-02-25 regarding fraud, but provides no evidence of the underlying factual assertion about fraud rates or comparative severity in those states. E1, E3, E5, and E6 address unrelated topics (jobs growth, income, innovation, and general state vices) and do not speak to fraud. Without evidence quantifying or comparing fraud in these states, the core assertion cannot be verified or contradicted.",
+    "reasoning": "The core assertion\u2014that Iran killed 'at least 32,000 protesters' in recent months of protests\u2014is supported by Trump's own State of the Union statement (E1) and falls within the range of estimates cited in reporting (E2: 'several thousand to over 35,000'; E5: 'at least 16,500'). However, the claim is MISLEADING because it presents a single figure (32,000) as established fact when the evidence shows substantial uncertainty and a wide range of estimates. E3 reported only 538 confirmed deaths as of mid-January; E5 cited 16,500 as of late January; E2 and E6 indicate estimates vary dramatically depending on source, with E6 noting the Iranian government's official count (nearly 3,000) is far lower and activists warning the true toll 'could be many times higher.' The claim cherry-picks the highest estimate without acknowledging the significant evidentiary dispute about actual death toll, creating a false impression of certainty around a contested figure. The statement also contains a grammatical error ('32,000 protests' should be 'protesters'), though the intent is clear.",
     "votes": {
-      "MISLEADING": 1,
-      "UNVERIFIABLE": 2
+      "MISLEADING": 2,
+      "UNVERIFIABLE": 1
     },
     "by_role": {
       "proposer": [
@@ -740,6 +789,32 @@
         "UNVERIFIABLE"
       ],
       "arbiter": [
+        "MISLEADING"
+      ]
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "trump_2026:0568",
+    "status": "disagreement",
+    "verdict": null,
+    "confidence": null,
+    "citations": [],
+    "reasoning": "",
+    "votes": {
+      "TRUE": 1,
+      "FALSE": 1,
+      "UNVERIFIABLE": 1
+    },
+    "by_role": {
+      "proposer": [
+        "TRUE"
+      ],
+      "critic": [
+        "FALSE"
+      ],
+      "arbiter": [
         "UNVERIFIABLE"
       ]
     },
@@ -747,15 +822,50 @@
     "escalated": true
   },
   {
-    "sid": "trump_2026:0564",
+    "sid": "trump_2026:0400",
     "status": "resolved",
     "verdict": "MISLEADING",
-    "confidence": 0.825,
+    "confidence": 0.76,
     "citations": [
       "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
       "E6"
     ],
-    "reasoning": "The core assertion\u2014that Iran killed 'at least 32,000 protesters' in recent months\u2014is stated as a definitive fact, but the evidence shows this figure is disputed and unverified. E1 confirms Trump made this claim on 2026-02-26, and E6 (dated 2026-02-21) explicitly documents that 'figures vary from as few as 3,000 according to the regime in Tehran to over 32,000 reported by President Donald Trump,' indicating the 32,000 figure is Trump's claim, not an established fact. The speaker presents the 32,000 figure as settled reality ('it looks like 32,000'), when the evidence shows it is one end of a disputed range with no independent verification provided. This is an exaggeration or misrepresentation of an underlying real event (Iran's crackdown on protesters) presented without the material context that the figure is contested and unconfirmed.",
+    "reasoning": "The core assertion\u2014that in 2021 school officials in Virginia sought to socially transition Sage to a new gender, treating her as a boy and hiding it from parents\u2014is supported by the existence of documented cases and policies (E4, E5, E6 confirm schools did facilitate social transitions without parental notification in Virginia). However, the claim conflates or misidentifies the specific case: E1 and E2 indicate the widely-publicized narrative involved January Littlejohn's daughter (age 13, not 14 in 2021), not Sage Blair. E3 references 'Sage's Law' as a legislative response, suggesting Sage Blair may be a real person affected, but the evidence does not confirm Sage was 14 in 2021 or that her case specifically occurred then. The claim appears to blend details from multiple cases or misattribute the January Littlejohn story to Sage Blair. The underlying phenomenon (schools socially transitioning students without parental knowledge) is real and documented, but the specific attribution to Sage at age 14 in 2021 is not clearly verified by the evidence provided, making the claim as stated an exaggeration or misidentification of the actual case(s).",
+    "votes": {
+      "MISLEADING": 2,
+      "UNVERIFIABLE": 1
+    },
+    "by_role": {
+      "proposer": [
+        "MISLEADING"
+      ],
+      "critic": [
+        "UNVERIFIABLE"
+      ],
+      "arbiter": [
+        "MISLEADING"
+      ]
+    },
+    "split": true,
+    "escalated": true
+  },
+  {
+    "sid": "trump_2026:0452",
+    "status": "resolved",
+    "verdict": "FALSE",
+    "confidence": 0.925,
+    "citations": [
+      "E1",
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "reasoning": "The core assertion has two parts: (1) Iryna Zarutska escaped a brutal war and was killed by a criminal\u2014TRUE (E3, E4, E5 confirm she fled Ukraine and was fatally stabbed by DeCarlos Brown); (2) the criminal 'came in through open borders'\u2014FALSE (E6 states Brown is a US-born citizen, contradicting the immigration claim). The claim conflates a real tragedy with a false premise about the perpetrator's immigration status, creating a misleading narrative that distorts the actual facts of the case.",
     "votes": {
       "MISLEADING": 2,
       "FALSE": 1
@@ -772,91 +882,11 @@
       ]
     },
     "split": true,
-    "escalated": true
-  },
-  {
-    "sid": "trump_2026:0568",
-    "status": "resolved",
-    "verdict": "MISLEADING",
-    "confidence": 0.825,
-    "citations": [
-      "E1",
-      "E2",
-      "E3",
-      "E4",
-      "E5",
-      "E6"
-    ],
-    "reasoning": "The claim is misleading because while it is true that Iran has developed missiles that can threaten Europe and U.S. bases overseas, the evidence suggests that the timeline for missiles reaching the United States is more uncertain and cautious according to U.S. intelligence reports.",
-    "votes": {
-      "MISLEADING": 2
-    },
-    "by_role": {
-      "proposer": [
-        "MISLEADING"
-      ],
-      "critic": [
-        "MISLEADING"
-      ]
-    },
-    "split": false,
-    "escalated": false
-  },
-  {
-    "sid": "trump_2026:0400",
-    "status": "resolved",
-    "verdict": "MISLEADING",
-    "confidence": 0.76,
-    "citations": [
-      "E1",
-      "E2",
-      "E4",
-      "E5",
-      "E6"
-    ],
-    "reasoning": "The core assertion\u2014that school officials in Virginia sought to socially transition Sage to a new gender, treating her as a boy and hiding it from parents\u2014is supported by evidence (E4, E5, E6 confirm school staff supported transition without parental knowledge). However, the claim states Sage was 14 in 2021, but E2 references a similar case involving a 13-year-old, and E4 mentions 'first year' at school without confirming the 2021 date or age 14 specifically. E1 (Snopes) reports the rumor spread in Feb 2026 but does not independently verify the 2021 date or age 14. The core fact of hidden social transition appears real, but the specific temporal and age details (14 in 2021) are not independently confirmed in the provided evidence, making the precise framing potentially inaccurate even if the underlying incident occurred. The claim conflates or may misdate the Sage Blair case relative to other similar cases referenced.",
-    "votes": {
-      "MISLEADING": 2,
-      "TRUE": 1
-    },
-    "by_role": {
-      "proposer": [
-        "MISLEADING"
-      ],
-      "critic": [
-        "TRUE"
-      ],
-      "arbiter": [
-        "MISLEADING"
-      ]
-    },
-    "split": true,
-    "escalated": true
-  },
-  {
-    "sid": "trump_2026:0452",
-    "status": "resolved",
-    "verdict": "FALSE",
-    "confidence": 0.925,
-    "citations": [
-      "E1",
-      "E2",
-      "E6"
-    ],
-    "reasoning": "The core assertion that the criminal came in through 'open borders' is contradicted by fact-checks from the Charlotte Observer and NBC News, which state that the claim is untrue.",
-    "votes": {
-      "FALSE": 2
-    },
-    "by_role": {
-      "proposer": [
-        "FALSE"
-      ],
-      "critic": [
-        "FALSE"
-      ]
-    },
-    "split": false,
-    "escalated": false
+    "escalated": true,
+    "crm114": {
+      "stage1": "MISLEADING",
+      "final": "FALSE"
+    }
   },
   {
     "sid": "trump_2026:0620",
@@ -865,11 +895,10 @@
     "confidence": 0.925,
     "citations": [
       "E1",
-      "E4",
-      "E5",
-      "E6"
+      "E2",
+      "E5"
     ],
-    "reasoning": "The claim is supported by evidence that Mexican forces killed Nemesio Oseguera Cervantes, known as 'El Mencho,' in February 2026, which aligns with the statement made on 2026-02-24.",
+    "reasoning": "The evidence confirms that Nemesio 'El Mencho' Oseguera Cervantes, a notorious cartel kingpin, was killed in February 2026, aligning with the claim made on February 24, 2026.",
     "votes": {
       "TRUE": 2
     },
@@ -887,27 +916,28 @@
   {
     "sid": "biden_2022:0045",
     "status": "resolved",
-    "verdict": "TRUE",
-    "confidence": 0.91,
+    "verdict": "MISLEADING",
+    "confidence": 0.79,
     "citations": [
       "E1",
+      "E2",
       "E5",
       "E6"
     ],
-    "reasoning": "The core assertion\u2014that Putin is isolated from the world more than ever as of March 1, 2022\u2014is directly supported by contemporaneous evidence. E5 and E6 document that President Biden made this exact statement on March 2, 2022, immediately after Russia's invasion of Ukraine. E1 corroborates the factual basis: more than 30 countries announced strong sanctions and export controls targeting Russia, presenting a united front. While 'more than ever' is a comparative superlative that cannot be definitively verified without exhaustive historical analysis, the evidence shows unprecedented coordinated international sanctions and diplomatic isolation in response to the invasion, supporting the claim's core assertion as of the utterance date.",
+    "reasoning": "The core assertion\u2014that Putin is 'now isolated from the world more than ever'\u2014uses an absolute temporal superlative ('more than ever'). Evidence shows Russia was heavily sanctioned and isolated from Western finance and commerce as of March 2022, supporting the claim's direction. However, the phrase 'more than ever' requires comparison to Putin's entire history; evidence documents isolation *after the 2022 invasion* but provides no baseline showing this exceeded all prior periods of Putin's tenure. E6 notes Russia had already pursued 'economic isolation' policy before 2022, suggesting prior isolation existed. The evidence supports that Russia faced unprecedented *Western* sanctions and isolation post-invasion, but does not establish this exceeded isolation from all actors across Putin's entire rule. The claim overstates by asserting a historical superlative without comparative evidence.",
     "votes": {
-      "MISLEADING": 1,
-      "TRUE": 2
+      "MISLEADING": 2,
+      "UNVERIFIABLE": 1
     },
     "by_role": {
       "proposer": [
         "MISLEADING"
       ],
       "critic": [
-        "TRUE"
+        "UNVERIFIABLE"
       ],
       "arbiter": [
-        "TRUE"
+        "MISLEADING"
       ]
     },
     "split": true,
@@ -916,24 +946,31 @@
   {
     "sid": "biden_2022:0385",
     "status": "resolved",
-    "verdict": "FALSE",
-    "confidence": 0.925,
-    "citations": [
-      "E5"
-    ],
-    "reasoning": "The core assertion is that the speaker signed 80 bipartisan bills into law in the previous year. Evidence E5 directly contradicts this claim, stating that Congress had only enacted 68 bills and resolutions into law during the relevant period.",
+    "verdict": "MISLEADING",
+    "confidence": null,
+    "citations": [],
+    "reasoning": "",
     "votes": {
-      "FALSE": 2
+      "MISLEADING": 1,
+      "FALSE": 1,
+      "UNVERIFIABLE": 1
     },
     "by_role": {
       "proposer": [
-        "FALSE"
+        "MISLEADING"
       ],
       "critic": [
         "FALSE"
+      ],
+      "arbiter": [
+        "UNVERIFIABLE"
       ]
     },
-    "split": false,
-    "escalated": false
+    "split": true,
+    "escalated": true,
+    "crm114": {
+      "stage1": "DISAGREEMENT",
+      "final": "MISLEADING"
+    }
   }
 ]

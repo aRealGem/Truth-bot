@@ -466,3 +466,27 @@
   }
 })();
 
+/* ── E-id jump links: reveal targets hidden inside collapsed <details> ──
+   Reasoning cites pack ids as anchors into "Sources consulted", which is
+   collapsed by default; plain fragment navigation won't open a closed
+   <details>, so open every ancestor before the browser scrolls. */
+(function() {
+  'use strict';
+  function revealHashTarget() {
+    var id = location.hash && location.hash.slice(1);
+    var el = id && document.getElementById(id);
+    if (!el || !el.closest) return;
+    var d = el.closest('details');
+    while (d) {
+      d.open = true;
+      d = d.parentElement ? d.parentElement.closest('details') : null;
+    }
+    el.scrollIntoView({block: 'center'});
+  }
+  window.addEventListener('hashchange', revealHashTarget);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', revealHashTarget);
+  } else {
+    revealHashTarget();
+  }
+})();
