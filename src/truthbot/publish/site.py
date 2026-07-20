@@ -65,6 +65,19 @@ VERDICT_ORDER = ["True", "Mostly True", "Exaggerated", "Misleading", "False", "U
 # Source rubric: ``eval/sotu-2026/findings-review.md`` Part H.
 COARSE_VERDICT_ORDER = ["True", "Truthy", "Unverifiable", "Falsey", "False"]
 
+# Aggregate BAR order — family-grouped union of the coarse and fine axes.
+# When the Falsey umbrella left the PCA per-claim pills (2026-07-19), the
+# aggregate bars kept iterating COARSE_VERDICT_ORDER, so fine-labeled PCA
+# claims (Misleading, Exaggerated, Mostly True) silently vanished from the
+# graph while the headline still counted them in its family totals — "95 of
+# 132 false-leaning" with only 44 visible on the bar (jackie, 2026-07-20).
+# This order includes both axes' labels, contiguous by family (true family →
+# abstain → adverse family), so the bar shows every decided claim and the
+# family rail's brackets equal the headline's totals by construction.
+AGGREGATE_BAR_ORDER = ["True", "Mostly True", "Truthy",
+                       "Unverifiable",
+                       "Exaggerated", "Misleading", "Falsey", "False"]
+
 # Mirror of LENIENT_PROJECTION / STRICT_PROJECTION in
 # ``src/truthbot/verify/engine.py``, but keyed on the *fine-axis label string*
 # (not the ``VerdictLabel`` enum) so this module can stay string-typed. The
@@ -875,10 +888,48 @@ def _model_cited_unverified_html(urls: list[str]) -> str:
     )
 
 
+def _family_rail_html(dist: dict[str, int], label_order: list[str],
+                      rail_class: str = "vp-family-rail") -> str:
+    """The Truthy/Falsey family rail above a verdict bar.
+
+    The headline ratio ("95 of 132 decided claims false-leaning") sums the two
+    FAMILIES, but the bar segments are per-bucket — so the totals weren't
+    visibly derivable from the graph (jackie, 2026-07-20). The rail brackets
+    the family groups at the same percentage widths as the segments below
+    (families are contiguous in ``COARSE_VERDICT_ORDER``: True/Truthy left,
+    abstentions middle, Falsey/False right), labeled with the family totals
+    the headline uses. Empty when nothing was decided."""
+    total = sum(dist.get(l, 0) for l in label_order) or 1
+    t = sum(dist.get(l, 0) for l in label_order if l in _TRUE_FAMILY)
+    f = sum(dist.get(l, 0) for l in label_order if l in _ADVERSE_FAMILY)
+    abstain = total - t - f
+    decided = t + f
+    if not decided:
+        return ""
+    cells: list[str] = []
+    if t:
+        cells.append(
+            f'<div class="fam fam-true" style="width:{t/total*100:.1f}%" '
+            f'title="{t} of {decided} decided claims true-leaning">'
+            f'Truthy-leaning <span class="n">{t}</span></div>')
+    if abstain > 0:
+        cells.append(
+            f'<div class="fam fam-abstain" style="width:{abstain/total*100:.1f}%" '
+            f'title="{abstain} claims not decided (Unverifiable) — excluded from the '
+            f'leaning denominator">{abstain} undecided</div>')
+    if f:
+        cells.append(
+            f'<div class="fam fam-false" style="width:{f/total*100:.1f}%" '
+            f'title="{f} of {decided} decided claims false-leaning">'
+            f'Falsey-leaning <span class="n">{f}</span></div>')
+    return f'<div class="{rail_class}">{"".join(cells)}</div>'
+
+
 def _verdict_bar_html(
     dist: dict[str, int],
     bar_class: str = "vp-bar",
     order: Optional[list[str]] = None,
+    family_rail: bool = False,
 ) -> str:
     """Render a verdict bar + legend.
 
@@ -886,7 +937,8 @@ def _verdict_bar_html(
     to the 6-bucket fine axis (``VERDICT_ORDER``) for backward compatibility,
     but every aggregate caller now passes ``COARSE_VERDICT_ORDER`` (plus
     "Models split" implicitly skipped since it carries no semantic position
-    on the bar).
+    on the bar). ``family_rail`` prepends the Truthy/Falsey family rail so the
+    headline's leaning totals are traceable to the graph.
     """
     label_order = order if order is not None else VERDICT_ORDER
     total = sum(dist.get(l, 0) for l in label_order) or 1
@@ -910,6 +962,10 @@ def _verdict_bar_html(
     legend_items = []
     for label in label_order:
         count = dist.get(label, 0)
+        if count == 0 and family_rail:
+            # Aggregate mode iterates the union of both axes — hide the
+            # unused axis's labels instead of a row of dimmed zeros.
+            continue
         css = _verdict_css(label)
         zero_cls = " zero" if count == 0 else ""
         legend_items.append(
@@ -919,7 +975,8 @@ def _verdict_bar_html(
             '</div>'
         )
     legend_html = f'<div class="vp-legend">{"".join(legend_items)}</div>'
-    return bar_html + "\n" + legend_html
+    rail_html = _family_rail_html(dist, label_order) if family_rail else ""
+    return rail_html + bar_html + "\n" + legend_html
 
 
 def _prompt_hash() -> str:
@@ -1317,8 +1374,10 @@ def _verdict_panel(site_report) -> str:
     # which lens they're seeing (the legend below the bar lists buckets,
     # not the active rubric). Strict block is rendered first and visible
     # by default — Lenient ships ``hidden`` and the lens chip flips it.
-    bar_html_lenient = _verdict_bar_html(dist_lenient, order=COARSE_VERDICT_ORDER)
-    bar_html_strict  = _verdict_bar_html(dist_strict,  order=COARSE_VERDICT_ORDER)
+    bar_html_lenient = _verdict_bar_html(dist_lenient, order=AGGREGATE_BAR_ORDER,
+                                         family_rail=True)
+    bar_html_strict  = _verdict_bar_html(dist_strict,  order=AGGREGATE_BAR_ORDER,
+                                         family_rail=True)
     bar_html = (
         '<div class="vp-bar-lens" data-lens-axis="strict">'
         + '<div class="vp-lens-caption">Strict lens</div>'
@@ -2470,9 +2529,11 @@ def _report_card(r: dict) -> str:
         fine_dist, COARSE_STRICT_PROJECTION
     )
 
-    def _card_axis_html(d: dict[str, int], axis: str = "strict") -> tuple[str, str, str, str]:
-        """Return (headline_html, ratio_text, segs_html, counts_html) for one axis.
-        Strict lens = graded family bands; Lenient lens = simple Truthy/Falsey."""
+    def _card_axis_html(d: dict[str, int], axis: str = "strict") -> tuple[str, str, str, str, str]:
+        """Return (headline_html, ratio_text, segs_html, counts_html, rail_html)
+        for one axis. Strict lens = graded family bands; Lenient lens = simple
+        Truthy/Falsey. rail_html is the family rail tying the headline's
+        leaning totals to the bar."""
         if axis == "lenient":
             headline, cls, ratio_text = _binary_verdict(d)
         else:
@@ -2481,7 +2542,7 @@ def _report_card(r: dict) -> str:
         total_named = sum(named.values()) or 1
         segs_inner: list[str] = []
         counts_inner: list[str] = []
-        for label in COARSE_VERDICT_ORDER:
+        for label in AGGREGATE_BAR_ORDER:
             count = d.get(label, 0)
             if not count:
                 continue
@@ -2497,10 +2558,11 @@ def _report_card(r: dict) -> str:
             f'<span class="label {cls}">{_esc(headline)}</span>'
             f'<span class="ratio">{_esc(ratio_text)}</span>'
         )
-        return head_html, ratio_text, "".join(segs_inner), "".join(counts_inner)
+        rail = _family_rail_html(d, AGGREGATE_BAR_ORDER, rail_class="report-family-rail")
+        return head_html, ratio_text, "".join(segs_inner), "".join(counts_inner), rail
 
-    head_lenient, _ratio_lenient, segs_lenient, counts_lenient = _card_axis_html(dist_lenient, axis="lenient")
-    head_strict,  _ratio_strict,  segs_strict,  counts_strict  = _card_axis_html(dist_strict, axis="strict")
+    head_lenient, _ratio_lenient, segs_lenient, counts_lenient, rail_lenient = _card_axis_html(dist_lenient, axis="lenient")
+    head_strict,  _ratio_strict,  segs_strict,  counts_strict,  rail_strict  = _card_axis_html(dist_strict, axis="strict")
 
     meta_bits = []
     if r.get("date"):
@@ -2537,6 +2599,8 @@ def _report_card(r: dict) -> str:
         f'    <div class="report-bar-caption lens-target" data-lens-axis="strict">Strict lens</div>'
         f'    <div class="report-bar-caption lens-target" data-lens-axis="lenient" hidden>Lenient lens</div>'
         '  </div>'
+        f'  <div class="lens-target" data-lens-axis="strict">{rail_strict}</div>'
+        f'  <div class="lens-target" data-lens-axis="lenient" hidden>{rail_lenient}</div>'
         f'  <div class="report-bar lens-target" data-lens-axis="strict">{segs_strict}</div>'
         f'  <div class="report-bar lens-target" data-lens-axis="lenient" hidden>{segs_lenient}</div>'
         f'  <div class="report-counts lens-target" data-lens-axis="strict">{counts_strict}</div>'
@@ -3556,6 +3620,31 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
   font-variant-numeric: tabular-nums;
 }
+/* Family rail — brackets the Truthy/Falsey family groups above a verdict bar
+   at the same widths as the segments, so the headline's "N of M decided
+   claims X-leaning" totals are visibly derivable from the graph. */
+.vp-family-rail, .report-family-rail {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.vp-family-rail .fam, .report-family-rail .fam {
+  border-top: 2px solid;
+  padding-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.vp-family-rail .fam .n, .report-family-rail .fam .n { font-weight: 700; }
+.fam.fam-true    { border-color: var(--v-truthy); color: var(--v-true); }
+.fam.fam-false   { border-color: var(--v-falsey); color: var(--v-false); text-align: right; }
+.fam.fam-abstain { border-color: var(--border-strong, #d6d3d1); color: var(--ink-faint); text-align: center; border-top-style: dashed; }
+
 .claim-pill {
   font-family: var(--mono);
   font-size: 0.7rem;
