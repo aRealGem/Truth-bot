@@ -70,6 +70,9 @@ class TestBraveSearchConnector:
         assert connector._classify_tier("https://nytimes.com/article") == SourceTier.ESTABLISHED
         assert connector._classify_tier("https://politifact.com/fact") == SourceTier.FACTCHECK
         assert connector._classify_tier("https://randomsite.com") == SourceTier.OTHER
+        # registered-domain matching, not substring: lookalikes stay OTHER
+        assert connector._classify_tier("https://www.govtech.com/article") == SourceTier.OTHER
+        assert connector._classify_tier("https://www.reutersfans.com/x") == SourceTier.OTHER
 
 
 class TestGovernmentDataConnector:

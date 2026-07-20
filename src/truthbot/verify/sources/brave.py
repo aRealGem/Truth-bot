@@ -16,6 +16,7 @@ import re
 from datetime import date
 from typing import Optional
 
+from truthbot.domains import url_matches_any
 from truthbot.models import Claim, Evidence, SourceTier
 from truthbot.verify.sources.base import SourceConnector, TimeWindow
 
@@ -185,9 +186,12 @@ class BraveSearchConnector(SourceConnector):
         return evidence
 
     def _classify_tier(self, url: str) -> SourceTier:
-        """Assign a trust tier based on the domain."""
-        lower = url.lower()
-        gov_domains = (".gov", ".mil", "bls.gov", "census.gov", "cbo.gov", "federalreserve.gov")
+        """Assign a trust tier based on the URL's registered domain.
+
+        Host-suffix matching (truthbot.domains), not substring — a substring
+        rule made ``www.govtech.com`` rank Government because it contains
+        ``.gov``, letting a trade magazine win pack slots."""
+        gov_domains = (".gov", ".mil", "federalreserve.gov")
         wire_domains = ("apnews.com", "reuters.com")
         established_domains = (
             "nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk",
@@ -195,12 +199,12 @@ class BraveSearchConnector(SourceConnector):
         )
         factcheck_domains = ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")
 
-        if any(d in lower for d in gov_domains):
+        if url_matches_any(url, gov_domains):
             return SourceTier.GOVERNMENT
-        if any(d in lower for d in wire_domains):
+        if url_matches_any(url, wire_domains):
             return SourceTier.WIRE
-        if any(d in lower for d in established_domains):
+        if url_matches_any(url, established_domains):
             return SourceTier.ESTABLISHED
-        if any(d in lower for d in factcheck_domains):
+        if url_matches_any(url, factcheck_domains):
             return SourceTier.FACTCHECK
         return SourceTier.OTHER

@@ -32,6 +32,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+from truthbot.domains import url_matches_any
 from truthbot.models import VerdictBundle, VerdictLabel
 
 logger = logging.getLogger(__name__)
@@ -626,20 +627,28 @@ def _headline_verdict_coarse(dist: dict[str, int]) -> tuple[str, str]:
     return label, css
 
 
+# Registered-domain rules shared by _tier_bucket and _tier_badge (and matching the
+# Brave connector's _classify_tier) — host-suffix matched via truthbot.domains, so a
+# lookalike host like www.govtech.com no longer counts as Government.
+_TIER_GOV = (".gov", ".mil")
+_TIER_WIRE = ("apnews.com", "reuters.com")
+_TIER_NEWS = ("nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk", "npr.org",
+              "nbcnews.com", "cbsnews.com", "abcnews.go.com")
+_TIER_FC = ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")
+
+
 def _tier_bucket(url: str) -> str:
     """Classify a source URL into one of: gov, wire, news, fc, other.
 
-    Uses the same substring rules as _tier_badge so the two stay in sync.
+    Uses the same domain rules as _tier_badge so the two stay in sync.
     """
-    lower = url.lower()
-    if any(d in lower for d in (".gov", ".mil")):
+    if url_matches_any(url, _TIER_GOV):
         return "gov"
-    if any(d in lower for d in ("apnews.com", "reuters.com")):
+    if url_matches_any(url, _TIER_WIRE):
         return "wire"
-    if any(d in lower for d in ("nytimes.com", "washingtonpost.com", "bbc.", "npr.org",
-                                "nbcnews.com", "cbsnews.com", "abcnews.go.com")):
+    if url_matches_any(url, _TIER_NEWS):
         return "news"
-    if any(d in lower for d in ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")):
+    if url_matches_any(url, _TIER_FC):
         return "fc"
     return "other"
 
@@ -660,15 +669,13 @@ def _tier_counts_for_report(site_report) -> dict[str, int]:
 
 def _tier_badge(url: str) -> str:
     """Return an evidence-tier span for a source URL."""
-    lower = url.lower()
-    if any(d in lower for d in (".gov", ".mil")):
+    if url_matches_any(url, _TIER_GOV):
         return '<span class="evidence-tier tier-gov">T1·Gov</span>'
-    if any(d in lower for d in ("apnews.com", "reuters.com")):
+    if url_matches_any(url, _TIER_WIRE):
         return '<span class="evidence-tier tier-news">T2·Wire</span>'
-    if any(d in lower for d in ("nytimes.com", "washingtonpost.com", "bbc.", "npr.org",
-                                  "nbcnews.com", "cbsnews.com", "abcnews.go.com")):
+    if url_matches_any(url, _TIER_NEWS):
         return '<span class="evidence-tier tier-news">T3·News</span>'
-    if any(d in lower for d in ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")):
+    if url_matches_any(url, _TIER_FC):
         return '<span class="evidence-tier tier-fc">T5·FC</span>'
     return '<span class="evidence-tier tier-other">T6</span>'
 
