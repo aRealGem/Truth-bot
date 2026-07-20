@@ -22,6 +22,13 @@ def test_a2_parse_contract():
     # personal-anecdote is a valid claim_type (guest-story genre, P67 2026-07-20)
     va = classifier.parse_a2({"label": "check-worthy", "claim_type": "personal-anecdote"})
     assert va["claim_type"] == "personal-anecdote"
+    # live A2 recurringly puts the claim type IN the label slot — that is a
+    # check-worthy classification with the type misplaced, not an error
+    # (2026-07-20 live run: those sentences were silently dropped as unimportant)
+    vb = classifier.parse_a2({"label": "personal-anecdote"})
+    assert vb["label"] == "check-worthy" and vb["claim_type"] == "personal-anecdote"
+    vc = classifier.parse_a2({"label": "statistical", "confidence": 0.9})
+    assert vc["label"] == "check-worthy" and vc["claim_type"] == "statistical"
     # non-check-worthy forces claim_type null
     v2 = classifier.parse_a2({"label": "opinion", "claim_type": "statistical"})
     assert v2["claim_type"] is None
@@ -48,8 +55,11 @@ def test_classify_tolerant_mode_defaults_bad_label():
 
     sents = [{"sid": "s:0", "text": "The deficit fell.", "context": ""},
              {"sid": "s:1", "text": "Some line.", "context": ""}]
+    # A claim type in the label slot is NOT a bad label anymore — it maps to
+    # check-worthy with that claim_type (2026-07-20 fix; see parse_a2). Use a
+    # genuinely out-of-contract label for the fallback path.
     hm = _FakeHM([{"label": "check-worthy", "claim_type": "statistical", "confidence": 0.9},
-                 {"label": "attribution"}])   # second seat hallucinates a label
+                 {"label": "vibes"}])   # second seat hallucinates a label
 
     # default (raise) preserves fail-closed
     with pytest.raises(ValueError):
