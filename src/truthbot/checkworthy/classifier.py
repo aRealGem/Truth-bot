@@ -32,10 +32,12 @@ a historical or current event, a quantitative comparison or superlative, a causa
 claim about what a person/entity did, said, or funded. Keep it check-worthy even if the fact is \
 well known or dramatically phrased, as long as the assertion is specific and consequential. Also \
 return claim_type in {statistical, historical, attribution, comparison, personal-anecdote, other}. \
-Use "personal-anecdote" when the assertion is a PRIVATE individual's personal story or biography \
-told from the stage (a guest, constituent, or family member — not a public official's record or \
-an institution's act): such claims are specific and stay check-worthy, but they are typically \
-settleable only via personal records rather than public reporting.
+Use claim_type "personal-anecdote" when the assertion is a PRIVATE individual's personal story or \
+biography told from the stage (a guest, constituent, or family member — not a public official's \
+record or an institution's act): such claims are specific and stay check-worthy, but they are \
+typically settleable only via personal records rather than public reporting. NOTE: \
+"personal-anecdote" is a claim_type value, NEVER a label — an anecdote sentence is \
+label="check-worthy" with claim_type="personal-anecdote".
 - "opinion": label opinion when the sentence's MAIN speech-act is a value judgment, rhetoric, \
 aspiration, promise, prediction, or a proposal/recommendation ("we should...", "let's...", \
 "let X do Y", "I think..."). It stays opinion even if it embeds a factual premise — the premise \
@@ -77,6 +79,15 @@ def parse_a2(raw: dict) -> dict:
     if label not in _VALID_LABELS:
         # tolerate minor variants
         label = {"checkworthy": "check-worthy", "check worthy": "check-worthy"}.get(label, label)
+    if label in (_VALID_CLAIM_TYPES - {None}):
+        # Live A2 recurringly answers with a CLAIM TYPE in the label slot
+        # ("label": "personal-anecdote") — that is an affirmative check-worthy
+        # classification with the type misplaced, not an invalid label. Without
+        # this mapping, tolerant mode routed every such sentence to
+        # "unimportant", silently dropping anecdote claims from the queue
+        # (2026-07-20 live publish run).
+        raw = {**raw, "claim_type": label}
+        label = "check-worthy"
     if label not in _VALID_LABELS:
         raise ValueError(f"A2 emitted invalid label {raw.get('label')!r}")
     ct = raw.get("claim_type")
