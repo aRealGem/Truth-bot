@@ -128,6 +128,18 @@ class BraveSearchConnector(SourceConnector):
             logger.error("Brave search failed for claim %s: %s", claim.id, exc)
             return []
 
+    def search_query(self, claim: Claim, query: str, window: TimeWindow = None) -> list[Evidence]:
+        """Fetch with an EXPLICIT query (relevance middle step: cheap-model
+        query generation), still era-windowed. Returns [] on error/no key."""
+        if not self.is_available():
+            logger.debug("BraveSearchConnector: no API key configured, skipping.")
+            return []
+        try:
+            return self._fetch(claim, query[:200], _freshness_for(window))
+        except Exception as exc:
+            logger.error("Brave query search failed for claim %s: %s", claim.id, exc)
+            return []
+
     def _build_query(self, claim: Claim) -> str:
         """Build a search query optimized for fact-checking."""
         # Prepend fact-check keywords to surface relevant journalism

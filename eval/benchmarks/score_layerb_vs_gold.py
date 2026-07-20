@@ -30,20 +30,30 @@ TRAIN = HERE / "claim-set" / "claim_set.train.jsonl"
 GOLD = HERE / "claim-set" / "verdict_gold.train.jsonl"
 
 
-def _build_open_book_provider():
+def _build_open_book_provider(*, relevance: bool = True):
     """Layer C provider: Brave + FactCheck connectors (both keyed on BRAVE_API_KEY),
-    time-scoped per claim inside adjudicate. Returns None (→ closed-book) if no key
-    is configured, so --open-book degrades loudly rather than silently faking a pack."""
+    time-scoped per claim inside adjudicate. With ``relevance`` (default; disable
+    via --no-relevance for A/B) the cheap-model middle step generates targeted
+    queries and scores candidates so packs rank relevance-then-tier. Returns None
+    (→ closed-book) if no key is configured, so --open-book degrades loudly rather
+    than silently faking a pack."""
     import os
     from truthbot.verify.evidence_provider import build_evidence_provider
+    from truthbot.verify.relevance import build_relevance_provider
     from truthbot.verify.sources.brave import BraveSearchConnector
     from truthbot.verify.sources.factcheck import FactCheckConnector
 
     if not os.environ.get("BRAVE_API_KEY"):
         print("BLOCKED --open-book: BRAVE_API_KEY not set; cannot fetch evidence.")
         return None
-    connectors = [BraveSearchConnector(max_results=5), FactCheckConnector(max_results=3)]
-    return build_evidence_provider(source="connectors", connectors=connectors)
+    brave = BraveSearchConnector(max_results=5)
+    factcheck = FactCheckConnector(max_results=3)
+    if relevance:
+        refined = build_relevance_provider(brave, [factcheck])
+        if refined is not None:
+            return refined
+        print("relevance middle step unavailable (no proxy key) — tier-ranked retrieval.")
+    return build_evidence_provider(source="connectors", connectors=[brave, factcheck])
 
 
 def main():
@@ -65,7 +75,8 @@ def main():
 
     if not proxy_client.key_present():
         print(proxy_client.BLOCKED_MSG); return
-    provider = _build_open_book_provider() if open_book else None
+    relevance = "--no-relevance" not in sys.argv
+    provider = _build_open_book_provider(relevance=relevance) if open_book else None
     if open_book and provider is None:
         return    # keyless open-book run is a no-op, not a silent closed-book pass
     tune = None

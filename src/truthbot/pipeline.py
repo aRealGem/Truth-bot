@@ -1015,19 +1015,27 @@ def _default_speech_id(speaker: str, date) -> str:
 
 def _build_open_book_provider():
     """Layer C evidence provider: Brave + FactCheck connectors (both keyed on
-    BRAVE_API_KEY), time-scoped per claim inside adjudicate. Returns None (→
-    closed-book) when no key is set, so the run degrades loudly rather than
-    silently faking evidence. Mirrors the eval driver's provider builder."""
+    BRAVE_API_KEY), time-scoped per claim inside adjudicate, with the
+    cheap-model relevance middle step (query generation + relevance/supports
+    scoring) when the proxy key is present. Returns None (→ closed-book) when
+    no Brave key is set, so the run degrades loudly rather than silently
+    faking evidence. Mirrors the eval driver's provider builder."""
     import os
 
     if not os.environ.get("BRAVE_API_KEY"):
         return None
     from truthbot.verify.evidence_provider import build_evidence_provider
+    from truthbot.verify.relevance import build_relevance_provider
     from truthbot.verify.sources.brave import BraveSearchConnector
     from truthbot.verify.sources.factcheck import FactCheckConnector
 
-    connectors = [BraveSearchConnector(max_results=5), FactCheckConnector(max_results=3)]
-    return build_evidence_provider(source="connectors", connectors=connectors)
+    brave = BraveSearchConnector(max_results=5)
+    factcheck = FactCheckConnector(max_results=3)
+    refined = build_relevance_provider(brave, [factcheck])
+    if refined is not None:
+        return refined
+    # No proxy key for the cheap scorer — legacy tier-ranked retrieval.
+    return build_evidence_provider(source="connectors", connectors=[brave, factcheck])
 
 
 def _publish_bundles(args, bundles: list, date, source_url: str,
