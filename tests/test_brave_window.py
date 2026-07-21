@@ -64,6 +64,30 @@ def test_search_windowed_sends_date_range(monkeypatch):
     # publication date is folded into the snippet so it survives into the payload
     assert ev[0].snippet.startswith("[2026-03-16]")
     assert ev[0].source_tier == SourceTier.GOVERNMENT
+    # ...and captured structurally for the pack-build era filter (P67 Round B #60)
+    from datetime import datetime
+    assert ev[0].published_at == datetime(2026, 3, 16)
+
+
+def test_brave_drops_homepage_and_listing_results(monkeypatch):
+    """P67 2026-07-20 (#67): homepages and listing indexes are not evidence —
+    the Brave result loop must skip them, same as FactCheck and pack build."""
+    import httpx
+
+    def fake_get(url, headers=None, params=None, timeout=None):
+        return _FakeResp({"web": {"results": [
+            {"url": "https://www.snopes.com/", "description": "definitive reference",
+             "meta_url": {"hostname": "snopes.com"}},
+            {"url": "https://www.snopes.com/fact-check/?pagenum=3", "description": "rumors",
+             "meta_url": {"hostname": "snopes.com"}},
+            {"url": "https://bls.gov/news/article", "description": "data",
+             "meta_url": {"hostname": "bls.gov"}},
+        ]}})
+
+    monkeypatch.setattr(httpx, "get", fake_get)
+    conn = BraveSearchConnector(api_key="k")
+    ev = conn.search(Claim(transcript_id="t", text="c"))
+    assert [e.source_url for e in ev] == ["https://bls.gov/news/article"]
 
 
 def test_search_without_window_uses_past_year(monkeypatch):
