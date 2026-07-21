@@ -201,25 +201,31 @@ class BraveSearchConnector(SourceConnector):
         return evidence
 
     def _classify_tier(self, url: str) -> SourceTier:
-        """Assign a trust tier based on the URL's registered domain.
+        return classify_tier(url)
 
-        Host-suffix matching (truthbot.domains), not substring — a substring
-        rule made ``www.govtech.com`` rank Government because it contains
-        ``.gov``, letting a trade magazine win pack slots."""
-        gov_domains = (".gov", ".mil", "federalreserve.gov")
-        wire_domains = ("apnews.com", "reuters.com")
-        established_domains = (
-            "nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk",
-            "nbcnews.com", "cbsnews.com", "abcnews.go.com", "npr.org",
-        )
-        factcheck_domains = ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")
 
-        if url_matches_any(url, gov_domains):
-            return SourceTier.GOVERNMENT
-        if url_matches_any(url, wire_domains):
-            return SourceTier.WIRE
-        if url_matches_any(url, established_domains):
-            return SourceTier.ESTABLISHED
-        if url_matches_any(url, factcheck_domains):
-            return SourceTier.FACTCHECK
-        return SourceTier.OTHER
+def classify_tier(url: str) -> SourceTier:
+    """Assign a trust tier based on the URL's registered domain.
+
+    Host-suffix matching (truthbot.domains), not substring — a substring
+    rule made ``www.govtech.com`` rank Government because it contains
+    ``.gov``, letting a trade magazine win pack slots. Module-level so the
+    evidence-v2 retrievers (P67.8) classify identically to the Brave
+    connector."""
+    gov_domains = (".gov", ".mil", "federalreserve.gov")
+    wire_domains = ("apnews.com", "reuters.com")
+    established_domains = (
+        "nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk",
+        "nbcnews.com", "cbsnews.com", "abcnews.go.com", "npr.org",
+    )
+    factcheck_domains = ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")
+
+    if url_matches_any(url, gov_domains):
+        return SourceTier.GOVERNMENT
+    if url_matches_any(url, wire_domains):
+        return SourceTier.WIRE
+    if url_matches_any(url, established_domains):
+        return SourceTier.ESTABLISHED
+    if url_matches_any(url, factcheck_domains):
+        return SourceTier.FACTCHECK
+    return SourceTier.OTHER
