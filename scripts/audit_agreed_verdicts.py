@@ -184,7 +184,9 @@ def main() -> None:
     ap.add_argument("--out", required=True, help="JSONL results path (appended; resume-safe)")
     ap.add_argument("--limit", type=int, default=0, help="stop after N new audits (metering)")
     ap.add_argument("--speech", default="", help="restrict to one speech_id")
-    ap.add_argument("--model", default="claude-sonnet-4-6")
+    # Proxy ALIAS (virtual keys are alias-scoped): "claude-sonnet" resolves to
+    # claude-sonnet-4-6 in the LiteLLM models table.
+    ap.add_argument("--model", default="claude-sonnet")
     ap.add_argument("--dry-run", action="store_true",
                     help="print selection counts + the first prompt; no calls")
     args = ap.parse_args()
