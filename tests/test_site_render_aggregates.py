@@ -1300,3 +1300,24 @@ def test_aggregate_bar_includes_fine_labels_and_rail_matches_headline() -> None:
     # adverse family = 5 Misleading + 4 False = 9; decided = 12.
     assert "Falsey-leaning <span class=\"n\">9</span>" in html
     assert "9 of 12 decided claims false-leaning" in html
+
+
+def test_verdict_panel_footnotes_anecdote_share_of_unverifiable() -> None:
+    """P67 2026-07-20 (#64): the panel breaks out how much of the Unverifiable
+    bucket is the guest-anecdote genre vs data claims the evidence failed on."""
+    from truthbot.models import VerdictProvenance
+
+    anecdote = _make_bundle(VerdictLabel.UNVERIFIABLE, coarse_lenient="Unverifiable",
+                            coarse_strict="Unverifiable")
+    anecdote.consensus.provenance = VerdictProvenance(
+        layer_a_label="check-worthy", layer_a_source="A2",
+        layer_a_claim_type="personal-anecdote")
+    plain = _make_bundle(VerdictLabel.UNVERIFIABLE, coarse_lenient="Unverifiable",
+                         coarse_strict="Unverifiable")
+    sr = _make_site_report([anecdote, plain])
+    html = _verdict_panel(sr)
+    assert "1 of the Unverifiable claim is a guest anecdote" in html
+
+    # no anecdotes → no footnote at all
+    sr2 = _make_site_report([plain])
+    assert "guest anecdote" not in _verdict_panel(sr2)
