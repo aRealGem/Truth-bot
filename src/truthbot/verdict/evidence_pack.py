@@ -149,7 +149,15 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
     falls through to the old trust-tier ordering unchanged.
 
     Items without a URL are dropped — I5 requires a url, and an unaddressable
-    snippet cannot be cited or re-verified."""
+    snippet cannot be cited or re-verified.
+
+    Reserved fact-check slot (P67 Round B.5): once ranked, if no FactCheck-tier
+    item made the cap but one exists, swap the highest-relevance FactCheck item
+    into the last slot. A direct ruling (factcheck.org / PolitiFact) must not be
+    crowded out of the pack by on-topic background explainers — the biden_2022:0342
+    case, where a factcheck.org ruling fell E1→E4 and the panel flipped
+    FALSE→ABSTAIN. Exactly ONE slot is reserved: packs that already surface a
+    ruling, or that retrieved none, are unchanged."""
     seen: set[str] = set()
     unique: list[Evidence] = []
     for ev in evidence:
@@ -167,7 +175,15 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
         unique.append(ev)
     unique.sort(key=lambda e: (-(e.relevance_score if e.relevance_score is not None else 0.5),
                                _TIER_RANK.get(e.source_tier, 99)))  # stable
-    return unique[:max_items]
+    capped = unique[:max_items]
+    if capped and not any(e.source_tier == SourceTier.FACTCHECK for e in capped):
+        # unique is already relevance-then-tier sorted, so the first FactCheck is
+        # the best one. It can only be absent from a FULL cap (a shorter cap holds
+        # all of unique, ruling included), so displace the last, lowest-ranked slot.
+        ruling = next((e for e in unique if e.source_tier == SourceTier.FACTCHECK), None)
+        if ruling is not None and len(capped) == max_items:
+            capped[-1] = ruling
+    return capped
 
 
 def build_evidence_pack(

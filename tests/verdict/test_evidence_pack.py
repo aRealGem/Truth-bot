@@ -104,6 +104,46 @@ def test_pack_render_contains_ids_and_snippets():
     assert "[E1]" in r and "alpha snippet" in r and "Government" in r
 
 
+# ── P67 Round B.5: reserved fact-check slot ───────────────────────────────────
+
+def _relevant(url, tier, relevance):
+    e = _ev(url, tier=tier)
+    e.relevance_score = relevance
+    return e
+
+
+def test_factcheck_ruling_reserved_when_crowded_out():
+    # 6 highly-relevant explainers + one lower-relevance factcheck ruling. Without
+    # the reserved slot the ruling (rank-4 tier, 0.7 relevance) is capped out.
+    explainers = [_relevant(f"https://news{i}.com/story", SourceTier.ESTABLISHED, 0.9)
+                  for i in range(6)]
+    ruling = _relevant("https://politifact.com/factchecks/x", SourceTier.FACTCHECK, 0.7)
+    pack = build_evidence_pack("trump_2026:3", "c", FakeProvider(explainers + [ruling]))
+    tiers = [it.tier for it in pack.items]
+    assert SourceTier.FACTCHECK in tiers
+    assert pack.items[-1].source_url == "https://politifact.com/factchecks/x"  # last slot
+    assert len(pack.items) == 6
+
+
+def test_factcheck_already_in_cap_is_noop():
+    # A high-relevance ruling already ranks into the cap → no swap, natural order.
+    ruling = _relevant("https://factcheck.org/x", SourceTier.FACTCHECK, 0.95)
+    explainers = [_relevant(f"https://news{i}.com/story", SourceTier.ESTABLISHED, 0.9)
+                  for i in range(6)]
+    pack = build_evidence_pack("trump_2026:3", "c", FakeProvider([ruling] + explainers))
+    assert pack.items[0].source_url == "https://factcheck.org/x"  # ranked first, untouched
+    assert sum(it.tier == SourceTier.FACTCHECK for it in pack.items) == 1
+
+
+def test_no_factcheck_pack_unchanged():
+    # No ruling retrieved → cap is pure relevance-then-tier, no reserved slot.
+    explainers = [_relevant(f"https://news{i}.com/story", SourceTier.ESTABLISHED, 0.9)
+                  for i in range(8)]
+    pack = build_evidence_pack("trump_2026:3", "c", FakeProvider(explainers))
+    assert len(pack.items) == 6
+    assert all(it.tier == SourceTier.ESTABLISHED for it in pack.items)
+
+
 def test_pack_enforces_i5_on_malformed_evidence(monkeypatch):
     """A provider that yields evidence which can't be provenance-stamped fails
     closed at entry (I5) rather than reaching a verdict."""
