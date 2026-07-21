@@ -97,7 +97,8 @@ def render_artifact(path: Path, publisher: SitePublisher, role: str) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("artifacts", nargs="*", help="pca_runs artifact paths (default: all with evidence)")
+    ap.add_argument("artifacts", nargs="*",
+                    help="pca_runs artifact paths (default: latest evidence-bearing artifact per speech)")
     ap.add_argument("--site-root", required=True)
     ap.add_argument("--role", default="President")
     args = ap.parse_args()
@@ -106,8 +107,18 @@ def main() -> None:
     if not paths:
         candidates = sorted((REPO / "metrics" / "pca_runs").glob("*.json"),
                             key=lambda p: p.stat().st_mtime)
-        paths = [p for p in candidates
-                 if "evidence" in json.loads(p.read_text(encoding="utf-8"))]
+        # LATEST artifact per speech_id — a superseded run of the same speech
+        # must not resurrect its stale report alongside the current one (this
+        # bit as soon as a re-publish left two evidence-bearing artifacts per
+        # speech, 2026-07-20). Pass paths explicitly to render an older run.
+        latest: dict[str, Path] = {}
+        for p in candidates:
+            d = json.loads(p.read_text(encoding="utf-8"))
+            if "evidence" not in d:
+                continue
+            sid = (d.get("meta") or {}).get("speech_id") or p.stem
+            latest[sid] = p          # candidates are mtime-ascending; last wins
+        paths = list(latest.values())
         if not paths:
             sys.exit("no artifacts with persisted evidence found under metrics/pca_runs/")
         print(f"rendering {len(paths)} artifact(s): {', '.join(p.stem[:8] for p in paths)}")

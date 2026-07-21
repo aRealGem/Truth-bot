@@ -1,56 +1,6 @@
 [
   {
-    "id": "48ff1afc-4474-4514-bbae-fb4208f06779",
-    "date": "2022-03-01",
-    "speaker": "Joe Biden",
-    "role": "President",
-    "venue": "U.S. Capitol",
-    "claim_count": 111,
-    "verdict_distribution": {
-      "True": 72,
-      "Mostly True": 0,
-      "Misleading": 21,
-      "Exaggerated": 0,
-      "False": 7,
-      "Unverifiable": 5,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 6
-    },
-    "verdict_distribution_lenient": {
-      "True": 72,
-      "Truthy": 0,
-      "Unverifiable": 5,
-      "Falsey": 0,
-      "False": 7,
-      "Models split": 6,
-      "Misleading": 21
-    },
-    "verdict_distribution_strict": {
-      "True": 72,
-      "Truthy": 0,
-      "Unverifiable": 5,
-      "Falsey": 0,
-      "False": 7,
-      "Models split": 6,
-      "Misleading": 21
-    },
-    "model_agreement_rate": 0.784,
-    "url": "reports/2022-03-01-joe-biden-48ff1a.html",
-    "tier_counts": {
-      "gov": 56,
-      "wire": 18,
-      "news": 76,
-      "fc": 16,
-      "other": 284
-    },
-    "source_of_claims": "Joe Biden",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "e224c658-c1ff-41c1-9827-fb6379658abe",
+    "id": "b2c755fe-d235-4750-8ab7-62fe7a73d20a",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
@@ -86,7 +36,7 @@
       "Misleading": 68
     },
     "model_agreement_rate": 0.466,
-    "url": "reports/2026-02-24-donald-trump-e224c6.html",
+    "url": "reports/2026-02-24-donald-trump-b2c755.html",
     "tier_counts": {
       "gov": 61,
       "wire": 18,
@@ -95,6 +45,56 @@
       "other": 330
     },
     "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "eac8fe3e-0f10-4e6a-881d-6ef99a319644",
+    "date": "2022-03-01",
+    "speaker": "Joe Biden",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 111,
+    "verdict_distribution": {
+      "True": 72,
+      "Mostly True": 0,
+      "Misleading": 21,
+      "Exaggerated": 0,
+      "False": 7,
+      "Unverifiable": 5,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 6
+    },
+    "verdict_distribution_lenient": {
+      "True": 72,
+      "Truthy": 0,
+      "Unverifiable": 5,
+      "Falsey": 0,
+      "False": 7,
+      "Models split": 6,
+      "Misleading": 21
+    },
+    "verdict_distribution_strict": {
+      "True": 72,
+      "Truthy": 0,
+      "Unverifiable": 5,
+      "Falsey": 0,
+      "False": 7,
+      "Models split": 6,
+      "Misleading": 21
+    },
+    "model_agreement_rate": 0.784,
+    "url": "reports/2022-03-01-joe-biden-eac8fe.html",
+    "tier_counts": {
+      "gov": 56,
+      "wire": 18,
+      "news": 76,
+      "fc": 16,
+      "other": 284
+    },
+    "source_of_claims": "Joe Biden",
     "source_of_claims_professional_public_title": "President",
     "event": "",
     "channel": ""

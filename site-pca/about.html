@@ -12,14 +12,14 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="truth-bot">
   <meta property="og:title" content="About — truth-bot">
-  <meta property="og:description" content="How truth-bot works: atomic claim decomposition, multi-model verification against government primary sources, and transparent consensus scoring.">
+  <meta property="og:description" content="How truth-bot works: check-worthiness triage, era-scoped evidence retrieval, a speaker-blind proposer-critic-arbiter model panel that must cite its evidence, and a second-stage severity check.">
   <meta property="og:image" content="./assets/social-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About — truth-bot">
-  <meta name="twitter:description" content="How truth-bot works: atomic claim decomposition, multi-model verification against government primary sources, and transparent consensus scoring.">
+  <meta name="twitter:description" content="How truth-bot works: check-worthiness triage, era-scoped evidence retrieval, a speaker-blind proposer-critic-arbiter model panel that must cite its evidence, and a second-stage severity check.">
   <meta name="twitter:image" content="./assets/social-card.png">
   <meta name="twitter:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
   <title>About — truth-bot</title>
@@ -39,7 +39,7 @@
       <span class="lens-label">Lens:</span>
       <span class="lens-value">Strict</span>
     </button>
-    <span class="stamp">2026-07-21 01:07 UTC</span>
+    <span class="stamp">2026-07-21 01:33 UTC</span>
   </div>
 </div>
 <header class="masthead">
@@ -56,208 +56,17 @@
   </div>
 </header>
 <main class="wrap">
-<h2>About truth-bot</h2><hr class="rule"><h3>What this is</h3><p>truth-bot is an automated political fact-checker that decomposes speeches and public statements into atomic, individually verifiable claims, then runs each claim through multiple large language models simultaneously. Each model performs live web searches and returns a structured verdict. The results are aggregated into a consensus verdict with an explicit strength score.</p><h3 style="margin-top:1.5rem">How verdicts are produced</h3><p>Each claim is sent to all configured LLM providers in parallel. Every provider is instructed to search Tier 1 government sources first (BLS, BEA, CBP, etc.) before citing secondary sources. The providers return a structured JSON verdict including a label, confidence level, explanation, source URLs, and a self-reported caveats field flagging source-quality gaps.</p><p style="margin-top:0.75rem">Consensus is computed by majority vote. Three or more models returning the same label = "Strong consensus." Two models agreeing = "Weak consensus." No majority = "Models split."</p><h3 style="margin-top:1.5rem">Headline pill: 5-bucket coarse-axis projection</h3><p>Each model returns one of <strong>six</strong> labels — True, Mostly True, Exaggerated, Misleading, False, Unverifiable. Those per-model labels are preserved in full on the per-claim model strip for audit. The headline pill on each claim collapses the panel into a <strong>five-bucket "Truthy scale"</strong> (True · Truthy · Unverifiable · Falsey · False) so directionally aligned panels don't look split just because two models split <em>Mostly True</em> from <em>Exaggerated</em>.</p><p style="margin-top:0.75rem">Two projections are published side-by-side and you can flip between them with the <strong>Lens</strong> chip in the status bar:</p><table class="tier-table" style="margin-top:0.5rem"><tr><th>6-bucket label</th><th>Lenient (default)</th><th>Strict</th></tr><tr><td>True</td><td>True</td><td>True</td></tr><tr><td>Mostly True</td><td>Truthy</td><td>Truthy</td></tr><tr><td>Exaggerated</td><td>Truthy</td><td><strong>Falsey</strong></td></tr><tr><td>Misleading</td><td>Falsey</td><td>Falsey</td></tr><tr><td>False</td><td>False</td><td>False</td></tr><tr><td>Unverifiable</td><td>Unverifiable</td><td>Unverifiable</td></tr></table><p style="margin-top:0.75rem"><strong>Split-projection guardrail:</strong> if the panel still has no plurality after projecting (e.g. 2-2 Truthy/Falsey), the headline shows "Models split" rather than tie-breaking — the projection is not allowed to manufacture agreement that isn't there.</p><p style="margin-top:0.75rem"><strong>Per-model strip is unaffected.</strong> Individual model verdicts always render on the original 6-bucket axis so you can see the editorial nuance each model assigned, even when the headline rolls up to Truthy or Falsey.</p><h3 style="margin-top:1.5rem">Models</h3><ul><li><strong>Anthropic</strong> claude-opus-4-7 — primary verifier</li><li><strong>OpenAI</strong> gpt-5.4 — verifier (batch mode)</li><li><strong>Google</strong> gemini-2.5-pro — pending API key</li><li><strong>xAI</strong> grok-4 — pending API key</li></ul><h3 style="margin-top:1.5rem">Source tier hierarchy</h3><table class="tier-table"><tr><th>Tier</th><th>Sources</th><th>Trust weight</th></tr><tr><td><strong>Government</strong></td><td>.gov, .mil — BLS, BEA, CBO, Census, CDC, etc.</td><td>Highest</td></tr><tr><td><strong>Wire</strong></td><td>AP, Reuters</td><td>High</td></tr><tr><td><strong>Established</strong></td><td>NYT, WaPo, BBC, NPR, CBS, NBC, ABC</td><td>Medium-High</td></tr><tr><td><strong>Academic</strong></td><td>Peer-reviewed journals, university presses</td><td>Medium-High</td></tr><tr><td><strong>Fact-check</strong></td><td>PolitiFact, FactCheck.org, Snopes, FullFact</td><td>Medium</td></tr><tr><td><strong>Other</strong></td><td>Blogs, opinion sites, social media, unverified sources</td><td>Low</td></tr></table><h3 style="margin-top:1.5rem">Known limitations</h3><ul><li><strong>Small corpus:</strong> Each claim is verified independently with no cross-claim context. Recurring rhetoric may be rated inconsistently across speeches.</li><li><strong>Hallucinated citations:</strong> Language models can fabricate plausible-looking URLs. All cited sources should be independently verified before drawing conclusions.</li><li><strong>Training-data bias:</strong> Model verdicts may reflect the political slant of their training data. The multi-model consensus is designed to partially mitigate this, but systematic bias in all four providers would not be caught.</li><li><strong>Temporal grounding:</strong> Web search retrieves recent results but may miss updated statistics or corrections published after the pipeline run. The generation timestamp on each report indicates when verification occurred.</li></ul><h3 id="prompt" style="margin-top:1.5rem">Full verdict prompt (hash: 7c462496)</h3><p class="dim">Verbatim prompt sent to each model for verdict synthesis.</p><pre>You are an expert fact-checker. Given a claim and a set of evidence snippets, use your web search tool to research the claim and return a verdict.
+<h2>About truth-bot</h2><hr class="rule"><h3>What this is</h3><p>truth-bot is an automated political fact-checker. It segments a speech into sentences, filters them to specific, verifiable, consequential claims, retrieves era-appropriate evidence for each claim from the open web, and adjudicates every claim through a structured panel of language models that must ground its verdict in the retrieved evidence and cite it.</p><h3 style="margin-top:1.5rem">The pipeline</h3><p><strong>1 · Check-worthiness triage.</strong> Every sentence is classified as check-worthy, opinion, or unimportant. Opinions, aspirations, pleasantries, and rhetoric are set aside — visibly, not silently: each report links a <em>Statement Triage</em> page listing everything excluded and why. Check-worthy claims also get a type (statistical, historical, attribution, comparison, personal-anecdote, other). The classifier never sees who the speaker is.</p><p style="margin-top:0.75rem"><strong>2 · Evidence retrieval.</strong> For each claim, a small model writes targeted search queries (the era's fiscal year, the specific statistic or program named), and the pipeline fetches candidates via web search plus fact-check databases — time-scoped to the claim's era so a 2026 article cannot decide a 2022 claim. Candidates are scored for relevance to the claim, deduplicated, stripped of non-evidence (homepages, listing pages), and capped at six items ranked by relevance, then source trust. Every pack item carries a URL, retrieval timestamp, and content hash.</p><p style="margin-top:0.75rem"><strong>3 · The verdict panel (PCA).</strong> A <em>proposer</em> drafts a verdict from the evidence; a <em>critic</em> independently re-judges the same evidence; when they disagree, an <em>arbiter</em> decides. Verdicts use a four-label contract — True, False, Misleading, Unverifiable — and must cite pack items by id (the E1, E2… ids you see in reasoning and source lists; citations outside the pack are rejected). A genuine tie is published as "Panel split," never silently broken. The panel is speaker-blind: seats see the claim, its context, and its era — never the speaker's name.</p><p style="margin-top:0.75rem"><strong>4 · Severity check.</strong> Because small models tend to soften a contradicted claim to "Misleading," False-vs-Misleading boundary calls and tie-routed rows pass through a second-stage Severity Classifier on a stronger model. Its overrides are shown on the claim card's provenance strip.</p><p style="margin-top:0.75rem"><strong>Guest anecdotes.</strong> A private individual's personal story told from the stage usually has no public record to check against. Those claims still run the full panel, but when they come back unverifiable they are labeled <em>Anecdote</em> — a limit of the genre, not a failed verification. An anecdote the press independently investigated gets a real verdict.</p><h3 style="margin-top:1.5rem">How to read a report</h3><p><strong>Per-claim pill.</strong> Each claim headlines the panel's own verdict (True, False, Misleading, Unverifiable — or Anecdote / Panel split). The provenance strip beneath the verdict shows the full chain: how the claim was routed, what each seat predicted, the vote tally, and any Severity Classifier override. E-ids in the reasoning link to the exact evidence item cited.</p><p style="margin-top:0.75rem"><strong>Report headline &amp; leaning totals.</strong> Claims aggregate into two families — true-leaning (True) and false-leaning (False + Misleading) — over <em>decided</em> claims only; Unverifiable, Anecdote, and Panel split are abstentions and stay out of the denominator. The headline band is the dominant family's share of decided claims: ≥70% "Largely," ≥55% "Mostly," under 55% "Mixed verdict." The family rail above each verdict bar brackets the same totals on the graph itself, so the headline's "N of M decided claims X-leaning" is always visibly derivable.</p><p style="margin-top:0.75rem"><strong>The Lens chip</strong> flips between two presentations of the same computation: <em>Lenient</em> shows the simple Truthy/Falsey lean; <em>Strict</em> (the default) shows the graded bands. The two lenses share the Mixed band and the decided-claims denominator — they can never disagree about whether a report is a toss-up.</p><h3 style="margin-top:1.5rem">Who's on the panel</h3><ul><li><strong>Proposer</strong> — Mistral Small 3.2 24B: drafts the initial verdict</li><li><strong>Critic</strong> — DeepSeek V4 Flash: independently re-judges the same evidence, hunting for why a naive verdict could be wrong</li><li><strong>Arbiter</strong> — Claude Haiku 4.5: adjudicates only when proposer and critic disagree</li><li><strong>Severity Classifier</strong> — Claude Sonnet 4.6: a second-stage check on False-vs-Misleading boundary calls and panel ties</li><li><strong>Retrieval &amp; triage</strong> — Claude Haiku 4.5: check-worthiness classification, search-query generation, and evidence relevance scoring</li></ul><p class="dim" style="margin-top:0.5rem">Three different model families from three different vendors sit in the verdict seats, so a single vendor's blind spot can't silently decide a claim. The exact roster used for a report is recorded in its "Panel composition" section. Earlier versions of truth-bot fanned every claim out to four frontier models in parallel; the current design gets comparable accuracy at roughly a tenth of the cost by spending small-model calls where they're cheap (triage, retrieval) and escalating only genuine disagreements.</p><h3 style="margin-top:1.5rem">Source tier hierarchy</h3><p>Evidence items carry a trust tier assigned from the source's registered domain. Relevance to the claim ranks first; tier breaks ties and is what the panel is told to weigh on conflicting evidence.</p><table class="tier-table"><tr><th>Tier</th><th>Sources</th><th>Trust weight</th></tr><tr><td><strong>Government</strong></td><td>.gov, .mil — BLS, BEA, CBO, Census, CDC, etc.</td><td>Highest</td></tr><tr><td><strong>Wire</strong></td><td>AP, Reuters</td><td>High</td></tr><tr><td><strong>Established</strong></td><td>NYT, WaPo, BBC, NPR, CBS, NBC, ABC</td><td>Medium-High</td></tr><tr><td><strong>Academic</strong></td><td>Peer-reviewed journals, university presses</td><td>Medium-High</td></tr><tr><td><strong>Fact-check</strong></td><td>PolitiFact, FactCheck.org, Snopes, FullFact</td><td>Medium</td></tr><tr><td><strong>Other</strong></td><td>Blogs, opinion sites, social media, unverified sources</td><td>Low</td></tr></table><h3 style="margin-top:1.5rem">Known limitations</h3><ul><li><strong>Small models, one panel:</strong> Verdict seats are deliberately inexpensive models. The proposer→critic→arbiter structure and the second-stage Severity Classifier are the accuracy mechanism — not raw model size — and boundary calls (False vs Misleading) remain the hardest cases.</li><li><strong>Retrieval-bounded:</strong> Verdicts are grounded in a six-item evidence pack fetched at run time. If retrieval misses the decisive source, the panel can only abstain (Unverifiable) — it is instructed not to fill gaps from memory.</li><li><strong>Model-scored relevance:</strong> The evidence ranking itself uses a small model; an off-target relevance score can demote the decisive source below the pack cap.</li><li><strong>No cross-claim context:</strong> Each claim is judged independently. Recurring rhetoric may be rated inconsistently across speeches.</li><li><strong>Training-data bias:</strong> Model judgments may reflect the slant of their training data. Cross-vendor seats partially mitigate this; a bias shared by all three vendors would not be caught.</li><li><strong>As-of-utterance judging:</strong> Claims are judged against evidence from their own era — a claim true when spoken is not False because reality moved later. The "Last verified" stamp on each claim shows when the check ran.</li></ul><h3 id="prompt" style="margin-top:1.5rem">Full verdict prompts (hash: bcef1142)</h3><p class="dim">Verbatim system prompts for the three panel seats — the calibrated open-book set, including the decision procedure and the absolute-claim rule. The hash in every report footer commits to exactly this text.</p><pre>── PROPOSER ──
+You are the PROPOSER. Assess the factual claim and draft a verdict. Classify by the claim's CORE assertion, judged against the evidence: (1) State the single central factual assertion, ignoring rhetoric. (2) FALSE if the evidence CONTRADICTS the core assertion — the stated fact did not happen, or the reverse is true — even when a peripheral detail is accurate. Do not soften a contradicted core to MISLEADING because it contains a kernel of truth. (2b) ABSOLUTE-CLAIM RULE: when the core assertion is an absolute or universal — zero, none, only, all, every, ended, eliminated, completely stopped or destroyed, biggest/lowest in history — evidence of material counterexamples CONTRADICTS that core, and the verdict is FALSE. The underlying trend or event being real does NOT soften an absolute to MISLEADING: &quot;we ended X&quot; is FALSE when X demonstrably continues, even if X was substantially reduced. (3) MISLEADING if the core is REAL but the evidence shows it is exaggerated, cherry-picked, stripped of context, or spun to create a false impression. Overstating or distorting a true underlying fact is MISLEADING — NOT FALSE (unless the claim states an absolute; see 2b); reserve FALSE for a core the evidence actually contradicts. Also do NOT call such a claim TRUE. (4) TRUE only when the evidence supports the core assertion without material exaggeration or distortion. (5) UNVERIFIABLE only when the provided evidence cannot settle the core assertion — not as a hedge when a label is uncomfortable. Distinguish contradiction (FALSE) from overstatement of a real fact (MISLEADING); pick the label the evidence warrants, and do not default toward the middle. Evidence items are provided in the input under &quot;evidence&quot;; each has an &quot;id&quot; (E1, E2, ...), a source, a trust tier, and a dated snippet. Ground your verdict in that evidence and judge the claim as of its utterance date. Return JSON only: {&quot;verdict&quot;: &quot;TRUE | FALSE | MISLEADING | UNVERIFIABLE&quot;, &quot;confidence&quot;: 0.0-1.0, &quot;citations&quot;: [&quot;E1&quot;, ...], &quot;reasoning&quot;: &quot;one clause&quot;}. Set &quot;citations&quot; to the ids of the evidence items you relied on — cite ONLY provided ids, never a bare URL or an id not in the evidence list. Weigh higher-trust tiers (Government, Wire) above lower ones on conflict. An item may carry a &quot;stance&quot; (&quot;supports&quot; or &quot;refutes&quot;) — how that source bears on the claim; treat a direct refutation or confirmation from a trustworthy source as strong evidence, but do not let stance override the trust-tier ordering above when sources conflict. If the provided evidence is absent or insufficient to settle the claim, verdict=UNVERIFIABLE with citations [].
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 1 — MANDATORY PRIMARY-SOURCE SEARCH
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+── CRITIC ──
+You are the CRITIC. Independently and skeptically assess the same claim against the SAME evidence; test whether the core assertion is actually FALSE rather than merely misleading. Classify by the claim's CORE assertion, judged against the evidence: (1) State the single central factual assertion, ignoring rhetoric. (2) FALSE if the evidence CONTRADICTS the core assertion — the stated fact did not happen, or the reverse is true — even when a peripheral detail is accurate. Do not soften a contradicted core to MISLEADING because it contains a kernel of truth. (2b) ABSOLUTE-CLAIM RULE: when the core assertion is an absolute or universal — zero, none, only, all, every, ended, eliminated, completely stopped or destroyed, biggest/lowest in history — evidence of material counterexamples CONTRADICTS that core, and the verdict is FALSE. The underlying trend or event being real does NOT soften an absolute to MISLEADING: &quot;we ended X&quot; is FALSE when X demonstrably continues, even if X was substantially reduced. (3) MISLEADING if the core is REAL but the evidence shows it is exaggerated, cherry-picked, stripped of context, or spun to create a false impression. Overstating or distorting a true underlying fact is MISLEADING — NOT FALSE (unless the claim states an absolute; see 2b); reserve FALSE for a core the evidence actually contradicts. Also do NOT call such a claim TRUE. (4) TRUE only when the evidence supports the core assertion without material exaggeration or distortion. (5) UNVERIFIABLE only when the provided evidence cannot settle the core assertion — not as a hedge when a label is uncomfortable. Distinguish contradiction (FALSE) from overstatement of a real fact (MISLEADING); pick the label the evidence warrants, and do not default toward the middle. Evidence items are provided in the input under &quot;evidence&quot;; each has an &quot;id&quot; (E1, E2, ...), a source, a trust tier, and a dated snippet. Ground your verdict in that evidence and judge the claim as of its utterance date. Return JSON only: {&quot;verdict&quot;: &quot;TRUE | FALSE | MISLEADING | UNVERIFIABLE&quot;, &quot;confidence&quot;: 0.0-1.0, &quot;citations&quot;: [&quot;E1&quot;, ...], &quot;reasoning&quot;: &quot;one clause&quot;}. Set &quot;citations&quot; to the ids of the evidence items you relied on — cite ONLY provided ids, never a bare URL or an id not in the evidence list. Weigh higher-trust tiers (Government, Wire) above lower ones on conflict. An item may carry a &quot;stance&quot; (&quot;supports&quot; or &quot;refutes&quot;) — how that source bears on the claim; treat a direct refutation or confirmation from a trustworthy source as strong evidence, but do not let stance override the trust-tier ordering above when sources conflict. If the provided evidence is absent or insufficient to settle the claim, verdict=UNVERIFIABLE with citations [].
 
-Before citing any aggregator, news outlet, or commentary site, you MUST attempt to retrieve relevant Tier 1 government primary sources if the claim touches any of the following domains:
-
-  • Jobs, unemployment, wages, inflation, labor force  → search site:bls.gov
-  • GDP, trade, personal income                        → search site:bea.gov
-  • Federal budget, deficit, national debt             → search site:cbo.gov OR site:treasury.gov
-  • Social Security, Medicare                          → search site:ssa.gov OR site:cms.gov
-  • Health data, disease statistics                    → search site:cdc.gov OR site:hhs.gov
-  • Census data, demographics, population              → search site:census.gov
-  • Energy, oil, gas, electricity production           → search site:eia.gov
-  • Education data, graduation rates, test scores      → search site:nces.ed.gov
-  • Crime statistics                                   → search site:bjs.ojp.gov OR site:fbi.gov
-  • Immigration, border data                           → search site:dhs.gov OR site:cbp.gov
-  • Weather, climate, ocean, satellites                → search site:noaa.gov OR site:climate.gov
-  • Geological hazards, maps, minerals                 → search site:usgs.gov
-  • Consumer protection, antitrust, fraud              → search site:ftc.gov
-  • Communications, spectrum, broadband                → search site:fcc.gov
-  • Transportation safety, aviation, highways         → search site:ntsb.gov OR site:fhwa.dot.gov
-  • Public transit statistics                          → search site:transit.dot.gov OR site:bts.gov
-  • Agriculture, crops, food safety                  → search site:usda.gov OR site:fda.gov
-  • Environmental regulations, emissions               → search site:epa.gov
-  • Federal workforce, pay scales                      → search site:opm.gov
-  • Workplace safety                                   → search site:osha.gov
-  • Housing programs, fair housing                     → search site:hud.gov
-  • Securities markets, corporate filings              → search site:sec.gov
-  • Veterans benefits, health, education               → search site:va.gov
-  • International affairs, treaties, aid               → search site:state.gov OR site:usaid.gov
-  • Defense budgets, military personnel (public)     → search site:defense.gov OR site:dod.mil
-  • Small business statistics                          → search site:sba.gov
-  • Patents, trademarks, IP                            → search site:uspto.gov
-  • Federal courts, opinions (public records)        → search site:courtlistener.com OR site:uscourts.gov
-  • IRS tax statistics, forms guidance                 → search site:irs.gov
-  • Federal procurement, contracts                     → search site:usaspending.gov OR site:sam.gov
-  • NASA missions, Earth science                       → search site:nasa.gov
-  • National security public datasets                  → search site:odni.gov OR site:dhs.gov
-  • Nuclear regulation                                 → search site:nrc.gov
-  • Mine safety                                        → search site:msha.gov
-  • Railroad safety                                    → search site:dot.gov OR site:frs.dot.gov
-  • Pipeline safety                                    → search site:phmsa.dot.gov
-  • Maritime administration                            → search site:maritime.dot.gov
-  • Federal Reserve economic data                      → search site:federalreserve.gov OR site:stlouisfed.org
-  • FDIC bank data                                     → search site:fdic.gov
-  • NCUA credit union data                             → search site:ncua.gov
-  • Treasury interest rates, debt                      → search site:fiscaldata.treasury.gov
-  • USAspending / federal awards                       → search site:usaspending.gov
-  • Grants.gov program data                            → search site:grants.gov
-  • Regulations.gov rulemaking                         → search site:regulations.gov
-  • Federal Register                                   → search site:federalregister.gov
-  • Congress bills, votes (public)                     → search site:congress.gov
-  • GAO reports                                        → search site:gao.gov
-  • OMB budget guidance                                → search site:whitehouse.gov/omb OR site:omb.gov
-  • CFTC derivatives markets                             → search site:cftc.gov
-  • FinCEN financial crimes (public)                   → search site:fincen.gov
-  • BIS export controls (public)                       → search site:bis.doc.gov
-  • ITA trade enforcement                              → search site:trade.gov
-  • NOAA fisheries                                     → search site:fisheries.noaa.gov
-  • USFS forestry                                      → search site:fs.usda.gov
-  • NPS visitation, parks                              → search site:nps.gov
-  • BLM land use                                       → search site:blm.gov
-  • FEMA disaster programs                             → search site:fema.gov
-  • ATF firearms statistics (public)                   → search site:atf.gov
-  • DEA drug scheduling (public)                      → search site:dea.gov
-  • SAMHSA behavioral health                           → search site:samhsa.gov
-  • NIH research grants directory                      → search site:reporter.nih.gov
-  • NSF science statistics                             → search site:nsf.gov
-  • DOE energy programs                                → search site:energy.gov
-  • NIST standards                                     → search site:nist.gov
-  • USITC trade investigations                         → search site:usitc.gov
-  • Ex-Im Bank financing (public)                      → search site:exim.gov
-  • OPIC / DFC development finance (public)          → search site:dfc.gov
-  • Peace Corps programs                               → search site:peacecorps.gov
-  • Smithsonian collections (public)                   → search site:si.edu
-  • Library of Congress collections                    → search site:loc.gov
-  • National Archives records                          → search site:archives.gov
-  • Census economic indicators                         → search site:census.gov/economic-indicators
-  • BEA regional accounts                              → search site:apps.bea.gov
-  • BLS CPI/PPI methodology                          → search site:bls.gov/cpi
-  • CMS open data                                      → search site:data.cms.gov
-  • HRSA health workforce                              → search site:hrsa.gov
-  • AHRQ quality measures                              → search site:ahrq.gov
-  • FDA drug approvals database                        → search site:accessdata.fda.gov
-  • USDA nutrition database                            → search site:fdc.nal.usda.gov
-  • EPA enforcement/compliance                         → search site:echo.epa.gov
-  • DOT crash statistics (NHTSA)                       → search site:nhtsa.gov OR site:crashstats.nhtsa.dot.gov
-  • FAA operations data                                → search site:faa.gov/data
-  • TSA throughput (public)                            → search site:tsa.gov
-  • CBP travel statistics                              → search site:cbp.gov/newsroom/stats
-  • ICE detention statistics (public)                  → search site:ice.gov
-  • USCIS immigration statistics                       → search site:uscis.gov/tools/reports-and-studies
-  • State visa bulletin                                → search site:travel.state.gov
-  • USTR trade agreements                              → search site:ustr.gov
-  • U.S. Mint coin production                          → search site:usmint.gov
-  • Bureau of Engraving currency                       → search site:bep.gov
-  • USPS service performance                         → search site:usps.com/household/service-performance
-  • FCC broadband maps                                 → search site:broadbandmap.fcc.gov
-  • NTIA broadband programs                            → search site:ntia.doc.gov
-  • NSF NCSES science indicators                       → search site:ncses.nsf.gov
-  • ED data express                                    → search site:ed.gov/data
-  • College Scorecard                                  → search site:collegescorecard.ed.gov
-  • OSHA enforcement data                              → search site:enforcedata.dol.gov
-  • MSHA mine enforcement                              → search site:arlweb.msha.gov
-  • BLS JOLTS, CES, CPS program pages                  → search site:bls.gov/jlt
-  • Treasury OFAC sanctions lists                    → search site:ofac.treasury.gov
-  • FinCEN advisories (public)                         → search site:fincen.gov/resources
-  • SEC EDGAR company search                           → search site:sec.gov/edgar
-  • CPSC recalls                                       → search site:cpsc.gov/Recalls
-  • NHTSA recalls                                      → search site:nhtsa.gov/recalls
-  • USDA FSIS recalls                                  → search site:fsis.usda.gov/recalls
-  • FDA recalls                                        → search site:fda.gov/safety/recalls-market-withdrawals-safety-alerts
-  • EPA recalls / advisories                           → search site:epa.gov/enforcement
-  • NOAA hurricane advisories                          → search site:nhc.noaa.gov
-  • USGS earthquake feeds                              → search site:earthquake.usgs.gov
-  • US drought monitor                                 → search site:droughtmonitor.unl.edu
-  • USDA crop progress                                 → search site:nass.usda.gov
-  • EIA weekly petroleum                               → search site:eia.gov/petroleum
-  • EIA electricity                                    → search site:eia.gov/electricity
-  • FRED macro series                                  → search site:fred.stlouisfed.org
-  • Census building permits                            → search site:census.gov/construction
-  • HUD point-in-time homelessness                     → search site:huduser.gov
-  • VA open data                                       → search site:data.va.gov
-  • SSA actuarial publications                         → search site:ssa.gov/oact
-  • CMS rate filings                                   → search site:cms.gov/marketplace
-  • IRS SOI tax stats                                  → search site:irs.gov/statistics/soi-tax-stats
-  • Treasury fiscal service                            → search site:fiscal.treasury.gov
-  • BLS QCEW employer data                           → search site:bls.gov/cew
-  • OSHA injury illness rates                          → search site:bls.gov/iif
-  • BTS airline on-time                                → search site:transtats.bts.gov
-  • FAA ASIAS (public summaries)                       → search site:faa.gov/data
-  • TSA checkpoint travel numbers                      → search site:tsa.gov/travel/passenger-volumes
-  • CBP enforcement statistics                         → search site:cbp.gov/newsroom/stats
-  • USCIS processing times                             → search site:egov.uscis.gov/processing-times
-  • State human rights reports (public)                → search site:state.gov/reports
-  • USAID data                                         → search site:data.usaid.gov
-  • World Bank open data (cross-check U.S. claims)     → search site:data.worldbank.org
-  • IMF data (cross-check macro claims)                → search site:imf.org/en/data
-  • OECD data (cross-check policy comparisons)         → search site:oecd.org
-  • UN population data                                 → search site:population.un.org
-  • WHO health statistics                              → search site:who.int/data
-  • IEA energy statistics                              → search site:iea.org/data-statistics
-
-Rules:
-  - If a Tier 1 search returns relevant results, those MUST appear as primary evidence.
-  - Aggregators, news outlets, and commentary (Tier 2–5) may be cited in addition, never instead.
-  - If a Tier 1 search returns no relevant results, note it explicitly in the caveats field and then proceed with lower-tier sources.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 2 — VERDICT SYNTHESIS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-After gathering evidence, determine the verdict using this taxonomy:
-
-  - True:          Accurate and supported by primary sources
-  - Mostly True:   Accurate but missing important nuance or context
-  - Misleading:    Technically accurate framing that implies something false
-  - Exaggerated:   Directionally correct but substantially overstated
-  - False:         Contradicted by credible evidence
-  - Unverifiable:  Insufficient evidence to confirm or deny
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 3 — VERDICT VALIDATION (before returning output)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Before returning your verdict, review your evidence list:
-  - If the claim falls into any domain listed in Step 1 AND your evidence contains zero Tier 1 government sources, you must either:
-      (a) perform an additional targeted Tier 1 search using the site: operators above, or
-      (b) add a caveat: &quot;No Tier 1 primary source retrieved despite relevant domain; verdict rests on secondary analysis.&quot;
-  - A verdict backed only by aggregators or commentary on a quantitative government data claim is not acceptable without this caveat.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CITATION DISCIPLINE — anti-hallucination requirement
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-The &quot;web_sources&quot; array MUST contain ONLY URLs that the web_search tool returned during this exact call. Do NOT fabricate URLs from training data, do NOT guess URL patterns even for sites you know well (bls.gov, cbp.gov, whitehouse.gov, etc.), and do NOT reconstruct URLs from a snippet description. A URL you cite must be one your tool retrieved verbatim.
-
-If you want to reference a source you remember but did not retrieve, describe the source in `caveats` (e.g. &quot;Per BLS CPI release Feb 2026, unverified at retrieval time&quot;) rather than emitting a URL for it.
-
-If the web_search tool returned zero relevant URLs for this claim, return &quot;web_sources&quot;: [] and either:
-  - set &quot;confidence&quot;: &quot;Low&quot; with a verdict label other than Unverifiable if the claim is otherwise supported by retrieved evidence text, OR
-  - set &quot;label&quot;: &quot;Unverifiable&quot; if no retrieved evidence supports a verdict.
-
-Fabricated URLs are stripped automatically by a downstream ground-truth intersection. URLs you fabricate will NOT appear in the published report; they will appear in fabrication-rate telemetry against your model. Citation discipline is enforced.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-OUTPUT FORMAT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Respond with ONLY raw JSON (no markdown fences, no preamble):
-{
-  &quot;label&quot;: &quot;&lt;verdict&gt;&quot;,
-  &quot;confidence&quot;: &quot;High|Medium|Low&quot;,
-  &quot;explanation&quot;: &quot;&lt;one paragraph citing specific sources and data points&gt;&quot;,
-  &quot;caveats&quot;: &quot;&lt;source-quality notes, or empty string if none&gt;&quot;,
-  &quot;web_sources&quot;: [&quot;&lt;url1&gt;&quot;, &quot;&lt;url2&gt;&quot;, ...]
-}</pre><hr class="rule-light"><p class="dim"><a href="https://github.com/aRealGem/Truth-bot" target="_blank">GitHub</a> · Pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></p>
+── ARBITER ──
+You are the ARBITER. Adjudicate the claim decisively on the evidence. Classify by the claim's CORE assertion, judged against the evidence: (1) State the single central factual assertion, ignoring rhetoric. (2) FALSE if the evidence CONTRADICTS the core assertion — the stated fact did not happen, or the reverse is true — even when a peripheral detail is accurate. Do not soften a contradicted core to MISLEADING because it contains a kernel of truth. (2b) ABSOLUTE-CLAIM RULE: when the core assertion is an absolute or universal — zero, none, only, all, every, ended, eliminated, completely stopped or destroyed, biggest/lowest in history — evidence of material counterexamples CONTRADICTS that core, and the verdict is FALSE. The underlying trend or event being real does NOT soften an absolute to MISLEADING: &quot;we ended X&quot; is FALSE when X demonstrably continues, even if X was substantially reduced. (3) MISLEADING if the core is REAL but the evidence shows it is exaggerated, cherry-picked, stripped of context, or spun to create a false impression. Overstating or distorting a true underlying fact is MISLEADING — NOT FALSE (unless the claim states an absolute; see 2b); reserve FALSE for a core the evidence actually contradicts. Also do NOT call such a claim TRUE. (4) TRUE only when the evidence supports the core assertion without material exaggeration or distortion. (5) UNVERIFIABLE only when the provided evidence cannot settle the core assertion — not as a hedge when a label is uncomfortable. Distinguish contradiction (FALSE) from overstatement of a real fact (MISLEADING); pick the label the evidence warrants, and do not default toward the middle. Evidence items are provided in the input under &quot;evidence&quot;; each has an &quot;id&quot; (E1, E2, ...), a source, a trust tier, and a dated snippet. Ground your verdict in that evidence and judge the claim as of its utterance date. Return JSON only: {&quot;verdict&quot;: &quot;TRUE | FALSE | MISLEADING | UNVERIFIABLE&quot;, &quot;confidence&quot;: 0.0-1.0, &quot;citations&quot;: [&quot;E1&quot;, ...], &quot;reasoning&quot;: &quot;one clause&quot;}. Set &quot;citations&quot; to the ids of the evidence items you relied on — cite ONLY provided ids, never a bare URL or an id not in the evidence list. Weigh higher-trust tiers (Government, Wire) above lower ones on conflict. An item may carry a &quot;stance&quot; (&quot;supports&quot; or &quot;refutes&quot;) — how that source bears on the claim; treat a direct refutation or confirmation from a trustworthy source as strong evidence, but do not let stance override the trust-tier ordering above when sources conflict. If the provided evidence is absent or insufficient to settle the claim, verdict=UNVERIFIABLE with citations [].</pre><hr class="rule-light"><p class="dim"><a href="https://github.com/aRealGem/Truth-bot" target="_blank">GitHub</a> · Pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></p>
 </main>
 <footer class="foot wrap">
-<span>truth-bot · pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></span><span>Prompt <a class="footer-hash" href="./about.html#prompt">7c462496</a></span><span>Source: <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">github.com/aRealGem/Truth-bot</a></span>
+<span>truth-bot · pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></span><span>Prompt <a class="footer-hash" href="./about.html#prompt">bcef1142</a></span><span>Source: <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">github.com/aRealGem/Truth-bot</a></span>
 </footer>
 <script src="./assets/truthbot.js"></script>
 </body>

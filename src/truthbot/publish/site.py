@@ -979,12 +979,25 @@ def _verdict_bar_html(
     return rail_html + bar_html + "\n" + legend_html
 
 
-def _prompt_hash() -> str:
+def _pca_prompt_text() -> str:
+    """The ADOPTED verdict prompt set (calibrated open-book PCA seats), rendered
+    as one stable text block. This is what the footer hash commits to — it
+    changed from the legacy SYNTHESIS_SYSTEM when the PCA engine became the
+    production path (About refresh, 2026-07-20)."""
     try:
-        from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM
-        return hashlib.sha256(SYNTHESIS_SYSTEM.encode()).hexdigest()[:8]
+        from truthbot.verdict.prompts import CALIBRATED_OPEN_BOOK_PROMPTS
+        return "\n\n".join(
+            f"── {role.upper()} ──\n{CALIBRATED_OPEN_BOOK_PROMPTS[role]}"
+            for role in ("proposer", "critic", "arbiter"))
     except Exception:
+        return "(prompt unavailable)"
+
+
+def _prompt_hash() -> str:
+    text = _pca_prompt_text()
+    if text == "(prompt unavailable)":
         return "unknown"
+    return hashlib.sha256(text.encode()).hexdigest()[:8]
 
 
 # ── Truthy SVG + tap hint ────────────────────────────────────────────────────
@@ -6638,14 +6651,9 @@ def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
 
 
 def _render_about() -> str:
-    """Render the about/method page."""
-    try:
-        from truthbot.verify.adapters.base import SYNTHESIS_SYSTEM
-        prompt_text = SYNTHESIS_SYSTEM
-    except Exception:
-        prompt_text = "(prompt unavailable)"
-
-    phash = hashlib.sha256(prompt_text.encode()).hexdigest()[:8]
+    """Render the about/method page (PCA-era architecture; refreshed 2026-07-20)."""
+    prompt_text = _pca_prompt_text()
+    phash = _prompt_hash()
 
     tier_rows = "".join(
         f'<tr><td><strong>{_esc(t)}</strong></td><td>{_esc(d)}</td><td>{_esc(q)}</td></tr>'
@@ -6659,81 +6667,123 @@ def _render_about() -> str:
 
     models_list = (
         "<ul>"
-        "<li><strong>Anthropic</strong> claude-opus-4-7 — primary verifier</li>"
-        "<li><strong>OpenAI</strong> gpt-5.4 — verifier (batch mode)</li>"
-        "<li><strong>Google</strong> gemini-2.5-pro — pending API key</li>"
-        "<li><strong>xAI</strong> grok-4 — pending API key</li>"
+        "<li><strong>Proposer</strong> — Mistral Small 3.2 24B: drafts the initial verdict</li>"
+        "<li><strong>Critic</strong> — DeepSeek V4 Flash: independently re-judges the same "
+        "evidence, hunting for why a naive verdict could be wrong</li>"
+        "<li><strong>Arbiter</strong> — Claude Haiku 4.5: adjudicates only when proposer and "
+        "critic disagree</li>"
+        "<li><strong>Severity Classifier</strong> — Claude Sonnet 4.6: a second-stage check on "
+        "False-vs-Misleading boundary calls and panel ties</li>"
+        "<li><strong>Retrieval &amp; triage</strong> — Claude Haiku 4.5: check-worthiness "
+        "classification, search-query generation, and evidence relevance scoring</li>"
         "</ul>"
+        "<p class=\"dim\" style=\"margin-top:0.5rem\">Three different model families from three "
+        "different vendors sit in the verdict seats, so a single vendor's blind spot can't "
+        "silently decide a claim. The exact roster used for a report is recorded in its "
+        "\"Panel composition\" section. Earlier versions of truth-bot fanned every claim out "
+        "to four frontier models in parallel; the current design gets comparable accuracy at "
+        "roughly a tenth of the cost by spending small-model calls where they're cheap "
+        "(triage, retrieval) and escalating only genuine disagreements.</p>"
     )
 
     limitations = (
         "<ul>"
-        "<li><strong>Small corpus:</strong> Each claim is verified independently with no "
-        "cross-claim context. Recurring rhetoric may be rated inconsistently across speeches.</li>"
-        "<li><strong>Hallucinated citations:</strong> Language models can fabricate plausible-"
-        "looking URLs. All cited sources should be independently verified before drawing "
-        "conclusions.</li>"
-        "<li><strong>Training-data bias:</strong> Model verdicts may reflect the political "
-        "slant of their training data. The multi-model consensus is designed to partially "
-        "mitigate this, but systematic bias in all four providers would not be caught.</li>"
-        "<li><strong>Temporal grounding:</strong> Web search retrieves recent results but "
-        "may miss updated statistics or corrections published after the pipeline run. "
-        "The generation timestamp on each report indicates when verification occurred.</li>"
+        "<li><strong>Small models, one panel:</strong> Verdict seats are deliberately "
+        "inexpensive models. The proposer→critic→arbiter structure and the second-stage "
+        "Severity Classifier are the accuracy mechanism — not raw model size — and boundary "
+        "calls (False vs Misleading) remain the hardest cases.</li>"
+        "<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in a six-item evidence "
+        "pack fetched at run time. If retrieval misses the decisive source, the panel can "
+        "only abstain (Unverifiable) — it is instructed not to fill gaps from memory.</li>"
+        "<li><strong>Model-scored relevance:</strong> The evidence ranking itself uses a "
+        "small model; an off-target relevance score can demote the decisive source below "
+        "the pack cap.</li>"
+        "<li><strong>No cross-claim context:</strong> Each claim is judged independently. "
+        "Recurring rhetoric may be rated inconsistently across speeches.</li>"
+        "<li><strong>Training-data bias:</strong> Model judgments may reflect the slant of "
+        "their training data. Cross-vendor seats partially mitigate this; a bias shared by "
+        "all three vendors would not be caught.</li>"
+        "<li><strong>As-of-utterance judging:</strong> Claims are judged against evidence "
+        "from their own era — a claim true when spoken is not False because reality moved "
+        "later. The \"Last verified\" stamp on each claim shows when the check ran.</li>"
         "</ul>"
     )
 
     body = (
         f'<h2>About truth-bot</h2><hr class="rule">'
         f'<h3>What this is</h3>'
-        f'<p>truth-bot is an automated political fact-checker that decomposes speeches and '
-        f'public statements into atomic, individually verifiable claims, then runs each claim '
-        f'through multiple large language models simultaneously. Each model performs live web '
-        f'searches and returns a structured verdict. The results are aggregated into a consensus '
-        f'verdict with an explicit strength score.</p>'
-        f'<h3 style="margin-top:1.5rem">How verdicts are produced</h3>'
-        f'<p>Each claim is sent to all configured LLM providers in parallel. Every provider '
-        f'is instructed to search Tier 1 government sources first (BLS, BEA, CBP, etc.) before '
-        f'citing secondary sources. The providers return a structured JSON verdict including a '
-        f'label, confidence level, explanation, source URLs, and a self-reported caveats field '
-        f'flagging source-quality gaps.</p>'
-        f'<p style="margin-top:0.75rem">Consensus is computed by majority vote. '
-        f'Three or more models returning the same label = "Strong consensus." '
-        f'Two models agreeing = "Weak consensus." No majority = "Models split."</p>'
-        f'<h3 style="margin-top:1.5rem">Headline pill: 5-bucket coarse-axis projection</h3>'
-        f'<p>Each model returns one of <strong>six</strong> labels — True, Mostly True, '
-        f'Exaggerated, Misleading, False, Unverifiable. Those per-model labels are '
-        f'preserved in full on the per-claim model strip for audit. The headline pill '
-        f'on each claim collapses the panel into a <strong>five-bucket "Truthy scale"</strong> '
-        f'(True · Truthy · Unverifiable · Falsey · False) so directionally aligned panels '
-        f'don\'t look split just because two models split <em>Mostly True</em> from '
-        f'<em>Exaggerated</em>.</p>'
-        f'<p style="margin-top:0.75rem">Two projections are published side-by-side and you '
-        f'can flip between them with the <strong>Lens</strong> chip in the status bar:</p>'
-        f'<table class="tier-table" style="margin-top:0.5rem">'
-        f'<tr><th>6-bucket label</th><th>Lenient (default)</th><th>Strict</th></tr>'
-        f'<tr><td>True</td><td>True</td><td>True</td></tr>'
-        f'<tr><td>Mostly True</td><td>Truthy</td><td>Truthy</td></tr>'
-        f'<tr><td>Exaggerated</td><td>Truthy</td><td><strong>Falsey</strong></td></tr>'
-        f'<tr><td>Misleading</td><td>Falsey</td><td>Falsey</td></tr>'
-        f'<tr><td>False</td><td>False</td><td>False</td></tr>'
-        f'<tr><td>Unverifiable</td><td>Unverifiable</td><td>Unverifiable</td></tr>'
-        f'</table>'
-        f'<p style="margin-top:0.75rem"><strong>Split-projection guardrail:</strong> if the '
-        f'panel still has no plurality after projecting (e.g. 2-2 Truthy/Falsey), the '
-        f'headline shows "Models split" rather than tie-breaking — the projection is not '
-        f'allowed to manufacture agreement that isn\'t there.</p>'
-        f'<p style="margin-top:0.75rem"><strong>Per-model strip is unaffected.</strong> '
-        f'Individual model verdicts always render on the original 6-bucket axis so you can '
-        f'see the editorial nuance each model assigned, even when the headline rolls up to '
-        f'Truthy or Falsey.</p>'
-        f'<h3 style="margin-top:1.5rem">Models</h3>'
+        f'<p>truth-bot is an automated political fact-checker. It segments a speech into '
+        f'sentences, filters them to specific, verifiable, consequential claims, retrieves '
+        f'era-appropriate evidence for each claim from the open web, and adjudicates every '
+        f'claim through a structured panel of language models that must ground its verdict '
+        f'in the retrieved evidence and cite it.</p>'
+        f'<h3 style="margin-top:1.5rem">The pipeline</h3>'
+        f'<p><strong>1 · Check-worthiness triage.</strong> Every sentence is classified as '
+        f'check-worthy, opinion, or unimportant. Opinions, aspirations, pleasantries, and '
+        f'rhetoric are set aside — visibly, not silently: each report links a '
+        f'<em>Statement Triage</em> page listing everything excluded and why. Check-worthy '
+        f'claims also get a type (statistical, historical, attribution, comparison, '
+        f'personal-anecdote, other). The classifier never sees who the speaker is.</p>'
+        f'<p style="margin-top:0.75rem"><strong>2 · Evidence retrieval.</strong> For each '
+        f'claim, a small model writes targeted search queries (the era\'s fiscal year, the '
+        f'specific statistic or program named), and the pipeline fetches candidates via web '
+        f'search plus fact-check databases — time-scoped to the claim\'s era so a 2026 '
+        f'article cannot decide a 2022 claim. Candidates are scored for relevance to the '
+        f'claim, deduplicated, stripped of non-evidence (homepages, listing pages), and '
+        f'capped at six items ranked by relevance, then source trust. Every pack item '
+        f'carries a URL, retrieval timestamp, and content hash.</p>'
+        f'<p style="margin-top:0.75rem"><strong>3 · The verdict panel (PCA).</strong> A '
+        f'<em>proposer</em> drafts a verdict from the evidence; a <em>critic</em> '
+        f'independently re-judges the same evidence; when they disagree, an <em>arbiter</em> '
+        f'decides. Verdicts use a four-label contract — True, False, Misleading, '
+        f'Unverifiable — and must cite pack items by id (the E1, E2… ids you see in '
+        f'reasoning and source lists; citations outside the pack are rejected). A '
+        f'genuine tie is published as "Panel split," never silently broken. The panel is '
+        f'speaker-blind: seats see the claim, its context, and its era — never the '
+        f'speaker\'s name.</p>'
+        f'<p style="margin-top:0.75rem"><strong>4 · Severity check.</strong> Because small '
+        f'models tend to soften a contradicted claim to "Misleading," False-vs-Misleading '
+        f'boundary calls and tie-routed rows pass through a second-stage Severity '
+        f'Classifier on a stronger model. Its overrides are shown on the claim card\'s '
+        f'provenance strip.</p>'
+        f'<p style="margin-top:0.75rem"><strong>Guest anecdotes.</strong> A private '
+        f'individual\'s personal story told from the stage usually has no public record to '
+        f'check against. Those claims still run the full panel, but when they come back '
+        f'unverifiable they are labeled <em>Anecdote</em> — a limit of the genre, not a '
+        f'failed verification. An anecdote the press independently investigated gets a '
+        f'real verdict.</p>'
+        f'<h3 style="margin-top:1.5rem">How to read a report</h3>'
+        f'<p><strong>Per-claim pill.</strong> Each claim headlines the panel\'s own verdict '
+        f'(True, False, Misleading, Unverifiable — or Anecdote / Panel split). The '
+        f'provenance strip beneath the verdict shows the full chain: how the claim was '
+        f'routed, what each seat predicted, the vote tally, and any Severity Classifier '
+        f'override. E-ids in the reasoning link to the exact evidence item cited.</p>'
+        f'<p style="margin-top:0.75rem"><strong>Report headline &amp; leaning totals.</strong> '
+        f'Claims aggregate into two families — true-leaning (True) and false-leaning (False '
+        f'+ Misleading) — over <em>decided</em> claims only; Unverifiable, Anecdote, and '
+        f'Panel split are abstentions and stay out of the denominator. The headline band is '
+        f'the dominant family\'s share of decided claims: ≥70% "Largely," ≥55% "Mostly," '
+        f'under 55% "Mixed verdict." The family rail above each verdict bar brackets the '
+        f'same totals on the graph itself, so the headline\'s "N of M decided claims '
+        f'X-leaning" is always visibly derivable.</p>'
+        f'<p style="margin-top:0.75rem"><strong>The Lens chip</strong> flips between two '
+        f'presentations of the same computation: <em>Lenient</em> shows the simple '
+        f'Truthy/Falsey lean; <em>Strict</em> (the default) shows the graded bands. The two '
+        f'lenses share the Mixed band and the decided-claims denominator — they can never '
+        f'disagree about whether a report is a toss-up.</p>'
+        f'<h3 style="margin-top:1.5rem">Who\'s on the panel</h3>'
         f'{models_list}'
         f'<h3 style="margin-top:1.5rem">Source tier hierarchy</h3>'
+        f'<p>Evidence items carry a trust tier assigned from the source\'s registered '
+        f'domain. Relevance to the claim ranks first; tier breaks ties and is what the '
+        f'panel is told to weigh on conflicting evidence.</p>'
         f'{tier_table}'
         f'<h3 style="margin-top:1.5rem">Known limitations</h3>'
         f'{limitations}'
-        f'<h3 id="prompt" style="margin-top:1.5rem">Full verdict prompt (hash: {phash})</h3>'
-        f'<p class="dim">Verbatim prompt sent to each model for verdict synthesis.</p>'
+        f'<h3 id="prompt" style="margin-top:1.5rem">Full verdict prompts (hash: {phash})</h3>'
+        f'<p class="dim">Verbatim system prompts for the three panel seats — the calibrated '
+        f'open-book set, including the decision procedure and the absolute-claim rule. The '
+        f'hash in every report footer commits to exactly this text.</p>'
         f'<pre>{_esc(prompt_text)}</pre>'
         f'<hr class="rule-light">'
         f'<p class="dim"><a href="{GITHUB_URL}" target="_blank">GitHub</a> · '
@@ -6751,8 +6801,9 @@ def _render_about() -> str:
         footer=footer,
         og_title="About — truth-bot",
         og_description=(
-            "How truth-bot works: atomic claim decomposition, multi-model verification "
-            "against government primary sources, and transparent consensus scoring."
+            "How truth-bot works: check-worthiness triage, era-scoped evidence retrieval, "
+            "a speaker-blind proposer-critic-arbiter model panel that must cite its "
+            "evidence, and a second-stage severity check."
         ),
         og_type="website",
     )
