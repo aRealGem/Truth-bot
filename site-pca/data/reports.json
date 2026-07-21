@@ -1,100 +1,100 @@
 [
   {
-    "id": "5a611fc0-a7e9-4f28-87f8-fd5f6a834037",
-    "date": "2026-02-24",
-    "speaker": "Donald Trump",
-    "role": "President",
-    "venue": "U.S. Capitol",
-    "claim_count": 167,
-    "verdict_distribution": {
-      "True": 37,
-      "Mostly True": 0,
-      "Misleading": 51,
-      "Exaggerated": 0,
-      "False": 44,
-      "Unverifiable": 28,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 7
-    },
-    "verdict_distribution_lenient": {
-      "True": 37,
-      "Truthy": 0,
-      "Unverifiable": 28,
-      "Falsey": 0,
-      "False": 44,
-      "Models split": 7,
-      "Misleading": 51
-    },
-    "verdict_distribution_strict": {
-      "True": 37,
-      "Truthy": 0,
-      "Unverifiable": 28,
-      "Falsey": 0,
-      "False": 44,
-      "Models split": 7,
-      "Misleading": 51
-    },
-    "model_agreement_rate": 0.503,
-    "url": "reports/2026-02-24-donald-trump-5a611f.html",
-    "tier_counts": {
-      "gov": 33,
-      "wire": 9,
-      "news": 45,
-      "fc": 112,
-      "other": 137
-    },
-    "source_of_claims": "Donald Trump",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "b4e623c2-de05-4547-b9de-989c67082b17",
+    "id": "48ff1afc-4474-4514-bbae-fb4208f06779",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
     "claim_count": 111,
     "verdict_distribution": {
-      "True": 73,
+      "True": 72,
       "Mostly True": 0,
-      "Misleading": 20,
+      "Misleading": 21,
       "Exaggerated": 0,
-      "False": 2,
-      "Unverifiable": 8,
+      "False": 7,
+      "Unverifiable": 5,
       "Truthy": 0,
       "Falsey": 0,
-      "Models split": 8
+      "Models split": 6
     },
     "verdict_distribution_lenient": {
-      "True": 73,
+      "True": 72,
       "Truthy": 0,
-      "Unverifiable": 8,
+      "Unverifiable": 5,
       "Falsey": 0,
-      "False": 2,
-      "Models split": 8,
-      "Misleading": 20
+      "False": 7,
+      "Models split": 6,
+      "Misleading": 21
     },
     "verdict_distribution_strict": {
-      "True": 73,
+      "True": 72,
       "Truthy": 0,
-      "Unverifiable": 8,
+      "Unverifiable": 5,
       "Falsey": 0,
-      "False": 2,
-      "Models split": 8,
-      "Misleading": 20
+      "False": 7,
+      "Models split": 6,
+      "Misleading": 21
     },
-    "model_agreement_rate": 0.685,
-    "url": "reports/2022-03-01-joe-biden-b4e623.html",
+    "model_agreement_rate": 0.784,
+    "url": "reports/2022-03-01-joe-biden-48ff1a.html",
     "tier_counts": {
-      "gov": 49,
-      "wire": 9,
-      "news": 53,
-      "fc": 72,
-      "other": 117
+      "gov": 56,
+      "wire": 18,
+      "news": 76,
+      "fc": 16,
+      "other": 284
     },
     "source_of_claims": "Joe Biden",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "e224c658-c1ff-41c1-9827-fb6379658abe",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 178,
+    "verdict_distribution": {
+      "True": 45,
+      "Mostly True": 0,
+      "Misleading": 68,
+      "Exaggerated": 0,
+      "False": 38,
+      "Unverifiable": 18,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 9
+    },
+    "verdict_distribution_lenient": {
+      "True": 45,
+      "Truthy": 0,
+      "Unverifiable": 18,
+      "Falsey": 0,
+      "False": 38,
+      "Models split": 9,
+      "Misleading": 68
+    },
+    "verdict_distribution_strict": {
+      "True": 45,
+      "Truthy": 0,
+      "Unverifiable": 18,
+      "Falsey": 0,
+      "False": 38,
+      "Models split": 9,
+      "Misleading": 68
+    },
+    "model_agreement_rate": 0.466,
+    "url": "reports/2026-02-24-donald-trump-e224c6.html",
+    "tier_counts": {
+      "gov": 61,
+      "wire": 18,
+      "news": 55,
+      "fc": 75,
+      "other": 330
+    },
+    "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
     "event": "",
     "channel": ""
