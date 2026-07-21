@@ -53,8 +53,12 @@ _OPEN_CONTRACT = (
     '"citations": ["E1", ...], "reasoning": "one clause"}. Set "citations" to the '
     'ids of the evidence items you relied on — cite ONLY provided ids, never a bare '
     'URL or an id not in the evidence list. Weigh higher-trust tiers (Government, '
-    'Wire) above lower ones on conflict. If the provided evidence is absent or '
-    'insufficient to settle the claim, verdict=UNVERIFIABLE with citations [].'
+    'Wire) above lower ones on conflict. An item may carry a "stance" ("supports" or '
+    '"refutes") — how that source bears on the claim; treat a direct refutation or '
+    'confirmation from a trustworthy source as strong evidence, but do not let stance '
+    'override the trust-tier ordering above when sources conflict. If the provided '
+    'evidence is absent or insufficient to settle the claim, verdict=UNVERIFIABLE '
+    'with citations [].'
     % VERDICTS
 )
 

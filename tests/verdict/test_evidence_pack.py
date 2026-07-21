@@ -104,6 +104,38 @@ def test_pack_render_contains_ids_and_snippets():
     assert "[E1]" in r and "alpha snippet" in r and "Government" in r
 
 
+# ── P67 Round B.5: stance surfaced into the panel payload ─────────────────────
+
+def _ev_stance(url, supports, relevance=0.9, **kw):
+    e = _ev(url, **kw)
+    e.supports_claim = supports
+    e.relevance_score = relevance
+    return e
+
+
+def test_pack_item_carries_relevance_layer_signals():
+    p = FakeProvider([_ev_stance("https://a/x", True, relevance=0.8)])
+    it = build_evidence_pack("trump_2026:3", "c", p).items[0]
+    assert it.supports_claim is True and it.relevance_score == 0.8
+
+
+def test_payload_surfaces_supports_and_refutes_stance():
+    p = FakeProvider([_ev_stance("https://a/x", True),
+                      _ev_stance("https://b/y", False)])
+    payload = {d["id"]: d for d in build_evidence_pack("trump_2026:3", "c", p).to_payload()}
+    assert payload["E1"]["stance"] == "supports"
+    assert payload["E2"]["stance"] == "refutes"
+
+
+def test_payload_omits_stance_when_unscored():
+    # Default pack (no relevance layer) → supports_claim None → no stance key,
+    # so the payload stays byte-identical to the pre-B.5 shape.
+    p = FakeProvider([_ev("https://a/x")])
+    item = build_evidence_pack("trump_2026:3", "c", p).to_payload()[0]
+    assert "stance" not in item
+    assert set(item) == {"id", "source", "tier", "url", "snippet"}
+
+
 def test_pack_enforces_i5_on_malformed_evidence(monkeypatch):
     """A provider that yields evidence which can't be provenance-stamped fails
     closed at entry (I5) rather than reaching a verdict."""

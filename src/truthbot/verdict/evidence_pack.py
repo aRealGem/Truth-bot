@@ -73,6 +73,12 @@ class PackItem:
     snippet: str
     retrieved_at: str       # ISO8601
     sha256: str             # content hash of url+snippet (integrity / dedup)
+    # Relevance-layer signals (P67 Round B.5). Carried through from the source
+    # Evidence so the panel can SEE the stance the relevance step already computed
+    # — previously dropped here, invisible to the seats. None when no relevance
+    # layer ran (the payload then stays byte-identical to the pre-B.5 pack).
+    supports_claim: Optional[bool] = None    # True=supports, False=refutes, None=ambiguous/unscored
+    relevance_score: Optional[float] = None  # 0–1 relevance to the claim
 
     def provenance(self) -> dict:
         """The I5 provenance record (``url/retrieved_at/sha256/tier`` required)."""
@@ -85,13 +91,20 @@ class PackItem:
 
     def to_payload(self) -> dict:
         """Model-facing view (goes into the JSON payload the panel reads)."""
-        return {
+        payload = {
             "id": self.pack_id,
             "source": self.source_name,
             "tier": self.tier.value,
             "url": self.source_url,
             "snippet": self.snippet,
         }
+        # Only surface stance when the relevance layer actually classified it
+        # (supports/refutes). None is omitted so packs built without a relevance
+        # layer — closed-book, --no-relevance A/B — carry the exact prior payload.
+        stance = _stance_label(self.supports_claim)
+        if stance is not None:
+            payload["stance"] = stance
+        return payload
 
 
 @dataclass(frozen=True)
@@ -118,6 +131,16 @@ class EvidencePack:
             lines.append(f"[{it.pack_id}] {it.source_name} ({it.tier.value}) {it.source_url}")
             lines.append(f"    {it.snippet}")
         return "\n".join(lines)
+
+
+def _stance_label(supports: Optional[bool]) -> Optional[str]:
+    """Legible stance for the panel payload, from the relevance layer's
+    supports/refutes classification. None (ambiguous or unscored) → omitted."""
+    if supports is True:
+        return "supports"
+    if supports is False:
+        return "refutes"
+    return None
 
 
 def _sha256(url: str, snippet: str) -> str:
@@ -200,6 +223,8 @@ def build_evidence_pack(
             snippet=ev.snippet or "",
             retrieved_at=_retrieved_iso(ev),
             sha256=_sha256(ev.source_url, ev.snippet or ""),
+            supports_claim=ev.supports_claim,
+            relevance_score=ev.relevance_score,
         )
         check_i5_provenance(item.provenance())  # I5: fail closed at entry
         items.append(item)

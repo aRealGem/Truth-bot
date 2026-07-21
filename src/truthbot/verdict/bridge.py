@@ -152,7 +152,8 @@ def _pack_sources(pack: Optional[EvidencePack]) -> list[dict]:
         return []
     return [
         {"id": it.pack_id, "source": it.source_name, "url": it.source_url,
-         "tier": it.tier.value, "snippet": it.snippet}
+         "tier": it.tier.value, "snippet": it.snippet,
+         "supports_claim": it.supports_claim, "relevance_score": it.relevance_score}
         for it in pack.items
     ]
 
@@ -163,13 +164,19 @@ def _pack_to_evidence(sid: str, pack: Optional[EvidencePack]) -> list[Evidence]:
         return []
     out: list[Evidence] = []
     for it in pack.items:
-        out.append(Evidence(
+        ev = Evidence(
             claim_id=sid,
             source_name=it.source_name,
             source_url=it.source_url,
             source_tier=it.tier,
             snippet=it.snippet,
-        ))
+            supports_claim=it.supports_claim,
+        )
+        # relevance_score has a non-None model default (0.5); only override when the
+        # pack item actually carries a score, so undated/unscored packs round-trip clean.
+        if it.relevance_score is not None:
+            ev.relevance_score = it.relevance_score
+        out.append(ev)
     return out
 
 
