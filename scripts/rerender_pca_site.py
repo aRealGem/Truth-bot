@@ -32,6 +32,8 @@ sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO))
 
 from truthbot.models import SourceTier
+from truthbot.publish.corrections import (apply_to_artifact, load_corrections,
+                                          load_notes)
 from truthbot.publish.site import SitePublisher, SiteReport
 from truthbot.verdict import bridge as bridge_mod
 from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
@@ -61,13 +63,22 @@ def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
             # Round B.5 stance signals; older artifacts predate them → None.
             supports_claim=ev.get("supports_claim"),
             relevance_score=ev.get("relevance_score"),
+            # P67.5: publication date round-trips through artifacts now;
+            # pre-fix artifacts carry null here (date lives in the snippet).
+            published_at=(str(ev.get("published_at"))[:10]
+                          if ev.get("published_at") else None),
         ))
     return EvidencePack(sid=sid, window=None, items=items)
 
 
-def render_artifact(path: Path, publisher: SitePublisher, role: str) -> None:
+def render_artifact(path: Path, publisher: SitePublisher, role: str,
+                    corrections: list[dict] | None = None) -> None:
     d = json.loads(path.read_text(encoding="utf-8"))
     meta = d["meta"]
+    if corrections:
+        n = apply_to_artifact(d, corrections)
+        if n:
+            print(f"{meta.get('speech_id')}: applied {n} correction(s)")
     rows, claims = d["rows"], d["claims"]
     packs = {sid: pack_from_evidence(sid, evs)
              for sid, evs in (d.get("evidence") or {}).items()}
@@ -123,9 +134,13 @@ def main() -> None:
             sys.exit("no artifacts with persisted evidence found under metrics/pca_runs/")
         print(f"rendering {len(paths)} artifact(s): {', '.join(p.stem[:8] for p in paths)}")
 
-    publisher = SitePublisher(site_root=args.site_root)
+    corrections = load_corrections(REPO / "data" / "corrections.json")
+    if corrections:
+        print(f"corrections on file: {len(corrections)}")
+    publisher = SitePublisher(site_root=args.site_root, corrections=corrections,
+                              correction_notes=load_notes(REPO / "data" / "corrections.json"))
     for p in paths:
-        render_artifact(p, publisher, args.role)
+        render_artifact(p, publisher, args.role, corrections=corrections)
     stats = publisher.summary()
     print(f"site: {stats['root']} — {stats['reports']} report(s), "
           f"{stats['claims']} claim(s), {stats['total_kb']} KB")

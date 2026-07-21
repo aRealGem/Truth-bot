@@ -407,6 +407,15 @@ class VerdictProvenance(BaseModel):
                     "Default empty — bundles from runs predating by_role capture "
                     "deserialize cleanly and the renderer falls back to the tally.",
     )
+    correction_note: str = Field(
+        default="",
+        description=(
+            "Non-empty when this verdict was corrected post-publication via the "
+            "public Corrections process (P67.6 / remediation T1.5): "
+            "'Corrected OLD → NEW (YYYY-MM-DD): reason'. Rendered on the "
+            "provenance strip and indexed on corrections.html."
+        ),
+    )
 
 
 class ConsensusVerdict(BaseModel):
