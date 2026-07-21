@@ -370,7 +370,7 @@
   var DEFAULT_LENS = 'strict';
   var ALL_PILL_CSS_CLASSES = [
     'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
-    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey'
+    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey', 'v-split'
   ];
 
   function readLens() {

@@ -58,6 +58,10 @@
      sits between misleading (orange) and false (red). */
   --v-truthy:       #84cc16;
   --v-falsey:       #ea580c;
+  /* Models split — panel deadlock. Its own cool slate, distinct from the
+     warm-gray Unverifiable, so the aggregate bars can show the split bucket
+     as a real segment (T0.2) rather than silently dropping it. */
+  --v-split:        #64748b;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -1551,6 +1555,7 @@ hr.rule-light {
 /* 5-bucket coarse-axis paint (headline pill only). */
 .v-truthy       { background: var(--v-truthy); }
 .v-falsey       { background: var(--v-falsey); }
+.v-split        { background: var(--v-split); }
 /* Text paint */
 .vt-true         { color: var(--v-true); }
 .vt-mostly-true  { color: var(--v-mostly-true); }
@@ -1560,6 +1565,7 @@ hr.rule-light {
 .vt-unverifiable { color: var(--v-unverifiable); }
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }
+.vt-split        { color: var(--v-split); }
 
 /* ── Editorial-lens chip (status bar) ──────────────────────────────────────
    Toggles the headline pill between the Lenient and Strict 5-bucket
