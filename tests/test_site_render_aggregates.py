@@ -539,10 +539,11 @@ def test_headline_frames_are_lens_paired_strict_first() -> None:
     assert '<span class="lens-target" data-lens-axis="lenient" hidden>' in html
 
 
-def test_truthy_or_better_includes_unverifiable_in_denominator() -> None:
-    """Editorial choice: a leader citing an unverifiable claim is itself
-    a fact-check failure, so Unverifiable counts in the denominator
-    (NOT just the numerator-eligible Truthy/True buckets)."""
+def test_truthy_or_better_uses_decided_denominator() -> None:
+    """Remediation T0.3 (F3): the header chips use the SAME families and
+    denominator as the headline — decided claims only; Unverifiable and
+    Models split are abstentions. The old all-claims denominator made the
+    chips contradict the "N of M decided" ratio two lines below them."""
     bundles = [
         _make_bundle(VerdictLabel.TRUE,         coarse_lenient="True",        coarse_strict="True"),
         _make_bundle(VerdictLabel.MOSTLY_TRUE,  coarse_lenient="Truthy",      coarse_strict="Truthy"),
@@ -551,16 +552,16 @@ def test_truthy_or_better_includes_unverifiable_in_denominator() -> None:
     ]
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
-    # 2 of 4 are Truthy-or-better → 50%. If Unverifiable were excluded
-    # from the denominator we'd see 2/3 = 67%.
-    assert '<span class="lens-target" data-lens-axis="strict">50%</span>' in html
-    assert '<span class="lens-target" data-lens-axis="lenient" hidden>50%</span>' in html
+    # 2 truthy of 3 DECIDED → 67%. The retired all-claims convention
+    # would render 2/4 = 50%.
+    assert '<span class="lens-target" data-lens-axis="strict">67%</span>' in html
+    assert '<span class="lens-target" data-lens-axis="lenient" hidden>67%</span>' in html
 
 
-def test_false_or_worse_uses_falsey_plus_false_numerator() -> None:
-    """% False or worse mirrors % Truthy or better on the negative
-    end of the scale: numerator = (False + Falsey), denominator =
-    full claim count (Unverifiable counts against)."""
+def test_false_or_worse_uses_headline_family_over_decided() -> None:
+    """Remediation T0.3 (F3): the False chip numerator is the full adverse
+    family (False + Falsey + Misleading + Exaggerated) over decided claims —
+    identical to the headline's falsey total, not a False-only count."""
     bundles = [
         _make_bundle(VerdictLabel.MOSTLY_TRUE,  coarse_lenient="Truthy",      coarse_strict="Truthy"),
         _make_bundle(VerdictLabel.MISLEADING,   coarse_lenient="Falsey",      coarse_strict="Falsey"),
@@ -569,15 +570,14 @@ def test_false_or_worse_uses_falsey_plus_false_numerator() -> None:
     ]
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
-    # 2 of 4 (Misleading + False) → 50% on both axes for this fixture.
-    # We pin the strict-side default since that's what non-JS sees.
+    # 2 adverse (Falsey + False) of 3 decided → 67%; the abstention stays
+    # out of the denominator.
     assert "False or worse" in html
-    # Find the False-or-worse frame and check its numbers.
     false_frame_idx = html.index("vp-stat-false")
     next_frame_close = html.index('</div>', html.index('</div>', false_frame_idx) + 1)
     false_frame_html = html[false_frame_idx : next_frame_close + 200]
-    assert 'data-lens-axis="strict">50%' in false_frame_html
-    assert 'data-lens-axis="lenient" hidden>50%' in false_frame_html
+    assert 'data-lens-axis="strict">67%' in false_frame_html
+    assert 'data-lens-axis="lenient" hidden>67%' in false_frame_html
 
 
 # ── Round 3: site-wide Truthy mute persistence contract ─────────────────────
@@ -1316,7 +1316,9 @@ def test_verdict_panel_footnotes_anecdote_share_of_unverifiable() -> None:
                          coarse_strict="Unverifiable")
     sr = _make_site_report([anecdote, plain])
     html = _verdict_panel(sr)
-    assert "1 of the Unverifiable claim is a guest anecdote" in html
+    # Remediation T0.2: the footnote states the bucket size it sits under,
+    # so its arithmetic is checkable against the bar ("1 of the 2").
+    assert "1 of the 2 Unverifiable claims is a guest anecdote" in html
 
     # no anecdotes → no footnote at all
     sr2 = _make_site_report([plain])

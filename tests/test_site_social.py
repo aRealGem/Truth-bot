@@ -301,7 +301,7 @@ class TestReportCardSrcTiers:
         assert "2 wire" in html
         assert "1 fc" in html
 
-    def test_omits_zero_and_other_buckets(self):
+    def test_omits_zero_buckets_but_surfaces_other(self):
         r = {
             "speaker": "S",
             "url": "reports/x.html",
@@ -316,9 +316,9 @@ class TestReportCardSrcTiers:
         assert "0 wire" not in html
         assert "0 news" not in html
         assert "0 fc" not in html
-        # "other" is never surfaced in the chip
-        assert "99 other" not in html
-        assert " other" not in html.split('class="src-tiers"')[1]
+        # "other" IS surfaced (remediation F6): it was the largest cited
+        # bucket on both SOTU reports; hiding it misrepresented the mix.
+        assert "99 other" in html
 
     def test_no_chip_when_all_counts_zero(self):
         r = {
