@@ -61,6 +61,10 @@ def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
             # Round B.5 stance signals; older artifacts predate them → None.
             supports_claim=ev.get("supports_claim"),
             relevance_score=ev.get("relevance_score"),
+            # P67.5: publication date round-trips through artifacts now;
+            # pre-fix artifacts carry null here (date lives in the snippet).
+            published_at=(str(ev.get("published_at"))[:10]
+                          if ev.get("published_at") else None),
         ))
     return EvidencePack(sid=sid, window=None, items=items)
 

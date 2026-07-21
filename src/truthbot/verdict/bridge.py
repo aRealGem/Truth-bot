@@ -50,6 +50,7 @@ Mapping summary (plan PR-B):
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Optional
 
 from truthbot.models import (
@@ -171,6 +172,11 @@ def _pack_to_evidence(sid: str, pack: Optional[EvidencePack]) -> list[Evidence]:
             source_tier=it.tier,
             snippet=it.snippet,
             supports_claim=it.supports_claim,
+            # P67.5: round-trip the publication date into the artifact —
+            # it used to serialize as null, leaving the era lint only the
+            # [YYYY-MM-DD] snippet prefix to work from.
+            published_at=(datetime.fromisoformat(it.published_at)
+                          if getattr(it, "published_at", None) else None),
         )
         # relevance_score has a non-None model default (0.5); only override when the
         # pack item actually carries a score, so undated/unscored packs round-trip clean.

@@ -25,6 +25,7 @@ Speaker-blind (I3): nothing here conditions on who made the claim — only its s
 from __future__ import annotations
 
 import hashlib
+import logging
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from typing import Optional
@@ -35,7 +36,9 @@ from truthbot.models import Claim, Evidence, SourceTier
 from truthbot.verify.evidence_provider import EvidenceProvider
 from truthbot.verify.sources.base import TimeWindow
 
-from . import speech_context
+from . import era_lint, speech_context
+
+logger = logging.getLogger(__name__)
 
 # Source-trust order (design: Government > Wire > Established > Academic >
 # FactCheck > Other). Lower rank = more trusted → surfaced first in the pack.
@@ -79,6 +82,10 @@ class PackItem:
     # layer ran (the payload then stays byte-identical to the pre-B.5 pack).
     supports_claim: Optional[bool] = None    # True=supports, False=refutes, None=ambiguous/unscored
     relevance_score: Optional[float] = None  # 0–1 relevance to the claim
+    # Publication date, ISO YYYY-MM-DD (P67.5). Until this field existed the
+    # date survived only as a [YYYY-MM-DD] snippet prefix — artifacts
+    # serialized published_at=null and the era lint had nothing to check.
+    published_at: Optional[str] = None
 
     def provenance(self) -> dict:
         """The I5 provenance record (``url/retrieved_at/sha256/tier`` required)."""
@@ -163,6 +170,24 @@ def _within_window(ev: Evidence, window: TimeWindow) -> bool:
     return start <= ev.published_at.date() <= end
 
 
+def _within_fair_game(ev: Evidence, utterance: Optional[date]) -> bool:
+    """Fair-game filter (P67.5 / T1.1): a DATED item published after the
+    speaker's fair-game window (utterance + 7 days) is dropped — the coded
+    window ran to speech-month+3 and let post-utterance world-state (the
+    Iran-war price surge, the shutdown resolution) falsify claims the
+    audience heard months earlier. Undated items pass, as in _within_window."""
+    if utterance is None or ev.published_at is None:
+        return True
+    keep = ev.published_at.date() <= era_lint.fair_game_end(utterance)
+    if not keep:
+        logger.info(
+            "era gate: dropped %s — dated %s, observed after the speaker's "
+            "fair-game window (utterance %s + %d days)",
+            ev.source_url, ev.published_at.date(), utterance,
+            era_lint.FAIR_GAME_DAYS)
+    return keep
+
+
 def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
     """Drop duplicate URLs (first wins), stably rank relevance-then-tier, cap.
 
@@ -224,9 +249,11 @@ def build_evidence_pack(
     assigned a stable ``E<n>`` id and validated against I5 (``check_i5_provenance``)
     — a provenance gap fails closed here, at evidence entry, not at verdict time."""
     window = window_for(sid, today=today)
+    utterance = speech_context.speech_date_for(sid)
     claim = Claim(transcript_id=sid.split(":", 1)[0], text=claim_text, context=context or None)
     raw = provider.get_evidence(claim, window=window)
     raw = [ev for ev in raw if _within_window(ev, window)]
+    raw = [ev for ev in raw if _within_fair_game(ev, utterance)]
     kept = _dedup_rank_cap(raw, max_items)
 
     items: list[PackItem] = []
@@ -241,7 +268,13 @@ def build_evidence_pack(
             sha256=_sha256(ev.source_url, ev.snippet or ""),
             supports_claim=ev.supports_claim,
             relevance_score=ev.relevance_score,
+            published_at=(ev.published_at.date().isoformat()
+                          if ev.published_at else None),
         )
         check_i5_provenance(item.provenance())  # I5: fail closed at entry
         items.append(item)
-    return EvidencePack(sid=sid, window=window, items=items)
+    pack = EvidencePack(sid=sid, window=window, items=items)
+    # T1.1: the build FAILS on era violations — defense in depth behind the
+    # two filters above (a violation here means a filter regressed).
+    era_lint.assert_pack_within_era(pack, utterance)
+    return pack
