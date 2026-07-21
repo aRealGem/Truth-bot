@@ -1,0 +1,20 @@
+{
+  "schema": "truthbot-factcheck-blocklist v1",
+  "comment": "Evidence v2 (P67.7 / remediation T2.1): fact-checker domains and paths excluded from model-facing evidence packs in shared_pack_v2 mode. Fact-checker VERDICTS are gold-side only — never in model context (locked project invariant). Gold-side use of these sources is unchanged. Domains match by registered-domain suffix; path_prefix entries block only that path on the domain.",
+  "domains": [
+    "politifact.com",
+    "factcheck.org",
+    "snopes.com",
+    "fullfact.org",
+    "factcheck.afp.com",
+    "leadstories.com",
+    "checkyourfact.com"
+  ],
+  "path_prefixes": [
+    {"domain": "reuters.com", "prefix": "/fact-check"},
+    {"domain": "apnews.com", "prefix": "/hub/ap-fact-check"},
+    {"domain": "apnews.com", "prefix": "/ap-fact-check"},
+    {"domain": "washingtonpost.com", "prefix": "/politics/fact-checker"},
+    {"domain": "washingtonpost.com", "prefix": "/news/fact-checker"}
+  ]
+}

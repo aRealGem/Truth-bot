@@ -250,6 +250,7 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         crm114_final=str(crm.get("final") or ""),
         panel_by_role=by_role,
         correction_note=str((row.get("corrected") or {}).get("note") or ""),
+        evidence_gate=str(row.get("evidence_gate") or ""),
     )
 
 

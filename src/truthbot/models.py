@@ -416,6 +416,16 @@ class VerdictProvenance(BaseModel):
             "provenance strip and indexed on corrections.html."
         ),
     )
+    evidence_gate: str = Field(
+        default="",
+        description=(
+            "Pack-quality gate code (P67.7 / T2.4). "
+            "'insufficient-qualifying-evidence' = the shared_pack_v2 "
+            "consolidator could not meet tier quotas even after one targeted "
+            "re-retrieval, so the verdict was FORCED Unverifiable. Empty on "
+            "quota-met packs and all pre-v2 runs."
+        ),
+    )
 
 
 class ConsensusVerdict(BaseModel):
