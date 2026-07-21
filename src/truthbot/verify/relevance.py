@@ -121,9 +121,17 @@ def _era_label(window: TimeWindow) -> str:
 
 def generate_queries(llm: LlmFn, claim_text: str, *, context: str = "",
                      window: TimeWindow = None,
-                     n: int = DEFAULT_QUERIES_PER_CLAIM) -> list[str]:
+                     n: int = DEFAULT_QUERIES_PER_CLAIM,
+                     forbidden_terms: tuple[str, ...] = ()) -> list[str]:
     """Cheap-model query generation. Returns up to ``n`` deduped, non-empty
-    queries; [] on any failure (caller falls back to the legacy claim query)."""
+    queries; [] on any failure (caller falls back to the legacy claim query).
+
+    T2.2 constraint validation (P67.7): queries containing fact-check tokens
+    or any caller-supplied ``forbidden_terms`` (speaker-name tokens — checked
+    in CODE, never shown to the model, so the generation stays speaker-blind)
+    are dropped with a log line rather than sent to retrieval."""
+    from truthbot.verify.factcheck_exclusion import query_violates_constraints
+
     payload = json.dumps({
         "claim": claim_text,
         "context": (context or "")[:500],
@@ -141,7 +149,13 @@ def generate_queries(llm: LlmFn, claim_text: str, *, context: str = "",
         if not isinstance(q, str):
             continue
         q = q.strip()[:200]
-        if q and q.lower() not in {x.lower() for x in queries}:
+        if not q:
+            continue
+        reason = query_violates_constraints(q, forbidden_terms)
+        if reason:
+            logger.info("relevance: dropped query %r — %s (T2.2)", q, reason)
+            continue
+        if q.lower() not in {x.lower() for x in queries}:
             queries.append(q)
     return queries[:n]
 

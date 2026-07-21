@@ -156,6 +156,10 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
     rows = [normalize(r, closed_book=not open_book) for r in result.items]
     notes = dict(result.notes or {})
     notes["open_book"] = open_book
+    # T2.7: record the retrieval stack explicitly. The current live path is
+    # v1; shared_pack_v2 lands with the PR-5 retrievers + consolidator.
+    from truthbot.verdict.evidence_mode import EvidenceMode
+    notes["evidence_mode"] = EvidenceMode.infer_legacy(open_book).value
 
     # Stage 2 (CRM-114): re-decide the FALSE-vs-MISLEADING boundary on the adverse
     # bucket with a focused binary discriminator, on the SAME evidence packs. Open-book
