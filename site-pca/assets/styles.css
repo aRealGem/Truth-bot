@@ -1094,6 +1094,22 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.15rem;
   color: var(--ink-faint);
 }
+/* Post-publication correction note (T1.5) — amber, can't be missed. */
+.pca-correction {
+  margin-top: 0.25rem;
+  color: var(--v-exaggerated);
+}
+.pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
+.corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
+.corrections-note { color: var(--ink-muted); }
+.report-correction-banner {
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--v-exaggerated);
+  background: color-mix(in srgb, var(--v-exaggerated) 8%, transparent);
+  font-size: 0.9rem;
+}
+.report-correction-banner a { text-decoration: underline; }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {

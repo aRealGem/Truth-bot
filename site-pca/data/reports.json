@@ -1,42 +1,42 @@
 [
   {
-    "id": "5cc356fd-70a3-4a3f-ae13-2c11191fd308",
+    "id": "e611eb2d-5b76-4e0f-9053-71e99cf71117",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "U.S. Capitol",
     "claim_count": 178,
     "verdict_distribution": {
-      "True": 45,
+      "True": 48,
       "Mostly True": 0,
-      "Misleading": 68,
+      "Misleading": 72,
       "Exaggerated": 0,
-      "False": 38,
-      "Unverifiable": 18,
+      "False": 30,
+      "Unverifiable": 19,
       "Truthy": 0,
       "Falsey": 0,
       "Models split": 9
     },
     "verdict_distribution_lenient": {
-      "True": 45,
+      "True": 48,
       "Truthy": 0,
-      "Unverifiable": 18,
+      "Unverifiable": 19,
       "Falsey": 0,
-      "False": 38,
+      "False": 30,
       "Models split": 9,
-      "Misleading": 68
+      "Misleading": 72
     },
     "verdict_distribution_strict": {
-      "True": 45,
+      "True": 48,
       "Truthy": 0,
-      "Unverifiable": 18,
+      "Unverifiable": 19,
       "Falsey": 0,
-      "False": 38,
+      "False": 30,
       "Models split": 9,
-      "Misleading": 68
+      "Misleading": 72
     },
     "model_agreement_rate": 0.466,
-    "url": "reports/2026-02-24-donald-trump-5cc356.html",
+    "url": "reports/2026-02-24-donald-trump-e611eb.html",
     "tier_counts": {
       "gov": 61,
       "wire": 18,
@@ -50,43 +50,43 @@
     "channel": ""
   },
   {
-    "id": "ce344397-8c7f-48c2-95f2-8ed27b5c5400",
+    "id": "3d132e32-2630-420b-9c49-a6e847572022",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
     "claim_count": 111,
     "verdict_distribution": {
-      "True": 72,
+      "True": 76,
       "Mostly True": 0,
-      "Misleading": 21,
+      "Misleading": 19,
       "Exaggerated": 0,
-      "False": 7,
-      "Unverifiable": 5,
+      "False": 4,
+      "Unverifiable": 6,
       "Truthy": 0,
       "Falsey": 0,
       "Models split": 6
     },
     "verdict_distribution_lenient": {
-      "True": 72,
+      "True": 76,
       "Truthy": 0,
-      "Unverifiable": 5,
+      "Unverifiable": 6,
       "Falsey": 0,
-      "False": 7,
+      "False": 4,
       "Models split": 6,
-      "Misleading": 21
+      "Misleading": 19
     },
     "verdict_distribution_strict": {
-      "True": 72,
+      "True": 76,
       "Truthy": 0,
-      "Unverifiable": 5,
+      "Unverifiable": 6,
       "Falsey": 0,
-      "False": 7,
+      "False": 4,
       "Models split": 6,
-      "Misleading": 21
+      "Misleading": 19
     },
     "model_agreement_rate": 0.784,
-    "url": "reports/2022-03-01-joe-biden-ce3443.html",
+    "url": "reports/2022-03-01-joe-biden-3d132e.html",
     "tier_counts": {
       "gov": 56,
       "wire": 18,
