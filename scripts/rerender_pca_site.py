@@ -58,6 +58,9 @@ def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
             snippet=snippet,
             retrieved_at=str(ev.get("retrieved_at") or ""),
             sha256=_sha256(url, snippet),
+            # Round B.5 stance signals; older artifacts predate them → None.
+            supports_claim=ev.get("supports_claim"),
+            relevance_score=ev.get("relevance_score"),
         ))
     return EvidencePack(sid=sid, window=None, items=items)
 
