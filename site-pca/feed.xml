@@ -4,6 +4,7 @@
   <subtitle>Automated political fact-checking with multi-model consensus</subtitle>
   <link href="[SITE_URL]/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="[SITE_URL]/" rel="alternate" type="text/html"/>
+  <link href="[SITE_URL]/corrections.html" rel="related" type="text/html" title="Corrections"/>
   <updated>2026-04-21T19:18:00Z</updated>
   <id>urn:truth-bot:feed</id>
   <author>

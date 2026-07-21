@@ -157,6 +157,7 @@ FEED_XML_TEMPLATE = f"""\
   <subtitle>Automated political fact-checking with multi-model consensus</subtitle>
   <link href="[SITE_URL]/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="[SITE_URL]/" rel="alternate" type="text/html"/>
+  <link href="[SITE_URL]/corrections.html" rel="related" type="text/html" title="Corrections"/>
   <updated>2026-04-21T19:18:00Z</updated>
   <id>urn:truth-bot:feed</id>
   <author>
@@ -2188,7 +2189,8 @@ def _is_anecdote_unverifiable(bundle: VerdictBundle) -> bool:
             and bundle.consensus.consensus_label == VerdictLabel.UNVERIFIABLE)
 
 
-def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None) -> str:
+def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
+                          rel: str = "../") -> str:
     """The Layer A → PCA panel → CRM-114 chain, rendered as a compact strip.
 
     Surfaces provenance that used to live only as buried reasoning text (CRM-114)
@@ -2212,12 +2214,20 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None) 
     seat_html = (
         f'<div class="pca-seats">{_esc(seat_line)}</div>' if seat_line else ""
     )
+    # Post-publication correction (T1.5): shown wherever the verdict is,
+    # linked to the public changelog — a correction is never silent.
+    corr_html = ""
+    if getattr(prov, "correction_note", ""):
+        corr_html = (
+            f'<div class="pca-correction">⚠ {_esc(prov.correction_note)} '
+            f'· <a href="{rel}corrections.html">Corrections</a></div>'
+        )
     return (
         '<div class="pca-provenance" '
         'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
         'tally, each seat&#39;s own prediction, and any Severity Classifier '
         'stage-2 override.">'
-        f'{chain}{seat_html}</div>'
+        f'{chain}{seat_html}{corr_html}</div>'
     )
 
 
@@ -3829,6 +3839,22 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.15rem;
   color: var(--ink-faint);
 }
+/* Post-publication correction note (T1.5) — amber, can't be missed. */
+.pca-correction {
+  margin-top: 0.25rem;
+  color: var(--v-exaggerated);
+}
+.pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
+.corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
+.corrections-note { color: var(--ink-muted); }
+.report-correction-banner {
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--v-exaggerated);
+  background: color-mix(in srgb, var(--v-exaggerated) 8%, transparent);
+  font-size: 0.9rem;
+}
+.report-correction-banner a { text-decoration: underline; }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
@@ -6026,6 +6052,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         '<span>Last updated: ' + now + '</span>'
         + '<span>Pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML
         + f' · Prompt <a class="footer-hash" href="./about.html#prompt">{_phash}</a>'
+        + ' · <a href="./corrections.html">Corrections</a>'
         + ' · <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">GitHub</a></span>'
     )
     return _page_index(
@@ -6148,9 +6175,34 @@ def _render_report(site_report: SiteReport) -> str:
             '</aside>'
         )
 
+    # Report-level correction banner (D2): derived entirely from the bundles'
+    # correction notes — count and latest date come from data, never typed.
+    _corrected = [b for b in site_report.checkable_bundles
+                  if getattr(b.consensus.provenance, "correction_note", "")]
+    correction_banner = ""
+    if _corrected:
+        _dates = sorted(
+            m.group(1) for b in _corrected
+            for m in [re.search(r"\((\d{4}-\d{2}-\d{2})\)",
+                                b.consensus.provenance.correction_note)] if m)
+        _latest = _dates[-1] if _dates else ""
+        _n = len(_corrected)
+        correction_banner = (
+            '<aside class="report-correction-banner">'
+            f'<strong>Corrections applied:</strong> {_n} verdict'
+            f'{"s" if _n != 1 else ""} on this report '
+            f'{"were" if _n != 1 else "was"} revised'
+            + (f' on {_esc(_latest)}' if _latest else '')
+            + ' following a reasoning audit. Aggregates and the headline reflect '
+              'the corrected verdicts; each change is logged on the '
+              '<a href="../corrections.html">Corrections page</a> and marked on '
+              'the claim\'s provenance strip.</aside>'
+        )
+
     body = (
         hero_html
         + _verdict_panel(site_report)
+        + correction_banner
         + toc_section_head
         + toc_html
         + '<div class="section-head">'
@@ -6165,7 +6217,8 @@ def _render_report(site_report: SiteReport) -> str:
     )
     footer = (
         '<span>truth-bot · pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML + '</span>'
-        + f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a></span>'
+        + f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a>'
+        + ' · <a href="../corrections.html">Corrections</a></span>'
         + '<span>Source: <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">'
         + 'github.com/aRealGem/Truth-bot</a></span>'
     )
@@ -6697,6 +6750,64 @@ def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
     )
 
 
+def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None) -> str:
+    """The public Corrections page (P67.6 / T1.5) — a fact-checking-norm
+    changelog: claim id, old → new verdict, reason, date. Rendered on every
+    publish (empty state included) so the page exists before its first entry
+    and readers can always find the correction policy."""
+    if entries:
+        rows = "".join(
+            f'<tr><td class="mono">{_esc(e["sid"])}</td>'
+            f'<td>{_esc(e["speech_id"])}</td>'
+            f'<td><span class="vt-{_verdict_css(e["old_verdict"].capitalize())}">'
+            f'{_esc(e["old_verdict"].upper())}</span> → '
+            f'<span class="vt-{_verdict_css(e["new_verdict"].capitalize())}">'
+            f'{_esc(e["new_verdict"].upper())}</span></td>'
+            f'<td>{_esc(e["reason"])}</td>'
+            f'<td>{_esc(e["date"])}</td></tr>'
+            for e in entries
+        )
+        table = (
+            '<table class="tier-table corrections-table">'
+            '<tr><th>Claim</th><th>Report</th><th>Verdict</th>'
+            '<th>Reason</th><th>Date</th></tr>'
+            f'{rows}</table>'
+        )
+    else:
+        table = ('<p class="dim">No corrections have been issued for the '
+                 'currently published reports.</p>')
+    notes_html = "".join(
+        f'<p class="corrections-note"><strong>{_esc(n["date"])}</strong> — '
+        f'{_esc(n["text"])}</p>'
+        for n in (notes or [])
+    )
+    body = (
+        '<h2>Corrections</h2><hr class="rule">'
+        '<p>When a published verdict is found to be wrong — a reasoning error, '
+        'evidence outside the claim\'s era, a misread referent — it is corrected '
+        'publicly, per fact-checking norms: the claim keeps a visible correction '
+        'note on its provenance strip, and every change is logged here with the '
+        'old and new verdict, the reason, and the date. Corrections are never '
+        'applied silently.</p>'
+        + notes_html
+        + table
+    )
+    footer = (
+        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
+        f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
+        f'github.com/aRealGem/Truth-bot</a></span>'
+    )
+    return _page_about(
+        "Corrections",
+        body,
+        footer=footer,
+        og_title="Corrections — truth-bot",
+        og_description="Public changelog of corrected verdicts: claim, old and "
+                       "new verdict, reason, and date.",
+        og_type="website",
+    )
+
+
 def _render_model_insights_redirect() -> str:
     """Redirect stub shipped at model-insights.html while the page is retired
     (remediation T0.4). The v1 insights page predated the PCA pipeline: it
@@ -6913,12 +7024,18 @@ class SitePublisher:
         env var if not provided; falls back to ./site/.
     """
 
-    def __init__(self, site_root: Optional[str | Path] = None) -> None:
+    def __init__(self, site_root: Optional[str | Path] = None,
+                 corrections: Optional[list[dict]] = None,
+                 correction_notes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
         else:
             self._root = Path(os.environ.get("TRUTHBOT_SITE_ROOT", "./site"))
+        # Public corrections entries + editorial notes (P67.6 / T1.5) —
+        # rendered on corrections.html each publish. Empty → empty-state page.
+        self._corrections: list[dict] = list(corrections or [])
+        self._correction_notes: list[dict] = list(correction_notes or [])
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -6982,6 +7099,9 @@ class SitePublisher:
             self._root / "model-insights.html",
             _render_model_insights_redirect(),
         )
+        self._write(self._root / "corrections.html",
+                    _render_corrections(self._corrections,
+                                        self._correction_notes))
 
         return report_path.resolve()
 
