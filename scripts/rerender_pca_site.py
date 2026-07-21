@@ -32,7 +32,8 @@ sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO))
 
 from truthbot.models import SourceTier
-from truthbot.publish.corrections import apply_to_artifact, load_corrections
+from truthbot.publish.corrections import (apply_to_artifact, load_corrections,
+                                          load_notes)
 from truthbot.publish.site import SitePublisher, SiteReport
 from truthbot.verdict import bridge as bridge_mod
 from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
@@ -136,7 +137,8 @@ def main() -> None:
     corrections = load_corrections(REPO / "data" / "corrections.json")
     if corrections:
         print(f"corrections on file: {len(corrections)}")
-    publisher = SitePublisher(site_root=args.site_root, corrections=corrections)
+    publisher = SitePublisher(site_root=args.site_root, corrections=corrections,
+                              correction_notes=load_notes(REPO / "data" / "corrections.json"))
     for p in paths:
         render_artifact(p, publisher, args.role, corrections=corrections)
     stats = publisher.summary()

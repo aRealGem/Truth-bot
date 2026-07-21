@@ -40,6 +40,16 @@ class CorrectionsError(ValueError):
     """corrections.json is malformed — fail the build, don't guess."""
 
 
+def load_notes(path: Path) -> list[dict]:
+    """Editorial notes for the Corrections page ({date, text} dicts) — the
+    D2 band-change explanation lives here as DATA, not hand-typed HTML."""
+    path = Path(path)
+    if not path.exists():
+        return []
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    return [n for n in (doc.get("notes") or []) if n.get("date") and n.get("text")]
+
+
 def load_corrections(path: Path) -> list[dict]:
     """Load + validate corrections. Missing file → no corrections (empty)."""
     path = Path(path)

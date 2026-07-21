@@ -3846,6 +3846,15 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
 .corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
+.corrections-note { color: var(--ink-muted); }
+.report-correction-banner {
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--v-exaggerated);
+  background: color-mix(in srgb, var(--v-exaggerated) 8%, transparent);
+  font-size: 0.9rem;
+}
+.report-correction-banner a { text-decoration: underline; }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
@@ -6166,9 +6175,34 @@ def _render_report(site_report: SiteReport) -> str:
             '</aside>'
         )
 
+    # Report-level correction banner (D2): derived entirely from the bundles'
+    # correction notes — count and latest date come from data, never typed.
+    _corrected = [b for b in site_report.checkable_bundles
+                  if getattr(b.consensus.provenance, "correction_note", "")]
+    correction_banner = ""
+    if _corrected:
+        _dates = sorted(
+            m.group(1) for b in _corrected
+            for m in [re.search(r"\((\d{4}-\d{2}-\d{2})\)",
+                                b.consensus.provenance.correction_note)] if m)
+        _latest = _dates[-1] if _dates else ""
+        _n = len(_corrected)
+        correction_banner = (
+            '<aside class="report-correction-banner">'
+            f'<strong>Corrections applied:</strong> {_n} verdict'
+            f'{"s" if _n != 1 else ""} on this report '
+            f'{"were" if _n != 1 else "was"} revised'
+            + (f' on {_esc(_latest)}' if _latest else '')
+            + ' following a reasoning audit. Aggregates and the headline reflect '
+              'the corrected verdicts; each change is logged on the '
+              '<a href="../corrections.html">Corrections page</a> and marked on '
+              'the claim\'s provenance strip.</aside>'
+        )
+
     body = (
         hero_html
         + _verdict_panel(site_report)
+        + correction_banner
         + toc_section_head
         + toc_html
         + '<div class="section-head">'
@@ -6716,7 +6750,7 @@ def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
     )
 
 
-def _render_corrections(entries: list[dict]) -> str:
+def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None) -> str:
     """The public Corrections page (P67.6 / T1.5) — a fact-checking-norm
     changelog: claim id, old → new verdict, reason, date. Rendered on every
     publish (empty state included) so the page exists before its first entry
@@ -6742,6 +6776,11 @@ def _render_corrections(entries: list[dict]) -> str:
     else:
         table = ('<p class="dim">No corrections have been issued for the '
                  'currently published reports.</p>')
+    notes_html = "".join(
+        f'<p class="corrections-note"><strong>{_esc(n["date"])}</strong> — '
+        f'{_esc(n["text"])}</p>'
+        for n in (notes or [])
+    )
     body = (
         '<h2>Corrections</h2><hr class="rule">'
         '<p>When a published verdict is found to be wrong — a reasoning error, '
@@ -6750,6 +6789,7 @@ def _render_corrections(entries: list[dict]) -> str:
         'note on its provenance strip, and every change is logged here with the '
         'old and new verdict, the reason, and the date. Corrections are never '
         'applied silently.</p>'
+        + notes_html
         + table
     )
     footer = (
@@ -6985,15 +7025,17 @@ class SitePublisher:
     """
 
     def __init__(self, site_root: Optional[str | Path] = None,
-                 corrections: Optional[list[dict]] = None) -> None:
+                 corrections: Optional[list[dict]] = None,
+                 correction_notes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
         else:
             self._root = Path(os.environ.get("TRUTHBOT_SITE_ROOT", "./site"))
-        # Public corrections entries (P67.6 / T1.5) — rendered on
-        # corrections.html each publish. Empty list → empty-state page.
+        # Public corrections entries + editorial notes (P67.6 / T1.5) —
+        # rendered on corrections.html each publish. Empty → empty-state page.
         self._corrections: list[dict] = list(corrections or [])
+        self._correction_notes: list[dict] = list(correction_notes or [])
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -7058,7 +7100,8 @@ class SitePublisher:
             _render_model_insights_redirect(),
         )
         self._write(self._root / "corrections.html",
-                    _render_corrections(self._corrections))
+                    _render_corrections(self._corrections,
+                                        self._correction_notes))
 
         return report_path.resolve()
 

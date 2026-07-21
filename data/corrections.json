@@ -1,4 +1,164 @@
 {
   "schema": "truthbot-corrections v1",
-  "entries": []
+  "notes": [
+    {
+      "date": "2026-07-21",
+      "text": "A systematic audit of panel reasoning (every claim decided by proposer-critic agreement without arbiter review) found a class of shared misreads: tenses, quarterly-vs-annual figures, baselines, and invented referents. 17 verdicts were revised with editor approval. As a result, the Donald Trump SOTU 2026 headline moved from 'Largely False' to 'Mostly False' (102 of 150 decided claims false-leaning); the Joe Biden SOTU 2022 headline remains 'Largely True' and strengthened."
+    }
+  ],
+  "entries": [
+    {
+      "sid": "biden_2022:0026",
+      "speech_id": "biden_2022",
+      "old_verdict": "FALSE",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (reasoning error): The claim states the US is a member 'along with 29 other nations,' which means 29 nations besides the US — totaling 30 members.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "biden_2022:0115",
+      "speech_id": "biden_2022",
+      "old_verdict": "FALSE",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (quarterly-vs-annual/unit confusion): The panel committed a quarterly-vs-annual confusion (error class b): the 6.4%, 6.9%, and 7.0% figures in the evidence are annualized quarterly rates, not the full-year 2021 GDP growth figure.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "biden_2022:0201",
+      "speech_id": "biden_2022",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (quarterly-vs-annual/unit confusion, invented referent): the panel conflated two different cost comparisons — the RAND 5-10x figure measures a different ratio than the one the claim states, so the evidence does not contradict the claim.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "biden_2022:0244",
+      "speech_id": "biden_2022",
+      "old_verdict": "FALSE",
+      "new_verdict": "MISLEADING",
+      "reason": "Reasoning audit (baseline selection): 'before I took office' baselines to FY2020 (deficit ~$3.1T), not FY2019 ($984B); on that baseline the FY2022 deficit (~$1.3T) is indeed less than half — though the drop partly reflects expiring COVID-era spending.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "biden_2022:0282",
+      "speech_id": "biden_2022",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (colloquial-recency falsification): Rounding 89% to 90% is a colloquial approximation, not a material misstatement — the same category as 'nearly 90%' or 'about 90%'.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "biden_2022:0289",
+      "speech_id": "biden_2022",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Reasoning audit (tense/temporal misread): The panel committed a tense/temporal misread: the claim was made on 2022-03-01 (during Biden's State of the Union address), announcing that additional tests could be ordered 'starting next week' (i.e., around 2022-03-07).",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "biden_2022:0432",
+      "speech_id": "biden_2022",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (invented referent): The claim is a specific narrative statement about one individual (Heath) whose lungs and body were ravaged by cancer from burn pit exposure — it is not a general scientific claim about all veterans or all cancer types.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0057",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (invented referent): The panel committed an invented-referent error by treating 'hottest country' as a literal temperature claim, when the context (E1, E2, E3) makes clear Trump is using 'hottest' colloquially to mean most economically dynamic or trending — …",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0064",
+      "speech_id": "trump_2026",
+      "old_verdict": "TRUE",
+      "new_verdict": "MISLEADING",
+      "reason": "Reasoning audit (reasoning error): E2 explicitly notes the claim is 'accurate' but 'doesn't account for population growth,' and E4 confirms raw job numbers are records while the employment-to-population ratio is 'well below record highs' — a standard caveat that makes a f…",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0407",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "MISLEADING",
+      "reason": "Reasoning audit (tense/temporal misread): The panel committed a tense/temporal misread: it cited evidence from after the utterance date (E2, E4 from April 2026; E1 from March 2026) showing the shutdown was 'eventually resolved' to rebut a present-tense claim made on 2026-02-24.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0522",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "MISLEADING",
+      "reason": "Reasoning audit (tense/temporal misread, invented referent): The panel commits a tense/temporal misread and an invented-referent error: Trump's claim does not say Beckstrom is currently alive or active; it honors her as someone who 'helped achieve' a turnaround — a past-tense tribute entirely cons…",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0526",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (tense/temporal misread, invented referent): The panel committed a tense/temporal misread: the utterance date is 2026-02-24, and Trump is recounting a past event (the November 2025 shooting) in narrative form — 'the very next day' refers to the sequence within that past story, not …",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0586",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "MISLEADING",
+      "reason": "Reasoning audit (tense/temporal misread, invented referent): The panel treated Trump's garbled syntax as a factual claim that 'the PM of Pakistan would have died,' but the evidence (E1-E6, including the Times of India headline 'Trump misspeaks') makes clear this was a misspoken version of an inten…",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0606",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "MISLEADING",
+      "reason": "Reasoning audit (tense/temporal misread, reasoning error): the panel's own evidence supports the claimed event and timeline; the False verdict rested on a misreading of the cited item's dating.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0661",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (colloquial-recency falsification): The panel's reasoning commits a colloquial-recency falsification error (class d): the payment was distributed in December 2025, roughly two months before the utterance date of February 24, 2026.",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0672",
+      "speech_id": "trump_2026",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "TRUE",
+      "reason": "Reasoning audit (reasoning error): The panel's reasoning is internally contradictory: one-third to nearly 40% of Mexico's territory is, by any ordinary meaning, 'large swaths' or 'really large parts.' The claim uses colloquial, non-quantified language that is fully consis…",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    },
+    {
+      "sid": "trump_2026:0690",
+      "speech_id": "trump_2026",
+      "old_verdict": "FALSE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Reasoning audit (invented referent, reasoning error): The panel's reasoning relies on an invented referent error: the claim itself says nothing about Enrique being imprisoned or still detained as of the utterance date — it only states that Alejandro grew up in a tight-knit Venezuelan family…",
+      "date": "2026-07-21",
+      "source": "agreed-verdict-audit-2026-07-21 (Severity-tier model, conf >= 0.8, approved by editor)"
+    }
+  ]
 }

@@ -146,3 +146,51 @@ def test_footers_link_corrections_page(tmp_path: Path) -> None:
     assert 'href="../corrections.html"' in report_path.read_text()
     assert "No corrections have been issued" in (tmp_path / "corrections.html").read_text()
     assert 'corrections.html" rel="related"' in (tmp_path / "feed.xml").read_text()
+
+
+def test_corrections_page_renders_editorial_notes() -> None:
+    html = _render_corrections([ENTRY], notes=[
+        {"date": "2026-07-21", "text": "Headline moved from X to Y."}])
+    assert "corrections-note" in html
+    assert "Headline moved from X to Y." in html
+
+
+def test_report_banner_derives_from_corrected_bundles(tmp_path: Path) -> None:
+    from tests.test_site_render_aggregates import _make_bundle, _make_site_report
+    from truthbot.models import VerdictLabel, VerdictProvenance
+    from truthbot.publish.site import _render_report
+
+    corrected = _make_bundle(VerdictLabel.TRUE, coarse_lenient="True",
+                             coarse_strict="True")
+    corrected.consensus.provenance = VerdictProvenance(
+        layer_a_label="check-worthy", panel_votes={"True": 2},
+        correction_note=note_for(ENTRY))
+    plain = _make_bundle(VerdictLabel.FALSE, coarse_lenient="False",
+                         coarse_strict="False")
+    html = _render_report(_make_site_report([corrected, plain]))
+    assert "report-correction-banner" in html
+    assert "1 verdict on this report was revised on 2026-07-21" in html
+
+    # no corrections -> no banner
+    html2 = _render_report(_make_site_report([plain]))
+    assert "report-correction-banner" not in html2
+
+
+def test_repo_corrections_file_is_valid_and_matches_audit() -> None:
+    """The committed corrections must load cleanly and every entry must trace
+    to a flagged, conf>=0.8 audit record with matching verdict move."""
+    import pytest
+    repo = Path(__file__).resolve().parents[2]
+    cpath = repo / "data" / "corrections.json"
+    apath = repo / "metrics" / "audits" / "agreed_verdicts_2026-07-21.jsonl"
+    if not (cpath.exists() and apath.exists()):
+        pytest.skip("corrections/audit artifacts not in this checkout")
+    entries = load_corrections(cpath)
+    audit = {json.loads(l)["sid"]: json.loads(l) for l in apath.open()}
+    for e in entries:
+        rec = audit.get(e["sid"])
+        assert rec is not None, e["sid"]
+        assert rec["verdict_sound"] is False
+        assert rec["confidence"] >= 0.8
+        assert rec["shipped_verdict"] == e["old_verdict"]
+        assert rec["suggested_verdict"] == e["new_verdict"]
