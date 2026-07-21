@@ -130,6 +130,18 @@ def main() -> None:
     print(f"site: {stats['root']} — {stats['reports']} report(s), "
           f"{stats['claims']} claim(s), {stats['total_kb']} KB")
 
+    # Build-time figure verification (remediation T0.8): every quantitative
+    # figure in site copy must derive from data/*.json. A violation fails
+    # the render — hand-typed numbers don't ship.
+    from truthbot.publish.consistency import check_site
+    violations = check_site(Path(args.site_root))
+    if violations:
+        print(f"\nCONSISTENCY CHECK FAILED — {len(violations)} violation(s):")
+        for v in violations:
+            print(f"  · {v}")
+        sys.exit(1)
+    print("consistency check: all rendered figures derive from data/*.json")
+
 
 if __name__ == "__main__":
     main()

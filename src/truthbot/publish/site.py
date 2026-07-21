@@ -48,12 +48,12 @@ VERDICT_CSS: dict[str, str] = {
     "False":         "false",
     "Unverifiable":  "unverifiable",
     # 5-bucket coarse-axis projection (Truthy scale) — used on the headline
-    # pill, not the per-model strip. ``Models split`` reuses the same neutral
-    # styling as ``Unverifiable`` so the guardrail surfaces visibly without
-    # a new CSS class.
+    # pill, not the per-model strip. ``Models split`` gets its own slug so
+    # aggregate bars can show it as a distinct segment (remediation T0.2:
+    # every rendered breakdown must sum to claim_count, split included).
     "Truthy":        "truthy",
     "Falsey":        "falsey",
-    "Models split":  "unverifiable",
+    "Models split":  "split",
 }
 
 # Display order for the verdict bar legend (always show all 6)
@@ -75,7 +75,7 @@ COARSE_VERDICT_ORDER = ["True", "Truthy", "Unverifiable", "Falsey", "False"]
 # abstain → adverse family), so the bar shows every decided claim and the
 # family rail's brackets equal the headline's totals by construction.
 AGGREGATE_BAR_ORDER = ["True", "Mostly True", "Truthy",
-                       "Unverifiable",
+                       "Unverifiable", "Models split",
                        "Exaggerated", "Misleading", "Falsey", "False"]
 
 # Mirror of LENIENT_PROJECTION / STRICT_PROJECTION in
@@ -163,7 +163,7 @@ FEED_XML_TEMPLATE = f"""\
     <name>truth-bot pipeline</name>
   </author>
   <generator version="{PIPELINE_VERSION}">truth-bot{BETA_TEXT_SUFFIX}</generator>
-  <rights>Data sourced from public speeches and government primary sources.</rights>
+  <rights>Data sourced from public speeches and cited web evidence.</rights>
 
   <entry>
     <title>Donald Trump \u2014 March 04, 2026</title>
@@ -915,8 +915,8 @@ def _family_rail_html(dist: dict[str, int], label_order: list[str],
     if abstain > 0:
         cells.append(
             f'<div class="fam fam-abstain" style="width:{abstain/total*100:.1f}%" '
-            f'title="{abstain} claims not decided (Unverifiable) — excluded from the '
-            f'leaning denominator">{abstain} undecided</div>')
+            f'title="{abstain} claims not decided (Unverifiable or Models split) — '
+            f'excluded from the leaning denominator">{abstain} undecided</div>')
     if f:
         cells.append(
             f'<div class="fam fam-false" style="width:{f/total*100:.1f}%" '
@@ -1255,11 +1255,6 @@ def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
     return caps.get(state, ""), bubble_class_map.get(state, "is-iffy")
 def _verdict_panel(site_report) -> str:
     """Build the full .verdict-panel section for a report page."""
-    tv = site_report.truthy_verdict
-    mood = tv.mood
-    state_map = {"happy": "true", "iffy": "iffy", "sad": "lie"}
-    svg_state = "state-" + state_map.get(mood, "iffy")
-
     claim_count = len(site_report.checkable_bundles)
     model_count, model_hint = _models_engaged(site_report)
     agree_rate  = site_report.model_agreement_rate
@@ -1272,6 +1267,19 @@ def _verdict_panel(site_report) -> str:
     # Strict = the graded family bands — two presentations of one computation.
     headline_lenient, hcls_lenient, ratio_text_lenient = _binary_verdict(dist_lenient)
     headline_strict,  hcls_strict,  ratio_text_strict  = _family_verdict(dist_strict)
+
+    # Mascot mood derives from the published headline band (remediation T0.3),
+    # not the independent truthy-score rollup — the old rollup mapped
+    # Misleading/Unverifiable to HALF_TRUE and could say "Mixed signals" over
+    # a Largely False headline.
+    if headline_strict.endswith("True"):
+        mood = "happy"
+    elif headline_strict.endswith("False"):
+        mood = "sad"
+    else:  # Mixed verdict / Unverifiable / no claims
+        mood = "iffy"
+    state_map = {"happy": "true", "iffy": "iffy", "sad": "lie"}
+    svg_state = "state-" + state_map.get(mood, "iffy")
 
     bubble_text, bubble_cls = _initial_bubble(mood, claim_count)
 
@@ -1310,25 +1318,36 @@ def _verdict_panel(site_report) -> str:
 
     # Headline-stats frames: "Truthy or better" + "False or worse",
     # promoted out of the stats grid into two prominent block frames
-    # above the aggregate stats. Both share the same denominator
-    # (full claim count, Unverifiable included) by editorial choice:
-    # a leader citing an unverifiable claim is itself a fact-check
-    # failure. Both frames are lens-aware via the paired data-lens-axis
-    # pattern; Strict is the published default since 2026-04-30.
+    # above the aggregate stats. Family logic and denominator are
+    # IDENTICAL to the headline (remediation T0.3): the two families
+    # over decided claims, abstentions (Unverifiable / Models split)
+    # excluded — the chips and the "N of M decided" ratio can never
+    # disagree. Both frames are lens-aware via the paired
+    # data-lens-axis pattern; Strict is the published default.
     def _pct(numerator: int, total: int) -> str:
         return format(numerator / total, '.0%') if total else "0%"
 
-    total_for_pct = sum(dist_strict.values()) or 1   # == claim_count
-    truthy_pct_strict  = _pct(dist_strict.get("True", 0)  + dist_strict.get("Truthy", 0),  total_for_pct)
-    truthy_pct_lenient = _pct(dist_lenient.get("True", 0) + dist_lenient.get("Truthy", 0), total_for_pct)
-    false_pct_strict   = _pct(dist_strict.get("False", 0)  + dist_strict.get("Falsey", 0),  total_for_pct)
-    false_pct_lenient  = _pct(dist_lenient.get("False", 0) + dist_lenient.get("Falsey", 0), total_for_pct)
+    def _family_split(dist: dict[str, int]) -> tuple[int, int, int]:
+        t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
+        f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
+        return t, f, t + f
+
+    t_strict,  f_strict,  decided_strict  = _family_split(dist_strict)
+    t_lenient, f_lenient, decided_lenient = _family_split(dist_lenient)
+    truthy_pct_strict  = _pct(t_strict,  decided_strict)
+    truthy_pct_lenient = _pct(t_lenient, decided_lenient)
+    false_pct_strict   = _pct(f_strict,  decided_strict)
+    false_pct_lenient  = _pct(f_lenient, decided_lenient)
 
     truthy_frame_title = (
-        "True + Truthy / all claims (Unverifiable counts in the denominator)."
+        "True-leaning family (True + Mostly True + Truthy) over decided "
+        "claims — same families and denominator as the headline; "
+        "Unverifiable and Models split are excluded."
     )
     false_frame_title = (
-        "False + Falsey / all claims (Unverifiable counts in the denominator)."
+        "False-leaning family (False + Falsey + Misleading + Exaggerated) "
+        "over decided claims — same families and denominator as the "
+        "headline; Unverifiable and Models split are excluded."
     )
 
     headline_stats_html = (
@@ -1341,7 +1360,7 @@ def _verdict_panel(site_report) -> str:
         + '<span class="lens-target" data-lens-axis="lenient" hidden>' + truthy_pct_lenient + '</span>'
         + '</div>\n'
         + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
-        + '        <div class="vp-stat-hint">True + Truthy / all claims</div>\n'
+        + '        <div class="vp-stat-hint">true-leaning / decided claims</div>\n'
         + '      </div>\n'
         + '    </div>\n'
         + '    <div class="vp-headline-stat vp-stat-false" title="' + _esc(false_frame_title) + '">\n'
@@ -1352,7 +1371,7 @@ def _verdict_panel(site_report) -> str:
         + '<span class="lens-target" data-lens-axis="lenient" hidden>' + false_pct_lenient + '</span>'
         + '</div>\n'
         + '        <div class="vp-stat-lbl">False or worse</div>\n'
-        + '        <div class="vp-stat-hint">False + Falsey / all claims</div>\n'
+        + '        <div class="vp-stat-hint">false-leaning / decided claims</div>\n'
         + '      </div>\n'
         + '    </div>\n'
         + '  </div>\n'
@@ -1424,15 +1443,27 @@ def _verdict_panel(site_report) -> str:
 
     # Guest-anecdote footnote: break out how much of the Unverifiable bucket is
     # the anecdote genre (no public record to check) vs data claims the
-    # evidence failed to settle.
-    n_anecdote = sum(1 for b in site_report.checkable_bundles if _is_anecdote_unverifiable(b))
+    # evidence failed to settle. Anecdote-pilled claims whose panel deadlocked
+    # sit in the Models-split bar bucket, not Unverifiable, so they get their
+    # own clause — the footnote's arithmetic must reconcile with the bar it
+    # sits under (remediation T0.2; the old count lumped both together and
+    # could exceed the Unverifiable segment).
+    anec_bundles = [b for b in site_report.checkable_bundles if _is_anecdote_unverifiable(b)]
+    n_anec_split = sum(1 for b in anec_bundles
+                       if b.consensus.consensus_verdict == "Models split")
+    n_anec_uv = len(anec_bundles) - n_anec_split
+    uv_bucket = dist_strict.get("Unverifiable", 0)
     anecdote_note_html = ""
-    if n_anecdote:
-        noun = "claims are guest anecdotes" if n_anecdote != 1 else "claim is a guest anecdote"
+    if anec_bundles:
+        unit = "claim" if uv_bucket == 1 else "claims"
+        verb = "is a guest anecdote" if n_anec_uv == 1 else "are guest anecdotes"
+        split_clause = ""
+        if n_anec_split:
+            split_clause = f", plus {n_anec_split} more among the Models-split claims"
         anecdote_note_html = (
             '<p class="vp-anecdote-note" style="font-size:0.85rem;color:var(--ink-muted)">'
-            f'{n_anecdote} of the Unverifiable {noun} — private individuals\' stories '
-            'with no independent public record to check.</p>\n'
+            f'{n_anec_uv} of the {uv_bucket} Unverifiable {unit} {verb}{split_clause} — '
+            'private individuals\' stories with no independent public record to check.</p>\n'
         )
 
     return (
@@ -1865,9 +1896,13 @@ def _masthead_compact(rel: str = "../") -> str:
 
 
 # Default OG/Twitter description used when a page doesn't provide one.
+# "Verified against primary sources" was removed (remediation T0.5, D4):
+# packs currently mix source tiers, including fact-check and unvetted
+# domains — the tagline returns only after Phase 3 verifies pack contents.
 _DEFAULT_OG_DESCRIPTION = (
-    "Multi-model AI consensus analysis of political speeches. Every claim "
-    "decomposed, verified against primary sources, and scored for accuracy."
+    "Automated fact-checking of political speeches. Every claim is checked "
+    "by a multi-model AI panel against a shared, cited evidence pack — "
+    "sources linked inline, disagreements disclosed."
 )
 
 
@@ -2551,8 +2586,9 @@ def _report_card(r: dict) -> str:
             headline, cls, ratio_text = _binary_verdict(d)
         else:
             headline, cls, ratio_text = _family_verdict(d)
-        named = {k: v for k, v in d.items() if k != "Models split"}
-        total_named = sum(named.values()) or 1
+        # Every bucket renders, Models split included — the card bar must sum
+        # to claim_count just like the report-page bar (remediation T0.2).
+        total_named = sum(d.values()) or 1
         segs_inner: list[str] = []
         counts_inner: list[str] = []
         for label in AGGREGATE_BAR_ORDER:
@@ -2585,7 +2621,11 @@ def _report_card(r: dict) -> str:
     meta = '<span class="sep">·</span>'.join(meta_bits)
 
     tier_counts = r.get("tier_counts") or {}
-    _tier_label_order = [("gov", "gov"), ("wire", "wire"), ("news", "news"), ("fc", "fc")]
+    # "other" ships too (remediation F6): it is the largest cited-source
+    # bucket on both SOTU reports — omitting it made the chip row read as if
+    # only vetted tiers fed the verdicts.
+    _tier_label_order = [("gov", "gov"), ("wire", "wire"), ("news", "news"),
+                         ("fc", "fc"), ("other", "other")]
     _tier_parts = [
         f'{tier_counts.get(key, 0)} {label}'
         for key, label in _tier_label_order
@@ -2753,6 +2793,10 @@ CSS = """\
      sits between misleading (orange) and false (red). */
   --v-truthy:       #84cc16;
   --v-falsey:       #ea580c;
+  /* Models split — panel deadlock. Its own cool slate, distinct from the
+     warm-gray Unverifiable, so the aggregate bars can show the split bucket
+     as a real segment (T0.2) rather than silently dropping it. */
+  --v-split:        #64748b;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -4246,6 +4290,7 @@ hr.rule-light {
 /* 5-bucket coarse-axis paint (headline pill only). */
 .v-truthy       { background: var(--v-truthy); }
 .v-falsey       { background: var(--v-falsey); }
+.v-split        { background: var(--v-split); }
 /* Text paint */
 .vt-true         { color: var(--v-true); }
 .vt-mostly-true  { color: var(--v-mostly-true); }
@@ -4255,6 +4300,7 @@ hr.rule-light {
 .vt-unverifiable { color: var(--v-unverifiable); }
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }
+.vt-split        { color: var(--v-split); }
 
 /* ── Editorial-lens chip (status bar) ──────────────────────────────────────
    Toggles the headline pill between the Lenient and Strict 5-bucket
@@ -5336,7 +5382,7 @@ JS = """\
   var DEFAULT_LENS = 'strict';
   var ALL_PILL_CSS_CLASSES = [
     'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
-    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey'
+    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey', 'v-split'
   ];
 
   function readLens() {
@@ -5943,7 +5989,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         '<div class="how-sep" aria-hidden="true">&rarr;</div>'
         '<div class="how-step">'
         '<span class="how-num">2</span>'
-        '<span class="how-text">Each claim is checked by multiple AI models using primary sources</span>'
+        '<span class="how-text">Each claim is checked by a multi-model panel against a shared, cited evidence pack</span>'
         '</div>'
         '<div class="how-sep" aria-hidden="true">&rarr;</div>'
         '<div class="how-step">'
@@ -5961,14 +6007,14 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         cards_html += '<p class="dim">No reports yet.</p>'
     cards_html += '</div>'
 
-    insights_strip = _insights_strip_html(stats.get("insights"))
-
+    # Model-insights strip retired with the vestigial insights page
+    # (remediation T0.4) — it summarized a single pseudo-model with 0%
+    # dissent by construction. Returns with the Phase 4 per-seat rebuild.
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     body = (
         hero_html
         + stats_html
         + how_strip_html
-        + insights_strip
         + '<hr class="rule">'
         + '<div class="section-head"><span>Latest truthiness reviews</span>'
         + '<span class="sub">Feed</span></div>'
@@ -5988,8 +6034,9 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         footer,
         og_title="truth-bot — Automated Political Fact-Checking",
         og_description=(
-            "Multi-model AI consensus analysis of political speeches. Every claim "
-            "decomposed, verified against primary sources, and scored for accuracy."
+            "Automated fact-checking of political speeches. Every claim is checked "
+            "by a multi-model AI panel against a shared, cited evidence pack — "
+            "sources linked inline, disagreements disclosed."
         ),
         og_type="website",
     )
@@ -6650,6 +6697,25 @@ def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
     )
 
 
+def _render_model_insights_redirect() -> str:
+    """Redirect stub shipped at model-insights.html while the page is retired
+    (remediation T0.4). The v1 insights page predated the PCA pipeline: it
+    showed a single reconciled pseudo-model with 0% dissent by construction
+    and a claim total that disagreed with the rest of the site. The Phase 4
+    rebuild will regenerate it from per-seat provenance (panel_by_role)."""
+    return (
+        '<!doctype html>\n<html lang="en">\n<head>\n'
+        '  <meta charset="utf-8">\n'
+        '  <meta http-equiv="refresh" content="0; url=./about.html">\n'
+        '  <link rel="canonical" href="./about.html">\n'
+        '  <title>Model insights — moved — truth-bot</title>\n'
+        '</head>\n<body>\n'
+        '  <p>The model-insights page is being rebuilt from per-seat panel '
+        'provenance. <a href="./about.html">Continue to About</a>.</p>\n'
+        '</body>\n</html>\n'
+    )
+
+
 def _render_about() -> str:
     """Render the about/method page (PCA-era architecture; refreshed 2026-07-20)."""
     prompt_text = _pca_prompt_text()
@@ -6681,9 +6747,10 @@ def _render_about() -> str:
         "different vendors sit in the verdict seats, so a single vendor's blind spot can't "
         "silently decide a claim. The exact roster used for a report is recorded in its "
         "\"Panel composition\" section. Earlier versions of truth-bot fanned every claim out "
-        "to four frontier models in parallel; the current design gets comparable accuracy at "
-        "roughly a tenth of the cost by spending small-model calls where they're cheap "
-        "(triage, retrieval) and escalating only genuine disagreements.</p>"
+        "to four frontier models in parallel; the current design runs at roughly a tenth of "
+        "the cost by spending small-model calls where they're cheap (triage, retrieval) and "
+        "escalating only genuine disagreements. A benchmark against the reference claim "
+        "corpus will be published with the next full run.</p>"
     )
 
     limitations = (
@@ -6723,7 +6790,8 @@ def _render_about() -> str:
         f'rhetoric are set aside — visibly, not silently: each report links a '
         f'<em>Statement Triage</em> page listing everything excluded and why. Check-worthy '
         f'claims also get a type (statistical, historical, attribution, comparison, '
-        f'personal-anecdote, other). The classifier never sees who the speaker is.</p>'
+        f'personal-anecdote, other). The classifier is not told who the speaker is, '
+        f'though a sentence may name its own speaker.</p>'
         f'<p style="margin-top:0.75rem"><strong>2 · Evidence retrieval.</strong> For each '
         f'claim, a small model writes targeted search queries (the era\'s fiscal year, the '
         f'specific statistic or program named), and the pipeline fetches candidates via web '
@@ -6738,9 +6806,11 @@ def _render_about() -> str:
         f'decides. Verdicts use a four-label contract — True, False, Misleading, '
         f'Unverifiable — and must cite pack items by id (the E1, E2… ids you see in '
         f'reasoning and source lists; citations outside the pack are rejected). A '
-        f'genuine tie is published as "Panel split," never silently broken. The panel is '
-        f'speaker-blind: seats see the claim, its context, and its era — never the '
-        f'speaker\'s name.</p>'
+        f'genuine tie is either resolved by the Severity Classifier — recorded on the '
+        f'claim\'s provenance strip — or published as "Panel split"; a tie is never '
+        f'dropped without a visible trace. The panel is speaker-blind in its inputs: '
+        f'the speaker\'s name is withheld as metadata, though the claim text itself '
+        f'may still identify the speaker.</p>'
         f'<p style="margin-top:0.75rem"><strong>4 · Severity check.</strong> Because small '
         f'models tend to soften a contradicted claim to "Misleading," False-vs-Misleading '
         f'boundary calls and tie-routed rows pass through a second-stage Severity '
@@ -6766,6 +6836,12 @@ def _render_about() -> str:
         f'under 55% "Mixed verdict." The family rail above each verdict bar brackets the '
         f'same totals on the graph itself, so the headline\'s "N of M decided claims '
         f'X-leaning" is always visibly derivable.</p>'
+        f'<p style="margin-top:0.75rem"><strong>Display conventions.</strong> Aggregate '
+        f'bars show every claim, including a distinct <em>Models split</em> segment for '
+        f'panel deadlocks — segments always sum to the report\'s claim count. Guest '
+        f'anecdotes keep their Unverifiable (or Models split) bucket on the bar; the '
+        f'Anecdote pill and the footnote beneath the bar break out how many of those '
+        f'abstentions are anecdotes.</p>'
         f'<p style="margin-top:0.75rem"><strong>The Lens chip</strong> flips between two '
         f'presentations of the same computation: <em>Lenient</em> shows the simple '
         f'Truthy/Falsey lean; <em>Strict</em> (the default) shows the graded bands. The two '
@@ -6898,9 +6974,13 @@ class SitePublisher:
         self._write(self._root / "about.html", _render_about())
         self._write(self._root / "truthy.html", _render_truthy())
         self._write(self._root / "404.html",   _render_404())
+        # model-insights is retired until the Phase 4 per-seat rebuild
+        # (remediation T0.4): the v1 page summarized one pseudo-model with
+        # 0% dissent by construction and a third, conflicting claim total.
+        # Inbound links land on About via this redirect stub.
         self._write(
             self._root / "model-insights.html",
-            _render_model_insights(stats.get("insights")),
+            _render_model_insights_redirect(),
         )
 
         return report_path.resolve()
@@ -7035,6 +7115,7 @@ class SitePublisher:
             "provenance": {
                 "layer_a_label":   bundle.consensus.provenance.layer_a_label,
                 "layer_a_source":  bundle.consensus.provenance.layer_a_source,
+                "layer_a_claim_type": bundle.consensus.provenance.layer_a_claim_type,
                 "panel_votes":     dict(bundle.consensus.provenance.panel_votes),
                 "panel_split":     bundle.consensus.provenance.panel_split,
                 "panel_escalated": bundle.consensus.provenance.panel_escalated,
@@ -7048,8 +7129,28 @@ class SitePublisher:
         }
 
     def _compute_stats(self, reports: list[dict], claims: list[dict] | None = None) -> dict:
-        total_claims = sum(r.get("claim_count", 0) for r in reports)
-        if reports:
+        # Canonical claim count is the claims index itself (remediation T0.7)
+        # — every surfaced figure derives from the same source. The per-report
+        # claim_count sum must reconcile; drift is surfaced loudly (the
+        # consistency checker fails the build on it) rather than papered over.
+        reports_claim_sum = sum(r.get("claim_count", 0) for r in reports)
+        total_claims = len(claims) if claims else reports_claim_sum
+        if claims and reports_claim_sum != len(claims):
+            logger.warning(
+                "claim-count drift: claims.json has %d entries but reports.json "
+                "claim_counts sum to %d", len(claims), reports_claim_sum)
+        # Site-wide consensus = CLAIM-WEIGHTED mean of per-report panel
+        # agreement (remediation T0.1). The old path averaged per-claim
+        # agreement from model_verdicts_summary, which under the PCA
+        # pipeline holds a single reconciled pseudo-model that matches
+        # consensus by construction — rendering "100% Model Consensus"
+        # over reports whose real agreement was 47% and 78%.
+        if reports_claim_sum:
+            agree_rate = sum(
+                r.get("model_agreement_rate", 0) * r.get("claim_count", 0)
+                for r in reports
+            ) / reports_claim_sum
+        elif reports:
             agree_rate = sum(r.get("model_agreement_rate", 0) for r in reports) / len(reports)
         else:
             agree_rate = 0.0
@@ -7114,8 +7215,9 @@ class SitePublisher:
                         adapter = mv.get("adapter", "")
                         model_agree.setdefault(adapter, []).append(mv.get("label") == consensus)
 
-        avg_consensus = (sum(per_claim_agree) / len(per_claim_agree)
-                         if per_claim_agree else agree_rate)
+        # per_claim_agree is kept for the per-model divergence stats below,
+        # but no longer feeds the site-wide consensus figure (see above).
+        avg_consensus = agree_rate
 
         model_rates = {a: sum(v) / len(v) for a, v in model_agree.items() if v}
         mean_rate = sum(model_rates.values()) / len(model_rates) if model_rates else 0.0

@@ -90,8 +90,9 @@ def test_headline_pill_carries_both_projection_data_attrs() -> None:
     assert 'data-coarse-lenient="Truthy"' in html
     assert 'data-coarse-strict="Models split"' in html
     assert 'data-coarse-lenient-css="truthy"' in html
-    # 'Models split' renders with the neutral unverifiable styling.
-    assert 'data-coarse-strict-css="unverifiable"' in html
+    # 'Models split' has its own slug since the P67.4 display-integrity
+    # fix (T0.2) — the aggregate bars need a distinct split segment.
+    assert 'data-coarse-strict-css="split"' in html
 
 
 def test_headline_pill_default_renders_strict_label_and_class() -> None:
