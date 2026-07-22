@@ -1102,6 +1102,18 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
 .corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
 .corrections-note { color: var(--ink-muted); }
+/* Pipeline diagram (About, T4.2) — structural only, no figures. */
+.pipeline-diagram {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  margin: 1rem 0; font-family: var(--sans); font-size: 0.82rem;
+}
+.pipeline-diagram .pd-node {
+  border: 1px solid var(--rule, #ccc); border-radius: 6px;
+  padding: 0.35rem 0.6rem; text-align: center; line-height: 1.25;
+}
+.pipeline-diagram .pd-node small { color: var(--ink-muted); font-size: 0.72rem; }
+.pipeline-diagram .pd-arrow { color: var(--ink-faint); }
+.seat-insights td .ct { font-weight: 600; }
 .report-correction-banner {
   margin: 0.75rem 0 1.25rem;
   padding: 0.6rem 0.9rem;

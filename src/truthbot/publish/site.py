@@ -118,7 +118,7 @@ STRENGTH_LABEL: dict[str, str] = {
 }
 
 TIER_TABLE = [
-    ("Government",  ".gov, .mil — BLS, BEA, CBO, Census, CDC, etc.",          "Highest"),
+    ("Government",  ".gov, .mil, .int — BLS, BEA, CBO, Census, NATO, etc.",   "Highest"),
     ("Wire",        "AP, Reuters",                                              "High"),
     ("Established", "NYT, WaPo, BBC, NPR, CBS, NBC, ABC",                      "Medium-High"),
     ("Academic",    "Peer-reviewed journals, university presses",               "Medium-High"),
@@ -644,7 +644,7 @@ def _headline_verdict_coarse(dist: dict[str, int]) -> tuple[str, str]:
 # Registered-domain rules shared by _tier_bucket and _tier_badge (and matching the
 # Brave connector's _classify_tier) — host-suffix matched via truthbot.domains, so a
 # lookalike host like www.govtech.com no longer counts as Government.
-_TIER_GOV = (".gov", ".mil")
+_TIER_GOV = (".gov", ".mil", ".int")
 _TIER_WIRE = ("apnews.com", "reuters.com")
 _TIER_NEWS = ("nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk", "npr.org",
               "nbcnews.com", "cbsnews.com", "abcnews.go.com")
@@ -3847,6 +3847,18 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
 .corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
 .corrections-note { color: var(--ink-muted); }
+/* Pipeline diagram (About, T4.2) — structural only, no figures. */
+.pipeline-diagram {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  margin: 1rem 0; font-family: var(--sans); font-size: 0.82rem;
+}
+.pipeline-diagram .pd-node {
+  border: 1px solid var(--rule, #ccc); border-radius: 6px;
+  padding: 0.35rem 0.6rem; text-align: center; line-height: 1.25;
+}
+.pipeline-diagram .pd-node small { color: var(--ink-muted); font-size: 0.72rem; }
+.pipeline-diagram .pd-arrow { color: var(--ink-faint); }
+.seat-insights td .ct { font-weight: 600; }
 .report-correction-banner {
   margin: 0.75rem 0 1.25rem;
   padding: 0.6rem 0.9rem;
@@ -6053,6 +6065,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + '<span>Pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML
         + f' · Prompt <a class="footer-hash" href="./about.html#prompt">{_phash}</a>'
         + ' · <a href="./corrections.html">Corrections</a>'
+        + ' · <a href="./model-insights.html">Panel insights</a>'
         + ' · <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">GitHub</a></span>'
     )
     return _page_index(
@@ -6249,6 +6262,24 @@ _TRIAGE_SOURCE_LABELS = {
 }
 
 
+def _falsifiability_note_html(n_claims: int, n_set_aside: int) -> str:
+    """The falsifiability-ratio genre statistic (P67.10 / T4.2): what share of
+    a speech is checkable at all. Derived at render time (T0.8)."""
+    total = n_claims + n_set_aside
+    if not total or not n_claims:
+        return ""
+    ratio = n_claims / total
+    return (
+        '<aside class="methodology">'
+        f'<strong>Falsifiability ratio.</strong> {n_claims} of the {total} '
+        f'sentences in this speech ({format(ratio, ".1%")}) made a checkable '
+        'factual claim. This is a statistic about the <em>genre</em> — '
+        'political speech is mostly narrative, applause lines, and aspiration '
+        '— not about the speaker\'s accuracy, which the report itself '
+        'measures.</aside>'
+    )
+
+
 def _render_statement_triage(site_report: SiteReport) -> str:
     """Render the Statement Triage page — the non-check-worthy sentences that the
     pipeline recorded but never published, grouped by the stage that set them aside.
@@ -6289,6 +6320,7 @@ def _render_statement_triage(site_report: SiteReport) -> str:
         'otherwise unimportant — and set aside before verification. We surface '
         'them here so it is clear what was excluded and which stage excluded it.'
         '</aside>'
+        + _falsifiability_note_html(len(site_report.checkable_bundles), total)
     )
 
     # Deterministic stage order: A1 first, then A2, then any others alphabetically.
@@ -6380,7 +6412,7 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
     _claim_og_desc = (
         f"Verdict: {_verdict_label}. "
         f"{_agree_models} of {_total_models} model{'s' if _total_models != 1 else ''} agree. "
-        "Verified against primary government sources."
+        "Checked against a shared, cited evidence pack."
     )
     return _page_report(
         f"Claim: {_claim_text_trunc}",
@@ -6750,6 +6782,95 @@ def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
     )
 
 
+def _render_model_insights_v2(reports: list[dict], claims: list[dict]) -> str:
+    """Per-seat panel insights rebuilt from published provenance (P67.10 /
+    T4.1) — replaces the retired v1 page, which summarized one reconciled
+    pseudo-model at 0% dissent by construction. Every figure derives from
+    claims.json at build time (T0.8)."""
+    from truthbot.publish.seat_insights import compute_seat_insights
+
+    insights = compute_seat_insights(claims)
+    by_id = {r.get("id"): r for r in reports}
+    label_order = ["True", "Misleading", "False", "Unverifiable"]
+
+    sections: list[str] = []
+    for rid, ins in insights.items():
+        r = by_id.get(rid) or {}
+        roster = (r.get("panel_roster") or {}).get("seats") or {}
+        title = f'{_esc(r.get("speaker", "Unknown"))} — {_esc(r.get("date", ""))}'
+        url = r.get("url", "#")
+        seat_rows = []
+        for role in ("proposer", "critic", "arbiter"):
+            seat = ins.seats.get(role)
+            if seat is None:
+                continue
+            model = ", ".join(roster.get(role, [])) or "—"
+            counts = " · ".join(
+                f'{lbl} <span class="ct">{seat.label_counts.get(lbl, 0)}</span>'
+                for lbl in label_order if seat.label_counts.get(lbl, 0))
+            seat_rows.append(
+                f'<tr><td><strong>{_esc(role.capitalize())}</strong></td>'
+                f'<td class="mono">{_esc(model)}</td>'
+                f'<td>{counts}</td>'
+                f'<td>{format(seat.rate("False"), ".1%")}</td>'
+                f'<td>{seat.total}</td></tr>')
+        arb = ins.arbiter_sided
+        arb_line = ""
+        if ins.escalated:
+            arb_line = (
+                f'<p>Arbiter side-taking on the {ins.escalated} escalated claims: '
+                f'sided with the proposer {arb.get("proposer", 0)}, with the critic '
+                f'{arb.get("critic", 0)}, took a third position {arb.get("neither", 0)}.</p>')
+        ov_line = ""
+        if ins.overrides:
+            parts = [f'{_esc(k)} <span class="ct">{v}</span>'
+                     for k, v in sorted(ins.overrides.items())]
+            ov_line = ('<p>Severity-Classifier stage-2 overrides: '
+                       + " · ".join(parts) + '.</p>')
+        sections.append(
+            f'<h3 style="margin-top:1.5rem"><a href="./{_esc(url)}">{title}</a></h3>'
+            f'<p class="dim">{ins.n_claims} claims · {ins.escalated} escalated to '
+            f'the arbiter ({format(ins.escalation_rate, ".1%")})</p>'
+            f'<table class="tier-table seat-insights">'
+            f'<tr><th>Seat</th><th>Model</th><th>Seat predictions</th>'
+            f'<th>False-rate</th><th>Claims voted</th></tr>'
+            + "".join(seat_rows) + '</table>'
+            + arb_line + ov_line)
+
+    body = (
+        '<h2>Model panel insights</h2><hr class="rule">'
+        '<p>What each seat of the verdict panel actually predicted, per report '
+        '— computed from the published per-claim provenance '
+        '(<span class="mono">panel_by_role</span>), not from the reconciled '
+        'verdicts. Disagreement between seats is the pipeline\'s error-'
+        'catching mechanism: an escalation means the proposer and critic '
+        'differed and the arbiter decided; a Severity-Classifier override '
+        'means a second-stage model re-graded a boundary call. Both are '
+        'disclosed per claim on its provenance strip.</p>'
+        + "".join(sections)
+        + '<p class="dim" style="margin-top:1.5rem">Method notes: seat '
+        'predictions are each seat\'s own verdict before reconciliation; the '
+        'False-rate is the share of that seat\'s votes reading False. See '
+        '<a href="./about.html">About</a> for the full pipeline.</p>'
+    )
+    footer = (
+        f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
+        f'<span><a href="./corrections.html">Corrections</a></span>'
+        f'<span>Source: <a href="{GITHUB_URL}" target="_blank" rel="noopener">'
+        f'github.com/aRealGem/Truth-bot</a></span>'
+    )
+    return _page_about(
+        "Model Panel Insights",
+        body,
+        footer=footer,
+        og_title="Model panel insights — truth-bot",
+        og_description="Per-seat verdict distributions, escalation rates, "
+                       "arbiter side-taking, and severity overrides for every "
+                       "published report.",
+        og_type="website",
+    )
+
+
 def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None) -> str:
     """The public Corrections page (P67.6 / T1.5) — a fact-checking-norm
     changelog: claim id, old → new verdict, reason, date. Rendered on every
@@ -6933,6 +7054,19 @@ def _render_about() -> str:
         f'unverifiable they are labeled <em>Anecdote</em> — a limit of the genre, not a '
         f'failed verification. An anecdote the press independently investigated gets a '
         f'real verdict.</p>'
+        f'<div class="pipeline-diagram" aria-label="Pipeline diagram">'
+        f'<span class="pd-node">Transcript</span><span class="pd-arrow">→</span>'
+        f'<span class="pd-node">Check-worthiness triage<br><small>A1 + A2, speaker withheld</small></span>'
+        f'<span class="pd-arrow">→</span>'
+        f'<span class="pd-node">Era-scoped retrieval<br><small>queries + connectors</small></span>'
+        f'<span class="pd-arrow">→</span>'
+        f'<span class="pd-node">Evidence pack<br><small>deduped · ranked · hashed</small></span>'
+        f'<span class="pd-arrow">→</span>'
+        f'<span class="pd-node">Panel<br><small>proposer → critic → arbiter</small></span>'
+        f'<span class="pd-arrow">→</span>'
+        f'<span class="pd-node">Severity check</span><span class="pd-arrow">→</span>'
+        f'<span class="pd-node">Report</span>'
+        f'</div>'
         f'<h3 style="margin-top:1.5rem">How to read a report</h3>'
         f'<p><strong>Per-claim pill.</strong> Each claim headlines the panel\'s own verdict '
         f'(True, False, Misleading, Unverifiable — or Anecdote / Panel split). The '
@@ -6953,6 +7087,12 @@ def _render_about() -> str:
         f'anecdotes keep their Unverifiable (or Models split) bucket on the bar; the '
         f'Anecdote pill and the footnote beneath the bar break out how many of those '
         f'abstentions are anecdotes.</p>'
+        f'<p style="margin-top:0.75rem"><strong>Going deeper.</strong> The '
+        f'<a href="./model-insights.html">Model panel insights</a> page shows what each '
+        f'seat predicted per report — dissent, escalations, arbiter side-taking, and '
+        f'severity overrides. Each report\'s <em>Statement Triage</em> page carries its '
+        f'falsifiability ratio: the share of the speech that made a checkable claim at '
+        f'all, a statistic about the genre rather than the speaker.</p>'
         f'<p style="margin-top:0.75rem"><strong>The Lens chip</strong> flips between two '
         f'presentations of the same computation: <em>Lenient</em> shows the simple '
         f'Truthy/Falsey lean; <em>Strict</em> (the default) shows the graded bands. The two '
@@ -7091,13 +7231,15 @@ class SitePublisher:
         self._write(self._root / "about.html", _render_about())
         self._write(self._root / "truthy.html", _render_truthy())
         self._write(self._root / "404.html",   _render_404())
-        # model-insights is retired until the Phase 4 per-seat rebuild
-        # (remediation T0.4): the v1 page summarized one pseudo-model with
-        # 0% dissent by construction and a third, conflicting claim total.
-        # Inbound links land on About via this redirect stub.
+        # model-insights v2 (P67.10 / T4.1): rebuilt from per-seat provenance.
+        # Falls back to the About redirect stub when the claims index carries
+        # no panel_by_role data (fresh site, legacy corpus).
+        has_seats = any((c.get("provenance") or {}).get("panel_by_role")
+                        for c in claims_index)
         self._write(
             self._root / "model-insights.html",
-            _render_model_insights_redirect(),
+            _render_model_insights_v2(reports_index, claims_index)
+            if has_seats else _render_model_insights_redirect(),
         )
         self._write(self._root / "corrections.html",
                     _render_corrections(self._corrections,
@@ -7191,6 +7333,11 @@ class SitePublisher:
             "role":                sr.role,
             "venue":               sr.venue,
             "claim_count":         len(sr.checkable_bundles),
+            # P67.10: seat naming for the per-seat insights page, and the
+            # set-aside count so the falsifiability ratio is derivable from
+            # reports.json alone.
+            "panel_roster":        dict(getattr(sr, "panel_roster", None) or {}),
+            "triage_count":        len(getattr(sr, "characterization", None) or []),
             "verdict_distribution": sr.verdict_distribution,
             # 5-bucket coarse-axis distributions for lens-aware aggregate
             # rendering on the index page (and external consumers of
