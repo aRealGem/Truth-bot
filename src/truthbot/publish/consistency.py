@@ -225,14 +225,18 @@ def check_site(site_root: Path) -> list[str]:
                 f"index: Model Consensus shows {m.group(1)}%, claim-weighted "
                 f"mean of reports.json is {want}%")
 
-    # ── Retired-page + tagline guards (T0.4 / T0.5 / T0.6) ───────────────
+    # ── Insights page + tagline guards (T0.4 → rebuilt in T4.1) ──────────
+    # Valid states: the About redirect stub (no per-seat data) or the v2
+    # per-seat page. The v1 pseudo-model page ("Hydramind") must never ship.
     insights = site_root / "model-insights.html"
     if insights.exists():
         text = insights.read_text(encoding="utf-8")
-        if 'http-equiv="refresh"' not in text or "Hydramind" in text:
+        is_stub = 'http-equiv="refresh"' in text
+        is_v2 = "Model panel insights" in text and "panel_by_role" in text
+        if "Hydramind" in text or not (is_stub or is_v2):
             violations.append(
-                "model-insights.html: expected the About redirect stub "
-                "(page is retired until the Phase 4 per-seat rebuild)")
+                "model-insights.html: expected the v2 per-seat page or the "
+                "About redirect stub; the v1 pseudo-model page must not ship")
     for fname, banned in (("index.html", "primary sources"),
                           ("about.html", "comparable accuracy"),
                           ("about.html", "never silently broken")):

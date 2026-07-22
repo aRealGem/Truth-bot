@@ -212,7 +212,9 @@ def classify_tier(url: str) -> SourceTier:
     ``.gov``, letting a trade magazine win pack slots. Module-level so the
     evidence-v2 retrievers (P67.8) classify identically to the Brave
     connector."""
-    gov_domains = (".gov", ".mil", "federalreserve.gov")
+    # ``.int`` = treaty-established intergovernmental orgs (nato.int, un.int)
+    # — primary-source class; was silently OTHER until the 2026-07-21 pilot.
+    gov_domains = (".gov", ".mil", ".int", "federalreserve.gov")
     wire_domains = ("apnews.com", "reuters.com")
     established_domains = (
         "nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk",
