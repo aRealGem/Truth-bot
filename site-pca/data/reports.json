@@ -1,11 +1,26 @@
 [
   {
-    "id": "e611eb2d-5b76-4e0f-9053-71e99cf71117",
+    "id": "514413a0-6343-4341-a09b-9f947b14cab6",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "U.S. Capitol",
     "claim_count": 178,
+    "panel_roster": {
+      "name": "dev",
+      "seats": {
+        "proposer": [
+          "mistral"
+        ],
+        "critic": [
+          "dsv4-flash"
+        ],
+        "arbiter": [
+          "claude-haiku"
+        ]
+      }
+    },
+    "triage_count": 605,
     "verdict_distribution": {
       "True": 48,
       "Mostly True": 0,
@@ -36,7 +51,7 @@
       "Misleading": 72
     },
     "model_agreement_rate": 0.466,
-    "url": "reports/2026-02-24-donald-trump-e611eb.html",
+    "url": "reports/2026-02-24-donald-trump-514413.html",
     "tier_counts": {
       "gov": 61,
       "wire": 18,
@@ -50,12 +65,27 @@
     "channel": ""
   },
   {
-    "id": "3d132e32-2630-420b-9c49-a6e847572022",
+    "id": "87e3725d-e94b-471f-b8a9-c8a1e49d8ca5",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
     "claim_count": 111,
+    "panel_roster": {
+      "name": "dev",
+      "seats": {
+        "proposer": [
+          "mistral"
+        ],
+        "critic": [
+          "dsv4-flash"
+        ],
+        "arbiter": [
+          "claude-haiku"
+        ]
+      }
+    },
+    "triage_count": 369,
     "verdict_distribution": {
       "True": 76,
       "Mostly True": 0,
@@ -86,13 +116,13 @@
       "Misleading": 19
     },
     "model_agreement_rate": 0.784,
-    "url": "reports/2022-03-01-joe-biden-3d132e.html",
+    "url": "reports/2022-03-01-joe-biden-87e372.html",
     "tier_counts": {
-      "gov": 56,
+      "gov": 59,
       "wire": 18,
       "news": 76,
       "fc": 16,
-      "other": 284
+      "other": 281
     },
     "source_of_claims": "Joe Biden",
     "source_of_claims_professional_public_title": "President",

@@ -1,12 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=./about.html">
-  <link rel="canonical" href="./about.html">
-  <title>Model insights — moved — truth-bot</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="truth-bot 0.2.0 (beta)">
+  <meta name="theme-color" content="#fafaf9">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="truth-bot">
+  <meta property="og:title" content="Model panel insights — truth-bot">
+  <meta property="og:description" content="Per-seat verdict distributions, escalation rates, arbiter side-taking, and severity overrides for every published report.">
+  <meta property="og:image" content="./assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Model panel insights — truth-bot">
+  <meta name="twitter:description" content="Per-seat verdict distributions, escalation rates, arbiter side-taking, and severity overrides for every published report.">
+  <meta name="twitter:image" content="./assets/social-card.png">
+  <meta name="twitter:image:alt" content="truth-bot: automated political fact-checking with multi-model consensus">
+  <title>Model Panel Insights — truth-bot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400;6..72,1,500&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+
+  <link rel="stylesheet" href="./assets/styles.css">
 </head>
 <body>
-  <p>The model-insights page is being rebuilt from per-seat panel provenance. <a href="./about.html">Continue to About</a>.</p>
+<div class="status-bar">
+  <div class="row">
+    <span class="live">Operational</span>
+    <span>Pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></span>
+    <span>Multi-model</span>
+    <button type="button" class="editorial-lens" data-lens="strict" hidden title="Toggle the report verdict between the Strict lens (graded: Largely/Mostly True/False over decided claims, Mixed for coin-flips) and the Lenient lens (simple overall lean: Truthy or Falsey). Same claims, same counts — two presentations.">
+      <span class="lens-label">Lens:</span>
+      <span class="lens-value">Strict</span>
+    </button>
+    <span class="stamp">2026-07-22 01:20 UTC</span>
+  </div>
+</div>
+<header class="masthead">
+  <div class="wrap masthead-row">
+    <div>
+      <div class="wordmark"><a href="./index.html" style="color:inherit;text-decoration:none">truth-bot<span class="dot">.</span></a></div>
+      <p class="tagline">Automated political fact-checking with multi-model consensus analysis.</p>
+    </div>
+    <nav class="top-nav">
+      <a href="./index.html">Reports</a>
+      <a href="./about.html">About</a>
+      <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<h2>Model panel insights</h2><hr class="rule"><p>What each seat of the verdict panel actually predicted, per report — computed from the published per-claim provenance (<span class="mono">panel_by_role</span>), not from the reconciled verdicts. Disagreement between seats is the pipeline's error-catching mechanism: an escalation means the proposer and critic differed and the arbiter decided; a Severity-Classifier override means a second-stage model re-graded a boundary call. Both are disclosed per claim on its provenance strip.</p><h3 style="margin-top:1.5rem"><a href="./reports/2022-03-01-joe-biden-87e372.html">Joe Biden — 2022-03-01</a></h3><p class="dim">111 claims · 24 escalated to the arbiter (21.6%)</p><table class="tier-table seat-insights"><tr><th>Seat</th><th>Model</th><th>Seat predictions</th><th>False-rate</th><th>Claims voted</th></tr><tr><td><strong>Proposer</strong></td><td class="mono">mistral</td><td>True <span class="ct">74</span> · Misleading <span class="ct">26</span> · False <span class="ct">8</span> · Unverifiable <span class="ct">3</span></td><td>7.2%</td><td>111</td></tr><tr><td><strong>Critic</strong></td><td class="mono">dsv4-flash</td><td>True <span class="ct">80</span> · Misleading <span class="ct">9</span> · False <span class="ct">15</span> · Unverifiable <span class="ct">7</span></td><td>13.5%</td><td>111</td></tr><tr><td><strong>Arbiter</strong></td><td class="mono">claude-haiku</td><td>True <span class="ct">2</span> · Misleading <span class="ct">17</span> · False <span class="ct">1</span> · Unverifiable <span class="ct">4</span></td><td>4.2%</td><td>24</td></tr></table><p>Arbiter side-taking on the 24 escalated claims: sided with the proposer 14, with the critic 4, took a third position 6.</p><p>Severity-Classifier stage-2 overrides: Misleading→False <span class="ct">1</span>.</p><h3 style="margin-top:1.5rem"><a href="./reports/2026-02-24-donald-trump-514413.html">Donald Trump — 2026-02-24</a></h3><p class="dim">178 claims · 95 escalated to the arbiter (53.4%)</p><table class="tier-table seat-insights"><tr><th>Seat</th><th>Model</th><th>Seat predictions</th><th>False-rate</th><th>Claims voted</th></tr><tr><td><strong>Proposer</strong></td><td class="mono">mistral</td><td>True <span class="ct">51</span> · Misleading <span class="ct">83</span> · False <span class="ct">30</span> · Unverifiable <span class="ct">14</span></td><td>16.9%</td><td>178</td></tr><tr><td><strong>Critic</strong></td><td class="mono">dsv4-flash</td><td>True <span class="ct">45</span> · Misleading <span class="ct">16</span> · False <span class="ct">89</span> · Unverifiable <span class="ct">28</span></td><td>50.0%</td><td>178</td></tr><tr><td><strong>Arbiter</strong></td><td class="mono">claude-haiku</td><td>True <span class="ct">14</span> · Misleading <span class="ct">60</span> · False <span class="ct">8</span> · Unverifiable <span class="ct">13</span></td><td>8.4%</td><td>95</td></tr></table><p>Arbiter side-taking on the 95 escalated claims: sided with the proposer 61, with the critic 20, took a third position 14.</p><p>Severity-Classifier stage-2 overrides: Disagreement→Misleading <span class="ct">5</span> · False→Misleading <span class="ct">4</span> · Misleading→False <span class="ct">7</span>.</p><p class="dim" style="margin-top:1.5rem">Method notes: seat predictions are each seat's own verdict before reconciliation; the False-rate is the share of that seat's votes reading False. See <a href="./about.html">About</a> for the full pipeline.</p>
+</main>
+<footer class="foot wrap">
+<span>truth-bot · pipeline v0.2.0<span class="beta-badge" aria-label="Beta release">Beta</span></span><span><a href="./corrections.html">Corrections</a></span><span>Source: <a href="https://github.com/aRealGem/Truth-bot" target="_blank" rel="noopener">github.com/aRealGem/Truth-bot</a></span>
+</footer>
+<script src="./assets/truthbot.js"></script>
 </body>
 </html>
