@@ -86,3 +86,24 @@ def build_hydramind(*, response_parser: Optional[Callable[[Any], dict]] = None) 
         spend_sink=NullSpendSink(),
         project=CLIENT,
     )
+
+
+def proxy_key_spend(environ: Optional[Mapping[str, str]] = None) -> float:
+    """Current proxy-DB spend for the truth-bot key, in USD (P67.3 budget
+    probe). The proxy DB is the authoritative ledger — self-reported
+    telemetry undercounts ~7x. Raises on transport errors so the budget
+    probe fails LOUD, never silently open."""
+    import json
+    import urllib.request
+
+    env = _env(environ)
+    key = env.get(resolve_key_env(env)) or ""
+    if not key:
+        raise EnvironmentError(BLOCKED_MSG)
+    base = env.get(BASE_URL_ENV, DEFAULT_BASE_URL).rstrip("/")
+    req = urllib.request.Request(f"{base}/key/info",
+                                 headers={"Authorization": f"Bearer {key}"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        doc = json.loads(resp.read().decode("utf-8"))
+    info = doc.get("info", doc)
+    return float(info.get("spend") or 0.0)

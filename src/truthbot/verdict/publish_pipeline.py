@@ -72,6 +72,83 @@ def _chunk(items: list, size: int) -> list[list]:
     return [items[i:i + size] for i in range(0, len(items), size)]
 
 
+class BudgetHalt(RuntimeError):
+    """Raised BEFORE a chunk when the preflight probe says headroom is below
+    the projected chunk cost (P67.3 option 3). Completed rows ride on
+    ``partial_result`` like any other mid-run failure — but nothing was lost:
+    the halt fires before spend, not after a 429."""
+
+
+# ── P67.3 chunk journal (option 1) ───────────────────────────────────────────
+#
+# One JSONL line per completed chunk: {"chunk", "rows", "evidence", "cost_usd",
+# "roster"?}. Evidence is serialized like the run artifact (Evidence dicts) so
+# a resumed run rebuilds identical packs and the offline re-bridge path works
+# on a journal alone.
+
+def append_chunk_journal(path, chunk_idx: int, rows: list[dict],
+                         packs: dict, cost_usd: float,
+                         roster: Optional[dict] = None) -> None:
+    import json
+    from pathlib import Path
+
+    rec = {
+        "chunk": chunk_idx,
+        "rows": rows,
+        "evidence": {sid: [ev.model_dump(mode="json") for ev in
+                           bridge_mod._pack_to_evidence(sid, pack)]
+                     for sid, pack in (packs or {}).items()},
+        "cost_usd": cost_usd,
+    }
+    if roster:
+        rec["roster"] = roster
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+
+def load_chunk_journal(path) -> tuple[list[dict], dict, float, Optional[dict]]:
+    """(rows, packs, cost_usd, roster) accumulated from a prior run's journal.
+    Missing file → empty (fresh run)."""
+    import json
+    from pathlib import Path
+
+    from truthbot.models import Evidence
+    from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
+
+    p = Path(path)
+    rows: list[dict] = []
+    packs: dict[str, EvidencePack] = {}
+    cost = 0.0
+    roster: Optional[dict] = None
+    if not p.exists():
+        return rows, packs, cost, roster
+    for line in p.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        rows.extend(rec.get("rows") or [])
+        cost += float(rec.get("cost_usd") or 0.0)
+        roster = roster or rec.get("roster")
+        for sid, evs in (rec.get("evidence") or {}).items():
+            items = []
+            for i, d in enumerate(evs, start=1):
+                ev = Evidence.model_validate(d)
+                items.append(PackItem(
+                    pack_id=f"E{i}", source_name=ev.source_name,
+                    source_url=ev.source_url, tier=ev.source_tier,
+                    snippet=ev.snippet,
+                    retrieved_at=ev.retrieved_at.isoformat(),
+                    sha256=_sha256(ev.source_url, ev.snippet),
+                    supports_claim=ev.supports_claim,
+                    relevance_score=ev.relevance_score,
+                    published_at=(ev.published_at.date().isoformat()
+                                  if ev.published_at else None)))
+            packs[sid] = EvidencePack(sid=sid, window=None, items=items)
+    return rows, packs, cost, roster
+
+
 def run_pca_verify(
     sentences: list[dict],
     *,
@@ -80,6 +157,11 @@ def run_pca_verify(
     chunk_size: int = 6,
     confirm_pass: bool = True,
     on_progress: Optional[Callable[[int, int, list[dict]], None]] = None,
+    resume_rows: Optional[list[dict]] = None,
+    resume_packs: Optional[dict] = None,
+    journal_path=None,
+    budget_check: Optional[Callable[[], float]] = None,
+    budget_safety: float = 1.5,
 ) -> PcaVerifyResult:
     """Segmented sentences → published-ready ``VerdictBundle``s via the PCA stack.
 
@@ -93,8 +175,22 @@ def run_pca_verify(
       chunk_size:   check-worthy claims per adjudicate call (rate-limit control).
       confirm_pass: pass through to Layer A (A2 confirms the A1-PASS band).
       on_progress:  optional callback(chunk_idx, n_chunks, chunk_rows) for CLI logging.
+      resume_rows:  P67.3 resume — rows from a prior run's journal; their sids
+                    are NEVER re-adjudicated (their spend is already banked).
+      resume_packs: sid → EvidencePack matching ``resume_rows`` (journal-loaded).
+      journal_path: P67.3 option 1 — when set, every completed chunk's rows +
+                    packs + cost are appended to this JSONL immediately, so a
+                    mid-run failure loses at most the in-flight chunk.
+      budget_check: P67.3 option 3 — callable returning remaining headroom in
+                    USD. Probed before every chunk; when headroom < projected
+                    chunk cost × ``budget_safety`` (rolling mean of completed
+                    chunks), the run halts EARLY with ``BudgetHalt`` — before
+                    spend, with everything journaled.
 
     Returns a ``PcaVerifyResult``. Pure/offline given offline ``*_fn``s.
+    On ANY mid-run exception the completed rows/claims ride on the exception
+    as ``exc.partial_result`` (a PcaVerifyResult without bundles), so callers
+    and tooling can always recover banked spend.
     """
     layer_a = run_layer_a(sentences, classify_fn=layer_a_fn, confirm_pass=confirm_pass)
     queue = layer_a.check_worthy_queue
@@ -117,25 +213,60 @@ def run_pca_verify(
                "layer_a": {"label": r.get("label", ""), "source": r.get("source", ""),
                            "claim_type": r.get("claim_type") or ""}}
               for r in queue]
-    chunks = _chunk(claims, chunk_size)
+    # P67.3 resume: sids with journaled rows never hit the lane again.
+    all_rows: list[dict] = list(resume_rows or [])
+    packs: dict[str, EvidencePack] = dict(resume_packs or {})
+    done_sids = {r.get("sid") for r in all_rows}
+    todo = [c for c in claims if c["sid"] not in done_sids]
+
+    chunks = _chunk(todo, chunk_size)
     result.n_chunks = len(chunks)
 
-    all_rows: list[dict] = []
-    packs: dict[str, EvidencePack] = {}
-    for idx, chunk in enumerate(chunks, 1):
-        rows, notes = adjudicate_fn(chunk)
-        all_rows.extend(rows)
-        for sid, pack in (notes.get("packs") or {}).items():
-            packs[sid] = pack
-        result.cost_usd += float(notes.get("cost_usd", 0.0) or 0.0)
-        # Capture the PCA roster composition once — it's identical across chunks,
-        # so take the first non-empty one and never overwrite it.
-        if result.roster is None:
-            roster_note = notes.get("roster")
-            if roster_note:
-                result.roster = roster_note
-        if on_progress is not None:
-            on_progress(idx, len(chunks), rows)
+    chunk_costs: list[float] = []
+    try:
+        for idx, chunk in enumerate(chunks, 1):
+            if budget_check is not None:
+                projected = (sum(chunk_costs) / len(chunk_costs)
+                             if chunk_costs else 0.0) * budget_safety
+                headroom = budget_check()
+                if chunk_costs and headroom < projected:
+                    raise BudgetHalt(
+                        f"budget preflight: headroom ${headroom:.2f} < "
+                        f"projected chunk cost ${projected:.2f} "
+                        f"(halting before chunk {idx}/{len(chunks)}; "
+                        f"completed work journaled)")
+            rows, notes = adjudicate_fn(chunk)
+            all_rows.extend(rows)
+            chunk_packs = dict(notes.get("packs") or {})
+            packs.update(chunk_packs)
+            chunk_cost = float(notes.get("cost_usd", 0.0) or 0.0)
+            chunk_costs.append(chunk_cost)
+            result.cost_usd += chunk_cost
+            # Capture the PCA roster composition once — it's identical across
+            # chunks, so take the first non-empty one and never overwrite it.
+            if result.roster is None:
+                roster_note = notes.get("roster")
+                if roster_note:
+                    result.roster = roster_note
+            if journal_path is not None:
+                append_chunk_journal(journal_path, idx, rows, chunk_packs,
+                                     chunk_cost,
+                                     roster=result.roster if idx == 1 else None)
+            if on_progress is not None:
+                on_progress(idx, len(chunks), rows)
+    except Exception as exc:
+        # The partial-result channel (P67.3): whatever completed — including
+        # resumed rows — survives on the exception. With a journal_path it is
+        # also already on disk.
+        partial = PcaVerifyResult(
+            characterization=result.characterization,
+            rows=all_rows, claims=claims,
+            n_sentences=result.n_sentences,
+            n_check_worthy=result.n_check_worthy,
+            n_chunks=result.n_chunks, cost_usd=result.cost_usd,
+            roster=result.roster)
+        exc.partial_result = partial
+        raise
 
     out = bridge_mod.bridge(all_rows, claims, packs)
     result.bundles = out.bundles
