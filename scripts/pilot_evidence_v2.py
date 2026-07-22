@@ -124,10 +124,11 @@ def main() -> None:
     from truthbot.verdict.consolidator import consolidate
     from truthbot.verdict.speech_context import expected_claim_window as _ecw
     from truthbot.verify.retrievers import (
-        ClaudeWorkerRetriever, OpenAIBrowsingRetriever,
+        ClaudeWorkerRetriever, GrokSearchRetriever, OpenAIBrowsingRetriever,
         assert_no_contamination, build_retrieval_prompt)
 
-    r1, r2 = ClaudeWorkerRetriever(), OpenAIBrowsingRetriever()
+    r1, r2, r3 = (ClaudeWorkerRetriever(), OpenAIBrowsingRetriever(),
+                  GrokSearchRetriever())
     results = []
     for i, c in enumerate(claims):
         speech = c["speech"]
@@ -146,12 +147,13 @@ def main() -> None:
         if not args.skip_new:
             sl1 = r1.shortlist(text, utterance=utt, window=window)
             sl2 = r2.shortlist(text, utterance=utt, window=window)
-            new_pack = consolidate(sid, [("R1", sl1), ("R2", sl2)],
+            sl3 = r3.shortlist(text, utterance=utt, window=window)
+            new_pack = consolidate(sid, [("R1", sl1), ("R2", sl2), ("R3", sl3)],
                                    utterance=utt, window=window)
             urls = [it.evidence.source_url for it in new_pack.items]
             tiers = [it.evidence.source_tier.value for it in new_pack.items]
             rec["new"] = {
-                "r1_n": len(sl1), "r2_n": len(sl2),
+                "r1_n": len(sl1), "r2_n": len(sl2), "r3_n": len(sl3),
                 "pack": new_pack.to_payload(),
                 "quota_met": new_pack.quota_met,
                 "gate_code": new_pack.gate_code,

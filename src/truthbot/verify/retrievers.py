@@ -252,16 +252,64 @@ class OpenAIBrowsingRetriever:
 
 
 @dataclass
-class R3Retriever:
-    """Third retrieval backend — BLOCKED on decision D1 (Grok live search vs
-    an independent search API via Lane-Tools; recommendation on file: Grok).
-    Do not implement around the block."""
-    label: str = "R3-pending-D1"
+class GrokSearchRetriever:
+    """R3 — Grok Live Search via the xAI API (decision D1, resolved
+    2026-07-22: jackie's roster ruling put Grok in the stack; the on-file
+    recommendation was Grok, and ``XAI_API_KEY`` ships in ``~/.env``).
 
-    def shortlist(self, *args, **kwargs) -> list[Evidence]:
-        raise PendingDecisionError(
-            "R3 retrieval backend is pending decision D1 "
-            "(Grok live search vs independent search API via Lane-Tools)")
+    Era discipline is enforced twice: the Live Search ``from_date``/
+    ``to_date`` parameters bound what Grok may search (to_date = fair-game
+    end), and the shared conversion/consolidation filters re-check every
+    returned item like any other retriever."""
+    label: str = "R3-grok-search"
+    model: str = ""
+    timeout_s: int = 300
+
+    def _post(self, model: str, prompt: str, tool: dict) -> dict:
+        key = os.environ.get("XAI_API_KEY")
+        if not key:
+            raise EnvironmentError("XAI_API_KEY not set (R3 lane)")
+        # xAI Agent Tools API (the 2026 replacement for the deprecated
+        # search_parameters Live Search — the old field now 410s). The
+        # /v1/responses envelope mirrors OpenAI's, so R2's output parsing
+        # is reused verbatim.
+        body = json.dumps({
+            "model": model,
+            "input": prompt,
+            "tools": [tool],
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            "https://api.x.ai/v1/responses", data=body,
+            headers={"Authorization": f"Bearer {key}",
+                     "Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+
+    def shortlist(self, claim_text: str, *, context: str = "",
+                  utterance: Optional[date] = None,
+                  window: Optional[tuple[date, date]] = None) -> list[Evidence]:
+        prompt = build_retrieval_prompt(claim_text, context=context,
+                                        utterance=utterance, window=window)
+        tool: dict = {"type": "web_search"}
+        if window:
+            tool["from_date"] = window[0].isoformat()
+        if utterance:
+            tool["to_date"] = fair_game_end(utterance).isoformat()
+        elif window:
+            tool["to_date"] = window[1].isoformat()
+        model = self.model or os.environ.get("TRUTHBOT_R3_MODEL") or "grok-4"
+        try:
+            doc = self._post(model, prompt, tool)
+        except Exception as exc:  # noqa: BLE001 — fail soft like the other seats
+            logger.warning("%s: model %s failed (%s)", self.label, model, exc)
+            return []
+        usage = doc.get("usage") or {}
+        logger.info("%s: model=%s tokens in/out %s/%s", self.label,
+                    doc.get("model", model), usage.get("input_tokens"),
+                    usage.get("output_tokens"))
+        return items_to_evidence(
+            _parse_shortlist_json(OpenAIBrowsingRetriever._output_text(doc)),
+            retriever_label=self.label)
 
 
 # ── T2.6 contamination guard (harness assertion, not a convention) ───────────

@@ -19,7 +19,7 @@ from truthbot.verify.retrievers import (
     ContaminationError,
     OpenAIBrowsingRetriever,
     PendingDecisionError,
-    R3Retriever,
+    GrokSearchRetriever,
     assert_no_contamination,
     build_retrieval_prompt,
     items_to_evidence,
@@ -114,9 +114,34 @@ def test_r2_falls_down_model_chain(monkeypatch) -> None:
     assert evs[0].supports_claim is None  # context stance
 
 
-def test_r3_refuses_until_d1() -> None:
-    with pytest.raises(PendingDecisionError, match="D1"):
-        R3Retriever().shortlist("claim")
+def test_r3_grok_era_scopes_live_search_and_parses(monkeypatch) -> None:
+    """D1 resolved (2026-07-22): R3 = Grok Live Search. The search window must
+    carry from_date = coded-window start and to_date = FAIR-GAME end."""
+    captured = {}
+
+    def fake_post(self, model, prompt, tool):
+        captured["model"] = model
+        captured["search"] = tool
+        return {"output": [{"content": [{"type": "output_text", "text": json.dumps(
+            {"items": [{"url": "https://www.bls.gov/news.release/x.htm",
+                        "date": "2026-02-20", "stance": "refutes",
+                        "one_line_why": "official series"}]})}]}],
+                "usage": {"input_tokens": 100, "output_tokens": 50}}
+
+    monkeypatch.setenv("XAI_API_KEY", "xai-test")
+    monkeypatch.setattr(GrokSearchRetriever, "_post", fake_post)
+    evs = GrokSearchRetriever().shortlist("claim", utterance=UTT, window=WINDOW)
+    assert captured["model"] == "grok-4"
+    assert captured["search"]["from_date"] == "2024-01-01"
+    assert captured["search"]["to_date"] == "2026-03-03"   # fair-game end, NOT window end
+    assert captured["search"]["type"] == "web_search"
+    assert evs[0].source_tier == SourceTier.GOVERNMENT
+    assert evs[0].supports_claim is False
+
+
+def test_r3_grok_fails_soft_without_key(monkeypatch) -> None:
+    monkeypatch.delenv("XAI_API_KEY", raising=False)
+    assert GrokSearchRetriever().shortlist("claim", utterance=UTT, window=WINDOW) == []
 
 
 def test_contamination_guard_raises_on_gold_leak() -> None:
