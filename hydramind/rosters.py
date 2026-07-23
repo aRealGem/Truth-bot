@@ -25,6 +25,7 @@ SEAT_CODES = {"P": "proposer", "C": "critic", "A": "arbiter"}
 # Model → set of seats it may occupy. Absent ⇒ any seat.
 ROLES_ALLOWED: dict[str, set[str]] = {
     "grok": {"critic"},          # never proposes or arbitrates (I1, Principle 2)
+    "grok-4.3": {"critic"},      # same guard, prod-roster alias (P67.9)
     "dsv4-flash": {"critic"},    # China-origin: critic-only (Western-audit doctrine)
 }
 

@@ -42,12 +42,21 @@ ALIAS_META: dict[str, tuple[str, str]] = {
     "claude-opus": ("anthropic", "frontier"),
     "gpt-4o-mini": ("openai", "standard"),
     "gpt-4o": ("openai", "frontier"),
+    "gpt-5.5": ("openai", "frontier"),
     "gemini-flash": ("gemini", "cheap"),
     "gemini-pro": ("gemini", "standard"),
     "grok": ("xai", "standard"),
+    "grok-4.3": ("xai", "frontier"),
     "mistral": ("deepinfra", "standard"),
     "dsv4-flash": ("deepinfra", "cheap"),
+    "opus-worker": ("anthropic", "frontier"),
 }
+
+# Aliases that ride L-W (Claude worker, subscription auth) instead of the
+# proxy. NOT proxy model_names — the transport routes them before any proxy
+# dispatch (P67.9 / T3.1). The "opus" token keeps returned_ok() family
+# checking honest against the worker's reported claude-opus-* id.
+WORKER_ALIASES: frozenset[str] = frozenset({"opus-worker"})
 
 
 def binding_from_alias(alias: str) -> ModelBinding:
@@ -108,6 +117,11 @@ RATE_TABLE_USD_PER_MTOK: dict[str, tuple[float, float]] = {
     "claude-haiku": (0.80, 4.00),    # Anthropic; proxy-priced in practice (fallback est.)
     "mistral":      (0.075, 0.20),   # DeepInfra Mistral-Small-3.2-24B (list, 2026-07-09)
     "dsv4-flash":   (0.09, 0.18),    # DeepInfra DeepSeek-V4-Flash (list, 2026-07-09)
+    # roster.prod seats (P67.9): rates pinned in the proxy config, so these are
+    # fallback-only. opus-worker is absent by design — L-W is subscription
+    # auth, cost_source="subscription", never table-priced.
+    "grok-4.3":     (1.25, 2.50),    # xAI grok-4.3 (litellm price map, 2026-07-23)
+    "gpt-5.5":      (5.00, 30.00),   # OpenAI gpt-5.5 (litellm price map, 2026-07-23)
 }
 
 

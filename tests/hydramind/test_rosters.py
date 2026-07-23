@@ -9,17 +9,27 @@ from hydramind import rosters
 from hydramind.rosters import load_rosters, get_roster, validate_roster, Roster, RosterRoleError
 
 
-def test_dev_roster_complete_prod_incomplete():
+def test_dev_and_prod_rosters_complete():
     rs = load_rosters()
     assert rs["dev"].complete and rs["dev"].seats["proposer"] == ["mistral"]
     assert rs["dev"].seats["critic"] == ["dsv4-flash"]
-    assert not rs["prod"].complete            # TBD seats
-    assert rs["prod"].seats["critic"] == ["grok", "dsv4-flash"]
+    # P67.9: prod filled (jackie, final) — Opus worker-lane proposer, Grok
+    # critic, GPT arbiter; DeepSeek dumped from the prod panel.
+    assert rs["prod"].complete
+    assert rs["prod"].seats == {"proposer": ["opus-worker"],
+                                "critic": ["grok-4.3"],
+                                "arbiter": ["gpt-5.5"]}
+    assert get_roster("prod") is not None     # runnable
 
 
-def test_get_prod_roster_refused_incomplete():
+def test_incomplete_roster_refused(tmp_path):
+    p = tmp_path / "rosters.yaml"
+    p.write_text("half:\n  proposer: TBD\n  critic: mistral\n  arbiter: claude-haiku\n",
+                 encoding="utf-8")
+    rs = load_rosters(p)
+    assert not rs["half"].complete            # TBD seat survives load ...
     with pytest.raises(RosterRoleError):
-        get_roster("prod")                    # TBD seats ⇒ not runnable
+        get_roster("half", p)                 # ... but is refused at run time
 
 
 def test_roles_allowed_guard():
@@ -33,6 +43,13 @@ def test_roles_allowed_guard():
     # legal: grok & dsv4-flash both as critics
     validate_roster(Roster("ok", {"proposer": ["mistral"], "critic": ["grok", "dsv4-flash"],
                                   "arbiter": ["claude-haiku"]}, True))
+    # P67.9: the prod-alias grok-4.3 inherits the critic-only guard
+    with pytest.raises(RosterRoleError):
+        validate_roster(Roster("bad3", {"proposer": ["grok-4.3"], "critic": ["mistral"],
+                                        "arbiter": ["claude-haiku"]}, True))
+    with pytest.raises(RosterRoleError):
+        validate_roster(Roster("bad4", {"proposer": ["opus-worker"], "critic": ["mistral"],
+                                        "arbiter": ["grok-4.3"]}, True))
 
 
 def _scripted(outputs):
