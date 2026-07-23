@@ -281,6 +281,7 @@ def build_pca_lane_fns(
     hm_verdict,
     provider,
     *,
+    pack_builder=None,
     crm114: bool = True,
     roster: str = "dev",
     a2_tier: str = "cheap",
@@ -310,7 +311,9 @@ def build_pca_lane_fns(
     from truthbot.checkworthy import classifier
     from truthbot.verdict import adjudicator
 
-    two_stage = bool(crm114) and provider is not None
+    # shared_pack_v2 (P67.9): a pack_builder supersedes the v1 provider; the
+    # CRM-114 stage judges on evidence either way, so it stays on for both.
+    two_stage = bool(crm114) and (provider is not None or pack_builder is not None)
     _sleep = sleep_fn or time.sleep
 
     def layer_a_fn(sentences: list[dict]) -> list[dict]:
@@ -328,6 +331,7 @@ def build_pca_lane_fns(
     def adjudicate_fn(chunk: list[dict]) -> tuple[list[dict], dict]:
         rows, manifest, notes = adjudicator.adjudicate(
             hm_verdict, chunk, roster=roster, evidence_provider=provider,
+            pack_builder=pack_builder,
             two_stage=two_stage, disc_tier=disc_tier)
         notes = dict(notes or {})
         try:
