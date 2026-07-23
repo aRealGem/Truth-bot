@@ -1,0 +1,2136 @@
+{
+  "fixture": "sotu_gold_fixture_2026-07-10.json",
+  "summary": {
+    "old": {
+      "claims": 10,
+      "mean_decisive_source_recall": 0.7
+    },
+    "new": {
+      "claims": 10,
+      "mean_decisive_source_recall": 0.85
+    }
+  },
+  "claims": [
+    {
+      "claim_id": "biden2022-01",
+      "speech": "biden2022",
+      "paraphrase": "NATO created to secure peace/stability in Europe after WWII",
+      "new": {
+        "r1_n": 8,
+        "r2_n": 7,
+        "r3_n": 4,
+        "pack": [
+          {
+            "url": "https://www.nato.int/en/what-we-do/introduction-to-nato/natos-purpose",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "Official NATO statement: purpose is to safeguard members and secure lasting peace in Europe and North America."
+          },
+          {
+            "url": "https://www.nato.int/en/about-us/nato-history/a-short-history-of-nato",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "Official NATO page details founding in 1949 for deterring Soviets, preventing European militarism, and promoting integration/stability post-WWII."
+          },
+          {
+            "url": "https://history.state.gov/milestones/1945-1952/nato",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "US State Dept Office of the Historian: NATO formed amid post-WWII instability to deter Soviet expansion and stabilize Europe."
+          },
+          {
+            "url": "https://www.nato.int/en/what-we-do/introduction-to-nato",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "Official NATO overview says NATO was founded after WWII to preserve peace and security across Europe and North America."
+          },
+          {
+            "url": "https://sais.jhu.edu/sites/default/files/NATO2030AndBeyondAccessibleVersion.pdf",
+            "date": "2021-01-01",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2021-01-01] 2021 analysis notes NATO as Europe's guarantor of peace, security, and stability since founding, shaped by post-WWII environment."
+          },
+          {
+            "url": "https://www.nato.int/en/news-and-events/articles/news/2021/03/16/the-secretary-generals-annual-report-2020",
+            "date": "2021-03-16",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-03-16] Official annual report describes NATO’s mission as keeping allied territory and populations safe amid peace/security risks."
+          },
+          {
+            "url": "https://www.britannica.com/topic/North-Atlantic-Treaty-Organization",
+            "date": null,
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "Encyclopedia entry: NATO's purposes included mutual defense, preventing nationalist militarism, and fostering European integration."
+          },
+          {
+            "url": "https://www.nato.int/en/news-and-events/articles/news/2020/03/19/the-secretary-generals-annual-report-2019",
+            "date": "2020-03-19",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2020-03-19] Official annual report states NATO’s core responsibility is keeping allied territory and populations safe where peace is not guaranteed."
+          },
+          {
+            "url": "https://www.nato.int/en/about-us/organization/founding-treaty",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "Text/framing of 1949 North Atlantic Treaty: mutual-assistance pact against Soviet extension of control in Europe."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "after-fair-game-window": 1,
+          "outside-coded-window": 1,
+          "duplicate-url": 2,
+          "t6-quota": 6
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "North Atlantic Treaty, 1949, nato.int",
+              "result": "hit",
+              "domains": [
+                "nato.int"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://education.cfr.org/learn/timeline/nato-worlds-largest-alliance",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.aljazeera.com/features/2021/6/14/desperately-seeking-relevance-nato-in-the-21st-century",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.nps.gov/articles/cworigons-americancwpolicy.htm",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.cram.com/essay/Evolution-Of-Collective-Security-To-Collective-Defense/FJCUGNBEBU",
+            "tier": "Other"
+          },
+          {
+            "url": "https://2017-2021.state.gov/remarks-at-the-reception-to-celebrate-natos-70th-anniversary/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.snopes.com/fact-check/sean-connery-slap-women/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 0.0,
+          "details": [
+            {
+              "source": "North Atlantic Treaty, 1949, nato.int",
+              "result": "miss",
+              "domains": [
+                "nato.int"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-02",
+      "speech": "biden2022",
+      "paraphrase": "Only president to cut the deficit by $1T+ in a single year",
+      "new": {
+        "r1_n": 6,
+        "r2_n": 7,
+        "r3_n": 6,
+        "pack": [
+          {
+            "url": "https://www.govinfo.gov/app/details/BUDGET-2022-MSR",
+            "date": "2021-08-27",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-08-27] OMB projected deficits falling from $3.115T in FY2021 to $1.542T in FY2022, a drop over $1T."
+          },
+          {
+            "url": "https://home.treasury.gov/news/press-releases/jy0428",
+            "date": "2021-10-22",
+            "tier": "Government",
+            "stance": "refutes",
+            "one_line_why": "[2021-10-22] Official FY2021 deficit $2.772T, $360B below FY2020's $3.132T (no $1T+ cut)."
+          },
+          {
+            "url": "https://www.crfb.org/blogs/did-president-biden-reduce-deficit-1-trillion",
+            "date": "2022-03-02",
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "[2022-03-02] Non-fact-checker policy analysis published day after utterance, directly assessing the $1T deficit-reduction claim and its COVID-baseline caveat."
+          },
+          {
+            "url": "https://www.cbo.gov/publication/57539/html",
+            "date": "2021-11-08",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-11-08] CBO official FY2021 budget review: deficit fell only ~$360B (to $2.77T), the actual prior-year data available when claim was made."
+          },
+          {
+            "url": "https://fiscal.treasury.gov/files/reports-statements/mts/mts0921.pdf",
+            "date": "2021-10-01",
+            "tier": "Government",
+            "stance": "refutes",
+            "one_line_why": "[2021-10-01] Primary MTS data: FY2021 deficit exactly $2.772 trillion vs prior year."
+          },
+          {
+            "url": "https://fiscaldata.treasury.gov/americas-finance-guide/national-deficit/",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "Treasury primary deficit data series enabling year-over-year comparison; no prior president had a $1T+ nominal single-year decline."
+          },
+          {
+            "url": "https://www.cbo.gov/publication/57373",
+            "date": "2021-07-21",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-07-21] CBO projected a $3.0T FY2021 deficit and much smaller 2022-2031 deficits, supporting an expected FY2022 plunge."
+          },
+          {
+            "url": "https://www.cbo.gov/system/files/2022-03/57841-MBR.pdf",
+            "date": "2022-03-08",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-03-08] CBO showed FY2022 deficit through February was $571B below the same FY2021 period, indicating a large in-year decline."
+          },
+          {
+            "url": "https://www.crfb.org/blogs/treasury-2021-deficit-was-28-trillion",
+            "date": "2021-10-22",
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "[2021-10-22] Treasury's final FY2021 Monthly Statement summarized: $2.8T deficit, $360B below FY2020 record — the elevated baseline the later drop is measured from."
+          },
+          {
+            "url": "https://www.cbo.gov/publication/57339",
+            "date": "2021-07-21",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-07-21] CBO official budget/economic outlook projecting deficit trajectory as pandemic relief expires, framing the projected large FY2022 decline."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "duplicate-url": 4,
+          "t6-quota": 1,
+          "pack-cap": 4
+        },
+        "recall": {
+          "matched": 2,
+          "matchable": 2,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "Treasury/OMB Final Monthly Treasury Statement FY2022 (Oct 2022)",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            },
+            {
+              "source": "CBO, The Budget and Economic Outlook: 2021–2031 (Feb 2021)",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://www.cbo.gov/publication/56746",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.cbo.gov/publication/57170",
+            "tier": "Government"
+          },
+          {
+            "url": "https://home.treasury.gov/news/press-releases/sm1155",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.cbo.gov/system/files/2020-10/56661-MBR.pdf",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.cbo.gov/publication/56783",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.factcheck.org/2008/02/the-budget-and-deficit-under-clinton/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 2,
+          "matchable": 2,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "Treasury/OMB Final Monthly Treasury Statement FY2022 (Oct 2022)",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            },
+            {
+              "source": "CBO, The Budget and Economic Outlook: 2021–2031 (Feb 2021)",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-03",
+      "speech": "biden2022",
+      "paraphrase": "75% adults fully vaccinated; hospitalizations down 77%",
+      "new": {
+        "r1_n": 6,
+        "r2_n": 8,
+        "r3_n": 6,
+        "pack": [
+          {
+            "url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/03042022.html",
+            "date": "2022-03-04",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-03-04] CDC COVID Data Tracker Weekly Review nearest the claim date; reports 7-day hospital admission percent change and vaccination coverage."
+          },
+          {
+            "url": "https://stacks.cdc.gov/view/cdc/114951",
+            "date": "2022-03-01",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-03-01] Official CDC Data Tracker snapshot for March 1, 2022 vaccination coverage and fully-vaccinated definitions."
+          },
+          {
+            "url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02252022.html",
+            "date": "2022-02-25",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-02-25] CDC weekly review documenting steep post-Omicron declines in hospital admissions and cumulative vaccination percentages."
+          },
+          {
+            "url": "https://stacks.cdc.gov/view/cdc/115111/cdc_115111_DS1.pdf",
+            "date": "2022-03-04",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-03-04] CDC weekly review reports 215.8M fully vaccinated and 4,243 average new hospital admissions for Feb. 23-Mar. 1."
+          },
+          {
+            "url": "https://wwwnc.cdc.gov/eid/article/28/3/21-1561_article",
+            "date": "2022-02-03",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-02-03] CDC/EID report notes ~72% US adults fully vaccinated as of Sep 2021; trends into 2022."
+          },
+          {
+            "url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+            "date": "2022-03-02",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-03-02] White House National COVID-19 Preparedness Plan citing adult vaccination coverage and hospitalization declines around the SOTU claim."
+          },
+          {
+            "url": "https://www.cdc.gov/mmwr/volumes/71/wr/mm7104e4.htm",
+            "date": "2022-01-28",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-01-28] CDC MMWR gives Omicron-period peak 7-day average hospital admissions of 21,586 on Jan. 15, 2022."
+          },
+          {
+            "url": "https://bidenwhitehouse.archives.gov/briefing-room/press-briefings/2022/03/02/press-briefing-by-white-house-and-hhs-public-health-officials-march-2-2022",
+            "date": "2022-03-02",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-03-02] White House/HHS officials brief on vaccination coverage and declining hospitalizations, contextualizing the SOTU figures."
+          },
+          {
+            "url": "https://datahub.hhs.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/g62h-syeh",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "Official HHS raw hospital timeseries underlying CDC admissions metrics; enables exact decline calculation through March 1."
+          },
+          {
+            "url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02042022.html",
+            "date": "2022-02-04",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-02-04] Earlier CDC weekly review showing hospitalizations declining from the January Omicron peak, establishing the downward trend."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "outside-coded-window": 3,
+          "pack-cap": 7
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 1,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "CDC COVID Data Tracker (archived, Feb 2022)",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            },
+            {
+              "source": "HHS hospital admissions series",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://thehill.com/policy/healthcare/579479-white-house-70-of-adults-are-fully-vaccinated-80-partially/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.factcheck.org/2021/07/factchecking-bidens-cnn-town-hall-3/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://www.reuters.com/world/us/half-us-population-fully-vaccinated-against-covid-19-cdc-2021-08-06/",
+            "tier": "Wire"
+          },
+          {
+            "url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/01142022.html",
+            "tier": "Government"
+          },
+          {
+            "url": "https://cdc.gov/mmwr/volumes/70/wr/mm7025e2.htm",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.politifact.com/article/2021/dec/20/vaccine-rollout-was-success-events-within-and-beyo/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 1,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "CDC COVID Data Tracker (archived, Feb 2022)",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            },
+            {
+              "source": "HHS hospital admissions series",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-04",
+      "speech": "biden2022",
+      "paraphrase": "US shared intel in advance of Putin's false justification for invasion",
+      "new": {
+        "r1_n": 8,
+        "r2_n": 8,
+        "r3_n": 8,
+        "pack": [
+          {
+            "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/02/24/remarks-by-president-biden-on-russias-unprovoked-and-unjustified-attack-on-ukraine/",
+            "date": "2022-02-24",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-02-24] Official remarks say U.S. shared declassified evidence on Russia’s plans, cyberattacks, and false pretexts before Putin attacked."
+          },
+          {
+            "url": "https://www.bbc.com/news/world-europe-59998988",
+            "date": "2022-01-14",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2022-01-14] US official details Russian false-flag plans as pretext, citing intel."
+          },
+          {
+            "url": "https://www.cnn.com/2022/01/14/politics/us-intelligence-russia-false-flag",
+            "date": "2022-01-14",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2022-01-14] First report US intel indicated Russia prepositioning operatives to fabricate a pretext justifying invasion of Ukraine."
+          },
+          {
+            "url": "https://www.defense.gov/News/Transcripts/Transcript/Article/2900932/pentagon-press-secretary-john-f-kirby-holds-a-press-briefing/",
+            "date": "2022-01-14",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-01-14] Pentagon said Russia pre-positioned operatives for a false-flag attack to create a pretext for invading Ukraine."
+          },
+          {
+            "url": "https://www.npr.org/2022/02/03/1078045214/u-s-says-russia-is-planning-a-staged-attack-in-ukraine-to-justify-an-invasion",
+            "date": "2022-02-03",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2022-02-03] State Dept publicly shared declassified intel that Russia planned a staged attack as false pretext for invasion."
+          },
+          {
+            "url": "https://www.nbcnews.com/politics/politics-news/u-s-intel-suggests-russia-preparing-false-flag-operation-pretext-n1287514",
+            "date": "2022-01-14",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2022-01-14] US intel on Russian false-flag operation to justify Ukraine invasion."
+          },
+          {
+            "url": "https://2021-2025.state.gov/secretary-antony-j-blinken-on-russias-threat-to-peace-and-security-at-the-un-security-council/",
+            "date": "2022-02-17",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-02-17] Blinken publicly detailed U.S. intelligence that Russia planned to manufacture a pretext, possibly alleging genocide or chemical attack."
+          },
+          {
+            "url": "https://www.nytimes.com/2022/02/03/us/politics/russia-ukraine-invasion-pretext.html",
+            "date": "2022-02-03",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2022-02-03] US acquired and disclosed intel on Russian fake video pretext plan."
+          },
+          {
+            "url": "https://www.rferl.org/a/ukraine-invasion-russia-fake-pretext/31685484.html",
+            "date": "2022-02-03",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2022-02-03] Reports newly declassified US intelligence showing Russian plans to create a fake pretext for invading Ukraine."
+          },
+          {
+            "url": "https://www.defense.gov/News/Transcripts/Transcript/Article/2922998/pentagon-press-secretary-john-f-kirby-holds-a-press-briefing/",
+            "date": "2022-02-03",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-02-03] Pentagon disclosed intelligence that Russia could fabricate a graphic propaganda video as a pretext for invasion."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "duplicate-url": 2,
+          "t6-quota": 8,
+          "pack-cap": 4
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "Blinken UNSC remarks, state.gov, 2022-02-17",
+              "result": "hit",
+              "domains": [
+                "state.gov"
+              ],
+              "class": "gov"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://www.washingtonpost.com/national-security/2022/02/11/russia-ukraine-invasion-intelligence/",
+            "tier": "Established"
+          },
+          {
+            "url": "https://www.forbes.com/sites/lisakim/2022/01/14/us-intelligence-says-russia-is-planning-false-flag-operation-to-justify-ukraine-invasion/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.cnn.com/2022/01/14/politics/us-intelligence-russia-false-flag/index.html",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.politifact.com/article/2022/feb/08/false-flags-theyre-real-far-less-widespread-social/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://www.theguardian.com/us-news/2022/feb/24/us-uk-intelligence-russian-invasion-ukraine",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.theguardian.com/us-news/2022/feb/20/russia-invasion-ukraine-biden-blinken-us-national-security-council",
+            "tier": "Other"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 0.0,
+          "details": [
+            {
+              "source": "Blinken UNSC remarks, state.gov, 2022-02-17",
+              "result": "miss",
+              "domains": [
+                "state.gov"
+              ],
+              "class": "gov"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-05",
+      "speech": "biden2022",
+      "paraphrase": "Economy grew 5.7% last year, strongest in ~40 years",
+      "new": {
+        "r1_n": 8,
+        "r2_n": 8,
+        "r3_n": 8,
+        "pack": [
+          {
+            "url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-advance-estimate",
+            "date": "2022-01-27",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-01-27] Primary BEA release: real GDP rose 5.7% for full-year 2021, the official source figure."
+          },
+          {
+            "url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-second-estimate",
+            "date": "2022-02-24",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-02-24] Latest pre-claim BEA release: real GDP increased 5.7% in 2021, unchanged from the prior estimate."
+          },
+          {
+            "url": "https://www.bea.gov/sites/default/files/2022-02/hist4q21_2nd.pdf",
+            "date": "2022-02-24",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-02-24] BEA historical table shows 2021 real GDP growth 5.7%; last larger annual growth was 1984’s 7.2%."
+          },
+          {
+            "url": "https://www.washingtonpost.com/business/2022/01/27/gdp-2021-q4-economy/",
+            "date": "2022-01-27",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2022-01-27] Business-section report confirming 5.7% 2021 growth, fastest since 1984 (business article, not fact-check)."
+          },
+          {
+            "url": "https://www.bea.gov/index.php/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-advance-estimate",
+            "date": "2022-01-27",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-01-27] Initial BEA release reported real GDP increased 5.7% in 2021 versus a 3.4% decrease in 2020."
+          },
+          {
+            "url": "https://www.usitc.gov/research_and_analysis/tradeshifts/2021/macroeconomic_conditions",
+            "date": "2022-01-01",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-01-01] Cites BEA data: 5.7% US real GDP growth in 2021, recovery from 2020 contraction."
+          },
+          {
+            "url": "https://www.pbs.org/newshour/show/news-wrap-u-s-economy-grew-5-7-percent-in-2021-fastest-since-1984",
+            "date": "2022-01-27",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2022-01-27] PBS NewsHour: economy grew 5.7% in 2021, fastest since 1984."
+          },
+          {
+            "url": "https://www.bea.gov/sites/default/files/2022-01/hist4q21_adv.pdf",
+            "date": "2022-01-27",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2022-01-27] BEA initial historical comparison shows 2021 growth of 5.7% and last larger GDP growth in 1984."
+          },
+          {
+            "url": "https://www.nbcnews.com/news/us-news/us-economy-grew-57-2021-rebounding-2020-recession-rcna13771",
+            "date": "2022-01-27",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2022-01-27] NBC News: 5.7% 2021 growth rebounding from 2020 recession, fastest pace since 1984."
+          },
+          {
+            "url": "https://www.presidency.ucsb.edu/documents/icymi-us-economy-grew-57-2021-fastest-growth-since-reagan-administration",
+            "date": "2022-01-27",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2022-01-27] Notes 5.7% growth as fastest full-year since 1984 (~38 years)."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "duplicate-url": 3,
+          "after-fair-game-window": 2,
+          "t6-quota": 7,
+          "pack-cap": 2
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "BEA GDP releases: Q4-2021 advance (Jan 2022) + subsequent annual revisions",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://bidenwhitehouse.archives.gov/cea/written-materials/2022/02/22/new-data-show-that-economic-growth-was-broadly-shared-in-2021/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.forbes.com/sites/davidmarotta/2020/01/21/longest-economic-expansion-in-united-states-history/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-second-estimate",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.bea.gov/news/2021/gross-domestic-product-second-quarter-2021-advance-estimate-and-annual-update",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-advance-estimate",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.factcheck.org/2020/01/trumps-numbers-january-2020-update/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "BEA GDP releases: Q4-2021 advance (Jan 2022) + subsequent annual revisions",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-06",
+      "speech": "biden2022",
+      "paraphrase": "US infrastructure ranked 13th in the world",
+      "new": {
+        "r1_n": 7,
+        "r2_n": 8,
+        "r3_n": 4,
+        "pack": [
+          {
+            "url": "https://www.washingtonpost.com/transportation/2021/04/30/us-infrastructure-ranking/",
+            "date": "2021-04-30",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2021-04-30] WaPo reports White House citing WEF No. 13 US infrastructure rank in 2021 Jobs Plan context."
+          },
+          {
+            "url": "https://www.weforum.org/publications/the-global-competitiveness-report-2020/in-full/downloads/",
+            "date": "2020-12-16",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2020-12-16] Official WEF download hub links 2019 rankings, dataset, and U.S. profile showing infrastructure rank of 13th."
+          },
+          {
+            "url": "https://www.whitehouse.gov/wp-content/uploads/2021/11/Infrastructure-brief-11.15-updated.pdf",
+            "date": "2021-11-15",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-11-15] White House CEA brief says WEF ranks U.S. 13th in overall infrastructure quality."
+          },
+          {
+            "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/03/31/fact-sheet-the-american-jobs-plan/",
+            "date": "2021-03-31",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-03-31] Official White House fact sheet says the U.S. ranks 13th for overall infrastructure quality."
+          },
+          {
+            "url": "https://www.fasterbettersafer.org/2020/02/declining-global-ranking-for-u-s-infrastructure-looming-highway-trust-fund-insolvency-urgent-need-for-new-investment/",
+            "date": "2020-02-01",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2020-02-01] US Chamber of Commerce piece citing WEF ranking of US infrastructure at 13th, documenting the decline."
+          },
+          {
+            "url": "https://www.congress.gov/event/117th-congress/house-event/LC66953/text",
+            "date": "2021-05-06",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-05-06] Congressional hearing text states WEF ranked the United States 13th worldwide for infrastructure in 2019."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "outside-coded-window": 4,
+          "duplicate-url": 2,
+          "after-fair-game-window": 1,
+          "t6-quota": 6
+        },
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 1,
+          "recall": null,
+          "details": [
+            {
+              "source": "WEF Global Competitiveness Report 2019, US economy profile",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://bidenwhitehouse.archives.gov/cea/written-materials/2021/11/06/bringing-infrastructure-into-the-21st-century/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.washingtonpost.com/transportation/2021/04/30/us-infrastructure-ranking/",
+            "tier": "Established"
+          },
+          {
+            "url": "https://www.france24.com/en/americas/20210727-1-trillion-plan-how-does-the-us-rank-globally-on-infrastructure",
+            "tier": "Other"
+          },
+          {
+            "url": "https://builtworlds.com/insights/builtworlds-2021-infrastructure-tech-report/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.factcheck.org/2022/03/factchecking-bidens-state-of-the-union-address/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://www.cnn.com/2021/03/03/politics/us-infrastructure-report-card/index.html",
+            "tier": "Other"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 1,
+          "recall": null,
+          "details": [
+            {
+              "source": "WEF Global Competitiveness Report 2019, US economy profile",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-07",
+      "speech": "biden2022",
+      "paraphrase": "Law on books ~a century for taxpayer dollars supporting American jobs",
+      "new": {
+        "r1_n": 6,
+        "r2_n": 7,
+        "r3_n": 5,
+        "pack": [
+          {
+            "url": "https://www.congress.gov/crs-product/R46748",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "CRS report confirms the Buy American Act dates to 1933 and governs federal procurement domestic-content preferences."
+          },
+          {
+            "url": "https://www.congress.gov/crs_external_products/R/PDF/R46748/R46748.2.pdf",
+            "date": "2021-03-31",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-03-31] CRS says Buy American Act of 1933 requires federal agencies to prefer domestic end products/construction materials, with exceptions."
+          },
+          {
+            "url": "https://www.govinfo.gov/content/pkg/FR-2022-03-07/pdf/2022-04173.pdf",
+            "date": "2022-03-07",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-03-07] Official final FAR rule strengthens Buy American requirements; describes $600B procurement, domestic thresholds, exceptions, and jobs/manufacturing rationale."
+          },
+          {
+            "url": "https://indianaconstructors.org/buy-american-vs-buy-america/",
+            "date": "2021-01-27",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2021-01-27] Details Buy American Act passed 1933 for government purchases preferring U.S. goods funded by taxpayers."
+          },
+          {
+            "url": "https://www.federalregister.gov/documents/2021/02/01/2021-02038/ensuring-the-future-is-made-in-all-of-america-by-all-of-americas-workers",
+            "date": "2021-02-01",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-02-01] Official EO 14005 text invokes the longstanding Buy American statutory framework directing procurement to support US jobs."
+          },
+          {
+            "url": "https://www.govinfo.gov/content/pkg/FR-2021-07-30/pdf/2021-15881.pdf",
+            "date": "2021-07-30",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-07-30] Official proposed FAR rule says Congress passed Buy American Act during the Great Depression to foster American industry."
+          },
+          {
+            "url": "https://uscode.house.gov/view.xhtml?path=/prelim@title41/subtitle4/chapter83&edition=prelim",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "Official U.S. Code codifying Buy American Act of 1933 (41 U.S.C. Ch. 83) for domestic procurement preferences."
+          },
+          {
+            "url": "https://www.govinfo.gov/content/pkg/FR-2021-01-28/pdf/2021-02038.pdf",
+            "date": "2021-01-28",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-01-28] Executive Order 14005 states federal procurement/assistance should maximize U.S.-produced goods and help American businesses and workers thrive."
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Buy_American_Act",
+            "date": null,
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "Encyclopedic account: Act passed 1933, signed by Hoover, requires US-made goods in federal purchasing."
+          },
+          {
+            "url": "https://www.govinfo.gov/content/pkg/PLAW-117publ58/pdf/PLAW-117publ58.pdf",
+            "date": "2021-11-15",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-11-15] Build America, Buy America findings say taxpayer-funded infrastructure should use U.S.-made products and support domestic manufacturing jobs."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "outside-coded-window": 1,
+          "duplicate-url": 2,
+          "t6-quota": 3,
+          "pack-cap": 2
+        },
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 1,
+          "recall": null,
+          "details": [
+            {
+              "source": "41 U.S.C. §8301 et seq. (Buy American Act, 1933)",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://crsreports.congress.gov/product/pdf/IF/IF11989",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.congress.gov/crs_external_products/R/PDF/R46748/R46748.7.pdf",
+            "tier": "Government"
+          },
+          {
+            "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/08/03/fact-sheet-the-bipartisan-infrastructure-investment-and-jobs-act-creates-good-paying-jobs-and-supports-workers/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.whitecase.com/insight-alert/biden-administration-increases-domestic-content-requirements-under-buy-american-act",
+            "tier": "Other"
+          },
+          {
+            "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/03/31/fact-sheet-the-american-jobs-plan/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.politifact.com/factchecks/2021/feb/19/facebook-posts/facebook-post-misleads-about-tax-bill-breakdown/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 1,
+          "recall": null,
+          "details": [
+            {
+              "source": "41 U.S.C. §8301 et seq. (Buy American Act, 1933)",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-08",
+      "speech": "biden2022",
+      "paraphrase": "Insulin costs ~$10/vial to make",
+      "new": {
+        "r1_n": 7,
+        "r2_n": 8,
+        "r3_n": 4,
+        "pack": [
+          {
+            "url": "https://www.finance.senate.gov/chairmans-news/grassley-wyden-release-insulin-investigation-uncovering-business-practices-between-drug-companies-and-pbms-that-keep-prices-high",
+            "date": "2021-01-14",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-01-14] Bipartisan Senate investigation documents how list prices ballooned far above costs for a century-old drug; primary/official."
+          },
+          {
+            "url": "https://www.familyplanninglinkagetobhcare.org/sites/default/files/uploaded-publication-files/Altarum%20Strategies%20for%20Insulin%20Affordability%20September%2014%202020.pdf",
+            "date": "2020-09-14",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2020-09-14] Report explicitly rounds manufacturing-plus-approval estimates to $4 human and $7 analog, under $10 per vial."
+          },
+          {
+            "url": "https://www.edgepark.com/healthinsights/insurance-access/understanding-the-costs-of-insulin/",
+            "date": "2021-06-16",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2021-06-16] Cites research estimating $3.69-$6.16 per vial for analog insulin production costs."
+          },
+          {
+            "url": "https://aspe.hhs.gov/reports/comparing-insulin-prices-us-other-countries",
+            "date": "2020-09-23",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2020-09-23] Official HHS report on US vs foreign insulin prices (not production costs)."
+          },
+          {
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8597930/",
+            "date": "2021-11-01",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-11-01] Reviews global procurement prices for insulin vials (not manufacturing costs)."
+          },
+          {
+            "url": "https://www.finance.senate.gov/imo/media/doc/Insulin%20Committee%20Print.pdf",
+            "date": "2021-01-14",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-01-14] Official Senate report documents pricing practices and market concentration driving high insulin prices, but not manufacturing cost."
+          },
+          {
+            "url": "https://www.washingtonpost.com/business/2022/03/03/cheaper-insulin-plan/",
+            "date": "2022-03-03",
+            "tier": "Established",
+            "stance": "supports",
+            "one_line_why": "[2022-03-03] Reports Civica plan and the wide gap between cheap production and ~$300 list price."
+          },
+          {
+            "url": "https://aspe.hhs.gov/sites/default/files/private/pdf/264056/Comparing-Insulin-Prices.pdf",
+            "date": "2020-09-23",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2020-09-23] HHS/RAND report shows U.S. insulin prices were over eight times international prices, contextualizing markup versus production-cost estimates."
+          }
+        ],
+        "quota_met": false,
+        "gate_code": "insufficient-qualifying-evidence",
+        "dropped": {
+          "duplicate-url": 1,
+          "t6-quota": 10
+        },
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 1,
+          "recall": null,
+          "details": [
+            {
+              "source": "Gotham, Barber & Hill 2018, BMJ Global Health (insulin biosimilar production costs)",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://le.utah.gov/interim/2021/pdf/00003465.pdf",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.edgepark.com/healthinsights/insurance-access/understanding-the-costs-of-insulin/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://sites.psu.edu/apd5648/2021/04/07/the-cost-of-insulin/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.rand.org/pubs/articles/2021/the-astronomical-price-of-insulin-hurts-american-families.html",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.politifact.com/factchecks/2021/feb/02/chuck-grassley/why-are-insulin-prices-going-chuck-grassley-explai/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://www.politifact.com/factchecks/2022/feb/10/facebook-posts/republicans-opposed-build-back-better-whole-not-ne/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 1,
+          "recall": null,
+          "details": [
+            {
+              "source": "Gotham, Barber & Hill 2018, BMJ Global Health (insulin biosimilar production costs)",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-09",
+      "speech": "biden2022",
+      "paraphrase": "Medicare should negotiate drug prices like VA does",
+      "new": {
+        "r1_n": 0,
+        "r2_n": 8,
+        "r3_n": 6,
+        "pack": [
+          {
+            "url": "https://www.gao.gov/products/gao-21-111",
+            "date": "2020-12-15",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2020-12-15] GAO found VA paid 54% less than Medicare Part D; VA negotiates as one system and gets statutory discounts."
+          },
+          {
+            "url": "https://www.cbo.gov/publication/56978",
+            "date": "2021-02-18",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-02-18] CBO compared federal drug programs; Medicare Part D paid highest average brand prices, while VA/FSS prices reflect VA negotiations."
+          },
+          {
+            "url": "https://www.cbo.gov/system/files/2021-02/56978-Drug-Prices.pdf",
+            "date": "2021-02-01",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2021-02-01] CBO analysis compares net prices across federal programs including Medicare Part D and VA/DoD."
+          },
+          {
+            "url": "https://aspe.hhs.gov/reports/comprehensive-plan-addressing-high-drug-prices",
+            "date": "2021-09-09",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-09-09] Official HHS plan recommends Medicare Parts B and D negotiation, noting VA and Medicaid mechanisms yield lower brand-drug prices."
+          },
+          {
+            "url": "https://www.kff.org/medicare/whats-the-latest-on-medicare-drug-price-negotiations/",
+            "date": "2021-07-23",
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "[2021-07-23] KFF explains Medicare non-interference clause vs. VA's negotiation authority and formulary."
+          },
+          {
+            "url": "https://www.cbo.gov/publication/56905",
+            "date": "2021-02-04",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-02-04] CBO model of Medicare negotiation under H.R.3 projected negotiated prices 57% to 75% below current prices."
+          },
+          {
+            "url": "https://www.commonwealthfund.org/publications/explainer/2021/oct/domestic-reference-pricing-role-medicare-pharmaceutical-price",
+            "date": "2021-10-26",
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "[2021-10-26] Discusses using VA prices as domestic benchmark/reference for potential Medicare negotiations."
+          },
+          {
+            "url": "https://www.sanders.senate.gov/wp-content/uploads/Summary-The-Medicare-Drug-Price-Negotiation-Act.pdf",
+            "date": "2021-01-01",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-01-01] Summary notes Medicare pays twice as much as VA for same drugs and advocates negotiation."
+          },
+          {
+            "url": "https://www.cbo.gov/publication/57050",
+            "date": "2022-01-19",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2022-01-19] CBO documents rising Medicare Part D brand-name net prices from 2009 to 2018, providing cost-pressure context for negotiation proposals."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "duplicate-url": 2,
+          "t6-quota": 3
+        },
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 2,
+          "recall": null,
+          "details": [
+            {
+              "source": "38 U.S.C. §8126",
+              "result": "unmatchable"
+            },
+            {
+              "source": "SSA §1860D-11(i) noninterference clause",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://news.bloomberglaw.com/health-law-and-business/push-to-negotiate-medicare-drug-prices-prompts-look-at-va-model",
+            "tier": "Other"
+          },
+          {
+            "url": "https://washingtonmonthly.com/2021/10/26/no-negotiating-for-lower-drug-prices-wont-hurt-innovation-or-seniors/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.cbo.gov/publication/56978",
+            "tier": "Government"
+          },
+          {
+            "url": "https://thehill.com/opinion/healthcare/484409-va-could-lead-way-for-nation-on-lower-drug-pricing/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.sanders.senate.gov/press-releases/gao-medicare-part-d-pays-twice-as-much-for-same-drugs-as-va/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.politifact.com/factchecks/2021/sep/28/60-plus-association/ads-charge-drug-price-haggling-swipe-500-billion/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 2,
+          "recall": null,
+          "details": [
+            {
+              "source": "38 U.S.C. §8126",
+              "result": "unmatchable"
+            },
+            {
+              "source": "SSA §1860D-11(i) noninterference clause",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "biden2022-10",
+      "speech": "biden2022",
+      "paraphrase": "American Rescue Plan gave schools money for teachers and learning recovery",
+      "new": {
+        "r1_n": 7,
+        "r2_n": 8,
+        "r3_n": 8,
+        "pack": [
+          {
+            "url": "https://www.ed.gov/sites/ed/files/2021/03/FINAL_ARP-ESSER-FACT-SHEET.pdf",
+            "date": "2021-03-17",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-03-17] Official ED fact sheet: ARP ESSER $122B for K-12, min 20% for learning-loss recovery, funds for staffing/teachers."
+          },
+          {
+            "url": "https://www.congress.gov/bill/117th-congress/house-bill/1319/text/pl",
+            "date": "2021-03-11",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-03-11] Public law appropriated $122.8B for ESSER, required LEA learning-loss reserves, and allowed continuing existing school staff."
+          },
+          {
+            "url": "https://www.ed.gov/about/news/press-release/department-of-education-announces-american-rescue-plan-funds-for-all-50-states-puerto-rico-and-the-district-of-columbia-to-help-schools-reopen",
+            "date": "2021-03-24",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-03-24] ED press release announcing ARP ESSER allocations to all states to reopen schools and address teaching/learning disruption."
+          },
+          {
+            "url": "https://www.congress.gov/117/bills/hr1319/BILLS-117hr1319enr.pdf",
+            "date": "2021-03-14",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-03-14] Enrolled bill text authorizing ARP ESSER funds for elementary/secondary schools and pandemic recovery uses."
+          },
+          {
+            "url": "https://www.ed.gov/sites/ed/files/2021/12/21-0414.DCL_Labor-Shortages.pdf",
+            "date": "2021-12-16",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-12-16] Secretary Cardona letter says ARP resources can hire additional educators and improve compensation to recruit and retain school staff."
+          },
+          {
+            "url": "https://www.federalregister.gov/documents/2021/04/22/2021-08359/american-rescue-plan-act-elementary-and-secondary-school-emergency-relief-fund",
+            "date": "2021-04-22",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-04-22] Federal Register notice on ARP ESSER allocations and allowable uses including teaching capacity and learning recovery."
+          },
+          {
+            "url": "https://learningpolicyinstitute.org/blog/covid-analysis-american-rescue-plan-act-2021",
+            "date": "2021-03-11",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2021-03-11] Policy analysis detailing ARP's $122B education investment, learning recovery set-asides, and support for school staff."
+          },
+          {
+            "url": "https://www.ed.gov/sites/ed/files/documents/coronavirus/lost-instructional-time.pdf",
+            "date": "2021-08-31",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-08-31] ED guidance explains ARP ESSER funds support evidence-based interventions addressing lost instructional time and meaningful teaching and learning."
+          },
+          {
+            "url": "https://www.tcta.org/american-rescue-plan-act-injects-over-123-billion-into-schools",
+            "date": "2021-03-15",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2021-03-15] Details ARP injecting $123B into schools, usable for staffing and academic recovery programs."
+          },
+          {
+            "url": "http://www.ed.gov/grants-and-programs/formula-grants/response-formula-grants/covid-19-emergency-relief-grants/american-rescue-plan",
+            "date": "2021-03-11",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2021-03-11] Official ED page on ARP delivering aid to schools, educators, and students for recovery."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "duplicate-url": 3,
+          "non-substantive-url": 1,
+          "after-fair-game-window": 1,
+          "t6-quota": 5,
+          "pack-cap": 3
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "ARP Act §2001 / ED ARP-ESSER guidance, ed.gov",
+              "result": "hit",
+              "domains": [
+                "ed.gov"
+              ],
+              "class": "gov"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://ies.ed.gov/learn/blog/american-rescue-plan-ies-paving-way-learning-recovery",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.federalregister.gov/documents/2021/04/22/2021-08359/american-rescue-plan-act-elementary-and-secondary-school-emergency-relief-fund",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.factcheck.org/2021/07/democrat-makes-misleading-defund-the-police-claim/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://millerjohnson.com/american-rescue-plan/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.cbpp.org/research/state-budget-and-tax/american-rescue-plan-act-includes-much-needed-k-12-funding",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.americanactionforum.org/insight/the-american-rescue-plans-education-provisions/",
+            "tier": "Other"
+          }
+        ],
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "ARP Act §2001 / ED ARP-ESSER guidance, ed.gov",
+              "result": "hit",
+              "domains": [
+                "ed.gov"
+              ],
+              "class": "gov"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "trump2026-01",
+      "speech": "trump2026",
+      "paraphrase": "All Democrats voted against massive tax cuts",
+      "new": {
+        "r1_n": 7,
+        "r2_n": 8,
+        "r3_n": 8,
+        "pack": [
+          {
+            "url": "https://clerk.house.gov/Votes/2025190",
+            "date": "2025-07-03",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2025-07-03] Official House Clerk roll call for H.R.1 final passage (218-214); every Democrat voted nay."
+          },
+          {
+            "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00372.htm",
+            "date": "2025-07-01",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2025-07-01] Official Senate roll call on H.R.1 shows all Democratic senators voted Nay; Vance broke the tie."
+          },
+          {
+            "url": "https://www.govtrack.us/congress/votes/119-2025/h190",
+            "date": "2025-07-03",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2025-07-03] House passage roll call with party breakdown showing all voting Democrats opposed the tax-cut bill."
+          },
+          {
+            "url": "https://www.congress.gov/bill/119th-congress/house-bill/1/summary/07",
+            "date": "2025-07-04",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2025-07-04] Official bill page confirms H.R.1 became Public Law 119-21 and summarizes major tax provisions."
+          },
+          {
+            "url": "https://www.govtrack.us/congress/votes/119-2025/s372",
+            "date": "2025-07-01",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2025-07-01] Senate passage roll call (51-50, Vance tiebreak); entire 47-member Democratic caucus voted against."
+          },
+          {
+            "url": "https://www.senate.gov/legislative/LIS/roll_call_lists/vote_menu_119_1.htm",
+            "date": "2025-07-01",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2025-07-01] Official Senate roll-call index listing H.R.1 votes for verifying party-line opposition."
+          },
+          {
+            "url": "https://www.jct.gov/publications/2025/jcx-35-25/",
+            "date": "2025-07-01",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2025-07-01] Official JCT revenue estimate for Senate-passed tax provisions helps judge whether cuts were massive."
+          },
+          {
+            "url": "https://www.cbo.gov/publication/61537",
+            "date": "2025-07-01",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2025-07-01] CBO/JCT estimate says Senate-passed H.R.1 would increase deficits $3.4 trillion versus January 2025 baseline."
+          },
+          {
+            "url": "https://docs.house.gov/billsthisweek/20250519/RulesReport05212025_.pdf",
+            "date": "2025-05-21",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2025-05-21] Official Rules report notes a Democratic amendment would preserve tax breaks for taxpayers earning $400,000 or less."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "duplicate-url": 4,
+          "after-fair-game-window": 2,
+          "outside-coded-window": 1,
+          "t6-quota": 7
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "congress.gov H.R.1 (119th Congress) actions/roll calls",
+              "result": "hit",
+              "domains": [
+                "congress.gov"
+              ],
+              "class": "gov"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://www.reuters.com/legal/government/us-house-republicans-head-toward-final-vote-trumps-sweeping-tax-cut-bill-2025-07-03/",
+            "tier": "Wire"
+          },
+          {
+            "url": "https://www.factcheck.org/2025/06/explaining-trumps-claim-of-a-68-tax-increase/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://www.kcra.com/article/big-beautiful-bill-tax-cuts-vote/65291875",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.whitehouse.gov/releases/2025/07/senate-democrats-just-voted-against-lower-taxes-higher-pay-national-security-and-more/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.whitehouse.gov/releases/2025/05/every-democrat-just-voted-against-tax-cuts-pay-raises-and-more/",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.snopes.com/news/2025/02/27/budget-resolution-taxes-tips/",
+            "tier": "FactCheck"
+          }
+        ],
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "congress.gov H.R.1 (119th Congress) actions/roll calls",
+              "result": "hit",
+              "domains": [
+                "congress.gov"
+              ],
+              "class": "gov"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "trump2026-02",
+      "speech": "trump2026",
+      "paraphrase": "Record-setting inflation cost typical family $34,000",
+      "new": {
+        "r1_n": 6,
+        "r2_n": 8,
+        "r3_n": 8,
+        "pack": [
+          {
+            "url": "https://www.jec.senate.gov/public/index.cfm/republicans/analysis?id=A3FDE5A7-A0DD-4DDD-B8C1-DD91693BE0A6",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "JEC national inflation tracker: primary source of the cumulative extra household cost since Jan 2021 that the $34,000 figure derives from."
+          },
+          {
+            "url": "https://www.jec.senate.gov/public/index.cfm/republicans/state-inflation-tracker",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "Congressional tracker defines household inflation costs relative to January 2021; likely source methodology behind large cumulative cost claims."
+          },
+          {
+            "url": "https://www.congress.gov/119/crec/2026/02/24/172/36/modified/CREC-2026-02-24-pt1-PgS645-2.htm",
+            "date": "2026-02-24",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2026-02-24] Congressional Record transcript of 2/24/2026 speech containing the exact claim."
+          },
+          {
+            "url": "https://www.jec.senate.gov/public/vendor/_accounts/JEC-R/inflation-updates/Massachusetts%20Inflation%20Update.pdf",
+            "date": null,
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "JEC Massachusetts update shows ~$34,975 cumulative household cost since Jan 2021, nearest state figure to the claimed $34,000."
+          },
+          {
+            "url": "https://www.jec.senate.gov/public/index.cfm?File_id=71577DD2-5298-4CFE-8A6C-8059E8AFD261&a=files.serve",
+            "date": "2026-01-28",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2026-01-28] JEC Republican analysis gives comparable cumulative household cost increases for Biden’s first year versus Trump’s first year."
+          },
+          {
+            "url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-31",
+            "date": "2026-02-24",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2026-02-24] Official transcript of the 2/24/2026 address repeating the $34,000 inflation claim."
+          },
+          {
+            "url": "https://www.jec.senate.gov/public/vendor/_accounts/JEC-R/inflation-updates/Florida%20Inflation%20Update.pdf",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "JEC Florida update (~$37,452 cumulative) shows state-level spread; national 'typical family' figure sits below high-cost states."
+          },
+          {
+            "url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+            "date": "2026-02-13",
+            "tier": "Government",
+            "stance": "refutes",
+            "one_line_why": "[2026-02-13] Latest CPI before the claim reported 2.4% annual inflation in January 2026, not record-setting current inflation."
+          },
+          {
+            "url": "https://www.govinfo.gov/content/pkg/CDOC-119hdoc121/pdf/CDOC-119hdoc121.pdf",
+            "date": "2026-02-24",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2026-02-24] GovInfo PDF of the 2/24/2026 State of the Union speech with the claim."
+          },
+          {
+            "url": "https://www.jec.senate.gov/public/_cache/files/089d189b-2854-46ef-ac20-4151ce3ca0c7/november-2024-inflation-and-real-earnings---jec-republican-staff-commentary.pdf",
+            "date": "2024-12-11",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2024-12-11] JEC staff commentary documents the methodology and ~20.6% cumulative CPI since Jan 2021 behind the household-cost estimate."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "outside-coded-window": 1,
+          "duplicate-url": 1,
+          "pack-cap": 10
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 2,
+          "unmatchable": 1,
+          "recall": 0.5,
+          "details": [
+            {
+              "source": "BLS CPI historical series",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            },
+            {
+              "source": "CBS News fact check 2024-09-18",
+              "result": "unmatchable"
+            },
+            {
+              "source": "FactCheck.org 2026 SOTU analysis",
+              "result": "miss",
+              "domains": [
+                "factcheck.org"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://www.factcheck.org/2026/02/a-pre-sotu-guide-to-trumps-economic-claims/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://budget.house.gov/press-release/bidens-20-percent-inflation-tax-costs-american-families-over-17000-per-year",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.usatoday.com/story/news/factcheck/2024/10/28/biden-inflation-less-than-11000-fact-check/75831100007/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.jec.senate.gov/public/index.cfm/republicans/2024/9/inflation-has-harmed-working-families-under-multiple-measures",
+            "tier": "Government"
+          },
+          {
+            "url": "https://money.usnews.com/money/personal-finance/family-finance/articles/inflation-calculator-see-how-much-inflation-is-costing-you",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.clevelandfed.org/publications/economic-commentary/2025/ec-202511-did-inflation-affect-households-differently",
+            "tier": "Other"
+          }
+        ],
+        "recall": {
+          "matched": 2,
+          "matchable": 2,
+          "unmatchable": 1,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "BLS CPI historical series",
+              "result": "hit",
+              "domains": [],
+              "class": "gov"
+            },
+            {
+              "source": "CBS News fact check 2024-09-18",
+              "result": "unmatchable"
+            },
+            {
+              "source": "FactCheck.org 2026 SOTU analysis",
+              "result": "hit",
+              "domains": [
+                "factcheck.org"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "trump2026-03",
+      "speech": "trump2026",
+      "paraphrase": "Thomas Jefferson drew his last breath (July 4, 1826)",
+      "new": {
+        "r1_n": 8,
+        "r2_n": 8,
+        "r3_n": 8,
+        "pack": [
+          {
+            "url": "https://www.archives.gov/founding-docs/signers-factsheet",
+            "date": "2024-07-10",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2024-07-10] National Archives signer factsheet lists Thomas Jefferson’s date of death as 7/4/1826."
+          },
+          {
+            "url": "https://www.monticello.org/encyclopedia/jeffersons-last-words",
+            "date": null,
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "Thomas Jefferson Foundation (Monticello) — primary authority on Jefferson's estate; documents his July 4, 1826 death and last hours."
+          },
+          {
+            "url": "https://www.history.com/this-day-in-history/july-4/thomas-jefferson-and-john-adams-die",
+            "date": "2025-05-28",
+            "tier": "Other",
+            "stance": "supports",
+            "one_line_why": "[2025-05-28] History.com confirms Jefferson died July 4, 1826."
+          },
+          {
+            "url": "https://apnews.com/article/8e8f357181cfc0e47093ff49de9a8fbe",
+            "date": "2025-07-04",
+            "tier": "Wire",
+            "stance": "supports",
+            "one_line_why": "[2025-07-04] AP Today in History says Adams and Jefferson both died in 1826 on July 4."
+          }
+        ],
+        "quota_met": true,
+        "gate_code": "",
+        "dropped": {
+          "duplicate-url": 5,
+          "t6-quota": 15
+        },
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "Monticello.org / Library of Congress historical record",
+              "result": "hit",
+              "domains": [
+                "monticello.org"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://www.snopes.com/fact-check/jefferson-injustice-resistance-quote/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://www.history.com/this-day-in-history/july-4/thomas-jefferson-and-john-adams-die",
+            "tier": "Other"
+          },
+          {
+            "url": "https://allthatsinteresting.com/thomas-jefferson-death",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.historyofeveryday.com/blog/2023/5/25/thomas-jeffersons-death",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.biography.com/political-figures/thomas-jefferson",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.indiatvnews.com/news/world/us-independence-day-three-us-presidents-died-on-july-4-coincidence-2025-07-04-997483",
+            "tier": "Other"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 0.0,
+          "details": [
+            {
+              "source": "Monticello.org / Library of Congress historical record",
+              "result": "miss",
+              "domains": [
+                "monticello.org"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "trump2026-04",
+      "speech": "trump2026",
+      "paraphrase": "One drug cost Catherine $4,000 to purchase",
+      "new": {
+        "r1_n": 7,
+        "r2_n": 8,
+        "r3_n": 5,
+        "pack": [
+          {
+            "url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+            "date": "2026-02-24",
+            "tier": "Government",
+            "stance": "supports",
+            "one_line_why": "[2026-02-24] Official Congressional Record transcript gives the exact Catherine Rayner $4,000 drug and under-$500 TrumpRx statement."
+          },
+          {
+            "url": "https://thehill.com/policy/healthcare/5753853-prescription-drug-costs-trumprx-state-union/",
+            "date": "2026-02-24",
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "[2026-02-24] Reports Trump's SOTU claim that Catherine Rayner's drug cost $4,000; notes TrumpRx listed discounts total only $1,658.46, questioning the figure."
+          },
+          {
+            "url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-31",
+            "date": "2026-02-24",
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "[2026-02-24] Official transcript of Trump's Feb 24 SOTU quoting the exact claim about Catherine Rayner."
+          },
+          {
+            "url": "https://www.govinfo.gov/content/pkg/DCPD-202600083/pdf/DCPD-202600083.pdf",
+            "date": "2026-02-06",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2026-02-06] Official launch transcript identifies Catherine Rayner as first TrumpRx user to buy Gonal-F for IVF."
+          },
+          {
+            "url": "https://www.whitehouse.gov/fact-sheets/2026/02/fact-sheet-president-donald-j-trump-launches-trumprx-gov-to-bring-lower-drug-prices-to-american-patients/",
+            "date": "2026-02-05",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2026-02-05] White House says Gonal-F falls to as low as $168 per pen and fertility-drug savings average $2,000 per cycle."
+          },
+          {
+            "url": "https://apnews.com/article/trump-ivf-drug-fertility-2c168dcc0ec7250db16b0a671aea9db8",
+            "date": "2025-10-16",
+            "tier": "Wire",
+            "stance": "context",
+            "one_line_why": "[2025-10-16] AP reports IVF drugs can cost thousands per cycle; a patient cited $1,000 to $5,000 per round."
+          },
+          {
+            "url": "https://abcnews.go.com/Politics/trump-unveil-trumprx-website-americans-buy-lower-priced/story?id=129895605",
+            "date": "2026-02-06",
+            "tier": "Established",
+            "stance": "context",
+            "one_line_why": "[2026-02-06] ABC reports TrumpRx listed Gonal-F down from $966 to $168 per pen, with prior full prices around $1,400."
+          },
+          {
+            "url": "https://www.cbsnews.com/amp/news/white-house-launches-trumprx-discounted-drug-site/",
+            "date": "2026-02-06",
+            "tier": "Established",
+            "stance": "context",
+            "one_line_why": "[2026-02-06] CBS reports a unit of Gonal-F was listed at $252, an 83% discount from sticker price."
+          }
+        ],
+        "quota_met": false,
+        "gate_code": "insufficient-qualifying-evidence",
+        "dropped": {
+          "duplicate-url": 2,
+          "t6-quota": 10
+        },
+        "recall": {
+          "matched": 0,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 0.0,
+          "details": [
+            {
+              "source": "FactCheck.org 2026 SOTU analysis (TrumpRx section)",
+              "result": "miss",
+              "domains": [
+                "factcheck.org"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://www.factcheck.org/2026/02/trump-misleads-on-drug-pricing-deals/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://intercept.health/insights/blog/2025-prescription-drug-pricing-predictions-trends-employers-and-employees-need-to-know/",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.hhs.gov/about/news/2024/09/30/hhs-announces-cost-savings-for-prescription-drugs-thanks-to-medicare-inflation-rebate-program.html",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.cms.gov/newsroom/press-releases/biden-harris-administration-issues-final-guidance-help-people-medicare-prescription-drug-coverage",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/drugmakers-raise-us-prices-over-250-medicines-starting-jan-1-2024-12-31/",
+            "tier": "Wire"
+          },
+          {
+            "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/drugmakers-raise-us-prices-350-medicines-despite-pressure-trump-2025-12-31/",
+            "tier": "Wire"
+          }
+        ],
+        "recall": {
+          "matched": 1,
+          "matchable": 1,
+          "unmatchable": 0,
+          "recall": 1.0,
+          "details": [
+            {
+              "source": "FactCheck.org 2026 SOTU analysis (TrumpRx section)",
+              "result": "hit",
+              "domains": [
+                "factcheck.org"
+              ],
+              "class": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "claim_id": "trump2026-05",
+      "speech": "trump2026",
+      "paraphrase": "Both Dominican Americans grew up on streets they later patrolled as officers",
+      "new": {
+        "r1_n": 8,
+        "r2_n": 8,
+        "r3_n": 8,
+        "pack": [
+          {
+            "url": "https://www.whitehouse.gov/releases/2026/02/president-trump-delivers-his-2026-state-of-the-union-address",
+            "date": "2026-02-24",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2026-02-24] Official White House release/transcript of the address where the claim was made; primary source for exact wording and any officer names."
+          },
+          {
+            "url": "https://nycdetectives.org/honor-roll/jason-rivera/",
+            "date": null,
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "DEA says Rivera and Mora were 32nd Precinct Harlem officers; provides service, death, and partial background details."
+          },
+          {
+            "url": "https://www.pbs.org/newshour/politics/read-trumps-full-2026-state-of-the-union-address",
+            "date": "2026-02-25",
+            "tier": "Other",
+            "stance": "context",
+            "one_line_why": "[2026-02-25] Full verbatim transcript of the SOTU; lets judge see the actual Dominican-officers anecdote as delivered."
+          },
+          {
+            "url": "https://www.nyc.gov/site/nypd/bureaus/patrol/precincts/32nd-precinct.page",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "Official NYPD page identifies the 32nd Precinct patrol area as northeastern Harlem."
+          },
+          {
+            "url": "https://www.cbsnews.com/news/state-of-the-union-2026-transcript/",
+            "date": "2026-02-25",
+            "tier": "Established",
+            "stance": "context",
+            "one_line_why": "[2026-02-25] Complete CBS transcript of the 2026 address; independent record of the claim's exact framing."
+          },
+          {
+            "url": "https://www.nyc.gov/mayors-office/news/2024/01/mayor-adams-lays-out-future-focused-vision-working-class-new-yorkers-third-state-the-city",
+            "date": "2024-01-24",
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "[2024-01-24] Official mayoral release references the murders of Detectives Jason Rivera and Wilbert Mora."
+          },
+          {
+            "url": "https://www.nbcnews.com/politics/donald-trump/live-blog/trump-state-of-union-speech-2026-live-updates-rcna258811",
+            "date": "2026-02-24",
+            "tier": "Established",
+            "stance": "context",
+            "one_line_why": "[2026-02-24] Real-time highlights of honored gallery guests, useful to locate the two officers referenced."
+          },
+          {
+            "url": "https://www.nyc.gov/site/nypd/bureaus/patrol/precincts/34th-precinct.page",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "Official NYPD page says Inwood/Washington Heights north of 179th Street are served by 34th Precinct."
+          },
+          {
+            "url": "https://www.cbsnews.com/live-updates/state-of-the-union-2026/",
+            "date": "2026-02-24",
+            "tier": "Established",
+            "stance": "context",
+            "one_line_why": "[2026-02-24] CBS running highlights of honorees and personal stories cited during the speech."
+          },
+          {
+            "url": "https://www.nyc.gov/site/nypd/bureaus/patrol/precincts/90th-precinct.page",
+            "date": null,
+            "tier": "Government",
+            "stance": "context",
+            "one_line_why": "Official NYPD page says Williamsburg is mainly served by Brooklyn’s 90th Precinct, useful for Mora childhood-location checks."
+          }
+        ],
+        "quota_met": false,
+        "gate_code": "insufficient-qualifying-evidence",
+        "dropped": {
+          "outside-coded-window": 6,
+          "t6-quota": 8
+        },
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 2,
+          "recall": null,
+          "details": [
+            {
+              "source": "Biden 2022 transcript (PBS)",
+              "result": "unmatchable"
+            },
+            {
+              "source": "NBC New York 2022-03-02",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      },
+      "old": {
+        "pack": [
+          {
+            "url": "https://www.factcheck.org/2025/10/what-we-know-about-political-violence-in-america/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://politifact.com/article/2019/jul/26/context-ilhan-omars-our-country-should-be-more-fea/",
+            "tier": "FactCheck"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Fausto_B._Pichardo",
+            "tier": "Other"
+          },
+          {
+            "url": "https://www.npr.org/2025/06/02/nx-s1-5419588/finding-every-deportable-immigrant-inside-ices-puerto-rico-operation",
+            "tier": "Established"
+          },
+          {
+            "url": "https://www.state.gov/reports/2024-country-reports-on-human-rights-practices/dominican-republic",
+            "tier": "Government"
+          },
+          {
+            "url": "https://www.osac.gov/Content/Report/a0444fbf-6267-44aa-8230-1c2ce149b0ec",
+            "tier": "Government"
+          }
+        ],
+        "recall": {
+          "matched": 0,
+          "matchable": 0,
+          "unmatchable": 2,
+          "recall": null,
+          "details": [
+            {
+              "source": "Biden 2022 transcript (PBS)",
+              "result": "unmatchable"
+            },
+            {
+              "source": "NBC New York 2022-03-02",
+              "result": "unmatchable"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
