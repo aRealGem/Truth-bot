@@ -20,7 +20,7 @@ Closed-book 4-label contract: TRUE | FALSE | MISLEADING | UNVERIFIABLE. Full
 from __future__ import annotations
 
 from datetime import date
-from typing import Optional
+from typing import Callable, Optional
 
 from hydramind import HydraMind, ItemResult, StrategyResultKind
 
@@ -88,6 +88,7 @@ def normalize(item: ItemResult, *, closed_book: bool = True) -> dict:
 
 
 def build_items(claims: list[dict], *, evidence_provider: Optional[EvidenceProvider] = None,
+                pack_builder: Optional["PackBuilder"] = None,
                 today: Optional[date] = None, max_items: int = DEFAULT_MAX_ITEMS
                 ) -> tuple[list[dict], dict[str, EvidencePack]]:
     """Build the pca payload items for a claim batch (pure; no network unless a
@@ -98,7 +99,12 @@ def build_items(claims: list[dict], *, evidence_provider: Optional[EvidenceProvi
     fetched per claim and attached to the payload as ``evidence`` (model-facing) +
     ``evidence_pack_ids`` (the ids I4 checks citations against); ``packs`` maps sid →
     pack for telemetry. Without a provider (CLOSED-BOOK) ``evidence_pack_ids`` stays
-    empty so I4 requires ``citations == []``."""
+    empty so I4 requires ``citations == []``.
+
+    ``pack_builder`` (shared_pack_v2, P67.9) supersedes ``evidence_provider``
+    when given: a ``(sid, text, context) -> EvidencePack`` callable — the CLI
+    binds ``evidence_pack_v2.build_evidence_pack_v2`` over the retriever trio.
+    Same pack type either way, so everything downstream is mode-blind."""
     items: list[dict] = []
     packs: dict[str, EvidencePack] = {}
     for c in claims:
@@ -107,10 +113,14 @@ def build_items(claims: list[dict], *, evidence_provider: Optional[EvidenceProvi
         payload = {"claim": c["text"],
                    "context": preamble + c.get("context", ""),
                    "evidence_pack_ids": []}
-        if evidence_provider is not None:
+        pack: Optional[EvidencePack] = None
+        if pack_builder is not None:
+            pack = pack_builder(c["sid"], c["text"], c.get("context", ""))
+        elif evidence_provider is not None:
             pack = evidence_pack.build_evidence_pack(
                 c["sid"], c["text"], evidence_provider,
                 today=today, max_items=max_items, context=c.get("context", ""))
+        if pack is not None:
             packs[c["sid"]] = pack
             payload["evidence"] = pack.to_payload()
             payload["evidence_pack_ids"] = pack.ids
@@ -118,9 +128,29 @@ def build_items(claims: list[dict], *, evidence_provider: Optional[EvidenceProvi
     return items, packs
 
 
+# (sid, claim_text, context) -> EvidencePack — the shared_pack_v2 hook.
+PackBuilder = Callable[[str, str, str], EvidencePack]
+
+
+def _forced_uv_row(sid: str) -> dict:
+    """T2.4 quality gate: the verdict-contract row for a claim whose v2 pack
+    failed quota after its one targeted re-retrieval. Never sent to the panel
+    — no seat votes exist, and the provenance code says exactly why."""
+    from .consolidator import GATE_INSUFFICIENT
+    return {"sid": sid, "status": "resolved", "verdict": "UNVERIFIABLE",
+            "confidence": None, "citations": [],
+            "reasoning": ("Forced UNVERIFIABLE: the evidence pack failed the "
+                          "quality gate (too few qualifying Tier-1..3 sources "
+                          "bearing on the core assertion) after one targeted "
+                          "re-retrieval."),
+            "votes": {}, "by_role": {}, "split": False, "escalated": False,
+            "provenance_code": GATE_INSUFFICIENT}
+
+
 def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
                tune: Optional[dict] = None, rc_id: Optional[str] = None,
                evidence_provider: Optional[EvidenceProvider] = None,
+               pack_builder: Optional[PackBuilder] = None,
                max_items: int = DEFAULT_MAX_ITEMS, two_stage: bool = True,
                disc_tier: str = "standard", today=None):
     """claims: [{"sid","text","context"}]. Returns (rows, manifest, notes).
@@ -144,22 +174,41 @@ def adjudicate(hm: HydraMind, claims: list[dict], *, roster: str = "dev",
 
     Pass rc_id ONLY for a scored heldout pass (I6 read-once); leave None for TRAIN
     iteration."""
-    open_book = evidence_provider is not None
+    open_book = evidence_provider is not None or pack_builder is not None
     items, packs = build_items(claims, evidence_provider=evidence_provider,
+                               pack_builder=pack_builder,
                                today=today, max_items=max_items)
+    # T2.4 quality gate (shared_pack_v2): claims whose pack failed quota after
+    # the one targeted re-retrieval are FORCED Unverifiable here — before the
+    # panel, so no seat spend and no chance of a thin-pack verdict. Their rows
+    # carry provenance_code=insufficient-qualifying-evidence.
+    from .consolidator import GATE_INSUFFICIENT
+    gated = {sid for sid, p in packs.items() if p.gate_code == GATE_INSUFFICIENT}
+    forced_rows = [_forced_uv_row(sid) for sid in sorted(gated)]
+    items = [it for it in items if it["item_id"] not in gated]
+
     # Open-book default is the CALIBRATED prompt set (adopted 2026-07-19, P67 Track B:
     # +0.06 decided-acc over plain at equal cost; plain remains available via tune).
     run_tune = {"prompts": CALIBRATED_OPEN_BOOK_PROMPTS if open_book else PROMPTS}
     run_tune.update(tune or {})
-    result, manifest = hm.run("verdict", items, "pca", roster=roster,
-                              tune=run_tune, rc_id=rc_id)
-    rows = [normalize(r, closed_book=not open_book) for r in result.items]
-    notes = dict(result.notes or {})
+    if items:
+        result, manifest = hm.run("verdict", items, "pca", roster=roster,
+                                  tune=run_tune, rc_id=rc_id)
+        rows = [normalize(r, closed_book=not open_book) for r in result.items]
+        notes = dict(result.notes or {})
+    else:
+        # Every claim in the batch was gated — nothing to run. manifest=None is
+        # safe for callers (they read it via getattr(..., "total_cost_usd", 0)).
+        result, manifest, rows, notes = None, None, [], {}
+    rows = forced_rows + rows
     notes["open_book"] = open_book
-    # T2.7: record the retrieval stack explicitly. The current live path is
-    # v1; shared_pack_v2 lands with the PR-5 retrievers + consolidator.
+    if gated:
+        notes["gate_forced_unverifiable"] = sorted(gated)
+    # T2.7: record the retrieval stack explicitly (v2 when a pack_builder ran).
     from truthbot.verdict.evidence_mode import EvidenceMode
-    notes["evidence_mode"] = EvidenceMode.infer_legacy(open_book).value
+    notes["evidence_mode"] = (EvidenceMode.SHARED_PACK_V2.value
+                              if pack_builder is not None
+                              else EvidenceMode.infer_legacy(open_book).value)
 
     # Stage 2 (CRM-114): re-decide the FALSE-vs-MISLEADING boundary on the adverse
     # bucket with a focused binary discriminator, on the SAME evidence packs. Open-book

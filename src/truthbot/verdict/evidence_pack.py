@@ -116,11 +116,19 @@ class PackItem:
 
 @dataclass(frozen=True)
 class EvidencePack:
-    """A claim's assembled evidence: ordered items + their citable ids."""
+    """A claim's assembled evidence: ordered items + their citable ids.
+
+    ``gate_code`` (shared_pack_v2 only, T2.4): non-empty when the pack failed
+    the quality gate after its one targeted re-retrieval — the claim's verdict
+    is then FORCED Unverifiable upstream of any panel call. v1 packs always
+    carry "". The code is banked on the adjudication ROW (which journals), so
+    it deliberately does not round-trip through the chunk journal's
+    Evidence-list serialization."""
 
     sid: str
     window: TimeWindow
     items: list[PackItem] = field(default_factory=list)
+    gate_code: str = ""
 
     @property
     def ids(self) -> list[str]:

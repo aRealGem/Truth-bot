@@ -1,0 +1,112 @@
+"""shared_pack_v2 pack builder — retriever trio → deterministic consolidator
+(P67.9, wiring the T2.3/T2.4 core into the publish path; design note at wiki
+``projects:truthbot:evidence-v2-design``).
+
+``build_evidence_pack_v2`` is the v2 counterpart of
+``evidence_pack.build_evidence_pack``: same output type (``EvidencePack``, so
+the panel payload, I4 citation checking, journal and bridge are unchanged), but
+the pack is assembled by the R1/R2/R3 retriever shortlists through
+``consolidator.consolidate`` instead of connector search + ``_dedup_rank_cap``.
+The v1 builder — including its reserved fact-check slot — stays untouched as
+the ablation baseline (B.5 handoff: lift only at explicit cutover).
+
+Quality gate (T2.4): quota unmet → exactly ONE targeted re-retrieval (the
+retry asks specifically for Tier-1..3 sources bearing on the core assertion)
+→ consolidate over the union → still unmet → the returned pack carries
+``gate_code == GATE_INSUFFICIENT`` and the caller (adjudicate) FORCES the
+verdict Unverifiable without spending a panel call. No silent thin-pack
+verdicts.
+"""
+from __future__ import annotations
+
+import logging
+from datetime import date
+from typing import Optional, Sequence
+
+from hydramind.invariants import check_i5_provenance
+from truthbot.verify.retrievers import Retriever
+
+from . import era_lint, speech_context
+from .consolidator import PACK_CAP_V2, consolidate
+from .evidence_pack import EvidencePack, PackItem, _retrieved_iso, _sha256, window_for
+
+logger = logging.getLogger(__name__)
+
+# Appended to the claim context on the T2.4 retry — the ONE targeted
+# re-retrieval. The retrieval prompt already demands primary sources; the
+# retry narrows to what the quota actually needs.
+_RETRY_FOCUS = (
+    "TARGETED RE-RETRIEVAL: an earlier pass found too few qualifying items. "
+    "Return ONLY primary/official (government/agency), wire-service, or "
+    "established-outlet pages that DIRECTLY support or refute the claim's "
+    "core assertion — no background explainers. ")
+
+
+def build_evidence_pack_v2(
+    sid: str,
+    claim_text: str,
+    retrievers: Sequence[Retriever],
+    *,
+    today: Optional[date] = None,
+    context: str = "",
+    max_items: int = PACK_CAP_V2,
+) -> EvidencePack:
+    """Assemble a shared_pack_v2 ``EvidencePack`` for one claim.
+
+    Time scoping mirrors v1: window from ``window_for(sid)`` (the same rule the
+    temporal preamble uses), fair-game era from the sid's utterance date — both
+    enforced inside ``consolidate`` and re-asserted on the built pack (T1.1
+    defense in depth). Speaker-blind (I3): only sid/text/context flow in."""
+    window = window_for(sid, today=today)
+    utterance = speech_context.speech_date_for(sid)
+
+    def _shortlists(label_suffix: str, ctx: str):
+        out = []
+        for r in retrievers:
+            try:
+                sl = r.shortlist(claim_text, context=ctx,
+                                 utterance=utterance, window=window)
+            except Exception as exc:
+                # One dead retriever must not kill the claim — the consolidator
+                # quota decides whether what remains is enough (and the gate
+                # forces UV when it isn't). Loud in the log, soft in the run.
+                logger.warning("v2 retriever %s failed for %s: %s",
+                               r.label, sid, exc)
+                sl = []
+            out.append((r.label + label_suffix, sl))
+        return out
+
+    shortlists = _shortlists("", context)
+    res = consolidate(sid, shortlists, utterance=utterance, window=window,
+                      max_items=max_items)
+    if not res.quota_met:
+        retry = _shortlists("-retry", _RETRY_FOCUS + context)
+        res = consolidate(sid, shortlists + retry, utterance=utterance,
+                          window=window, max_items=max_items)
+        if not res.quota_met:
+            logger.info("T2.4 gate: %s pack fails quota after targeted retry "
+                        "(%s) — verdict will be forced Unverifiable",
+                        sid, res.gate_code)
+
+    items: list[PackItem] = []
+    for i, cit in enumerate(res.items, start=1):
+        ev = cit.evidence
+        item = PackItem(
+            pack_id=f"E{i}",
+            source_name=ev.source_name or "Unknown",
+            source_url=ev.source_url,
+            tier=ev.source_tier,
+            snippet=ev.snippet or "",
+            retrieved_at=_retrieved_iso(ev),
+            sha256=_sha256(ev.source_url, ev.snippet or ""),
+            supports_claim=ev.supports_claim,
+            relevance_score=ev.relevance_score,
+            published_at=(ev.published_at.date().isoformat()
+                          if ev.published_at else None),
+        )
+        check_i5_provenance(item.provenance())   # I5: fail closed at entry
+        items.append(item)
+    pack = EvidencePack(sid=sid, window=window, items=items,
+                        gate_code=res.gate_code)
+    era_lint.assert_pack_within_era(pack, utterance)
+    return pack

@@ -1038,6 +1038,40 @@ def _build_open_book_provider():
     return build_evidence_provider(source="connectors", connectors=[brave, factcheck])
 
 
+def _build_v2_pack_builder():
+    """shared_pack_v2 (P67.9): bind the R1/R2/R3 retriever trio into the
+    ``pack_builder`` hook (trio shortlists → deterministic consolidator →
+    T2.4 quality gate). Fails LOUD when a lane is missing — a dead retriever
+    key would otherwise yield silent empty shortlists and gate every claim
+    Unverifiable, which is a broken run, not a verdict."""
+    import os
+    import shutil
+
+    missing = []
+    if shutil.which("claude") is None:
+        missing.append("claude CLI (R1 opus worker)")
+    if not os.environ.get("OPENAI_API_KEY"):
+        missing.append("OPENAI_API_KEY (R2 gpt browsing)")
+    if not os.environ.get("XAI_API_KEY"):
+        missing.append("XAI_API_KEY (R3 grok search)")
+    if missing:
+        print("BLOCKED (--evidence-mode v2): missing " + "; ".join(missing)
+              + ". No spend attempted.")
+        sys.exit(1)
+    from truthbot.verdict.evidence_pack_v2 import build_evidence_pack_v2
+    from truthbot.verify.retrievers import (ClaudeWorkerRetriever,
+                                            GrokSearchRetriever,
+                                            OpenAIBrowsingRetriever)
+
+    trio = (ClaudeWorkerRetriever(), OpenAIBrowsingRetriever(),
+            GrokSearchRetriever())
+
+    def pack_builder(sid: str, text: str, context: str):
+        return build_evidence_pack_v2(sid, text, trio, context=context)
+
+    return pack_builder
+
+
 def _publish_bundles(args, bundles: list, date, source_url: str,
                      characterization: Optional[list] = None,
                      panel_roster: Optional[dict] = None) -> None:
@@ -1122,18 +1156,26 @@ def _run_publish_pca(args) -> None:
     print(f"Segmented {len(sentences)} sentence(s) (speech_id={speech_id}, "
           f"utterance={date.date().isoformat()})")
 
-    provider = _build_open_book_provider()
-    if provider is None:
-        print("WARNING: BRAVE_API_KEY not set — running CLOSED-BOOK "
-              "(no evidence, CRM-114 disabled).")
+    evidence_mode = getattr(args, "evidence_mode", "v1") or "v1"
+    provider = None
+    pack_builder = None
+    if evidence_mode == "v2":
+        pack_builder = _build_v2_pack_builder()   # fails LOUD on a missing lane
+    else:
+        provider = _build_open_book_provider()
+        if provider is None:
+            print("WARNING: BRAVE_API_KEY not set — running CLOSED-BOOK "
+                  "(no evidence, CRM-114 disabled).")
 
     crm114 = not bool(getattr(args, "no_crm114", False))
+    open_book = provider is not None or pack_builder is not None
     # Two engines: Layer A classify needs the raw/identity parser (parse_a2 reads the
     # {"label", …} JSON itself); the verdict panel + CRM-114 need parse_verdict.
     hm_classify = proxy_lane.build_hydramind()
     hm_verdict = proxy_lane.build_hydramind(response_parser=adjudicator.parse_verdict)
     layer_a_fn, adjudicate_fn = publish_pipeline.build_pca_lane_fns(
-        hm_classify, hm_verdict, provider, crm114=crm114,
+        hm_classify, hm_verdict, provider, pack_builder=pack_builder,
+        crm114=crm114,
         roster=getattr(args, "roster", "dev") or "dev",
         a2_tier=getattr(args, "a2_tier", "cheap") or "cheap",
     )
@@ -1143,9 +1185,11 @@ def _run_publish_pca(args) -> None:
         dist = Counter(r.get("verdict") or r.get("status") for r in rows)
         print(f"  adjudicate chunk {i}/{n}: {dict(dist)}")
 
+    mode_label = ("open-book+crm114" if open_book and crm114
+                  else ("open-book" if open_book else "closed-book"))
     print(f"Verifying via PCA (roster={getattr(args, 'roster', 'dev')}, "
-          f"chunk_size={chunk_size}, "
-          f"mode={'open-book+crm114' if provider is not None and crm114 else ('open-book' if provider is not None else 'closed-book')})...")
+          f"chunk_size={chunk_size}, evidence={evidence_mode}, "
+          f"mode={mode_label})...")
     # P67.3: chunk journal + resume + preflight budget probe. The journal
     # defaults ON (metrics/journals/<speech_id>.jsonl): a mid-run failure keeps
     # every completed chunk, and re-running with --resume re-spends only on
@@ -1588,6 +1632,19 @@ def main() -> None:
         type=int,
         default=6,
         help="PCA path: check-worthy claims per adjudicate call (proxy rate-limit control; default 6).",
+    )
+    pub_parser.add_argument(
+        "--evidence-mode",
+        dest="evidence_mode",
+        choices=("v1", "v2"),
+        default="v1",
+        help=(
+            "Retrieval stack (T2.7). 'v1' (default) = Brave/FactCheck connectors "
+            "(shared_pack_v1, the ablation baseline). 'v2' = R1/R2/R3 retriever "
+            "trio → deterministic consolidator with the T2.4 quality gate "
+            "(shared_pack_v2, the Phase 3 rerun stack); needs the claude CLI, "
+            "OPENAI_API_KEY and XAI_API_KEY."
+        ),
     )
     pub_parser.add_argument(
         "--journal",
