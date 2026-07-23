@@ -1,0 +1,78 @@
+{
+  "config": {
+    "roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "evidence_mode": "shared_pack_v2",
+    "two_stage": true,
+    "proxy_cap": 3.0
+  },
+  "chunks": [
+    {
+      "speech": "trump_2026",
+      "n_claims": 6,
+      "proxy_delta_usd": 0.05,
+      "manifest_self_reported_usd": 0.05,
+      "wall_s": 1562.5,
+      "gate_forced": [],
+      "verdicts": {
+        "trump_2026:0010": "FALSE",
+        "trump_2026:0092": "FALSE",
+        "trump_2026:0219": "MISLEADING",
+        "trump_2026:0336": "TRUE",
+        "trump_2026:0479": "TRUE",
+        "trump_2026:0579": "TRUE"
+      },
+      "r2_calls": 6,
+      "r3_calls": 6
+    },
+    {
+      "speech": "biden_2022",
+      "n_claims": 4,
+      "proxy_delta_usd": 0.0147,
+      "manifest_self_reported_usd": 0.0103,
+      "wall_s": 1075.3,
+      "gate_forced": [
+        "biden_2022:0017"
+      ],
+      "verdicts": {
+        "biden_2022:0017": "UNVERIFIABLE",
+        "biden_2022:0115": "TRUE",
+        "biden_2022:0201": "TRUE",
+        "biden_2022:0322": "TRUE"
+      },
+      "r2_calls": 5,
+      "r3_calls": 5
+    }
+  ],
+  "started_at": "2026-07-23T13:36:14-0400",
+  "totals": {
+    "claims": 10,
+    "proxy_usd": 0.0647,
+    "r2_offproxy": {
+      "in": 916042,
+      "out": 41871,
+      "usd_est": 5.8363
+    },
+    "r3_offproxy": {
+      "in": 250448,
+      "out": 18279,
+      "usd_est": 0.3588
+    },
+    "subscription_lanes_usd": 0.0,
+    "per_claim_usd": 0.626,
+    "projection_289_claims_usd": 180.91,
+    "note": "off-proxy figures are token-usage estimates at list price; reconcile against the OpenAI/xAI ledgers before the go decision. Layer A (haiku classify, both speeches) adds ~$0.7 on prior telemetry and is not part of this leg."
+  }
+}
