@@ -63,20 +63,19 @@ class _DetonatingAdjudicator:
 
 # ── characterization: today's lossy behavior ──────────────────────────────────
 
-def test_mid_run_chunk_failure_discards_all_completed_chunks():
-    """CURRENT behavior (the P67.3 gap): chunk 3 of 4 failing loses chunks 1-2's
-    completed rows — the exception propagates and no partial result object,
-    journal, or artifact carries them. When checkpointing lands this test must
-    be REPLACED by the xfail contracts below, not silently deleted."""
+def test_mid_run_chunk_failure_preserves_completed_chunks_on_exception():
+    """P67.3 LANDED (2026-07-22, replacing the lossy characterization test per
+    its own instruction): chunk 3 of 4 failing still raises, but chunks 1-2's
+    completed rows ride on ``exc.partial_result`` — banked spend is never
+    unreachable again."""
     adj = _DetonatingAdjudicator(fail_on_chunk=3)
-    with pytest.raises(RuntimeError, match="429"):
+    with pytest.raises(RuntimeError, match="429") as ei:
         pp.run_pca_verify(_sentences(8),
                           layer_a_fn=_fake_classify_all_checkworthy,
                           adjudicate_fn=adj, chunk_size=CHUNK)
-    # Two chunks (4 rows) HAD completed inside the lane...
     assert len(adj.completed_rows) == 2 * CHUNK
-    # ...but the caller has no way to receive them: run_pca_verify surfaces
-    # nothing on failure (no partial-result channel exists today).
+    partial = ei.value.partial_result
+    assert [r["sid"] for r in partial.rows] == [r["sid"] for r in adj.completed_rows]
 
 
 def test_failure_on_first_chunk_loses_nothing_but_layer_a_spend():
@@ -92,8 +91,6 @@ def test_failure_on_first_chunk_loses_nothing_but_layer_a_spend():
 
 # ── desired contract for the P67.3 fix (strict xfail until implemented) ───────
 
-@pytest.mark.xfail(strict=True,
-                   reason="P67.3 not implemented: completed chunks should survive a mid-run failure")
 def test_completed_chunks_survive_a_mid_run_failure():
     """TARGET: after a chunk-3 failure, the completed rows from chunks 1-2 are
     recoverable from the run (partial result / journal), so their spend is not
@@ -110,8 +107,6 @@ def test_completed_chunks_survive_a_mid_run_failure():
     assert partial is not None and len(partial.rows) == 2 * CHUNK
 
 
-@pytest.mark.xfail(strict=True,
-                   reason="P67.3 not implemented: resume should skip already-adjudicated sids")
 def test_resume_skips_already_adjudicated_sids():
     """TARGET: a resumed run re-spends ONLY on sids that never completed.
     Weakest useful form: run_pca_verify accepts prior rows and does not call
@@ -130,3 +125,53 @@ def test_resume_skips_already_adjudicated_sids():
     adjudicated = {r["sid"] for rows in [adj.completed_rows] for r in rows}
     assert "sp:0000" not in adjudicated and "sp:0001" not in adjudicated
     assert len(result.rows) == 4
+
+
+# ── P67.3 landed: journal + budget probe (options 1 + 3) ─────────────────────
+
+def test_journal_appends_per_chunk_and_resumes(tmp_path):
+    """Option 1: every completed chunk lands in the JSONL immediately; a
+    resumed run loads it and re-spends only on the missing sids."""
+    journal = tmp_path / "run.jsonl"
+    adj = _DetonatingAdjudicator(fail_on_chunk=3)
+    with pytest.raises(RuntimeError, match="429"):
+        pp.run_pca_verify(_sentences(8),
+                          layer_a_fn=_fake_classify_all_checkworthy,
+                          adjudicate_fn=adj, chunk_size=CHUNK,
+                          journal_path=journal)
+    rows, packs, cost, roster = pp.load_chunk_journal(journal)
+    assert len(rows) == 2 * CHUNK
+
+    adj2 = _DetonatingAdjudicator(fail_on_chunk=99)
+    result = pp.run_pca_verify(_sentences(8),
+                               layer_a_fn=_fake_classify_all_checkworthy,
+                               adjudicate_fn=adj2, chunk_size=CHUNK,
+                               resume_rows=rows, resume_packs=packs,
+                               journal_path=journal)
+    resumed_sids = {r["sid"] for r in rows}
+    assert not resumed_sids & {r["sid"] for r in adj2.completed_rows}
+    assert len(result.rows) == 8
+    assert adj2.calls == 2   # only the two missing chunks
+
+
+def test_budget_probe_halts_early_with_work_journaled(tmp_path):
+    """Option 3: when headroom drops below projected chunk cost, the run halts
+    BEFORE spending, raising BudgetHalt with the partial result attached."""
+    journal = tmp_path / "run.jsonl"
+
+    base = _DetonatingAdjudicator(fail_on_chunk=99)   # reports $1/chunk via wrapper
+    def adj(chunk):
+        rows, _ = base(chunk)
+        return rows, {"cost_usd": 1.0}
+
+    headroom = iter([10.0, 10.0, 1.0, 1.0])   # probed per chunk
+    with pytest.raises(pp.BudgetHalt, match="preflight") as ei:
+        pp.run_pca_verify(_sentences(8),
+                          layer_a_fn=_fake_classify_all_checkworthy,
+                          adjudicate_fn=adj, chunk_size=CHUNK,
+                          journal_path=journal,
+                          budget_check=lambda: next(headroom))
+    partial = ei.value.partial_result
+    assert len(partial.rows) == 2 * CHUNK        # halted before chunk 3
+    rows, _, cost, _ = pp.load_chunk_journal(journal)
+    assert len(rows) == 2 * CHUNK and cost == 2.0

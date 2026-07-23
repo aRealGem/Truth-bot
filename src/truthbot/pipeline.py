@@ -1146,12 +1146,40 @@ def _run_publish_pca(args) -> None:
     print(f"Verifying via PCA (roster={getattr(args, 'roster', 'dev')}, "
           f"chunk_size={chunk_size}, "
           f"mode={'open-book+crm114' if provider is not None and crm114 else ('open-book' if provider is not None else 'closed-book')})...")
+    # P67.3: chunk journal + resume + preflight budget probe. The journal
+    # defaults ON (metrics/journals/<speech_id>.jsonl): a mid-run failure keeps
+    # every completed chunk, and re-running with --resume re-spends only on
+    # sids that never finished.
+    from truthbot.config import settings as _cfg
+    journal_path = getattr(args, "journal", None) or (
+        Path(_cfg.metrics_dir) / "journals" / f"{speech_id}.jsonl")
+    resume_rows: list = []
+    resume_packs: dict = {}
+    if getattr(args, "resume", False):
+        resume_rows, resume_packs, prior_cost, _ = \
+            publish_pipeline.load_chunk_journal(journal_path)
+        if resume_rows:
+            print(f"  resume: {len(resume_rows)} journaled rows from "
+                  f"{journal_path} (banked spend ${prior_cost:.2f})")
+    budget_check = None
+    budget_cap = float(getattr(args, "budget_cap", 0) or 0)
+    if budget_cap:
+        from truthbot.verdict.proxy_lane import proxy_key_spend
+        _start_spend = proxy_key_spend()
+
+        def budget_check() -> float:
+            return budget_cap - (proxy_key_spend() - _start_spend)
+
     result = publish_pipeline.run_pca_verify(
         sentences,
         layer_a_fn=layer_a_fn,
         adjudicate_fn=adjudicate_fn,
         chunk_size=chunk_size,
         on_progress=_on_progress,
+        resume_rows=resume_rows,
+        resume_packs=resume_packs,
+        journal_path=journal_path,
+        budget_check=budget_check,
     )
     print(f"Layer A: {result.n_check_worthy}/{result.n_sentences} check-worthy; "
           f"adjudicated in {result.n_chunks} chunk(s); spend ${result.cost_usd:.4f}")
@@ -1560,6 +1588,26 @@ def main() -> None:
         type=int,
         default=6,
         help="PCA path: check-worthy claims per adjudicate call (proxy rate-limit control; default 6).",
+    )
+    pub_parser.add_argument(
+        "--journal",
+        dest="journal",
+        default=None,
+        help="P67.3: chunk-journal JSONL path (default metrics/journals/<speech_id>.jsonl).",
+    )
+    pub_parser.add_argument(
+        "--resume",
+        dest="resume",
+        action="store_true",
+        help="P67.3: load the journal and skip already-adjudicated sids (banked spend).",
+    )
+    pub_parser.add_argument(
+        "--budget-cap",
+        dest="budget_cap",
+        type=float,
+        default=0.0,
+        help="P67.3: halt BEFORE a chunk when proxy-key headroom under this cap "
+             "falls below the projected chunk cost (0 = no probe).",
     )
     pub_parser.add_argument(
         "--roster",
