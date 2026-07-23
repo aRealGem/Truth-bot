@@ -73,16 +73,25 @@ def build_hydramind(*, response_parser: Optional[Callable[[Any], dict]] = None) 
     (``build_pca_lane_fns``) instead."""
     from hydramind import HydraMind
     from hydramind.manifest import NullSpendSink
+    from hydramind.models import WORKER_ALIASES
     from hydramind.registry import load_registry
-    from hydramind.transport import ProxyCompletion, Transport
+    from hydramind.transport import ClaudeWorkerCompletion, ProxyCompletion, Transport
 
     return HydraMind(
         load_registry(),
-        Transport(completion_fn=ProxyCompletion(
-            key_env=resolve_key_env(),
-            base_url=base_url(),
-            response_parser=response_parser,   # None → transport's identity passthrough
-        )),
+        Transport(
+            completion_fn=ProxyCompletion(
+                key_env=resolve_key_env(),
+                base_url=base_url(),
+                response_parser=response_parser,   # None → transport's identity passthrough
+            ),
+            # L-W seat lane (P67.9): roster aliases in WORKER_ALIASES (the prod
+            # proposer opus-worker) ride the subscription-auth claude CLI, not
+            # the proxy. Same response_parser — the lane is a cost choice, not
+            # a semantic one (§2).
+            worker_fn=ClaudeWorkerCompletion(response_parser=response_parser),
+            worker_models=WORKER_ALIASES,
+        ),
         spend_sink=NullSpendSink(),
         project=CLIENT,
     )

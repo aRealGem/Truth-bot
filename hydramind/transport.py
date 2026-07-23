@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import time
 import urllib.error
 import urllib.request
@@ -208,7 +209,7 @@ def _loads_or_text(s: str) -> dict:
     return {"text": s}
 
 
-# ── L-T / L-W: not built in C1 ────────────────────────────────────────────────
+# ── L-T: not built in C1 ──────────────────────────────────────────────────────
 
 class LaneNotAvailable(RuntimeError):
     pass
@@ -220,22 +221,115 @@ def _l_t_stub(call: Call) -> CallResult:
 
 
 def _l_w_stub(call: Call) -> CallResult:
-    raise LaneNotAvailable("L-W (Claude Code worker) is ON HOLD for C1.")
+    raise LaneNotAvailable("L-W agentic TOOL_TASK is ON HOLD; only worker "
+                           "COMPLETIONS (worker_models aliases) ride L-W.")
+
+
+# ── L-W: Claude worker completions (P67.9 / T3.1) ─────────────────────────────
+
+class WorkerCallError(RuntimeError):
+    """A worker completion failed after retries. Fail LOUD: a seat that
+    silently returns nothing would corrupt the PCA quorum; the P67.3
+    journal/resume machinery is the recovery path, not a fake result."""
+
+
+class ClaudeWorkerCompletion:
+    """L-W completion backend: the ``claude`` CLI headless on the Max
+    subscription (T3.1) — zero marginal cost, so the prod roster's frontier
+    proposer seat doesn't ride API billing. Mirrors the validated R1
+    ``ClaudeWorkerRetriever`` pattern: ANTHROPIC_API_KEY is STRIPPED from the
+    child env so the CLI can never fall back to API-key billing.
+
+    Semantic note (§2): L-P sends ``template`` as the system message and the
+    JSON-rendered inputs as the user message; the CLI takes one prompt string,
+    so this lane concatenates the same two parts in the same order. No tools
+    are granted (headless auto-denies) — seat completions are closed over
+    their inputs; evidence acquisition stays Layer C's job."""
+
+    def __init__(self, model: str = "opus", timeout_s: float = 300.0,
+                 response_parser: Optional[Callable[[dict], dict]] = None,
+                 max_retries: int = 2,
+                 run_fn: Optional[Callable[..., "subprocess.CompletedProcess"]] = None):
+        self.model = model
+        self.timeout_s = timeout_s
+        self.response_parser = response_parser or (lambda d: d)
+        self.max_retries = max_retries
+        self._run = run_fn or subprocess.run
+
+    def _invoke(self, prompt: str) -> "subprocess.CompletedProcess":
+        env = dict(os.environ)
+        env.pop("ANTHROPIC_API_KEY", None)   # subscription auth, never API billing
+        return self._run(
+            ["claude", "-p", prompt, "--output-format", "json",
+             "--model", self.model],
+            capture_output=True, text=True, timeout=self.timeout_s, env=env)
+
+    def __call__(self, call: Call) -> CallResult:
+        prompt = (call.prompt.template + "\n\nINPUT:\n"
+                  + json.dumps(call.inputs or {}, ensure_ascii=False))
+        last_err = ""
+        for _attempt in range(self.max_retries + 1):
+            try:
+                proc = self._invoke(prompt)
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                last_err = f"invocation failed: {exc}"
+                continue
+            if proc.returncode != 0:
+                last_err = f"exit {proc.returncode}: {(proc.stderr or '')[-300:]}"
+                continue
+            try:
+                envelope = json.loads(proc.stdout)
+            except json.JSONDecodeError:
+                envelope = {}
+            text = envelope.get("result") if isinstance(envelope, dict) else None
+            if not text:
+                last_err = f"no result in worker envelope: {(proc.stdout or '')[:200]}"
+                continue
+            usage = envelope.get("usage") or {}
+            model_usage = envelope.get("modelUsage") or {}
+            returned = next(iter(model_usage), "") if isinstance(model_usage, dict) else ""
+            return CallResult(
+                call=call, output=self.response_parser(_loads_or_text(text)),
+                lane=Lane.L_W,
+                tokens_in=int(usage.get("input_tokens") or 0),
+                tokens_out=int(usage.get("output_tokens") or 0),
+                # Max-subscription lane: no marginal spend, and the envelope's
+                # total_cost_usd is an API-rate hypothetical — never bank it.
+                cost_usd=0.0, cost_source="subscription",
+                returned_model=returned, raw=envelope,
+            )
+        raise WorkerCallError(
+            f"L-W worker completion failed after {self.max_retries + 1} "
+            f"attempts ({call.role}:{call.item_id}): {last_err}")
 
 
 # ── router ────────────────────────────────────────────────────────────────────
 
 class Transport:
     def __init__(self, completion_fn: CompletionFn,
-                 batch_backend: Optional[BatchBackend] = None):
+                 batch_backend: Optional[BatchBackend] = None,
+                 worker_fn: Optional[CompletionFn] = None,
+                 worker_models: frozenset[str] = frozenset()):
         self.completion_fn = completion_fn
         self.batch_backend = batch_backend
+        # L-W completion routing (P67.9): calls whose binding.model is in
+        # worker_models ride worker_fn instead of the proxy. The alias set
+        # lives with the caller (hydramind.models.WORKER_ALIASES) so the
+        # router stays policy-free.
+        self.worker_fn = worker_fn
+        self.worker_models = frozenset(worker_models)
+
+    def _is_worker(self, c: Call) -> bool:
+        return c.binding.model in self.worker_models
 
     def lane_for_wave(self, wave: Wave, spec: Spec) -> Lane:
-        """Wave-level lane decision for COMPLETION calls (TOOL_TASK always L-W)."""
+        """Wave-level lane decision for COMPLETION calls (TOOL_TASK always L-W).
+        Worker-alias completions are excluded — they always ride L-W and never
+        count toward L-B lot size."""
         eligible = set(spec.batch.get("eligible_waves", []))
         min_lot = int(spec.batch.get("min_lot", 10**9))
-        completions = [c for c in wave.calls if c.kind == Kind.COMPLETION]
+        completions = [c for c in wave.calls
+                       if c.kind == Kind.COMPLETION and not self._is_worker(c)]
         if (wave.batchable and wave.tag in eligible
                 and self.batch_backend is not None
                 and len(completions) >= min_lot):
@@ -246,10 +340,21 @@ class Transport:
         results: list[CallResult] = []
 
         tool_calls = [c for c in wave.calls if c.kind == Kind.TOOL_TASK]
-        completions = [c for c in wave.calls if c.kind == Kind.COMPLETION]
+        worker_calls = [c for c in wave.calls
+                        if c.kind == Kind.COMPLETION and self._is_worker(c)]
+        completions = [c for c in wave.calls
+                       if c.kind == Kind.COMPLETION and not self._is_worker(c)]
 
-        for c in tool_calls:                       # L-W (on hold)
+        for c in tool_calls:                       # L-W agentic (on hold)
             results.append(_l_w_stub(c))
+
+        for c in worker_calls:                     # L-W completions
+            if self.worker_fn is None:
+                raise LaneNotAvailable(
+                    f"call {call_key(c)} binds worker alias "
+                    f"'{c.binding.model}' but no worker_fn is wired — refuse "
+                    f"to reroute a subscription seat onto a billed lane.")
+            results.append(self.worker_fn(c))
 
         if not completions:
             return results
