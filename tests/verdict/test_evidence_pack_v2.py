@@ -135,3 +135,32 @@ def test_adjudicate_all_gated_skips_panel_entirely():
     assert rows[0]["verdict"] == "UNVERIFIABLE"
     # callers read cost via getattr(manifest, "total_cost_usd", 0.0) — safe
     assert float(getattr(manifest, "total_cost_usd", 0.0) or 0.0) == 0.0
+
+
+def test_retry_retrievers_join_only_the_rescue_round():
+    """Grok-fallback (2026-07-24): the retry pool is consulted ONLY when the
+    first-pass pack fails quota — quota-met claims never touch it."""
+    grok_calls = []
+
+    class _Grok:
+        label = "R3"
+
+        def shortlist(self, claim_text, *, context="", utterance=None, window=None):
+            grok_calls.append(claim_text)
+            return [_ev("https://apnews.com/rescue", tier=SourceTier.WIRE,
+                        supports=False)]
+
+    # quota met first pass → grok never called
+    r1 = _Retriever("R1", [[_ev("https://bls.gov/a"),
+                            _ev("https://bea.gov/b", supports=False)]])
+    pack = build_evidence_pack_v2(SID, "healthy claim", (r1,),
+                                  retry_retrievers=(r1, _Grok()))
+    assert pack.gate_code == "" and grok_calls == []
+
+    # quota unmet → grok joins the one retry and can rescue the pack
+    r1_thin = _Retriever("R1", [[_ev("https://bls.gov/a")], []])
+    pack = build_evidence_pack_v2(SID, "thin claim", (r1_thin,),
+                                  retry_retrievers=(r1_thin, _Grok()))
+    assert grok_calls == ["thin claim"]
+    assert pack.gate_code == ""              # rescued: 1 gov supports + 1 wire refutes
+    assert any("apnews" in it.source_url for it in pack.items)

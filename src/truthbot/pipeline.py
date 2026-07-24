@@ -1038,12 +1038,18 @@ def _build_open_book_provider():
     return build_evidence_provider(source="connectors", connectors=[brave, factcheck])
 
 
-def _build_v2_pack_builder():
+def _build_v2_pack_builder(grok_fallback: bool = False):
     """shared_pack_v2 (P67.9): bind the R1/R2/R3 retriever trio into the
     ``pack_builder`` hook (trio shortlists → deterministic consolidator →
     T2.4 quality gate). Fails LOUD when a lane is missing — a dead retriever
     key would otherwise yield silent empty shortlists and gate every claim
-    Unverifiable, which is a broken run, not a verdict."""
+    Unverifiable, which is a broken run, not a verdict.
+
+    ``grok_fallback`` (jackie, 2026-07-24): grok researches ONLY claims whose
+    first-pass pack fails the T2.4 quota (thin-evidence rescue), not every
+    claim. R1+R2 alone measured decisive_source_recall 0.85 = full trio, and
+    grok's marginal value concentrates in exactly the starved tail this mode
+    routes to it. Cuts the grok retrieval bill ~85-95% per speech."""
     import os
     import shutil
 
@@ -1065,9 +1071,11 @@ def _build_v2_pack_builder():
 
     trio = (ClaudeWorkerRetriever(), OpenAIBrowsingRetriever(),
             GrokSearchRetriever())
+    primary = trio[:2] if grok_fallback else trio
 
     def pack_builder(sid: str, text: str, context: str):
-        return build_evidence_pack_v2(sid, text, trio, context=context)
+        return build_evidence_pack_v2(sid, text, primary,
+                                      retry_retrievers=trio, context=context)
 
     return pack_builder
 
@@ -1160,7 +1168,8 @@ def _run_publish_pca(args) -> None:
     provider = None
     pack_builder = None
     if evidence_mode == "v2":
-        pack_builder = _build_v2_pack_builder()   # fails LOUD on a missing lane
+        pack_builder = _build_v2_pack_builder(    # fails LOUD on a missing lane
+            grok_fallback=bool(getattr(args, "grok_fallback", False)))
     else:
         provider = _build_open_book_provider()
         if provider is None:
@@ -1644,6 +1653,16 @@ def main() -> None:
             "trio → deterministic consolidator with the T2.4 quality gate "
             "(shared_pack_v2, the Phase 3 rerun stack); needs the claude CLI, "
             "OPENAI_API_KEY and XAI_API_KEY."
+        ),
+    )
+    pub_parser.add_argument(
+        "--grok-fallback",
+        dest="grok_fallback",
+        action="store_true",
+        help=(
+            "v2 economy mode: grok (R3) researches ONLY claims whose first-pass "
+            "pack fails the T2.4 quota (thin-evidence rescue), not every claim. "
+            "R1+R2 primary measured recall 0.85 = full trio (2026-07-24 pilots)."
         ),
     )
     pub_parser.add_argument(
