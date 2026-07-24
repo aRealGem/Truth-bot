@@ -47,6 +47,7 @@ def build_evidence_pack_v2(
     claim_text: str,
     retrievers: Sequence[Retriever],
     *,
+    retry_retrievers: Optional[Sequence[Retriever]] = None,
     today: Optional[date] = None,
     context: str = "",
     max_items: int = PACK_CAP_V2,
@@ -56,13 +57,19 @@ def build_evidence_pack_v2(
     Time scoping mirrors v1: window from ``window_for(sid)`` (the same rule the
     temporal preamble uses), fair-game era from the sid's utterance date — both
     enforced inside ``consolidate`` and re-asserted on the built pack (T1.1
-    defense in depth). Speaker-blind (I3): only sid/text/context flow in."""
+    defense in depth). Speaker-blind (I3): only sid/text/context flow in.
+
+    ``retry_retrievers`` (jackie, 2026-07-24): the roster for the ONE targeted
+    T2.4 retry; defaults to ``retrievers``. Passing a superset implements
+    escalation-on-thin-evidence — e.g. R1+R2 primary with grok joining only
+    the rescue round, which keeps its lineage diversity exactly where evidence
+    is scarce at ~5-15% of its always-on cost."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
 
-    def _shortlists(label_suffix: str, ctx: str):
+    def _shortlists(pool: Sequence[Retriever], label_suffix: str, ctx: str):
         out = []
-        for r in retrievers:
+        for r in pool:
             try:
                 sl = r.shortlist(claim_text, context=ctx,
                                  utterance=utterance, window=window)
@@ -76,11 +83,12 @@ def build_evidence_pack_v2(
             out.append((r.label + label_suffix, sl))
         return out
 
-    shortlists = _shortlists("", context)
+    shortlists = _shortlists(retrievers, "", context)
     res = consolidate(sid, shortlists, utterance=utterance, window=window,
                       max_items=max_items)
     if not res.quota_met:
-        retry = _shortlists("-retry", _RETRY_FOCUS + context)
+        retry = _shortlists(retry_retrievers or retrievers, "-retry",
+                            _RETRY_FOCUS + context)
         res = consolidate(sid, shortlists + retry, utterance=utterance,
                           window=window, max_items=max_items)
         if not res.quota_met:
