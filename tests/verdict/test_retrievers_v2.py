@@ -161,3 +161,58 @@ def test_brave_classify_tier_is_shared_module_level() -> None:
     from truthbot.verify.sources.brave import classify_tier
     assert classify_tier("https://www.bls.gov/x") == SourceTier.GOVERNMENT
     assert classify_tier("https://www.govtech.com/x") == SourceTier.OTHER
+
+
+def test_r2_retries_same_model_once_on_empty_shortlist(monkeypatch) -> None:
+    """P67.9: an empty parse is a soft failure — one same-model retry before
+    falling down the chain (gpt-5-mini flake mitigation)."""
+    calls: list[str] = []
+
+    def fake_post(self, model, prompt):
+        calls.append(model)
+        if len(calls) == 1:
+            return {"output": [], "usage": {}}          # empty flake
+        return {"output": [{"content": [{"type": "output_text", "text":
+                '{"items": [{"url": "https://bls.gov/x", "date": "2026-01-10", '
+                '"stance": "supports", "one_line_why": "w"}]}'}]}], "usage": {}}
+
+    monkeypatch.setattr(OpenAIBrowsingRetriever, "_post", fake_post)
+    evs = OpenAIBrowsingRetriever(model="gpt-5-mini").shortlist(
+        "claim", utterance=UTT, window=WINDOW)
+    assert calls == ["gpt-5-mini", "gpt-5-mini"]         # same-model retry
+    assert len(evs) == 1 and evs[0].source_url == "https://bls.gov/x"
+
+
+def test_r2_double_empty_falls_down_chain(monkeypatch) -> None:
+    calls: list[str] = []
+
+    def fake_post(self, model, prompt):
+        calls.append(model)
+        if model == "gpt-5-mini":
+            return {"output": [], "usage": {}}           # empty both attempts
+        return {"output": [{"content": [{"type": "output_text", "text":
+                '{"items": [{"url": "https://apnews.com/y", "date": null, '
+                '"stance": "context", "one_line_why": "w"}]}'}]}], "usage": {}}
+
+    monkeypatch.setattr(OpenAIBrowsingRetriever, "_post", fake_post)
+    evs = OpenAIBrowsingRetriever(model="gpt-5-mini").shortlist(
+        "claim", utterance=UTT, window=WINDOW)
+    assert calls[:3] == ["gpt-5-mini", "gpt-5-mini", "gpt-5.4"]
+    assert len(evs) == 1
+
+
+def test_r2_post_failure_skips_same_model_retry(monkeypatch) -> None:
+    calls: list[str] = []
+
+    def fake_post(self, model, prompt):
+        calls.append(model)
+        if model == "gpt-5-mini":
+            raise RuntimeError("boom")                   # POST failure
+        return {"output": [{"content": [{"type": "output_text", "text":
+                '{"items": [{"url": "https://apnews.com/y", "date": null, '
+                '"stance": "context", "one_line_why": "w"}]}'}]}], "usage": {}}
+
+    monkeypatch.setattr(OpenAIBrowsingRetriever, "_post", fake_post)
+    OpenAIBrowsingRetriever(model="gpt-5-mini").shortlist(
+        "claim", utterance=UTT, window=WINDOW)
+    assert calls[:2] == ["gpt-5-mini", "gpt-5.4"]        # no same-model retry
