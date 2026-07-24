@@ -1,0 +1,96 @@
+[
+  {
+    "claim": "Farm income is up 70 percent.",
+    "n_items": 10,
+    "gate_code": "",
+    "dated_items": 6,
+    "undated_items": 4,
+    "urls": [
+      "https://esmis.nal.usda.gov/sites/default/release-files/k930bx00t/jm214s39s/zc77st192/FIS-07-23-1973.pdf",
+      "https://fraser.stlouisfed.org/title/economic-report-president-45/1973-8144/fulltext",
+      "https://fraser.stlouisfed.org/files/docs/historical/frbchi/agletter/frbchi_agletter_1258.pdf",
+      "https://fraser.stlouisfed.org/title/economic-report-president-45/1974-8145/fulltext",
+      "https://www.nass.usda.gov/Statistics_by_State/New_Mexico/Publications/Annual_Statistical_Bulletin/historical_summaries/Bulletin_1974.pdf",
+      "https://fred.stlouisfed.org/data/B1448C1A027NBEA",
+      "https://ers.usda.gov/sites/default/files/_laserfiche/publications/41988/50849_aib485.pdf?v=44268",
+      "https://www.ers.usda.gov/data-products/farm-income-and-wealth-statistics/data-files-us-and-state-level-farm-income-and-wealth-statistics",
+      "https://fred.stlouisfed.org/series/B1448C1A027NBEA",
+      "https://downloads.usda.library.cornell.edu/usda-esmis/files/k930bx00t/ff365838x/qn59q706h/FIS-07-23-1974.pdf"
+    ]
+  },
+  {
+    "claim": "More than two and a half million new jobs were created in the past year alone.",
+    "n_items": 10,
+    "gate_code": "",
+    "dated_items": 10,
+    "undated_items": 0,
+    "urls": [
+      "https://fraser.stlouisfed.org/title/economic-report-president-45/1974-8145/fulltext",
+      "https://fraser.stlouisfed.org/docs/releases/bls/bls_employnews_197312.pdf",
+      "https://fraser.stlouisfed.org/title/employment-situation-144/december-1973-56071",
+      "https://fraser.stlouisfed.org/files/docs/publications/ERP/1974/ERP_1974.pdf",
+      "https://fraser.stlouisfed.org/docs/releases/bls/bls_employnews_197401.pdf",
+      "https://fraser.stlouisfed.org/title/employment-situation-144/january-1974-56074",
+      "https://fraser.stlouisfed.org/title/employment-earnings-60/february-1974-20303/fulltext",
+      "https://fraser.stlouisfed.org/title/employment-earnings-60/january-1973-20290/fulltext",
+      "https://fraser.stlouisfed.org/title/federal-reserve-bulletin-62/february-1974-21470/fulltext",
+      "https://fraser.stlouisfed.org/title/employment-earnings-60/may-1973-20294/fulltext"
+    ]
+  },
+  {
+    "claim": "In the past five years, the average American's real spendable income has increased by 16 percent.",
+    "n_items": 10,
+    "gate_code": "",
+    "dated_items": 8,
+    "undated_items": 2,
+    "urls": [
+      "https://fraser.stlouisfed.org/files/docs/publications/ERP/1974/ERP_1974.pdf",
+      "https://fraser.stlouisfed.org/title/economic-report-president-45/1974-8145/fulltext",
+      "https://fraser.stlouisfed.org/title/employment-earnings-60/january-1973-20290/fulltext",
+      "https://fraser.stlouisfed.org/title/survey-current-business-46/april-1973-9830/fulltext",
+      "https://fraser.stlouisfed.org/title/survey-current-business-46/november-1972-9825/fulltext",
+      "https://apps.bea.gov/scb/issues/1974/scb-1974-february.pdf",
+      "https://www.presidency.ucsb.edu/documents/address-the-state-the-union-delivered-before-joint-session-the-congress",
+      "https://www.gutenberg.org/files/5043/5043-h/5043-h.htm",
+      "https://fred.stlouisfed.org/series/DPIC96",
+      "https://files.eric.ed.gov/fulltext/ED174500.pdf"
+    ]
+  },
+  {
+    "claim": "For the first time in a generation, no young Americans are being drafted into the armed services of the United States.",
+    "n_items": 10,
+    "gate_code": "",
+    "dated_items": 3,
+    "undated_items": 7,
+    "urls": [
+      "https://www.nytimes.com/1973/01/28/archives/nation-ends-draft-turns-to-volunteers-message-from-laird-hopes.html",
+      "https://www.sss.gov/wp-content/uploads/2020/03/1974-Vietnam-Lottery.pdf",
+      "https://www.govinfo.gov/content/pkg/GPO-CRECB-1973-pt16/pdf/GPO-CRECB-1973-pt16-6-2.pdf",
+      "https://www.sss.gov/history-and-records/draft-cards/",
+      "https://www.sss.gov/about/return-to-draft/",
+      "https://history.state.gov/historicaldocuments/frus1969-76v34/d138",
+      "https://www.nber.org/system/files/working_papers/w3514/w3514.pdf",
+      "https://www.archives.gov/st-louis/selective-service",
+      "https://www.dmi-ida.org/download-pdf/pdf/RAND_MG265.pdf",
+      "https://history.army.mil/portals/143/Images/Publications/catalog/30-18.pdf"
+    ]
+  },
+  {
+    "claim": "The billions of dollars the taxpayers were paying in farm subsidies has been cut to nearly zero.",
+    "n_items": 9,
+    "gate_code": "",
+    "dated_items": 5,
+    "undated_items": 4,
+    "urls": [
+      "https://www.presidency.ucsb.edu/documents/address-the-state-the-union-delivered-before-joint-session-the-congress",
+      "https://www.ers.usda.gov/data-products/farm-income-and-wealth-statistics/government-payments-by-program",
+      "https://ers.usda.gov/data-products/chart-gallery/82238/",
+      "https://www.ers.usda.gov/data-products/farm-income-and-wealth-statistics/",
+      "https://fred.stlouisfed.org/series/B1448C1A027NBEA",
+      "https://farmdocdaily.illinois.edu/2020/07/ad-hoc-payments-a-leading-indicator-of-farm-policy-change.html",
+      "https://esmis.nal.usda.gov/sites/default/release-files/k930bx00t/ff365838x/qn59q706h/FIS-07-23-1974.pdf",
+      "https://www.govinfo.gov/content/pkg/GAOREPORT-CBO-1980-corporations-in-farming/html/GAOREPORT-CBO-1980-corporations-in-farming.htm",
+      "https://www.cbo.gov/sites/default/files/96th-congress-1979-1980/workingpaper/1980_02_corporations_0.pdf"
+    ]
+  }
+]

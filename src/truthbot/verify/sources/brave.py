@@ -214,7 +214,11 @@ def classify_tier(url: str) -> SourceTier:
     connector."""
     # ``.int`` = treaty-established intergovernmental orgs (nato.int, un.int)
     # — primary-source class; was silently OTHER until the 2026-07-21 pilot.
-    gov_domains = (".gov", ".mil", ".int", "federalreserve.gov")
+    # ``stlouisfed.org`` = Federal Reserve Bank of St. Louis (FRASER + FRED):
+    # a Fed property on .org and the canonical host of archival government
+    # statistics — ranked OTHER until the Nixon probe (2026-07-24) showed its
+    # BLS-release archives couldn't credit the T2.4 quota.
+    gov_domains = (".gov", ".mil", ".int", "federalreserve.gov", "stlouisfed.org")
     wire_domains = ("apnews.com", "reuters.com")
     established_domains = (
         "nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk",

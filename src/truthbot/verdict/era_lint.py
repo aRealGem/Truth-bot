@@ -37,6 +37,37 @@ from typing import Any, Iterable, Optional
 
 FAIR_GAME_DAYS = 7
 
+# Historical-era policy (jackie, 2026-07-24; wiki projects:truthbot:
+# historical-era-design). Speeches uttered before this date are "pre-web":
+# the contemporaneous web record starts ~1994-1997 (major outlets + gov
+# statistical sites), so from Clinton's 2nd term onward strict mode holds.
+PRE_WEB_CUTOFF = date(1997, 1, 1)
+
+# Future-tense markers → the claim is (heuristically) a PREDICTION and keeps
+# strict era mode even pre-web: retrospective sources judge "There will be no
+# recession" (Nixon 1974) with hindsight — exactly what fair-game prevents.
+# A real Layer A `prediction` claim_type is future work; this is documented
+# as a conservative text heuristic, not semantics.
+_PREDICTIVE_RX = re.compile(r"\b(will|shall|won't|going to)\b", re.IGNORECASE)
+
+
+def is_pre_web(utterance: Optional[date]) -> bool:
+    """True when the speech predates the contemporaneous web record."""
+    return utterance is not None and utterance < PRE_WEB_CUTOFF
+
+
+def is_predictive_claim(text: str) -> bool:
+    """Heuristic: does the claim assert future world-state? (See module note —
+    predictions keep strict era mode so hindsight can't judge them.)"""
+    return bool(_PREDICTIVE_RX.search(text or ""))
+
+
+def era_mode_for(utterance: Optional[date], claim_text: str = "") -> str:
+    """"lenient" for pre-web non-predictive claims, else "strict"."""
+    if is_pre_web(utterance) and not is_predictive_claim(claim_text):
+        return "lenient"
+    return "strict"
+
 
 def fair_game_end(utterance: date) -> date:
     """Last date the audience could observe and still call it the speech's
@@ -164,10 +195,14 @@ def lint_pack_items(sid: str, items: Iterable[Any], utterance: date,
     return violations, dated, undated
 
 
-def assert_pack_within_era(pack, utterance: Optional[date]) -> None:
+def assert_pack_within_era(pack, utterance: Optional[date],
+                           era_mode: str = "strict") -> None:
     """Publish-time gate (T1.1: build fails on violations). No-op when the
-    utterance date is unknown — there is no era to violate."""
-    if utterance is None:
+    utterance date is unknown — there is no era to violate — or when the pack
+    was built under the historical-era LENIENT policy, where retrospective
+    items are admitted by design (the consolidator ranks them behind
+    contemporaneous sources instead of dropping them)."""
+    if utterance is None or era_mode == "lenient":
         return
     violations, _, _ = lint_pack_items(
         pack.sid, pack.items, utterance, window=pack.window)

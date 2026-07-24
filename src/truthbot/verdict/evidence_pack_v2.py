@@ -41,6 +41,18 @@ _RETRY_FOCUS = (
     "established-outlet pages that DIRECTLY support or refute the claim's "
     "core assertion — no background explainers. ")
 
+# Lenient-mode retrieval guidance (historical-era policy). The strict prompt's
+# "later items will be discarded" language would suppress exactly the
+# retrospective sources lenient mode admits, so pre-web claims get the era
+# brief through the CONTEXT channel instead of the utterance/window params
+# (no Retriever interface change).
+_HISTORICAL_FOCUS = (
+    "HISTORICAL CLAIM from a speech given on {utterance}. Ideal sources are "
+    "archival originals carrying their era publication dates (government "
+    "statistical releases, FRASER/govinfo/agency archives, newspaper "
+    "archives from that period). Reliable retrospective historical sources "
+    "about that period are also acceptable. ")
+
 
 def build_evidence_pack_v2(
     sid: str,
@@ -66,13 +78,27 @@ def build_evidence_pack_v2(
     is scarce at ~5-15% of its always-on cost."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
+    # Historical-era policy (wiki projects:truthbot:historical-era-design):
+    # pre-web speeches run lenient — unless the claim is (heuristically) a
+    # prediction, which must never be judged with hindsight.
+    mode = era_lint.era_mode_for(utterance, claim_text)
+    if mode == "lenient":
+        context = _HISTORICAL_FOCUS.format(utterance=utterance) + context
+        # The strict prompt hard-scopes publication dates; lenient retrieval
+        # briefs the era via context instead and leaves the params unset.
+        prompt_utterance, prompt_window = None, None
+        logger.info("historical-era lenient mode for %s (utterance %s)",
+                    sid, utterance)
+    else:
+        prompt_utterance, prompt_window = utterance, window
 
     def _shortlists(pool: Sequence[Retriever], label_suffix: str, ctx: str):
         out = []
         for r in pool:
             try:
                 sl = r.shortlist(claim_text, context=ctx,
-                                 utterance=utterance, window=window)
+                                 utterance=prompt_utterance,
+                                 window=prompt_window)
             except Exception as exc:
                 # One dead retriever must not kill the claim — the consolidator
                 # quota decides whether what remains is enough (and the gate
@@ -85,12 +111,12 @@ def build_evidence_pack_v2(
 
     shortlists = _shortlists(retrievers, "", context)
     res = consolidate(sid, shortlists, utterance=utterance, window=window,
-                      max_items=max_items)
+                      max_items=max_items, era_mode=mode)
     if not res.quota_met:
         retry = _shortlists(retry_retrievers or retrievers, "-retry",
                             _RETRY_FOCUS + context)
         res = consolidate(sid, shortlists + retry, utterance=utterance,
-                          window=window, max_items=max_items)
+                          window=window, max_items=max_items, era_mode=mode)
         if not res.quota_met:
             logger.info("T2.4 gate: %s pack fails quota after targeted retry "
                         "(%s) — verdict will be forced Unverifiable",
@@ -116,5 +142,5 @@ def build_evidence_pack_v2(
         items.append(item)
     pack = EvidencePack(sid=sid, window=window, items=items,
                         gate_code=res.gate_code)
-    era_lint.assert_pack_within_era(pack, utterance)
+    era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
     return pack

@@ -83,6 +83,7 @@ class ConsolidationResult:
     quota_met: bool = False
     gate_code: str = ""              # GATE_INSUFFICIENT when forced-UV applies
     dropped: dict[str, int] = field(default_factory=dict)  # reason -> count
+    retrospective: int = 0           # lenient mode: admitted post-era items
 
     @property
     def schema_version(self) -> str:
@@ -119,18 +120,38 @@ def consolidate(
     utterance: Optional[date],
     window: Optional[tuple[date, date]] = None,
     max_items: int = PACK_CAP_V2,
+    era_mode: str = "strict",
 ) -> ConsolidationResult:
     """Assemble a shared_pack_v2 pack from retriever shortlists.
 
     ``shortlists`` is an ordered sequence of ``(retriever_label, items)``;
     each retriever's list is in ITS preference order. Deterministic: no
-    randomness, no model calls, stable ordering throughout."""
+    randomness, no model calls, stable ordering throughout.
+
+    ``era_mode`` (historical-era policy, wiki projects:truthbot:
+    historical-era-design): "strict" (default) DROPS items dated outside the
+    coded window / fair-game end. "lenient" (pre-web speeches) ADMITS them —
+    ranked behind contemporaneous sources — and lets a GOVERNMENT-tier item
+    dated within the era count toward the quota even when its stance is
+    neutral (a 1973 BLS table IS bearing evidence). Fact-checker exclusion,
+    dedup, and provenance rules are identical in both modes."""
     result = ConsolidationResult(sid=sid)
     seen: set[str] = set()
     kept: list[ConsolidatedItem] = []
+    era_class: dict[int, int] = {}   # id(item) -> 0 contemporaneous / 1 undated / 2 retro
 
     def _drop(reason: str) -> None:
         result.dropped[reason] = result.dropped.get(reason, 0) + 1
+
+    def _contemporaneous(d: Optional[date]) -> Optional[bool]:
+        """True/False for dated items, None for undated."""
+        if d is None:
+            return None
+        if window is not None and not (window[0] <= d <= window[1]):
+            return False
+        if utterance is not None and d > era_lint.fair_game_end(utterance):
+            return False
+        return True
 
     for draw_round, label, ev in _round_robin(shortlists):
         url = (ev.source_url or "").strip()
@@ -149,14 +170,18 @@ def consolidate(
             _drop("non-substantive-url")
             continue
         d = era_lint.item_date(ev.published_at, ev.snippet or "")
-        if d is not None:
-            if window is not None and not (window[0] <= d <= window[1]):
+        contemp = _contemporaneous(d)
+        if contemp is False and era_mode != "lenient":
+            if window is not None and d is not None and not (window[0] <= d <= window[1]):
                 _drop("outside-coded-window")
-                continue
-            if utterance is not None and d > era_lint.fair_game_end(utterance):
+            else:
                 _drop("after-fair-game-window")
-                continue
-        kept.append(ConsolidatedItem(evidence=ev, draw_round=draw_round, retriever=label))
+            continue
+        if contemp is False:
+            result.retrospective += 1
+        item = ConsolidatedItem(evidence=ev, draw_round=draw_round, retriever=label)
+        era_class[id(item)] = 0 if contemp else (1 if contemp is None else 2)
+        kept.append(item)
 
     # T6 quota: keep at most MAX_T6 OTHER items, dropping the lowest-priority
     # (latest-drawn, then worst-tier — here all OTHER, so latest-drawn) first.
@@ -167,16 +192,31 @@ def consolidate(
         result.dropped["t6-quota"] = len(others) - MAX_T6
 
     # Final order: draw round, then tier rank — the round-robin merge is the
-    # primary ranking (T2.3), tier breaks ties within a round.
-    kept.sort(key=lambda it: (it.draw_round, _TIER_RANK[it.evidence.source_tier]))
+    # primary ranking (T2.3), tier breaks ties within a round. Lenient mode
+    # prepends the era class so contemporaneous sources ALWAYS outrank
+    # undated, which outrank retrospective (strict ordering is unchanged —
+    # strict packs never contain retrospective items).
+    if era_mode == "lenient":
+        kept.sort(key=lambda it: (era_class.get(id(it), 1), it.draw_round,
+                                  _TIER_RANK[it.evidence.source_tier]))
+    else:
+        kept.sort(key=lambda it: (it.draw_round, _TIER_RANK[it.evidence.source_tier]))
     result.items = kept[:max_items]
     if len(kept) > max_items:
         result.dropped["pack-cap"] = len(kept) - max_items
 
-    bearing_t13 = sum(
-        1 for it in result.items
-        if it.evidence.source_tier in _T13 and _bearing(it.evidence))
-    result.quota_met = bearing_t13 >= MIN_BEARING_T13
+    def _quota_credit(it: ConsolidatedItem) -> bool:
+        if it.evidence.source_tier in _T13 and _bearing(it.evidence):
+            return True
+        # Lenient: an era-contemporaneous GOVERNMENT document counts even
+        # when the stance layer called it neutral "context" — archival
+        # statistical PDFs rarely take an explicit side, but a 1973 BLS
+        # table IS bearing evidence (Nixon probe, 2026-07-24).
+        return (era_mode == "lenient"
+                and it.evidence.source_tier == SourceTier.GOVERNMENT
+                and era_class.get(id(it)) == 0)
+
+    result.quota_met = sum(1 for it in result.items if _quota_credit(it)) >= MIN_BEARING_T13
     if not result.quota_met:
         result.gate_code = GATE_INSUFFICIENT
     return result
