@@ -232,19 +232,30 @@ class OpenAIBrowsingRetriever:
                                         utterance=utterance, window=window)
         last_err: Exception | None = None
         for model in self._models():
-            try:
-                doc = self._post(model, prompt)
-            except Exception as exc:  # noqa: BLE001 — fall down the chain
-                logger.warning("%s: model %s failed (%s)", self.label, model, exc)
-                last_err = exc
-                continue
-            usage = doc.get("usage") or {}
-            logger.info("%s: model=%s tokens in/out %s/%s", self.label, model,
-                        usage.get("input_tokens"), usage.get("output_tokens"))
-            return items_to_evidence(
-                _parse_shortlist_json(self._output_text(doc)),
-                retriever_label=self.label)
-        logger.warning("%s: all models failed (%s)", self.label, last_err)
+            # An EMPTY parse from a successful call is a soft failure, not an
+            # answer (P67.9 mini pilot: gpt-5-mini came back empty on 2/15
+            # claims where gpt-5.5 never did — refusal/format flakes, since
+            # even unsourceable claims normally yield *something*). Retry the
+            # same model once (pennies at mini rates), then fall down the
+            # chain like a POST failure would.
+            for attempt in (1, 2):
+                try:
+                    doc = self._post(model, prompt)
+                except Exception as exc:  # noqa: BLE001 — fall down the chain
+                    logger.warning("%s: model %s failed (%s)", self.label, model, exc)
+                    last_err = exc
+                    break                      # POST failure → next model
+                usage = doc.get("usage") or {}
+                logger.info("%s: model=%s tokens in/out %s/%s", self.label, model,
+                            usage.get("input_tokens"), usage.get("output_tokens"))
+                items = items_to_evidence(
+                    _parse_shortlist_json(self._output_text(doc)),
+                    retriever_label=self.label)
+                if items:
+                    return items
+                logger.warning("%s: model %s returned an empty shortlist "
+                               "(attempt %d/2)", self.label, model, attempt)
+        logger.warning("%s: all models failed or empty (%s)", self.label, last_err)
         return []
 
 
