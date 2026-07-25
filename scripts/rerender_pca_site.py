@@ -112,6 +112,16 @@ def main() -> None:
                     help="pca_runs artifact paths (default: latest evidence-bearing artifact per speech)")
     ap.add_argument("--site-root", required=True)
     ap.add_argument("--role", default="President")
+    ap.add_argument("--corrections", choices=("apply", "skip"), default="apply",
+                    help=(
+                        "'apply' (default) patches artifact rows with the "
+                        "data/corrections.json ledger and renders per-claim "
+                        "banners — the pre-Phase-3 behavior. 'skip' is for "
+                        "POST-remediation artifacts whose verdicts were "
+                        "re-adjudicated from scratch and SUPERSEDE the ledger "
+                        "(applying would fail closed on old_verdict "
+                        "mismatches); the historical corrections/changelog "
+                        "page still renders from the ledger notes."))
     args = ap.parse_args()
 
     paths = [Path(p) for p in args.artifacts]
@@ -136,11 +146,14 @@ def main() -> None:
 
     corrections = load_corrections(REPO / "data" / "corrections.json")
     if corrections:
-        print(f"corrections on file: {len(corrections)}")
-    publisher = SitePublisher(site_root=args.site_root, corrections=corrections,
+        print(f"corrections on file: {len(corrections)}"
+              + (" (SKIPPED — superseded by re-adjudicated artifacts)"
+                 if args.corrections == "skip" else ""))
+    apply_corr = corrections if args.corrections == "apply" else None
+    publisher = SitePublisher(site_root=args.site_root, corrections=apply_corr,
                               correction_notes=load_notes(REPO / "data" / "corrections.json"))
     for p in paths:
-        render_artifact(p, publisher, args.role, corrections=corrections)
+        render_artifact(p, publisher, args.role, corrections=apply_corr)
     stats = publisher.summary()
     print(f"site: {stats['root']} — {stats['reports']} report(s), "
           f"{stats['claims']} claim(s), {stats['total_kb']} KB")

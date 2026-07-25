@@ -1,130 +1,130 @@
 [
   {
-    "id": "514413a0-6343-4341-a09b-9f947b14cab6",
-    "date": "2026-02-24",
-    "speaker": "Donald Trump",
-    "role": "President",
-    "venue": "U.S. Capitol",
-    "claim_count": 178,
-    "panel_roster": {
-      "name": "dev",
-      "seats": {
-        "proposer": [
-          "mistral"
-        ],
-        "critic": [
-          "dsv4-flash"
-        ],
-        "arbiter": [
-          "claude-haiku"
-        ]
-      }
-    },
-    "triage_count": 605,
-    "verdict_distribution": {
-      "True": 48,
-      "Mostly True": 0,
-      "Misleading": 72,
-      "Exaggerated": 0,
-      "False": 30,
-      "Unverifiable": 19,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 9
-    },
-    "verdict_distribution_lenient": {
-      "True": 48,
-      "Truthy": 0,
-      "Unverifiable": 19,
-      "Falsey": 0,
-      "False": 30,
-      "Models split": 9,
-      "Misleading": 72
-    },
-    "verdict_distribution_strict": {
-      "True": 48,
-      "Truthy": 0,
-      "Unverifiable": 19,
-      "Falsey": 0,
-      "False": 30,
-      "Models split": 9,
-      "Misleading": 72
-    },
-    "model_agreement_rate": 0.466,
-    "url": "reports/2026-02-24-donald-trump-514413.html",
-    "tier_counts": {
-      "gov": 61,
-      "wire": 18,
-      "news": 55,
-      "fc": 75,
-      "other": 330
-    },
-    "source_of_claims": "Donald Trump",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "87e3725d-e94b-471f-b8a9-c8a1e49d8ca5",
+    "id": "85a64cad-4920-4a23-be07-7db8892733d4",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
     "claim_count": 111,
     "panel_roster": {
-      "name": "dev",
+      "name": "prod",
       "seats": {
         "proposer": [
-          "mistral"
+          "opus-worker"
         ],
         "critic": [
-          "dsv4-flash"
+          "grok-4.3"
         ],
         "arbiter": [
-          "claude-haiku"
+          "gpt-5.5"
         ]
       }
     },
     "triage_count": 369,
     "verdict_distribution": {
-      "True": 76,
+      "True": 96,
       "Mostly True": 0,
-      "Misleading": 19,
+      "Misleading": 4,
       "Exaggerated": 0,
-      "False": 4,
-      "Unverifiable": 6,
+      "False": 1,
+      "Unverifiable": 7,
       "Truthy": 0,
       "Falsey": 0,
-      "Models split": 6
+      "Models split": 3
     },
     "verdict_distribution_lenient": {
-      "True": 76,
+      "True": 96,
       "Truthy": 0,
-      "Unverifiable": 6,
+      "Unverifiable": 7,
       "Falsey": 0,
-      "False": 4,
-      "Models split": 6,
-      "Misleading": 19
+      "False": 1,
+      "Models split": 3,
+      "Misleading": 4
     },
     "verdict_distribution_strict": {
-      "True": 76,
+      "True": 96,
       "Truthy": 0,
-      "Unverifiable": 6,
+      "Unverifiable": 7,
       "Falsey": 0,
-      "False": 4,
-      "Models split": 6,
-      "Misleading": 19
+      "False": 1,
+      "Models split": 3,
+      "Misleading": 4
     },
-    "model_agreement_rate": 0.784,
-    "url": "reports/2022-03-01-joe-biden-87e372.html",
+    "model_agreement_rate": 0.829,
+    "url": "reports/2022-03-01-joe-biden-85a64c.html",
     "tier_counts": {
-      "gov": 59,
-      "wire": 18,
-      "news": 76,
-      "fc": 16,
-      "other": 281
+      "gov": 271,
+      "wire": 21,
+      "news": 56,
+      "fc": 0,
+      "other": 93
     },
     "source_of_claims": "Joe Biden",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "721a7282-94ec-4808-bb12-382daaccd148",
+    "date": "2026-02-24",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 183,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "triage_count": 540,
+    "verdict_distribution": {
+      "True": 94,
+      "Mostly True": 0,
+      "Misleading": 31,
+      "Exaggerated": 0,
+      "False": 43,
+      "Unverifiable": 14,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 1
+    },
+    "verdict_distribution_lenient": {
+      "True": 94,
+      "Truthy": 0,
+      "Unverifiable": 14,
+      "Falsey": 0,
+      "False": 43,
+      "Models split": 1,
+      "Misleading": 31
+    },
+    "verdict_distribution_strict": {
+      "True": 94,
+      "Truthy": 0,
+      "Unverifiable": 14,
+      "Falsey": 0,
+      "False": 43,
+      "Models split": 1,
+      "Misleading": 31
+    },
+    "model_agreement_rate": 0.727,
+    "url": "reports/2026-02-24-donald-trump-721a72.html",
+    "tier_counts": {
+      "gov": 304,
+      "wire": 48,
+      "news": 79,
+      "fc": 0,
+      "other": 169
+    },
+    "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
     "event": "",
     "channel": ""

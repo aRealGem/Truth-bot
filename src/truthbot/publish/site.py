@@ -1897,13 +1897,15 @@ def _masthead_compact(rel: str = "../") -> str:
 
 
 # Default OG/Twitter description used when a page doesn't provide one.
-# "Verified against primary sources" was removed (remediation T0.5, D4):
-# packs currently mix source tiers, including fact-check and unvetted
-# domains — the tagline returns only after Phase 3 verifies pack contents.
+# "primary sources" RESTORED 2026-07-25 (remediation T3.3): the Phase 3
+# artifacts verified with zero fact-check items in any pack (T2.1 exclusion
+# holds end-to-end) and a green strict era lint — the claim is now true of
+# what actually ships. It was removed 2026-07-21 (T0.5, D4) while packs
+# still mixed in fact-check domains.
 _DEFAULT_OG_DESCRIPTION = (
     "Automated fact-checking of political speeches. Every claim is checked "
-    "by a multi-model AI panel against a shared, cited evidence pack — "
-    "sources linked inline, disagreements disclosed."
+    "by a multi-model AI panel against a shared pack of cited primary "
+    "sources — sources linked inline, disagreements disclosed."
 )
 
 
@@ -6965,38 +6967,38 @@ def _render_about() -> str:
 
     models_list = (
         "<ul>"
-        "<li><strong>Proposer</strong> — Mistral Small 3.2 24B: drafts the initial verdict</li>"
-        "<li><strong>Critic</strong> — DeepSeek V4 Flash: independently re-judges the same "
+        "<li><strong>Proposer</strong> — Claude Opus 4.8: drafts the initial verdict</li>"
+        "<li><strong>Critic</strong> — Grok 4.3: independently re-judges the same "
         "evidence, hunting for why a naive verdict could be wrong</li>"
-        "<li><strong>Arbiter</strong> — Claude Haiku 4.5: adjudicates only when proposer and "
+        "<li><strong>Arbiter</strong> — GPT-5.5: adjudicates only when proposer and "
         "critic disagree</li>"
         "<li><strong>Severity Classifier</strong> — Claude Sonnet 4.6: a second-stage check on "
         "False-vs-Misleading boundary calls and panel ties</li>"
-        "<li><strong>Retrieval &amp; triage</strong> — Claude Haiku 4.5: check-worthiness "
-        "classification, search-query generation, and evidence relevance scoring</li>"
+        "<li><strong>Evidence researchers</strong> — three independent web-search lanes "
+        "(Claude Opus native search, GPT browsing, Grok search) whose shortlists are merged "
+        "by a deterministic consolidator: URL dedup, era gates, fact-check-site exclusion, "
+        "source-tier quotas. No model ranks another model's findings</li>"
+        "<li><strong>Triage</strong> — Claude Haiku 4.5: check-worthiness classification "
+        "of every sentence before any claim is judged</li>"
         "</ul>"
         "<p class=\"dim\" style=\"margin-top:0.5rem\">Three different model families from three "
         "different vendors sit in the verdict seats, so a single vendor's blind spot can't "
         "silently decide a claim. The exact roster used for a report is recorded in its "
-        "\"Panel composition\" section. Earlier versions of truth-bot fanned every claim out "
-        "to four frontier models in parallel; the current design runs at roughly a tenth of "
-        "the cost by spending small-model calls where they're cheap (triage, retrieval) and "
-        "escalating only genuine disagreements. A benchmark against the reference claim "
-        "corpus will be published with the next full run.</p>"
+        "\"Panel composition\" section. Evidence is gathered fresh per claim, time-scoped "
+        "to what was knowable when the words were spoken, and fact-checking organizations "
+        "are excluded from evidence packs — the panel reaches its own verdicts from "
+        "primary sources rather than inheriting another checker's ruling.</p>"
     )
 
     limitations = (
         "<ul>"
-        "<li><strong>Small models, one panel:</strong> Verdict seats are deliberately "
-        "inexpensive models. The proposer→critic→arbiter structure and the second-stage "
-        "Severity Classifier are the accuracy mechanism — not raw model size — and boundary "
+        "<li><strong>One panel, one pass:</strong> The proposer→critic→arbiter structure "
+        "and the second-stage Severity Classifier are the accuracy mechanism, and boundary "
         "calls (False vs Misleading) remain the hardest cases.</li>"
-        "<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in a six-item evidence "
-        "pack fetched at run time. If retrieval misses the decisive source, the panel can "
-        "only abstain (Unverifiable) — it is instructed not to fill gaps from memory.</li>"
-        "<li><strong>Model-scored relevance:</strong> The evidence ranking itself uses a "
-        "small model; an off-target relevance score can demote the decisive source below "
-        "the pack cap.</li>"
+        "<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in an evidence pack "
+        "(up to ten items) assembled at run time. If retrieval misses the decisive source "
+        "and the pack fails the quality bar, the claim is forced to Unverifiable — the "
+        "panel is instructed not to fill gaps from memory.</li>"
         "<li><strong>No cross-claim context:</strong> Each claim is judged independently. "
         "Recurring rhetoric may be rated inconsistently across speeches.</li>"
         "<li><strong>Training-data bias:</strong> Model judgments may reflect the slant of "
