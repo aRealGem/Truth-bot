@@ -1,7 +1,7 @@
 [
   {
-    "id": "cbe6c9d2-023d-4bbe-bf34-56196d9fed4a",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "a9524ef7-464a-4c24-ba82-90fff4f10002",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "When I last spoke in this chamber 12 months ago, I had just inherited a nation in crisis with a stagnant economy, inflation at record levels, a wide open border, horrendous recruitment for military and police, rampant crime at home and wars and chaos all over the world.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -36,11 +36,11 @@
         ]
       }
     },
-    "url": "claims/cbe6c9d2-023d-4bbe-bf34-56196d9fed4a.html"
+    "url": "claims/a9524ef7-464a-4c24-ba82-90fff4f10002.html"
   },
   {
-    "id": "1ae4ce84-0f23-4c3b-a457-826ffcf7ef10",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "24d452f2-116f-476f-99b0-9e8f25a13bd2",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And Los Angeles is going to be safe just like Washington D.C. is now one of the safest cities in the country.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -75,11 +75,11 @@
         ]
       }
     },
-    "url": "claims/1ae4ce84-0f23-4c3b-a457-826ffcf7ef10.html"
+    "url": "claims/24d452f2-116f-476f-99b0-9e8f25a13bd2.html"
   },
   {
-    "id": "c3e160f4-115e-45e3-acdd-36a58c34235b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d5b8244e-9693-4a63-8342-2f8b35124944",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The price of eggs is down 60 percent.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -118,11 +118,11 @@
         ]
       }
     },
-    "url": "claims/c3e160f4-115e-45e3-acdd-36a58c34235b.html"
+    "url": "claims/d5b8244e-9693-4a63-8342-2f8b35124944.html"
   },
   {
-    "id": "afddbeca-b335-461b-9f37-7028b3df4d43",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f53e3799-85b3-4640-bb77-c74df1fe0c0d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And yesterday, as you probably saw at the White House, I hosted a ceremony with Americans who lost their treasured loved ones to the scourge of illegal immigration.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -157,11 +157,11 @@
         ]
       }
     },
-    "url": "claims/afddbeca-b335-461b-9f37-7028b3df4d43.html"
+    "url": "claims/f53e3799-85b3-4640-bb77-c74df1fe0c0d.html"
   },
   {
-    "id": "e7cdeead-6338-4796-9242-e0f55b3c2489",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "0b0af672-968d-4987-b59c-7584b38a4d04",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The terrorist shot Andrew in the head, and no one thought he could possibly make it.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -196,11 +196,11 @@
         ]
       }
     },
-    "url": "claims/e7cdeead-6338-4796-9242-e0f55b3c2489.html"
+    "url": "claims/0b0af672-968d-4987-b59c-7584b38a4d04.html"
   },
   {
-    "id": "dc28f26f-cba5-4385-85cd-4407669c1c60",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "5deed7b7-f259-4027-943b-4d10c069a7c4",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Also, we just approved $1 trillion budget.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -235,11 +235,11 @@
         ]
       }
     },
-    "url": "claims/dc28f26f-cba5-4385-85cd-4407669c1c60.html"
+    "url": "claims/5deed7b7-f259-4027-943b-4d10c069a7c4.html"
   },
   {
-    "id": "c09c4818-ea3e-4649-aa42-2402a0cb202b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "0d76ecef-1c27-4764-b51b-d9f0d93c9426",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Today, our border is secure.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -278,11 +278,11 @@
         ]
       }
     },
-    "url": "claims/c09c4818-ea3e-4649-aa42-2402a0cb202b.html"
+    "url": "claims/0d76ecef-1c27-4764-b51b-d9f0d93c9426.html"
   },
   {
-    "id": "c2b4307e-ca6f-4c7e-b223-bdac77c4d506",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c399d608-f07d-4d8b-9b7d-37f3c5821196",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Today our border is secure, our spirit is restored, inflation is plummeting, incomes are rising fast, the roaring economy is roaring like never before and our enemies are scared.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -321,11 +321,11 @@
         ]
       }
     },
-    "url": "claims/c2b4307e-ca6f-4c7e-b223-bdac77c4d506.html"
+    "url": "claims/c399d608-f07d-4d8b-9b7d-37f3c5821196.html"
   },
   {
-    "id": "5c36687f-0142-48eb-91dc-fde200a409ac",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8e4210f2-1b7f-4ded-8453-8afa6cffa04f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "After four years in which millions and millions of illegal aliens poured across our borders totally unvetted and unchecked, we now have the strongest and most secure border in American history by far.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -360,11 +360,11 @@
         ]
       }
     },
-    "url": "claims/5c36687f-0142-48eb-91dc-fde200a409ac.html"
+    "url": "claims/8e4210f2-1b7f-4ded-8453-8afa6cffa04f.html"
   },
   {
-    "id": "b9938c18-3ceb-4c01-bcb8-aa73dcb274ca",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "eaf99aa6-b641-4753-879a-aaca7ee58ef7",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In the past nine months, zero illegal aliens have been admitted to the United States.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -399,11 +399,11 @@
         ]
       }
     },
-    "url": "claims/b9938c18-3ceb-4c01-bcb8-aa73dcb274ca.html"
+    "url": "claims/eaf99aa6-b641-4753-879a-aaca7ee58ef7.html"
   },
   {
-    "id": "357050d0-bfec-4382-9ebd-c0a4ed06136c",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f90f041e-1964-47fe-8233-aaeaa5d998ff",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The flow of deadly fentanyl across our border is down by a record 56 percent in one year.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -438,11 +438,11 @@
         ]
       }
     },
-    "url": "claims/357050d0-bfec-4382-9ebd-c0a4ed06136c.html"
+    "url": "claims/f90f041e-1964-47fe-8233-aaeaa5d998ff.html"
   },
   {
-    "id": "45e987ff-5892-4dae-a6f6-e357857a502f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "1fbb2ac8-89b3-497c-a90c-c4ea9be77218",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And last year the murder rate saw its single largest decline in recorded history.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -477,11 +477,11 @@
         ]
       }
     },
-    "url": "claims/45e987ff-5892-4dae-a6f6-e357857a502f.html"
+    "url": "claims/1fbb2ac8-89b3-497c-a90c-c4ea9be77218.html"
   },
   {
-    "id": "7c21e112-3b1c-4544-b079-bddcc381ff5e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "e6b187d6-cef3-4020-b192-2624e27b9922",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -520,11 +520,11 @@
         ]
       }
     },
-    "url": "claims/7c21e112-3b1c-4544-b079-bddcc381ff5e.html"
+    "url": "claims/e6b187d6-cef3-4020-b192-2624e27b9922.html"
   },
   {
-    "id": "8c25b0b2-cf0b-47ba-9a02-8de20e6fc33f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "e2cacba9-0391-4e95-86a3-df9cd2896284",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The Biden administration and its allies in Congress gave us the worst inflation in the history of our country.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -559,11 +559,11 @@
         ]
       }
     },
-    "url": "claims/8c25b0b2-cf0b-47ba-9a02-8de20e6fc33f.html"
+    "url": "claims/e2cacba9-0391-4e95-86a3-df9cd2896284.html"
   },
   {
-    "id": "ce0ea5a3-f9c1-4098-a275-11c0122895a8",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "1e8df66f-ccc8-4749-abbc-2824b165aed0",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
     "consensus_verdict": "Models split",
     "consensus_strength": "none",
@@ -597,11 +597,11 @@
         ]
       }
     },
-    "url": "claims/ce0ea5a3-f9c1-4098-a275-11c0122895a8.html"
+    "url": "claims/1e8df66f-ccc8-4749-abbc-2824b165aed0.html"
   },
   {
-    "id": "7c52a646-b753-47bb-b7ca-bcf0d8ca533a",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "beed2f5c-4710-4366-a3b6-7491ccc740c0",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And in the last three months of 2025, it was down to 1.7 percent.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -636,11 +636,11 @@
         ]
       }
     },
-    "url": "claims/7c52a646-b753-47bb-b7ca-bcf0d8ca533a.html"
+    "url": "claims/beed2f5c-4710-4366-a3b6-7491ccc740c0.html"
   },
   {
-    "id": "c4231c4d-9a97-4f92-b204-aa871a4e077e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "805af359-5fc9-47b3-9b6a-de753123b309",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Gasoline, which reached a peak of over $6 a gallon in some states.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -675,11 +675,11 @@
         ]
       }
     },
-    "url": "claims/c4231c4d-9a97-4f92-b204-aa871a4e077e.html"
+    "url": "claims/805af359-5fc9-47b3-9b6a-de753123b309.html"
   },
   {
-    "id": "27eaa7a2-6043-48ae-b0c3-7c8f2c3a9e61",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8d215478-ef04-4c98-9a85-aa2ec6acdaa2",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Under my predecessor, it was quite honestly a disaster; it is now below $2.30 a gallon in most states and in some places $1.99 a gallon.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -718,11 +718,11 @@
         ]
       }
     },
-    "url": "claims/27eaa7a2-6043-48ae-b0c3-7c8f2c3a9e61.html"
+    "url": "claims/8d215478-ef04-4c98-9a85-aa2ec6acdaa2.html"
   },
   {
-    "id": "9eacc36d-df22-4bdd-9a07-9e7fd3dc69ea",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4d671b11-7cc0-4a08-bf03-608f64457889",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And when I visited the great state of Iowa just a few weeks ago, I even saw $1.85 a gallon for gasoline.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -757,11 +757,11 @@
         ]
       }
     },
-    "url": "claims/9eacc36d-df22-4bdd-9a07-9e7fd3dc69ea.html"
+    "url": "claims/4d671b11-7cc0-4a08-bf03-608f64457889.html"
   },
   {
-    "id": "a85f99f0-2ac8-4fc8-924c-112d9caa7106",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2ab068ec-2ba9-4ca7-926d-4e68782f9717",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Mortgage rates are the lowest in four years and falling fast, and the annual cost of a typical new mortgage is down almost $5,000 just since I took office, one year.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -800,11 +800,11 @@
         ]
       }
     },
-    "url": "claims/a85f99f0-2ac8-4fc8-924c-112d9caa7106.html"
+    "url": "claims/2ab068ec-2ba9-4ca7-926d-4e68782f9717.html"
   },
   {
-    "id": "1848325a-d000-40e7-92b4-506d1ba7b3da",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "11506347-d59a-4bc2-9aa5-10e49631b6ad",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The stock market has set 53 all-time record highs since the election.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -843,11 +843,11 @@
         ]
       }
     },
-    "url": "claims/1848325a-d000-40e7-92b4-506d1ba7b3da.html"
+    "url": "claims/11506347-d59a-4bc2-9aa5-10e49631b6ad.html"
   },
   {
-    "id": "45b48a25-b152-46e8-858f-2a305bf5d9b4",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "838b462f-b9e7-4e37-8902-616bdecff674",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -886,11 +886,11 @@
         ]
       }
     },
-    "url": "claims/45b48a25-b152-46e8-858f-2a305bf5d9b4.html"
+    "url": "claims/838b462f-b9e7-4e37-8902-616bdecff674.html"
   },
   {
-    "id": "d792b57f-a5ce-43f7-96a9-b871f17a47fd",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "cbfe044e-8622-46bc-8926-dd79ce7e4ebd",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In 12 months, I secured commitments for more than $18 trillion pouring in from all over the globe.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -929,11 +929,11 @@
         ]
       }
     },
-    "url": "claims/d792b57f-a5ce-43f7-96a9-b871f17a47fd.html"
+    "url": "claims/cbfe044e-8622-46bc-8926-dd79ce7e4ebd.html"
   },
   {
-    "id": "06d491b7-1f22-40d4-88c7-34cf9be2d22b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "29ea4def-61b3-49d6-8866-992812f6a2c7",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -968,11 +968,11 @@
         ]
       }
     },
-    "url": "claims/06d491b7-1f22-40d4-88c7-34cf9be2d22b.html"
+    "url": "claims/29ea4def-61b3-49d6-8866-992812f6a2c7.html"
   },
   {
-    "id": "f4a22e7f-3f17-4996-9bf2-c011fe23cea9",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "eb412d26-f0c8-49fa-9d3b-67057fe0e046",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "As thousands of new businesses are forming and factories, plants and laboratories are being built, we have added 70,000 new construction jobs in just a very short period of time.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -1011,11 +1011,11 @@
         ]
       }
     },
-    "url": "claims/f4a22e7f-3f17-4996-9bf2-c011fe23cea9.html"
+    "url": "claims/eb412d26-f0c8-49fa-9d3b-67057fe0e046.html"
   },
   {
-    "id": "781ca0d7-ed5a-4b1f-aa7d-021e5b4ba20c",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2095da8e-c8d7-4220-bbbb-a91e8981751b",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "American oil production is up by more than 600,000 barrels a day and we just received from our new friend and partner, Venezuela, more than 80 million barrels of oil.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -1050,11 +1050,11 @@
         ]
       }
     },
-    "url": "claims/781ca0d7-ed5a-4b1f-aa7d-021e5b4ba20c.html"
+    "url": "claims/2095da8e-c8d7-4220-bbbb-a91e8981751b.html"
   },
   {
-    "id": "6afe7af2-df6b-4d3c-ac50-ff2005369a60",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2ff67678-e08c-4b89-96e8-39b474262c49",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "American natural gas production is at an all-time high because I kept my promise to drill baby drill.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1089,11 +1089,11 @@
         ]
       }
     },
-    "url": "claims/6afe7af2-df6b-4d3c-ac50-ff2005369a60.html"
+    "url": "claims/2ff67678-e08c-4b89-96e8-39b474262c49.html"
   },
   {
-    "id": "6c9b6f56-19a1-4c79-abf6-834992f57a2b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "27906031-d42c-4465-9a93-9de0906ab504",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "More Americans are working today than at any time in the history of our country.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1128,11 +1128,11 @@
         ]
       }
     },
-    "url": "claims/6c9b6f56-19a1-4c79-abf6-834992f57a2b.html"
+    "url": "claims/27906031-d42c-4465-9a93-9de0906ab504.html"
   },
   {
-    "id": "6fa88476-7cf6-4705-b62c-0e2220d19f86",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2723b41b-3a27-4102-bf5c-311f530536b5",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Think about that, any time in the history of our country, more working today and 100 percent of all jobs created under my administration have been in the private sector.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1167,11 +1167,11 @@
         ]
       }
     },
-    "url": "claims/6fa88476-7cf6-4705-b62c-0e2220d19f86.html"
+    "url": "claims/2723b41b-3a27-4102-bf5c-311f530536b5.html"
   },
   {
-    "id": "3650e77b-7666-4130-8f29-e78c1e4358d3",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "965f6b3c-172d-45ce-92d6-1a7ae18fb502",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We ended DEI in America.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -1206,11 +1206,11 @@
         ]
       }
     },
-    "url": "claims/3650e77b-7666-4130-8f29-e78c1e4358d3.html"
+    "url": "claims/965f6b3c-172d-45ce-92d6-1a7ae18fb502.html"
   },
   {
-    "id": "cb215531-ca28-4a0b-ac80-355f03c8f90d",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "ebcad357-e617-4a71-9245-144285d14d68",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -1249,11 +1249,11 @@
         ]
       }
     },
-    "url": "claims/cb215531-ca28-4a0b-ac80-355f03c8f90d.html"
+    "url": "claims/ebcad357-e617-4a71-9245-144285d14d68.html"
   },
   {
-    "id": "4759bbeb-2a74-43aa-9b1b-91572a4f42cd",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f2d0ef48-7bec-47ed-a6f3-1eb1e8756c75",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "It's called the highest civilian honor in our country, the Presidential Medal of Freedom.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1288,11 +1288,11 @@
         ]
       }
     },
-    "url": "claims/4759bbeb-2a74-43aa-9b1b-91572a4f42cd.html"
+    "url": "claims/f2d0ef48-7bec-47ed-a6f3-1eb1e8756c75.html"
   },
   {
-    "id": "c956febc-287c-4439-b6d4-870dbbe39bc3",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d7597cd0-b2e5-4f53-a71d-06349f0e7eeb",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer version right in Los Angeles.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -1327,11 +1327,11 @@
         ]
       }
     },
-    "url": "claims/c956febc-287c-4439-b6d4-870dbbe39bc3.html"
+    "url": "claims/d7597cd0-b2e5-4f53-a71d-06349f0e7eeb.html"
   },
   {
-    "id": "09a7c47e-071b-4a0b-87c3-5d33a6bd6232",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "37cad88c-a1bd-47c0-892c-539339e36603",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But strange things took place and now I've got them because I got the Olympics and I got the 2026 FIFA World Cup and I wanted to claim the 250th, but I didn't get away with that one.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1366,11 +1366,11 @@
         ]
       }
     },
-    "url": "claims/09a7c47e-071b-4a0b-87c3-5d33a6bd6232.html"
+    "url": "claims/37cad88c-a1bd-47c0-892c-539339e36603.html"
   },
   {
-    "id": "15549d6c-7d54-4573-a36f-fa2f16f58d97",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8059fbec-8a69-47b0-b41c-60798a1aa654",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "I couldn't claim that one for myself, but we're getting the World Cup, so we have the World Cup and the Olympics coming and that is exciting news.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1405,11 +1405,11 @@
         ]
       }
     },
-    "url": "claims/15549d6c-7d54-4573-a36f-fa2f16f58d97.html"
+    "url": "claims/8059fbec-8a69-47b0-b41c-60798a1aa654.html"
   },
   {
-    "id": "54add6fd-eb59-4eaa-8ea7-8629b21714c8",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "064362fe-4199-4140-8b92-7e1c12b62534",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas MacArthur.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1444,11 +1444,11 @@
         ]
       }
     },
-    "url": "claims/54add6fd-eb59-4eaa-8ea7-8629b21714c8.html"
+    "url": "claims/064362fe-4199-4140-8b92-7e1c12b62534.html"
   },
   {
-    "id": "fceb8951-4ff7-495a-b897-3bd6c0eada29",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4555148f-52a7-4a7c-8d75-a0898060096f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "He fought bravely in the famous Battle of Manila, worked so hard.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -1474,11 +1474,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/fceb8951-4ff7-495a-b897-3bd6c0eada29.html"
+    "url": "claims/4555148f-52a7-4a7c-8d75-a0898060096f.html"
   },
   {
-    "id": "12d58479-05b5-42d8-bf26-929e97a1f13d",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "096880e7-c4d1-4127-83da-094246d16ee0",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "He was badly wounded and almost killed by enemy machine guns in Luzon.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1513,11 +1513,11 @@
         ]
       }
     },
-    "url": "claims/12d58479-05b5-42d8-bf26-929e97a1f13d.html"
+    "url": "claims/096880e7-c4d1-4127-83da-094246d16ee0.html"
   },
   {
-    "id": "816a6ec1-9424-46e9-955d-673065fdba19",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "9da581da-abbd-454b-9672-bbbde29c3d46",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And 81 years ago this month, he liberated the largest internment camp in the Philippines, one of the largest anywhere in the world.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1552,11 +1552,11 @@
         ]
       }
     },
-    "url": "claims/816a6ec1-9424-46e9-955d-673065fdba19.html"
+    "url": "claims/9da581da-abbd-454b-9672-bbbde29c3d46.html"
   },
   {
-    "id": "925e5d8c-6c68-4b9e-a0e6-b0b10b8d014c",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "579a0784-5982-48b7-a571-4d78cd0d72da",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in the gallery looking forward to July 4th, 2026, his 100th birthday.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1591,11 +1591,11 @@
         ]
       }
     },
-    "url": "claims/925e5d8c-6c68-4b9e-a0e6-b0b10b8d014c.html"
+    "url": "claims/579a0784-5982-48b7-a571-4d78cd0d72da.html"
   },
   {
-    "id": "c199085e-f853-4929-b551-de40fcc254d2",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "0480a673-0bef-49a6-ba57-d1e949b59692",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "It was July 4th of last year when flood waters tore through a girls' summer camp in central Texas, one of the worst things I've ever seen.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1630,11 +1630,11 @@
         ]
       }
     },
-    "url": "claims/c199085e-f853-4929-b551-de40fcc254d2.html"
+    "url": "claims/0480a673-0bef-49a6-ba57-d1e949b59692.html"
   },
   {
-    "id": "42a81bfc-1027-44aa-a008-75060af5b985",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "090ae63a-b630-4825-8135-b63be13b1206",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "I was there.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -1669,11 +1669,11 @@
         ]
       }
     },
-    "url": "claims/42a81bfc-1027-44aa-a008-75060af5b985.html"
+    "url": "claims/090ae63a-b630-4825-8135-b63be13b1206.html"
   },
   {
-    "id": "dec33ad9-7d43-4ac5-865a-e4922873c28d",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "e55cb22a-d4b5-42a7-a85f-e1ed05a33142",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Rising 26 feet in the matter of minutes, tragically claiming many, many lives.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1708,11 +1708,11 @@
         ]
       }
     },
-    "url": "claims/dec33ad9-7d43-4ac5-865a-e4922873c28d.html"
+    "url": "claims/e55cb22a-d4b5-42a7-a85f-e1ed05a33142.html"
   },
   {
-    "id": "1a85a1e2-acfe-4983-bbf6-a183b5c57ceb",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "12a3b68a-f9a0-478f-b7f9-2fc2c12b4838",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "As the waters threatened to sweep her away, 11-year-old Millie Kate McClelland closed her eyes and prayed to God.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1747,11 +1747,11 @@
         ]
       }
     },
-    "url": "claims/1a85a1e2-acfe-4983-bbf6-a183b5c57ceb.html"
+    "url": "claims/12a3b68a-f9a0-478f-b7f9-2fc2c12b4838.html"
   },
   {
-    "id": "d7035e58-afee-4bd5-9ad9-848074441db9",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d55acbab-6520-4e79-b375-59a7250f4f64",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "She thought she was going to die.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -1790,11 +1790,11 @@
         ]
       }
     },
-    "url": "claims/d7035e58-afee-4bd5-9ad9-848074441db9.html"
+    "url": "claims/d55acbab-6520-4e79-b375-59a7250f4f64.html"
   },
   {
-    "id": "a052c6d6-8318-400a-a258-eedcf35cf31c",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "131a19fb-35ff-4bd0-ac50-1a3de0327d8f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1829,11 +1829,11 @@
         ]
       }
     },
-    "url": "claims/a052c6d6-8318-400a-a258-eedcf35cf31c.html"
+    "url": "claims/131a19fb-35ff-4bd0-ac50-1a3de0327d8f.html"
   },
   {
-    "id": "e9877cef-9744-4f5b-ad7d-13baad0a0f3b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "31b65560-eed8-4764-8f5d-ce77322bea55",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "It was Scott's first ever rescue mission, a young guy, but very brave, very, very top, always top in his class.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1868,11 +1868,11 @@
         ]
       }
     },
-    "url": "claims/e9877cef-9744-4f5b-ad7d-13baad0a0f3b.html"
+    "url": "claims/31b65560-eed8-4764-8f5d-ce77322bea55.html"
   },
   {
-    "id": "504fac7c-e90d-4ae4-980c-e0e97240406c",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "a470ab21-4a38-4721-a9ef-7223894d0d6b",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And he lifted not just Millie Kate, but 164 others to safety.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1907,11 +1907,11 @@
         ]
       }
     },
-    "url": "claims/504fac7c-e90d-4ae4-980c-e0e97240406c.html"
+    "url": "claims/a470ab21-4a38-4721-a9ef-7223894d0d6b.html"
   },
   {
-    "id": "be7c6fa8-07b4-4166-a80b-1bb76c97216a",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "022dc84e-f8ef-4f6d-ba97-0cabcae5fd4d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republican majorities delivered so beautifully.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -1946,11 +1946,11 @@
         ]
       }
     },
-    "url": "claims/be7c6fa8-07b4-4166-a80b-1bb76c97216a.html"
+    "url": "claims/022dc84e-f8ef-4f6d-ba97-0cabcae5fd4d.html"
   },
   {
-    "id": "3ce29eb1-c948-4d18-91fb-d1da65d7e769",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "fe42f6d7-77e9-4aa5-a1bc-686e912c463d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "All Democrats, every single one of them, voted against these really important and very necessary massive tax cuts.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -1985,11 +1985,11 @@
         ]
       }
     },
-    "url": "claims/3ce29eb1-c948-4d18-91fb-d1da65d7e769.html"
+    "url": "claims/fe42f6d7-77e9-4aa5-a1bc-686e912c463d.html"
   },
   {
-    "id": "53193980-2c43-4aa9-8b1a-49b8fdbed4d0",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "9070226f-4d96-4284-a61f-b27ec3d11b5e",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And we also made interest on auto loans tax deductible—the first time—but only if the car is made in America.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -2024,11 +2024,11 @@
         ]
       }
     },
-    "url": "claims/53193980-2c43-4aa9-8b1a-49b8fdbed4d0.html"
+    "url": "claims/9070226f-4d96-4284-a61f-b27ec3d11b5e.html"
   },
   {
-    "id": "056d7af6-c0e5-4bd7-97f5-d046ef2ee6aa",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "9daf6c45-3e7a-4a9f-ad84-a430f59af92c",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no tax on overtime and our expanded child tax credit done again by Republicans, Megan and her husband will take home more than $5,000 extra just for the year cutting her tax bill in more than half.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2067,11 +2067,11 @@
         ]
       }
     },
-    "url": "claims/056d7af6-c0e5-4bd7-97f5-d046ef2ee6aa.html"
+    "url": "claims/9daf6c45-3e7a-4a9f-ad84-a430f59af92c.html"
   },
   {
-    "id": "ccf6b77a-c368-4e59-ad38-4371702dab95",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "67035e55-0489-4b9e-bff4-360354b64889",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Millions will be prefunded courtesy of the US Treasury and private individuals like Michael and Susan Dell, who have donated $6.25 billion to fund the Trump Accounts for 25 million American children.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -2106,11 +2106,11 @@
         ]
       }
     },
-    "url": "claims/ccf6b77a-c368-4e59-ad38-4371702dab95.html"
+    "url": "claims/67035e55-0489-4b9e-bff4-360354b64889.html"
   },
   {
-    "id": "b161e5d6-422d-4a60-abc9-38cc0578bd2f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "1601910e-347c-4cfe-9f27-04eff11208ae",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "You know, I asked Michael Dell, how do you make all that money?",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -2145,11 +2145,11 @@
         ]
       }
     },
-    "url": "claims/b161e5d6-422d-4a60-abc9-38cc0578bd2f.html"
+    "url": "claims/1601910e-347c-4cfe-9f27-04eff11208ae.html"
   },
   {
-    "id": "c5078f3a-e7ea-4b6d-92ab-3a9b5c2c1906",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8e1cfe92-1ae6-4965-8856-4bf7fd8b0dc9",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time they turn 18.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2188,11 +2188,11 @@
         ]
       }
     },
-    "url": "claims/c5078f3a-e7ea-4b6d-92ab-3a9b5c2c1906.html"
+    "url": "claims/8e1cfe92-1ae6-4965-8856-4bf7fd8b0dc9.html"
   },
   {
-    "id": "ae746c2d-7827-4e56-8726-ecd61488a617",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "df8aa90a-cbcb-48e1-97ef-40de979f52cb",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "One of the primary reasons for our country's stunning economic turnaround, the biggest in history where the Dow Jones broke 50,000 four years ahead of schedule and the S&P hit 7,000 where it wasn't supposed to do it for many years, were tariffs.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2227,11 +2227,11 @@
         ]
       }
     },
-    "url": "claims/ae746c2d-7827-4e56-8726-ecd61488a617.html"
+    "url": "claims/df8aa90a-cbcb-48e1-97ef-40de979f52cb.html"
   },
   {
-    "id": "03c751c5-c1aa-4c9f-89e0-6e344d4aab31",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c8b8aef5-bc1d-4a96-b5f5-75ff198d9908",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Countries that were ripping us off for decades are now paying us hundreds of billions of dollars.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2266,11 +2266,11 @@
         ]
       }
     },
-    "url": "claims/03c751c5-c1aa-4c9f-89e0-6e344d4aab31.html"
+    "url": "claims/c8b8aef5-bc1d-4a96-b5f5-75ff198d9908.html"
   },
   {
-    "id": "3dd49db1-cd5c-4704-85c2-9b92d24550d6",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2d77b457-8eab-434c-b36d-7065071d0c79",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "There was no inflation, tremendous growth.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2305,11 +2305,11 @@
         ]
       }
     },
-    "url": "claims/3dd49db1-cd5c-4704-85c2-9b92d24550d6.html"
+    "url": "claims/2d77b457-8eab-434c-b36d-7065071d0c79.html"
   },
   {
-    "id": "af94753c-0593-48b4-b95a-f9c8be92a63f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "812bb64f-533b-4499-a27c-6f499bcb0a49",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And the big story was how Donald Trump called the economy correctly and 22 Nobel Prize winners in economics didn't, they got it totally wrong.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2344,11 +2344,11 @@
         ]
       }
     },
-    "url": "claims/af94753c-0593-48b4-b95a-f9c8be92a63f.html"
+    "url": "claims/812bb64f-533b-4499-a27c-6f499bcb0a49.html"
   },
   {
-    "id": "9eb782e8-6014-4222-ac98-76c35d17f538",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "3eb91275-de69-42e4-b501-dc2409cf6563",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But the good news is that almost all countries and corporations want to keep the deal that they already made.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2383,11 +2383,11 @@
         ]
       }
     },
-    "url": "claims/9eb782e8-6014-4222-ac98-76c35d17f538.html"
+    "url": "claims/3eb91275-de69-42e4-b501-dc2409cf6563.html"
   },
   {
-    "id": "882c1265-bb15-4fa4-95be-8ad4e5efc6b3",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8e028a69-1330-411f-a06a-052cee72ee16",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Many of the wars I settled was because of the threat of tariffs.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2422,11 +2422,11 @@
         ]
       }
     },
-    "url": "claims/882c1265-bb15-4fa4-95be-8ad4e5efc6b3.html"
+    "url": "claims/8e028a69-1330-411f-a06a-052cee72ee16.html"
   },
   {
-    "id": "193d1b58-ac33-45ba-a82a-16cbc1d11222",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "5706689b-73bd-4a67-a2d4-df31c464227c",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "They poured in by the millions and millions from prisons, from mental institutions.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2461,11 +2461,11 @@
         ]
       }
     },
-    "url": "claims/193d1b58-ac33-45ba-a82a-16cbc1d11222.html"
+    "url": "claims/5706689b-73bd-4a67-a2d4-df31c464227c.html"
   },
   {
-    "id": "ecdc3f12-bf2f-4492-8a3e-43391db0d5df",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "405ba33e-efd5-4872-9307-1f292963b382",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "They were murderers, 11,888 murderers.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2504,11 +2504,11 @@
         ]
       }
     },
-    "url": "claims/ecdc3f12-bf2f-4492-8a3e-43391db0d5df.html"
+    "url": "claims/405ba33e-efd5-4872-9307-1f292963b382.html"
   },
   {
-    "id": "8d8de3bb-b0e7-49eb-bbd1-6e3f634ede7e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "ca38c0b4-5972-4d0c-a14f-4e18bc81b7ae",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2547,11 +2547,11 @@
         ]
       }
     },
-    "url": "claims/8d8de3bb-b0e7-49eb-bbd1-6e3f634ede7e.html"
+    "url": "claims/ca38c0b4-5972-4d0c-a14f-4e18bc81b7ae.html"
   },
   {
-    "id": "2ae21f3f-1fd5-48d9-b1ba-43c4dea60c61",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "208ac8b2-c9fd-419b-9304-ca1c15f6cce6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Their policies created the high prices.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2586,11 +2586,11 @@
         ]
       }
     },
-    "url": "claims/2ae21f3f-1fd5-48d9-b1ba-43c4dea60c61.html"
+    "url": "claims/208ac8b2-c9fd-419b-9304-ca1c15f6cce6.html"
   },
   {
-    "id": "47479190-84cf-4acb-bfe0-7efd3dfcd7c0",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "211caa8d-9309-4a0c-8fc4-c3861e7c2fda",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The cost of chicken, butter, fruit, hotels, automobiles, rent, is lower today than when I took office, by a lot.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2625,11 +2625,11 @@
         ]
       }
     },
-    "url": "claims/47479190-84cf-4acb-bfe0-7efd3dfcd7c0.html"
+    "url": "claims/211caa8d-9309-4a0c-8fc4-c3861e7c2fda.html"
   },
   {
-    "id": "57e6ac65-3e79-42f8-ab04-bff667b8f10e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "36f9fa0e-b10e-4c97-aaf4-9ca526646513",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And even beef, which was very high, is starting to come down significantly.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2668,11 +2668,11 @@
         ]
       }
     },
-    "url": "claims/57e6ac65-3e79-42f8-ab04-bff667b8f10e.html"
+    "url": "claims/36f9fa0e-b10e-4c97-aaf4-9ca526646513.html"
   },
   {
-    "id": "950807f2-1a0b-4869-a13d-7ef00c0e3664",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "a377bb7e-68e6-43d1-baf4-3e2157119f67",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "I'm also confronting one of the biggest rip-offs of our times, the crushing cost of health care, caused by you, since the passage of the Affordable Care Act, sometimes referred to as Obamacare.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2707,11 +2707,11 @@
         ]
       }
     },
-    "url": "claims/950807f2-1a0b-4869-a13d-7ef00c0e3664.html"
+    "url": "claims/a377bb7e-68e6-43d1-baf4-3e2157119f67.html"
   },
   {
-    "id": "5e73e6fe-9e8b-43da-bd2a-6f118e9af84f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "dfd33baa-2845-4c3a-95db-7b99cdff127e",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Big insurance companies got rich.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -2746,11 +2746,11 @@
         ]
       }
     },
-    "url": "claims/5e73e6fe-9e8b-43da-bd2a-6f118e9af84f.html"
+    "url": "claims/dfd33baa-2845-4c3a-95db-7b99cdff127e.html"
   },
   {
-    "id": "95fd9a8d-96bf-4d91-a975-5d2fc2896cfa",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "6d12b44d-30bd-4938-8f4b-ec590df4550a",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "With our government giving them hundreds and hundreds of billions of dollars a year as their stock prices soared 1,000, 1,200, 1,400 and even 1,700 percent, like nothing else.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -2789,11 +2789,11 @@
         ]
       }
     },
-    "url": "claims/95fd9a8d-96bf-4d91-a975-5d2fc2896cfa.html"
+    "url": "claims/6d12b44d-30bd-4938-8f4b-ec590df4550a.html"
   },
   {
-    "id": "0b2c7cf2-3ad6-428b-b993-49549184ac72",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "314ddbe7-4579-4dcb-9b84-ab26cbf23c41",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Other presidents tried to do it, but they never could.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2828,11 +2828,11 @@
         ]
       }
     },
-    "url": "claims/0b2c7cf2-3ad6-428b-b993-49549184ac72.html"
+    "url": "claims/314ddbe7-4579-4dcb-9b84-ab26cbf23c41.html"
   },
   {
-    "id": "1b41fe35-b62f-42b9-bb06-25d66b55afae",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c0a537fb-fc25-4956-a0b1-01fac04ad667",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Under my just enacted Most Favored Nation agreements, Americans who have for decades paid by far the highest prices of any nation anywhere in the world for prescription drugs will now pay the lowest price anywhere in the world for drugs, anywhere, the lowest price.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2867,11 +2867,11 @@
         ]
       }
     },
-    "url": "claims/1b41fe35-b62f-42b9-bb06-25d66b55afae.html"
+    "url": "claims/c0a537fb-fc25-4956-a0b1-01fac04ad667.html"
   },
   {
-    "id": "69123268-15c5-4c66-b85c-e11490849495",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8b57f2e8-28b3-456c-af4a-2eeb5dce8fa9",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "I took prescription drugs, a very big part of health care from the highest price in the entire world to the lowest.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -2906,11 +2906,11 @@
         ]
       }
     },
-    "url": "claims/69123268-15c5-4c66-b85c-e11490849495.html"
+    "url": "claims/8b57f2e8-28b3-456c-af4a-2eeb5dce8fa9.html"
   },
   {
-    "id": "7383ac9b-1363-4bce-959f-e807561f5677",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d37cd72b-706a-49a1-aa64-8bb3347e649f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The result is price differences of 300, 400, 500, 600 percent and more, all available right now at a new website called trump.gov.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -2945,11 +2945,11 @@
         ]
       }
     },
-    "url": "claims/7383ac9b-1363-4bce-959f-e807561f5677.html"
+    "url": "claims/d37cd72b-706a-49a1-aa64-8bb3347e649f.html"
   },
   {
-    "id": "ed55b453-3d7b-4733-b2fc-728de2ecc921",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f3ce4e52-c433-4b9f-8cde-82617ed7fcd2",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "For five years, she and her husband have struggled with infertility and they turned to IVF.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -2988,11 +2988,11 @@
         ]
       }
     },
-    "url": "claims/ed55b453-3d7b-4733-b2fc-728de2ecc921.html"
+    "url": "claims/f3ce4e52-c433-4b9f-8cde-82617ed7fcd2.html"
   },
   {
-    "id": "39e5cdb7-e2c5-4133-8bc9-dbe90b8004a7",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d8a24d40-30a9-4cb6-bd25-e63ed41dde56",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "One drug has been costing Catherine $4,000 to purchase.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -3031,11 +3031,11 @@
         ]
       }
     },
-    "url": "claims/39e5cdb7-e2c5-4133-8bc9-dbe90b8004a7.html"
+    "url": "claims/d8a24d40-30a9-4cb6-bd25-e63ed41dde56.html"
   },
   {
-    "id": "d86db655-c96b-4187-bbe6-b0f936537032",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "76f04074-2f43-45d5-80b8-ddbdc7ee7ab9",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But a few weeks ago, she logged on to the website and got that same drug that cost costs $4,000, got it for under $500, a reduction of much more actually than $3,500.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3074,11 +3074,11 @@
         ]
       }
     },
-    "url": "claims/d86db655-c96b-4187-bbe6-b0f936537032.html"
+    "url": "claims/76f04074-2f43-45d5-80b8-ddbdc7ee7ab9.html"
   },
   {
-    "id": "33850a2e-4cc5-423e-896e-011e46df07a1",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "a1a6107b-ce92-42e8-ab36-095f2d416773",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "This is a unique strategy never used in this country before.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -3113,11 +3113,11 @@
         ]
       }
     },
-    "url": "claims/33850a2e-4cc5-423e-896e-011e46df07a1.html"
+    "url": "claims/a1a6107b-ce92-42e8-ab36-095f2d416773.html"
   },
   {
-    "id": "b99d22ac-3c91-4bf0-98d4-93910e5f7869",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "68e4f1ac-7011-4fbf-9cb6-fd4c4bfd4c3e",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Since I took office, the typical 401-K balance is up by at least $30,000.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -3143,11 +3143,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/b99d22ac-3c91-4bf0-98d4-93910e5f7869.html"
+    "url": "claims/68e4f1ac-7011-4fbf-9cb6-fd4c4bfd4c3e.html"
   },
   {
-    "id": "a33fb533-4720-4662-be07-04bbec6bfbdd",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "99832da5-a658-48a3-8ba4-3a4efb0a8534",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "She placed bids on 20 homes and lost all of those bids to gigantic investment firms that bypassed inspection, paid all cash and turned those houses into rentals, stealing away her American dream.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -3182,11 +3182,11 @@
         ]
       }
     },
-    "url": "claims/a33fb533-4720-4662-be07-04bbec6bfbdd.html"
+    "url": "claims/99832da5-a658-48a3-8ba4-3a4efb0a8534.html"
   },
   {
-    "id": "eea9e750-5ca1-4ab7-9e6a-2a3f700a9158",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "1de1aa0d-3485-4323-8979-0610ebd9c217",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Stories like this are why last month I signed executive order to ban large Wall Street investment firms from buying up in the thousands, single-family homes.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -3221,11 +3221,11 @@
         ]
       }
     },
-    "url": "claims/eea9e750-5ca1-4ab7-9e6a-2a3f700a9158.html"
+    "url": "claims/1de1aa0d-3485-4323-8979-0610ebd9c217.html"
   },
   {
-    "id": "8eff41f6-ee27-4666-b0e1-95a18164a2db",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "87eee9d1-92be-44c0-86ef-45448c98ffda",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We have millions and millions of people, because the stock market has done so well, setting all those records.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3260,11 +3260,11 @@
         ]
       }
     },
-    "url": "claims/8eff41f6-ee27-4666-b0e1-95a18164a2db.html"
+    "url": "claims/87eee9d1-92be-44c0-86ef-45448c98ffda.html"
   },
   {
-    "id": "c6ff5ccb-d795-47db-b3af-8b9221f2caea",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "0a4cea1b-c602-41d8-8627-87bbf07b7468",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Your 401(k)s are way up.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3299,11 +3299,11 @@
         ]
       }
     },
-    "url": "claims/c6ff5ccb-d795-47db-b3af-8b9221f2caea.html"
+    "url": "claims/0a4cea1b-c602-41d8-8627-87bbf07b7468.html"
   },
   {
-    "id": "f8904e16-081e-4df6-aad9-9313a3f6d5fa",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4a9909a0-ca05-4e86-8810-ce3099cad390",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Yet, half of all of working Americans still do not have access to a retirement plan with matching contributions from an employer.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3338,11 +3338,11 @@
         ]
       }
     },
-    "url": "claims/f8904e16-081e-4df6-aad9-9313a3f6d5fa.html"
+    "url": "claims/4a9909a0-ca05-4e86-8810-ce3099cad390.html"
   },
   {
-    "id": "b1d76eac-6a6a-44d1-ac0a-af1cb168f067",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4f3d89ad-0d88-475d-96b2-d037eccb22aa",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $19 billion from the American taxpayer.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -3377,11 +3377,11 @@
         ]
       }
     },
-    "url": "claims/b1d76eac-6a6a-44d1-ac0a-af1cb168f067.html"
+    "url": "claims/4f3d89ad-0d88-475d-96b2-d037eccb22aa.html"
   },
   {
-    "id": "d9d5a75f-dd47-462b-bd1e-44e70b23edee",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "9542c975-15dc-4d77-abdb-1471439e729f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "(claim text unavailable)",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -3416,11 +3416,11 @@
         ]
       }
     },
-    "url": "claims/d9d5a75f-dd47-462b-bd1e-44e70b23edee.html"
+    "url": "claims/9542c975-15dc-4d77-abdb-1471439e729f.html"
   },
   {
-    "id": "c44506d6-f2f1-4919-b27b-b5990c8fc406",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "5d1e4134-98ad-4bff-9609-cf62de6915e9",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The Somali pirates who ransacked Minnesota, remind us that there are large parts of the world where bribery, corruption, and lawlessness are the norm, not the exception.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -3459,11 +3459,11 @@
         ]
       }
     },
-    "url": "claims/c44506d6-f2f1-4919-b27b-b5990c8fc406.html"
+    "url": "claims/5d1e4134-98ad-4bff-9609-cf62de6915e9.html"
   },
   {
-    "id": "2a060ab2-e4a1-4f26-a2ed-f251034bcbbc",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "5febabcb-d315-4b86-a265-6f963a132fe6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car traveling at 60 miles an hour or more.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3498,11 +3498,11 @@
         ]
       }
     },
-    "url": "claims/2a060ab2-e4a1-4f26-a2ed-f251034bcbbc.html"
+    "url": "claims/5febabcb-d315-4b86-a265-6f963a132fe6.html"
   },
   {
-    "id": "23cee67f-dee2-44be-9e89-283c60017e4e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4727baf5-90ad-487b-80c9-d33ada805876",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The driver was an illegal alien let in by Joe Biden and given a commercial driver's license by open borders politicians in California.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3537,11 +3537,11 @@
         ]
       }
     },
-    "url": "claims/23cee67f-dee2-44be-9e89-283c60017e4e.html"
+    "url": "claims/4727baf5-90ad-487b-80c9-d33ada805876.html"
   },
   {
-    "id": "ed02a01f-2d45-4b4d-bf11-cce85caa9940",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d011af4a-29cd-46a4-af97-69824dc83b31",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Doctors said Delilah would never be able to walk or talk, have a good life.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3576,11 +3576,11 @@
         ]
       }
     },
-    "url": "claims/ed02a01f-2d45-4b4d-bf11-cce85caa9940.html"
+    "url": "claims/d011af4a-29cd-46a4-af97-69824dc83b31.html"
   },
   {
-    "id": "869333c5-3f5a-4816-a039-0e11758fdf34",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4fa32e98-c0a5-46cf-80e2-2f96d6cfe651",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being stabbed 25 times.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -3606,11 +3606,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/869333c5-3f5a-4816-a039-0e11758fdf34.html"
+    "url": "claims/4fa32e98-c0a5-46cf-80e2-2f96d6cfe651.html"
   },
   {
-    "id": "8442da99-f1a1-45bf-a5e1-de937dfff1e4",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "3507c65b-4831-4c1d-86b6-43e7e6218b3f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Lizbeth's killer was a previously arrested illegal alien who had broken in and brutally, just brutally extinguished the brightest light in her family's life, violently and viciously.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -3636,11 +3636,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/8442da99-f1a1-45bf-a5e1-de937dfff1e4.html"
+    "url": "claims/3507c65b-4831-4c1d-86b6-43e7e6218b3f.html"
   },
   {
-    "id": "6c36ed77-633a-458d-95c1-870e0f681337",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "26ff086b-1d25-43cf-90db-fbe105db3187",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "She wouldn't even be able to eat again.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3675,11 +3675,11 @@
         ]
       }
     },
-    "url": "claims/6c36ed77-633a-458d-95c1-870e0f681337.html"
+    "url": "claims/26ff086b-1d25-43cf-90db-fbe105db3187.html"
   },
   {
-    "id": "234eaad8-eaac-418b-b3b4-7e8d17d500ed",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "b0293f1c-bc21-4f0a-ab46-5d460725e8d7",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But against all odds, she is now in the first grade, learning to walk.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3714,11 +3714,11 @@
         ]
       }
     },
-    "url": "claims/234eaad8-eaac-418b-b3b4-7e8d17d500ed.html"
+    "url": "claims/b0293f1c-bc21-4f0a-ab46-5d460725e8d7.html"
   },
   {
-    "id": "057f8490-eb09-4916-8118-268c984a6c4e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "e3919653-471c-4d8c-9046-92f9a8aed180",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Many, if not most, illegal aliens do not speak English and cannot read even the most basic road signs as to direction, speed, danger or location.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -3753,11 +3753,11 @@
         ]
       }
     },
-    "url": "claims/057f8490-eb09-4916-8118-268c984a6c4e.html"
+    "url": "claims/e3919653-471c-4d8c-9046-92f9a8aed180.html"
   },
   {
-    "id": "f92ce65f-a3af-47ee-8721-763ea1b4b450",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "39bdd9ab-ec76-465d-ba9d-c4498d110998",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas parade, but she never arrived.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -3792,11 +3792,11 @@
         ]
       }
     },
-    "url": "claims/f92ce65f-a3af-47ee-8721-763ea1b4b450.html"
+    "url": "claims/39bdd9ab-ec76-465d-ba9d-c4498d110998.html"
   },
   {
-    "id": "ce290b99-ba66-4eeb-9a44-e0078214878e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "def08b8e-0800-429d-9dd4-ee804dd99067",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And this should be an easy one, and by the way, it's polling at 89 percent, including Democrats, 89 percent.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -3822,11 +3822,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/ce290b99-ba66-4eeb-9a44-e0078214878e.html"
+    "url": "claims/def08b8e-0800-429d-9dd4-ee804dd99067.html"
   },
   {
-    "id": "cb836b48-08bc-4370-ac34-9423ad62e8df",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2f011953-d829-48d4-b07a-c8c5d8430dce",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our country at record numbers and we're getting them the hell out of here fast.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -3861,11 +3861,11 @@
         ]
       }
     },
-    "url": "claims/cb836b48-08bc-4370-ac34-9423ad62e8df.html"
+    "url": "claims/2f011953-d829-48d4-b07a-c8c5d8430dce.html"
   },
   {
-    "id": "eaaf595c-f2a8-4580-b7a6-9ed5b2232134",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2c8de4c3-4fa0-431e-adfb-21f150da1a08",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "As we speak, Democrats in this chamber have cut off all funding for the Department of Homeland Security.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -3900,11 +3900,11 @@
         ]
       }
     },
-    "url": "claims/eaaf595c-f2a8-4580-b7a6-9ed5b2232134.html"
+    "url": "claims/2c8de4c3-4fa0-431e-adfb-21f150da1a08.html"
   },
   {
-    "id": "eb850606-50f3-4d55-8daa-96783d0bff22",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "85f9ab9b-4b50-4bff-8a2e-a016bfc59478",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "They have instituted another Democrat shutdown, the first one costing us 2 points on GDP.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -3943,11 +3943,11 @@
         ]
       }
     },
-    "url": "claims/eb850606-50f3-4d55-8daa-96783d0bff22.html"
+    "url": "claims/85f9ab9b-4b50-4bff-8a2e-a016bfc59478.html"
   },
   {
-    "id": "f1c4c462-df64-466c-99c7-465a3d71903d",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "990d1f85-8aae-42d5-8622-038917f83788",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Now they have closed the agency responsible for protecting Americans from terrorists and murderers.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -3982,11 +3982,11 @@
         ]
       }
     },
-    "url": "claims/f1c4c462-df64-466c-99c7-465a3d71903d.html"
+    "url": "claims/990d1f85-8aae-42d5-8622-038917f83788.html"
   },
   {
-    "id": "049b2321-91a9-493f-8360-97cfa3921fad",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "db414b4f-0e83-49e6-b37d-868c42a02301",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "That cheating is rampant in our elections.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -4021,11 +4021,11 @@
         ]
       }
     },
-    "url": "claims/049b2321-91a9-493f-8360-97cfa3921fad.html"
+    "url": "claims/db414b4f-0e83-49e6-b37d-868c42a02301.html"
   },
   {
-    "id": "8dd76ab9-7b66-44fd-b953-0b78fa111109",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "fe09b09f-6c53-4002-b2d0-a19cc6c45f5a",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "After she was found in a horrific situation in Maryland, a left-wing judge refused to return sage to her parents because they did not immediately state that their daughter was their son.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -4051,11 +4051,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/8dd76ab9-7b66-44fd-b953-0b78fa111109.html"
+    "url": "claims/fe09b09f-6c53-4002-b2d0-a19cc6c45f5a.html"
   },
   {
-    "id": "393cc53e-910a-4e03-8afd-3c413e5dfd66",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "b5394e35-bdf3-4831-be7e-3dc2bb54146a",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Sage was thrown into an all-boys state home and suffered terribly for a long time.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -4081,11 +4081,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/393cc53e-910a-4e03-8afd-3c413e5dfd66.html"
+    "url": "claims/b5394e35-bdf3-4831-be7e-3dc2bb54146a.html"
   },
   {
-    "id": "b3739ac8-168a-4fb9-b250-f694a5340afd",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c1a8e945-2625-460b-a271-1eeb5546c61d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But today, all of that is behind them because Sage is a proud and wonderful young woman with a full ride scholarship to Liberty University.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -4111,11 +4111,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/b3739ac8-168a-4fb9-b250-f694a5340afd.html"
+    "url": "claims/c1a8e945-2625-460b-a271-1eeb5546c61d.html"
   },
   {
-    "id": "debcf33f-de7b-4359-bbfe-381799ccce9f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8fb06598-383f-4142-9f57-1decdfbfb9c9",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In 2021, Sage was 14 when school officials in Virginia sought to socially transition her to a new gender, treating her as a boy and hiding it from her parents.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4150,11 +4150,11 @@
         ]
       }
     },
-    "url": "claims/debcf33f-de7b-4359-bbfe-381799ccce9f.html"
+    "url": "claims/8fb06598-383f-4142-9f57-1decdfbfb9c9.html"
   },
   {
-    "id": "70b5260d-d339-4784-a65a-304dcd4a027b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "7449f6ea-3ebc-4763-9ab3-620cc0c074df",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Before long, a confused Sage ran away from home.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4189,11 +4189,11 @@
         ]
       }
     },
-    "url": "claims/70b5260d-d339-4784-a65a-304dcd4a027b.html"
+    "url": "claims/7449f6ea-3ebc-4763-9ab3-620cc0c074df.html"
   },
   {
-    "id": "27b5344a-2c86-4b91-b059-92f14d4de15f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d3924d4c-0302-49b4-bea7-a642bdbcab29",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But now we have to say it because it's going on all over, numerous states, without even telling the parents.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4228,11 +4228,11 @@
         ]
       }
     },
-    "url": "claims/27b5344a-2c86-4b91-b059-92f14d4de15f.html"
+    "url": "claims/d3924d4c-0302-49b4-bea7-a642bdbcab29.html"
   },
   {
-    "id": "e227596b-dbdf-4ce9-af1a-56d1c71dd178",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "3ec4b647-98b6-4f2e-b434-636b9a033ab9",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Over the past year, she has had an incredible impact championing AI legislation advancing a landmark executive order on foster care and helping secure $30 million to launch the Melania Trump Foster Youth to Independence Initiative.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4267,11 +4267,11 @@
         ]
       }
     },
-    "url": "claims/e227596b-dbdf-4ce9-af1a-56d1c71dd178.html"
+    "url": "claims/3ec4b647-98b6-4f2e-b434-636b9a033ab9.html"
   },
   {
-    "id": "caeb6251-d223-4d03-97fd-6276a11ad4b6",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f7527e0b-8097-49f8-b698-b61d56b0ab7c",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping America's next generation positioned to succeed and strongly succeed in the future.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4306,11 +4306,11 @@
         ]
       }
     },
-    "url": "claims/caeb6251-d223-4d03-97fd-6276a11ad4b6.html"
+    "url": "claims/f7527e0b-8097-49f8-b698-b61d56b0ab7c.html"
   },
   {
-    "id": "daf4f18e-ed69-4ce6-b348-f8fac0bf33bf",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "de05d565-138b-4fa7-a1da-67de6cae6e80",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "So, last year Charlie was violently murdered by an assassin and martyred, really martyred for his beliefs.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4345,11 +4345,11 @@
         ]
       }
     },
-    "url": "claims/daf4f18e-ed69-4ce6-b348-f8fac0bf33bf.html"
+    "url": "claims/de05d565-138b-4fa7-a1da-67de6cae6e80.html"
   },
   {
-    "id": "2685e7cf-2057-43c0-a7f8-29e543633541",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8afe37f6-232d-4e0c-9dae-3495253b2ba2",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Iryna fled war torn Ukraine to live with relatives near Charlotte, North Carolina.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4384,11 +4384,11 @@
         ]
       }
     },
-    "url": "claims/2685e7cf-2057-43c0-a7f8-29e543633541.html"
+    "url": "claims/8afe37f6-232d-4e0c-9dae-3495253b2ba2.html"
   },
   {
-    "id": "90a8144d-db83-4f32-a376-e331605e26a2",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "6c121bab-f31a-4528-9326-095d788f4bda",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Last summer, 23-year-old Iryna was riding home on the train when a deranged monster, who had been arrested over a dozen times and was released through no cash bail, stood up and viciously slashed a knife through her neck and body.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4423,11 +4423,11 @@
         ]
       }
     },
-    "url": "claims/90a8144d-db83-4f32-a376-e331605e26a2.html"
+    "url": "claims/6c121bab-f31a-4528-9326-095d788f4bda.html"
   },
   {
-    "id": "998107d6-ab8e-418a-941f-11cc7d7e5bf2",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f531739b-6b24-454d-a106-b2951a1597d7",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's face as she looked up at her attacker in the last seconds of her life.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -4466,11 +4466,11 @@
         ]
       }
     },
-    "url": "claims/998107d6-ab8e-418a-941f-11cc7d7e5bf2.html"
+    "url": "claims/f531739b-6b24-454d-a106-b2951a1597d7.html"
   },
   {
-    "id": "57eef570-28b4-4bd5-b461-a1c84c380155",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "b34e99f7-f1b1-4c67-908c-9ce1545e8858",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "She had escaped a brutal war only to be slain by a hardened criminal set free to kill in America, came in through open borders.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -4505,11 +4505,11 @@
         ]
       }
     },
-    "url": "claims/57eef570-28b4-4bd5-b461-a1c84c380155.html"
+    "url": "claims/b34e99f7-f1b1-4c67-908c-9ce1545e8858.html"
   },
   {
-    "id": "0e8b2ec4-b45e-4695-9dda-b5553eaef0ed",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2bba81c9-2bdb-45a1-ac14-5eb7f5b406e2",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Starting last summer, I deployed our National Guard and federal law enforcement to restore law and order to our most dangerous cities, including Memphis, Tennessee, big success; New Orleans, Louisiana, big success; and our nation's capital itself, Washington D.C. where we have almost no crime anymore in Washington D.C. How did that happen?",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -4548,11 +4548,11 @@
         ]
       }
     },
-    "url": "claims/0e8b2ec4-b45e-4695-9dda-b5553eaef0ed.html"
+    "url": "claims/2bba81c9-2bdb-45a1-ac14-5eb7f5b406e2.html"
   },
   {
-    "id": "763945ab-ab19-4382-b04a-67fe8ab29ebf",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "75c57c3b-76bf-4f3c-b0f8-74be7dd1efe2",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In fact, crime in Washington is now at the lowest level ever recorded, and murders in D.C. this January were down close to 100 percent from a year ago.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -4591,11 +4591,11 @@
         ]
       }
     },
-    "url": "claims/763945ab-ab19-4382-b04a-67fe8ab29ebf.html"
+    "url": "claims/75c57c3b-76bf-4f3c-b0f8-74be7dd1efe2.html"
   },
   {
-    "id": "4e12ab47-bbe4-4a4f-bbce-56afc80a8895",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "49bb362e-8fc5-4e66-95e1-d1227e528894",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "One of the brave service members who helped achieve this stunning turnaround was 20-year-old West Virginia Army National Guard Specialist, Sarah Beckstrom.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4634,11 +4634,11 @@
         ]
       }
     },
-    "url": "claims/4e12ab47-bbe4-4a4f-bbce-56afc80a8895.html"
+    "url": "claims/49bb362e-8fc5-4e66-95e1-d1227e528894.html"
   },
   {
-    "id": "2fe2d936-e932-4e9a-883a-be9bab0efad0",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "62cf081f-0da0-49ce-9510-9d26691cfeb1",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4673,11 +4673,11 @@
         ]
       }
     },
-    "url": "claims/2fe2d936-e932-4e9a-883a-be9bab0efad0.html"
+    "url": "claims/62cf081f-0da0-49ce-9510-9d26691cfeb1.html"
   },
   {
-    "id": "6d75b624-f9a8-445a-a7f0-546d543387a3",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8191c2f3-e015-4efe-8ce1-5dc4d1a5f78b",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But the very next day she was on patrol near the White House when she was ambushed and shot in the head by a terrorist monster from Afghanistan, shouldn't have been in our country.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4712,11 +4712,11 @@
         ]
       }
     },
-    "url": "claims/6d75b624-f9a8-445a-a7f0-546d543387a3.html"
+    "url": "claims/8191c2f3-e015-4efe-8ce1-5dc4d1a5f78b.html"
   },
   {
-    "id": "0c36de77-f4f7-43f8-898c-104348076b86",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "cbd56f8d-d4cb-4113-81ed-5e591f28069f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And all because she wore the uniform of our nation, she was shot.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4751,11 +4751,11 @@
         ]
       }
     },
-    "url": "claims/0c36de77-f4f7-43f8-898c-104348076b86.html"
+    "url": "claims/cbd56f8d-d4cb-4113-81ed-5e591f28069f.html"
   },
   {
-    "id": "85b752a5-f724-48d9-be71-3bb03b899cca",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "265b51a7-7e9d-4606-9d98-3ef16a010ae3",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Sarah Beckstrom died in order to defend our capital.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4790,11 +4790,11 @@
         ]
       }
     },
-    "url": "claims/85b752a5-f724-48d9-be71-3bb03b899cca.html"
+    "url": "claims/265b51a7-7e9d-4606-9d98-3ef16a010ae3.html"
   },
   {
-    "id": "cf4cd5cb-f71b-4b04-9be1-df83a0f38635",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "cba38863-5d46-4e27-ba4a-c40a238a668d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Serving alongside Sarah that day was Staff Sergeant Andrew Wolfe.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4829,11 +4829,11 @@
         ]
       }
     },
-    "url": "claims/cf4cd5cb-f71b-4b04-9be1-df83a0f38635.html"
+    "url": "claims/cba38863-5d46-4e27-ba4a-c40a238a668d.html"
   },
   {
-    "id": "31401460-2a1f-4543-b68f-11b7268fc1d2",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8bb58b3d-2453-483f-9b4a-ab93da60be0e",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The two of them, Sarah and Andrew, both shot violently in the head, neither was expected to make it.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4868,11 +4868,11 @@
         ]
       }
     },
-    "url": "claims/31401460-2a1f-4543-b68f-11b7268fc1d2.html"
+    "url": "claims/8bb58b3d-2453-483f-9b4a-ab93da60be0e.html"
   },
   {
-    "id": "d2fca347-910f-474a-b647-30a5a3eead9b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "8f6e933a-4172-40de-9e0a-8cefdb5a48b1",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4907,11 +4907,11 @@
         ]
       }
     },
-    "url": "claims/d2fca347-910f-474a-b647-30a5a3eead9b.html"
+    "url": "claims/8f6e933a-4172-40de-9e0a-8cefdb5a48b1.html"
   },
   {
-    "id": "b4d93745-b192-4b29-a404-a7b0a75de88e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "90b3c86a-43ea-4ef4-aac3-e104a90f9d23",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4950,11 +4950,11 @@
         ]
       }
     },
-    "url": "claims/b4d93745-b192-4b29-a404-a7b0a75de88e.html"
+    "url": "claims/90b3c86a-43ea-4ef4-aac3-e104a90f9d23.html"
   },
   {
-    "id": "714a7a2b-5b87-4de6-b31e-0643928dbdeb",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c8ee046a-b910-4a14-825f-cc6f8dbb818b",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "With God's help, Andrew has battled back from the edge of death—and we're talking about the edge of death, on his way to a miraculous recovery.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -4989,11 +4989,11 @@
         ]
       }
     },
-    "url": "claims/714a7a2b-5b87-4de6-b31e-0643928dbdeb.html"
+    "url": "claims/c8ee046a-b910-4a14-825f-cc6f8dbb818b.html"
   },
   {
-    "id": "987960fe-c128-483a-a884-2c4ce6d521fc",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "89253846-87e9-449d-96d0-d8bc8675884a",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In my first 10 months I ended eight wars, including Cambodia.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5028,11 +5028,11 @@
         ]
       }
     },
-    "url": "claims/987960fe-c128-483a-a884-2c4ce6d521fc.html"
+    "url": "claims/89253846-87e9-449d-96d0-d8bc8675884a.html"
   },
   {
-    "id": "958cc646-bf23-49c0-a37c-e74e468c5139",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "420f2758-e581-4517-9a49-9946c445c18d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -5067,11 +5067,11 @@
         ]
       }
     },
-    "url": "claims/958cc646-bf23-49c0-a37c-e74e468c5139.html"
+    "url": "claims/420f2758-e581-4517-9a49-9946c445c18d.html"
   },
   {
-    "id": "b3771c7a-4f28-4af2-b546-ee889ac9c2bf",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d984ef32-a7d3-4d5e-87a3-b878f54a24c1",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Kosovo and Serbia, Israel and Iran, Egypt and Ethiopia, Armenia and Azerbaijan, the Congo and Rwanda and, of course, the war in Gaza, which proceeds at a very low level.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5110,11 +5110,11 @@
         ]
       }
     },
-    "url": "claims/b3771c7a-4f28-4af2-b546-ee889ac9c2bf.html"
+    "url": "claims/d984ef32-a7d3-4d5e-87a3-b878f54a24c1.html"
   },
   {
-    "id": "90f4a6e2-4172-4204-a776-12730c17d19f",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c011d11d-63a7-4fb6-a285-33a3c0e627b4",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "You know, Marco got 100 percent of the votes when he was in—I think our next one was about 54 percent.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5149,11 +5149,11 @@
         ]
       }
     },
-    "url": "claims/90f4a6e2-4172-4204-a776-12730c17d19f.html"
+    "url": "claims/c011d11d-63a7-4fb6-a285-33a3c0e627b4.html"
   },
   {
-    "id": "803db115-c5d0-42ba-b10d-80be94e85144",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4954c28e-aa3c-40e1-86f1-d5eb1ccf98a4",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Under the ceasefire, I negotiated every single hostage, both living and dead has been returned home.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5188,11 +5188,11 @@
         ]
       }
     },
-    "url": "claims/803db115-c5d0-42ba-b10d-80be94e85144.html"
+    "url": "claims/4954c28e-aa3c-40e1-86f1-d5eb1ccf98a4.html"
   },
   {
-    "id": "c1143d5e-8057-40af-8a7b-020ad4a9bfdf",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "a6c09e0d-bcb7-42d4-acd3-a909903a5ad6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Think of that, 25,000 soldiers are dying a month, a war which would have never happened if I were president, would have never happened.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -5218,11 +5218,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/c1143d5e-8057-40af-8a7b-020ad4a9bfdf.html"
+    "url": "claims/a6c09e0d-bcb7-42d4-acd3-a909903a5ad6.html"
   },
   {
-    "id": "40d85592-9b3b-4a3d-b1ad-8ce5cbaafc10",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "4db96a28-ec1e-434f-9d15-470e94e91445",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And when we got all of the living hostages back and many, many before them but I always said those last 20 are going to be very tough, but we got many, many more, hundreds.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5257,11 +5257,11 @@
         ]
       }
     },
-    "url": "claims/40d85592-9b3b-4a3d-b1ad-8ce5cbaafc10.html"
+    "url": "claims/4db96a28-ec1e-434f-9d15-470e94e91445.html"
   },
   {
-    "id": "6c601402-1c4a-4666-8bc0-74aad4a56694",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "ae5b8264-1d80-4605-b6f1-b7d2da6674f6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But we only got back 14 or 15 of the dead, of the 28.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -5296,11 +5296,11 @@
         ]
       }
     },
-    "url": "claims/6c601402-1c4a-4666-8bc0-74aad4a56694.html"
+    "url": "claims/ae5b8264-1d80-4605-b6f1-b7d2da6674f6.html"
   },
   {
-    "id": "63759ec5-cfcb-47af-b202-b7ddcfb7b093",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "2c22ae29-307f-4460-b6f7-7f7779507274",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 soldiers are dying each and every month.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5335,11 +5335,11 @@
         ]
       }
     },
-    "url": "claims/63759ec5-cfcb-47af-b202-b7ddcfb7b093.html"
+    "url": "claims/2c22ae29-307f-4460-b6f7-7f7779507274.html"
   },
   {
-    "id": "05e6c380-be79-4ef8-a20b-e3057d708ccc",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "e1c02a7e-38cb-4230-97fc-301f077ce0da",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "That's why in a breakthrough operation last June, the United States military obliterated Iran's nuclear weapons program with an attack on Iranian soil, known as Operation Midnight Hammer.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -5374,11 +5374,11 @@
         ]
       }
     },
-    "url": "claims/05e6c380-be79-4ef8-a20b-e3057d708ccc.html"
+    "url": "claims/e1c02a7e-38cb-4230-97fc-301f077ce0da.html"
   },
   {
-    "id": "b739a3d7-30b9-4c20-9368-b0c430a96c6e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "37e7d384-5b85-4685-8970-e1370aea5763",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "For decades, it had been the policy of the United States never to allow Iran to obtain a nuclear weapon, many decades.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5413,11 +5413,11 @@
         ]
       }
     },
-    "url": "claims/b739a3d7-30b9-4c20-9368-b0c430a96c6e.html"
+    "url": "claims/37e7d384-5b85-4685-8970-e1370aea5763.html"
   },
   {
-    "id": "e85220a1-a83f-48f2-b14d-a1ae768bf466",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "68997885-128b-40ab-9596-7faaa6d59915",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Since they seized control of that proud nation 47 years ago, the regime and its murderous proxies have spread nothing but terrorism and death and hate.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5456,11 +5456,11 @@
         ]
       }
     },
-    "url": "claims/e85220a1-a83f-48f2-b14d-a1ae768bf466.html"
+    "url": "claims/68997885-128b-40ab-9596-7faaa6d59915.html"
   },
   {
-    "id": "afb78fe6-900e-416b-8d99-c08cce3828a0",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "957a9c19-be83-4ce2-8bc2-21ebb9d0a5cc",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people with what's called roadside bombs.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5499,11 +5499,11 @@
         ]
       }
     },
-    "url": "claims/afb78fe6-900e-416b-8d99-c08cce3828a0.html"
+    "url": "claims/957a9c19-be83-4ce2-8bc2-21ebb9d0a5cc.html"
   },
   {
-    "id": "5090b141-422f-4399-83c4-d196d31ea565",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c2817af6-0443-4d50-b7f8-628de0722d6f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "They were the kings of the roadside bomb.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5538,11 +5538,11 @@
         ]
       }
     },
-    "url": "claims/5090b141-422f-4399-83c4-d196d31ea565.html"
+    "url": "claims/c2817af6-0443-4d50-b7f8-628de0722d6f.html"
   },
   {
-    "id": "7fd8d4eb-71f0-4a0b-b7f3-982158dd1d03",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "e3af5689-5ae3-4195-81d8-da81d171624f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And we took out Soleimani.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5577,11 +5577,11 @@
         ]
       }
     },
-    "url": "claims/7fd8d4eb-71f0-4a0b-b7f3-982158dd1d03.html"
+    "url": "claims/e3af5689-5ae3-4195-81d8-da81d171624f.html"
   },
   {
-    "id": "04620bde-2c2f-47b9-8f8e-1a2b197335bd",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "3d44afa4-4cbf-4269-a8c3-47a012ce72c0",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "He was the father of the roadside bomb.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5620,11 +5620,11 @@
         ]
       }
     },
-    "url": "claims/04620bde-2c2f-47b9-8f8e-1a2b197335bd.html"
+    "url": "claims/3d44afa4-4cbf-4269-a8c3-47a012ce72c0.html"
   },
   {
-    "id": "94e605e0-ec02-4d2e-b929-8905fb7817ed",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "1f5c6632-4278-4fce-af51-c26a11db68dd",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,000 protesters in their own country.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5663,11 +5663,11 @@
         ]
       }
     },
-    "url": "claims/94e605e0-ec02-4d2e-b929-8905fb7817ed.html"
+    "url": "claims/1f5c6632-4278-4fce-af51-c26a11db68dd.html"
   },
   {
-    "id": "e4678074-48d1-4b91-919d-d9b7e4522642",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "aa479e55-b878-4eeb-b969-8de76dd568a6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "They shot them and hung them.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5702,11 +5702,11 @@
         ]
       }
     },
-    "url": "claims/e4678074-48d1-4b91-919d-d9b7e4522642.html"
+    "url": "claims/aa479e55-b878-4eeb-b969-8de76dd568a6.html"
   },
   {
-    "id": "f697eaf8-3059-4766-be64-2cd3168d0fe6",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "44b1bb24-4e65-41f1-9123-86a8fead32b3",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We stopped them from hanging a lot of them with the threat of serious violence.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5741,11 +5741,11 @@
         ]
       }
     },
-    "url": "claims/f697eaf8-3059-4766-be64-2cd3168d0fe6.html"
+    "url": "claims/44b1bb24-4e65-41f1-9123-86a8fead32b3.html"
   },
   {
-    "id": "6cda1732-34ac-49ff-9425-86b3f3d5dfe2",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "de0e85b6-2a83-4bf5-8cbd-72c986410db9",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "After Midnight Hammer, they were warned to make no future attempts to rebuild their weapons program in a particular, nuclear weapons, yet they continue starting it all over.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5780,11 +5780,11 @@
         ]
       }
     },
-    "url": "claims/6cda1732-34ac-49ff-9425-86b3f3d5dfe2.html"
+    "url": "claims/de0e85b6-2a83-4bf5-8cbd-72c986410db9.html"
   },
   {
-    "id": "e63a5a41-6fa1-4337-aa07-c9e431466319",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "367839a5-c4c6-4da6-9d8e-9b26c2fc8dd3",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But one thing is certain, I will never allow the world's number one sponsor of terror, which they are by far to have a nuclear weapon, can't let that happen.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5819,11 +5819,11 @@
         ]
       }
     },
-    "url": "claims/e63a5a41-6fa1-4337-aa07-c9e431466319.html"
+    "url": "claims/367839a5-c4c6-4da6-9d8e-9b26c2fc8dd3.html"
   },
   {
-    "id": "1d2b0a0a-99c1-4074-ad54-984d3849f15e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "bf1193af-82b2-4c6e-ae39-5e746f0e5b51",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We have the most powerful military on earth I rebuilt the military in my first term.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5862,11 +5862,11 @@
         ]
       }
     },
-    "url": "claims/1d2b0a0a-99c1-4074-ad54-984d3849f15e.html"
+    "url": "claims/bf1193af-82b2-4c6e-ae39-5e746f0e5b51.html"
   },
   {
-    "id": "5c9acb1e-800d-4930-a6cc-1f891322b9f9",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "743ee5cc-3a18-4475-94c7-3378bde8bb2d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States armed forces, also creating a lot of jobs, but we're not even doing it for that reason.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5901,11 +5901,11 @@
         ]
       }
     },
-    "url": "claims/5c9acb1e-800d-4930-a6cc-1f891322b9f9.html"
+    "url": "claims/743ee5cc-3a18-4475-94c7-3378bde8bb2d.html"
   },
   {
-    "id": "d04bdd53-f573-4195-ab78-f4029d8ca0a3",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "0a361666-1aa4-4476-a8c0-4f9464b418e7",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Because as I said, we have more jobs, more people working today than ever before in the history of our country.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -5940,11 +5940,11 @@
         ]
       }
     },
-    "url": "claims/d04bdd53-f573-4195-ab78-f4029d8ca0a3.html"
+    "url": "claims/0a361666-1aa4-4476-a8c0-4f9464b418e7.html"
   },
   {
-    "id": "d9159b1c-6d48-4d56-b9d3-4bf7541ea376",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "b660cd09-5fa2-4fdd-93fd-a00600cfa863",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And NATO countries, our friends and allies, and they are, they're our friends and they're our allies, have just agreed at my very strong request to pay five percent of GDP for military defense rather than the two percent, which they weren't paying; we were paying for almost all of them.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -5983,11 +5983,11 @@
         ]
       }
     },
-    "url": "claims/d9159b1c-6d48-4d56-b9d3-4bf7541ea376.html"
+    "url": "claims/b660cd09-5fa2-4fdd-93fd-a00600cfa863.html"
   },
   {
-    "id": "1dc15153-e624-47fe-86e2-7ac116e452e4",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "0d43057c-f5bd-4ce6-88c7-10803f8bef8d",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Now they're paying five as opposed to not paying for it.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -6022,11 +6022,11 @@
         ]
       }
     },
-    "url": "claims/1dc15153-e624-47fe-86e2-7ac116e452e4.html"
+    "url": "claims/0d43057c-f5bd-4ce6-88c7-10803f8bef8d.html"
   },
   {
-    "id": "4319da96-f592-4714-adb4-4a1f2c21fb03",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "fb6f7b1b-42dc-42a8-af07-973478e2d793",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And everything we send over to Ukraine is sent through NATO and they pay us in full.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -6061,11 +6061,11 @@
         ]
       }
     },
-    "url": "claims/4319da96-f592-4714-adb4-4a1f2c21fb03.html"
+    "url": "claims/fb6f7b1b-42dc-42a8-af07-973478e2d793.html"
   },
   {
-    "id": "a3220f53-3fcf-479a-8b26-043f3735e17e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "26a89128-645e-468d-adbf-8c0997064e97",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "They pay us totally in full.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -6100,11 +6100,11 @@
         ]
       }
     },
-    "url": "claims/a3220f53-3fcf-479a-8b26-043f3735e17e.html"
+    "url": "claims/26a89128-645e-468d-adbf-8c0997064e97.html"
   },
   {
-    "id": "14338a3d-5598-4baa-959f-07b844878470",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "76e9ed5c-324a-4a68-94b3-b5459d20facd",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Every branch of our armed forces is setting records for recruitment.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -6139,11 +6139,11 @@
         ]
       }
     },
-    "url": "claims/14338a3d-5598-4baa-959f-07b844878470.html"
+    "url": "claims/76e9ed5c-324a-4a68-94b3-b5459d20facd.html"
   },
   {
-    "id": "fb444d25-ea3e-41b8-8db4-b8a4df44e0c8",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "556c8b5d-a641-4fef-a4a9-0f0146563255",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And every service member recently received a warrior dividend of $1,776.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -6178,11 +6178,11 @@
         ]
       }
     },
-    "url": "claims/fb444d25-ea3e-41b8-8db4-b8a4df44e0c8.html"
+    "url": "claims/556c8b5d-a641-4fef-a4a9-0f0146563255.html"
   },
   {
-    "id": "f8ca2f44-3dcb-46b2-9146-3e77270803d8",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "99cc177f-abba-4558-b8e9-96f7ef3ba4f0",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "For years, large swaths of territory in our region, including large parts of Mexico, really large parts of Mexico, have been controlled by murderous drug cartels.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6217,11 +6217,11 @@
         ]
       }
     },
-    "url": "claims/f8ca2f44-3dcb-46b2-9146-3e77270803d8.html"
+    "url": "claims/99cc177f-abba-4558-b8e9-96f7ef3ba4f0.html"
   },
   {
-    "id": "ad101691-48a5-49bc-a81d-bc232580680b",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "a6842cc6-a81c-4f3a-8212-3b9e6c9cd80f",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "That's why I designated these cartels as foreign terrorist organizations, and I declared illicit fentanyl as a weapon of mass destruction.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6256,11 +6256,11 @@
         ]
       }
     },
-    "url": "claims/ad101691-48a5-49bc-a81d-bc232580680b.html"
+    "url": "claims/a6842cc6-a81c-4f3a-8212-3b9e6c9cd80f.html"
   },
   {
-    "id": "ebe0fa15-3611-4a81-b231-aaa2633e20f4",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "6b60ed77-5533-412f-8689-a516b9980820",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stopped it completely coming in by water or sea.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -6295,11 +6295,11 @@
         ]
       }
     },
-    "url": "claims/ebe0fa15-3611-4a81-b231-aaa2633e20f4.html"
+    "url": "claims/6b60ed77-5533-412f-8689-a516b9980820.html"
   },
   {
-    "id": "0fc4b32e-7b1c-4de8-add2-5dced2c5ff72",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "7fb83f61-a816-4187-8db5-83cb1fbe5c50",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We've also taken down one of the most sinister cartel kingpins of all.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6334,11 +6334,11 @@
         ]
       }
     },
-    "url": "claims/0fc4b32e-7b1c-4de8-add2-5dced2c5ff72.html"
+    "url": "claims/7fb83f61-a816-4187-8db5-83cb1fbe5c50.html"
   },
   {
-    "id": "7273584f-f861-4c17-bd33-03b7157df518",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d7e4c9c1-cd60-4850-97fb-dda91d21f6f6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "And America's armed forces overwhelmed all defenses and utterly defeated an enemy—good fighters—to end the reign of outlaw dictator Nicolas Maduro and bring him to face American justice.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6373,11 +6373,11 @@
         ]
       }
     },
-    "url": "claims/7273584f-f861-4c17-bd33-03b7157df518.html"
+    "url": "claims/d7e4c9c1-cd60-4850-97fb-dda91d21f6f6.html"
   },
   {
-    "id": "91f93003-5048-4997-ab94-5db822a4f783",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "ce334e11-19e5-40ee-84b3-bc4828c778d6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We're working closely with the new president of Venezuela, Delcy Rodriguez, to unleash extraordinary economic gains for both of our countries and to bring new hope to those who have suffered so terribly.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6412,11 +6412,11 @@
         ]
       }
     },
-    "url": "claims/91f93003-5048-4997-ab94-5db822a4f783.html"
+    "url": "claims/ce334e11-19e5-40ee-84b3-bc4828c778d6.html"
   },
   {
-    "id": "01a05e06-45c7-4f06-8146-dcab8907eb99",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f5927402-51d9-41c7-bf2f-eb74ccbd7ffe",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6455,11 +6455,11 @@
         ]
       }
     },
-    "url": "claims/01a05e06-45c7-4f06-8146-dcab8907eb99.html"
+    "url": "claims/f5927402-51d9-41c7-bf2f-eb74ccbd7ffe.html"
   },
   {
-    "id": "241ae4b1-b432-4bed-bedb-15bb0cad45b0",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d18223df-ad90-400c-bfd4-c4812a264eb6",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the regime's really infamous prison in Caracas.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6494,11 +6494,11 @@
         ]
       }
     },
-    "url": "claims/241ae4b1-b432-4bed-bedb-15bb0cad45b0.html"
+    "url": "claims/d18223df-ad90-400c-bfd4-c4812a264eb6.html"
   },
   {
-    "id": "92cc7899-6190-4f15-9e1f-c61c1a4dc18c",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "93c5f006-a03c-49f7-983c-e619542011e2",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But since the raid, we have worked with the new leadership, and they have ordered the closure of that vile prison and released hundreds of political prisoners already with more to come.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -6537,11 +6537,11 @@
         ]
       }
     },
-    "url": "claims/92cc7899-6190-4f15-9e1f-c61c1a4dc18c.html"
+    "url": "claims/93c5f006-a03c-49f7-983c-e619542011e2.html"
   },
   {
-    "id": "3ba2d92c-c14b-439d-a5f8-7eb8e2ccec96",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "ca563aea-cd7b-4853-bd5b-58326c7165fd",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6576,11 +6576,11 @@
         ]
       }
     },
-    "url": "claims/3ba2d92c-c14b-439d-a5f8-7eb8e2ccec96.html"
+    "url": "claims/ca563aea-cd7b-4853-bd5b-58326c7165fd.html"
   },
   {
-    "id": "3fd254dc-d0d7-40aa-ac37-bcd424257dfb",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "6300269f-2a58-44ff-8133-d99de4e37b40",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "There were many heroes on that January raid to capture Maduro, really great heroes.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6615,11 +6615,11 @@
         ]
       }
     },
-    "url": "claims/3fd254dc-d0d7-40aa-ac37-bcd424257dfb.html"
+    "url": "claims/6300269f-2a58-44ff-8133-d99de4e37b40.html"
   },
   {
-    "id": "d0eca69c-b4fa-4005-9e21-5316d731b83a",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "15eb67dc-a90f-44d7-a9eb-a35b72501949",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "But the deeds of one warrior that night will live forever in the eternal chronicles of military valor, Chief Warrant Officer Five, Eric Slover, planned the mission and was the flight lead in the cockpit of the first helicopter.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6654,11 +6654,11 @@
         ]
       }
     },
-    "url": "claims/d0eca69c-b4fa-4005-9e21-5316d731b83a.html"
+    "url": "claims/15eb67dc-a90f-44d7-a9eb-a35b72501949.html"
   },
   {
-    "id": "046fb965-c01c-435f-90ab-4a3a025ac814",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "f1e57bfe-ded4-4afa-84d5-1fb282a8f061",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one bullet after another.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6693,11 +6693,11 @@
         ]
       }
     },
-    "url": "claims/046fb965-c01c-435f-90ab-4a3a025ac814.html"
+    "url": "claims/f1e57bfe-ded4-4afa-84d5-1fb282a8f061.html"
   },
   {
-    "id": "736e6088-d139-4bc9-b40f-f37b293d7853",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "1e3d9b21-3b66-475f-b242-2d564371cadb",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "He absorbed four agonizing shots, shredding his leg into numerous pieces.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6736,11 +6736,11 @@
         ]
       }
     },
-    "url": "claims/736e6088-d139-4bc9-b40f-f37b293d7853.html"
+    "url": "claims/1e3d9b21-3b66-475f-b242-2d564371cadb.html"
   },
   {
-    "id": "bd9b26eb-9010-4607-96fe-008803a172ef",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "d1bb86de-1057-4375-98b7-972894a53c34",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the threat—turned the helicopter around so the gunners could take care of business, saving the lives of his fellow warriors from what could have been a catastrophic crash deep in enemy territory.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6775,11 +6775,11 @@
         ]
       }
     },
-    "url": "claims/bd9b26eb-9010-4607-96fe-008803a172ef.html"
+    "url": "claims/d1bb86de-1057-4375-98b7-972894a53c34.html"
   },
   {
-    "id": "e7f62de8-1d5f-4cf4-a559-397d71f6045d",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "efd2cb14-55fb-49bc-b9bf-2230562e2433",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mission, we probably would have had maybe cancel the mission if that didn't happen, Eric told his copilot, also wounded but not as gravely, to take over, I'm about ready to pass out.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6814,11 +6814,11 @@
         ]
       }
     },
-    "url": "claims/e7f62de8-1d5f-4cf4-a559-397d71f6045d.html"
+    "url": "claims/efd2cb14-55fb-49bc-b9bf-2230562e2433.html"
   },
   {
-    "id": "d2d5748e-6c06-492c-beee-6cdddb25793d",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "181be612-3244-46e3-aca0-648dd6a96295",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "The success of the entire mission and the lives of his fellow warriors hinge on Eric's ability to take the searing pain, it was unbelievable what's happened to his legs, of the bullets and keep on flying and landing and people knew what was happening.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6853,11 +6853,11 @@
         ]
       }
     },
-    "url": "claims/d2d5748e-6c06-492c-beee-6cdddb25793d.html"
+    "url": "claims/181be612-3244-46e3-aca0-648dd6a96295.html"
   },
   {
-    "id": "a26261a0-5cf2-4cb8-bcf2-e64d51c87dd8",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "e2fb12f4-3666-49a9-b843-a63500d2a132",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6892,11 +6892,11 @@
         ]
       }
     },
-    "url": "claims/a26261a0-5cf2-4cb8-bcf2-e64d51c87dd8.html"
+    "url": "claims/e2fb12f4-3666-49a9-b843-a63500d2a132.html"
   },
   {
-    "id": "d5c1f3a1-8a0f-4d13-81e5-ab054e18dcbb",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "0b940052-f6a7-4fb5-a3f3-b99ff95efa55",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "You notice the name Fort Bragg, we have it back, we brought it back.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6931,11 +6931,11 @@
         ]
       }
     },
-    "url": "claims/d5c1f3a1-8a0f-4d13-81e5-ab054e18dcbb.html"
+    "url": "claims/0b940052-f6a7-4fb5-a3f3-b99ff95efa55.html"
   },
   {
-    "id": "eae9e68f-02cf-49ce-b12a-c0ad78b6c272",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c7702a55-e0a5-458e-8092-6de0287cbb3c",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "We won the First World War with it, the Second World War with it and then they decide to change the name, but we changed it back.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -6974,11 +6974,11 @@
         ]
       }
     },
-    "url": "claims/eae9e68f-02cf-49ce-b12a-c0ad78b6c272.html"
+    "url": "claims/c7702a55-e0a5-458e-8092-6de0287cbb3c.html"
   },
   {
-    "id": "7a4966e9-5972-45c9-aba3-52e40ca8d1ab",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "a1737d62-4f89-4fcf-bfb4-24dc6038e465",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "He is one more heroic American aviator, navy fighter pilot Royce Williams served in World War II, Korea, Vietnam, flying more than 220 missions.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7013,11 +7013,11 @@
         ]
       }
     },
-    "url": "claims/7a4966e9-5972-45c9-aba3-52e40ca8d1ab.html"
+    "url": "claims/a1737d62-4f89-4fcf-bfb4-24dc6038e465.html"
   },
   {
-    "id": "e3669361-ea25-4977-8c89-69df1f4d836e",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "9d60b478-0f26-4815-9bd1-b36b4d2163de",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "In the skies over Korea in 1952, Royce was in the dogfight of a lifetime, legendary dogfight.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7052,11 +7052,11 @@
         ]
       }
     },
-    "url": "claims/e3669361-ea25-4977-8c89-69df1f4d836e.html"
+    "url": "claims/9d60b478-0f26-4815-9bd1-b36b4d2163de.html"
   },
   {
-    "id": "710ab1f0-71c0-4012-b6cc-0e3ea945a394",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "20e0f87e-32bf-426d-9c18-8a9d09fe7dab",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Flying through blizzard conditions, his squadron was ambushed by seven Soviet fighter planes.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7091,11 +7091,11 @@
         ]
       }
     },
-    "url": "claims/710ab1f0-71c0-4012-b6cc-0e3ea945a394.html"
+    "url": "claims/20e0f87e-32bf-426d-9c18-8a9d09fe7dab.html"
   },
   {
-    "id": "238f1ab7-5e56-4032-9f40-af48b25cd379",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "9b229afa-2a89-4a24-9c89-8e72b0160246",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "It was his first aerial combat of the war and despite being massively outnumbered and outgunned, Royce led the takedown of four enemy jets and almost destroyed the others, vanquishing his adversaries while taking 263 bullets to his own plane and being seriously hurt.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7134,11 +7134,11 @@
         ]
       }
     },
-    "url": "claims/238f1ab7-5e56-4032-9f40-af48b25cd379.html"
+    "url": "claims/9b229afa-2a89-4a24-9c89-8e72b0160246.html"
   },
   {
-    "id": "b779a393-edaa-41c9-85e6-9808b5e1eb96",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "c769f598-f1d4-4ee0-9d99-b47bf3fc05ec",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "His story was secret for over 50 years.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7173,11 +7173,11 @@
         ]
       }
     },
-    "url": "claims/b779a393-edaa-41c9-85e6-9808b5e1eb96.html"
+    "url": "claims/c769f598-f1d4-4ee0-9d99-b47bf3fc05ec.html"
   },
   {
-    "id": "f1ab48e8-6e8f-451f-a5e0-529d8b9b5ff2",
-    "report_id": "924c85df-24cd-46c3-918a-39fc91d5b2c1",
+    "id": "1ad80592-66a3-4d9f-afac-ccc72a9fbbde",
+    "report_id": "ccc7e328-0c68-448f-819b-e6c40d357c6b",
     "claim_text": "Two of the gentlemen we met in the gallery this evening took their first breaths one century ago, 100 years before that on July 4th, 1826, the author of the Declaration of Independence, brilliant.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7212,11 +7212,11 @@
         ]
       }
     },
-    "url": "claims/f1ab48e8-6e8f-451f-a5e0-529d8b9b5ff2.html"
+    "url": "claims/1ad80592-66a3-4d9f-afac-ccc72a9fbbde.html"
   },
   {
-    "id": "b0422001-124e-45de-b6e3-109baefa2314",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "43197061-05ca-420e-b258-6b467f83962b",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Groups of citizens blocking tanks with their bodies.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -7242,11 +7242,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/b0422001-124e-45de-b6e3-109baefa2314.html"
+    "url": "claims/43197061-05ca-420e-b258-6b467f83962b.html"
   },
   {
-    "id": "1b63f0db-d221-42e4-8028-bb9db4b1ea16",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "1688327c-7847-4332-91f3-b0f466d364e7",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Our economy grew at a rate of 5.7 percent last year, the strongest growth in nearly 40 years, the first step in bringing fundamental change to an economy that hasn’t worked for the working people of this nation for too long.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7281,11 +7281,11 @@
         ]
       }
     },
-    "url": "claims/1b63f0db-d221-42e4-8028-bb9db4b1ea16.html"
+    "url": "claims/1688327c-7847-4332-91f3-b0f466d364e7.html"
   },
   {
-    "id": "7c83c4f9-2cec-48c9-b00d-12465ac54752",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "0e8befa6-55e4-4c5b-92fe-8d3e93b4eb41",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "But drug companies charge families like Joshua and his dad up to 30 times more.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7320,11 +7320,11 @@
         ]
       }
     },
-    "url": "claims/7c83c4f9-2cec-48c9-b00d-12465ac54752.html"
+    "url": "claims/0e8befa6-55e4-4c5b-92fe-8d3e93b4eb41.html"
   },
   {
-    "id": "9bbd0ffb-cdb0-489c-a8e2-b01a5c10b6d0",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "22262ca3-6fcb-489a-a460-395d812ec3b9",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "They were responding to a 9-1-1 call when a man shot and killed them with a stolen gun.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7359,11 +7359,11 @@
         ]
       }
     },
-    "url": "claims/9bbd0ffb-cdb0-489c-a8e2-b01a5c10b6d0.html"
+    "url": "claims/22262ca3-6fcb-489a-a460-395d812ec3b9.html"
   },
   {
-    "id": "1cfbb741-bea0-48b7-aa69-19aa2b186f32",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "b9b898f0-c809-4361-b90d-ed62eb4d8dc4",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” The Ukrainian Ambassador to the United States is here tonight.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7398,11 +7398,11 @@
         ]
       }
     },
-    "url": "claims/1cfbb741-bea0-48b7-aa69-19aa2b186f32.html"
+    "url": "claims/b9b898f0-c809-4361-b90d-ed62eb4d8dc4.html"
   },
   {
-    "id": "c12bd89b-c4f2-4964-b002-a4450edc1aa5",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "acb78f94-152f-4f70-8c59-2399c144dada",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "That’s why the NATO Alliance was created to secure peace and stability in Europe after World War 2.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7437,11 +7437,11 @@
         ]
       }
     },
-    "url": "claims/c12bd89b-c4f2-4964-b002-a4450edc1aa5.html"
+    "url": "claims/acb78f94-152f-4f70-8c59-2399c144dada.html"
   },
   {
-    "id": "9a64412c-9e1d-43aa-9576-3a58cbff700b",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "76ded8f6-c6b9-4ab5-be8a-4672300d8da5",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The United States is a member along with 29 other nations.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7476,11 +7476,11 @@
         ]
       }
     },
-    "url": "claims/9a64412c-9e1d-43aa-9576-3a58cbff700b.html"
+    "url": "claims/76ded8f6-c6b9-4ab5-be8a-4672300d8da5.html"
   },
   {
-    "id": "2ba792c1-861e-47bd-abe5-67b91e5d0618",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "47d3d424-872e-4daf-bf58-4cc98891ab77",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Putin’s latest attack on Ukraine was premeditated and unprovoked.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7515,11 +7515,11 @@
         ]
       }
     },
-    "url": "claims/2ba792c1-861e-47bd-abe5-67b91e5d0618.html"
+    "url": "claims/47d3d424-872e-4daf-bf58-4cc98891ab77.html"
   },
   {
-    "id": "d19c4a98-b387-4515-bc99-49c1d2104f3e",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "71e5e088-0957-4921-b56b-b87d187ebdf2",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "He rejected repeated efforts at diplomacy.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7554,11 +7554,11 @@
         ]
       }
     },
-    "url": "claims/d19c4a98-b387-4515-bc99-49c1d2104f3e.html"
+    "url": "claims/71e5e088-0957-4921-b56b-b87d187ebdf2.html"
   },
   {
-    "id": "66a16041-1bf7-4298-9c48-737d728767b3",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "934d461c-d48c-4d4d-b18d-6ef1c9b77290",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We spent months building a coalition of other freedom-loving nations from Europe and the Americas to Asia and Africa to confront Putin.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7593,11 +7593,11 @@
         ]
       }
     },
-    "url": "claims/66a16041-1bf7-4298-9c48-737d728767b3.html"
+    "url": "claims/934d461c-d48c-4d4d-b18d-6ef1c9b77290.html"
   },
   {
-    "id": "4b4783f3-981d-4916-acca-1ea076ec9b3a",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "97ac69e5-01fa-4db4-8779-c92a7c6e4b63",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We shared with the world in advance what we knew Putin was planning and precisely how he would try to falsely justify his aggression.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7632,11 +7632,11 @@
         ]
       }
     },
-    "url": "claims/4b4783f3-981d-4916-acca-1ea076ec9b3a.html"
+    "url": "claims/97ac69e5-01fa-4db4-8779-c92a7c6e4b63.html"
   },
   {
-    "id": "0f2cbca9-f8c7-40c2-abea-23a6540d6d74",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "326d37c7-b6d2-429e-bbdc-ccac2e817d6a",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Putin is now isolated from the world more than ever.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7671,11 +7671,11 @@
         ]
       }
     },
-    "url": "claims/0f2cbca9-f8c7-40c2-abea-23a6540d6d74.html"
+    "url": "claims/326d37c7-b6d2-429e-bbdc-ccac2e817d6a.html"
   },
   {
-    "id": "ed267a25-3a37-4b2a-a706-791a8c14aca4",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "96f9f19c-26cd-4dae-877f-5261835e2300",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Together with our allies, we are right now enforcing powerful economic sanctions.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7710,11 +7710,11 @@
         ]
       }
     },
-    "url": "claims/ed267a25-3a37-4b2a-a706-791a8c14aca4.html"
+    "url": "claims/96f9f19c-26cd-4dae-877f-5261835e2300.html"
   },
   {
-    "id": "a253900d-ebe2-4670-b8b9-d9fad36a4b96",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "ef78bdbb-63ae-4c84-9b90-077e37161e3c",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We are cutting off Russia’s largest banks from the international financial system.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7749,11 +7749,11 @@
         ]
       }
     },
-    "url": "claims/a253900d-ebe2-4670-b8b9-d9fad36a4b96.html"
+    "url": "claims/ef78bdbb-63ae-4c84-9b90-077e37161e3c.html"
   },
   {
-    "id": "044c22ae-6b88-44e3-b39a-7c916f67d48e",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "50d49c8b-c2ec-484d-a3ae-95686f527c7e",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Preventing Russia’s central bank from defending the Russian Ruble, making Putin’s $630 Billion “war fund” worthless.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7788,11 +7788,11 @@
         ]
       }
     },
-    "url": "claims/044c22ae-6b88-44e3-b39a-7c916f67d48e.html"
+    "url": "claims/50d49c8b-c2ec-484d-a3ae-95686f527c7e.html"
   },
   {
-    "id": "04ea4a7d-b06b-4143-a669-6b60b1b4abf8",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "bef17383-2cae-47c9-b7f2-77eba8fc530d",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The US Department of Justice is assembling a dedicated task force to go after the crimes of Russian oligarchs.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7827,11 +7827,11 @@
         ]
       }
     },
-    "url": "claims/04ea4a7d-b06b-4143-a669-6b60b1b4abf8.html"
+    "url": "claims/bef17383-2cae-47c9-b7f2-77eba8fc530d.html"
   },
   {
-    "id": "c4efbc33-cbae-4c94-bb0a-8b8e027b8e33",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "007da988-6787-4040-93f9-9f3b0fcea262",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The Ruble has lost 30 percent of its value.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7866,11 +7866,11 @@
         ]
       }
     },
-    "url": "claims/c4efbc33-cbae-4c94-bb0a-8b8e027b8e33.html"
+    "url": "claims/007da988-6787-4040-93f9-9f3b0fcea262.html"
   },
   {
-    "id": "08f05f2c-d659-40e0-aa35-de2e9b043f2c",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "aa76f445-a8b0-4ee0-8c97-17c891d4d9ab",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The Russian stock market has lost 40 percent of its value and trading remains suspended.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7909,11 +7909,11 @@
         ]
       }
     },
-    "url": "claims/08f05f2c-d659-40e0-aa35-de2e9b043f2c.html"
+    "url": "claims/aa76f445-a8b0-4ee0-8c97-17c891d4d9ab.html"
   },
   {
-    "id": "cb9195b8-bf2f-429a-b38f-2d4463b00856",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "9b7c126f-faf1-4ef8-8114-ed35ae81e9b0",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We are giving more than $1 Billion in direct assistance to Ukraine.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7948,11 +7948,11 @@
         ]
       }
     },
-    "url": "claims/cb9195b8-bf2f-429a-b38f-2d4463b00856.html"
+    "url": "claims/9b7c126f-faf1-4ef8-8114-ed35ae81e9b0.html"
   },
   {
-    "id": "86e5b9a7-087c-454b-bf2d-5f8e1e6669d2",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "d486d535-9fed-4992-9b85-caa99a2dd588",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "For that purpose, we’ve mobilized American ground forces, air squadrons, and ship deployments to protect NATO countries including Poland, Romania, Latvia, Lithuania, and Estonia.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -7987,11 +7987,11 @@
         ]
       }
     },
-    "url": "claims/86e5b9a7-087c-454b-bf2d-5f8e1e6669d2.html"
+    "url": "claims/d486d535-9fed-4992-9b85-caa99a2dd588.html"
   },
   {
-    "id": "9565736f-b831-4699-97ec-c4996c07cf88",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "44a0fb7e-fc2e-4e60-912c-26b5568e8ccf",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And a proud Ukrainian people, who have known 30 years of independence, have repeatedly shown that they will not tolerate anyone who tries to take their country backwards.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8026,11 +8026,11 @@
         ]
       }
     },
-    "url": "claims/9565736f-b831-4699-97ec-c4996c07cf88.html"
+    "url": "claims/44a0fb7e-fc2e-4e60-912c-26b5568e8ccf.html"
   },
   {
-    "id": "d728c17f-4f1b-4193-8b51-b463b2ac3f81",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "e01f1d40-5fde-413f-9cd1-3b647ef5933f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Tonight, I can announce that the United States has worked with 30 other countries to release 60 million barrels of oil from reserves around the world.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8065,11 +8065,11 @@
         ]
       }
     },
-    "url": "claims/d728c17f-4f1b-4193-8b51-b463b2ac3f81.html"
+    "url": "claims/e01f1d40-5fde-413f-9cd1-3b647ef5933f.html"
   },
   {
-    "id": "e4ac1dfd-9065-49f0-aafd-19a8541fb85b",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "4fd4d104-699b-4ed6-83ba-5577f2992098",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "America will lead that effort, releasing 30 million barrels from our own Strategic Petroleum Reserve.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8104,11 +8104,11 @@
         ]
       }
     },
-    "url": "claims/e4ac1dfd-9065-49f0-aafd-19a8541fb85b.html"
+    "url": "claims/4fd4d104-699b-4ed6-83ba-5577f2992098.html"
   },
   {
-    "id": "3ad339d5-7cc6-42d1-bc20-5ac289bb776d",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "89adc22c-d942-46ed-8e95-8507fa649482",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And we see unity among the people who are gathering in cities in large crowds around the world, even in Russia, to demonstrate their support for Ukraine.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8143,11 +8143,11 @@
         ]
       }
     },
-    "url": "claims/3ad339d5-7cc6-42d1-bc20-5ac289bb776d.html"
+    "url": "claims/89adc22c-d942-46ed-8e95-8507fa649482.html"
   },
   {
-    "id": "2e4e9096-dd90-441d-9488-c71bb70f7bfd",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "ba3dd0d5-e476-468f-96a9-003a39a0a487",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "I remember when my dad had to leave our home in Scranton, Pennsylvania to find work.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8182,11 +8182,11 @@
         ]
       }
     },
-    "url": "claims/2e4e9096-dd90-441d-9488-c71bb70f7bfd.html"
+    "url": "claims/ba3dd0d5-e476-468f-96a9-003a39a0a487.html"
   },
   {
-    "id": "7d55097c-6ebe-4a3c-938d-6d195742ef2c",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "c7652b16-c850-4fed-8908-bdc679fa8ca3",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "That’s why one of the first things I did as President was fight to pass the American Rescue Plan.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8221,11 +8221,11 @@
         ]
       }
     },
-    "url": "claims/7d55097c-6ebe-4a3c-938d-6d195742ef2c.html"
+    "url": "claims/c7652b16-c850-4fed-8908-bdc679fa8ca3.html"
   },
   {
-    "id": "0103d887-6dee-46e0-adb3-6e86c38205b8",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "dedb8543-9a35-45e9-811b-1fa6fb20eed5",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "It delivered immediate economic relief for tens of millions of Americans.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8260,11 +8260,11 @@
         ]
       }
     },
-    "url": "claims/0103d887-6dee-46e0-adb3-6e86c38205b8.html"
+    "url": "claims/dedb8543-9a35-45e9-811b-1fa6fb20eed5.html"
   },
   {
-    "id": "9094d6b2-6936-4c10-8c34-2f0ca4100a7d",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "00a0a8c3-beac-4e8c-8166-dac70368ac59",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And unlike the $2-trillion tax cut passed in the previous administration that benefitted the top 1 percent of Americans, the American Rescue Plan helped working people—and left no one behind.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -8299,11 +8299,11 @@
         ]
       }
     },
-    "url": "claims/9094d6b2-6936-4c10-8c34-2f0ca4100a7d.html"
+    "url": "claims/00a0a8c3-beac-4e8c-8166-dac70368ac59.html"
   },
   {
-    "id": "ff3b3463-95e9-45ea-82b1-8b64b98e4fa5",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "065915d1-ca2a-4820-8244-c615a2862b4c",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in the history of America.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8342,11 +8342,11 @@
         ]
       }
     },
-    "url": "claims/ff3b3463-95e9-45ea-82b1-8b64b98e4fa5.html"
+    "url": "claims/065915d1-ca2a-4820-8244-c615a2862b4c.html"
   },
   {
-    "id": "e4534e22-844e-4df2-a200-71b5d56a85e9",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "41b913eb-e390-4b08-8bee-173fbf2c9276",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "For the past 40 years, we were told that if we gave tax breaks to those at the very top, the benefits would trickle down to everyone else.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8381,11 +8381,11 @@
         ]
       }
     },
-    "url": "claims/e4534e22-844e-4df2-a200-71b5d56a85e9.html"
+    "url": "claims/41b913eb-e390-4b08-8bee-173fbf2c9276.html"
   },
   {
-    "id": "eca972d1-f38a-40f7-8189-87b5335b1882",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "d9ab23ac-5a8d-40ed-883e-864e670974f1",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "But that trickle-down theory led to weaker economic growth, lower wages, bigger deficits, and the widest gap between those at the top and everyone else in nearly a century.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -8424,11 +8424,11 @@
         ]
       }
     },
-    "url": "claims/eca972d1-f38a-40f7-8189-87b5335b1882.html"
+    "url": "claims/d9ab23ac-5a8d-40ed-883e-864e670974f1.html"
   },
   {
-    "id": "a0d1953c-880b-439b-83a1-de321bc0fdb9",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "6c7a4f36-4666-4b1c-9385-1dfc15f64c10",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "America used to have the best roads, bridges, and airports on Earth.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -8467,11 +8467,11 @@
         ]
       }
     },
-    "url": "claims/a0d1953c-880b-439b-83a1-de321bc0fdb9.html"
+    "url": "claims/6c7a4f36-4666-4b1c-9385-1dfc15f64c10.html"
   },
   {
-    "id": "7a2fc4eb-fe38-4d8f-98cc-57a970c39dfa",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "f4d9996c-a90c-442e-905b-62215386ecd0",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Now our infrastructure is ranked 13th in the world.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8506,11 +8506,11 @@
         ]
       }
     },
-    "url": "claims/7a2fc4eb-fe38-4d8f-98cc-57a970c39dfa.html"
+    "url": "claims/f4d9996c-a90c-442e-905b-62215386ecd0.html"
   },
   {
-    "id": "38291db3-7483-435b-84eb-baec6502d698",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "70ea72e0-6734-425b-b3ae-5cb89f85b14e",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "That’s why it was so important to pass the Bipartisan Infrastructure Law—the most sweeping investment to rebuild America in history.",
     "consensus_verdict": "Models split",
     "consensus_strength": "none",
@@ -8544,11 +8544,11 @@
         ]
       }
     },
-    "url": "claims/38291db3-7483-435b-84eb-baec6502d698.html"
+    "url": "claims/70ea72e0-6734-425b-b3ae-5cb89f85b14e.html"
   },
   {
-    "id": "5b5055c7-59e3-4ad1-97cd-4f2eb3fd3cf6",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "34121d49-805f-4747-b942-3e0686a69da2",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "If you travel 20 miles east of Columbus, Ohio, you’ll find 1,000 empty acres of land.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -8574,11 +8574,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/5b5055c7-59e3-4ad1-97cd-4f2eb3fd3cf6.html"
+    "url": "claims/34121d49-805f-4747-b942-3e0686a69da2.html"
   },
   {
-    "id": "d8851f10-afce-4e03-8717-132652900970",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "ac261686-1c1c-44f6-bc77-5698acd0d216",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "4,000 projects have already been announced.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8613,11 +8613,11 @@
         ]
       }
     },
-    "url": "claims/d8851f10-afce-4e03-8717-132652900970.html"
+    "url": "claims/ac261686-1c1c-44f6-bc77-5698acd0d216.html"
   },
   {
-    "id": "859bc2b4-bf85-4789-8107-0ae99b04e8c4",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "668af4ee-f395-45d6-8e8a-2a8863a8369d",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And tonight, I’m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrepair.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8652,11 +8652,11 @@
         ]
       }
     },
-    "url": "claims/859bc2b4-bf85-4789-8107-0ae99b04e8c4.html"
+    "url": "claims/668af4ee-f395-45d6-8e8a-2a8863a8369d.html"
   },
   {
-    "id": "8139b191-1d11-473c-bb6c-4275b44b3377",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "81131d49-58ef-4a19-a839-50400f9587d1",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The federal government spends about $600 Billion a year to keep the country safe and secure.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8695,11 +8695,11 @@
         ]
       }
     },
-    "url": "claims/8139b191-1d11-473c-bb6c-4275b44b3377.html"
+    "url": "claims/81131d49-58ef-4a19-a839-50400f9587d1.html"
   },
   {
-    "id": "36867016-adfd-4c3d-9595-6236d4057b6a",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "d0605630-3627-4672-a1ec-475fc189440b",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "There’s been a law on the books for almost a century to make sure taxpayers’ dollars support American jobs and businesses.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8734,11 +8734,11 @@
         ]
       }
     },
-    "url": "claims/36867016-adfd-4c3d-9595-6236d4057b6a.html"
+    "url": "claims/d0605630-3627-4672-a1ec-475fc189440b.html"
   },
   {
-    "id": "6613d45b-4434-4415-bf68-143084227b3c",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "728b8f93-8567-4c8e-8c15-aeb5d7dd5ead",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "This is where Intel, the American company that helped build Silicon Valley, is going to build its $20 billion semiconductor “mega site.” Up to eight state-of-the-art factories in one place, 10,000 new good-paying jobs.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8773,11 +8773,11 @@
         ]
       }
     },
-    "url": "claims/6613d45b-4434-4415-bf68-143084227b3c.html"
+    "url": "claims/728b8f93-8567-4c8e-8c15-aeb5d7dd5ead.html"
   },
   {
-    "id": "f1b9c05f-92d8-4d03-8578-483ce4e9bbe7",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "c3a9cf1a-cd85-4d32-91b1-f4437309eb43",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "That would be one of the biggest investments in manufacturing in American history.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -8803,11 +8803,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/f1b9c05f-92d8-4d03-8578-483ce4e9bbe7.html"
+    "url": "claims/c3a9cf1a-cd85-4d32-91b1-f4437309eb43.html"
   },
   {
-    "id": "ab2145be-1dc4-4ca7-9a44-f1bdc661300d",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "936a0915-22e8-4949-87c1-dc6291d1245f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Intel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to $100 billion.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8842,11 +8842,11 @@
         ]
       }
     },
-    "url": "claims/ab2145be-1dc4-4ca7-9a44-f1bdc661300d.html"
+    "url": "claims/936a0915-22e8-4949-87c1-dc6291d1245f.html"
   },
   {
-    "id": "ed8f8879-64ef-4d4e-ab73-d01316ed0285",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "c0ce8176-8437-4f5e-9dfc-b5979b6ea16f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Companies are choosing to build new factories here, when just a few years ago, they would have built them overseas.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8881,11 +8881,11 @@
         ]
       }
     },
-    "url": "claims/ed8f8879-64ef-4d4e-ab73-d01316ed0285.html"
+    "url": "claims/c0ce8176-8437-4f5e-9dfc-b5979b6ea16f.html"
   },
   {
-    "id": "63c7a283-80d4-4c31-9d74-3af4d39d8673",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "43f27589-88e3-49f6-b0f5-0f3a5219cf59",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Ford is investing $11 billion to build electric vehicles, creating 11,000 jobs across the country.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -8924,11 +8924,11 @@
         ]
       }
     },
-    "url": "claims/63c7a283-80d4-4c31-9d74-3af4d39d8673.html"
+    "url": "claims/43f27589-88e3-49f6-b0f5-0f3a5219cf59.html"
   },
   {
-    "id": "b0d855ae-9fb6-4ae5-a38c-abc2c0c447c8",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "15e4a9bf-2cad-47cf-81e8-7cee160aedb6",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "GM is making the largest investment in its history—$7 billion to build electric vehicles, creating 4,000 jobs in Michigan.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -8963,11 +8963,11 @@
         ]
       }
     },
-    "url": "claims/b0d855ae-9fb6-4ae5-a38c-abc2c0c447c8.html"
+    "url": "claims/15e4a9bf-2cad-47cf-81e8-7cee160aedb6.html"
   },
   {
-    "id": "2da83765-a93f-4389-8ac6-454708d01233",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "cc0b8a8f-b3a0-423a-855d-0f39e1916fb7",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "All told, we created 369,000 new manufacturing jobs in America just last year.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9002,11 +9002,11 @@
         ]
       }
     },
-    "url": "claims/2da83765-a93f-4389-8ac6-454708d01233.html"
+    "url": "claims/cc0b8a8f-b3a0-423a-855d-0f39e1916fb7.html"
   },
   {
-    "id": "273825d9-deda-44a7-85db-2a509a5a3b9c",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "290d202f-009d-4cec-b73d-33e1e868589e",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "As Ohio Senator Sherrod Brown says, “It’s time to bury the label “Rust Belt.” It’s time.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9041,11 +9041,11 @@
         ]
       }
     },
-    "url": "claims/273825d9-deda-44a7-85db-2a509a5a3b9c.html"
+    "url": "claims/290d202f-009d-4cec-b73d-33e1e868589e.html"
   },
   {
-    "id": "09395b92-3ee3-498c-b90e-6a48f0f31935",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "b07c5cb3-6561-4e3f-92b4-0a99cf0294ac",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "But with all the bright spots in our economy, record job growth and higher wages, too many families are struggling to keep up with the bills.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9080,11 +9080,11 @@
         ]
       }
     },
-    "url": "claims/09395b92-3ee3-498c-b90e-6a48f0f31935.html"
+    "url": "claims/b07c5cb3-6561-4e3f-92b4-0a99cf0294ac.html"
   },
   {
-    "id": "cea1f719-cc2b-445f-bf87-695b396a425c",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "e36f96bf-b71a-42f3-8b48-4e14845a9067",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The pandemic also disrupted global supply chains.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9119,11 +9119,11 @@
         ]
       }
     },
-    "url": "claims/cea1f719-cc2b-445f-bf87-695b396a425c.html"
+    "url": "claims/e36f96bf-b71a-42f3-8b48-4e14845a9067.html"
   },
   {
-    "id": "b6de2203-2c14-4d69-a5fa-dac8120ad2a5",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "fe6c16ff-e63f-4cba-a764-c241f1559c90",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Last year, there weren’t enough semiconductors to make all the cars that people wanted to buy.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9158,11 +9158,11 @@
         ]
       }
     },
-    "url": "claims/b6de2203-2c14-4d69-a5fa-dac8120ad2a5.html"
+    "url": "claims/fe6c16ff-e63f-4cba-a764-c241f1559c90.html"
   },
   {
-    "id": "b5eef5ca-7a2e-49be-a91e-1c3ac62a7473",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "e28e7730-0db9-4fb8-ac8a-e0523dbb73c5",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And guess what, prices of automobiles went up.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9197,11 +9197,11 @@
         ]
       }
     },
-    "url": "claims/b5eef5ca-7a2e-49be-a91e-1c3ac62a7473.html"
+    "url": "claims/e28e7730-0db9-4fb8-ac8a-e0523dbb73c5.html"
   },
   {
-    "id": "b70fae2e-c313-48f5-be92-76db2781fdf5",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "1cd1cf1d-75b6-4e5e-8876-582fff7d9b39",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Top business leaders and most Americans support my plan.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9236,11 +9236,11 @@
         ]
       }
     },
-    "url": "claims/b70fae2e-c313-48f5-be92-76db2781fdf5.html"
+    "url": "claims/1cd1cf1d-75b6-4e5e-8876-582fff7d9b39.html"
   },
   {
-    "id": "8b128e34-c6a1-4c08-a1d6-adc3ca27ed28",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "e0b0d7a9-6ad9-4541-beaa-2b7bdc3c6bc8",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Many families pay up to $14,000 a year for child care per child.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -9266,11 +9266,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/8b128e34-c6a1-4c08-a1d6-adc3ca27ed28.html"
+    "url": "claims/e0b0d7a9-6ad9-4541-beaa-2b7bdc3c6bc8.html"
   },
   {
-    "id": "1c9fc510-ff34-4d3d-bf42-edbd6644daa2",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "887ae915-6a2a-4224-8d23-3becffa677f9",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "One in ten Americans has diabetes.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9305,11 +9305,11 @@
         ]
       }
     },
-    "url": "claims/1c9fc510-ff34-4d3d-bf42-edbd6644daa2.html"
+    "url": "claims/887ae915-6a2a-4224-8d23-3becffa677f9.html"
   },
   {
-    "id": "08a73ec8-db70-4923-a960-b66cc8ebb0ce",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "cf59115d-d000-4b11-ab53-9f1ba1e9c3af",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "He and his dad both have Type 1 diabetes, which means they need insulin every day.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9344,11 +9344,11 @@
         ]
       }
     },
-    "url": "claims/08a73ec8-db70-4923-a960-b66cc8ebb0ce.html"
+    "url": "claims/cf59115d-d000-4b11-ab53-9f1ba1e9c3af.html"
   },
   {
-    "id": "4702e3cf-3509-444e-976c-3c4a1274127f",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "25aa377a-6665-4455-95c3-fe944080a92f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Insulin costs about $10 a vial to make.",
     "consensus_verdict": "Misleading",
     "consensus_strength": "weak",
@@ -9387,11 +9387,11 @@
         ]
       }
     },
-    "url": "claims/4702e3cf-3509-444e-976c-3c4a1274127f.html"
+    "url": "claims/25aa377a-6665-4455-95c3-fe944080a92f.html"
   },
   {
-    "id": "116686f2-1f6a-4eb9-bb2f-04f79c98a7f2",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "594329ac-adfb-4842-ae0f-e55e937d89a3",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their health care premiums.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9426,11 +9426,11 @@
         ]
       }
     },
-    "url": "claims/116686f2-1f6a-4eb9-bb2f-04f79c98a7f2.html"
+    "url": "claims/594329ac-adfb-4842-ae0f-e55e937d89a3.html"
   },
   {
-    "id": "2dfe1293-9899-406b-bf29-88055ffe96d5",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "da25446e-8ff9-4383-bd3f-4c854d5415e4",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Just last year, 55 Fortune 500 corporations earned $40 billion in profits and paid zero dollars in federal income tax.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9469,11 +9469,11 @@
         ]
       }
     },
-    "url": "claims/2dfe1293-9899-406b-bf29-88055ffe96d5.html"
+    "url": "claims/da25446e-8ff9-4383-bd3f-4c854d5415e4.html"
   },
   {
-    "id": "0913a685-2f81-44b6-93ea-a8837b8be7b5",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "2587e606-b5b6-4cdd-9223-d6314a2c4bb7",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We got more than 130 countries to agree on a global minimum tax rate so companies can’t get out of paying their taxes at home by shipping jobs and factories overseas.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9508,11 +9508,11 @@
         ]
       }
     },
-    "url": "claims/0913a685-2f81-44b6-93ea-a8837b8be7b5.html"
+    "url": "claims/2587e606-b5b6-4cdd-9223-d6314a2c4bb7.html"
   },
   {
-    "id": "195c045f-01f2-4aaa-8c26-26abbc487f6a",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "5efabb6d-ff4d-4cc9-bd3e-23edce04dd6e",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The previous Administration not only ballooned the deficit with tax cuts for the very wealthy and corporations, it undermined the watchdogs whose job was to keep pandemic relief funds from being wasted.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9547,11 +9547,11 @@
         ]
       }
     },
-    "url": "claims/195c045f-01f2-4aaa-8c26-26abbc487f6a.html"
+    "url": "claims/5efabb6d-ff4d-4cc9-bd3e-23edce04dd6e.html"
   },
   {
-    "id": "b22e0a5e-00be-4c9b-9451-40545a97bb7f",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "49361adb-60dd-4908-8b73-38ecd3c1b93e",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We’re going after the criminals who stole billions in relief money meant for small businesses and millions of Americans.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9586,11 +9586,11 @@
         ]
       }
     },
-    "url": "claims/b22e0a5e-00be-4c9b-9451-40545a97bb7f.html"
+    "url": "claims/49361adb-60dd-4908-8b73-38ecd3c1b93e.html"
   },
   {
-    "id": "a1cf1cac-e2f8-41c4-a7de-ca822c8c6f8f",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "19e04e50-0128-42fd-8928-94da4aadebb6",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "By the end of this year, the deficit will be down to less than half what it was before I took office.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9625,11 +9625,11 @@
         ]
       }
     },
-    "url": "claims/a1cf1cac-e2f8-41c4-a7de-ca822c8c6f8f.html"
+    "url": "claims/19e04e50-0128-42fd-8928-94da4aadebb6.html"
   },
   {
-    "id": "2df7b3a3-54db-4b24-bf08-8ce57f7540e2",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "616075e9-c392-4651-8457-1ba31d1af353",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The only president ever to cut the deficit by more than one trillion dollars in a single year.",
     "consensus_verdict": "False",
     "consensus_strength": "weak",
@@ -9664,11 +9664,11 @@
         ]
       }
     },
-    "url": "claims/2df7b3a3-54db-4b24-bf08-8ce57f7540e2.html"
+    "url": "claims/616075e9-c392-4651-8457-1ba31d1af353.html"
   },
   {
-    "id": "ea0cbdbe-19d2-422e-a073-a271c975bb18",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "6aa7deb6-0aba-4de0-8ae2-42fcdba190b3",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We see it happening with ocean carriers moving goods in and out of America.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9703,11 +9703,11 @@
         ]
       }
     },
-    "url": "claims/ea0cbdbe-19d2-422e-a073-a271c975bb18.html"
+    "url": "claims/6aa7deb6-0aba-4de0-8ae2-42fcdba190b3.html"
   },
   {
-    "id": "a2c70b24-9eb5-4eaf-b6c4-1b33d8e6aaad",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "61a0896b-2415-4b10-a82c-d4e0a62a84d1",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "During the pandemic, these foreign-owned companies raised prices by as much as 1,000 percent and made record profits.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9742,11 +9742,11 @@
         ]
       }
     },
-    "url": "claims/a2c70b24-9eb5-4eaf-b6c4-1b33d8e6aaad.html"
+    "url": "claims/61a0896b-2415-4b10-a82c-d4e0a62a84d1.html"
   },
   {
-    "id": "8181e6c1-005f-4fbc-b640-a39ffa922953",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "44657720-1098-48fd-b9c5-71656bc020ea",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And as Wall Street firms take over more nursing homes, quality in those homes has gone down and costs have gone up.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9781,11 +9781,11 @@
         ]
       }
     },
-    "url": "claims/8181e6c1-005f-4fbc-b640-a39ffa922953.html"
+    "url": "claims/44657720-1098-48fd-b9c5-71656bc020ea.html"
   },
   {
-    "id": "4f95094c-5e34-4abe-8a06-ac96b5d43fb9",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "0969fabb-de26-4632-bc46-75b81fe9de27",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9820,11 +9820,11 @@
         ]
       }
     },
-    "url": "claims/4f95094c-5e34-4abe-8a06-ac96b5d43fb9.html"
+    "url": "claims/0969fabb-de26-4632-bc46-75b81fe9de27.html"
   },
   {
-    "id": "e23856f6-d160-4c24-a5a6-60b41cd9374b",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "63488039-d03e-4216-828f-64fc94e17d9b",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Just a few days ago, the Centers for Disease Control and Prevention—the CDC—issued new mask guidelines.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9859,11 +9859,11 @@
         ]
       }
     },
-    "url": "claims/e23856f6-d160-4c24-a5a6-60b41cd9374b.html"
+    "url": "claims/63488039-d03e-4216-828f-64fc94e17d9b.html"
   },
   {
-    "id": "e432be16-0abf-4f6d-9eb5-a36a674d044d",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "296889ce-640b-4f34-b701-5f772b15f537",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Under these new guidelines, most Americans in most of the country can now be mask free.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9898,11 +9898,11 @@
         ]
       }
     },
-    "url": "claims/e432be16-0abf-4f6d-9eb5-a36a674d044d.html"
+    "url": "claims/296889ce-640b-4f34-b701-5f772b15f537.html"
   },
   {
-    "id": "9292b5b0-ce92-4ca4-9c71-380948a02db6",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "485c49c9-fe2b-416a-8f3f-cc049f1c3ed3",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "If you’re vaccinated and boosted, you have the highest degree of protection.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9937,11 +9937,11 @@
         ]
       }
     },
-    "url": "claims/9292b5b0-ce92-4ca4-9c71-380948a02db6.html"
+    "url": "claims/485c49c9-fe2b-416a-8f3f-cc049f1c3ed3.html"
   },
   {
-    "id": "8828cf1b-3414-4797-89ed-cfb935ca8163",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "59798133-5b3c-47af-a93f-cdb59f1f4ab6",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "If you get COVID-19, the Pfizer pill reduces your chances of ending up in the hospital by 90 percent.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -9976,11 +9976,11 @@
         ]
       }
     },
-    "url": "claims/8828cf1b-3414-4797-89ed-cfb935ca8163.html"
+    "url": "claims/59798133-5b3c-47af-a93f-cdb59f1f4ab6.html"
   },
   {
-    "id": "8f8ee681-b231-4fb9-815c-762649d5a33a",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "798e08f3-9219-4f0d-961b-91881678700b",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We’ve ordered more of these pills than anyone in the world.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10015,11 +10015,11 @@
         ]
       }
     },
-    "url": "claims/8f8ee681-b231-4fb9-815c-762649d5a33a.html"
+    "url": "claims/798e08f3-9219-4f0d-961b-91881678700b.html"
   },
   {
-    "id": "f9a5ee43-49a4-465c-a0c8-3366f82c4a3f",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "31ba6f2b-efb7-482b-8040-768da3322ee0",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10054,11 +10054,11 @@
         ]
       }
     },
-    "url": "claims/f9a5ee43-49a4-465c-a0c8-3366f82c4a3f.html"
+    "url": "claims/31ba6f2b-efb7-482b-8040-768da3322ee0.html"
   },
   {
-    "id": "6516b77a-5915-45be-b5bd-c2c37c23689d",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "544249f6-6a43-48e8-87f9-1c83a5a8b0ed",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And we’re launching the “Test to Treat” initiative so people can get tested at a pharmacy, and if they’re positive, receive antiviral pills on the spot at no cost.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10093,11 +10093,11 @@
         ]
       }
     },
-    "url": "claims/6516b77a-5915-45be-b5bd-c2c37c23689d.html"
+    "url": "claims/544249f6-6a43-48e8-87f9-1c83a5a8b0ed.html"
   },
   {
-    "id": "e6aed0db-a5bf-4d05-b2af-06d87e9f200d",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "ac88c61f-cddd-40e9-9137-05a273488b5e",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And on testing, we have made hundreds of millions of tests available for you to order for free.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10132,11 +10132,11 @@
         ]
       }
     },
-    "url": "claims/e6aed0db-a5bf-4d05-b2af-06d87e9f200d.html"
+    "url": "claims/ac88c61f-cddd-40e9-9137-05a273488b5e.html"
   },
   {
-    "id": "e022568f-d8b8-4f34-ab36-f2eaba94d562",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "64ab761d-0a03-431b-8356-d1abccc3a3d1",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Even if you already ordered free tests tonight, I am announcing that you can order more from covidtests.gov starting next week.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10171,11 +10171,11 @@
         ]
       }
     },
-    "url": "claims/e022568f-d8b8-4f34-ab36-f2eaba94d562.html"
+    "url": "claims/64ab761d-0a03-431b-8356-d1abccc3a3d1.html"
   },
   {
-    "id": "75b8c0e7-5d9c-49ce-839f-e751cf5f1ed7",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "72ec8fae-5ed1-470e-970b-e9b0e2ad51d2",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Over the past year, we’ve gotten much better at detecting new variants.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10210,11 +10210,11 @@
         ]
       }
     },
-    "url": "claims/75b8c0e7-5d9c-49ce-839f-e751cf5f1ed7.html"
+    "url": "claims/72ec8fae-5ed1-470e-970b-e9b0e2ad51d2.html"
   },
   {
-    "id": "e1d8b242-17af-4eaf-8c3f-071c6d0adb7b",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "53e4da42-770b-4ee8-9744-c7683d41ceb9",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And with 75 percent of adult Americans fully vaccinated and hospitalizations down by 77 percent, most Americans can remove their masks, return to work, stay in the classroom, and move forward safely.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10249,11 +10249,11 @@
         ]
       }
     },
-    "url": "claims/e1d8b242-17af-4eaf-8c3f-071c6d0adb7b.html"
+    "url": "claims/53e4da42-770b-4ee8-9744-c7683d41ceb9.html"
   },
   {
-    "id": "32feeddf-5448-4a98-8117-cb0ab52b1ec1",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "37a0960c-7b2a-450e-84eb-30b425e5b309",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We achieved this because we provided free vaccines, treatments, tests, and masks.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10292,11 +10292,11 @@
         ]
       }
     },
-    "url": "claims/32feeddf-5448-4a98-8117-cb0ab52b1ec1.html"
+    "url": "claims/37a0960c-7b2a-450e-84eb-30b425e5b309.html"
   },
   {
-    "id": "882abb5c-c424-452e-b58e-9f21cd16b149",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "9ce056e8-66aa-4301-91b8-51bce8ce40a3",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10331,11 +10331,11 @@
         ]
       }
     },
-    "url": "claims/882abb5c-c424-452e-b58e-9f21cd16b149.html"
+    "url": "claims/9ce056e8-66aa-4301-91b8-51bce8ce40a3.html"
   },
   {
-    "id": "474ac7b3-3048-4537-9dce-6635f3536655",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "b1e1e1b1-33bc-461f-b124-46ec64dbf6f8",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "I recently visited the New York City Police Department days after the funerals of Officer Wilbert Mora and his partner, Officer Jason Rivera.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10370,11 +10370,11 @@
         ]
       }
     },
-    "url": "claims/474ac7b3-3048-4537-9dce-6635f3536655.html"
+    "url": "claims/b1e1e1b1-33bc-461f-b124-46ec64dbf6f8.html"
   },
   {
-    "id": "eff37916-86a8-44c5-9dcd-94ff9bccbc09",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "4bba5339-c014-4a87-b338-084aed8c6ff5",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Officer Mora was 27 years old.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10409,11 +10409,11 @@
         ]
       }
     },
-    "url": "claims/eff37916-86a8-44c5-9dcd-94ff9bccbc09.html"
+    "url": "claims/4bba5339-c014-4a87-b338-084aed8c6ff5.html"
   },
   {
-    "id": "962feecd-ce7b-4104-b7bb-e5b64dad6262",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "0cbafc97-6dea-488b-a809-a070e85f13ed",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Officer Rivera was 22.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10448,11 +10448,11 @@
         ]
       }
     },
-    "url": "claims/962feecd-ce7b-4104-b7bb-e5b64dad6262.html"
+    "url": "claims/0cbafc97-6dea-488b-a809-a070e85f13ed.html"
   },
   {
-    "id": "e584c790-7c93-49ab-8524-f4eda44d5ff8",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "8653ce7c-8b5b-41de-8f45-dd6a750c2968",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "That’s why the Justice Department required body cameras, banned chokeholds, and restricted no-knock warrants for its officers.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10487,11 +10487,11 @@
         ]
       }
     },
-    "url": "claims/e584c790-7c93-49ab-8524-f4eda44d5ff8.html"
+    "url": "claims/8653ce7c-8b5b-41de-8f45-dd6a750c2968.html"
   },
   {
-    "id": "255b4e5f-a970-4b6f-9a65-8b76cde4d4c2",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "861baa46-2815-41a8-8551-e958e87869c3",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "That’s why the American Rescue Plan provided $350 billion that cities, states, and counties can use to hire more police and invest in proven strategies like community violence interruption—trusted messengers breaking the cycle of violence and trauma and giving young people hope.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10526,11 +10526,11 @@
         ]
       }
     },
-    "url": "claims/255b4e5f-a970-4b6f-9a65-8b76cde4d4c2.html"
+    "url": "claims/861baa46-2815-41a8-8551-e958e87869c3.html"
   },
   {
-    "id": "2ee08d37-ee99-48fd-becc-f63dda1f707b",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "b9cf8394-19d3-45f1-b316-bb8b1c6d50d4",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "In state after state, new laws have been passed, not only to suppress the vote, but to subvert entire elections.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10565,11 +10565,11 @@
         ]
       }
     },
-    "url": "claims/2ee08d37-ee99-48fd-becc-f63dda1f707b.html"
+    "url": "claims/b9cf8394-19d3-45f1-b316-bb8b1c6d50d4.html"
   },
   {
-    "id": "71320f85-b45d-4626-a4d4-f78f2cf2e9cc",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "bf10e7c2-675e-49ec-adfd-b0f64a6523c2",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Tonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10604,11 +10604,11 @@
         ]
       }
     },
-    "url": "claims/71320f85-b45d-4626-a4d4-f78f2cf2e9cc.html"
+    "url": "claims/bf10e7c2-675e-49ec-adfd-b0f64a6523c2.html"
   },
   {
-    "id": "9526fa3d-a2ce-4e9a-a02e-413fcf81a49c",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "473ca5d2-df36-46a7-b80d-6dbe1d2f6adf",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10643,11 +10643,11 @@
         ]
       }
     },
-    "url": "claims/9526fa3d-a2ce-4e9a-a02e-413fcf81a49c.html"
+    "url": "claims/473ca5d2-df36-46a7-b80d-6dbe1d2f6adf.html"
   },
   {
-    "id": "dd4b0c4a-f8ef-4069-b5ff-d9a9d25cc61a",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "bc0f1318-5aad-427b-937d-205573866a4f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "That’s why immigration reform is supported by everyone from labor unions to religious leaders to the US Chamber of Commerce.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "none",
@@ -10673,11 +10673,11 @@
       "crm114_final": "",
       "panel_by_role": {}
     },
-    "url": "claims/dd4b0c4a-f8ef-4069-b5ff-d9a9d25cc61a.html"
+    "url": "claims/bc0f1318-5aad-427b-937d-205573866a4f.html"
   },
   {
-    "id": "333c6a6e-4018-47b8-8b0c-fe196a228f05",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "0eb66e6c-7ad1-4a21-976a-62eb3d04b5cd",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10712,11 +10712,11 @@
         ]
       }
     },
-    "url": "claims/333c6a6e-4018-47b8-8b0c-fe196a228f05.html"
+    "url": "claims/0eb66e6c-7ad1-4a21-976a-62eb3d04b5cd.html"
   },
   {
-    "id": "4d050874-24b3-4da5-90de-f3383119d274",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "e8e7eb32-789d-4a31-a111-8811f7146463",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "At our border, we’ve installed new technology like cutting-edge scanners to better detect drug smuggling.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10751,11 +10751,11 @@
         ]
       }
     },
-    "url": "claims/4d050874-24b3-4da5-90de-f3383119d274.html"
+    "url": "claims/e8e7eb32-789d-4a31-a111-8811f7146463.html"
   },
   {
-    "id": "4e01db31-0ce8-4421-9440-3852d1a963db",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "0f3be7ef-0328-4929-b629-e5e70c7d029b",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.",
     "consensus_verdict": "Models split",
     "consensus_strength": "none",
@@ -10789,11 +10789,11 @@
         ]
       }
     },
-    "url": "claims/4e01db31-0ce8-4421-9440-3852d1a963db.html"
+    "url": "claims/0f3be7ef-0328-4929-b629-e5e70c7d029b.html"
   },
   {
-    "id": "81e39051-8132-48c1-a300-97457df70adc",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "0113870a-e775-44b7-aaea-bcdd7df9d0e3",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "We’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10828,11 +10828,11 @@
         ]
       }
     },
-    "url": "claims/81e39051-8132-48c1-a300-97457df70adc.html"
+    "url": "claims/0113870a-e775-44b7-aaea-bcdd7df9d0e3.html"
   },
   {
-    "id": "9fa8fd23-72c5-4800-9951-3b95dfed821e",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "23766f8c-a7d9-4662-bef2-e999317dc552",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The constitutional right affirmed in Roe v.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10867,11 +10867,11 @@
         ]
       }
     },
-    "url": "claims/9fa8fd23-72c5-4800-9951-3b95dfed821e.html"
+    "url": "claims/23766f8c-a7d9-4662-bef2-e999317dc552.html"
   },
   {
-    "id": "9c83ab2b-ec9b-4b90-9e48-bdcc25782265",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "50f14016-57bd-4093-83cb-f250985901dd",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Wade—standing precedent for half a century—is under attack as never before.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10906,11 +10906,11 @@
         ]
       }
     },
-    "url": "claims/9c83ab2b-ec9b-4b90-9e48-bdcc25782265.html"
+    "url": "claims/50f14016-57bd-4093-83cb-f250985901dd.html"
   },
   {
-    "id": "e647ae6a-5299-4f0b-8dfd-15d10588d833",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "1aab35e2-42ee-4210-8024-705ec039dbe5",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "I signed 80 bipartisan bills into law last year.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10949,11 +10949,11 @@
         ]
       }
     },
-    "url": "claims/e647ae6a-5299-4f0b-8dfd-15d10588d833.html"
+    "url": "claims/1aab35e2-42ee-4210-8024-705ec039dbe5.html"
   },
   {
-    "id": "ac3857cd-6379-4f6b-a9f7-131a0e4f3cbe",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "574761cc-a044-4082-be93-1173cbf16b65",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "And soon, we’ll strengthen the Violence Against Women Act that I first wrote three decades ago.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -10988,11 +10988,11 @@
         ]
       }
     },
-    "url": "claims/ac3857cd-6379-4f6b-a9f7-131a0e4f3cbe.html"
+    "url": "claims/574761cc-a044-4082-be93-1173cbf16b65.html"
   },
   {
-    "id": "e7c8aac8-89b7-4e0b-99c0-f32b1ff1a6c4",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "dd15db6f-bd10-47f0-9077-208bea48d81d",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "I believe in recovery, and I celebrate the 23 million Americans in recovery.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11027,11 +11027,11 @@
         ]
       }
     },
-    "url": "claims/e7c8aac8-89b7-4e0b-99c0-f32b1ff1a6c4.html"
+    "url": "claims/dd15db6f-bd10-47f0-9077-208bea48d81d.html"
   },
   {
-    "id": "4f6c78b8-114b-421d-8e42-913ed4725584",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "8806b9f0-3608-4140-917c-899d832456a0",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The American Rescue Plan gave schools money to hire teachers and help students make up for lost learning.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11066,11 +11066,11 @@
         ]
       }
     },
-    "url": "claims/4f6c78b8-114b-421d-8e42-913ed4725584.html"
+    "url": "claims/8806b9f0-3608-4140-917c-899d832456a0.html"
   },
   {
-    "id": "a802b1d4-a65e-4e4a-9dfb-65a43ee79587",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "1fceac94-1eae-4e38-b995-9a3687aa7117",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Children were also struggling before the pandemic.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11105,11 +11105,11 @@
         ]
       }
     },
-    "url": "claims/a802b1d4-a65e-4e4a-9dfb-65a43ee79587.html"
+    "url": "claims/1fceac94-1eae-4e38-b995-9a3687aa7117.html"
   },
   {
-    "id": "72d09262-de2b-4021-a10b-31e0a71206db",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "64ae4906-0f6a-410a-a354-3ece57fc50a4",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "My administration is providing assistance with job training and housing, and now helping lower-income veterans get VA care debt-free.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11144,11 +11144,11 @@
         ]
       }
     },
-    "url": "claims/72d09262-de2b-4021-a10b-31e0a71206db.html"
+    "url": "claims/64ae4906-0f6a-410a-a354-3ece57fc50a4.html"
   },
   {
-    "id": "2c6bdf3e-b550-4c3b-99a2-c6d602f5211a",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "ed18ca83-c002-4b03-9e94-7bbe7a8261d6",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "One was stationed at bases and breathing in toxic smoke from “burn pits” that incinerated wastes of war—medical and hazard material, jet fuel, and more.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11183,11 +11183,11 @@
         ]
       }
     },
-    "url": "claims/2c6bdf3e-b550-4c3b-99a2-c6d602f5211a.html"
+    "url": "claims/ed18ca83-c002-4b03-9e94-7bbe7a8261d6.html"
   },
   {
-    "id": "cdbe00f5-1265-453c-8f35-88dc1ee8c603",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "8b1aa3f7-74ec-4aa5-ad6a-0a0cf875a95e",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "One of those soldiers was my son Major Beau Biden.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11222,11 +11222,11 @@
         ]
       }
     },
-    "url": "claims/cdbe00f5-1265-453c-8f35-88dc1ee8c603.html"
+    "url": "claims/8b1aa3f7-74ec-4aa5-ad6a-0a0cf875a95e.html"
   },
   {
-    "id": "366709d1-ed30-4c7c-8bfa-25d67aa40036",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "203154ee-3829-4052-921c-760ff88665bf",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Combat medic in Kosovo and Iraq.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11261,11 +11261,11 @@
         ]
       }
     },
-    "url": "claims/366709d1-ed30-4c7c-8bfa-25d67aa40036.html"
+    "url": "claims/203154ee-3829-4052-921c-760ff88665bf.html"
   },
   {
-    "id": "696df4cf-7d6a-46b5-adb2-60ff003df0ca",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "189f2e19-ff74-4493-a3cf-cf97f2db3d9f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Stationed near Baghdad, just yards from burn pits the size of football fields.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11300,11 +11300,11 @@
         ]
       }
     },
-    "url": "claims/696df4cf-7d6a-46b5-adb2-60ff003df0ca.html"
+    "url": "claims/189f2e19-ff74-4493-a3cf-cf97f2db3d9f.html"
   },
   {
-    "id": "00de7ed9-4642-49a0-8d2e-02e1d56ea4f5",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "7639b332-6f1e-4caf-a274-b82846a3e58f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "He loved building Legos with their daughter.",
     "consensus_verdict": "Unverifiable",
     "consensus_strength": "weak",
@@ -11343,11 +11343,11 @@
         ]
       }
     },
-    "url": "claims/00de7ed9-4642-49a0-8d2e-02e1d56ea4f5.html"
+    "url": "claims/7639b332-6f1e-4caf-a274-b82846a3e58f.html"
   },
   {
-    "id": "ad1e16ba-d1ef-42f2-971f-8d0fa644e167",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "f1fc37a9-9c3e-49da-93d3-6de5cbf7bf03",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body.",
     "consensus_verdict": "Models split",
     "consensus_strength": "none",
@@ -11381,11 +11381,11 @@
         ]
       }
     },
-    "url": "claims/ad1e16ba-d1ef-42f2-971f-8d0fa644e167.html"
+    "url": "claims/f1fc37a9-9c3e-49da-93d3-6de5cbf7bf03.html"
   },
   {
-    "id": "96cb1843-ed74-4114-aaa3-fda7a867823f",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "d9a3ed03-770e-492c-9874-2f0c7ce0b580",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "The VA is pioneering new ways of linking toxic exposures to diseases, already helping more veterans get benefits.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11420,11 +11420,11 @@
         ]
       }
     },
-    "url": "claims/96cb1843-ed74-4114-aaa3-fda7a867823f.html"
+    "url": "claims/d9a3ed03-770e-492c-9874-2f0c7ce0b580.html"
   },
   {
-    "id": "43cf0720-4069-4973-977d-03a5d988f8e9",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "81405880-0618-490d-8f6b-fee7736d4103",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Cancer is the #2 cause of death in America—second only to heart disease.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11459,11 +11459,11 @@
         ]
       }
     },
-    "url": "claims/43cf0720-4069-4973-977d-03a5d988f8e9.html"
+    "url": "claims/81405880-0618-490d-8f6b-fee7736d4103.html"
   },
   {
-    "id": "516bebbb-0b0e-4241-a4ba-72879464aa63",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "666faedd-52f3-42d1-aedb-68b8e971e8d4",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "Last month, I announced our plan to supercharge the Cancer Moonshot that President Obama asked me to lead six years ago.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11498,11 +11498,11 @@
         ]
       }
     },
-    "url": "claims/516bebbb-0b0e-4241-a4ba-72879464aa63.html"
+    "url": "claims/666faedd-52f3-42d1-aedb-68b8e971e8d4.html"
   },
   {
-    "id": "1f40c700-2a34-4c43-aa91-152550ac49de",
-    "report_id": "a1ecabda-5e43-4ec9-bd07-4b531b8d0e77",
+    "id": "8dc83292-7c7e-4a8f-b659-590c5d67da2f",
+    "report_id": "fd633a7f-8885-4362-96e4-0b409812b024",
     "claim_text": "It’s based on DARPA—the Defense Department project that led to the Internet, GPS, and so much more.",
     "consensus_verdict": "True",
     "consensus_strength": "weak",
@@ -11537,6 +11537,6 @@
         ]
       }
     },
-    "url": "claims/1f40c700-2a34-4c43-aa91-152550ac49de.html"
+    "url": "claims/8dc83292-7c7e-4a8f-b659-590c5d67da2f.html"
   }
 ]

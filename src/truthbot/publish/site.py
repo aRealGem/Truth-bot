@@ -561,9 +561,9 @@ def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
     share of DECIDED claims, e.g. '56% True' — the same families and the same
     decided-claims denominator the bands used (Unverifiable / Models split /
     No verdict are abstentions, out of the denominator, and disclosed by the
-    ratio text). CSS keeps the old color bands as color ONLY: true-share
-    ≥ 55% greens, ≤ 45% reds, the middle stays neutral — the words never
-    grade, the number speaks.
+    ratio text). Color bands (jackie, 2026-07-25): true-share > 75% green,
+    50-75% inclusive yellow (vt-mid), under 50% red — the words never grade,
+    the number speaks.
     A report with claims but zero decided verdicts headlines 'Unverifiable'.
     """
     total = sum(dist.values())
@@ -577,12 +577,12 @@ def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
     share = t / decided
     label = f"{round(100 * share)}% True"
     ratio = f"{t} of {decided} decided claims rated True"
-    if share >= 0.55:
+    if share > 0.75:
         css = f"vt-{_verdict_css('True')}"
-    elif share <= 0.45:
-        css = f"vt-{_verdict_css('False')}"
+    elif share >= 0.50:
+        css = "vt-mid"
     else:
-        css = "neutral"
+        css = f"vt-{_verdict_css('False')}"
     return label, css, ratio
 
 
@@ -1248,8 +1248,8 @@ def _verdict_panel(site_report) -> str:
     # the independent truthy-score rollup. Since 2026-07-25 the headline TEXT
     # is a percentage ("56% True" — every label ends with "True"), so the
     # mood keys off the headline's color class, which carries the lean:
-    # ≥55% true-share greens (happy), ≤45% reds (sad), the middle is iffy —
-    # as are Unverifiable / no-claims headlines (both "neutral").
+    # >75% true-share greens (happy), <50% reds (sad), the 50-75% yellow
+    # band (vt-mid) is iffy — as are Unverifiable / no-claims ("neutral").
     if hcls_strict == "vt-true":
         mood = "happy"
     elif hcls_strict == "vt-false":
@@ -2782,6 +2782,8 @@ CSS = """\
      sits between misleading (orange) and false (red). */
   --v-truthy:       #84cc16;
   --v-falsey:       #ea580c;
+  /* percent-true headline mid band (50-75% inclusive, jackie 2026-07-25) */
+  --v-mid:          #ca8a04;
   /* Models split — panel deadlock. Its own cool slate, distinct from the
      warm-gray Unverifiable, so the aggregate bars can show the split bucket
      as a real segment (T0.2) rather than silently dropping it. */
@@ -4314,6 +4316,7 @@ hr.rule-light {
 .vt-exaggerated  { color: var(--v-exaggerated); }
 .vt-misleading   { color: var(--v-misleading); }
 .vt-false        { color: var(--v-false); }
+.vt-mid          { color: var(--v-mid); }
 .vt-unverifiable { color: var(--v-unverifiable); }
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }

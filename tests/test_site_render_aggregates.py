@@ -249,13 +249,13 @@ def test_headline_verdict_coarse_family_aggregation() -> None:
     )
     assert label == "40% True"
 
-    # Genuine coin-flip → 50% True, neutral color — the number says it all.
+    # Genuine coin-flip → 50% True, yellow — the number says it all.
     label, cls = _headline_verdict_coarse(
         {"True": 0, "Truthy": 2, "Unverifiable": 0, "Falsey": 2, "False": 0,
          "Models split": 0}
     )
     assert label == "50% True"
-    assert cls == "neutral"
+    assert cls == "vt-mid"
 
 
 def test_headline_verdict_coarse_dominant_models_split_is_abstention() -> None:
@@ -358,20 +358,22 @@ def test_models_engaged_counts_panel_seats_not_reconciled_cards() -> None:
 def test_binary_verdict_percent_true_headline() -> None:
     """2026-07-25 (jackie): both lenses show the percent-true number — same
     families, same decided-claims denominator, abstentions disclosed via the
-    ratio. Color (not words) carries the lean: ≥55% green, ≤45% red, middle
-    neutral."""
+    ratio. Color (not words) carries the lean: >75% green, 50-75% inclusive
+    yellow (vt-mid), under 50% red."""
     from truthbot.publish.site import _binary_verdict
     label, cls, ratio = _binary_verdict({"True": 3, "Falsey": 1, "Unverifiable": 4})
     assert label == "75% True" and ratio == "3 of 4 decided claims rated True"
-    assert cls == "vt-true"
+    assert cls == "vt-mid"                             # 75% is yellow's top edge
+    label, cls, _r = _binary_verdict({"True": 19, "Falsey": 1})    # 95%
+    assert label == "95% True" and cls == "vt-true"
     label, cls, _r = _binary_verdict({"True": 1, "Misleading": 3})
     assert label == "25% True" and cls == "vt-false"
     label, cls, _r = _binary_verdict({"True": 2, "Misleading": 2})
-    assert label == "50% True" and cls == "neutral"    # exact tie, neutral color
+    assert label == "50% True" and cls == "vt-mid"     # yellow's bottom edge
     label, cls, _r = _binary_verdict({"True": 10, "Falsey": 9})    # 52.6%
-    assert label == "53% True" and cls == "neutral"    # coin-flip color band
-    label, cls, _r = _binary_verdict({"True": 11, "Falsey": 9})    # 55%
-    assert label == "55% True" and cls == "vt-true"    # color band edge inclusive
+    assert label == "53% True" and cls == "vt-mid"
+    label, cls, _r = _binary_verdict({"True": 9, "Falsey": 10})    # 47.4%
+    assert label == "47% True" and cls == "vt-false"   # under 50% is red
     label, _cls, _r = _binary_verdict({"Unverifiable": 3, "Models split": 1})
     assert label == "Unverifiable"
     label, _cls, _r = _binary_verdict({})

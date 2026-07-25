@@ -58,6 +58,8 @@
      sits between misleading (orange) and false (red). */
   --v-truthy:       #84cc16;
   --v-falsey:       #ea580c;
+  /* percent-true headline mid band (50-75% inclusive, jackie 2026-07-25) */
+  --v-mid:          #ca8a04;
   /* Models split — panel deadlock. Its own cool slate, distinct from the
      warm-gray Unverifiable, so the aggregate bars can show the split bucket
      as a real segment (T0.2) rather than silently dropping it. */
@@ -1590,6 +1592,7 @@ hr.rule-light {
 .vt-exaggerated  { color: var(--v-exaggerated); }
 .vt-misleading   { color: var(--v-misleading); }
 .vt-false        { color: var(--v-false); }
+.vt-mid          { color: var(--v-mid); }
 .vt-unverifiable { color: var(--v-unverifiable); }
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }
