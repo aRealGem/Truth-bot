@@ -31,21 +31,27 @@ def test_acceptance_fixture_f10_f11_reproduced_from_committed_site() -> None:
     by_speaker = {r["speaker"]: r["id"] for r in reports}
     ins = compute_seat_insights(claims)
 
+    # Fixture RE-PINNED 2026-07-25 to the Phase 3 corpus (prod roster
+    # opus-worker/grok-4.3/gpt-5.5 + shared_pack_v2) after the re-adjudicated
+    # site landed. The original 2026-07-21 pins reproduced the audit's F10/F11
+    # numbers on the dev-roster corpus (trump n=178, critic-False 0.500,
+    # escalation 95/178) — preserved in git history; the guard's job is
+    # unchanged: committed site data and insights math may never drift apart
+    # silently.
     trump = ins[by_speaker["Donald Trump"]]
-    assert trump.n_claims == 178
-    assert trump.seats["critic"].rate("False") == pytest.approx(0.500, abs=1e-3)
-    assert trump.escalation_rate == pytest.approx(95 / 178, abs=1e-4)
-    assert trump.arbiter_sided["proposer"] == 61
-    assert trump.arbiter_sided["critic"] == 20
-    assert trump.overrides == {"Misleading→False": 7, "False→Misleading": 4,
-                               "Disagreement→Misleading": 5}
+    assert trump.n_claims == 183
+    assert trump.seats["critic"].rate("False") == pytest.approx(0.345, abs=1e-3)
+    assert trump.escalation_rate == pytest.approx(41 / 183, abs=1e-4)
+    assert trump.arbiter_sided["proposer"] == 25
+    assert trump.arbiter_sided["critic"] == 15
+    assert trump.overrides == {"False→Misleading": 7, "Misleading→False": 1}
 
     biden = ins[by_speaker["Joe Biden"]]
     assert biden.n_claims == 111
-    assert biden.seats["critic"].rate("False") == pytest.approx(0.135, abs=1e-3)
-    assert biden.escalation_rate == pytest.approx(24 / 111, abs=1e-4)
-    assert biden.arbiter_sided["proposer"] == 14
-    assert biden.overrides == {"Misleading→False": 1}
+    assert biden.seats["critic"].rate("False") == pytest.approx(0.075, abs=1e-3)
+    assert biden.escalation_rate == pytest.approx(14 / 111, abs=1e-4)
+    assert biden.arbiter_sided["proposer"] == 7
+    assert biden.overrides == {}
 
 
 def test_insights_v2_page_renders_seats_no_hydramind() -> None:
@@ -57,8 +63,8 @@ def test_insights_v2_page_renders_seats_no_hydramind() -> None:
     assert "Hydramind" not in html
     assert "Proposer" in html and "Critic" in html and "Arbiter" in html
     assert "Severity-Classifier stage-2 overrides" in html
-    # F11 escalation figures render
-    assert "53.4%" in html and "21.6%" in html
+    # F11 escalation figures render (Phase 3 corpus: 41/183 and 14/111)
+    assert "22.4%" in html and "12.6%" in html
 
 
 def test_publisher_writes_v2_page_when_seat_data_exists(tmp_path: Path) -> None:

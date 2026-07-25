@@ -553,17 +553,17 @@ _ADVERSE_FAMILY: frozenset[str] = frozenset(
 
 
 def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """Family-aggregated GRADED headline (the Strict lens; 2026-07-19 lens
-    semantics: Strict = graded bands, Lenient = the simple Truthy/Falsey lean
-    from ``_binary_verdict`` — same numbers, two presentations).
+    """Percent-true headline (jackie, 2026-07-25: "just show percent true" —
+    supersedes the 2026-07-19 graded bands, whose 'Mostly True' read as an
+    endorsement at 55% truthiness).
 
-    Returns (label_text, css_class, ratio_text). Bands over the dominant
-    family's share s of decided claims — s ∈ [0.5, 1] by construction
-    (two families partition decided), and the bands partition that domain,
-    so they are mutually exclusive and exhaustive:
-      s ∈ [0.70, 1.00]  → 'Largely True/False'
-      s ∈ [0.55, 0.70)  → 'Mostly True/False'
-      s ∈ [0.50, 0.55)  → 'Mixed verdict'   (incl. exact ties, s = 0.5)
+    Returns (label_text, css_class, ratio_text). The label is the TRUE-family
+    share of DECIDED claims, e.g. '56% True' — the same families and the same
+    decided-claims denominator the bands used (Unverifiable / Models split /
+    No verdict are abstentions, out of the denominator, and disclosed by the
+    ratio text). CSS keeps the old color bands as color ONLY: true-share
+    ≥ 55% greens, ≤ 45% reds, the middle stays neutral — the words never
+    grade, the number speaks.
     A report with claims but zero decided verdicts headlines 'Unverifiable'.
     """
     total = sum(dist.values())
@@ -574,49 +574,24 @@ def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
     decided = t + f
     if decided == 0:
         return "Unverifiable", "neutral", f"{total} claims checked"
-    if t >= f:
-        fam_count, word, css = t, "True", _verdict_css("True")
-    else:
-        fam_count, word, css = f, "False", _verdict_css("False")
-    share = fam_count / decided
-    lean = "true-leaning" if word == "True" else "false-leaning"
-    ratio = f"{fam_count} of {decided} decided claims {lean}"
-    if share >= 0.70:
-        return f"Largely {word}", f"vt-{css}", ratio
+    share = t / decided
+    label = f"{round(100 * share)}% True"
+    ratio = f"{t} of {decided} decided claims rated True"
     if share >= 0.55:
-        return f"Mostly {word}", f"vt-{css}", ratio
-    return "Mixed verdict", "neutral", ratio
+        css = f"vt-{_verdict_css('True')}"
+    elif share <= 0.45:
+        css = f"vt-{_verdict_css('False')}"
+    else:
+        css = "neutral"
+    return label, css, ratio
 
 
 def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """The SIMPLE headline (the Lenient lens): overall Truthy/Falsey lean,
-    with 'Mixed verdict' for genuine coin-flips (jackie, 2026-07-19).
-
-    Uses the SAME Mixed band as the graded lens — dominant family share
-    s < 0.55 → 'Mixed verdict' — so the two lenses always agree on when a
-    report is a toss-up; above the band the dominant family reads Truthy or
-    Falsey. Bands partition s ∈ [0.5, 1]: mutually exclusive and exhaustive.
-    Same families and same decided-claims denominator as ``_family_verdict``
-    — two presentations of one computation, never two answers.
-    Zero decided → 'Unverifiable'."""
-    total = sum(dist.values())
-    if total == 0:
-        return "No claims evaluated", "neutral", "0 claims checked"
-    t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
-    f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
-    decided = t + f
-    if decided == 0:
-        return "Unverifiable", "neutral", f"{total} claims checked"
-    share = max(t, f) / decided
-    if share < 0.55:
-        lean = "true" if t >= f else "false"
-        return ("Mixed verdict", "neutral",
-                f"{max(t, f)} of {decided} decided claims {lean}-leaning")
-    if t > f:
-        return ("Truthy", f"vt-{_verdict_css('Truthy')}",
-                f"{t} of {decided} decided claims true-leaning")
-    return ("Falsey", f"vt-{_verdict_css('Falsey')}",
-            f"{f} of {decided} decided claims false-leaning")
+    """Both lenses now show the same percent-true headline (jackie,
+    2026-07-25) — the Strict/Lenient distinction lives in the graded vs
+    coarse DISTRIBUTIONS below the headline, not in the headline wording.
+    One computation, one presentation: delegates to ``_family_verdict``."""
+    return _family_verdict(dist)
 
 
 def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
@@ -1269,15 +1244,17 @@ def _verdict_panel(site_report) -> str:
     headline_lenient, hcls_lenient, ratio_text_lenient = _binary_verdict(dist_lenient)
     headline_strict,  hcls_strict,  ratio_text_strict  = _family_verdict(dist_strict)
 
-    # Mascot mood derives from the published headline band (remediation T0.3),
-    # not the independent truthy-score rollup — the old rollup mapped
-    # Misleading/Unverifiable to HALF_TRUE and could say "Mixed signals" over
-    # a Largely False headline.
-    if headline_strict.endswith("True"):
+    # Mascot mood derives from the published headline (remediation T0.3), not
+    # the independent truthy-score rollup. Since 2026-07-25 the headline TEXT
+    # is a percentage ("56% True" — every label ends with "True"), so the
+    # mood keys off the headline's color class, which carries the lean:
+    # ≥55% true-share greens (happy), ≤45% reds (sad), the middle is iffy —
+    # as are Unverifiable / no-claims headlines (both "neutral").
+    if hcls_strict == "vt-true":
         mood = "happy"
-    elif headline_strict.endswith("False"):
+    elif hcls_strict == "vt-false":
         mood = "sad"
-    else:  # Mixed verdict / Unverifiable / no claims
+    else:  # neutral: coin-flip percentage / Unverifiable / no claims
         mood = "iffy"
     state_map = {"happy": "true", "iffy": "iffy", "sad": "lie"}
     svg_state = "state-" + state_map.get(mood, "iffy")
