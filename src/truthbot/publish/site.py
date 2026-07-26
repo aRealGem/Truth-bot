@@ -553,17 +553,17 @@ _ADVERSE_FAMILY: frozenset[str] = frozenset(
 
 
 def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """Family-aggregated GRADED headline (the Strict lens; 2026-07-19 lens
-    semantics: Strict = graded bands, Lenient = the simple Truthy/Falsey lean
-    from ``_binary_verdict`` — same numbers, two presentations).
+    """Percent-true headline (jackie, 2026-07-25: "just show percent true" —
+    supersedes the 2026-07-19 graded bands, whose 'Mostly True' read as an
+    endorsement at 55% truthiness).
 
-    Returns (label_text, css_class, ratio_text). Bands over the dominant
-    family's share s of decided claims — s ∈ [0.5, 1] by construction
-    (two families partition decided), and the bands partition that domain,
-    so they are mutually exclusive and exhaustive:
-      s ∈ [0.70, 1.00]  → 'Largely True/False'
-      s ∈ [0.55, 0.70)  → 'Mostly True/False'
-      s ∈ [0.50, 0.55)  → 'Mixed verdict'   (incl. exact ties, s = 0.5)
+    Returns (label_text, css_class, ratio_text). The label is the TRUE-family
+    share of DECIDED claims, e.g. '56% True' — the same families and the same
+    decided-claims denominator the bands used (Unverifiable / Models split /
+    No verdict are abstentions, out of the denominator, and disclosed by the
+    ratio text). Color bands (jackie, 2026-07-25): true-share > 75% green,
+    50-75% inclusive yellow (vt-mid), under 50% red — the words never grade,
+    the number speaks.
     A report with claims but zero decided verdicts headlines 'Unverifiable'.
     """
     total = sum(dist.values())
@@ -574,49 +574,24 @@ def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
     decided = t + f
     if decided == 0:
         return "Unverifiable", "neutral", f"{total} claims checked"
-    if t >= f:
-        fam_count, word, css = t, "True", _verdict_css("True")
+    share = t / decided
+    label = f"{round(100 * share)}% True"
+    ratio = f"{t} of {decided} decided claims rated True"
+    if share > 0.75:
+        css = f"vt-{_verdict_css('True')}"
+    elif share >= 0.50:
+        css = "vt-mid"
     else:
-        fam_count, word, css = f, "False", _verdict_css("False")
-    share = fam_count / decided
-    lean = "true-leaning" if word == "True" else "false-leaning"
-    ratio = f"{fam_count} of {decided} decided claims {lean}"
-    if share >= 0.70:
-        return f"Largely {word}", f"vt-{css}", ratio
-    if share >= 0.55:
-        return f"Mostly {word}", f"vt-{css}", ratio
-    return "Mixed verdict", "neutral", ratio
+        css = f"vt-{_verdict_css('False')}"
+    return label, css, ratio
 
 
 def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """The SIMPLE headline (the Lenient lens): overall Truthy/Falsey lean,
-    with 'Mixed verdict' for genuine coin-flips (jackie, 2026-07-19).
-
-    Uses the SAME Mixed band as the graded lens — dominant family share
-    s < 0.55 → 'Mixed verdict' — so the two lenses always agree on when a
-    report is a toss-up; above the band the dominant family reads Truthy or
-    Falsey. Bands partition s ∈ [0.5, 1]: mutually exclusive and exhaustive.
-    Same families and same decided-claims denominator as ``_family_verdict``
-    — two presentations of one computation, never two answers.
-    Zero decided → 'Unverifiable'."""
-    total = sum(dist.values())
-    if total == 0:
-        return "No claims evaluated", "neutral", "0 claims checked"
-    t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
-    f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
-    decided = t + f
-    if decided == 0:
-        return "Unverifiable", "neutral", f"{total} claims checked"
-    share = max(t, f) / decided
-    if share < 0.55:
-        lean = "true" if t >= f else "false"
-        return ("Mixed verdict", "neutral",
-                f"{max(t, f)} of {decided} decided claims {lean}-leaning")
-    if t > f:
-        return ("Truthy", f"vt-{_verdict_css('Truthy')}",
-                f"{t} of {decided} decided claims true-leaning")
-    return ("Falsey", f"vt-{_verdict_css('Falsey')}",
-            f"{f} of {decided} decided claims false-leaning")
+    """Both lenses now show the same percent-true headline (jackie,
+    2026-07-25) — the Strict/Lenient distinction lives in the graded vs
+    coarse DISTRIBUTIONS below the headline, not in the headline wording.
+    One computation, one presentation: delegates to ``_family_verdict``."""
+    return _family_verdict(dist)
 
 
 def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
@@ -1269,15 +1244,17 @@ def _verdict_panel(site_report) -> str:
     headline_lenient, hcls_lenient, ratio_text_lenient = _binary_verdict(dist_lenient)
     headline_strict,  hcls_strict,  ratio_text_strict  = _family_verdict(dist_strict)
 
-    # Mascot mood derives from the published headline band (remediation T0.3),
-    # not the independent truthy-score rollup — the old rollup mapped
-    # Misleading/Unverifiable to HALF_TRUE and could say "Mixed signals" over
-    # a Largely False headline.
-    if headline_strict.endswith("True"):
+    # Mascot mood derives from the published headline (remediation T0.3), not
+    # the independent truthy-score rollup. Since 2026-07-25 the headline TEXT
+    # is a percentage ("56% True" — every label ends with "True"), so the
+    # mood keys off the headline's color class, which carries the lean:
+    # >75% true-share greens (happy), <50% reds (sad), the 50-75% yellow
+    # band (vt-mid) is iffy — as are Unverifiable / no-claims ("neutral").
+    if hcls_strict == "vt-true":
         mood = "happy"
-    elif headline_strict.endswith("False"):
+    elif hcls_strict == "vt-false":
         mood = "sad"
-    else:  # Mixed verdict / Unverifiable / no claims
+    else:  # neutral: coin-flip percentage / Unverifiable / no claims
         mood = "iffy"
     state_map = {"happy": "true", "iffy": "iffy", "sad": "lie"}
     svg_state = "state-" + state_map.get(mood, "iffy")
@@ -1897,13 +1874,15 @@ def _masthead_compact(rel: str = "../") -> str:
 
 
 # Default OG/Twitter description used when a page doesn't provide one.
-# "Verified against primary sources" was removed (remediation T0.5, D4):
-# packs currently mix source tiers, including fact-check and unvetted
-# domains — the tagline returns only after Phase 3 verifies pack contents.
+# "primary sources" RESTORED 2026-07-25 (remediation T3.3): the Phase 3
+# artifacts verified with zero fact-check items in any pack (T2.1 exclusion
+# holds end-to-end) and a green strict era lint — the claim is now true of
+# what actually ships. It was removed 2026-07-21 (T0.5, D4) while packs
+# still mixed in fact-check domains.
 _DEFAULT_OG_DESCRIPTION = (
     "Automated fact-checking of political speeches. Every claim is checked "
-    "by a multi-model AI panel against a shared, cited evidence pack — "
-    "sources linked inline, disagreements disclosed."
+    "by a multi-model AI panel against a shared pack of cited primary "
+    "sources — sources linked inline, disagreements disclosed."
 )
 
 
@@ -2803,6 +2782,8 @@ CSS = """\
      sits between misleading (orange) and false (red). */
   --v-truthy:       #84cc16;
   --v-falsey:       #ea580c;
+  /* percent-true headline mid band (50-75% inclusive, jackie 2026-07-25) */
+  --v-mid:          #ca8a04;
   /* Models split — panel deadlock. Its own cool slate, distinct from the
      warm-gray Unverifiable, so the aggregate bars can show the split bucket
      as a real segment (T0.2) rather than silently dropping it. */
@@ -4335,6 +4316,7 @@ hr.rule-light {
 .vt-exaggerated  { color: var(--v-exaggerated); }
 .vt-misleading   { color: var(--v-misleading); }
 .vt-false        { color: var(--v-false); }
+.vt-mid          { color: var(--v-mid); }
 .vt-unverifiable { color: var(--v-unverifiable); }
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }
@@ -6965,38 +6947,38 @@ def _render_about() -> str:
 
     models_list = (
         "<ul>"
-        "<li><strong>Proposer</strong> — Mistral Small 3.2 24B: drafts the initial verdict</li>"
-        "<li><strong>Critic</strong> — DeepSeek V4 Flash: independently re-judges the same "
+        "<li><strong>Proposer</strong> — Claude Opus 4.8: drafts the initial verdict</li>"
+        "<li><strong>Critic</strong> — Grok 4.3: independently re-judges the same "
         "evidence, hunting for why a naive verdict could be wrong</li>"
-        "<li><strong>Arbiter</strong> — Claude Haiku 4.5: adjudicates only when proposer and "
+        "<li><strong>Arbiter</strong> — GPT-5.5: adjudicates only when proposer and "
         "critic disagree</li>"
         "<li><strong>Severity Classifier</strong> — Claude Sonnet 4.6: a second-stage check on "
         "False-vs-Misleading boundary calls and panel ties</li>"
-        "<li><strong>Retrieval &amp; triage</strong> — Claude Haiku 4.5: check-worthiness "
-        "classification, search-query generation, and evidence relevance scoring</li>"
+        "<li><strong>Evidence researchers</strong> — three independent web-search lanes "
+        "(Claude Opus native search, GPT browsing, Grok search) whose shortlists are merged "
+        "by a deterministic consolidator: URL dedup, era gates, fact-check-site exclusion, "
+        "source-tier quotas. No model ranks another model's findings</li>"
+        "<li><strong>Triage</strong> — Claude Haiku 4.5: check-worthiness classification "
+        "of every sentence before any claim is judged</li>"
         "</ul>"
         "<p class=\"dim\" style=\"margin-top:0.5rem\">Three different model families from three "
         "different vendors sit in the verdict seats, so a single vendor's blind spot can't "
         "silently decide a claim. The exact roster used for a report is recorded in its "
-        "\"Panel composition\" section. Earlier versions of truth-bot fanned every claim out "
-        "to four frontier models in parallel; the current design runs at roughly a tenth of "
-        "the cost by spending small-model calls where they're cheap (triage, retrieval) and "
-        "escalating only genuine disagreements. A benchmark against the reference claim "
-        "corpus will be published with the next full run.</p>"
+        "\"Panel composition\" section. Evidence is gathered fresh per claim, time-scoped "
+        "to what was knowable when the words were spoken, and fact-checking organizations "
+        "are excluded from evidence packs — the panel reaches its own verdicts from "
+        "primary sources rather than inheriting another checker's ruling.</p>"
     )
 
     limitations = (
         "<ul>"
-        "<li><strong>Small models, one panel:</strong> Verdict seats are deliberately "
-        "inexpensive models. The proposer→critic→arbiter structure and the second-stage "
-        "Severity Classifier are the accuracy mechanism — not raw model size — and boundary "
+        "<li><strong>One panel, one pass:</strong> The proposer→critic→arbiter structure "
+        "and the second-stage Severity Classifier are the accuracy mechanism, and boundary "
         "calls (False vs Misleading) remain the hardest cases.</li>"
-        "<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in a six-item evidence "
-        "pack fetched at run time. If retrieval misses the decisive source, the panel can "
-        "only abstain (Unverifiable) — it is instructed not to fill gaps from memory.</li>"
-        "<li><strong>Model-scored relevance:</strong> The evidence ranking itself uses a "
-        "small model; an off-target relevance score can demote the decisive source below "
-        "the pack cap.</li>"
+        "<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in an evidence pack "
+        "(up to ten items) assembled at run time. If retrieval misses the decisive source "
+        "and the pack fails the quality bar, the claim is forced to Unverifiable — the "
+        "panel is instructed not to fill gaps from memory.</li>"
         "<li><strong>No cross-claim context:</strong> Each claim is judged independently. "
         "Recurring rhetoric may be rated inconsistently across speeches.</li>"
         "<li><strong>Training-data bias:</strong> Model judgments may reflect the slant of "

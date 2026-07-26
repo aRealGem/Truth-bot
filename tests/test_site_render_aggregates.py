@@ -222,40 +222,40 @@ def test_site_report_falls_back_to_projection_for_legacy_bundles() -> None:
 
 
 def test_headline_verdict_coarse_family_aggregation() -> None:
-    # 2026-07-19 editorial (jackie): headlines aggregate FAMILIES over decided
-    # claims — a spread of adverse buckets must read as false-leaning, not
-    # "Mixed" because no single bucket dominates.
-    # 5/5 true-family (True + Truthy) → Largely True.
+    # 2026-07-25 editorial (jackie): the headline IS the percent-true number —
+    # the graded "Mostly/Largely" bands read as endorsements at 55% truthiness.
+    # Families and the decided-claims denominator are unchanged from 2026-07-19.
+    # 5/5 true-family (True + Truthy) → 100% True.
     label, cls = _headline_verdict_coarse(
         {"True": 1, "Truthy": 4, "Unverifiable": 0, "Falsey": 0, "False": 0,
          "Models split": 0}
     )
-    assert label == "Largely True"
+    assert label == "100% True"
     assert cls == "vt-true"
 
-    # The Trump-2026 shape: adverse spread (Falsey 51 + False 44) vs True 37
-    # → 72% false-leaning of decided → Largely False (was "Mixed verdict").
+    # The (old) Trump-2026 shape: adverse spread (Falsey 51 + False 44) vs
+    # True 37 → 37/132 decided → 28% True, red.
     label, cls = _headline_verdict_coarse(
         {"True": 37, "Truthy": 0, "Unverifiable": 28, "Falsey": 51, "False": 44,
          "Models split": 7}
     )
-    assert label == "Largely False"
+    assert label == "28% True"
     assert cls == "vt-false"
 
-    # 60% adverse → Mostly False ("<40% true is damning", not Mixed).
+    # 60% adverse → 40% True, red (≤45% band colors false).
     label, cls = _headline_verdict_coarse(
         {"True": 4, "Truthy": 0, "Unverifiable": 0, "Falsey": 6, "False": 0,
          "Models split": 0}
     )
-    assert label == "Mostly False"
+    assert label == "40% True"
 
-    # Genuine coin-flip → Mixed verdict.
+    # Genuine coin-flip → 50% True, yellow — the number says it all.
     label, cls = _headline_verdict_coarse(
         {"True": 0, "Truthy": 2, "Unverifiable": 0, "Falsey": 2, "False": 0,
          "Models split": 0}
     )
-    assert label == "Mixed verdict"
-    assert cls == "neutral"
+    assert label == "50% True"
+    assert cls == "vt-mid"
 
 
 def test_headline_verdict_coarse_dominant_models_split_is_abstention() -> None:
@@ -265,7 +265,7 @@ def test_headline_verdict_coarse_dominant_models_split_is_abstention() -> None:
         {"True": 1, "Truthy": 0, "Unverifiable": 0, "Falsey": 0, "False": 0,
          "Models split": 4}
     )
-    assert label == "Largely True"          # 1/1 decided
+    assert label == "100% True"             # 1/1 decided
     # nothing decided at all → Unverifiable headline, not nonsense English
     label, cls = _headline_verdict_coarse(
         {"True": 0, "Truthy": 0, "Unverifiable": 1, "Falsey": 0, "False": 0,
@@ -316,18 +316,20 @@ def test_verdict_panel_bar_blocks_carry_lens_caption() -> None:
 
 
 def test_verdict_panel_lens_semantics_binary_vs_graded() -> None:
-    """2026-07-19 lens semantics: Lenient = simple Truthy/Falsey lean,
-    Strict = graded family bands. The 6-bucket label (e.g. "Exaggerated")
-    never appears as a headline. Here: all-Truthy under Lenient → 'Truthy';
-    all-Falsey under Strict → 'Largely False'."""
+    """2026-07-25 lens semantics: BOTH lenses headline the percent-true number
+    (jackie: no more word-grades); Strict vs Lenient still differ through the
+    coarse projections feeding each lens's distribution. The 6-bucket label
+    (e.g. "Exaggerated") never appears as a headline. Here the same bundles
+    project all-Truthy under Lenient (→ 100% True) and all-Falsey under
+    Strict (→ 0% True)."""
     bundles = [_make_bundle(VerdictLabel.EXAGGERATED,
                              coarse_lenient="Truthy", coarse_strict="Falsey")] * 3
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
     import re
     headlines = re.findall(r'<div class="vp-verdict[^"]*">([^<]+)</div>', html)
-    assert any(h.strip() == "Truthy" for h in headlines)          # lenient/simple
-    assert any("Largely False" in h for h in headlines)           # strict/graded
+    assert any(h.strip() == "100% True" for h in headlines)      # lenient projection
+    assert any(h.strip() == "0% True" for h in headlines)        # strict projection
     assert not any("Exaggerated" in h for h in headlines)
 
 
@@ -353,22 +355,25 @@ def test_models_engaged_counts_panel_seats_not_reconciled_cards() -> None:
     assert n == len({mv.adapter_name for b in bundles for mv in b.model_verdicts})
 
 
-def test_binary_verdict_simple_lean_with_mixed_band() -> None:
-    """The Lenient-lens rule: Truthy/Falsey by dominant family, with the SAME
-    Mixed band as the graded lens (dominant share < 0.55 → Mixed) so the two
-    lenses always agree on when a report is a toss-up. Abstentions stay out of
-    the denominator."""
+def test_binary_verdict_percent_true_headline() -> None:
+    """2026-07-25 (jackie): both lenses show the percent-true number — same
+    families, same decided-claims denominator, abstentions disclosed via the
+    ratio. Color (not words) carries the lean: >75% green, 50-75% inclusive
+    yellow (vt-mid), under 50% red."""
     from truthbot.publish.site import _binary_verdict
     label, cls, ratio = _binary_verdict({"True": 3, "Falsey": 1, "Unverifiable": 4})
-    assert label == "Truthy" and ratio == "3 of 4 decided claims true-leaning"
-    label, _cls, _r = _binary_verdict({"True": 1, "Misleading": 3})
-    assert label == "Falsey"
-    label, _cls, _r = _binary_verdict({"True": 2, "Misleading": 2})
-    assert label == "Mixed verdict"                    # exact tie → Mixed
-    label, _cls, _r = _binary_verdict({"True": 10, "Falsey": 9})   # 52.6%
-    assert label == "Mixed verdict"                    # coin-flip band
-    label, _cls, _r = _binary_verdict({"True": 11, "Falsey": 9})   # 55%
-    assert label == "Truthy"                           # band edge is exclusive
+    assert label == "75% True" and ratio == "3 of 4 decided claims rated True"
+    assert cls == "vt-mid"                             # 75% is yellow's top edge
+    label, cls, _r = _binary_verdict({"True": 19, "Falsey": 1})    # 95%
+    assert label == "95% True" and cls == "vt-true"
+    label, cls, _r = _binary_verdict({"True": 1, "Misleading": 3})
+    assert label == "25% True" and cls == "vt-false"
+    label, cls, _r = _binary_verdict({"True": 2, "Misleading": 2})
+    assert label == "50% True" and cls == "vt-mid"     # yellow's bottom edge
+    label, cls, _r = _binary_verdict({"True": 10, "Falsey": 9})    # 52.6%
+    assert label == "53% True" and cls == "vt-mid"
+    label, cls, _r = _binary_verdict({"True": 9, "Falsey": 10})    # 47.4%
+    assert label == "47% True" and cls == "vt-false"   # under 50% is red
     label, _cls, _r = _binary_verdict({"Unverifiable": 3, "Models split": 1})
     assert label == "Unverifiable"
     label, _cls, _r = _binary_verdict({})
