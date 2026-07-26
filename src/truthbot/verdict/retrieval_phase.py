@@ -51,8 +51,14 @@ def build_packs_phase(
     journal_path=None,
     resume_packs: Optional[dict] = None,
     on_progress: Optional[Callable[[int, int, str], None]] = None,
+    governor=None,
 ) -> dict:
-    """Build (and journal) an ``EvidencePack`` for every claim — Phase R, serial.
+    """Build (and journal) an ``EvidencePack`` for every claim — Phase R.
+
+    Serial by default; when ``governor`` (a P120 PR-2 ``PoolGovernor``) is supplied,
+    claims are built through the adaptive pool (several in flight, sized by Pi
+    pressure). Either way each freshly built pack is journaled the instant it
+    completes, so a mid-phase pare/pause/crash loses at most the in-flight claims.
 
     Args:
       claims:       adjudicate-shaped dicts ``[{"sid","text","context",…}]``
@@ -61,9 +67,9 @@ def build_packs_phase(
       resume_packs: sid → EvidencePack already built and journaled by a prior run;
                     their sids are skipped (retrieval spend already banked).
       journal_path: when set, each freshly built pack is appended to the Phase R
-                    packs journal immediately, so a mid-phase crash loses at most
-                    the in-flight claim.
-      on_progress:  optional ``callback(i, n, sid)`` per built pack, for CLI logging.
+                    packs journal immediately.
+      on_progress:  optional ``callback(done, n, sid)`` per built pack, for CLI logging.
+      governor:     optional ``PoolGovernor`` enabling the adaptive parallel pool.
 
     Returns sid → EvidencePack for the full claim set (resumed + freshly built).
     A ``pack_builder`` exception propagates (matching the inline path, where it
@@ -74,13 +80,25 @@ def build_packs_phase(
 
     packs: dict = dict(resume_packs or {})
     todo = [c for c in claims if c["sid"] not in packs]
+
+    def _journal(sid: str, pack) -> None:
+        if journal_path is not None:
+            pp.append_packs_journal(journal_path, sid, pack)
+
+    if governor is not None:
+        from truthbot.verdict import retrieval_pool
+        built = retrieval_pool.build_packs_pooled(
+            todo, pack_builder, governor,
+            on_pack=_journal, on_progress=on_progress)
+        packs.update(built)
+        return packs
+
     n = len(todo)
     for i, c in enumerate(todo, 1):
         sid = c["sid"]
         pack = pack_builder(sid, c["text"], c.get("context", ""))
         packs[sid] = pack
-        if journal_path is not None:
-            pp.append_packs_journal(journal_path, sid, pack)
+        _journal(sid, pack)
         if on_progress is not None:
             on_progress(i, n, sid)
     return packs

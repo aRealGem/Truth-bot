@@ -1038,12 +1038,19 @@ def _build_open_book_provider():
     return build_evidence_provider(source="connectors", connectors=[brave, factcheck])
 
 
-def _build_v2_pack_builder(grok_fallback: bool = False):
+def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
+                           retriever_concurrency: int = 0):
     """shared_pack_v2 (P67.9): bind the R1/R2/R3 retriever trio into the
     ``pack_builder`` hook (trio shortlists → deterministic consolidator →
     T2.4 quality gate). Fails LOUD when a lane is missing — a dead retriever
     key would otherwise yield silent empty shortlists and gate every claim
     Unverifiable, which is a broken run, not a verdict.
+
+    ``governor`` (P120 PR-2): when supplied, the trio's shortlists run CONCURRENTLY
+    (L1) through the adaptive pool, rate-limit signals are wired to the governor
+    (R1 Max → drop R1; R2/R3 429 → pare the lane), and each claim's active researcher
+    set is filtered so a Max-dropped R1 falls out until it recovers. ``None`` keeps
+    the pre-P120 serial trio.
 
     ``grok_fallback`` (jackie, 2026-07-24): grok researches ONLY claims whose
     first-pass pack fails the T2.4 quota (thin-evidence rescue), not every
@@ -1073,9 +1080,27 @@ def _build_v2_pack_builder(grok_fallback: bool = False):
             GrokSearchRetriever())
     primary = trio[:2] if grok_fallback else trio
 
+    runner = None
+    if governor is not None:
+        import functools
+
+        from truthbot.verdict import retrieval_pool
+        # Wire rate-limit signals so the governor can pare/drop lanes at runtime.
+        trio[0].on_rate_limit = governor.note_max_signal              # R1 Claude Max
+        trio[1].on_rate_limit = lambda: governor.note_429("R2")      # OpenAI 429
+        trio[2].on_rate_limit = lambda: governor.note_429("R3")      # xAI 429
+        runner = functools.partial(
+            retrieval_pool.parallel_shortlists, governor=governor,
+            max_workers=(retriever_concurrency or None))
+
     def pack_builder(sid: str, text: str, context: str):
-        return build_evidence_pack_v2(sid, text, primary,
-                                      retry_retrievers=trio, context=context)
+        # Active-set filtering (governor drops R1 during a Max cool-down); the pool
+        # counts ACTIVE researchers, never a fixed trio (grok-fallback + Max-drop).
+        prim = governor.active_retrievers(primary) if governor else primary
+        retry = governor.active_retrievers(trio) if governor else trio
+        return build_evidence_pack_v2(sid, text, prim,
+                                      retry_retrievers=retry, context=context,
+                                      shortlist_runner=runner)
 
     return pack_builder
 
@@ -1166,11 +1191,31 @@ def _run_publish_pca(args) -> None:
           f"utterance={date.date().isoformat()})")
 
     evidence_mode = getattr(args, "evidence_mode", "v1") or "v1"
+    retrieval_phase_mode = getattr(args, "retrieval_phase", "split")
     provider = None
     pack_builder = None
+    governor = None
     if evidence_mode == "v2":
+        # P120 PR-2: the adaptive pool lives on the split path only (inline is the
+        # pre-P120 serial ablation baseline). The governor sizes the pool from Pi
+        # pressure + API/subscription headroom; it is created per-run and sampled
+        # in-process (no daemon).
+        if retrieval_phase_mode == "split":
+            from truthbot.verdict.pool_governor import PoolGovernor
+            governor = PoolGovernor(
+                pool_start=int(getattr(args, "retrieval_pool", 1) or 1),
+                pool_max=int(getattr(args, "retrieval_pool_max", 3) or 3),
+                r1_cli_cap=int(getattr(args, "r1_cli_cap", 2) or 2),
+                adaptive=not bool(getattr(args, "no_adaptive", False)),
+                mem_floor_mb=int(getattr(args, "mem_floor_mb", 2000) or 2000),
+                pressure_stale_s=int(getattr(args, "pressure_stale_s", 5400) or 5400),
+                pressure_wait_s=int(getattr(args, "pressure_wait_s", 600) or 600),
+                r1_cooldown_s=int(getattr(args, "r1_cooldown_s", 900) or 900),
+            )
         pack_builder = _build_v2_pack_builder(    # fails LOUD on a missing lane
-            grok_fallback=bool(getattr(args, "grok_fallback", False)))
+            grok_fallback=bool(getattr(args, "grok_fallback", False)),
+            governor=governor,
+            retriever_concurrency=int(getattr(args, "retriever_concurrency", 0) or 0))
     else:
         provider = _build_open_book_provider()
         if provider is None:
@@ -1224,8 +1269,8 @@ def _run_publish_pca(args) -> None:
     # builder; the v1 provider path has no retrieval to split, and --retrieval-phase
     # inline keeps the fused (pre-P120) behavior as the ablation baseline.
     prebuilt_layer_a = None
-    split = (pack_builder is not None
-             and getattr(args, "retrieval_phase", "split") == "split")
+    phase_r_telemetry = None
+    split = governor is not None
     if split:
         packs_journal = (Path(_cfg.metrics_dir) / "journals"
                          / f"{speech_id}_packs.jsonl")
@@ -1253,11 +1298,24 @@ def _run_publish_pca(args) -> None:
         def _phase_r_progress(i: int, n: int, sid: str) -> None:
             print(f"  Phase R: built pack {i}/{n} ({sid})")
 
-        packs = retrieval_phase.build_packs_phase(
-            todo, pack_builder, journal_path=packs_journal,
-            resume_packs=loaded_packs, on_progress=_phase_r_progress)
+        from truthbot.verdict.pool_governor import CriticalPressureTimeout
+        pool_note = ("serial" if not governor.adaptive and governor.pool_start <= 1
+                     else f"adaptive pool ≤{governor.pool_max}, r1_cap={governor.r1_cli_cap}")
+        print(f"Phase R: building {len(todo)} pack(s) ({pool_note})...")
+        try:
+            packs = retrieval_phase.build_packs_phase(
+                todo, pack_builder, journal_path=packs_journal,
+                resume_packs=loaded_packs, on_progress=_phase_r_progress,
+                governor=governor)
+        except CriticalPressureTimeout as exc:
+            # Clean journaled stop: completed packs are on disk; rerun --resume when
+            # the Pi recovers. Never stack panel spend on a degraded box.
+            print(f"Phase R halted on Pi pressure: {exc}. "
+                  f"Completed packs journaled → {packs_journal}; rerun with --resume.")
+            sys.exit(0)
+        phase_r_telemetry = governor.telemetry()
         print(f"Phase R complete: {len(packs)} pack(s) built for the panel "
-              f"→ {packs_journal}")
+              f"→ {packs_journal} | telemetry: {phase_r_telemetry}")
         # Phase P consumes prebuilt packs — rebuild the adjudicate lane so it looks
         # packs up instead of retrieving. layer_a_fn is unchanged and unused now
         # (Layer A already ran).
@@ -1310,6 +1368,8 @@ def _run_publish_pca(args) -> None:
             "n_sentences": result.n_sentences,
             "n_check_worthy": result.n_check_worthy,
             "cost_usd": result.cost_usd,
+            # P120: adaptive pool params + observed pares, for ablation comparability.
+            "phase_r_pool": phase_r_telemetry,
         },
         metrics_dir=_settings.metrics_dir,
     )
@@ -1724,6 +1784,40 @@ def main() -> None:
             "ablation baseline. No effect without --evidence-mode v2."
         ),
     )
+    # P120 PR-2: adaptive resource-aware retrieval pool (split path only).
+    pub_parser.add_argument(
+        "--retrieval-pool", dest="retrieval_pool", type=int, default=1,
+        help=("Starting claims-in-flight in Phase R (default 1 = serial; the R1/R2/R3 "
+              "trio still runs concurrently WITHIN each claim). The monitor may grow "
+              "this toward --retrieval-pool-max when the Pi is healthy."))
+    pub_parser.add_argument(
+        "--retrieval-pool-max", dest="retrieval_pool_max", type=int, default=3,
+        help="Hard ceiling on claims-in-flight the monitor may grow to (default 3).")
+    pub_parser.add_argument(
+        "--retriever-concurrency", dest="retriever_concurrency", type=int, default=0,
+        help=("Max researchers run concurrently within a claim (L1). 0 (default) = the "
+              "active-researcher count."))
+    pub_parser.add_argument(
+        "--r1-cli-cap", dest="r1_cli_cap", type=int, default=2,
+        help=("Max concurrent claude CLI workers (R1) across all in-flight claims — "
+              "guards the Claude Max window + Pi RSS (default 2)."))
+    pub_parser.add_argument(
+        "--no-adaptive", dest="no_adaptive", action="store_true",
+        help=("Freeze the pool at --retrieval-pool (no runtime grow/pare) for "
+              "reproducible ablation runs. The monitor still pauses on critical Pi "
+              "pressure."))
+    pub_parser.add_argument(
+        "--mem-floor-mb", dest="mem_floor_mb", type=int, default=2000,
+        help="Pare to serial when MemAvailable is below this, even at ok (default 2000).")
+    pub_parser.add_argument(
+        "--pressure-stale-s", dest="pressure_stale_s", type=int, default=5400,
+        help="pressure.json older than this → treated as warn (default 5400).")
+    pub_parser.add_argument(
+        "--pressure-wait-s", dest="pressure_wait_s", type=int, default=600,
+        help="Max block on critical Pi pressure before a clean journaled stop (default 600).")
+    pub_parser.add_argument(
+        "--r1-cooldown-s", dest="r1_cooldown_s", type=int, default=900,
+        help="How long R1 stays dropped after a Claude Max signal (default 900).")
     pub_parser.add_argument(
         "--grok-fallback",
         dest="grok_fallback",

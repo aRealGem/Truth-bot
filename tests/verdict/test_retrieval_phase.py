@@ -186,3 +186,54 @@ def test_split_matches_inline_bundles():
     assert res_split.bundles[3].consensus.consensus_label is VerdictLabel.UNVERIFIABLE
     # split retrieved each claim EXACTLY once (Phase R) and never again in Phase P
     assert sorted(b_split.calls) == ids
+
+
+# ── PR-2: pool seam ───────────────────────────────────────────────────────────
+
+def test_build_evidence_pack_v2_uses_shortlist_runner():
+    # The pool injects a concurrent runner; confirm build_evidence_pack_v2 routes its
+    # per-retriever calls through whatever runner is passed (default stays serial).
+    from datetime import date
+
+    from truthbot.verdict import evidence_pack_v2, speech_context
+
+    speech_context.register_speech_date("rt:0000", date(2026, 1, 1))
+    seen = {"pools": 0}
+
+    class _FakeR:
+        def __init__(self, label):
+            self.label = label
+
+        def shortlist(self, claim_text, *, context="", utterance=None, window=None):
+            return []
+
+    def runner(pool, call):
+        seen["pools"] += 1
+        return [call(r) for r in pool]
+
+    evidence_pack_v2.build_evidence_pack_v2(
+        "rt:0000", "some claim", (_FakeR("A"), _FakeR("B")),
+        context="", shortlist_runner=runner)
+    assert seen["pools"] >= 1                 # runner drove the fan-out
+
+
+def test_build_packs_phase_governor_matches_serial(tmp_path):
+    # L2 pool path (governor set) must produce the SAME packs as the serial path.
+    from truthbot.verdict.pool_governor import PoolGovernor
+
+    claims = pp.claims_from_queue(_fake_classify_all_checkworthy(_sentences(6)))
+
+    serial = rp.build_packs_phase(claims, _CountingBuilder())
+
+    p = tmp_path / "pressure.json"
+    p.write_text('{"level":"ok","mem_avail_mb":8000,"ts":1000}')
+    gov = PoolGovernor(pressure_path=str(p), now_fn=lambda: 1000.0,
+                       sleep_fn=lambda s: None, pool_max=3)
+    jp = tmp_path / "pooled_packs.jsonl"
+    pooled = rp.build_packs_phase(claims, _CountingBuilder(), journal_path=jp,
+                                  governor=gov)
+
+    assert set(pooled) == set(serial)
+    # journaled every sid exactly once despite the concurrency
+    loaded = pp.load_packs_journal(jp)
+    assert set(loaded) == set(serial)

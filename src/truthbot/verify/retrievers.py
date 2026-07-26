@@ -31,10 +31,11 @@ import logging
 import os
 import re
 import subprocess
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
-from typing import Optional, Protocol, Sequence
+from typing import Callable, Optional, Protocol, Sequence
 
 from truthbot.models import Evidence, SourceTier
 from truthbot.verdict.era_lint import FAIR_GAME_DAYS, fair_game_end
@@ -44,6 +45,22 @@ from truthbot.verify.sources.brave import classify_tier
 logger = logging.getLogger(__name__)
 
 SHORTLIST_N = 8
+
+# P120 PR-2: rate-limit / subscription-quota detection for the adaptive pool.
+# Retrievers stay fail-soft (return []); when an ``on_rate_limit`` callback is wired
+# (by the pool governor) they ALSO signal it so the pool can pare/drop the lane. The
+# claude CLI (R1) has no structured error, so we sniff its stderr/stdout for the
+# usage-limit phrasings; R2/R3 raise urllib HTTPError 429.
+_RATE_LIMIT_RE = re.compile(
+    r"usage limit|rate[ _-]?limit|too many requests|quota|overloaded|\b429\b", re.I)
+
+
+def _looks_rate_limited(text: str) -> bool:
+    return bool(text and _RATE_LIMIT_RE.search(text))
+
+
+def _is_http_429(exc: Exception) -> bool:
+    return isinstance(exc, urllib.error.HTTPError) and getattr(exc, "code", None) == 429
 
 
 class PendingDecisionError(RuntimeError):
@@ -154,6 +171,9 @@ class ClaudeWorkerRetriever:
     label: str = "R1-opus-worker"
     model: str = "opus"
     timeout_s: int = 420
+    # P120 PR-2: called (if set) when the worker output looks like a Max
+    # usage/rate-limit hit, so the pool governor can drop R1 for a cool-down.
+    on_rate_limit: Optional[Callable[[], None]] = None
 
     def shortlist(self, claim_text: str, *, context: str = "",
                   utterance: Optional[date] = None,
@@ -174,6 +194,11 @@ class ClaudeWorkerRetriever:
         if proc.returncode != 0:
             logger.warning("%s: worker exit %d: %s", self.label,
                            proc.returncode, proc.stderr[-300:])
+            if self.on_rate_limit and _looks_rate_limited(
+                    (proc.stderr or "") + (proc.stdout or "")):
+                logger.warning("%s: worker output looks like a Max usage/rate "
+                               "limit — signaling pool backoff", self.label)
+                self.on_rate_limit()
             return []
         try:
             envelope = json.loads(proc.stdout)
@@ -194,6 +219,7 @@ class OpenAIBrowsingRetriever:
     label: str = "R2-gpt-browsing"
     model: str = ""
     timeout_s: int = 300
+    on_rate_limit: Optional[Callable[[], None]] = None   # P120 PR-2: 429 → pool pare
 
     def _models(self) -> list[str]:
         primary = (self.model or os.environ.get("TRUTHBOT_R2_MODEL") or "gpt-5.5")
@@ -244,6 +270,8 @@ class OpenAIBrowsingRetriever:
                 except Exception as exc:  # noqa: BLE001 — fall down the chain
                     logger.warning("%s: model %s failed (%s)", self.label, model, exc)
                     last_err = exc
+                    if self.on_rate_limit and _is_http_429(exc):
+                        self.on_rate_limit()
                     break                      # POST failure → next model
                 usage = doc.get("usage") or {}
                 logger.info("%s: model=%s tokens in/out %s/%s", self.label, model,
@@ -275,6 +303,7 @@ class GrokSearchRetriever:
     label: str = "R3-grok-search"
     model: str = ""
     timeout_s: int = 300
+    on_rate_limit: Optional[Callable[[], None]] = None   # P120 PR-2: 429 → pool pare
 
     def _post(self, model: str, prompt: str, tool: dict) -> dict:
         key = os.environ.get("XAI_API_KEY")
@@ -313,6 +342,8 @@ class GrokSearchRetriever:
             doc = self._post(model, prompt, tool)
         except Exception as exc:  # noqa: BLE001 — fail soft like the other seats
             logger.warning("%s: model %s failed (%s)", self.label, model, exc)
+            if self.on_rate_limit and _is_http_429(exc):
+                self.on_rate_limit()
             return []
         usage = doc.get("usage") or {}
         logger.info("%s: model=%s tokens in/out %s/%s", self.label,

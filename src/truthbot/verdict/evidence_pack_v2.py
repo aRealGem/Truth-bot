@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import logging
 from datetime import date
-from typing import Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 from hydramind.invariants import check_i5_provenance
 from truthbot.verify.retrievers import Retriever
@@ -53,6 +53,16 @@ _HISTORICAL_FOCUS = (
     "archives from that period). Reliable retrospective historical sources "
     "about that period are also acceptable. ")
 
+# A shortlist runner fans the per-retriever calls out (serial by default; P120
+# PR-2 injects a concurrent one). It takes the retriever pool and a per-retriever
+# ``call(retriever) -> list[Evidence]`` and MUST return results in pool order.
+ShortlistRunner = Callable[[Sequence[Retriever], Callable[[Retriever], list]], list]
+
+
+def _serial_runner(pool: Sequence[Retriever],
+                   call: Callable[[Retriever], list]) -> list:
+    return [call(r) for r in pool]
+
 
 def build_evidence_pack_v2(
     sid: str,
@@ -63,6 +73,7 @@ def build_evidence_pack_v2(
     today: Optional[date] = None,
     context: str = "",
     max_items: int = PACK_CAP_V2,
+    shortlist_runner: Optional[ShortlistRunner] = None,
 ) -> EvidencePack:
     """Assemble a shared_pack_v2 ``EvidencePack`` for one claim.
 
@@ -92,22 +103,26 @@ def build_evidence_pack_v2(
     else:
         prompt_utterance, prompt_window = utterance, window
 
+    runner = shortlist_runner or _serial_runner
+
+    def _call_one(r: Retriever, ctx: str) -> list:
+        try:
+            return r.shortlist(claim_text, context=ctx,
+                               utterance=prompt_utterance,
+                               window=prompt_window)
+        except Exception as exc:
+            # One dead retriever must not kill the claim — the consolidator quota
+            # decides whether what remains is enough (and the gate forces UV when
+            # it isn't). Loud in the log, soft in the run.
+            logger.warning("v2 retriever %s failed for %s: %s",
+                           r.label, sid, exc)
+            return []
+
     def _shortlists(pool: Sequence[Retriever], label_suffix: str, ctx: str):
-        out = []
-        for r in pool:
-            try:
-                sl = r.shortlist(claim_text, context=ctx,
-                                 utterance=prompt_utterance,
-                                 window=prompt_window)
-            except Exception as exc:
-                # One dead retriever must not kill the claim — the consolidator
-                # quota decides whether what remains is enough (and the gate
-                # forces UV when it isn't). Loud in the log, soft in the run.
-                logger.warning("v2 retriever %s failed for %s: %s",
-                               r.label, sid, exc)
-                sl = []
-            out.append((r.label + label_suffix, sl))
-        return out
+        # runner controls fan-out (serial by default, concurrent under the P120
+        # pool); it returns shortlists in pool order, so labels line up.
+        results = runner(pool, lambda r: _call_one(r, ctx))
+        return [(r.label + label_suffix, sl) for r, sl in zip(pool, results)]
 
     shortlists = _shortlists(retrievers, "", context)
     res = consolidate(sid, shortlists, utterance=utterance, window=window,
