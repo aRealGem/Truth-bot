@@ -1145,7 +1145,8 @@ def _run_publish_pca(args) -> None:
     from collections import Counter
     from datetime import datetime
 
-    from truthbot.verdict import adjudicator, proxy_lane, publish_pipeline
+    from truthbot.verdict import (adjudicator, proxy_lane, publish_pipeline,
+                                  retrieval_phase)
 
     if not proxy_lane.key_present():
         print(proxy_lane.BLOCKED_MSG)
@@ -1208,12 +1209,66 @@ def _run_publish_pca(args) -> None:
         Path(_cfg.metrics_dir) / "journals" / f"{speech_id}.jsonl")
     resume_rows: list = []
     resume_packs: dict = {}
-    if getattr(args, "resume", False):
+    resume = bool(getattr(args, "resume", False))
+    if resume:
         resume_rows, resume_packs, prior_cost, _ = \
             publish_pipeline.load_chunk_journal(journal_path)
         if resume_rows:
             print(f"  resume: {len(resume_rows)} journaled rows from "
                   f"{journal_path} (banked spend ${prior_cost:.2f})")
+
+    # P120 B1 phase-split: when retrieving v2 evidence, build ALL packs up front
+    # (Phase R) and journal each at build time, then run the panel (Phase P) over
+    # prebuilt packs via a lookup builder. Crash-proofs retrieval spend and is the
+    # seam PR-2's adaptive parallel pool lands on. Only meaningful with a v2 pack
+    # builder; the v1 provider path has no retrieval to split, and --retrieval-phase
+    # inline keeps the fused (pre-P120) behavior as the ablation baseline.
+    prebuilt_layer_a = None
+    split = (pack_builder is not None
+             and getattr(args, "retrieval_phase", "split") == "split")
+    if split:
+        packs_journal = (Path(_cfg.metrics_dir) / "journals"
+                         / f"{speech_id}_packs.jsonl")
+        loaded_packs: dict = {}
+        if resume:
+            loaded_packs = publish_pipeline.load_packs_journal(packs_journal)
+            if loaded_packs:
+                print(f"  resume: {len(loaded_packs)} journaled pack(s) from "
+                      f"{packs_journal}")
+        elif packs_journal.exists():
+            # Fresh (non-resume) run: reset the Phase R journal so we append onto a
+            # clean file, never onto a prior run's packs.
+            packs_journal.write_text("", encoding="utf-8")
+
+        # Layer A runs ONCE here (Phase R needs the check-worthy queue); it is
+        # handed to run_pca_verify via prebuilt_layer_a so the panel never re-runs it.
+        prebuilt_layer_a = publish_pipeline.run_layer_a(
+            sentences, classify_fn=layer_a_fn, confirm_pass=True)
+        claims = publish_pipeline.claims_from_queue(
+            prebuilt_layer_a.check_worthy_queue)
+        # Rows already banked (chunk-journal resume) skip retrieval too.
+        done_row_sids = {r.get("sid") for r in resume_rows}
+        todo = [c for c in claims if c["sid"] not in done_row_sids]
+
+        def _phase_r_progress(i: int, n: int, sid: str) -> None:
+            print(f"  Phase R: built pack {i}/{n} ({sid})")
+
+        packs = retrieval_phase.build_packs_phase(
+            todo, pack_builder, journal_path=packs_journal,
+            resume_packs=loaded_packs, on_progress=_phase_r_progress)
+        print(f"Phase R complete: {len(packs)} pack(s) built for the panel "
+              f"→ {packs_journal}")
+        # Phase P consumes prebuilt packs — rebuild the adjudicate lane so it looks
+        # packs up instead of retrieving. layer_a_fn is unchanged and unused now
+        # (Layer A already ran).
+        _, adjudicate_fn = publish_pipeline.build_pca_lane_fns(
+            hm_classify, hm_verdict, provider,
+            pack_builder=retrieval_phase.packs_only_builder(packs),
+            crm114=crm114,
+            roster=getattr(args, "roster", "dev") or "dev",
+            a2_tier=getattr(args, "a2_tier", "cheap") or "cheap",
+        )
+
     budget_check = None
     budget_cap = float(getattr(args, "budget_cap", 0) or 0)
     if budget_cap:
@@ -1233,6 +1288,7 @@ def _run_publish_pca(args) -> None:
         resume_packs=resume_packs,
         journal_path=journal_path,
         budget_check=budget_check,
+        prebuilt_layer_a=prebuilt_layer_a,
     )
     print(f"Layer A: {result.n_check_worthy}/{result.n_sentences} check-worthy; "
           f"adjudicated in {result.n_chunks} chunk(s); spend ${result.cost_usd:.4f}")
@@ -1653,6 +1709,19 @@ def main() -> None:
             "trio → deterministic consolidator with the T2.4 quality gate "
             "(shared_pack_v2, the Phase 3 rerun stack); needs the claude CLI, "
             "OPENAI_API_KEY and XAI_API_KEY."
+        ),
+    )
+    pub_parser.add_argument(
+        "--retrieval-phase",
+        dest="retrieval_phase",
+        choices=("split", "inline"),
+        default="split",
+        help=(
+            "P120 B1: 'split' (default) builds ALL v2 evidence packs up front "
+            "(Phase R, journaled at build time to <speech>_packs.jsonl) before the "
+            "panel runs (Phase P), crash-proofing retrieval spend. 'inline' keeps "
+            "the pre-P120 fused path (retrieve inside the panel chunk loop) as the "
+            "ablation baseline. No effect without --evidence-mode v2."
         ),
     )
     pub_parser.add_argument(

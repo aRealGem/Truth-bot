@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from typing import Callable, Optional
 
-from truthbot.checkworthy.pipeline import run_layer_a
+from truthbot.checkworthy.pipeline import LayerAResult, run_layer_a
 from truthbot.models import Evidence, VerdictBundle
 from truthbot.verdict import bridge as bridge_mod
 from truthbot.verdict.evidence_pack import EvidencePack
@@ -108,18 +108,45 @@ def append_chunk_journal(path, chunk_idx: int, rows: list[dict],
         fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
+def packs_from_evidence_dict(evidence_by_sid: dict,
+                             gate_codes: Optional[dict] = None) -> dict:
+    """sid → serialized-Evidence list → sid → EvidencePack. Shared decode for the
+    chunk journal and the P120 Phase R packs journal. ``gate_codes`` (optional)
+    restores each pack's T2.4 gate flag so a RESUMED gate-failed pack still forces
+    Unverifiable instead of silently reopening as a thin pack."""
+    from truthbot.models import Evidence
+    from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
+
+    gate_codes = gate_codes or {}
+    packs: dict[str, EvidencePack] = {}
+    for sid, evs in (evidence_by_sid or {}).items():
+        items = []
+        for i, d in enumerate(evs, start=1):
+            ev = Evidence.model_validate(d)
+            items.append(PackItem(
+                pack_id=f"E{i}", source_name=ev.source_name,
+                source_url=ev.source_url, tier=ev.source_tier,
+                snippet=ev.snippet,
+                retrieved_at=ev.retrieved_at.isoformat(),
+                sha256=_sha256(ev.source_url, ev.snippet),
+                supports_claim=ev.supports_claim,
+                relevance_score=ev.relevance_score,
+                published_at=(ev.published_at.date().isoformat()
+                              if ev.published_at else None)))
+        packs[sid] = EvidencePack(sid=sid, window=None, items=items,
+                                  gate_code=gate_codes.get(sid, ""))
+    return packs
+
+
 def load_chunk_journal(path) -> tuple[list[dict], dict, float, Optional[dict]]:
     """(rows, packs, cost_usd, roster) accumulated from a prior run's journal.
     Missing file → empty (fresh run)."""
     import json
     from pathlib import Path
 
-    from truthbot.models import Evidence
-    from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
-
     p = Path(path)
     rows: list[dict] = []
-    packs: dict[str, EvidencePack] = {}
+    packs: dict = {}
     cost = 0.0
     roster: Optional[dict] = None
     if not p.exists():
@@ -131,22 +158,66 @@ def load_chunk_journal(path) -> tuple[list[dict], dict, float, Optional[dict]]:
         rows.extend(rec.get("rows") or [])
         cost += float(rec.get("cost_usd") or 0.0)
         roster = roster or rec.get("roster")
-        for sid, evs in (rec.get("evidence") or {}).items():
-            items = []
-            for i, d in enumerate(evs, start=1):
-                ev = Evidence.model_validate(d)
-                items.append(PackItem(
-                    pack_id=f"E{i}", source_name=ev.source_name,
-                    source_url=ev.source_url, tier=ev.source_tier,
-                    snippet=ev.snippet,
-                    retrieved_at=ev.retrieved_at.isoformat(),
-                    sha256=_sha256(ev.source_url, ev.snippet),
-                    supports_claim=ev.supports_claim,
-                    relevance_score=ev.relevance_score,
-                    published_at=(ev.published_at.date().isoformat()
-                                  if ev.published_at else None)))
-            packs[sid] = EvidencePack(sid=sid, window=None, items=items)
+        packs.update(packs_from_evidence_dict(rec.get("evidence") or {}))
     return rows, packs, cost, roster
+
+
+# ── P120 B1 phase-split: Phase R packs journal ───────────────────────────────
+#
+# One JSONL line per built pack: {"sid", "gate_code", "evidence": [Evidence…]}.
+# Evidence is serialized exactly like the chunk journal so ``packs_from_evidence_dict``
+# reloads it. gate_code is persisted (unlike the chunk journal) because a Phase R
+# pack that gate-failed must still force Unverifiable when a resumed run reloads it
+# BEFORE the panel has run.
+
+def append_packs_journal(path, sid: str, pack) -> None:
+    import json
+    from pathlib import Path
+
+    rec = {"sid": sid,
+           "gate_code": getattr(pack, "gate_code", "") or "",
+           "evidence": [ev.model_dump(mode="json")
+                        for ev in bridge_mod._pack_to_evidence(sid, pack)]}
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+
+def load_packs_journal(path) -> dict:
+    """sid → EvidencePack accumulated from a Phase R packs journal (resume).
+    Missing file → empty (fresh phase)."""
+    import json
+    from pathlib import Path
+
+    p = Path(path)
+    if not p.exists():
+        return {}
+    evidence_by_sid: dict = {}
+    gate_codes: dict = {}
+    for line in p.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        sid = rec.get("sid")
+        if not sid:
+            continue
+        evidence_by_sid[sid] = rec.get("evidence") or []
+        gate_codes[sid] = rec.get("gate_code") or ""
+    return packs_from_evidence_dict(evidence_by_sid, gate_codes)
+
+
+def claims_from_queue(queue: list[dict]) -> list[dict]:
+    """Check-worthy queue rows → adjudicate/bridge claim dicts. Carries sid/text/
+    context plus each claim's Layer A routing provenance (label + which stage passed
+    it) so the bridge can record it — the queue row is the only place that survives.
+    Shared by ``run_pca_verify`` and the P120 split Phase R driver so both build
+    identical claim identity from the same queue."""
+    return [{"sid": r["sid"], "text": r.get("text", ""),
+             "context": r.get("context", ""),
+             "layer_a": {"label": r.get("label", ""), "source": r.get("source", ""),
+                         "claim_type": r.get("claim_type") or ""}}
+            for r in queue]
 
 
 def run_pca_verify(
@@ -162,6 +233,7 @@ def run_pca_verify(
     journal_path=None,
     budget_check: Optional[Callable[[], float]] = None,
     budget_safety: float = 1.5,
+    prebuilt_layer_a: Optional[LayerAResult] = None,
 ) -> PcaVerifyResult:
     """Segmented sentences → published-ready ``VerdictBundle``s via the PCA stack.
 
@@ -192,7 +264,9 @@ def run_pca_verify(
     as ``exc.partial_result`` (a PcaVerifyResult without bundles), so callers
     and tooling can always recover banked spend.
     """
-    layer_a = run_layer_a(sentences, classify_fn=layer_a_fn, confirm_pass=confirm_pass)
+    layer_a = (prebuilt_layer_a if prebuilt_layer_a is not None
+               else run_layer_a(sentences, classify_fn=layer_a_fn,
+                                confirm_pass=confirm_pass))
     queue = layer_a.check_worthy_queue
 
     result = PcaVerifyResult(
@@ -203,16 +277,9 @@ def run_pca_verify(
     if not queue:
         return result
 
-    # Claims for adjudicate + the bridge's Claim reconstruction. The check-worthy
-    # rows already carry sid/text/context; that's all adjudicate needs. We also
-    # attach each claim's Layer A routing provenance (label + which stage passed
-    # it) so the bridge can record it on the bundle — the queue row is the only
-    # place that survives.
-    claims = [{"sid": r["sid"], "text": r.get("text", ""),
-               "context": r.get("context", ""),
-               "layer_a": {"label": r.get("label", ""), "source": r.get("source", ""),
-                           "claim_type": r.get("claim_type") or ""}}
-              for r in queue]
+    # Claims for adjudicate + the bridge's Claim reconstruction (sid/text/context
+    # + Layer A routing provenance) — see claims_from_queue.
+    claims = claims_from_queue(queue)
     # P67.3 resume: sids with journaled rows never hit the lane again.
     all_rows: list[dict] = list(resume_rows or [])
     packs: dict[str, EvidencePack] = dict(resume_packs or {})
