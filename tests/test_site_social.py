@@ -138,8 +138,12 @@ def site_report() -> SiteReport:
 class TestTierBucket:
     def test_gov_urls(self):
         assert _tier_bucket("https://bls.gov/news") == "gov"
-        assert _tier_bucket("https://www.whitehouse.gov/a") == "gov"
         assert _tier_bucket("https://army.mil/unit") == "gov"
+
+    def test_whitehouse_is_political_not_gov(self):
+        """Claim Eval v3 / D7: the executive's communications shop is S5, not
+        top-tier Government. This URL used to bucket as "gov"."""
+        assert _tier_bucket("https://www.whitehouse.gov/a") == "political"
 
     def test_wire_urls(self):
         assert _tier_bucket("https://apnews.com/article") == "wire"
@@ -167,14 +171,16 @@ class TestTierBucket:
 class TestTierCountsForReport:
     def test_returns_all_buckets(self, site_report):
         counts = _tier_counts_for_report(site_report)
-        assert set(counts.keys()) == {"gov", "wire", "news", "fc", "other"}
+        assert set(counts.keys()) == {"gov", "wire", "news", "fc", "political", "other"}
 
     def test_dedupes_across_bundles_and_models(self, site_report):
         # Both bundles reference https://bls.gov/release.htm. Two models each.
-        # Unique gov URLs: bls.gov/release.htm, bls.gov/different-release.htm,
-        # whitehouse.gov/statement -> 3, not more.
+        # Unique gov URLs: bls.gov/release.htm, bls.gov/different-release.htm
+        # -> 2. whitehouse.gov/statement used to make that 3; under D7 it is
+        # S5 political communications and tallies in its own bucket.
         counts = _tier_counts_for_report(site_report)
-        assert counts["gov"] == 3
+        assert counts["gov"] == 2
+        assert counts["political"] == 1
         assert counts["wire"] == 1
         assert counts["news"] == 1
         assert counts["fc"] == 1
@@ -191,7 +197,8 @@ class TestTierCountsForReport:
             bundles=[],
         )
         counts = _tier_counts_for_report(empty)
-        assert counts == {"gov": 0, "wire": 0, "news": 0, "fc": 0, "other": 0}
+        assert counts == {"gov": 0, "wire": 0, "news": 0, "fc": 0,
+                          "political": 0, "other": 0}
 
 
 # ── _social_head ────────────────────────────────────────────────────────────
@@ -429,6 +436,8 @@ class TestPublisherAssets:
         pub = SitePublisher(site_root=str(tmp_dir))
         meta = pub._report_meta(site_report)
         assert "tier_counts" in meta
-        assert set(meta["tier_counts"].keys()) == {"gov", "wire", "news", "fc", "other"}
-        assert meta["tier_counts"]["gov"] == 3
+        assert set(meta["tier_counts"].keys()) == {"gov", "wire", "news", "fc",
+                                                   "political", "other"}
+        assert meta["tier_counts"]["gov"] == 2          # whitehouse.gov -> political (D7)
+        assert meta["tier_counts"]["political"] == 1
         assert meta["tier_counts"]["wire"] == 1

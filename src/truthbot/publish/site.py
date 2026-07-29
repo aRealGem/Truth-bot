@@ -32,8 +32,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-from truthbot.domains import url_matches_any
 from truthbot.models import VerdictBundle, VerdictLabel
+from truthbot.verify.source_tiers import TIER_BUCKET, TIER_DISPLAY, classify_tier
 
 logger = logging.getLogger(__name__)
 
@@ -616,36 +616,23 @@ def _headline_verdict_coarse(dist: dict[str, int]) -> tuple[str, str]:
     return label, css
 
 
-# Registered-domain rules shared by _tier_bucket and _tier_badge (and matching the
-# Brave connector's _classify_tier) — host-suffix matched via truthbot.domains, so a
-# lookalike host like www.govtech.com no longer counts as Government.
-_TIER_GOV = (".gov", ".mil", ".int")
-_TIER_WIRE = ("apnews.com", "reuters.com")
-_TIER_NEWS = ("nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk", "npr.org",
-              "nbcnews.com", "cbsnews.com", "abcnews.go.com")
-_TIER_FC = ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")
+# Tier rules live in truthbot.verify.source_tiers — ONE implementation shared
+# with the pipeline (Claim Eval v3 PR-A). This module used to keep its own
+# copies of the domain lists, and they had drifted: the connector counted
+# federalreserve.gov and stlouisfed.org as Government while this file did not,
+# so a FRASER/FRED source rendered as bottom-tier T6 despite being stored as
+# Government in its I5 provenance record.
 
 
 def _tier_bucket(url: str) -> str:
-    """Classify a source URL into one of: gov, wire, news, fc, other.
-
-    Uses the same domain rules as _tier_badge so the two stay in sync.
-    """
-    if url_matches_any(url, _TIER_GOV):
-        return "gov"
-    if url_matches_any(url, _TIER_WIRE):
-        return "wire"
-    if url_matches_any(url, _TIER_NEWS):
-        return "news"
-    if url_matches_any(url, _TIER_FC):
-        return "fc"
-    return "other"
+    """Classify a source URL into one of: gov, wire, news, fc, political, other."""
+    return TIER_BUCKET[classify_tier(url)]
 
 
 def _tier_counts_for_report(site_report) -> dict[str, int]:
     """Tally deduped source URLs per tier bucket across all checkable bundles."""
     seen: set[str] = set()
-    counts = {"gov": 0, "wire": 0, "news": 0, "fc": 0, "other": 0}
+    counts = {"gov": 0, "wire": 0, "news": 0, "fc": 0, "political": 0, "other": 0}
     for bundle in site_report.checkable_bundles:
         for mv in bundle.model_verdicts:
             for url in mv.web_sources or []:
@@ -658,15 +645,8 @@ def _tier_counts_for_report(site_report) -> dict[str, int]:
 
 def _tier_badge(url: str) -> str:
     """Return an evidence-tier span for a source URL."""
-    if url_matches_any(url, _TIER_GOV):
-        return '<span class="evidence-tier tier-gov">T1·Gov</span>'
-    if url_matches_any(url, _TIER_WIRE):
-        return '<span class="evidence-tier tier-news">T2·Wire</span>'
-    if url_matches_any(url, _TIER_NEWS):
-        return '<span class="evidence-tier tier-news">T3·News</span>'
-    if url_matches_any(url, _TIER_FC):
-        return '<span class="evidence-tier tier-fc">T5·FC</span>'
-    return '<span class="evidence-tier tier-other">T6</span>'
+    code, css = TIER_DISPLAY[classify_tier(url)]
+    return f'<span class="evidence-tier {css}">{code}</span>'
 
 
 # Layer 4 — anti-hallucination publish-layer rendering.
@@ -4074,6 +4054,9 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .tier-news  { background: #4a148c; }
 .tier-fc    { background: #e65100; }
 .tier-other { background: #546e7a; }
+/* T7 political communications — warm brown, deliberately NOT the verdict red,
+   which means a FALSE ruling rather than an untrusted source. */
+.tier-political { background: #6d4c41; }
 .evidence-list .source-snippet {
   display: block;
   width: 100%;
