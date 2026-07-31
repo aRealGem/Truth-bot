@@ -58,8 +58,8 @@ class _Config:
 
     __slots__ = ("political_domains", "political_paths", "gov_press_paths",
                  "stat_domains", "stat_data_paths", "stat_press_paths",
-                 "gov_substantive_paths", "data_signal_segments",
-                 "quarantine_unmapped_gov")
+                 "gov_substantive_paths", "established_gov_domains",
+                 "data_signal_segments", "quarantine_unmapped_gov")
 
     def __init__(self, doc: dict) -> None:
         pol = doc.get("political") or {}
@@ -80,6 +80,9 @@ class _Config:
         )
         self.gov_substantive_paths = tuple(
             p.lower() for p in (doc.get("gov_substantive_paths") or {}).get("prefixes") or ()
+        )
+        self.established_gov_domains = tuple(
+            d.lower() for d in (doc.get("established_gov_domains") or {}).get("domains") or ()
         )
         self.data_signal_segments = frozenset(
             s.lower() for s in (doc.get("data_signal_segments") or {}).get("segments") or ()
@@ -123,6 +126,12 @@ def _gov_tier(url: str, host: str, path: str, cfg: _Config) -> SourceTier:
     measured against stored run artifacts, the quarantine alone was demoting
     ``supremecourt.gov`` opinions and PubMed Central papers to S5.
     """
+    # D7 disposition: a government host explicitly capped at S3, overriding even
+    # its data/substantive paths — e.g. aspe.hhs.gov, an appointee-led research
+    # office that is credible-secondary, not primary nonpartisan record.
+    if any(host_matches(host, d) for d in cfg.established_gov_domains):
+        return SourceTier.ESTABLISHED
+
     if any(host_matches(host, d) for d in cfg.stat_domains):
         if _starts_with_any(path, cfg.stat_data_paths):
             return SourceTier.GOVERNMENT          # S1 — data, whatever it looks like

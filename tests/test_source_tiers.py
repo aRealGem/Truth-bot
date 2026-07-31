@@ -149,6 +149,29 @@ def test_senate_newsroom_stays_political():
     ) == SourceTier.POLITICAL
 
 
+# ── D7 residual dispositions (jackie 2026-07-31) ──────────────────────────────
+
+@pytest.mark.parametrize("url", [
+    "https://ofac.treasury.gov/faqs/added",                       # sanctions record
+    "https://ofac.treasury.gov/policy-issues/financial-sanctions",
+    "https://mymarketnews.ams.usda.gov/viewReport/2601",          # USDA AMS market data
+])
+def test_ofac_and_usda_ams_are_s1(url):
+    """Sanctions lists and USDA Market News are primary/statistical record → S1,
+    even on non-data paths that would otherwise quarantine."""
+    assert classify_tier(url) == SourceTier.GOVERNMENT
+
+
+@pytest.mark.parametrize("url", [
+    "https://aspe.hhs.gov/reports/some-analysis",   # would be S1 via /reports…
+    "https://aspe.hhs.gov/topics/health-coverage",  # …capped at S3 regardless
+])
+def test_aspe_is_capped_at_established(url):
+    """ASPE is an appointee-led research office — credible-secondary, not primary
+    nonpartisan record. Capped at S3 (Established), overriding its data paths."""
+    assert classify_tier(url) == SourceTier.ESTABLISHED
+
+
 # ── "data yes, press no": data survives under a press prefix, press does not ──
 
 @pytest.mark.parametrize("url", [

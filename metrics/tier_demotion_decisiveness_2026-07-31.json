@@ -6,11 +6,11 @@
       "claims": 183,
       "decided_claims": 168,
       "evidence_items": 1543,
-      "demoted_items": 412,
-      "demoted_distinct_hosts": 113,
-      "demoted_in_decided_pack": 406,
-      "demoted_cited_anywhere": 191,
-      "decisive_demoted": 190,
+      "demoted_items": 405,
+      "demoted_distinct_hosts": 111,
+      "demoted_in_decided_pack": 399,
+      "demoted_cited_anywhere": 187,
+      "decisive_demoted": 186,
       "top_demoted_hosts": [
         [
           "www.whitehouse.gov",
@@ -112,16 +112,6 @@
           "host": "www.whitehouse.gov",
           "url": "https://www.whitehouse.gov/releases/2025/08/fact-yes-d-c-crime-is-out-of-control/",
           "supports_claim": null,
-          "old_tier": "Government"
-        },
-        {
-          "sid": "trump_2026:0219",
-          "verdict": "MISLEADING",
-          "confidence": 0.69,
-          "label": "E5",
-          "host": "mymarketnews.ams.usda.gov",
-          "url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/3725/2026-02-27/1307445/ams_3725_00120.pdf",
-          "supports_claim": true,
           "old_tier": "Government"
         },
         {
@@ -761,26 +751,6 @@
           "label": "E3",
           "host": "www.usda.gov",
           "url": "https://www.usda.gov/sites/default/files/documents/2026AOF-livestock-poultry-outlook.pdf",
-          "supports_claim": false,
-          "old_tier": "Government"
-        },
-        {
-          "sid": "trump_2026:0222",
-          "verdict": "FALSE",
-          "confidence": 0.9,
-          "label": "E8",
-          "host": "mymarketnews.ams.usda.gov",
-          "url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2452/2026-02-02/1301589/ams_2452_01512.pdf",
-          "supports_claim": false,
-          "old_tier": "Government"
-        },
-        {
-          "sid": "trump_2026:0222",
-          "verdict": "FALSE",
-          "confidence": 0.9,
-          "label": "E10",
-          "host": "mymarketnews.ams.usda.gov",
-          "url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2453/2026-02-10/1303579/ams_2453_01519.pdf",
           "supports_claim": false,
           "old_tier": "Government"
         },
@@ -1815,16 +1785,6 @@
           "old_tier": "Government"
         },
         {
-          "sid": "trump_2026:0635",
-          "verdict": "TRUE",
-          "confidence": 0.825,
-          "label": "E7",
-          "host": "ofac.treasury.gov",
-          "url": "https://ofac.treasury.gov/faqs/added/2026-02-06",
-          "supports_claim": true,
-          "old_tier": "Government"
-        },
-        {
           "sid": "trump_2026:0649",
           "verdict": "TRUE",
           "confidence": 0.925,
@@ -1982,11 +1942,11 @@
       "claims": 111,
       "decided_claims": 101,
       "evidence_items": 918,
-      "demoted_items": 276,
-      "demoted_distinct_hosts": 96,
-      "demoted_in_decided_pack": 259,
-      "demoted_cited_anywhere": 151,
-      "decisive_demoted": 151,
+      "demoted_items": 269,
+      "demoted_distinct_hosts": 94,
+      "demoted_in_decided_pack": 252,
+      "demoted_cited_anywhere": 149,
+      "decisive_demoted": 149,
       "top_demoted_hosts": [
         [
           "bidenwhitehouse.archives.gov",
@@ -2029,10 +1989,6 @@
           5
         ],
         [
-          "ofac.treasury.gov",
-          5
-        ],
-        [
           "www.cms.gov",
           5
         ],
@@ -2047,6 +2003,10 @@
         [
           "www.publichealth.va.gov",
           4
+        ],
+        [
+          "www.nyc.gov",
+          3
         ]
       ],
       "decisive_records": [
@@ -2274,16 +2234,6 @@
           "sid": "biden_2022:0047",
           "verdict": "TRUE",
           "confidence": 0.875,
-          "label": "E5",
-          "host": "ofac.treasury.gov",
-          "url": "https://ofac.treasury.gov/faqs/966",
-          "supports_claim": true,
-          "old_tier": "Government"
-        },
-        {
-          "sid": "biden_2022:0047",
-          "verdict": "TRUE",
-          "confidence": 0.875,
           "label": "E8",
           "host": "www.whitehouse.gov",
           "url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/26/joint-statement-on-further-restrictive-economic-measures/",
@@ -2297,16 +2247,6 @@
           "label": "E1",
           "host": "home.treasury.gov",
           "url": "https://home.treasury.gov/news/press-releases/jy0612",
-          "supports_claim": true,
-          "old_tier": "Government"
-        },
-        {
-          "sid": "biden_2022:0048",
-          "verdict": "TRUE",
-          "confidence": 0.925,
-          "label": "E2",
-          "host": "ofac.treasury.gov",
-          "url": "https://ofac.treasury.gov/recent-actions/20220228",
           "supports_claim": true,
           "old_tier": "Government"
         },
@@ -3565,9 +3505,9 @@
   ],
   "aggregate": {
     "evidence_items": 2461,
-    "demoted_items": 688,
-    "demoted_in_decided_pack": 665,
-    "demoted_cited_anywhere": 342,
-    "decisive_demoted": 341
+    "demoted_items": 674,
+    "demoted_in_decided_pack": 651,
+    "demoted_cited_anywhere": 336,
+    "decisive_demoted": 335
   }
 }

@@ -62,6 +62,8 @@
       "bjs.ojp.gov",
       "nass.usda.gov",
       "ers.usda.gov",
+      "mymarketnews.ams.usda.gov",
+      "ofac.treasury.gov",
 
       "congress.gov",
       "clerk.house.gov",
@@ -147,6 +149,11 @@
       "/programs",
       "/about"
     ]
+  },
+
+  "established_gov_domains": {
+    "comment": "D7 disposition (jackie 2026-07-31): government hosts capped at S3 (Established), NOT S1 — checked first, so it overrides even substantive/data paths. INTEGRITY NOTE for aspe.hhs.gov: the HHS Office of the Assistant Secretary for Planning and Evaluation is a research/evaluation office led by a Senate-confirmed political appointee, so its analyses carry an administration lean and are credible-secondary, not primary nonpartisan record. Distinct from the statistical agencies in nonpartisan_sources (career-run, S1).",
+    "domains": ["aspe.hhs.gov"]
   },
 
   "data_signal_segments": {
