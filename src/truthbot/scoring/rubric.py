@@ -62,6 +62,12 @@ TIER_WEIGHTS: dict[SourceTier, float] = {
     SourceTier.ACADEMIC: 0.80,
     SourceTier.FACTCHECK: 0.75,
     SourceTier.OTHER: 0.40,
+    # S5 political communications (Claim Eval v3 PR-A / D7). Lowest weight in
+    # the table: a partisan press release is evidence that a claim was MADE,
+    # not that it is TRUE. It also drops out of the two GOVERNMENT/WIRE checks
+    # below for free — the automatic-FALSE override in _label_from_ratio and
+    # the high-tier confidence bump — because it is no longer GOVERNMENT.
+    SourceTier.POLITICAL: 0.15,
 }
 
 

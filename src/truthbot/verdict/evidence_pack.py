@@ -49,6 +49,7 @@ _TIER_RANK: dict[SourceTier, int] = {
     SourceTier.ACADEMIC: 3,
     SourceTier.FACTCHECK: 4,
     SourceTier.OTHER: 5,
+    SourceTier.POLITICAL: 6,   # S5 — ranks below OTHER (Claim Eval v3 PR-A / D7)
 }
 
 DEFAULT_MAX_ITEMS = 6

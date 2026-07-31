@@ -52,8 +52,13 @@ _TIER_RANK = {
     SourceTier.ACADEMIC: 3,
     SourceTier.FACTCHECK: 4,   # unreachable in v2 (excluded), kept for totality
     SourceTier.OTHER: 5,
+    SourceTier.POLITICAL: 6,   # S5 — ranks below OTHER (Claim Eval v3 PR-A / D7)
 }
 
+# Tiers that can credit the decided-verdict quota. POLITICAL is deliberately
+# ABSENT: a partisan press release may show a claim was made, never that it is
+# true, so it must not be one of the MIN_BEARING_T13 items that let a claim
+# reach a decided verdict.
 _T13 = {SourceTier.GOVERNMENT, SourceTier.WIRE, SourceTier.ESTABLISHED}
 
 

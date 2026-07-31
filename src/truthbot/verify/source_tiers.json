@@ -1,0 +1,165 @@
+{
+  "schema": "truthbot-source-tiers v1",
+  "comment": "Claim Evaluation v3 PR-A (D7, approved 2026-07-29). Seeds the S5 'political communications' tier — jackie's ruling: partisan government press releases are admissible only to show a claim was MADE, never to prove it TRUE, so they rank at the BOTTOM. Before this, tiering was domain-only and every .gov host became top-tier Government, which let a White House press release enter at maximum trust weight (rubric TIER_WEIGHTS 1.0) and even force an automatic FALSE verdict. Design note: wiki projects:truthbot:claim-eval-v3. Domains match by registered-domain suffix (truthbot.domains.host_matches); path prefixes match the lowercased URL path.",
+
+  "political": {
+    "comment": "S5 outright: the executive's own communications shop, and party/campaign organs. These are political speech by construction, whatever the path.",
+    "domains": [
+      "whitehouse.gov",
+      "bidenwhitehouse.archives.gov",
+      "trumpwhitehouse.archives.gov",
+      "obamawhitehouse.archives.gov",
+      "democrats.org",
+      "gop.com",
+      "rnc.org",
+      "dnc.org",
+      "ndrc.org",
+      "actblue.com",
+      "winred.com",
+      "donaldjtrump.com",
+      "joebiden.com",
+      "berniesanders.com",
+      "kamalaharris.com"
+    ],
+    "path_prefixes": [
+      {"domain": "senate.gov", "prefix": "/newsroom"},
+      {"domain": "house.gov", "prefix": "/newsroom"}
+    ]
+  },
+
+  "gov_press_paths": {
+    "comment": "Press-shop paths on any government host not covered by the statistical-agency carve-out below → S5. This is the '*/news/*, */newsroom/*, */press-releases/*' half of D7.",
+    "prefixes": [
+      "/news/",
+      "/newsroom",
+      "/news-room",
+      "/press-releases",
+      "/press-release",
+      "/pressreleases",
+      "/press/",
+      "/media/press",
+      "/blog",
+      "/articles/",
+      "/statements",
+      "/remarks",
+      "/briefing"
+    ]
+  },
+
+  "nonpartisan_sources": {
+    "comment": "THE CARVE-OUT, and the reason a naive '/news/ means demote' rule is wrong. Nonpartisan primary sources publish real material on press-looking paths — BLS releases its headline series at bls.gov/news.release/*. For these hosts: data paths stay S1 (Government), a genuine press-shop path is S3 (Established), and anything unmatched defaults to S1 rather than being quarantined. D7 named statistical agencies; the list was WIDENED after measuring the rule against 4,844 stored URLs, which showed the quarantine demoting congress.gov statute text, supremecourt.gov opinions, clerk.house.gov roll-call votes, CDC/MMWR health data and PubMed Central articles to 'political communications'. That is the same gutting the BLS case warned about, one scope level up. NOTE: house.gov and senate.gov are deliberately NOT here — member and committee sites on those hosts are partisan by construction and must stay subject to the quarantine. Archived White House sites are caught earlier by political.domains. Extend consciously, not reflexively.",
+    "domains": [
+      "bls.gov",
+      "bea.gov",
+      "census.gov",
+      "cbo.gov",
+      "gao.gov",
+      "crs.gov",
+      "federalreserve.gov",
+      "stlouisfed.org",
+      "eia.gov",
+      "nces.ed.gov",
+      "bjs.ojp.gov",
+      "nass.usda.gov",
+      "ers.usda.gov",
+      "mymarketnews.ams.usda.gov",
+      "ofac.treasury.gov",
+
+      "congress.gov",
+      "clerk.house.gov",
+      "uscode.house.gov",
+      "supremecourt.gov",
+      "uscourts.gov",
+      "fjc.gov",
+      "federalregister.gov",
+      "ecfr.gov",
+      "govinfo.gov",
+      "gpo.gov",
+      "archives.gov",
+      "loc.gov",
+      "sec.gov",
+      "uspto.gov",
+
+      "nih.gov",
+      "cdc.gov",
+      "nsf.gov",
+      "nasa.gov",
+      "noaa.gov",
+      "usgs.gov",
+      "nist.gov"
+    ],
+    "data_path_prefixes": {
+      "comment": "Explicitly S1 even though they read as press paths — checked BEFORE press rules.",
+      "prefixes": [
+        "/news.release",
+        "/newsreleases/archive",
+        "/opub",
+        "/cps",
+        "/ces",
+        "/data",
+        "/timeseries",
+        "/publication",
+        "/reports",
+        "/series"
+      ]
+    },
+    "press_path_prefixes": {
+      "comment": "Genuine press-shop paths on a nonpartisan source → S3, per jackie's ruling. Even a nonpartisan agency's press office is writing communications, not publishing data.",
+      "prefixes": [
+        "/newsroom",
+        "/press-releases",
+        "/bls/newsrels",
+        "/news/press",
+        "/media/releases",
+        "/news-events/news-releases"
+      ]
+    }
+  },
+
+  "gov_substantive_paths": {
+    "comment": "Allowlist that survives the D7 quarantine: paths that carry primary documents, data, or statute rather than messaging. An unmapped path matching neither this nor the carve-out is quarantined to S5 — but ONLY on .gov hosts, which is what D7 says. .int (treaty-established intergovernmental orgs: NATO, UN) and .mil are primary-source classes with no US partisan press shop to guard against, so they default to S1; an earlier revision quarantined the whole government class and wrongly demoted nato.int/cps/*. NOTE '/legislative': senate.gov roll-call vote records live at senate.gov/legislative/LIS/roll_call_votes/* — the Secretary of the Senate is a nonpartisan officer and these are primary record, the Senate counterpart to the clerk.house.gov carve-out. It survives here (not in nonpartisan_sources) because senate.gov as a whole stays subject to the quarantine — only its record paths are promoted, while member/committee /newsroom pages remain S5 (checked first).",
+    "prefixes": [
+      "/data",
+      "/datasets",
+      "/statistics",
+      "/stats",
+      "/publication",
+      "/publications",
+      "/report",
+      "/reports",
+      "/documents",
+      "/document",
+      "/bill",
+      "/bills",
+      "/legislative",
+      "/budget",
+      "/appropriations",
+      "/cfr",
+      "/uscode",
+      "/regulations",
+      "/rulemaking",
+      "/federal-register",
+      "/app/details",
+      "/content/pkg",
+      "/files",
+      "/pdf",
+      "/tables",
+      "/survey",
+      "/research",
+      "/programs",
+      "/about"
+    ]
+  },
+
+  "established_gov_domains": {
+    "comment": "D7 disposition (jackie 2026-07-31): government hosts capped at S3 (Established), NOT S1 — checked first, so it overrides even substantive/data paths. INTEGRITY NOTE for aspe.hhs.gov: the HHS Office of the Assistant Secretary for Planning and Evaluation is a research/evaluation office led by a Senate-confirmed political appointee, so its analyses carry an administration lean and are credible-secondary, not primary nonpartisan record. Distinct from the statistical agencies in nonpartisan_sources (career-run, S1).",
+    "domains": ["aspe.hhs.gov"]
+  },
+
+  "data_signal_segments": {
+    "comment": "'Data yes, press no' (D7, jackie 2026-07-31). If ANY exact path segment is one of these, the URL is structured data / statistical record and survives to S1 even when nested under a press prefix — e.g. cbp.gov/newsroom/stats/nationwide-encounters is border-encounter DATA on a /newsroom path (the BLS case, one scope level out, for an enforcement agency not on the nonpartisan-source list). Checked BEFORE the press-path demotion. Exact-segment match (not substring), so /news/data-shows-crime-down does NOT qualify. Kept deliberately tight — structured-data words only, never spin vocabulary. A genuine press release/announcement with no data segment still demotes to S5.",
+    "segments": ["stats", "statistics", "data", "dataset", "datasets", "timeseries", "series", "tables"]
+  },
+
+  "quarantine_unmapped_gov": true
+}

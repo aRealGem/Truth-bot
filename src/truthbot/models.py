@@ -51,6 +51,9 @@ class SourceTier(str, Enum):
     ACADEMIC = "Academic"           # Peer-reviewed, major NGOs
     FACTCHECK = "FactCheck"         # PolitiFact, FactCheck.org, Snopes
     OTHER = "Other"
+    # Declaration order IS the trust ranking — rubric._score_evidence tracks
+    # best_tier via ``list(SourceTier).index``. POLITICAL must stay LAST.
+    POLITICAL = "Political"         # White House / agency press shops, party + campaign organs
 
 
 # ── Core models ───────────────────────────────────────────────────────────────

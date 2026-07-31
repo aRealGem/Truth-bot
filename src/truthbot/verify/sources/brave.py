@@ -16,8 +16,9 @@ import re
 from datetime import date, datetime
 from typing import Optional
 
-from truthbot.domains import is_substantive_url, url_matches_any
+from truthbot.domains import is_substantive_url
 from truthbot.models import Claim, Evidence, SourceTier
+from truthbot.verify.source_tiers import classify_tier
 from truthbot.verify.sources.base import SourceConnector, TimeWindow
 
 logger = logging.getLogger(__name__)
@@ -204,34 +205,8 @@ class BraveSearchConnector(SourceConnector):
         return classify_tier(url)
 
 
-def classify_tier(url: str) -> SourceTier:
-    """Assign a trust tier based on the URL's registered domain.
-
-    Host-suffix matching (truthbot.domains), not substring — a substring
-    rule made ``www.govtech.com`` rank Government because it contains
-    ``.gov``, letting a trade magazine win pack slots. Module-level so the
-    evidence-v2 retrievers (P67.8) classify identically to the Brave
-    connector."""
-    # ``.int`` = treaty-established intergovernmental orgs (nato.int, un.int)
-    # — primary-source class; was silently OTHER until the 2026-07-21 pilot.
-    # ``stlouisfed.org`` = Federal Reserve Bank of St. Louis (FRASER + FRED):
-    # a Fed property on .org and the canonical host of archival government
-    # statistics — ranked OTHER until the Nixon probe (2026-07-24) showed its
-    # BLS-release archives couldn't credit the T2.4 quota.
-    gov_domains = (".gov", ".mil", ".int", "federalreserve.gov", "stlouisfed.org")
-    wire_domains = ("apnews.com", "reuters.com")
-    established_domains = (
-        "nytimes.com", "washingtonpost.com", "bbc.com", "bbc.co.uk",
-        "nbcnews.com", "cbsnews.com", "abcnews.go.com", "npr.org",
-    )
-    factcheck_domains = ("politifact.com", "factcheck.org", "snopes.com", "fullfact.org")
-
-    if url_matches_any(url, gov_domains):
-        return SourceTier.GOVERNMENT
-    if url_matches_any(url, wire_domains):
-        return SourceTier.WIRE
-    if url_matches_any(url, established_domains):
-        return SourceTier.ESTABLISHED
-    if url_matches_any(url, factcheck_domains):
-        return SourceTier.FACTCHECK
-    return SourceTier.OTHER
+# Tier rules moved to truthbot.verify.source_tiers (Claim Eval v3 PR-A) so the
+# pipeline and the site renderer share ONE implementation instead of two lists
+# that had already drifted. Re-exported here: the evidence-v2 retrievers (P67.8)
+# and this connector both import ``classify_tier`` from this module.
+__all__ = ["BraveSearchConnector", "classify_tier"]
