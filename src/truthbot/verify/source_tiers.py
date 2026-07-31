@@ -59,7 +59,8 @@ class _Config:
     __slots__ = ("political_domains", "political_paths", "gov_press_paths",
                  "stat_domains", "stat_data_paths", "stat_press_paths",
                  "gov_substantive_paths", "established_gov_domains",
-                 "data_signal_segments", "quarantine_unmapped_gov")
+                 "data_signal_segments", "data_hub_host_labels",
+                 "quarantine_unmapped_gov")
 
     def __init__(self, doc: dict) -> None:
         pol = doc.get("political") or {}
@@ -87,6 +88,9 @@ class _Config:
         self.data_signal_segments = frozenset(
             s.lower() for s in (doc.get("data_signal_segments") or {}).get("segments") or ()
         )
+        self.data_hub_host_labels = frozenset(
+            s.lower() for s in (doc.get("data_hub_host_labels") or {}).get("labels") or ()
+        )
         self.quarantine_unmapped_gov = bool(doc.get("quarantine_unmapped_gov", True))
 
 
@@ -106,6 +110,11 @@ def _url_path(url: str) -> str:
 
 def _starts_with_any(path: str, prefixes: tuple[str, ...]) -> bool:
     return any(path.startswith(p) for p in prefixes)
+
+
+def _host_leading_label(host: str) -> str:
+    """First dot-delimited label of ``host`` (``datahub.hhs.gov`` → ``datahub``)."""
+    return host.split(".", 1)[0]
 
 
 def _path_segments(path: str) -> tuple[str, ...]:
@@ -131,6 +140,13 @@ def _gov_tier(url: str, host: str, path: str, cfg: _Config) -> SourceTier:
     # office that is credible-secondary, not primary nonpartisan record.
     if any(host_matches(host, d) for d in cfg.established_gov_domains):
         return SourceTier.ESTABLISHED
+
+    # Open-data hubs: the data signal is in the HOST, not the path. P129 caught
+    # datahub.hhs.gov/Hospital/COVID-19-Reported-Patient-Impact quarantined to S5
+    # because no path segment said "data" — but the whole host IS a data hub.
+    # A leading label like ``data``/``datahub`` marks the host as structured data.
+    if _host_leading_label(host) in cfg.data_hub_host_labels:
+        return SourceTier.GOVERNMENT
 
     if any(host_matches(host, d) for d in cfg.stat_domains):
         if _starts_with_any(path, cfg.stat_data_paths):

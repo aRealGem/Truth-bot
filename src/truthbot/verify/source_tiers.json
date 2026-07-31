@@ -156,6 +156,11 @@
     "domains": ["aspe.hhs.gov"]
   },
 
+  "data_hub_host_labels": {
+    "comment": "P129 follow-up (2026-07-31): open-data hubs where the data signal lives in the HOSTNAME, not the path — datahub.hhs.gov/Hospital/COVID-19-Reported-Patient-Impact was quarantined to S5 because no path segment said 'data', but the whole host is a data hub. If a government-class host's LEADING label is one of these, it is structured data → S1. Tight leading-label match (datahub.hhs.gov, data.cdc.gov, opendata.*), never a substring.",
+    "labels": ["data", "datahub", "datasets", "opendata", "data-hub"]
+  },
+
   "data_signal_segments": {
     "comment": "'Data yes, press no' (D7, jackie 2026-07-31). If ANY exact path segment is one of these, the URL is structured data / statistical record and survives to S1 even when nested under a press prefix — e.g. cbp.gov/newsroom/stats/nationwide-encounters is border-encounter DATA on a /newsroom path (the BLS case, one scope level out, for an enforcement agency not on the nonpartisan-source list). Checked BEFORE the press-path demotion. Exact-segment match (not substring), so /news/data-shows-crime-down does NOT qualify. Kept deliberately tight — structured-data words only, never spin vocabulary. A genuine press release/announcement with no data segment still demotes to S5.",
     "segments": ["stats", "statistics", "data", "dataset", "datasets", "timeseries", "series", "tables"]
