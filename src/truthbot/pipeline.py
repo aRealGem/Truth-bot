@@ -954,6 +954,18 @@ def _persist_pca_run(
                 for sid, evs in (getattr(result, "evidence", {}) or {}).items()
             },
         }
+        # Composition-bias telemetry (Claim Eval v3 fast-follow): record how much
+        # of this run's evidence was quarantined to S5 and whether claims that
+        # depend on it get decided at a different rate — per speaker. Failing
+        # closed is only honest if the composition shift is on the record.
+        try:
+            from truthbot.verdict.composition_telemetry import composition_report
+
+            payload["composition"] = composition_report(
+                payload["rows"], payload["evidence"]
+            )
+        except Exception:                                  # never block a publish
+            logger.warning("composition telemetry failed", exc_info=True)
         path.write_text(_json.dumps(payload, default=str, ensure_ascii=False), encoding="utf-8")
         logger.info(
             "Persisted PCA replay artifact (%d rows) to %s",
