@@ -1,0 +1,50 @@
+{
+  "label": "after",
+  "n": 15,
+  "proxy_usd": 0.0865,
+  "off_proxy_usd_est": 1.2539,
+  "decided": 12,
+  "hits": 8,
+  "decided_acc": 0.667,
+  "coverage": 0.8,
+  "gold": {
+    "biden2022-01": "TRUE",
+    "biden2022-02": "MISLEADING",
+    "biden2022-03": "TRUE_AT_UTTERANCE",
+    "biden2022-04": "TRUE",
+    "biden2022-05": "TRUE",
+    "biden2022-06": "TRUE",
+    "biden2022-07": "TRUE",
+    "biden2022-08": "MOSTLY_TRUE",
+    "biden2022-09": "NORMATIVE_WITH_TRUE_PREMISE",
+    "biden2022-10": "TRUE",
+    "trump2026-01": "TRUE",
+    "trump2026-02": "MISLEADING",
+    "trump2026-03": "TRUE",
+    "trump2026-04": "UNVERIFIABLE_PERSONAL_TESTIMONY",
+    "trump2026-05": "MOSTLY_TRUE"
+  },
+  "preds": {
+    "biden2022-03": "UNVERIFIABLE",
+    "biden2022-06": "UNVERIFIABLE",
+    "trump2026-05": "UNVERIFIABLE",
+    "biden2022-01": "TRUE",
+    "biden2022-02": "TRUE",
+    "biden2022-04": "TRUE",
+    "biden2022-05": "TRUE",
+    "biden2022-07": "TRUE",
+    "biden2022-08": "MISLEADING",
+    "biden2022-09": "TRUE",
+    "biden2022-10": "TRUE",
+    "trump2026-01": "TRUE",
+    "trump2026-02": "MISLEADING",
+    "trump2026-03": "TRUE",
+    "trump2026-04": "TRUE"
+  },
+  "gate_forced_uv": [
+    "biden2022-03",
+    "biden2022-06",
+    "trump2026-05"
+  ],
+  "ran_at": "2026-07-31T15:34:15-0400"
+}

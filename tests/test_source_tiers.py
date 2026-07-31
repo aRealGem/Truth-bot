@@ -188,6 +188,18 @@ def test_agency_data_paths_survive_even_under_a_press_prefix(url):
 
 
 @pytest.mark.parametrize("url", [
+    # P129 regression: data hub where the data signal is in the HOST, not the path.
+    "https://datahub.hhs.gov/Hospital/COVID-19-Reported-Patient-Impact/abcd",
+    "https://data.gov/some/catalog/entry",
+    "https://opendata.dc.gov/datasets/crime",
+])
+def test_open_data_hub_hosts_are_government(url):
+    """A leading data-hub host label (data/datahub/opendata) → S1, even when no
+    path segment carries the data signal. Found by P129 (datahub.hhs.gov → S5)."""
+    assert classify_tier(url) == SourceTier.GOVERNMENT
+
+
+@pytest.mark.parametrize("url", [
     # genuine press releases / announcements with NO data segment stay S5.
     "https://home.treasury.gov/news/press-releases/sb0301",
     "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month",
