@@ -58,7 +58,8 @@ class _Config:
 
     __slots__ = ("political_domains", "political_paths", "gov_press_paths",
                  "stat_domains", "stat_data_paths", "stat_press_paths",
-                 "gov_substantive_paths", "quarantine_unmapped_gov")
+                 "gov_substantive_paths", "data_signal_segments",
+                 "quarantine_unmapped_gov")
 
     def __init__(self, doc: dict) -> None:
         pol = doc.get("political") or {}
@@ -79,6 +80,9 @@ class _Config:
         )
         self.gov_substantive_paths = tuple(
             p.lower() for p in (doc.get("gov_substantive_paths") or {}).get("prefixes") or ()
+        )
+        self.data_signal_segments = frozenset(
+            s.lower() for s in (doc.get("data_signal_segments") or {}).get("segments") or ()
         )
         self.quarantine_unmapped_gov = bool(doc.get("quarantine_unmapped_gov", True))
 
@@ -101,6 +105,13 @@ def _starts_with_any(path: str, prefixes: tuple[str, ...]) -> bool:
     return any(path.startswith(p) for p in prefixes)
 
 
+def _path_segments(path: str) -> tuple[str, ...]:
+    """Non-empty ``'/'``-delimited segments of ``path`` (``/newsroom/stats/x`` →
+    ``('newsroom', 'stats', 'x')``). Exact-segment matching, not substring, so
+    ``/news/data-shows-x`` does not count ``data-shows-x`` as a data segment."""
+    return tuple(s for s in path.split("/") if s)
+
+
 def _gov_tier(url: str, host: str, path: str, cfg: _Config) -> SourceTier:
     """Tier a government-class host, applying D7's path rules.
 
@@ -118,6 +129,16 @@ def _gov_tier(url: str, host: str, path: str, cfg: _Config) -> SourceTier:
         if _starts_with_any(path, cfg.stat_press_paths):
             return SourceTier.ESTABLISHED         # S3 — the agency's own press shop
         return SourceTier.GOVERNMENT              # nonpartisan by default, not quarantined
+
+    # "Data yes, press no" (D7, jackie 2026-07-31). A structured-data or
+    # statistical-record path survives even when it sits UNDER a press prefix:
+    # ``cbp.gov/newsroom/stats/nationwide-encounters`` is border-encounter data
+    # on a newsroom path — the BLS case one scope level out, for an enforcement
+    # agency that is not on the nonpartisan-source list. Checked BEFORE the
+    # press-path demotion so a data segment wins; a genuine press release or
+    # announcement (no data segment) still falls through to S5.
+    if cfg.data_signal_segments.intersection(_path_segments(path)):
+        return SourceTier.GOVERNMENT
 
     if _starts_with_any(path, cfg.gov_press_paths):
         return SourceTier.POLITICAL               # S5 — an agency press release

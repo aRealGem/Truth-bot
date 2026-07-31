@@ -55,6 +55,8 @@ def test_statistical_agency_press_shop_is_s3():
     "https://www.congress.gov/congressional-record/2026/01/01/senate-section",
     "https://www.supremecourt.gov/opinions/25pdf/24-1234_abcd.pdf",
     "https://clerk.house.gov/Votes/202612",
+    "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title5",
+    "https://www.fjc.gov/history/judges/breyer-stephen-gerald",
     "https://www.cdc.gov/mmwr/volumes/75/wr/mm7501a1.htm",
     "https://pmc.ncbi.nlm.nih.gov/articles/PMC1234567/",
     "https://stacks.cdc.gov/view/cdc/123456",
@@ -126,6 +128,53 @@ def test_unmapped_gov_path_is_quarantined():
 ])
 def test_substantive_gov_paths_survive_quarantine(url):
     assert classify_tier(url) == SourceTier.GOVERNMENT
+
+
+@pytest.mark.parametrize("url", [
+    "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00042.htm",
+    "https://www.senate.gov/legislative/LIS/roll_call_lists/vote_menu_119_1.htm",
+])
+def test_senate_legislative_vote_records_survive_quarantine(url):
+    """Secretary of the Senate roll-call records are primary record — the Senate
+    counterpart to the clerk.house.gov carve-out. senate.gov stays subject to the
+    quarantine as a whole, but its ``/legislative/*`` record paths are promoted."""
+    assert classify_tier(url) == SourceTier.GOVERNMENT
+
+
+def test_senate_newsroom_stays_political():
+    """The record carve-in must not promote member/committee press: ``/newsroom``
+    is a political path, checked before the substantive-path allowlist."""
+    assert classify_tier(
+        "https://www.senate.gov/newsroom/press-releases/x"
+    ) == SourceTier.POLITICAL
+
+
+# ── "data yes, press no": data survives under a press prefix, press does not ──
+
+@pytest.mark.parametrize("url", [
+    # border-encounter DATA on a /newsroom path — the BLS case for an enforcement
+    # agency (CBP) that is not on the nonpartisan-source list.
+    "https://www.cbp.gov/newsroom/stats/nationwide-encounters",
+    "https://www.dhs.gov/immigration-statistics/data",
+    "https://www.dea.gov/resources/data-and-statistics/tables/overdose-deaths",
+])
+def test_agency_data_paths_survive_even_under_a_press_prefix(url):
+    """A structured-data / statistical-record segment wins over the press-path
+    demotion. 'Data yes' (D7, 2026-07-31)."""
+    assert classify_tier(url) == SourceTier.GOVERNMENT
+
+
+@pytest.mark.parametrize("url", [
+    # genuine press releases / announcements with NO data segment stay S5.
+    "https://home.treasury.gov/news/press-releases/sb0301",
+    "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month",
+    "https://www.justice.gov/usao-dc/pr/violent-crime-dc-hits-30-year-low",
+    # exact-segment match only: 'data-shows-x' is not the segment 'data'.
+    "https://www.commerce.gov/news/press-releases/2026/data-shows-growth",
+])
+def test_agency_press_announcements_still_demote(url):
+    """'Press no': an announcement is S5 even when it reports a factual action."""
+    assert classify_tier(url) == SourceTier.POLITICAL
 
 
 @pytest.mark.parametrize("url", [

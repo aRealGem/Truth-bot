@@ -65,8 +65,10 @@
 
       "congress.gov",
       "clerk.house.gov",
+      "uscode.house.gov",
       "supremecourt.gov",
       "uscourts.gov",
+      "fjc.gov",
       "federalregister.gov",
       "ecfr.gov",
       "govinfo.gov",
@@ -113,7 +115,7 @@
   },
 
   "gov_substantive_paths": {
-    "comment": "Allowlist that survives the D7 quarantine: paths that carry primary documents, data, or statute rather than messaging. An unmapped path matching neither this nor the carve-out is quarantined to S5 — but ONLY on .gov hosts, which is what D7 says. .int (treaty-established intergovernmental orgs: NATO, UN) and .mil are primary-source classes with no US partisan press shop to guard against, so they default to S1; an earlier revision quarantined the whole government class and wrongly demoted nato.int/cps/*.",
+    "comment": "Allowlist that survives the D7 quarantine: paths that carry primary documents, data, or statute rather than messaging. An unmapped path matching neither this nor the carve-out is quarantined to S5 — but ONLY on .gov hosts, which is what D7 says. .int (treaty-established intergovernmental orgs: NATO, UN) and .mil are primary-source classes with no US partisan press shop to guard against, so they default to S1; an earlier revision quarantined the whole government class and wrongly demoted nato.int/cps/*. NOTE '/legislative': senate.gov roll-call vote records live at senate.gov/legislative/LIS/roll_call_votes/* — the Secretary of the Senate is a nonpartisan officer and these are primary record, the Senate counterpart to the clerk.house.gov carve-out. It survives here (not in nonpartisan_sources) because senate.gov as a whole stays subject to the quarantine — only its record paths are promoted, while member/committee /newsroom pages remain S5 (checked first).",
     "prefixes": [
       "/data",
       "/datasets",
@@ -127,6 +129,7 @@
       "/document",
       "/bill",
       "/bills",
+      "/legislative",
       "/budget",
       "/appropriations",
       "/cfr",
@@ -144,6 +147,11 @@
       "/programs",
       "/about"
     ]
+  },
+
+  "data_signal_segments": {
+    "comment": "'Data yes, press no' (D7, jackie 2026-07-31). If ANY exact path segment is one of these, the URL is structured data / statistical record and survives to S1 even when nested under a press prefix — e.g. cbp.gov/newsroom/stats/nationwide-encounters is border-encounter DATA on a /newsroom path (the BLS case, one scope level out, for an enforcement agency not on the nonpartisan-source list). Checked BEFORE the press-path demotion. Exact-segment match (not substring), so /news/data-shows-crime-down does NOT qualify. Kept deliberately tight — structured-data words only, never spin vocabulary. A genuine press release/announcement with no data segment still demotes to S5.",
+    "segments": ["stats", "statistics", "data", "dataset", "datasets", "timeseries", "series", "tables"]
   },
 
   "quarantine_unmapped_gov": true

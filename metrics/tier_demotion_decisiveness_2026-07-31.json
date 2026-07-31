@@ -1,0 +1,3573 @@
+{
+  "per_artifact": [
+    {
+      "artifact": "23939712-59ea-449d-93f7-a0a0b449efd8",
+      "speaker": "trump_2026",
+      "claims": 183,
+      "decided_claims": 168,
+      "evidence_items": 1543,
+      "demoted_items": 412,
+      "demoted_distinct_hosts": 113,
+      "demoted_in_decided_pack": 406,
+      "demoted_cited_anywhere": 191,
+      "decisive_demoted": 190,
+      "top_demoted_hosts": [
+        [
+          "www.whitehouse.gov",
+          94
+        ],
+        [
+          "www.justice.gov",
+          35
+        ],
+        [
+          "www.dhs.gov",
+          22
+        ],
+        [
+          "www.war.gov",
+          15
+        ],
+        [
+          "home.treasury.gov",
+          12
+        ],
+        [
+          "issa.house.gov",
+          11
+        ],
+        [
+          "www.irs.gov",
+          10
+        ],
+        [
+          "mpdc.dc.gov",
+          8
+        ],
+        [
+          "www.cbp.gov",
+          8
+        ],
+        [
+          "www.state.gov",
+          8
+        ],
+        [
+          "www.news.uscg.mil",
+          7
+        ],
+        [
+          "www.dol.gov",
+          6
+        ],
+        [
+          "bidenwhitehouse.archives.gov",
+          6
+        ],
+        [
+          "www.defense.gov",
+          6
+        ],
+        [
+          "www.fbi.gov",
+          5
+        ]
+      ],
+      "decisive_records": [
+        {
+          "sid": "trump_2026:0010",
+          "verdict": "FALSE",
+          "confidence": 0.875,
+          "label": "E9",
+          "host": "www.fbi.gov",
+          "url": "https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0010",
+          "verdict": "FALSE",
+          "confidence": 0.875,
+          "label": "E10",
+          "host": "www.fbi.gov",
+          "url": "https://www.fbi.gov/news/press-releases/fbi-releases-2024-quarterly-crime-report-and-use-of-force-data-update-q2",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0092",
+          "verdict": "FALSE",
+          "confidence": 0.8300000000000001,
+          "label": "E4",
+          "host": "mpdc.dc.gov",
+          "url": "https://mpdc.dc.gov/sites/default/files/dc/sites/mpdc/release_content/attachments/FINAL_Testimony_MPD%20FY25%20Perf%20Hearing_02%2025%2026.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0092",
+          "verdict": "FALSE",
+          "confidence": 0.8300000000000001,
+          "label": "E9",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2025/08/fact-yes-d-c-crime-is-out-of-control/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0219",
+          "verdict": "MISLEADING",
+          "confidence": 0.69,
+          "label": "E5",
+          "host": "mymarketnews.ams.usda.gov",
+          "url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/3725/2026-02-27/1307445/ams_3725_00120.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0336",
+          "verdict": "TRUE",
+          "confidence": 0.99,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2026/02/president-trump-honors-angel-families-remembers-american-lives-lost-to-illegal-immigration/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0336",
+          "verdict": "TRUE",
+          "confidence": 0.99,
+          "label": "E8",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/videos/president-trump-participates-in-angel-families-remembrance-ceremony/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0479",
+          "verdict": "TRUE",
+          "confidence": 0.9099999999999999,
+          "label": "E3",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/suspect-killing-national-guardsman-sarah-beckstrom-charged-complaint-new-federal-counts",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0479",
+          "verdict": "TRUE",
+          "confidence": 0.9099999999999999,
+          "label": "E9",
+          "host": "www.wv.ng.mil",
+          "url": "https://www.wv.ng.mil/News/Article_View/Article/4365730/governor-morrisey-requests-purple-hearts-for-guard-members-killed-injured-in-dc/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0579",
+          "verdict": "TRUE",
+          "confidence": 0.7,
+          "label": "E1",
+          "host": "appropriations.senate.gov",
+          "url": "https://appropriations.senate.gov/news/majority/congress-approves-fy-2026-defense-appropriations-bill",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0579",
+          "verdict": "TRUE",
+          "confidence": 0.7,
+          "label": "E7",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2026/04/budget_fy2027.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0015",
+          "verdict": "MISLEADING",
+          "confidence": 0.7,
+          "label": "E1",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/newsroom/national-media-release/one-year-most-secure-border-history",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0015",
+          "verdict": "MISLEADING",
+          "confidence": 0.7,
+          "label": "E3",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month-zero-releases-border",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0017",
+          "verdict": "MISLEADING",
+          "confidence": 0.855,
+          "label": "E3",
+          "host": "www.dol.gov",
+          "url": "https://www.dol.gov/newsroom/economicdata/realer_02132026.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0019",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E2",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/newsroom/national-media-release/most-secure-border-history-cbp-reports-major-enforcement-wins-june",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0019",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E4",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/12/04/border-crossings-once-again-record-low-november-2025",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0019",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E6",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month-zero-releases-border",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0019",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E8",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/newsroom/national-media-release/one-year-most-secure-border-history",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0019",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E10",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/11/05/dhs-delivers-historic-start-border-crossings-fy-2026",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0020",
+          "verdict": "FALSE",
+          "confidence": 0.8500000000000001,
+          "label": "E1",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month-zero-releases-border",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0022",
+          "verdict": "MISLEADING",
+          "confidence": 0.76,
+          "label": "E1",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/09/30/cbp-reports-drug-seizures-surge-again-august",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0031",
+          "verdict": "FALSE",
+          "confidence": 0.925,
+          "label": "E10",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/sb0301",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0033",
+          "verdict": "FALSE",
+          "confidence": 0.965,
+          "label": "E4",
+          "host": "www.bts.gov",
+          "url": "https://www.bts.gov/newsroom/motor-fuel-prices-february-2026-0",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0034",
+          "verdict": "FALSE",
+          "confidence": 0.7,
+          "label": "E4",
+          "host": "iowaagriculture.gov",
+          "url": "https://iowaagriculture.gov/sites/default/files/Fuel%20Price%20Report%2002-18-2026.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0043",
+          "verdict": "FALSE",
+          "confidence": 0.7749999999999999,
+          "label": "E2",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2025/01/IIA-REPORT-final.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0043",
+          "verdict": "FALSE",
+          "confidence": 0.7749999999999999,
+          "label": "E5",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/invest/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0043",
+          "verdict": "FALSE",
+          "confidence": 0.7749999999999999,
+          "label": "E7",
+          "host": "www.transportation.gov",
+          "url": "https://www.transportation.gov/sites/dot.gov/files/2024-12/Quadrennial%20Supply%20Chain%20Review%202021-2024_1.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0043",
+          "verdict": "FALSE",
+          "confidence": 0.7749999999999999,
+          "label": "E9",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2025/01/17/report-investing-in-america-report-todays-investments-tomorrows-future/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0045",
+          "verdict": "FALSE",
+          "confidence": 0.89,
+          "label": "E4",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/investments/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0046",
+          "verdict": "MISLEADING",
+          "confidence": 0.77,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/investments/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0054",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E6",
+          "host": "www.dol.gov",
+          "url": "https://www.dol.gov/newsroom/economicdata/empsit_02112026.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0055",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E1",
+          "host": "www.dol.gov",
+          "url": "https://www.dol.gov/newsroom/economicdata/empsit_02112026.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0055",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E8",
+          "host": "www.dol.gov",
+          "url": "https://www.dol.gov/index.php/newsroom/releases/osec/osec20260211",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0057",
+          "verdict": "MISLEADING",
+          "confidence": 0.89,
+          "label": "E3",
+          "host": "www.reginfo.gov",
+          "url": "https://www.reginfo.gov/public/pdf/eo14192/Final_Accounting_for_Fiscal_Year_2025_under_EO_14192.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0082",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2025/01/04/president-biden-announces-recipients-of-the-presidential-medal-of-freedom-3/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0082",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E8",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2026/02/president-trump-delivers-his-2026-state-of-the-union-address/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0090",
+          "verdict": "FALSE",
+          "confidence": 0.8500000000000001,
+          "label": "E3",
+          "host": "www.longbeach.gov",
+          "url": "https://www.longbeach.gov/globalassets/city-manager/media-library/documents/memos-to-the-mayor-tabbed-file-list-folders/2025/january-23--2025---2028-olympic-and-paralympic-games-update---strategic-roadmap",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0095",
+          "verdict": "TRUE",
+          "confidence": 0.8500000000000001,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fifa-2026-task-force/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0095",
+          "verdict": "TRUE",
+          "confidence": 0.8500000000000001,
+          "label": "E4",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2025/03/fact-sheet-president-donald-j-trump-establishes-white-house-task-force-on-the-fifa-world-cup-2026",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0095",
+          "verdict": "TRUE",
+          "confidence": 0.8500000000000001,
+          "label": "E9",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/freedom250/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0096",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2025/03/fact-sheet-president-donald-j-trump-establishes-white-house-task-force-on-the-fifa-world-cup-2026/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0096",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E4",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2025/08/fact-sheet-president-donald-j-trump-establishes-white-house-task-force-on-the-2028-summer-olympics/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0105",
+          "verdict": "TRUE",
+          "confidence": 0.99,
+          "label": "E1",
+          "host": "www.news.uscg.mil",
+          "url": "https://www.news.uscg.mil/Press-Releases/Article/4235507/coast-guard-responds-with-unified-command-to-flooding-near-kerrville-texas/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0106",
+          "verdict": "FALSE",
+          "confidence": 0.875,
+          "label": "E4",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/videos/president-trump-and-the-first-lady-attend-the-fourth-of-july-celebration/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0106",
+          "verdict": "FALSE",
+          "confidence": 0.875,
+          "label": "E7",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/videos/president-trump-gaggles-with-press-at-joint-base-andrews-july-04-2025/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0109",
+          "verdict": "TRUE",
+          "confidence": 0.8500000000000001,
+          "label": "E7",
+          "host": "www.democrats.senate.gov",
+          "url": "https://www.democrats.senate.gov/newsroom/trump-transcripts/transcript-president-trump-delivers-the-state-of-the-union-address-22426",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0111",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "www.mycg.uscg.mil",
+          "url": "https://www.mycg.uscg.mil/News/Article/4242423/coast-guard-rescue-6553s-heroic-efforts-during-texas-flash-flooding/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0113",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E8",
+          "host": "pfluger.house.gov",
+          "url": "https://pfluger.house.gov/news/documentsingle.aspx?DocumentID=2459",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0114",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E1",
+          "host": "www.mycg.uscg.mil",
+          "url": "https://www.mycg.uscg.mil/News/Article/4242423/coast-guard-rescue-6553s-heroic-efforts-during-texas-flash-flooding/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0114",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E4",
+          "host": "gonzales.house.gov",
+          "url": "https://gonzales.house.gov/2025/7/rep-tony-gonzales-honors-coast-guard-rescue-swimmer-scott-ruskan-in-u-s-house-for-saving-165-lives-during-texas-floods",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0114",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E6",
+          "host": "www.mycg.uscg.mil",
+          "url": "https://www.mycg.uscg.mil/News/Article/4306844/uscg-surface-and-aviation-capabilities-tip-of-the-spear/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0130",
+          "verdict": "FALSE",
+          "confidence": 0.7849999999999999,
+          "label": "E2",
+          "host": "waysandmeans.house.gov",
+          "url": "https://waysandmeans.house.gov/2025/07/03/passed-the-one-big-beautiful-bill-the-largest-tax-cut-in-american-history/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0135",
+          "verdict": "TRUE",
+          "confidence": 0.955,
+          "label": "E3",
+          "host": "www.irs.gov",
+          "url": "https://www.irs.gov/newsroom/working-families-tax-cuts-tax-deductions-for-working-americans-and-seniors",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0135",
+          "verdict": "TRUE",
+          "confidence": 0.955,
+          "label": "E9",
+          "host": "waysandmeans.house.gov",
+          "url": "https://waysandmeans.house.gov/2026/02/19/chairman-smith-taxpayers-benefit-from-no-tax-on-auto-loan-interest-for-made-in-america-cars/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0137",
+          "verdict": "MISLEADING",
+          "confidence": 0.81,
+          "label": "E4",
+          "host": "www.irs.gov",
+          "url": "https://www.irs.gov/newsroom/one-big-beautiful-bill-provisions",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0137",
+          "verdict": "MISLEADING",
+          "confidence": 0.81,
+          "label": "E10",
+          "host": "www.irs.gov",
+          "url": "https://www.irs.gov/newsroom/one-big-beautiful-bill-how-to-take-advantage-of-no-tax-on-tips-and-overtime",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0151",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2025/12/landmark-dell-gift-supercharges-trump-accounts-for-americas-kids/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0151",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E9",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/sb0372",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0161",
+          "verdict": "MISLEADING",
+          "confidence": 0.7749999999999999,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2025/08/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0161",
+          "verdict": "MISLEADING",
+          "confidence": 0.7749999999999999,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2025/03/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0161",
+          "verdict": "MISLEADING",
+          "confidence": 0.7749999999999999,
+          "label": "E8",
+          "host": "www.irs.gov",
+          "url": "https://www.irs.gov/pub/irs-drop/n-25-68.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0175",
+          "verdict": "MISLEADING",
+          "confidence": 0.78,
+          "label": "E1",
+          "host": "fiscaldata.treasury.gov",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0175",
+          "verdict": "MISLEADING",
+          "confidence": 0.78,
+          "label": "E4",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/newsroom/national-media-release/thanks-president-trump-cbp-announces-record-breaking-200-billion",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0175",
+          "verdict": "MISLEADING",
+          "confidence": 0.78,
+          "label": "E9",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2026/02/fact-sheet-president-donald-j-trump-imposes-a-temporary-import-duty-to-address-fundamental-international-payment-problems/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0205",
+          "verdict": "FALSE",
+          "confidence": 0.95,
+          "label": "E1",
+          "host": "www.elcajon.gov",
+          "url": "https://www.elcajon.gov/home/showpublisheddocument/28758/638721199959100000",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0206",
+          "verdict": "MISLEADING",
+          "confidence": 0.8300000000000001,
+          "label": "E1",
+          "host": "homeland.house.gov",
+          "url": "https://homeland.house.gov/wp-content/uploads/2024/09/24-01143-ICEs-Signed-Response-to-Representative-Tony-Gonzales.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0208",
+          "verdict": "MISLEADING",
+          "confidence": 0.75,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/featured-stories/a-third-quarter-update-to-the-purchasing-power-of-american-households",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0208",
+          "verdict": "MISLEADING",
+          "confidence": 0.75,
+          "label": "E2",
+          "host": "budget.house.gov",
+          "url": "https://budget.house.gov/press-release/bidens-20-percent-inflation-tax-costs-american-families-over-17000-per-year",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0222",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "label": "E3",
+          "host": "www.usda.gov",
+          "url": "https://www.usda.gov/sites/default/files/documents/2026AOF-livestock-poultry-outlook.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0222",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "label": "E8",
+          "host": "mymarketnews.ams.usda.gov",
+          "url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2452/2026-02-02/1301589/ams_2452_01512.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0222",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "label": "E10",
+          "host": "mymarketnews.ams.usda.gov",
+          "url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2453/2026-02-10/1303579/ams_2453_01519.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0231",
+          "verdict": "TRUE",
+          "confidence": 0.75,
+          "label": "E4",
+          "host": "www.cms.gov",
+          "url": "https://www.cms.gov/oact/tr/2025",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0241",
+          "verdict": "FALSE",
+          "confidence": 0.88,
+          "label": "E1",
+          "host": "www.cms.gov",
+          "url": "https://www.cms.gov/newsroom/fact-sheets/medicare-drug-price-negotiation-program-negotiated-prices-initial-price-applicability-year-2026",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0241",
+          "verdict": "FALSE",
+          "confidence": 0.88,
+          "label": "E4",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2024/03/06/fact-sheet-president-biden-takes-new-steps-to-lower-prescription-drug-and-health-care-costs-expand-access-to-health-care-and-protect-consumers",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0241",
+          "verdict": "FALSE",
+          "confidence": 0.88,
+          "label": "E5",
+          "host": "www.cms.gov",
+          "url": "https://www.cms.gov/newsroom/press-releases/negotiating-lower-drug-prices-works-saves-billions",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0248",
+          "verdict": "FALSE",
+          "confidence": 0.8,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2026/02/fact-sheet-president-donald-j-trump-launches-trumprx-gov-to-bring-lower-drug-prices-to-american-patients/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0248",
+          "verdict": "FALSE",
+          "confidence": 0.8,
+          "label": "E3",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2025/12/fact-sheet-president-donald-j-trump-announces-largest-developments-to-date-in-bringing-most-favored-nation-pricing-to-american-patients/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0248",
+          "verdict": "FALSE",
+          "confidence": 0.8,
+          "label": "E9",
+          "host": "democrats-energycommerce.house.gov",
+          "url": "https://democrats-energycommerce.house.gov/sites/evo-subsites/democrats-energycommerce.house.gov/files/evo-media-document/e-c-democrats-trumprx-big-talk-little-savings.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0250",
+          "verdict": "FALSE",
+          "confidence": 0.875,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2026/02/fact-sheet-president-donald-j-trump-launches-trumprx-gov-to-bring-lower-drug-prices-to-american-patients/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0252",
+          "verdict": "MISLEADING",
+          "confidence": 0.71,
+          "label": "E1",
+          "host": "whitehouse.gov",
+          "url": "https://whitehouse.gov/fact-sheets/2026/02/fact-sheet-president-donald-j-trump-launches-trumprx-gov-to-bring-lower-drug-prices-to-american-patients",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0252",
+          "verdict": "MISLEADING",
+          "confidence": 0.71,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2026/02/fact-sheet-president-donald-j-trump-launches-trumprx-gov-to-bring-lower-drug-prices-to-american-patients/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0252",
+          "verdict": "MISLEADING",
+          "confidence": 0.71,
+          "label": "E6",
+          "host": "trumprx.gov",
+          "url": "https://trumprx.gov/p/gonal-f",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0257",
+          "verdict": "TRUE",
+          "confidence": 0.765,
+          "label": "E1",
+          "host": "trumprx.gov",
+          "url": "https://trumprx.gov/p/gonal-f",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0270",
+          "verdict": "FALSE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "ferc.gov",
+          "url": "https://ferc.gov/news-events/news/fact-sheet-ferc-directs-nations-largest-grid-operator-create-new-rules-embrace",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0270",
+          "verdict": "FALSE",
+          "confidence": 0.96,
+          "label": "E2",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/cmei/ito/combined-heat-and-power-basics",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0270",
+          "verdict": "FALSE",
+          "confidence": 0.96,
+          "label": "E5",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/cmei/amo/articles/more-550-megawatts-new-combined-heat-and-power-capacity-added-united-states",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0281",
+          "verdict": "FALSE",
+          "confidence": 0.81,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2026/01/eo-14376.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0281",
+          "verdict": "FALSE",
+          "confidence": 0.81,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/presidential-actions/2026/01/stopping-wall-street-from-competing-with-main-street-homebuyers/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0310",
+          "verdict": "FALSE",
+          "confidence": 0.86,
+          "label": "E1",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-mn/pr/six-additional-defendants-charged-one-defendant-pleads-guilty-ongoing-fraud-schemes",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0310",
+          "verdict": "FALSE",
+          "confidence": 0.86,
+          "label": "E7",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2025/12/yes-theres-something-wrong-with-walz-and-it-cost-taxpayers-1-billion/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0311",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-mn/pr/three-plead-guilty-wire-fraud-250-million-feeding-our-future-fraud-scheme",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0319",
+          "verdict": "MISLEADING",
+          "confidence": 0.74,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/sb0358",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0319",
+          "verdict": "MISLEADING",
+          "confidence": 0.74,
+          "label": "E6",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/sb0354",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0325",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/09/25/father-speaks-out-after-ice-arrests-criminal-illegal-alien-who-struck-and-severely",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0326",
+          "verdict": "TRUE",
+          "confidence": 0.88,
+          "label": "E1",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/09/25/father-speaks-out-after-ice-arrests-criminal-illegal-alien-who-struck-and-severely",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0326",
+          "verdict": "TRUE",
+          "confidence": 0.88,
+          "label": "E7",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news-releases/press-releases?field_taxonomy_topics_tid=180&page=0",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0327",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E2",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2026/02/25/secretary-noem-backs-dalilah-law-bar-states-granting-commercial-drivers-licenses",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0327",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E5",
+          "host": "www.banks.senate.gov",
+          "url": "https://www.banks.senate.gov/news/press-releases/senator-banks-introduces-the-dalilah-law-to-get-illegal-truckers-off-americas-roads/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0328",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E2",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/09/25/father-speaks-out-after-ice-arrests-criminal-illegal-alien-who-struck-and-severely",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0328",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E7",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/09/25/father-speaks-out-after-ice-arrests-criminal-illegal-alien-who-struck-and-severely-injured-his-5-year-old-daughter-while-driving-18-wheeler-on-ca-issued-commercial-drivers-license",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0329",
+          "verdict": "TRUE",
+          "confidence": 0.89,
+          "label": "E4",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2025/09/25/father-speaks-out-after-ice-arrests-criminal-illegal-alien-who-struck-and-severely",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0334",
+          "verdict": "MISLEADING",
+          "confidence": 0.71,
+          "label": "E5",
+          "host": "opportunity.lacounty.gov",
+          "url": "https://opportunity.lacounty.gov/wp-content/uploads/2026/02/LAEDCxDEO_Immigration-Enforcment-Report-2026.02.01.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0334",
+          "verdict": "MISLEADING",
+          "confidence": 0.71,
+          "label": "E9",
+          "host": "qr.dmv.ca.gov",
+          "url": "https://qr.dmv.ca.gov/portal/driver-education-and-safety/educational-materials/sample-driver-license-dl-knowledge-tests/muestra-del-examen-escrito-para-licencia-de-manejar-clase-c-examen-2/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0343",
+          "verdict": "FALSE",
+          "confidence": 0.7,
+          "label": "E9",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2026/01/20/dhs-sets-stage-another-historic-record-breaking-year-under-president-trump",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0358",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "label": "E3",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/sites/default/files/2025-09/2025_0925_dhs_procedures_related_to_a_lapse_in_appropriations.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0358",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "label": "E6",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2026/02/22/1-week-democrats-shutdown-dhs-implements-emergency-measures-conserve-resources-and",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0358",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "label": "E8",
+          "host": "www.dhs.gov",
+          "url": "https://www.dhs.gov/news/2026/03/01/amid-shutdown-dhs-celebrates-23rd-anniversary",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0374",
+          "verdict": "FALSE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "www.eac.gov",
+          "url": "https://www.eac.gov/sites/default/files/2025-06/2024_EAVS_Report_508c.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0374",
+          "verdict": "FALSE",
+          "confidence": 0.925,
+          "label": "E3",
+          "host": "www.ohiosos.gov",
+          "url": "https://www.ohiosos.gov/media-center/press-releases/2025/2025-09-17/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0374",
+          "verdict": "FALSE",
+          "confidence": 0.925,
+          "label": "E9",
+          "host": "www.michigan.gov",
+          "url": "https://www.michigan.gov/sos/resources/news/2025/04/03/michigan-department-of-state-review-confirms-instances-of-noncitizen-voting-are-extremely-rare",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0409",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E8",
+          "host": "www.mass.gov",
+          "url": "https://www.mass.gov/doc/know-your-rights-gender-affirming-care/download",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0422",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/presidential-actions/2025/11/fostering-the-future-for-american-children-and-families/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0422",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E3",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefings-statements/2025/05/first-lady-melania-trump-joins-president-trump-for-signing-of-the-take-it-down-act",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0422",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E7",
+          "host": "www.hud.gov",
+          "url": "https://www.hud.gov/HUD-Accomplishments-2026",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0422",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E9",
+          "host": "salazar.house.gov",
+          "url": "https://salazar.house.gov/media/press-releases/take-it-down-act-officially-signed-law-president-trump",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0428",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefings-statements/2025/08/first-lady-melania-trump-launches-nationwide-presidential-ai-challenge",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0428",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2025/12/31600/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0428",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E7",
+          "host": "orise.orau.gov",
+          "url": "https://orise.orau.gov/ai-challenge/index.html",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0436",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "www.fbi.gov",
+          "url": "https://www.fbi.gov/news/press-releases/utah-valley-shooting-updates",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0436",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E8",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/presidential-actions/2025/10/national-day-of-remembrance-for-charlie-kirk/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0449",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E2",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-wdnc/pr/federal-indictment-charges-charlotte-man-light-rail-fatal-attack-iryna-zarutska",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0452",
+          "verdict": "FALSE",
+          "confidence": 0.925,
+          "label": "E4",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-wdnc/pr/federal-indictment-charges-charlotte-man-light-rail-fatal-attack-iryna-zarutska",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0452",
+          "verdict": "FALSE",
+          "confidence": 0.925,
+          "label": "E5",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/opa/pr/justice-department-charges-light-rail-attacker-federal-crime",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0457",
+          "verdict": "MISLEADING",
+          "confidence": 0.72,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/presidential-actions/2025/08/declaring-a-crime-emergency-in-the-district-of-columbia/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0457",
+          "verdict": "MISLEADING",
+          "confidence": 0.72,
+          "label": "E3",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/presidential-actions/2025/09/restoring-law-and-order-in-memphis/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0457",
+          "verdict": "MISLEADING",
+          "confidence": 0.72,
+          "label": "E6",
+          "host": "geauxguard.la.gov",
+          "url": "https://geauxguard.la.gov/2025/12/la-national-guard-mobilizes-to-support-law-enforcement-efforts-in-new-orleans/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0457",
+          "verdict": "MISLEADING",
+          "confidence": 0.72,
+          "label": "E7",
+          "host": "geauxguard.la.gov",
+          "url": "https://geauxguard.la.gov/2025/12/23/la-national-guard-mobilizes-to-support-law-enforcement-efforts-in-new-orleans/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0457",
+          "verdict": "MISLEADING",
+          "confidence": 0.72,
+          "label": "E9",
+          "host": "mpdc.dc.gov",
+          "url": "https://mpdc.dc.gov/dailycrime",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0458",
+          "verdict": "FALSE",
+          "confidence": 0.88,
+          "label": "E3",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/violent-crime-dc-hits-30-year-low",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0458",
+          "verdict": "FALSE",
+          "confidence": 0.88,
+          "label": "E5",
+          "host": "mpdc.dc.gov",
+          "url": "https://mpdc.dc.gov/release/mpd-statement-public-safety-district-columbia",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0458",
+          "verdict": "FALSE",
+          "confidence": 0.88,
+          "label": "E6",
+          "host": "mpdc.dc.gov",
+          "url": "https://mpdc.dc.gov/release/mpd-investigating-37th-street-homicide",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0458",
+          "verdict": "FALSE",
+          "confidence": 0.88,
+          "label": "E9",
+          "host": "mpdc.dc.gov",
+          "url": "https://mpdc.dc.gov/release/mpd-makes-arrest-pennsylvania-avenue-homicide-0",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0461",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E2",
+          "host": "www.nationalguard.mil",
+          "url": "https://www.nationalguard.mil/News/Article-View/Article/4357078/spc-sarah-beckstrom-laid-to-rest-at-west-virginia-national-cemetery/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0461",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E3",
+          "host": "www.wv.ng.mil",
+          "url": "https://www.wv.ng.mil/News/Article_View/Article/4363043/spc-sarah-beckstrom-laid-to-rest-at-wva-national-cemetery/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0465",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/afghan-national-charged-murder-national-guard-soldier-sarah-beckstrom",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0466",
+          "verdict": "TRUE",
+          "confidence": 0.935,
+          "label": "E2",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/afghan-national-charged-murder-national-guard-soldier-sarah-beckstrom",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0466",
+          "verdict": "TRUE",
+          "confidence": 0.935,
+          "label": "E4",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/suspect-killing-national-guardsman-sarah-beckstrom-charged-complaint-new-federal-counts",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0466",
+          "verdict": "TRUE",
+          "confidence": 0.935,
+          "label": "E6",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/lakanwal-newly-indicted-shooting-guardsmen-near-white-house-killed-sarah-beckstrom-0",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0469",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E2",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/lakanwal-newly-indicted-shooting-guardsmen-near-white-house-killed-sarah-beckstrom",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0478",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E1",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/afghan-national-charged-murder-national-guard-soldier-sarah-beckstrom",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0480",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E1",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/suspect-killing-national-guardsman-sarah-beckstrom-charged-complaint-new-federal-counts",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0487",
+          "verdict": "TRUE",
+          "confidence": 0.8,
+          "label": "E4",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/suspect-killing-national-guardsman-sarah-beckstrom-charged-complaint-new-federal-counts",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0487",
+          "verdict": "TRUE",
+          "confidence": 0.8,
+          "label": "E7",
+          "host": "www.justice.senate.gov",
+          "url": "https://www.justice.senate.gov/newsroom/press-releases/senator-justice-honors-west-virginia-heroes-and-purple-heart-recipients-sarah-beckstrom-and-andrew-wolfe-at-president-trumps-state-of-the-union-address/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0487",
+          "verdict": "TRUE",
+          "confidence": 0.8,
+          "label": "E8",
+          "host": "www.wv.ng.mil",
+          "url": "https://www.wv.ng.mil/News/Article_View/Article/4362911/update-on-national-guard-staff-sgt-andrew-wolfe/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0497",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E6",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/usao-dc/pr/afghan-national-charged-murder-national-guard-soldier-sarah-beckstrom",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0509",
+          "verdict": "MISLEADING",
+          "confidence": 0.76,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/fact-sheets/2025/10/fact-sheet-president-donald-j-trump-secures-peace-and-prosperity-in-malaysia/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0509",
+          "verdict": "MISLEADING",
+          "confidence": 0.76,
+          "label": "E4",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefings-statements/2025/10/joint-declaration-by-the-prime-minister-of-the-kingdom-of-cambodia-and-the-prime-minister-of-the-kingdom-of-thailand-on-the-outcomes-of-their-meeting-in-kuala-lampur-malaysia/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0558",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E8",
+          "host": "www.state.gov",
+          "url": "https://www.state.gov/state-sponsors-of-terrorism",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0559",
+          "verdict": "MISLEADING",
+          "confidence": 0.78,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2026/03/the-iranian-regimes-decades-of-terrorism-against-american-citizens",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0561",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E1",
+          "host": "media.defense.gov",
+          "url": "https://media.defense.gov/2024/May/30/2003475060/-1/-1/1/OES_Q2_MAR2024_508.PDF",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0561",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E3",
+          "host": "media.defense.gov",
+          "url": "https://media.defense.gov/2024/Aug/29/2003534907/-1/-1/1/OES_Q3_JUN2024_FINAL_508.PDF",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0575",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E7",
+          "host": "fitzpatrick.house.gov",
+          "url": "https://fitzpatrick.house.gov/2026/2/fitzpatrick-statement-regarding-iran",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0575",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E9",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/system/files/136/2024-National-Terrorist-Financing-Risk-Assessment.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0577",
+          "verdict": "MISLEADING",
+          "confidence": 0.69,
+          "label": "E3",
+          "host": "media.defense.gov",
+          "url": "https://media.defense.gov/2024/Dec/18/2003615520/-1/-1/0/MILITARY-AND-SECURITY-DEVELOPMENTS-INVOLVING-THE-PEOPLES-REPUBLIC-OF-CHINA-2024.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0577",
+          "verdict": "MISLEADING",
+          "confidence": 0.69,
+          "label": "E7",
+          "host": "www.armed-services.senate.gov",
+          "url": "https://www.armed-services.senate.gov/imo/media/doc/nds_commission_final_report.pdf",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0583",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E2",
+          "host": "www.war.gov",
+          "url": "https://www.war.gov/News/News-Stories/Article/Article/4227847/senior-officials-outline-presidents-proposed-fy26-defense-budget/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0585",
+          "verdict": "MISLEADING",
+          "confidence": 0.84,
+          "label": "E7",
+          "host": "www.ncia.nato.int",
+          "url": "https://www.ncia.nato.int/newsroom/news/the-hague-summit-declaration",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0592",
+          "verdict": "FALSE",
+          "confidence": 0.95,
+          "label": "E1",
+          "host": "www.defense.gov",
+          "url": "https://www.defense.gov/News/Trans/Tran/Article/4024088/two-senior-defense-officials-hold-a-dod-background-briefing-on-ukraine/",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0594",
+          "verdict": "MISLEADING",
+          "confidence": 0.725,
+          "label": "E3",
+          "host": "www.war.gov",
+          "url": "https://www.war.gov/News/News-Stories/Article/Article/4365687/fy25-sees-best-recruiting-numbers-in-15-years/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0594",
+          "verdict": "MISLEADING",
+          "confidence": 0.725,
+          "label": "E4",
+          "host": "www.spaceforce.mil",
+          "url": "https://www.spaceforce.mil/News/Article-Display/Article/4365558/hegseth-senior-leaders-honor-militarys-top-recruiters/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0596",
+          "verdict": "FALSE",
+          "confidence": 0.86,
+          "label": "E2",
+          "host": "www.irs.gov",
+          "url": "https://www.irs.gov/newsroom/treasury-irs-supplemental-basic-allowance-for-housing-payments-to-members-of-the-military-are-not-taxable",
+          "supports_claim": false,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0614",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E1",
+          "host": "www.dea.gov",
+          "url": "https://www.dea.gov/sites/default/files/2024-05/5.23.2024%20NDTA-updated.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0614",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E2",
+          "host": "www.dea.gov",
+          "url": "https://www.dea.gov/sites/default/files/2025-07/2025NationalDrugThreatAssessment.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0615",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/presidential-actions/2025/12/designating-fentanyl-as-a-weapon-of-mass-destruction/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0615",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E4",
+          "host": "whitehouse.gov",
+          "url": "https://whitehouse.gov/fact-sheets/2025/12/fact-sheet-president-donald-j-trump-designates-fentanyl-as-a-weapon-of-mass-destruction",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0615",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E5",
+          "host": "www.state.gov",
+          "url": "https://www.state.gov/designation-of-international-cartels",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0615",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E7",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/presidential-actions/2025/01/designating-cartels-and-other-organizations-as-foreign-terrorist-organizations-and-specially-designated-global-terrorists/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0616",
+          "verdict": "FALSE",
+          "confidence": 0.89,
+          "label": "E1",
+          "host": "www.news.uscg.mil",
+          "url": "https://www.news.uscg.mil/Press-Releases/Article/4398360/us-coast-guard-marks-200000-pounds-of-cocaine-seized-in-operation-pacific-viper/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0616",
+          "verdict": "FALSE",
+          "confidence": 0.89,
+          "label": "E4",
+          "host": "www.news.uscg.mil",
+          "url": "https://www.news.uscg.mil/Press-Releases/Article/4406849/coast-guard-offloads-over-1335-million-in-illicit-drugs-interdicted-in-eastern/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0616",
+          "verdict": "FALSE",
+          "confidence": 0.89,
+          "label": "E8",
+          "host": "www.news.uscg.mil",
+          "url": "https://www.news.uscg.mil/Press-Releases/Article/4355243/coast-guard-seizes-150000-pounds-of-cocaine-through-operation-pacific-viper-int/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0632",
+          "verdict": "TRUE",
+          "confidence": 0.935,
+          "label": "E1",
+          "host": "www.war.gov",
+          "url": "https://www.war.gov/News/News-Stories/Article/Article/4370431/trump-announces-us-militarys-capture-of-maduro/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0632",
+          "verdict": "TRUE",
+          "confidence": 0.935,
+          "label": "E5",
+          "host": "www.state.gov",
+          "url": "https://www.state.gov/nicolas-maduro-moros",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0635",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E1",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/node/4856208",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0635",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E2",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/articles/secretary-wright-delivers-remarks-alongside-interim-venezuelan-president-delcy-rodriguez",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0635",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E7",
+          "host": "ofac.treasury.gov",
+          "url": "https://ofac.treasury.gov/faqs/added/2026-02-06",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0649",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E2",
+          "host": "www.war.gov",
+          "url": "https://www.war.gov/News/News-Stories/Article/Article/4370431/trump-announces-us-militarys-capture-of-maduro/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0652",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E6",
+          "host": "valor.defense.gov",
+          "url": "https://valor.defense.gov/Recipients/Army-Medal-of-Honor-Recipients/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0665",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E7",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/releases/2026/02/president-trump-delivers-his-2026-state-of-the-union-address/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0674",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E2",
+          "host": "www.defense.gov",
+          "url": "https://www.defense.gov/News/Releases/Release/Article/4062245/secretary-of-defense-pete-hegseth-renames-fort-liberty-to-fort-roland-l-bragg/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0674",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E4",
+          "host": "www.defense.gov",
+          "url": "https://www.defense.gov/News/News-Stories/Article/Article/4063467/defense-secretary-renames-fort-liberty-as-fort-bragg-honoring-wwii-soldier/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0675",
+          "verdict": "TRUE",
+          "confidence": 0.905,
+          "label": "E1",
+          "host": "www.defense.gov",
+          "url": "https://www.defense.gov/News/News-Stories/Article/article/4063467/defense-secretary-renames-fort-liberty-as-fort-bragg-honoring-wwii-soldier/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0675",
+          "verdict": "TRUE",
+          "confidence": 0.905,
+          "label": "E9",
+          "host": "media.defense.gov",
+          "url": "https://media.defense.gov/2024/Apr/22/2003446158/-1/-1/1/DODIG%202024-074_REDACTED%20SECURE.PDF",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0682",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E2",
+          "host": "issa.house.gov",
+          "url": "http://issa.house.gov/issues/royce-williams",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0682",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E5",
+          "host": "issa.house.gov",
+          "url": "https://issa.house.gov/media/press-releases/breaking-issa-announces-president-trump-informs-royce-williams-he-will-receive",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0682",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E9",
+          "host": "issa.house.gov",
+          "url": "https://issa.house.gov/media/press-releases/issa-secures-congressional-medal-honor-language-san-diegan-captain-royce",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0683",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E2",
+          "host": "issa.house.gov",
+          "url": "http://issa.house.gov/issues/royce-williams/1952",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0683",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E6",
+          "host": "issa.house.gov",
+          "url": "https://issa.house.gov/media/press-releases/breaking-issa-announces-president-trump-informs-royce-williams-he-will-receive",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0684",
+          "verdict": "TRUE",
+          "confidence": 0.94,
+          "label": "E2",
+          "host": "issa.house.gov",
+          "url": "http://issa.house.gov/issues/royce-williams/1952",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0686",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E2",
+          "host": "issa.house.gov",
+          "url": "http://issa.house.gov/issues/royce-williams/1952",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "trump_2026:0686",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E5",
+          "host": "issa.house.gov",
+          "url": "http://issa.house.gov/issues/royce-williams",
+          "supports_claim": true,
+          "old_tier": "Government"
+        }
+      ]
+    },
+    {
+      "artifact": "7208bbbb-c802-4155-932f-d0cc66803b24",
+      "speaker": "biden_2022",
+      "claims": 111,
+      "decided_claims": 101,
+      "evidence_items": 918,
+      "demoted_items": 276,
+      "demoted_distinct_hosts": 96,
+      "demoted_in_decided_pack": 259,
+      "demoted_cited_anywhere": 151,
+      "decisive_demoted": 151,
+      "top_demoted_hosts": [
+        [
+          "bidenwhitehouse.archives.gov",
+          37
+        ],
+        [
+          "home.treasury.gov",
+          27
+        ],
+        [
+          "www.whitehouse.gov",
+          21
+        ],
+        [
+          "www.justice.gov",
+          14
+        ],
+        [
+          "news.va.gov",
+          9
+        ],
+        [
+          "www.defense.gov",
+          8
+        ],
+        [
+          "2021-2025.state.gov",
+          8
+        ],
+        [
+          "www.energy.gov",
+          7
+        ],
+        [
+          "www.cbp.gov",
+          6
+        ],
+        [
+          "www.finance.senate.gov",
+          5
+        ],
+        [
+          "ofac.treasury.gov",
+          5
+        ],
+        [
+          "www.cms.gov",
+          5
+        ],
+        [
+          "media.defense.gov",
+          4
+        ],
+        [
+          "www.hhs.gov",
+          4
+        ],
+        [
+          "www.publichealth.va.gov",
+          4
+        ]
+      ],
+      "decisive_records": [
+        {
+          "sid": "biden_2022:0201",
+          "verdict": "TRUE",
+          "confidence": 0.835,
+          "label": "E2",
+          "host": "le.utah.gov",
+          "url": "https://le.utah.gov/interim/2021/pdf/00003465.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0201",
+          "verdict": "TRUE",
+          "confidence": 0.835,
+          "label": "E5",
+          "host": "coag.gov",
+          "url": "https://coag.gov/app/uploads/2020/11/Insulin-Report-102020.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0322",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "ag.ny.gov",
+          "url": "https://ag.ny.gov/press-release/2022/attorney-general-james-statement-death-nypd-officer-wilbert-mora",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0019",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/03/02/remarks-by-president-biden-in-state-of-the-union-address/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0025",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E7",
+          "host": "history.state.gov",
+          "url": "https://history.state.gov/milestones/1945-1952/nato",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0025",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E8",
+          "host": "diplomacy.state.gov",
+          "url": "https://diplomacy.state.gov/artifact-collection-highlights/commemorating-70-years-of-the-north-atlantic-treaty",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0030",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/02/24/remarks-by-president-biden-on-russias-unprovoked-and-unjustified-attack-on-ukraine/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0030",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E7",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/02/22/remarks-by-president-biden-announcing-response-to-russian-actions-in-ukraine/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0031",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E4",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0610",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0038",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0612",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0038",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E4",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/02/24/remarks-by-president-biden-on-russias-unprovoked-and-unjustified-attack-on-ukraine/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0038",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E7",
+          "host": "uk.usembassy.gov",
+          "url": "https://uk.usembassy.gov/news-joint-statement-on-further-restrictive-economic-measures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0040",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E1",
+          "host": "www.state.gov",
+          "url": "https://www.state.gov/briefings/department-press-briefing-february-3-2022/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0040",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E5",
+          "host": "geneva.usmission.gov",
+          "url": "https://geneva.usmission.gov/2022/02/25/remarks-by-president-biden-on-russias-attack-on-ukraine/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0045",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0612",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0045",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E3",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0628",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0046",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/24/fact-sheet-joined-by-allies-and-partners-the-united-states-imposes-devastating-costs-on-russia/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0046",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E2",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0608",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0046",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E3",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0602",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0046",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E5",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/26/joint-statement-on-further-restrictive-economic-measures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0047",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0608",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0047",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E2",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/26/joint-statement-on-further-restrictive-economic-measures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0047",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E5",
+          "host": "ofac.treasury.gov",
+          "url": "https://ofac.treasury.gov/faqs/966",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0047",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E8",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/26/joint-statement-on-further-restrictive-economic-measures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0048",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0612",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0048",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E2",
+          "host": "ofac.treasury.gov",
+          "url": "https://ofac.treasury.gov/recent-actions/20220228",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0051",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E1",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/archives/opa/pr/attorney-general-merrick-b-garland-announces-launch-task-force-kleptocapture",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0051",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E2",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/archives/opa/video/attorney-general-merrick-b-garland-announces-launch-task-force-kleptocapture",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0062",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E1",
+          "host": "www.defense.gov",
+          "url": "https://www.defense.gov/News/News-Stories/Article/Article/2955960/us-provided-more-than-1-billion-in-security-assistance-to-ukraine-past-year/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0062",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E2",
+          "host": "2021-2025.state.gov",
+          "url": "https://2021-2025.state.gov/briefings/department-press-briefing-february-28-2022/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0062",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E5",
+          "host": "www.defense.gov",
+          "url": "https://www.defense.gov/News/News-Stories/Article/Article/2955960/us-provided-more-than-1-billion-in-security-assistance-to-ukraine-in-past-year/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0066",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E1",
+          "host": "media.defense.gov",
+          "url": "https://media.defense.gov/2022/Feb/02/2002931655/-1/-1/0/EUROPE-POSTURE-UPDATES-FACT-SHEET.PDF",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0066",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E2",
+          "host": "media.defense.gov",
+          "url": "https://media.defense.gov/2022/Mar/08/2002952460/-1/-1/0/2022-0308-MAR-5-SDOB-FACTSHEET-POSTURE-IN-SUPPORT-OF-ALLIES-IN-EUROPE.PDF",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0066",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E6",
+          "host": "media.defense.gov",
+          "url": "https://media.defense.gov/2022/Feb/22/2002943228/-1/-1/1/POSTURE-UPDATES-IN-SUPPORT-OF-ALLIES-IN-EUROPE.PDF",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0066",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "label": "E9",
+          "host": "www.usafe.af.mil",
+          "url": "https://www.usafe.af.mil/News/Press-Releases/Article/2931580/us-aircraft-heading-to-romania-to-enhance-nato-collective-defense/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0073",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E4",
+          "host": "2021-2025.state.gov",
+          "url": "https://2021-2025.state.gov/ukraine-national-day-30-years-of-independence/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0078",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E1",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/articles/us-and-30-countries-commit-release-60-million-barrels-oil-strategic-reserves-stabilize",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0079",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E1",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/articles/us-and-30-countries-commit-release-60-million-barrels-oil-strategic-reserves-stabilize",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0079",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/03/01/remarks-of-president-joe-biden-state-of-the-union-address-as-prepared-for-delivery/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0079",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E3",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/articles/doe-announces-emergency-sale-30-million-barrels-crude-oil-strategic-petroleum-reserve",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0079",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E8",
+          "host": "www.energy.gov",
+          "url": "https://www.energy.gov/ceser/articles/doe-announces-emergency-notice-sale-crude-oil-strategic-petroleum-reserve-address",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0100",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/03/01/remarks-of-president-joe-biden-state-of-the-union-address-as-prepared-for-delivery/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0100",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E5",
+          "host": "obamawhitehouse.archives.gov",
+          "url": "https://obamawhitehouse.archives.gov/realitycheck/node/110",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0100",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E7",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2025/01/The-Official-Biography-of-President-Joe-Biden-1.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0102",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2021/02/HR1319-SAP-Final.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0107",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/featured-stories/fact-sheet-the-american-rescue-plan-will-deliver-immediate-economic-relief-to-families",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0107",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E3",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0161",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0107",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E4",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/system/files/136/American-Rescue-Plan-Six-Month-Report.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0110",
+          "verdict": "MISLEADING",
+          "confidence": 0.71,
+          "label": "E1",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/system/files/136/Fact-Sheet-03-18-21.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0116",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E2",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0629",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0125",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/cea/written-materials/2021/11/06/bringing-infrastructure-into-the-21st-century/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0136",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/23/fact-sheet-biden-%E2%81%A0harris-administration-delivering-results-100-days-into-infrastructure-implementation/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0137",
+          "verdict": "TRUE",
+          "confidence": 0.885,
+          "label": "E4",
+          "host": "www.transportation.gov",
+          "url": "https://www.transportation.gov/briefing-room/dot-announces-historic-bridge-investment-under-bipartisan-infrastructure-law",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0137",
+          "verdict": "TRUE",
+          "confidence": 0.885,
+          "label": "E6",
+          "host": "highways.dot.gov",
+          "url": "https://highways.dot.gov/newsroom/fhwa-delivers-largest-federal-highway-apportionment-decades-part-bipartisan-infrastructure",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0139",
+          "verdict": "TRUE",
+          "confidence": 0.885,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/03/04/fact-sheet-biden-harris-administration-delivers-on-made-in-america-commitments/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0139",
+          "verdict": "TRUE",
+          "confidence": 0.885,
+          "label": "E2",
+          "host": "www.acquisition.gov",
+          "url": "https://www.acquisition.gov/sites/default/files/page_file_uploads/FAR_Buy_American_Act_Final_Rule_Prepublication.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0148",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E3",
+          "host": "governor.ohio.gov",
+          "url": "https://governor.ohio.gov/media/news-and-media/governor-dewine-announces-monumental-investment-by-intel-to-bring-their-most-advanced-semiconductor-manufacturing-plants-to-ohio-01212022",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0148",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E5",
+          "host": "www.commerce.gov",
+          "url": "https://www.commerce.gov/news/press-releases/2022/01/statements-us-secretary-commerce-gina-raimondo-and-deputy-secretary",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0165",
+          "verdict": "TRUE",
+          "confidence": 0.835,
+          "label": "E4",
+          "host": "gov.texas.gov",
+          "url": "https://gov.texas.gov/news/post/governor-abbott-announces-new-17-billion-samsung-manufacturing-facility-in-taylor",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0165",
+          "verdict": "TRUE",
+          "confidence": 0.835,
+          "label": "E8",
+          "host": "gov.texas.gov",
+          "url": "https://gov.texas.gov/news/post/governor-abbott-welcomes-tesla-to-texas",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0167",
+          "verdict": "MISLEADING",
+          "confidence": 0.81,
+          "label": "E3",
+          "host": "kentucky.gov",
+          "url": "https://kentucky.gov/Pages/Activity-stream.aspx?n=GovernorBeshear&prId=981",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0168",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "www.michigan.gov",
+          "url": "https://www.michigan.gov/whitmer/news/press-releases/2022/01/25/secures-historic-7-billion-investment-by-gm-to-create-thousands-of-manufacturing-jobs-",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0171",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "www.brown.senate.gov",
+          "url": "https://www.brown.senate.gov/newsroom/newsletters/burying-the-term-rust-belt",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0171",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E8",
+          "host": "www.brown.senate.gov",
+          "url": "https://www.brown.senate.gov/issues/manufacturing",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0180",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2021/06/100-day-supply-chain-review-report.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0180",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E5",
+          "host": "www.commerce.gov",
+          "url": "https://www.commerce.gov/news/blog/2022/01/secretary-raimondo-announces-results-request-information-semiconductor-supply",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0194",
+          "verdict": "TRUE",
+          "confidence": 0.825,
+          "label": "E3",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/01/26/remarks-by-president-biden-at-build-back-better-ceo-roundtable/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0199",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E8",
+          "host": "www.who.int",
+          "url": "https://www.who.int/news/item/12-11-2021-new-who-report-maps-barriers-to-insulin-availability-and-suggests-actions-to-promote-universal-access",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0200",
+          "verdict": "MISLEADING",
+          "confidence": 0.76,
+          "label": "E1",
+          "host": "www.finance.senate.gov",
+          "url": "https://www.finance.senate.gov/imo/media/doc/Grassley-Wyden%20Insulin%20Report%20(FINAL%201).pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0211",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E1",
+          "host": "cms.gov",
+          "url": "https://cms.gov/newsroom/press-releases/biden-harris-administration-announces-145-million-americans-signed-affordable-health-care-during",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0211",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E4",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/01/27/statement-by-president-biden-on-14-5-million-americans-signing-up-for-health-insurance/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0211",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E10",
+          "host": "www.help.senate.gov",
+          "url": "https://www.help.senate.gov/dem/newsroom/press/after-american-rescue-plan-brought-down-costs-washington-state-and-national-open-enrollment-set-records-for-health-care-sign-ups",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0232",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0447",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0232",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E4",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0405",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0240",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E7",
+          "host": "trumpwhitehouse.archives.gov",
+          "url": "https://trumpwhitehouse.archives.gov/briefings-statements/statement-by-the-president-38/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0242",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/03/01/fact-sheet-president-biden-to-announce-new-steps-to-combat-criminal-fraud-and-identity-theft-in-pandemic-relief-programs/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0242",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E2",
+          "host": "www.pandemicoversight.gov",
+          "url": "https://www.pandemicoversight.gov/oversight/semiannual-reports-to-congress/october-2020-march-2021",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0242",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E7",
+          "host": "oversightdemocrats.house.gov",
+          "url": "https://oversightdemocrats.house.gov/news/press-releases/select-subcommittee-releases-new-findings-on-trump-administration-s-failure-to",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0242",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "label": "E9",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/archives/opa/pr/justice-department-takes-action-against-covid-19-fraud",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0244",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E7",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0428",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0245",
+          "verdict": "FALSE",
+          "confidence": 0.89,
+          "label": "E3",
+          "host": "fiscaldata.treasury.gov",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202109.pdf",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0250",
+          "verdict": "TRUE",
+          "confidence": 0.855,
+          "label": "E3",
+          "host": "www2.fmc.gov",
+          "url": "https://www2.fmc.gov/readingroom/docs/21-11/21-11_C_Rsp_R_Mtn_Public.pdf/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0251",
+          "verdict": "TRUE",
+          "confidence": 0.88,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/28/fact-sheet-lowering-prices-and-leveling-the-playing-field-in-ocean-shipping",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0282",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E3",
+          "host": "www.fda.gov",
+          "url": "https://www.fda.gov/news-events/press-announcements/coronavirus-covid-19-update-fda-authorizes-first-oral-antiviral-treatment-covid-19",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0282",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E6",
+          "host": "www.fda.gov",
+          "url": "https://www.fda.gov/media/155049/download",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0284",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E2",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0285",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/press-briefings/2022/03/02/press-briefing-by-white-house-and-hhs-public-health-officials-march-2-2022",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0285",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E2",
+          "host": "www.vdh.virginia.gov",
+          "url": "https://www.vdh.virginia.gov/content/uploads/sites/182/2022/03/ASPR-Fact-Sheet_T2T_FINAL_3.4.22.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0285",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "portal.ct.gov",
+          "url": "https://portal.ct.gov/dph/-/media/departments-and-agencies/dph/public-health-preparedness/2019-ncov/covid-19-therapeutics/208-28-aspr-fact-sheet_testtotreatinitiative_3422.pdf?rev=3d855795f5204a828fe41688264f47aa&hash=2694B262EF56AEEFC88270E832C373AD",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0285",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E4",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/covidplan/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0288",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/01/14/fact-sheet-the-biden-administration-to-begin-distributing-at-home-rapid-covid-19-tests-to-americans-for-free/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0288",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E7",
+          "host": "www.war.gov",
+          "url": "https://www.war.gov/News/News-Stories/Article/Article/2945466/dla-packs-ships-covid-19-tests-for-white-house-mission/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0306",
+          "verdict": "TRUE",
+          "confidence": 0.88,
+          "label": "E2",
+          "host": "www.cms.gov",
+          "url": "https://www.cms.gov/newsroom/press-releases/biden-harris-administration-requires-insurance-companies-group-health-plans-cover-cost-home-covid-19",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0306",
+          "verdict": "TRUE",
+          "confidence": 0.88,
+          "label": "E4",
+          "host": "www.hrsa.gov",
+          "url": "https://www.hrsa.gov/provider-relief/about/covid-19-coverage-assistance",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0306",
+          "verdict": "TRUE",
+          "confidence": 0.88,
+          "label": "E7",
+          "host": "www.hhs.gov",
+          "url": "https://www.hhs.gov/coronavirus/covid-19-care-uninsured-individuals/index.html",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0306",
+          "verdict": "TRUE",
+          "confidence": 0.88,
+          "label": "E9",
+          "host": "www.cms.gov",
+          "url": "https://www.cms.gov/monoclonal",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0311",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "2021-2025.state.gov",
+          "url": "https://2021-2025.state.gov/covid-19-vaccine-deliveries/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0311",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E2",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0311",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E3",
+          "host": "2021-2025.state.gov",
+          "url": "https://2021-2025.state.gov/briefings/department-press-briefing-march-3-2022/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0323",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E1",
+          "host": "www.nyc.gov",
+          "url": "https://www.nyc.gov/assets/nypd/downloads/pdf/fallen-heroes/0125-mn-det-mora.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0324",
+          "verdict": "TRUE",
+          "confidence": 0.97,
+          "label": "E2",
+          "host": "www.nyc.gov",
+          "url": "https://www.nyc.gov/assets/nypd/downloads/pdf/fallen-heroes/0121-mn-det-rivera.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0332",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/archives/opa/pr/department-justice-announces-department-wide-policy-chokeholds-and-no-knock-entries",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0332",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E2",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/archives/dag/file/1144936-0/dl?inline=",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0332",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/d9/pages/attachments/2021/09/14/2021.09.13_chokehold_carotid_restraint_knock_and_announce_policy_final_0.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0332",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E4",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/archives/dag/file/1166221-0/dl?inline=",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0332",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E5",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/archives/opa/pr/justice-department-announces-first-federal-agents-use-body-worn-cameras",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0332",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E9",
+          "host": "www.justice.gov",
+          "url": "https://www.justice.gov/opa/pr/department-justice-announces-department-wide-policy-chokeholds-and-no-knock-entries",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0333",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/06/23/fact-sheet-biden-harris-administration-announces-comprehensive-strategy-to-prevent-and-respond-to-gun-crime-and-ensure-public-safety/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0333",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "home.treasury.gov",
+          "url": "https://home.treasury.gov/news/press-releases/jy0240",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0347",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E9",
+          "host": "capitol.texas.gov",
+          "url": "https://capitol.texas.gov/tlodocs/872/billtext/html/SB00001F.HTM",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0353",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E4",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/01/27/remarks-by-president-biden-on-the-retirement-of-supreme-court-justice-stephen-breyer/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0356",
+          "verdict": "TRUE",
+          "confidence": 0.99,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/25/president-biden-nominates-judge-ketanji-brown-jackson-to-serve-as-associate-justice-of-the-u-s-supreme-court/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0356",
+          "verdict": "TRUE",
+          "confidence": 0.99,
+          "label": "E2",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/02/25/remarks-by-president-biden-on-his-nomination-of-judge-ketanji-brown-jackson-to-serve-as-associate-justice-of-the-u-s-supreme-court/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0362",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "www.judiciary.senate.gov",
+          "url": "https://www.judiciary.senate.gov/conservative-support-for-jackson",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0365",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/newsroom/spotlights/decentralized-training-and-mobile-scanning-equipment-yield-successes",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0365",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E2",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/newsroom/national-media-release/cbp-announces-46-million-rail-refresh",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0365",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E4",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/sites/default/files/documents/nii_factsheet_2.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0365",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E8",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/newsroom/local-media-release/cbp-introduces-first-in-the-nation-dedicated-centralized-inspection-facility-at-lax",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0365",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E10",
+          "host": "www.cbp.gov",
+          "url": "https://www.cbp.gov/frontline/cbp-america-s-front-line-against-fentanyl",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0368",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/07/29/fact-sheet-the-collaborative-migration-management-strategy",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0368",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E4",
+          "host": "2021-2025.state.gov",
+          "url": "https://2021-2025.state.gov/creating-a-comprehensive-framework-to-promote-safe-orderly-migration-in-north-and-central-america/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0368",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E5",
+          "host": "www.usaid.gov",
+          "url": "https://www.usaid.gov/sites/default/files/2022-05/2022-01-11_USG_Venezuela_Regional_Crisis_Response_Fact_Sheet_1.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0368",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E7",
+          "host": "2021-2025.state.gov",
+          "url": "https://2021-2025.state.gov/briefings-foreign-press-centers/us-government-response-to-migration-in-the-americas/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0368",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E10",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/statements-releases/2021/07/29/fact-sheet-the-collaborative-migration-management-strategy/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0377",
+          "verdict": "TRUE",
+          "confidence": 0.875,
+          "label": "E3",
+          "host": "capitol.texas.gov",
+          "url": "https://capitol.texas.gov/tlodocs/87R/billtext/html/SB00008F.htm",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0385",
+          "verdict": "TRUE",
+          "confidence": 0.84,
+          "label": "E5",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/state-of-the-union-2022/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0387",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "www.durbin.senate.gov",
+          "url": "https://www.durbin.senate.gov/newsroom/press-releases/senators-introduce-bipartisan-bill-to-modernize-violence-against-women-act",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0387",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E7",
+          "host": "history.house.gov",
+          "url": "https://history.house.gov/Exhibitions-and-Publications/BAIC/Historical-Essays/Power-Diversity/Legislative-Interests/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0397",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2022/03/FY-2023-Budget-Highlights.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0400",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E1",
+          "host": "www.ed.gov",
+          "url": "https://www.ed.gov/sites/ed/files/2021/03/FINAL_ARP-ESSER-FACT-SHEET.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0400",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E2",
+          "host": "www.ed.gov",
+          "url": "https://www.ed.gov/sites/ed/files/documents/coronavirus/lost-instructional-time.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0400",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E10",
+          "host": "www.cde.ca.gov",
+          "url": "https://www.cde.ca.gov/fg/cr/esseriiifaqs.asp",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0403",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "www.hhs.gov",
+          "url": "https://www.hhs.gov/sites/default/files/surgeon-general-youth-mental-health-advisory.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0412",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E1",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/03/01/fact-sheet-supporting-veterans-experiencing-financial-hardship-and-addressing-the-harmful-effects-of-military-environmental-exposures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0412",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E3",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/03/01/fact-sheet-supporting-veterans-experiencing-financial-hardship-and-addressing-the-harmful-effects-of-military-environmental-exposures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0412",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E4",
+          "host": "bidenwhitehouse.archives.gov",
+          "url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/03/08/remarks-by-president-biden-on-supporting-veterans-as-part-of-the-unity-agenda/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0412",
+          "verdict": "TRUE",
+          "confidence": 0.925,
+          "label": "E5",
+          "host": "news.va.gov",
+          "url": "https://news.va.gov/press-room/va-establishes-new-threshold-for-reporting-benefit-and-medical-debt/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0414",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "www.publichealth.va.gov",
+          "url": "https://www.publichealth.va.gov/exposures/burnpits/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0420",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E2",
+          "host": "ruiz.house.gov",
+          "url": "http://ruiz.house.gov/media-center/in-the-news/biden-uses-state-union-call-focus-burn-pits-which-he-believes-affected-his",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0420",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E4",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2022/02/FLOTUS-Bio.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0420",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E7",
+          "host": "news.va.gov",
+          "url": "https://news.va.gov/57127/army-veteran-beau-biden/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0420",
+          "verdict": "TRUE",
+          "confidence": 0.965,
+          "label": "E8",
+          "host": "geauxguard.la.gov",
+          "url": "https://geauxguard.la.gov/2021/02/10/president-biden-inauguration-support-memo/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0427",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E1",
+          "host": "www.portman.senate.gov",
+          "url": "https://www.portman.senate.gov/newsroom/press-releases/portman-brown-mast-ryan-introduce-legislation-help-veterans-exposed-toxic",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0427",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "dvs.ohio.gov",
+          "url": "https://dvs.ohio.gov/hall-of-fame/honorees/hall-of-fame-honorees/hall-of-fame-honorees-2020s/heath-m-robinson",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0428",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "www.brown.senate.gov",
+          "url": "https://www.brown.senate.gov/newsroom/press/release/brown-welcomes-ms-danielle-robinson-to-washington-as-dr-bidens-state-of-the-union-guest",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0428",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E3",
+          "host": "department.va.gov",
+          "url": "https://department.va.gov/history/object-100-iraq-burn-pit/",
+          "supports_claim": null,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0437",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E1",
+          "host": "news.va.gov",
+          "url": "https://news.va.gov/89496/breaking-news-va-plans-expansion-benefits-disability-claims-conditions-related-certain-toxic-exposures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0437",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E2",
+          "host": "news.va.gov",
+          "url": "https://news.va.gov/press-room/va-plans-expansion-of-benefits-for-disability-claims-for-conditions-related-to-certain-toxic-exposures/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0437",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E5",
+          "host": "news.va.gov",
+          "url": "https://news.va.gov/92772/va-to-start-processing-disability-claims-for-certain-conditions-related-to-particulate-matter/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0437",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "label": "E7",
+          "host": "news.va.gov",
+          "url": "https://news.va.gov/100009/disability-compensation-available-for-veterans-exposed-to-hazardous-materials/",
+          "supports_claim": true,
+          "old_tier": "Government"
+        },
+        {
+          "sid": "biden_2022:0447",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "label": "E3",
+          "host": "www.whitehouse.gov",
+          "url": "https://www.whitehouse.gov/wp-content/uploads/2021/08/2021-07-25_ARPA-H-Fact-Sheet.pdf",
+          "supports_claim": true,
+          "old_tier": "Government"
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "evidence_items": 2461,
+    "demoted_items": 688,
+    "demoted_in_decided_pack": 665,
+    "demoted_cited_anywhere": 342,
+    "decisive_demoted": 341
+  }
+}

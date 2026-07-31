@@ -101,13 +101,42 @@ Two consequences for anyone changing tiering:
 
 1. **Any new tier value must be truthy.** A tier whose value is `""` or `0` silently fails
    I5 for every item carrying it.
-2. **The render layer currently recomputes tier instead of reading it.**
-   `src/truthbot/publish/site.py:622` (`_tier_bucket()`) re-classifies URLs from scratch to
-   draw its badges, ignoring the `source_tier` the pipeline computed and I5 validated. So
-   the provenance record and the published badge are produced by two independent
-   implementations and can disagree. Any change to tier assignment must update **both**, or
-   the pipeline and the site will tell readers different things. Collapsing these onto one
-   implementation is the correct long-term fix and is not yet done.
+2. **The render layer and the pipeline now share one tier implementation.** Both the pipeline
+   (the `tier` value I5 validates) and the site renderer's badges resolve through the single
+   function `src/truthbot/verify/source_tiers.py:classify_tier`. The renderer's
+   `src/truthbot/publish/site.py:627` (`_tier_bucket()`) is now just
+   `TIER_BUCKET[classify_tier(url)]` — it no longer re-classifies URLs from scratch.
+   Historically these *were* two implementations with separate domain lists that had already
+   drifted (a FRASER/FRED source was Government in the provenance record and badged bottom-tier
+   on the page). They were collapsed onto one in Claim Eval v3 PR-A. **Keep it that way:** never
+   let the renderer re-derive a tier from the URL independently, or the provenance record and
+   the published badge can disagree again. The regression is pinned by
+   `tests/test_source_tiers.py::test_renderer_no_longer_drifts_from_the_pipeline`.
+
+### The tiering criterion (what earns which tier)
+
+Tier assignment is a **policy** — implemented deterministically in
+`verify/source_tiers.py` + `source_tiers.json`, not an I-guard — but it feeds I5's guarded
+`tier` field, so the criterion is recorded here so future calls are *derivable*, not
+enumerated host by host:
+
+> **DEMOTE** (to S5·POLITICAL) when the publishing entity has a **partisan principal AND a
+> communications function** — the executive's press shop, party/campaign organs, member and
+> committee newsrooms. **PROTECT** (Government, S1–S3) when the entity is a **nonpartisan
+> officer, court, statistical agency, science agency, or archival/record function** —
+> regardless of TLD or parent domain.
+
+Two operating rules follow from it:
+
+- Prefer **subdomain/path boundaries** where the government itself splits by function:
+  `bls.gov/news.release/*` is data (S1), `whitehouse.gov` is comms on every path (S5),
+  `clerk.house.gov`/`senate.gov/legislative/*` votes are record (S1) even though the
+  `house.gov`/`senate.gov` *newsrooms* are comms (S5).
+- Unmapped `.gov` paths **fail closed** to S5 (recall loss, never a forced wrong verdict).
+  Widen the registry by **measuring against stored artifacts**, not by guessing — and watch
+  the composition effect: because abstention is not free, a per-run report of how often packs
+  carry a quarantined item, and the decided-vs-Unverifiable rate for claims that depend on one,
+  is what keeps fail-closed honest rather than silently skewing *which* claims get decided.
 
 ## I6 — heldout read once per release candidate
 
