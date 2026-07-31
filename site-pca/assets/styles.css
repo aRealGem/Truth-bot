@@ -1350,6 +1350,9 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .tier-news  { background: #4a148c; }
 .tier-fc    { background: #e65100; }
 .tier-other { background: #546e7a; }
+/* T7 political communications — warm brown, deliberately NOT the verdict red,
+   which means a FALSE ruling rather than an untrusted source. */
+.tier-political { background: #6d4c41; }
 .evidence-list .source-snippet {
   display: block;
   width: 100%;
