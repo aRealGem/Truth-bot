@@ -316,6 +316,11 @@ def run_pca_verify(
     # Claims for adjudicate + the bridge's Claim reconstruction (sid/text/context
     # + Layer A routing provenance) — see claims_from_queue.
     claims = claims_from_queue(queue)
+    # PR-A2.3: make each claim's shape visible to the pack builder (the
+    # inline-retrieval path builds packs inside adjudicate_fn, downstream of
+    # here). No-op for shapeless/legacy queues.
+    from truthbot.verdict import shape_registry
+    shape_registry.register_claim_shapes(claims)
     # P67.3 resume: sids with journaled rows never hit the lane again.
     all_rows: list[dict] = list(resume_rows or [])
     packs: dict[str, EvidencePack] = dict(resume_packs or {})
