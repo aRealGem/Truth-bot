@@ -2572,7 +2572,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  {triage_badge}'
         '</div>'
         '<div class="claim-body">'
-        f'  <blockquote class="claim-quote">"{_esc(claim.text)}"</blockquote>'
+        f'  {_claim_quote_html(claim)}'
         f'  {context_html}'
         f'  {caveat_html}'
         f'  {models_block}'
@@ -2586,6 +2586,47 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         '</div>'
         '</article>'
     )
+
+def _claim_quote_html(claim) -> str:
+    """The claim quote, rendered INSIDE its surrounding transcript sentences.
+
+    Half the Obama-2014 claims (49/96) open with deictic words — "Tonight, I'm
+    announcing we'll launch six more this year." — that are unreadable as a
+    bare quote (jackie, 2026-08-01: unacceptable). The PCA panel always judged
+    with the surrounding sentences (``adjudicator`` feeds ``claim.context``);
+    the reader now sees the same thing: neighbors greyed, the checked claim
+    emphasized. Bundles without context (legacy) render the bare quote
+    exactly as before.
+
+    ``claim.context`` format is the segmenter's ``prev || claim || next``;
+    when the claim text isn't a clean element of it, the whole context renders
+    below the quote rather than being dropped.
+    """
+    text = (claim.text or "").strip()
+    ctx = (getattr(claim, "context", "") or "").strip()
+    bare = f'<blockquote class="claim-quote">"{_esc(text)}"</blockquote>'
+    if not ctx or ctx == text:
+        return bare
+    parts = [p.strip() for p in ctx.split("||") if p.strip()]
+    if text not in parts or len(parts) < 2:
+        return (bare
+                + '<div class="claim-context-fallback">'
+                  '<span class="ccq-label">In context</span> '
+                + _esc(" … ".join(p for p in parts if p != text)) + '</div>')
+    i = parts.index(text)
+    before = " ".join(f'<span class="ccq-side">{_esc(p)}</span>'
+                      for p in parts[:i])
+    after = " ".join(f'<span class="ccq-side">{_esc(p)}</span>'
+                     for p in parts[i + 1:])
+    mid = f'<span class="ccq-claim">"{_esc(text)}"</span>'
+    return (
+        '<blockquote class="claim-quote claim-quote-ctx" '
+        'title="The checked claim, emphasized, inside the transcript sentences '
+        'around it — the same context the verdict panel judged with.">'
+        + " ".join(s for s in (before, mid, after) if s)
+        + '</blockquote>'
+    )
+
 
 def _toc(bundles: list[VerdictBundle]) -> str:
     items = []
@@ -3824,6 +3865,33 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink);
   padding-left: 1.25rem;
   border-left: 3px solid var(--border-strong);
+}
+/* Claim-in-context (2026-08-01): the checked sentence emphasized inside its
+   greyed transcript neighbors — deictic quotes ("we'll launch six more") are
+   unreadable bare, and the panel always judged with this context. */
+.claim-quote-ctx { font-size: 1.15rem; }
+.claim-quote-ctx .ccq-side {
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+.claim-quote-ctx .ccq-claim {
+  color: var(--ink);
+  font-size: 1.32rem;
+  font-weight: 500;
+}
+.claim-context-fallback {
+  margin-top: 0.6rem;
+  padding-left: 1.25rem;
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+}
+.claim-context-fallback .ccq-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-right: 0.5rem;
 }
 .claim-context {
   margin-top: 1rem;
@@ -7463,6 +7531,10 @@ class SitePublisher:
             "id":                    bundle.claim.id,
             "report_id":             sr.report_id,
             "claim_text":            bundle.claim.text,
+            # Surrounding transcript sentences ("prev || claim || next") — the
+            # context the panel judged with and the pages now display
+            # (2026-08-01). Empty on legacy bundles.
+            "claim_context":         getattr(bundle.claim, "context", "") or "",
             "consensus_verdict":     bundle.consensus.consensus_verdict,
             "consensus_strength":    bundle.consensus.consensus_strength,
             # 5-bucket coarse-axis projections (Truthy scale). Default empty
