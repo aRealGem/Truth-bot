@@ -237,3 +237,31 @@ def test_build_packs_phase_governor_matches_serial(tmp_path):
     # journaled every sid exactly once despite the concurrency
     loaded = pp.load_packs_journal(jp)
     assert set(loaded) == set(serial)
+
+
+def test_packs_journal_persists_pre_cap_pool_when_larger(tmp_path):
+    # PR-A2.2: a pack whose builder discarded candidates at the cap journals
+    # the full pre-cap pool alongside the capped evidence; packs without a
+    # meaningful pool journal exactly as before (no "pool" key), and the
+    # loader (which reads only "evidence") is unaffected either way.
+    import json
+    jp = tmp_path / "p_packs.jsonl"
+    capped = _pack("sp:0000")
+    pool_items = list(capped.items) + [
+        PackItem(pack_id=f"E{i}", source_name="R1",
+                 source_url=f"https://extra{i}.gov/x", tier=SourceTier.GOVERNMENT,
+                 snippet="s", retrieved_at="2026-01-01T00:00:00Z", sha256="h")
+        for i in range(2, 5)]
+    with_pool = EvidencePack(sid="sp:0000", window=None,
+                             items=list(capped.items), pool=pool_items)
+    pp.append_packs_journal(jp, "sp:0000", with_pool)
+    pp.append_packs_journal(jp, "sp:0001", _pack("sp:0001"))
+
+    recs = [json.loads(l) for l in jp.read_text().splitlines()]
+    assert len(recs[0]["pool"]) == len(pool_items)
+    assert len(recs[0]["evidence"]) == len(capped.items)
+    assert "pool" not in recs[1]
+
+    loaded = pp.load_packs_journal(jp)
+    assert [it.source_url for it in loaded["sp:0000"].items] == \
+        [it.source_url for it in capped.items]

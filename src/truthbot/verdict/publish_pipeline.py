@@ -178,6 +178,16 @@ def append_packs_journal(path, sid: str, pack) -> None:
            "gate_code": getattr(pack, "gate_code", "") or "",
            "evidence": [ev.model_dump(mode="json")
                         for ev in bridge_mod._pack_to_evidence(sid, pack)]}
+    # PR-A2.2: persist the pre-cap candidate pool when the cap discarded
+    # anything, serialized exactly like ``evidence`` (a shim pack reuses the
+    # same converter). This is what the Obama-2014 run was missing — with only
+    # capped packs on disk, a cap/quota change could not be measured offline.
+    pool = getattr(pack, "pool", None) or []
+    if len(pool) > len(getattr(pack, "items", []) or []):
+        shim = EvidencePack(sid=sid, window=getattr(pack, "window", None),
+                            items=list(pool))
+        rec["pool"] = [ev.model_dump(mode="json")
+                       for ev in bridge_mod._pack_to_evidence(sid, shim)]
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("a", encoding="utf-8") as fh:

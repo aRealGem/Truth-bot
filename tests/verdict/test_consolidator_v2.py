@@ -14,6 +14,7 @@ from datetime import date, datetime, timezone
 from truthbot.models import Evidence, SourceTier
 from truthbot.verdict.consolidator import (
     GATE_INSUFFICIENT,
+    MAX_S5,
     MAX_T6,
     PACK_CAP_V2,
     consolidate,
@@ -185,3 +186,45 @@ def test_evidence_mode_enum_and_legacy_inference() -> None:
     assert EvidenceMode.SHARED_PACK_V2.value == "shared_pack_v2"
     assert EvidenceMode.infer_legacy(True) is EvidenceMode.SHARED_PACK_V1
     assert EvidenceMode.infer_legacy(False) is EvidenceMode.CLOSED_BOOK
+
+
+# ── PR-A2.2: S5 saturation quota + pre-cap pool ──────────────────────────────
+
+
+def test_s5_quota_caps_political_items() -> None:
+    pols = [_ev(f"https://whitehouse.gov/briefing/{i}", SourceTier.POLITICAL)
+            for i in range(6)]
+    goods = [_ev(f"https://n{i}.com/a") for i in range(3)]
+    res = consolidate("s", [("R1", goods + pols)], utterance=UTT, window=WINDOW)
+    tiers = [it.evidence.source_tier for it in res.items]
+    assert tiers.count(SourceTier.POLITICAL) == MAX_S5
+    assert res.dropped.get("s5-quota") == 3
+    # First-drawn S5 items are the kept ones.
+    kept_pol = [it.evidence.source_url for it in res.items
+                if it.evidence.source_tier == SourceTier.POLITICAL]
+    assert kept_pol == [f"https://whitehouse.gov/briefing/{i}" for i in range(3)]
+
+
+def test_s5_quota_frees_pack_cap_slots() -> None:
+    # 8 S5 + 7 bearing T3 = 15 candidates. Without the S5 cap the round-robin
+    # draw would carry all 8 S5 into the 10-slot pack and push T3 items past
+    # the cap; with it, at most MAX_S5 political items survive and the freed
+    # slots backfill with the T1-3 items the saturation crowded out.
+    pols = [_ev(f"https://whitehouse.gov/briefing/{i}", SourceTier.POLITICAL)
+            for i in range(8)]
+    goods = [_ev(f"https://n{i}.com/a") for i in range(7)]
+    res = consolidate("s", [("R1", pols + goods)], utterance=UTT, window=WINDOW)
+    tiers = [it.evidence.source_tier for it in res.items]
+    assert len(res.items) == PACK_CAP_V2
+    assert tiers.count(SourceTier.POLITICAL) == MAX_S5
+    assert tiers.count(SourceTier.ESTABLISHED) == 7
+    assert res.quota_met
+
+
+def test_pre_cap_pool_is_exposed_and_supersets_the_pack() -> None:
+    goods = [_ev(f"https://n{i}.com/a") for i in range(14)]
+    res = consolidate("s", [("R1", goods)], utterance=UTT, window=WINDOW)
+    assert len(res.items) == PACK_CAP_V2
+    assert len(res.pre_cap_items) == 14
+    assert res.pre_cap_items[:PACK_CAP_V2] == res.items
+    assert res.dropped.get("pack-cap") == 4
