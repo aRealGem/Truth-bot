@@ -298,3 +298,23 @@ def test_provenance_defaults_empty_without_layer_a_or_votes():
     assert prov.panel_votes == {}
     assert prov.layer_a_label == ""
     assert prov.crm114_final == ""
+
+
+def test_provenance_evidence_gate_reads_adjudicator_provenance_code():
+    # T2.4 wiring regression (PR-A2.1): _forced_uv_row writes the gate marker
+    # as ``provenance_code``; the bridge must land it in evidence_gate. Before
+    # this fix no published bundle ever carried the gate (the Obama-2014 run's
+    # 20 gate-forced rows all bridged with an empty evidence_gate).
+    row = _row("p:1", verdict="UNVERIFIABLE", confidence=None)
+    row["provenance_code"] = "insufficient-qualifying-evidence"
+    out = bridge.bridge([row], [_claim("p:1")])
+    prov = out.bundles[0].consensus.provenance
+    assert prov.evidence_gate == "insufficient-qualifying-evidence"
+
+
+def test_provenance_evidence_gate_key_wins_over_provenance_code():
+    row = _row("p:1", verdict="UNVERIFIABLE", confidence=None)
+    row["evidence_gate"] = "some-future-code"
+    row["provenance_code"] = "insufficient-qualifying-evidence"
+    out = bridge.bridge([row], [_claim("p:1")])
+    assert out.bundles[0].consensus.provenance.evidence_gate == "some-future-code"

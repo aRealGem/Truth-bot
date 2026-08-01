@@ -1,0 +1,64 @@
+{
+  "schema": "truthbot-principals v1",
+  "comment": [
+    "Era-scoped principal mapping (PR-A2.1). Data, not code: every rule that",
+    "names a person lives HERE, keyed by speaker, and the matching logic in",
+    "principals.py is computed identically for every speaker (invariant I3:",
+    "relational use of identity, never conditional). A domain is SELF for a",
+    "speaker only while the utterance date falls inside one of that speaker's",
+    "eras — whitehouse.gov is SELF for Barack Obama on 2014-01-28 and",
+    "INDEPENDENT for any other speaker on the same date.",
+    "The *.archives.gov mirrors are listed per administration because that is",
+    "where each White House's live content moves after the term ends —",
+    "retrieval for a 2014 claim returns obamawhitehouse.archives.gov URLs.",
+    "end=null means an era that is still open at config-write time."
+  ],
+  "principals": [
+    {
+      "speaker": "Barack Obama",
+      "aliases": ["President Barack Obama", "Barack H. Obama"],
+      "eras": [
+        {
+          "start": "2009-01-20",
+          "end": "2017-01-20",
+          "administration_domains": ["whitehouse.gov", "obamawhitehouse.archives.gov"],
+          "party_domains": ["democrats.org", "dnc.org"],
+          "campaign_domains": ["barackobama.com"]
+        }
+      ]
+    },
+    {
+      "speaker": "Donald Trump",
+      "aliases": ["President Donald Trump", "Donald J. Trump"],
+      "eras": [
+        {
+          "start": "2017-01-20",
+          "end": "2021-01-20",
+          "administration_domains": ["whitehouse.gov", "trumpwhitehouse.archives.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": ["donaldjtrump.com"]
+        },
+        {
+          "start": "2025-01-20",
+          "end": null,
+          "administration_domains": ["whitehouse.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": ["donaldjtrump.com"]
+        }
+      ]
+    },
+    {
+      "speaker": "Joe Biden",
+      "aliases": ["President Joe Biden", "Joseph R. Biden"],
+      "eras": [
+        {
+          "start": "2021-01-20",
+          "end": "2025-01-20",
+          "administration_domains": ["whitehouse.gov", "bidenwhitehouse.archives.gov"],
+          "party_domains": ["democrats.org", "dnc.org"],
+          "campaign_domains": ["joebiden.com"]
+        }
+      ]
+    }
+  ]
+}
