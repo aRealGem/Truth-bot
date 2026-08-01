@@ -38,10 +38,25 @@ CHUNK_JOURNAL = REPO / "metrics/journals/obama_2014_s5rescue.jsonl"
 RESCUE_PACKS_JOURNAL = REPO / "metrics/journals/obama_2014_s5rescue_packs.jsonl"
 OUT = REPO / "metrics/s5_rescue_p131.json"
 
-# List prices, USD per Mtok (litellm price map 2026-07-23; same as metered leg).
-R2_RATE = (5.00, 30.00)     # gpt-5.5
-R3_RATE = (1.25, 2.50)      # grok-4.3
+# List prices, USD per Mtok, PER MODEL (litellm price map 2026-07-23). The
+# first leg of this run priced everything at gpt-5.5 rates because the R2
+# model was left on its default — the 2026-08-01 ~$3 overrun. Estimation is
+# now per recorded model, and the run must be launched with
+# TRUTHBOT_R2_MODEL=gpt-5-mini (the pilot economy config); it refuses to
+# start otherwise.
+MODEL_RATES = {
+    "gpt-5-mini": (0.25, 2.00),
+    "gpt-5.5": (5.00, 30.00),
+    "grok-4.3": (1.25, 2.50),
+}
+_DEFAULT_RATE = (5.00, 30.00)   # unknown model → price pessimistically
 CHUNK_SIZE = 5
+
+
+class BudgetHalt(RuntimeError):
+    """Raised from inside pack_builder when the running estimate crosses the
+    cap — the per-CLAIM circuit breaker the first leg lacked (its between-
+    chunk check let one 5-claim gpt-5.5 chunk run to ~$5)."""
 
 
 def main() -> None:
@@ -60,6 +75,12 @@ def main() -> None:
 
     if not proxy_lane.key_present():
         sys.exit(proxy_lane.BLOCKED_MSG)
+    import os
+    if args.go and os.environ.get("TRUTHBOT_R2_MODEL") != "gpt-5-mini":
+        sys.exit("REFUSING to spend: TRUTHBOT_R2_MODEL=gpt-5-mini is not set "
+                 "(the economy config). The 2026-08-01 leg ran R2 on default "
+                 "gpt-5.5 and overspent ~2.5x; this guard makes that "
+                 "impossible to repeat by accident.")
 
     gated_sids = [json.loads(l)["sid"]
                   for l in PACKS_JOURNAL.read_text(encoding="utf-8").splitlines()
@@ -105,20 +126,28 @@ def main() -> None:
     primary = (R.ClaudeWorkerRetriever(), MeteredR2())
     retry = primary + (MeteredR3(model="grok-4.3"),)
 
+    def _offproxy_est() -> float:
+        total = 0.0
+        for entries in usage.values():
+            for e in entries:
+                rates = MODEL_RATES.get(str(e.get("model") or ""), _DEFAULT_RATE)
+                u = e["usage"]
+                tin = int(u.get("input_tokens") or u.get("prompt_tokens") or 0)
+                tout = int(u.get("output_tokens") or u.get("completion_tokens") or 0)
+                total += (tin * rates[0] + tout * rates[1]) / 1e6
+        return total
+
     def pack_builder(sid: str, text: str, context: str):
+        # Per-claim circuit breaker: retrieval is where the money goes, so the
+        # cap is enforced BEFORE each claim's retrieval, not just per chunk.
+        spent = (proxy_lane.proxy_key_spend() - start_spend) + _offproxy_est()
+        if spent >= args.total_cap:
+            raise BudgetHalt(f"${spent:.2f} >= cap ${args.total_cap:.2f} "
+                             f"(before retrieving {sid})")
         pack = build_evidence_pack_v2(sid, text, primary,
                                       retry_retrievers=retry, context=context)
         publish_pipeline.append_packs_journal(RESCUE_PACKS_JOURNAL, sid, pack)
         return pack
-
-    def _offproxy_est() -> float:
-        def cost(entries, rates):
-            tin = sum(int((e["usage"].get("input_tokens")
-                           or e["usage"].get("prompt_tokens") or 0)) for e in entries)
-            tout = sum(int((e["usage"].get("output_tokens")
-                            or e["usage"].get("completion_tokens") or 0)) for e in entries)
-            return (tin * rates[0] + tout * rates[1]) / 1e6
-        return cost(usage["R2"], R2_RATE) + cost(usage["R3"], R3_RATE)
 
     hm = proxy_lane.build_hydramind(response_parser=adjudicator.parse_verdict)
     roster_note = {"name": "prod", "seats": dict(get_roster("prod").seats)}
@@ -138,8 +167,13 @@ def main() -> None:
             print(halted)
             break
         t0, s0 = time.time(), proxy_lane.proxy_key_spend()
-        rows, manifest, notes = adjudicator.adjudicate(
-            hm, chunk, roster="prod", pack_builder=pack_builder, two_stage=True)
+        try:
+            rows, manifest, notes = adjudicator.adjudicate(
+                hm, chunk, roster="prod", pack_builder=pack_builder, two_stage=True)
+        except BudgetHalt as exc:
+            halted = f"BUDGET HALT mid-chunk {idx}: {exc}"
+            print(halted)
+            break
         s1, t1 = proxy_lane.proxy_key_spend(), time.time()
         publish_pipeline.append_chunk_journal(
             CHUNK_JOURNAL, idx, rows, notes.get("packs") or {}, s1 - s0,
