@@ -41,6 +41,7 @@ from . import era_lint
 PACK_CAP_V2 = 10
 MIN_BEARING_T13 = 2          # ≥2 Tier-1..3 items bearing on the core assertion
 MAX_T6 = 2                   # ≤2 OTHER-tier items
+MAX_S5 = 3                   # ≤3 POLITICAL items (PR-A2.2 / T2.1, symmetric with MAX_T6)
 GATE_INSUFFICIENT = "insufficient-qualifying-evidence"
 
 SCHEMA_VERSION = "evidence_pack v2.0"
@@ -89,6 +90,12 @@ class ConsolidationResult:
     gate_code: str = ""              # GATE_INSUFFICIENT when forced-UV applies
     dropped: dict[str, int] = field(default_factory=dict)  # reason -> count
     retrospective: int = 0           # lenient mode: admitted post-era items
+    # The full post-filter/post-quota candidate list BEFORE the pack cap, in
+    # final order (PR-A2.2). Persisting this is what makes "would claim X have
+    # decided under a different cap/quota?" answerable offline later — the
+    # Obama-2014 measurement could NOT be re-run locally because only capped
+    # packs were stored.
+    pre_cap_items: list[ConsolidatedItem] = field(default_factory=list)
 
     @property
     def schema_version(self) -> str:
@@ -196,6 +203,18 @@ def consolidate(
         kept = [it for it in kept if id(it) not in to_drop]
         result.dropped["t6-quota"] = len(others) - MAX_T6
 
+    # S5 saturation quota (PR-A2.2 / T2.1): at most MAX_S5 POLITICAL items,
+    # first-drawn kept, symmetric with the T6 rule. S5 items can never credit
+    # the decided-verdict quota, so saturation buys nothing epistemically —
+    # but on official-act claims the press-shop coverage is so dense it can
+    # crowd bearing T1–3 items past the pack cap (the T2.3 retrieval-
+    # saturation hypothesis). Runs BEFORE the cap so freed slots backfill.
+    pols = [it for it in kept if it.evidence.source_tier == SourceTier.POLITICAL]
+    if len(pols) > MAX_S5:
+        to_drop = {id(it) for it in pols[MAX_S5:]}
+        kept = [it for it in kept if id(it) not in to_drop]
+        result.dropped["s5-quota"] = len(pols) - MAX_S5
+
     # Final order: draw round, then tier rank — the round-robin merge is the
     # primary ranking (T2.3), tier breaks ties within a round. Lenient mode
     # prepends the era class so contemporaneous sources ALWAYS outrank
@@ -206,6 +225,7 @@ def consolidate(
                                   _TIER_RANK[it.evidence.source_tier]))
     else:
         kept.sort(key=lambda it: (it.draw_round, _TIER_RANK[it.evidence.source_tier]))
+    result.pre_cap_items = list(kept)
     result.items = kept[:max_items]
     if len(kept) > max_items:
         result.dropped["pack-cap"] = len(kept) - max_items

@@ -137,8 +137,7 @@ def build_evidence_pack_v2(
                         "(%s) — verdict will be forced Unverifiable",
                         sid, res.gate_code)
 
-    items: list[PackItem] = []
-    for i, cit in enumerate(res.items, start=1):
+    def _pack_item(i: int, cit) -> PackItem:
         ev = cit.evidence
         item = PackItem(
             pack_id=f"E{i}",
@@ -154,8 +153,18 @@ def build_evidence_pack_v2(
                           if ev.published_at else None),
         )
         check_i5_provenance(item.provenance())   # I5: fail closed at entry
-        items.append(item)
+        return item
+
+    items = [_pack_item(i, cit) for i, cit in enumerate(res.items, start=1)]
+    # Pre-cap pool (PR-A2.2): persisted alongside the pack when the cap
+    # actually discarded candidates, so cap/quota changes can be measured
+    # offline without re-retrieval. Same E<n> numbering — the pool's first
+    # len(items) entries ARE the pack.
+    pool: list[PackItem] = []
+    if len(res.pre_cap_items) > len(res.items):
+        pool = [_pack_item(i, cit)
+                for i, cit in enumerate(res.pre_cap_items, start=1)]
     pack = EvidencePack(sid=sid, window=window, items=items,
-                        gate_code=res.gate_code)
+                        gate_code=res.gate_code, pool=pool)
     era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
     return pack
