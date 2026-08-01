@@ -150,6 +150,24 @@ def test_verdict_distribution_gives_models_split_its_own_bucket() -> None:
     assert dist["True"] == 1
 
 
+def test_all_distributions_sum_to_checkable_claim_count() -> None:
+    # PR-A2.0 invariant: every aggregate surface (fine + both coarse lenses)
+    # accounts for every checkable claim exactly once, split bundles included —
+    # the 95-of-96 journal drift class must be impossible at render time.
+    bundles = [
+        _make_bundle(VerdictLabel.TRUE),
+        _make_bundle(VerdictLabel.FALSE),
+        _make_bundle(VerdictLabel.MISLEADING),
+        _make_bundle(VerdictLabel.UNVERIFIABLE),
+        _make_bundle(VerdictLabel.UNVERIFIABLE, consensus_verdict="Models split"),
+    ]
+    sr = _make_site_report(bundles)
+    n = len(sr.checkable_bundles)
+    assert sum(sr.verdict_distribution.values()) == n
+    assert sum(sr.verdict_distribution_lenient.values()) == n
+    assert sum(sr.verdict_distribution_strict.values()) == n
+
+
 # ── Projection mapping invariants ─────────────────────────────────────────────
 
 

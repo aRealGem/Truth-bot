@@ -207,6 +207,31 @@ def load_packs_journal(path) -> dict:
     return packs_from_evidence_dict(evidence_by_sid, gate_codes)
 
 
+def verdict_bucket_tally(rows: list[dict]) -> dict[str, int]:
+    """Canonical verdict-bucket tally for journal / run-artifact rows (PR-A2.0).
+
+    A PCA disagreement row carries ``verdict=None`` with ``split=True`` — it is
+    kept, not dropped (see ``verdict.bridge``), so any tally keyed naively on
+    ``row["verdict"]`` under-counts by every split claim. That is exactly how
+    the Obama-2014 measurement read 95 named buckets against 96 check-worthy
+    claims (T0.1). Every journal consumer must tally through this helper so
+    ``sum(tally.values()) == n_check_worthy`` holds by construction:
+
+      verdict present            → that verdict's bucket
+      verdict None + split       → "Models split"
+      verdict None, not split    → "No verdict" (malformed row — visible, not lost)
+    """
+    tally: dict[str, int] = {}
+    for row in rows:
+        verdict = row.get("verdict")
+        if verdict is None:
+            label = "Models split" if row.get("split") else "No verdict"
+        else:
+            label = str(verdict)
+        tally[label] = tally.get(label, 0) + 1
+    return tally
+
+
 def claims_from_queue(queue: list[dict]) -> list[dict]:
     """Check-worthy queue rows → adjudicate/bridge claim dicts. Carries sid/text/
     context plus each claim's Layer A routing provenance (label + which stage passed
