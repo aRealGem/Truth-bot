@@ -1,204 +1,6 @@
 [
   {
-    "id": "d9815d73-ef0a-4ba9-8341-449e1e07b3b4",
-    "date": "2006-01-31",
-    "speaker": "George W. Bush",
-    "role": "President",
-    "venue": "U.S. Capitol",
-    "claim_count": 48,
-    "panel_roster": {
-      "name": "prod",
-      "seats": {
-        "proposer": [
-          "opus-worker"
-        ],
-        "critic": [
-          "grok-4.3"
-        ],
-        "arbiter": [
-          "gpt-5.5"
-        ]
-      }
-    },
-    "triage_count": 227,
-    "verdict_distribution": {
-      "True": 37,
-      "Mostly True": 0,
-      "Misleading": 5,
-      "Exaggerated": 0,
-      "False": 0,
-      "Unverifiable": 6,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 0
-    },
-    "verdict_distribution_lenient": {
-      "True": 37,
-      "Truthy": 0,
-      "Unverifiable": 6,
-      "Falsey": 0,
-      "False": 0,
-      "Models split": 0,
-      "Misleading": 5
-    },
-    "verdict_distribution_strict": {
-      "True": 37,
-      "Truthy": 0,
-      "Unverifiable": 6,
-      "Falsey": 0,
-      "False": 0,
-      "Models split": 0,
-      "Misleading": 5
-    },
-    "model_agreement_rate": 0.771,
-    "url": "reports/2006-01-31-george-w-bush-d9815d.html",
-    "tier_counts": {
-      "gov": 99,
-      "wire": 1,
-      "news": 21,
-      "fc": 0,
-      "political": 16,
-      "other": 34
-    },
-    "source_of_claims": "George W. Bush",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "c13fedd0-08b3-4840-9f8e-0612cc277587",
-    "date": "1998-01-27",
-    "speaker": "Bill Clinton",
-    "role": "President",
-    "venue": "U.S. Capitol",
-    "claim_count": 92,
-    "panel_roster": {
-      "name": "prod",
-      "seats": {
-        "proposer": [
-          "opus-worker"
-        ],
-        "critic": [
-          "grok-4.3"
-        ],
-        "arbiter": [
-          "gpt-5.5"
-        ]
-      }
-    },
-    "triage_count": 278,
-    "verdict_distribution": {
-      "True": 72,
-      "Mostly True": 0,
-      "Misleading": 9,
-      "Exaggerated": 0,
-      "False": 2,
-      "Unverifiable": 8,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 1
-    },
-    "verdict_distribution_lenient": {
-      "True": 72,
-      "Truthy": 0,
-      "Unverifiable": 8,
-      "Falsey": 0,
-      "False": 2,
-      "Models split": 1,
-      "Misleading": 9
-    },
-    "verdict_distribution_strict": {
-      "True": 72,
-      "Truthy": 0,
-      "Unverifiable": 8,
-      "Falsey": 0,
-      "False": 2,
-      "Models split": 1,
-      "Misleading": 9
-    },
-    "model_agreement_rate": 0.75,
-    "url": "reports/1998-01-27-bill-clinton-c13fed.html",
-    "tier_counts": {
-      "gov": 170,
-      "wire": 0,
-      "news": 24,
-      "fc": 0,
-      "political": 33,
-      "other": 53
-    },
-    "source_of_claims": "Bill Clinton",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "75e7a4b6-e93c-41df-87a7-1c16d871a315",
-    "date": "2014-01-28",
-    "speaker": "Barack Obama",
-    "role": "President",
-    "venue": "U.S. Capitol",
-    "claim_count": 96,
-    "panel_roster": {
-      "name": "prod",
-      "seats": {
-        "proposer": [
-          "opus-worker"
-        ],
-        "critic": [
-          "grok-4.3"
-        ],
-        "arbiter": [
-          "gpt-5.5"
-        ]
-      }
-    },
-    "triage_count": 243,
-    "verdict_distribution": {
-      "True": 78,
-      "Mostly True": 0,
-      "Misleading": 3,
-      "Exaggerated": 0,
-      "False": 4,
-      "Unverifiable": 10,
-      "Truthy": 0,
-      "Falsey": 0,
-      "Models split": 1
-    },
-    "verdict_distribution_lenient": {
-      "True": 78,
-      "Truthy": 0,
-      "Unverifiable": 10,
-      "Falsey": 0,
-      "False": 4,
-      "Models split": 1,
-      "Misleading": 3
-    },
-    "verdict_distribution_strict": {
-      "True": 78,
-      "Truthy": 0,
-      "Unverifiable": 10,
-      "Falsey": 0,
-      "False": 4,
-      "Models split": 1,
-      "Misleading": 3
-    },
-    "model_agreement_rate": 0.823,
-    "url": "reports/2014-01-28-barack-obama-75e7a4.html",
-    "tier_counts": {
-      "gov": 90,
-      "wire": 6,
-      "news": 44,
-      "fc": 0,
-      "political": 86,
-      "other": 71
-    },
-    "source_of_claims": "Barack Obama",
-    "source_of_claims_professional_public_title": "President",
-    "event": "",
-    "channel": ""
-  },
-  {
-    "id": "e922033d-99a9-452f-9ec4-e995b2dd0d6e",
+    "id": "80ac5b2a-213b-4f93-ac14-8bb503cb3e64",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
@@ -249,7 +51,7 @@
       "Misleading": 31
     },
     "model_agreement_rate": 0.727,
-    "url": "reports/2026-02-24-donald-trump-e92203.html",
+    "url": "reports/2026-02-24-donald-trump-80ac5b.html",
     "tier_counts": {
       "gov": 146,
       "wire": 48,
@@ -264,7 +66,7 @@
     "channel": ""
   },
   {
-    "id": "384eb8c1-505a-4c73-af62-15565ff822d7",
+    "id": "aa8c461d-1ecb-4d5e-b1e0-2f1b2cfbaf0b",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
@@ -315,7 +117,7 @@
       "Misleading": 4
     },
     "model_agreement_rate": 0.829,
-    "url": "reports/2022-03-01-joe-biden-384eb8.html",
+    "url": "reports/2022-03-01-joe-biden-aa8c46.html",
     "tier_counts": {
       "gov": 129,
       "wire": 21,
@@ -325,6 +127,204 @@
       "other": 91
     },
     "source_of_claims": "Joe Biden",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "4a245ab3-0a47-4166-8da3-45260c1bfa7b",
+    "date": "2014-01-28",
+    "speaker": "Barack Obama",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 96,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "triage_count": 243,
+    "verdict_distribution": {
+      "True": 78,
+      "Mostly True": 0,
+      "Misleading": 3,
+      "Exaggerated": 0,
+      "False": 4,
+      "Unverifiable": 10,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 1
+    },
+    "verdict_distribution_lenient": {
+      "True": 78,
+      "Truthy": 0,
+      "Unverifiable": 10,
+      "Falsey": 0,
+      "False": 4,
+      "Models split": 1,
+      "Misleading": 3
+    },
+    "verdict_distribution_strict": {
+      "True": 78,
+      "Truthy": 0,
+      "Unverifiable": 10,
+      "Falsey": 0,
+      "False": 4,
+      "Models split": 1,
+      "Misleading": 3
+    },
+    "model_agreement_rate": 0.823,
+    "url": "reports/2014-01-28-barack-obama-4a245a.html",
+    "tier_counts": {
+      "gov": 90,
+      "wire": 6,
+      "news": 44,
+      "fc": 0,
+      "political": 86,
+      "other": 71
+    },
+    "source_of_claims": "Barack Obama",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "ba3fbe87-acdf-44f2-8953-cda81bc9a92a",
+    "date": "2006-01-31",
+    "speaker": "George W. Bush",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 48,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "triage_count": 227,
+    "verdict_distribution": {
+      "True": 37,
+      "Mostly True": 0,
+      "Misleading": 5,
+      "Exaggerated": 0,
+      "False": 0,
+      "Unverifiable": 6,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_lenient": {
+      "True": 37,
+      "Truthy": 0,
+      "Unverifiable": 6,
+      "Falsey": 0,
+      "False": 0,
+      "Models split": 0,
+      "Misleading": 5
+    },
+    "verdict_distribution_strict": {
+      "True": 37,
+      "Truthy": 0,
+      "Unverifiable": 6,
+      "Falsey": 0,
+      "False": 0,
+      "Models split": 0,
+      "Misleading": 5
+    },
+    "model_agreement_rate": 0.771,
+    "url": "reports/2006-01-31-george-w-bush-ba3fbe.html",
+    "tier_counts": {
+      "gov": 99,
+      "wire": 1,
+      "news": 21,
+      "fc": 0,
+      "political": 16,
+      "other": 34
+    },
+    "source_of_claims": "George W. Bush",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "93221f58-acd6-4139-adf6-69e99f722bc9",
+    "date": "1998-01-27",
+    "speaker": "Bill Clinton",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 92,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "triage_count": 278,
+    "verdict_distribution": {
+      "True": 72,
+      "Mostly True": 0,
+      "Misleading": 9,
+      "Exaggerated": 0,
+      "False": 2,
+      "Unverifiable": 8,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 1
+    },
+    "verdict_distribution_lenient": {
+      "True": 72,
+      "Truthy": 0,
+      "Unverifiable": 8,
+      "Falsey": 0,
+      "False": 2,
+      "Models split": 1,
+      "Misleading": 9
+    },
+    "verdict_distribution_strict": {
+      "True": 72,
+      "Truthy": 0,
+      "Unverifiable": 8,
+      "Falsey": 0,
+      "False": 2,
+      "Models split": 1,
+      "Misleading": 9
+    },
+    "model_agreement_rate": 0.75,
+    "url": "reports/1998-01-27-bill-clinton-93221f.html",
+    "tier_counts": {
+      "gov": 170,
+      "wire": 0,
+      "news": 24,
+      "fc": 0,
+      "political": 33,
+      "other": 53
+    },
+    "source_of_claims": "Bill Clinton",
     "source_of_claims_professional_public_title": "President",
     "event": "",
     "channel": ""

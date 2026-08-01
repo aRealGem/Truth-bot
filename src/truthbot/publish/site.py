@@ -7389,6 +7389,12 @@ class SitePublisher:
         for bundle in site_report.checkable_bundles:
             claims_index.append(self._claim_meta(bundle, site_report))
 
+        # Reverse-chronological by SPEECH date (jackie, 2026-08-01): with a
+        # multi-president corpus, publish order is meaningless to a reader —
+        # the index and reports.json list newest speech first. Undated
+        # reports sink to the end, stable within a date.
+        reports_index.sort(key=lambda r: r.get("date") or "", reverse=True)
+
         self._write_reports_index(reports_index)
         self._write_claims_index(claims_index)
 

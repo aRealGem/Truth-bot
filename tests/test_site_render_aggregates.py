@@ -1346,3 +1346,19 @@ def test_verdict_panel_footnotes_anecdote_share_of_unverifiable() -> None:
     # no anecdotes → no footnote at all
     sr2 = _make_site_report([plain])
     assert "guest anecdote" not in _verdict_panel(sr2)
+
+
+def test_reports_index_is_reverse_chronological_by_speech_date(tmp_path) -> None:
+    # jackie 2026-08-01: readers browse a multi-president corpus newest-first;
+    # publish order is an implementation detail and must not leak.
+    from truthbot.publish.site import SitePublisher
+    pub = SitePublisher(site_root=tmp_path)
+    for year in (2006, 2026, 1998):
+        sr = _make_site_report([_make_bundle(VerdictLabel.TRUE)])
+        sr.report_id = f"id-{year}"
+        sr.date = datetime(year, 1, 30, tzinfo=timezone.utc)
+        pub.publish(sr)
+    import json
+    dates = [r["date"] for r in json.loads(
+        (tmp_path / "data" / "reports.json").read_text())]
+    assert dates == sorted(dates, reverse=True)
