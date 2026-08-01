@@ -1,6 +1,72 @@
 [
   {
-    "id": "037258fd-bac6-4cec-a849-c19681d33f2a",
+    "id": "d2489fd3-2af7-4507-bc97-c61d10c14f39",
+    "date": "2014-01-28",
+    "speaker": "Barack Obama",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 96,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "triage_count": 243,
+    "verdict_distribution": {
+      "True": 67,
+      "Mostly True": 0,
+      "Misleading": 3,
+      "Exaggerated": 0,
+      "False": 4,
+      "Unverifiable": 21,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 1
+    },
+    "verdict_distribution_lenient": {
+      "True": 67,
+      "Truthy": 0,
+      "Unverifiable": 21,
+      "Falsey": 0,
+      "False": 4,
+      "Models split": 1,
+      "Misleading": 3
+    },
+    "verdict_distribution_strict": {
+      "True": 67,
+      "Truthy": 0,
+      "Unverifiable": 21,
+      "Falsey": 0,
+      "False": 4,
+      "Models split": 1,
+      "Misleading": 3
+    },
+    "model_agreement_rate": 0.698,
+    "url": "reports/2014-01-28-barack-obama-d2489f.html",
+    "tier_counts": {
+      "gov": 85,
+      "wire": 6,
+      "news": 39,
+      "fc": 0,
+      "political": 69,
+      "other": 60
+    },
+    "source_of_claims": "Barack Obama",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "0570f712-cee4-451f-ba5a-14ad24e32904",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
@@ -51,7 +117,7 @@
       "Misleading": 31
     },
     "model_agreement_rate": 0.727,
-    "url": "reports/2026-02-24-donald-trump-037258.html",
+    "url": "reports/2026-02-24-donald-trump-0570f7.html",
     "tier_counts": {
       "gov": 146,
       "wire": 48,
@@ -66,7 +132,7 @@
     "channel": ""
   },
   {
-    "id": "43a69948-a450-481e-826f-b576f51c999d",
+    "id": "3848488e-8c2e-4b63-9a79-0e8a0a4fd9cc",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
@@ -117,7 +183,7 @@
       "Misleading": 4
     },
     "model_agreement_rate": 0.829,
-    "url": "reports/2022-03-01-joe-biden-43a699.html",
+    "url": "reports/2022-03-01-joe-biden-384848.html",
     "tier_counts": {
       "gov": 129,
       "wire": 21,
