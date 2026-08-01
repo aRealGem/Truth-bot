@@ -1098,6 +1098,14 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
     trio = (ClaudeWorkerRetriever(), OpenAIBrowsingRetriever(),
             GrokSearchRetriever())
     primary = trio[:2] if grok_fallback else trio
+    # R4 archive lane (P132 / D12): joins the T2.4 RESCUE round only — the
+    # same economy pattern as grok-fallback — and only when its free key is
+    # present. Self-pacing (5/min) and fail-soft, so a dead lane can never
+    # gate a claim on its own.
+    retry_pool = trio
+    if os.environ.get("NYT_API_KEY"):
+        from truthbot.verify.archive_retriever import NytArchiveRetriever
+        retry_pool = trio + (NytArchiveRetriever(),)
 
     runner = None
     if governor is not None:
@@ -1125,7 +1133,7 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
         # Active-set filtering (governor drops R1 during a Max cool-down); the pool
         # counts ACTIVE researchers, never a fixed trio (grok-fallback + Max-drop).
         prim = governor.active_retrievers(primary) if governor else primary
-        retry = governor.active_retrievers(trio) if governor else trio
+        retry = governor.active_retrievers(retry_pool) if governor else retry_pool
         return build_evidence_pack_v2(sid, text, prim,
                                       retry_retrievers=retry, context=context,
                                       shortlist_runner=runner,
