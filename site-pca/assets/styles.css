@@ -1035,7 +1035,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-quote-ctx .ccq-claim {
   color: var(--ink);
   font-size: 1.32rem;
-  font-weight: 500;
+  font-weight: 700;
 }
 .claim-context-fallback {
   margin-top: 0.6rem;

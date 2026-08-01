@@ -1,6 +1,6 @@
 [
   {
-    "id": "761bebe9-6237-4736-a1af-ffed644f1406",
+    "id": "527b3cc3-e3d9-4387-92c6-912a788eaaa1",
     "date": "2014-01-28",
     "speaker": "Barack Obama",
     "role": "President",
@@ -51,7 +51,7 @@
       "Misleading": 3
     },
     "model_agreement_rate": 0.823,
-    "url": "reports/2014-01-28-barack-obama-761beb.html",
+    "url": "reports/2014-01-28-barack-obama-527b3c.html",
     "tier_counts": {
       "gov": 90,
       "wire": 6,
@@ -66,7 +66,7 @@
     "channel": ""
   },
   {
-    "id": "e6774ff0-a514-4ffd-b909-5fe24bae2a52",
+    "id": "ed071778-eebd-4d11-bec3-1d442843ee26",
     "date": "2026-02-24",
     "speaker": "Donald Trump",
     "role": "President",
@@ -117,7 +117,7 @@
       "Misleading": 31
     },
     "model_agreement_rate": 0.727,
-    "url": "reports/2026-02-24-donald-trump-e6774f.html",
+    "url": "reports/2026-02-24-donald-trump-ed0717.html",
     "tier_counts": {
       "gov": 146,
       "wire": 48,
@@ -132,7 +132,7 @@
     "channel": ""
   },
   {
-    "id": "20c89976-01b0-47d1-a734-2180e4be40b7",
+    "id": "b52211da-1c33-475d-bdd2-5a024d3a9335",
     "date": "2022-03-01",
     "speaker": "Joe Biden",
     "role": "President",
@@ -183,7 +183,7 @@
       "Misleading": 4
     },
     "model_agreement_rate": 0.829,
-    "url": "reports/2022-03-01-joe-biden-20c899.html",
+    "url": "reports/2022-03-01-joe-biden-b52211.html",
     "tier_counts": {
       "gov": 129,
       "wire": 21,
