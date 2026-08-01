@@ -250,7 +250,13 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         crm114_final=str(crm.get("final") or ""),
         panel_by_role=by_role,
         correction_note=str((row.get("corrected") or {}).get("note") or ""),
-        evidence_gate=str(row.get("evidence_gate") or ""),
+        # T2.4 gate wiring fix (PR-A2.1): the adjudicator's _forced_uv_row has
+        # always written the gate marker as ``provenance_code`` while this
+        # field read only ``evidence_gate`` — so no published bundle ever
+        # carried the gate. Accept both; ``evidence_gate`` wins if a future
+        # writer uses the model field's own name.
+        evidence_gate=str(row.get("evidence_gate")
+                          or row.get("provenance_code") or ""),
     )
 
 
