@@ -130,6 +130,12 @@ class EvidencePack:
     window: TimeWindow
     items: list[PackItem] = field(default_factory=list)
     gate_code: str = ""
+    # Post-filter/post-quota candidate pool BEFORE the pack cap (PR-A2.2),
+    # superset of ``items`` in the same order; empty on v1 packs and when the
+    # pool fit under the cap. Never part of the panel payload or I4 id space —
+    # it exists so the packs journal can persist what the cap discarded and a
+    # cap/quota change can be measured offline without re-retrieval.
+    pool: list[PackItem] = field(default_factory=list)
 
     @property
     def ids(self) -> list[str]:
