@@ -47,10 +47,13 @@ The active criterion is named in `pca.yaml` (`escalation.criterion`), so the pol
 explicit in the spec and manifest rather than implicit in gate code. Valid values live in
 `ESCALATION_CRITERIA` (`invariants.py:146`). Dispatched at `hydramind/strategies/pca.py:88`.
 
-## I3 — no speaker or source conditioning
+## I3 — no conditional use of speaker identity
 
-Nothing anywhere may branch on **who is being analyzed**. This is the invariant that makes
-truth-bot's output defensible as non-partisan, and it is guarded twice:
+Speaker identity may be used **relationally** but never **conditionally** (re-worded
+2026-08-01, D11 sign-off; the prior wording — "nothing anywhere may branch on who is
+being analyzed" — literally forbade the self-sourcing guard it was always meant to
+permit). This is the invariant that makes truth-bot's output defensible as
+non-partisan:
 
 1. **Spec keys** — `check_i3_no_speaker_conditionals` (`registry.py:43`) walks every key in
    the raw spec and rejects `speaker`, `per_source`, `source_id`, `by_speaker`,
@@ -61,19 +64,31 @@ truth-bot's output defensible as non-partisan, and it is guarded twice:
    - `src/truthbot/verdict/discriminator.py:55` — `CRM114_SYSTEM`
    - `src/truthbot/verdict/prompts.py:124` — every PCA seat prompt, looped by role
 
+**Relational vs conditional (the operative distinction):**
+
+* **CONDITIONAL — forbidden.** Any rule keyed to a *named* person, party, or outlet in
+  code or prompts: `if speaker == "X"`, a per-speaker threshold, a prompt that treats
+  one side's claims differently. The two guards above enforce this.
+* **RELATIONAL — permitted.** Speaker identity entering as an *argument to a total
+  function computed identically for every speaker*, with every person-naming fact in a
+  versioned data table, never in a branch. The canonical instance is
+  `verify/principals.py::principal_relation(url, speaker, utterance_date,
+  participants)` — the era-scoped source↔speaker affiliation feeding the
+  evidential-role axis (`verdict/evidential_role.py`, D11-approved). Its data table is
+  `principals.json` (same precedent as `source_tiers.json` naming
+  `obamawhitehouse.archives.gov`); its symmetry is pinned by regression tests
+  (`tests/test_principals.py::test_same_url_same_date_flips_by_speaker_only`) — the
+  same URL on the same date flips SELF/INDEPENDENT purely by which speaker it is
+  evaluated *against*, for every speaker alike.
+
+Enforcement points for the relational path: the principals data schema (no logic in
+data), the consolidator's role-aware quota taking the relation as an opaque callable
+(`consolidate(..., relation_of=...)` — the consolidator never sees the speaker), and
+the symmetry tests.
+
 **Deliberate exception:** conditioning on *which model produced an output* is allowed
 (model provenance, Principle 2). The regex keys on speaker/source vocabulary precisely so
 model-provenance conditionals stay legal.
-
-**Relational use is not conditioning (PR-A2.1 note; full re-wording is a D11
-line-item):** `verify/principals.py` computes an era-scoped *relation* between a
-source's org and the speaker (`principal_relation(url, speaker, utterance_date)`).
-That is speaker identity used **relationally** — an argument to a total function
-computed identically for every speaker, with every person-naming fact in a
-versioned data table (`principals.json`, same precedent as `source_tiers.json`
-naming `obamawhitehouse.archives.gov`) — never **conditionally** (no code path
-branches on who is being analyzed). Phase 1 consumes the relation for display
-only ("Unverified — self-sourced only"); any epistemic use is gated on D11.
 
 ## I4 — citations ⊆ evidence pack
 

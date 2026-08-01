@@ -71,6 +71,25 @@ TIER_WEIGHTS: dict[SourceTier, float] = {
 }
 
 
+def effective_tier_weight(tier: SourceTier, role: str = "") -> float:
+    """Evidence weight with the evidential-role axis applied (PR-A2.3).
+
+    ``role`` is the item's evidential role (verdict.evidential_role). An
+    ATTRIBUTION-ONLY item — a self-serving causal/evaluative record — carries
+    ZERO weight toward truth (D11.2; deliberately TIGHTER than POLITICAL's
+    0.15 base weight). All other roles use the plain tier weight.
+
+    Honesty note (D11.5.2): TIER_WEIGHTS feeds the legacy VerificationEngine
+    scoring path. On the PCA panel path the role axis binds through pack
+    composition, the consolidator quota, and the payload's role labels — this
+    hook exists so BOTH paths agree whenever a weight is consulted.
+    """
+    if role == "attribution-only":
+        return 0.0
+    return TIER_WEIGHTS[tier]
+
+
+
 @dataclass
 class VerdictScore:
     """The output of the rubric's scoring logic."""

@@ -251,7 +251,8 @@ def claims_from_queue(queue: list[dict]) -> list[dict]:
     return [{"sid": r["sid"], "text": r.get("text", ""),
              "context": r.get("context", ""),
              "layer_a": {"label": r.get("label", ""), "source": r.get("source", ""),
-                         "claim_type": r.get("claim_type") or ""}}
+                         "claim_type": r.get("claim_type") or "",
+                         "claim_shape": r.get("claim_shape") or ""}}
             for r in queue]
 
 

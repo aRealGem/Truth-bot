@@ -23,6 +23,10 @@ logger = logging.getLogger(__name__)
 _VALID_LABELS = {"check-worthy", "opinion", "unimportant"}
 _VALID_CLAIM_TYPES = {"statistical", "historical", "attribution", "comparison",
                       "personal-anecdote", "other", None}
+# Claim SHAPE (PR-A2.3 / D11.1) — a second, orthogonal axis. claim_type stays
+# the 277-row eval vocabulary; claim_shape feeds the evidential-role table
+# (verdict.evidential_role). None = legacy/unclassified → today's behavior.
+_VALID_CLAIM_SHAPES = {"c-exist", "c-count", "c-eval", "c-third", None}
 
 A2_SYSTEM = """You classify a single sentence from a political transcript for a fact-checking \
 pipeline. Decide whether it should be verified. Output EXACTLY one label:
@@ -47,6 +51,18 @@ personal aside, sentence fragment, sports score, or a trivial undisputed truism 
 death date). If the content is specific and consequential, it is check-worthy, not unimportant. \
 claim_type=null.
 
+For check-worthy sentences also return claim_shape, classifying WHAT KIND of assertion it is \
+(judged from the sentence alone):
+- "c-exist": an official act or event conducted by the speaker's organization ("we signed / \
+convened / launched / deployed X").
+- "c-count": an operational quantity of the organization's own operations (N attendees, N grants, \
+$X disbursed, N loans made).
+- "c-eval": a causal attribution, effectiveness claim, superlative, or comparison ("X worked", \
+"X led to Y", "the largest/first/most...").
+- "c-third": an assertion about actions of OTHERS (another government, company, person, or era).
+If a sentence mixes a ministerial act with an outcome ("we launched X, which ended Y"), the \
+outcome dominates: use "c-eval". claim_shape=null for non-check-worthy sentences.
+
 Judge the DOMINANT speech-act, and whether the checkable content is specific and consequential. \
 Do NOT consider who the speaker is.
 
@@ -65,16 +81,22 @@ through personal records)
 - "Thomas Jefferson drew his last breath." -> unimportant (undisputed truism, no public stakes)
 - "Thank you all for being here tonight." -> unimportant (greeting)
 
-Return JSON only: {"label": "...", "claim_type": "... or null", "confidence": 0.0-1.0, \
-"rationale": "one clause"}"""
+Return JSON only: {"label": "...", "claim_type": "... or null", "claim_shape": "... or null", \
+"confidence": 0.0-1.0, "rationale": "one clause"}"""
 
 # I3 guard at load — a speaker conditional in this template must fail the import.
 lint_template_for_speaker_conditionals("A2_SYSTEM", A2_SYSTEM)
 
 
-def parse_a2(raw: dict) -> dict:
+def parse_a2(raw: dict, text: str = "") -> dict:
     """Normalize a model output dict to the label contract; fail closed on
-    an invalid label (better to surface than to silently mislabel)."""
+    an invalid label (better to surface than to silently mislabel).
+
+    ``text`` (PR-A2.3): the classified sentence, when the caller has it — it
+    feeds the deterministic claim-shape lint (``shape_lint.enforce_shape``),
+    which binds regardless of what the model emitted. Without text the shape
+    is still normalized but not linted (unit callers that only exercise the
+    label contract are unaffected)."""
     label = (raw.get("label") or "").strip().lower()
     if label not in _VALID_LABELS:
         # tolerate minor variants
@@ -96,8 +118,18 @@ def parse_a2(raw: dict) -> dict:
         ct = "other"
     if label != "check-worthy":
         ct = None
+    # Claim shape (PR-A2.3): additive second axis. Out-of-contract values fall
+    # to None (legacy behavior), never to a guess; the deterministic lint then
+    # forces token-bearing ministerial shapes to c-eval.
+    shape = raw.get("claim_shape")
+    shape = shape.strip().lower() if isinstance(shape, str) else None
+    if shape not in _VALID_CLAIM_SHAPES or label != "check-worthy":
+        shape = None
+    if shape is not None and text:
+        from truthbot.checkworthy.shape_lint import enforce_shape
+        shape = enforce_shape(text, shape)
     conf = raw.get("confidence")
-    return {"label": label, "claim_type": ct,
+    return {"label": label, "claim_type": ct, "claim_shape": shape,
             "confidence": float(conf) if conf is not None else None,
             "rationale": raw.get("rationale", "")}
 
@@ -125,12 +157,12 @@ def classify(hm: HydraMind, sentences: list[dict], tune: Optional[dict] = None,
     out = []
     for r in result.items:
         try:
-            norm = parse_a2(r.value)
+            norm = parse_a2(r.value, text=by_sid.get(r.item_id, {}).get("text", ""))
         except (ValueError, AttributeError, TypeError) as exc:
             if on_parse_error != "default":
                 raise
             logger.warning("A2 parse fallback for %s → unimportant (%s)", r.item_id, exc)
-            norm = {"label": "unimportant", "claim_type": None,
+            norm = {"label": "unimportant", "claim_type": None, "claim_shape": None,
                     "confidence": None, "rationale": f"A2 parse fallback: {exc}"}
         norm["sid"] = r.item_id
         # Carry the claim text (and context) through so Layer B can consume the

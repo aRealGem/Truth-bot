@@ -74,6 +74,8 @@ def build_evidence_pack_v2(
     context: str = "",
     max_items: int = PACK_CAP_V2,
     shortlist_runner: Optional[ShortlistRunner] = None,
+    claim_shape: str = "",
+    relation_of=None,
 ) -> EvidencePack:
     """Assemble a shared_pack_v2 ``EvidencePack`` for one claim.
 
@@ -86,7 +88,13 @@ def build_evidence_pack_v2(
     T2.4 retry; defaults to ``retrievers``. Passing a superset implements
     escalation-on-thin-evidence — e.g. R1+R2 primary with grok joining only
     the rescue round, which keeps its lineage diversity exactly where evidence
-    is scarce at ~5-15% of its always-on cost."""
+    is scarce at ~5-15% of its always-on cost.
+
+    ``claim_shape`` + ``relation_of`` (PR-A2.3): opt-in to the evidential-role
+    quota (see ``consolidate``). ``relation_of`` is closed over speaker +
+    utterance by the CALLER (typically the publish CLI's pack_builder), so
+    this builder still receives no speaker — the callable is identical
+    machinery for every speaker (I3-relational)."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
     # Historical-era policy (wiki projects:truthbot:historical-era-design):
@@ -126,12 +134,14 @@ def build_evidence_pack_v2(
 
     shortlists = _shortlists(retrievers, "", context)
     res = consolidate(sid, shortlists, utterance=utterance, window=window,
-                      max_items=max_items, era_mode=mode)
+                      max_items=max_items, era_mode=mode,
+                      claim_shape=claim_shape, relation_of=relation_of)
     if not res.quota_met:
         retry = _shortlists(retry_retrievers or retrievers, "-retry",
                             _RETRY_FOCUS + context)
         res = consolidate(sid, shortlists + retry, utterance=utterance,
-                          window=window, max_items=max_items, era_mode=mode)
+                          window=window, max_items=max_items, era_mode=mode,
+                          claim_shape=claim_shape, relation_of=relation_of)
         if not res.quota_met:
             logger.info("T2.4 gate: %s pack fails quota after targeted retry "
                         "(%s) — verdict will be forced Unverifiable",
@@ -151,6 +161,7 @@ def build_evidence_pack_v2(
             relevance_score=ev.relevance_score,
             published_at=(ev.published_at.date().isoformat()
                           if ev.published_at else None),
+            role=getattr(cit, "role", "") or "",
         )
         check_i5_provenance(item.provenance())   # I5: fail closed at entry
         return item
