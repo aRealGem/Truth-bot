@@ -117,6 +117,31 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
             f"{slug}: reports.json claim_count={report.get('claim_count')} "
             f"but claims.json has {claim_count} claims for this report")
 
+    # Every stored distribution must sum EXACTLY to the checkable-claim count,
+    # and the fine buckets must re-derive from claims.json (PR-A2.0 / T0.1: the
+    # Obama-2014 journal tally read 95 of 96 because a split row carries
+    # verdict=null — no published aggregate may reproduce that drift class).
+    for key in ("verdict_distribution", "verdict_distribution_lenient",
+                "verdict_distribution_strict"):
+        dist = report.get(key)
+        if dist is None:
+            continue  # legacy report row predating the coarse exports
+        if sum(dist.values()) != claim_count:
+            violations.append(
+                f"{slug}: {key} sums to {sum(dist.values())}, "
+                f"claim_count is {claim_count}")
+    fine = report.get("verdict_distribution")
+    if fine is not None:
+        derived_fine: dict[str, int] = {}
+        for c in report_claims:
+            label = c.get("consensus_verdict", "")
+            derived_fine[label] = derived_fine.get(label, 0) + 1
+        stored_fine = {k: v for k, v in fine.items() if v}
+        if stored_fine != derived_fine:
+            violations.append(
+                f"{slug}: verdict_distribution {stored_fine} != "
+                f"claims.json-derived {derived_fine}")
+
     blocks = _lens_blocks(page)
     for axis in ("strict", "lenient"):
         dist = _coarse_dist(report_claims, axis)

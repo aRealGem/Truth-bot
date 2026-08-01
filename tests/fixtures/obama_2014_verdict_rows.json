@@ -1,0 +1,583 @@
+{
+ "speech_id": "obama_2014",
+ "n_check_worthy": 96,
+ "note": "Frozen from metrics/journals/obama_2014_pilot.jsonl (P131 pilot, published main@3837e71). Verdict/split/status only \u2014 evidence and reasoning stripped. Regression anchor for verdict_bucket_tally: sid obama_2014:0086 is the disagreement row (verdict=null, split=true).",
+ "rows": [
+  {
+   "sid": "obama_2014:0001",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0000",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0003",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0004",
+   "verdict": "UNVERIFIABLE",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0008",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0010",
+   "verdict": "TRUE",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0013",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0011",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0012",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0030",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0031",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0032",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0045",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0046",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0055",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0033",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0034",
+   "verdict": "FALSE",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0044",
+   "verdict": "MISLEADING",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0056",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0065",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0070",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0058",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0066",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0071",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0082",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0087",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0076",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0080",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0086",
+   "verdict": null,
+   "split": true,
+   "status": "disagreement"
+  },
+  {
+   "sid": "obama_2014:0088",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0090",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0093",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0095",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0103",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0109",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0110",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0121",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0125",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0114",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0123",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0124",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0126",
+   "verdict": "FALSE",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0127",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0128",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0134",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0138",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0142",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0143",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0151",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0153",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0157",
+   "verdict": "MISLEADING",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0158",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0165",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0166",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0177",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0174",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0180",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0181",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0185",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0189",
+   "verdict": "TRUE",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0198",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0207",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0190",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0202",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0204",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0214",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0221",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0216",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0217",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0218",
+   "verdict": "TRUE",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0220",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0223",
+   "verdict": "FALSE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0255",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0257",
+   "verdict": "UNVERIFIABLE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0225",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0246",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0247",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0256",
+   "verdict": "FALSE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0258",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0264",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0279",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0280",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0282",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0283",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0284",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0285",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0289",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0300",
+   "verdict": "MISLEADING",
+   "split": true,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0316",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0319",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0320",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0321",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0323",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0324",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0325",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  },
+  {
+   "sid": "obama_2014:0327",
+   "verdict": "TRUE",
+   "split": false,
+   "status": "resolved"
+  }
+ ]
+}
