@@ -211,3 +211,46 @@ def test_without_relation_or_shape_behavior_is_bitwise_legacy() -> None:
         assert res.quota_met == plain.quota_met
         assert [it.role for it in res.items] == ["", ""]
         assert res.role_tally == {}
+
+
+# ── PR-A2.3 wiring: shape registry ───────────────────────────────────────────
+
+
+def test_shape_registry_round_trip_and_legacy_default() -> None:
+    from truthbot.verdict import shape_registry as sr
+    sr.clear()
+    n = sr.register_claim_shapes([
+        {"sid": "s:1", "layer_a": {"claim_shape": "c-exist"}},
+        {"sid": "s:2", "layer_a": {"claim_shape": ""}},
+        {"sid": "s:3"},                       # no layer_a at all
+    ])
+    assert n == 1
+    assert sr.shape_for("s:1") == "c-exist"
+    assert sr.shape_for("s:2") == "" == sr.shape_for("s:3")
+    assert sr.shape_for("never-registered") == ""
+    sr.clear()
+
+
+def test_run_pca_verify_registers_shapes_for_the_pack_builder() -> None:
+    from truthbot.verdict import publish_pipeline as pp
+    from truthbot.verdict import shape_registry as sr
+    sr.clear()
+    sentences = [{"sid": "sp:0000", "text": "We convened a summit.", "context": ""}]
+
+    def layer_a_fn(rows):
+        return [{"sid": r["sid"], "label": "check-worthy", "claim_type": "other",
+                 "claim_shape": "c-exist", "confidence": 0.9, "rationale": "",
+                 "text": r["text"], "context": r.get("context", "")}
+                for r in rows]
+
+    def adjudicate_fn(chunk):
+        # By the time packs would be built, the registry must know the shape.
+        assert sr.shape_for(chunk[0]["sid"]) == "c-exist"
+        return ([{"sid": c["sid"], "status": "resolved", "verdict": "TRUE",
+                  "confidence": 0.9, "citations": [], "reasoning": "ok",
+                  "votes": {"TRUE": 3}} for c in chunk], {})
+
+    result = pp.run_pca_verify(sentences, layer_a_fn=layer_a_fn,
+                               adjudicate_fn=adjudicate_fn)
+    assert len(result.bundles) == 1
+    sr.clear()

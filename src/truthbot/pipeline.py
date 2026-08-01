@@ -1051,7 +1051,8 @@ def _build_open_book_provider():
 
 
 def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
-                           retriever_concurrency: int = 0):
+                           retriever_concurrency: int = 0,
+                           speaker: str = "", utterance=None):
     """shared_pack_v2 (P67.9): bind the R1/R2/R3 retriever trio into the
     ``pack_builder`` hook (trio shortlists → deterministic consolidator →
     T2.4 quality gate). Fails LOUD when a lane is missing — a dead retriever
@@ -1068,7 +1069,13 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
     first-pass pack fails the T2.4 quota (thin-evidence rescue), not every
     claim. R1+R2 alone measured decisive_source_recall 0.85 = full trio, and
     grok's marginal value concentrates in exactly the starved tail this mode
-    routes to it. Cuts the grok retrieval bill ~85-95% per speech."""
+    routes to it. Cuts the grok retrieval bill ~85-95% per speech.
+
+    ``speaker`` + ``utterance`` (PR-A2.3 wiring, D11-approved): when both are
+    supplied, packs consolidate ROLE-AWARE — the principal relation closes
+    over them here (identical machinery for every speaker, I3-relational) and
+    each claim's Layer A shape comes from ``shape_registry``. Either absent →
+    legacy quota, bit-for-bit."""
     import os
     import shutil
 
@@ -1105,6 +1112,15 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
             retrieval_pool.parallel_shortlists, governor=governor,
             max_workers=(retriever_concurrency or None))
 
+    relation_of = None
+    if speaker and utterance is not None:
+        from truthbot.verify.principals import principal_relation
+
+        def relation_of(ev):
+            return principal_relation(ev.source_url, speaker, utterance)
+
+    from truthbot.verdict import shape_registry
+
     def pack_builder(sid: str, text: str, context: str):
         # Active-set filtering (governor drops R1 during a Max cool-down); the pool
         # counts ACTIVE researchers, never a fixed trio (grok-fallback + Max-drop).
@@ -1112,7 +1128,9 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
         retry = governor.active_retrievers(trio) if governor else trio
         return build_evidence_pack_v2(sid, text, prim,
                                       retry_retrievers=retry, context=context,
-                                      shortlist_runner=runner)
+                                      shortlist_runner=runner,
+                                      claim_shape=shape_registry.shape_for(sid),
+                                      relation_of=relation_of)
 
     return pack_builder
 
@@ -1227,7 +1245,10 @@ def _run_publish_pca(args) -> None:
         pack_builder = _build_v2_pack_builder(    # fails LOUD on a missing lane
             grok_fallback=bool(getattr(args, "grok_fallback", False)),
             governor=governor,
-            retriever_concurrency=int(getattr(args, "retriever_concurrency", 0) or 0))
+            retriever_concurrency=int(getattr(args, "retriever_concurrency", 0) or 0),
+            # PR-A2.3: role-aware consolidation for every new v2 run.
+            speaker=getattr(args, "speaker", "") or "",
+            utterance=date.date())
     else:
         provider = _build_open_book_provider()
         if provider is None:
@@ -1303,6 +1324,11 @@ def _run_publish_pca(args) -> None:
             sentences, classify_fn=layer_a_fn, confirm_pass=True)
         claims = publish_pipeline.claims_from_queue(
             prebuilt_layer_a.check_worthy_queue)
+        # PR-A2.3: Phase R pack building consults each claim's Layer A shape.
+        from truthbot.verdict import shape_registry
+        n_shapes = shape_registry.register_claim_shapes(claims)
+        if n_shapes:
+            print(f"  claim shapes registered: {n_shapes}/{len(claims)}")
         # Rows already banked (chunk-journal resume) skip retrieval too.
         done_row_sids = {r.get("sid") for r in resume_rows}
         todo = [c for c in claims if c["sid"] not in done_row_sids]
