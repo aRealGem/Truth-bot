@@ -166,3 +166,35 @@ def test_classify_escalating_reclassifies_only_low_confidence(monkeypatch):
     assert by["s2"]["escalated"] is True and by["s2"]["label"] == "unimportant"  # strong tier won
     assert info["n_escalated"] == 1 and info["escalate_rate"] == 0.5
     assert calls[0][0] == "cheap" and calls[1] == ("standard", ["s2"])         # only s2 escalated
+
+
+# ── PR-A2.3: claim_shape (second axis) ───────────────────────────────────────
+
+
+def test_a2_parse_claim_shape_contract():
+    from truthbot.checkworthy.classifier import parse_a2
+    row = parse_a2({"label": "check-worthy", "claim_type": "statistical",
+                    "claim_shape": "C-Count", "confidence": 0.9})
+    assert row["claim_shape"] == "c-count"
+    # Out-of-contract shapes fall to None, never to a guess.
+    assert parse_a2({"label": "check-worthy", "claim_shape": "weird"}
+                    )["claim_shape"] is None
+    # Non-check-worthy rows never carry a shape.
+    assert parse_a2({"label": "opinion", "claim_shape": "c-eval"}
+                    )["claim_shape"] is None
+    # Legacy outputs without the key are untouched.
+    assert parse_a2({"label": "check-worthy", "claim_type": "other"}
+                    )["claim_shape"] is None
+
+
+def test_a2_parse_applies_shape_lint_when_text_present():
+    from truthbot.checkworthy.classifier import parse_a2
+    row = parse_a2(
+        {"label": "check-worthy", "claim_type": "other", "claim_shape": "c-exist"},
+        text="We launched the initiative that ended veteran unemployment "
+             "because our reforms worked.")
+    assert row["claim_shape"] == "c-eval"   # deterministic lint binds
+    clean = parse_a2(
+        {"label": "check-worthy", "claim_type": "other", "claim_shape": "c-exist"},
+        text="The White House convened a summit with 150 university presidents.")
+    assert clean["claim_shape"] == "c-exist"

@@ -154,7 +154,8 @@ def _pack_sources(pack: Optional[EvidencePack]) -> list[dict]:
     return [
         {"id": it.pack_id, "source": it.source_name, "url": it.source_url,
          "tier": it.tier.value, "snippet": it.snippet,
-         "supports_claim": it.supports_claim, "relevance_score": it.relevance_score}
+         "supports_claim": it.supports_claim, "relevance_score": it.relevance_score,
+         "role": getattr(it, "role", "") or ""}
         for it in pack.items
     ]
 
@@ -243,6 +244,7 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         layer_a_label=str(la.get("label") or ""),
         layer_a_source=str(la.get("source") or ""),
         layer_a_claim_type=str(la.get("claim_type") or ""),
+        layer_a_claim_shape=str(la.get("claim_shape") or ""),
         panel_votes=_normalize_votes(row.get("votes")),
         panel_split=bool(row.get("split", False)),
         panel_escalated=bool(row.get("escalated", False)),

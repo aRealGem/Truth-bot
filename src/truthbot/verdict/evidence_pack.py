@@ -87,6 +87,10 @@ class PackItem:
     # date survived only as a [YYYY-MM-DD] snippet prefix — artifacts
     # serialized published_at=null and the era lint had nothing to check.
     published_at: Optional[str] = None
+    # Evidential role (PR-A2.3): primary-record | corroborant |
+    # attribution-only | plain-s5 | "" (legacy / normal). Display + payload
+    # metadata; NOT part of the I5 provenance quad.
+    role: str = ""
 
     def provenance(self) -> dict:
         """The I5 provenance record (``url/retrieved_at/sha256/tier`` required)."""
@@ -112,6 +116,11 @@ class PackItem:
         stance = _stance_label(self.supports_claim)
         if stance is not None:
             payload["stance"] = stance
+        # Evidential role (PR-A2.3): surfaced so the panel can see that an
+        # attribution-only self record is non-probative. Omitted when unset /
+        # normal — pre-shape packs carry the exact prior payload.
+        if self.role and self.role != "normal":
+            payload["role"] = self.role
         return payload
 
 

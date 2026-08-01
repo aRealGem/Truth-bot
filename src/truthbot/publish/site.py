@@ -2246,7 +2246,9 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     prov = bundle.consensus.provenance
     parts: list[str] = []
     if prov.layer_a_label:
-        qualifiers = ", ".join(q for q in (prov.layer_a_source, prov.layer_a_claim_type) if q)
+        qualifiers = ", ".join(
+            q for q in (prov.layer_a_source, prov.layer_a_claim_type,
+                        getattr(prov, "layer_a_claim_shape", "")) if q)
         src = f" ({qualifiers})" if qualifiers else ""
         parts.append(f"Layer A: {prov.layer_a_label}{src}")
     if prov.panel_votes:
@@ -7483,6 +7485,8 @@ class SitePublisher:
                 "layer_a_label":   bundle.consensus.provenance.layer_a_label,
                 "layer_a_source":  bundle.consensus.provenance.layer_a_source,
                 "layer_a_claim_type": bundle.consensus.provenance.layer_a_claim_type,
+                "layer_a_claim_shape": getattr(bundle.consensus.provenance,
+                                               "layer_a_claim_shape", ""),
                 "panel_votes":     dict(bundle.consensus.provenance.panel_votes),
                 "panel_split":     bundle.consensus.provenance.panel_split,
                 "panel_escalated": bundle.consensus.provenance.panel_escalated,

@@ -395,6 +395,16 @@ class VerdictProvenance(BaseModel):
             "that come back Unverifiable (no independent public record)."
         ),
     )
+    layer_a_claim_shape: str = Field(
+        default="",
+        description=(
+            "A2 claim_shape (PR-A2.3 / D11.1): c-exist | c-count | c-eval | "
+            "c-third. The second, orthogonal claim axis feeding the "
+            "evidential-role table (verdict.evidential_role). Empty on "
+            "pre-shape runs and A1-routed rows — empty means today's "
+            "behavior exactly."
+        ),
+    )
     panel_votes: dict[str, int] = Field(
         default_factory=dict,
         description="Per-label seat tally from the PCA panel, e.g. {'True': 2, 'Misleading': 1}",

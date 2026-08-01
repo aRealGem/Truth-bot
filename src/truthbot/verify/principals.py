@@ -32,7 +32,7 @@ from datetime import date, datetime
 from enum import Enum
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, Sequence, Union
 
 from truthbot.domains import host_matches, url_host
 
@@ -92,7 +92,8 @@ def _coerce_date(when: Union[date, datetime, str, None]) -> Optional[date]:
 
 
 def principal_relation(url: str, speaker: str,
-                       utterance_date: Union[date, datetime, str, None]
+                       utterance_date: Union[date, datetime, str, None],
+                       participants: Sequence[str] = (),
                        ) -> PrincipalRelation:
     """Relation of the source behind ``url`` to ``speaker`` at utterance time.
 
@@ -101,6 +102,13 @@ def principal_relation(url: str, speaker: str,
     the URL host against that era's principal domains. Any gap — unknown
     speaker, unparseable/absent date, no covering era, no host — returns
     INDEPENDENT (fail-open: display code may under-flag, never over-flag).
+
+    ``participants`` (PR-A2.3, D11.5.1): explicit per-claim participant
+    domains — orgs NAMED in the claimed event, publishing on their own domain.
+    Deterministic and caller-supplied (never inferred here, never by an LLM);
+    SELF wins over PARTICIPANT when both match. Empty (the default, and the
+    only value any live caller passes until the participant-entity lane
+    exists) preserves the exact A2.1 behavior.
     """
     host = url_host(url)
     when = _coerce_date(utterance_date)
@@ -109,4 +117,6 @@ def principal_relation(url: str, speaker: str,
     for era in _eras_by_speaker().get(_norm(speaker), ()):
         if era.covers(when) and any(host_matches(host, d) for d in era.domains):
             return PrincipalRelation.SELF
+    if any(host_matches(host, d.lower()) for d in participants or ()):
+        return PrincipalRelation.PARTICIPANT
     return PrincipalRelation.INDEPENDENT

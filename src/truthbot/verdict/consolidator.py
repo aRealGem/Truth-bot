@@ -69,17 +69,24 @@ class ConsolidatedItem:
     evidence: Evidence
     draw_round: int          # which round-robin round drew it
     retriever: str           # shortlist label it came from
+    # Evidential role (PR-A2.3): non-empty only on role-aware consolidations
+    # (claim_shape + relation_of supplied). Rides into the panel payload so an
+    # attribution-only self record is visibly non-probative to the seats.
+    role: str = ""
 
     def to_payload_v2(self) -> dict:
         ev = self.evidence
         stance = {True: "supports", False: "refutes"}.get(ev.supports_claim, "context")
-        return {
+        payload = {
             "url": ev.source_url,
             "date": ev.published_at.date().isoformat() if ev.published_at else None,
             "tier": ev.source_tier.value,
             "stance": stance,
             "one_line_why": (ev.snippet or "").strip()[:200],
         }
+        if self.role and self.role != "normal":
+            payload["role"] = self.role
+        return payload
 
 
 @dataclass
@@ -96,6 +103,10 @@ class ConsolidationResult:
     # Obama-2014 measurement could NOT be re-run locally because only capped
     # packs were stored.
     pre_cap_items: list[ConsolidatedItem] = field(default_factory=list)
+    # Evidential-role tally over the kept pool (PR-A2.3), e.g.
+    # {"normal": 6, "primary-record": 2, "attribution-only": 1}. Empty on
+    # non-role-aware consolidations.
+    role_tally: dict[str, int] = field(default_factory=dict)
 
     @property
     def schema_version(self) -> str:
@@ -133,6 +144,8 @@ def consolidate(
     window: Optional[tuple[date, date]] = None,
     max_items: int = PACK_CAP_V2,
     era_mode: str = "strict",
+    claim_shape: str = "",
+    relation_of=None,
 ) -> ConsolidationResult:
     """Assemble a shared_pack_v2 pack from retriever shortlists.
 
@@ -146,7 +159,19 @@ def consolidate(
     ranked behind contemporaneous sources — and lets a GOVERNMENT-tier item
     dated within the era count toward the quota even when its stance is
     neutral (a 1973 BLS table IS bearing evidence). Fact-checker exclusion,
-    dedup, and provenance rules are identical in both modes."""
+    dedup, and provenance rules are identical in both modes.
+
+    Evidential-role axis (PR-A2.3, D11-approved): ``claim_shape`` is the
+    Layer A shape (c-exist/c-count/c-eval/c-third; '' = legacy) and
+    ``relation_of`` an ``Evidence -> PrincipalRelation`` callable the caller
+    closes over speaker + utterance (the consolidator itself stays
+    speaker-ignorant; the callable is identical machinery for every speaker —
+    I3-relational). When BOTH are supplied the quota is role-aware per the
+    D11.2 table: a PRIMARY-RECORD self item may fill at most one slot, a
+    PARTICIPANT corroborant fills the independent slot, an ATTRIBUTION-ONLY
+    item satisfies nothing, and a decided verdict always needs at least one
+    non-self credit. With either absent, quota behavior is bit-for-bit
+    today's."""
     result = ConsolidationResult(sid=sid)
     seen: set[str] = set()
     kept: list[ConsolidatedItem] = []
@@ -225,6 +250,24 @@ def consolidate(
                                   _TIER_RANK[it.evidence.source_tier]))
     else:
         kept.sort(key=lambda it: (it.draw_round, _TIER_RANK[it.evidence.source_tier]))
+    # Evidential-role annotation (PR-A2.3): computed once per item, attached
+    # to both the capped pack and the pre-cap pool so payloads and journals
+    # agree. Empty when the caller didn't opt into the role axis.
+    role_aware = bool(claim_shape) and relation_of is not None
+    if role_aware:
+        from dataclasses import replace
+
+        from truthbot.verdict.evidential_role import evidential_role
+        roles = {id(it): evidential_role(claim_shape,
+                                         relation_of(it.evidence)).value
+                 for it in kept}
+        kept = [replace(it, role=roles[id(it)]) for it in kept]
+        # id()s changed with replace(); carry era classes across.
+        era_class = {id(it): era_class.get(old_id, 1)
+                     for it, old_id in zip(kept, list(roles))}
+        for it in kept:
+            result.role_tally[it.role] = result.role_tally.get(it.role, 0) + 1
+
     result.pre_cap_items = list(kept)
     result.items = kept[:max_items]
     if len(kept) > max_items:
@@ -241,7 +284,25 @@ def consolidate(
                 and it.evidence.source_tier == SourceTier.GOVERNMENT
                 and era_class.get(id(it)) == 0)
 
-    result.quota_met = sum(1 for it in result.items if _quota_credit(it)) >= MIN_BEARING_T13
+    if not role_aware:
+        credits = sum(1 for it in result.items if _quota_credit(it))
+        result.quota_met = credits >= MIN_BEARING_T13
+    else:
+        # D11.2 quota: independent credits are today's rule but restricted to
+        # non-self, non-participant sources; a CORROBORANT fills the
+        # independent slot regardless of base tier; a PRIMARY-RECORD self item
+        # contributes at most ONE credit; ATTRIBUTION-ONLY and PLAIN-S5
+        # satisfy nothing. A decided verdict always needs ≥1 credit that is
+        # not the speaker's own record.
+        independent = sum(1 for it in result.items
+                          if it.role == "normal" and _quota_credit(it))
+        corroborants = sum(1 for it in result.items
+                           if it.role == "corroborant" and _bearing(it.evidence))
+        primary = sum(1 for it in result.items
+                      if it.role == "primary-record" and _bearing(it.evidence))
+        credits = independent + corroborants + min(1, primary)
+        result.quota_met = (credits >= MIN_BEARING_T13
+                            and (independent >= 1 or corroborants >= 1))
     if not result.quota_met:
         result.gate_code = GATE_INSUFFICIENT
     return result
