@@ -59,6 +59,40 @@
           "campaign_domains": ["joebiden.com"]
         }
       ]
+    },
+    {
+      "speaker": "Bill Clinton",
+      "aliases": ["President Bill Clinton", "William J. Clinton"],
+      "eras": [
+        {
+          "start": "1993-01-20",
+          "end": "2001-01-20",
+          "administration_domains": [
+            "whitehouse.gov",
+            "clintonwhitehouse1.archives.gov",
+            "clintonwhitehouse2.archives.gov",
+            "clintonwhitehouse3.archives.gov",
+            "clintonwhitehouse4.archives.gov",
+            "clintonwhitehouse5.archives.gov",
+            "clintonwhitehouse6.archives.gov"
+          ],
+          "party_domains": ["democrats.org", "dnc.org"],
+          "campaign_domains": []
+        }
+      ]
+    },
+    {
+      "speaker": "George W. Bush",
+      "aliases": ["President George W. Bush", "George Walker Bush"],
+      "eras": [
+        {
+          "start": "2001-01-20",
+          "end": "2009-01-20",
+          "administration_domains": ["whitehouse.gov", "georgewbush-whitehouse.archives.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": ["georgewbush.com"]
+        }
+      ]
     }
   ]
 }

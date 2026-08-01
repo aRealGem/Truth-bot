@@ -119,3 +119,23 @@ def test_host_matching_is_suffix_not_substring() -> None:
     rel = principal_relation("https://notwhitehouse.gov.example.com/x",
                              "Barack Obama", _OBAMA_SOTU)
     assert rel is PrincipalRelation.INDEPENDENT
+
+
+def test_clinton_and_gwbush_eras_seeded_for_the_internet_era_corpus() -> None:
+    # P131 internet-era runs (2026-08-01): the role axis is inert for any
+    # speaker missing from the data table, so the corpus speakers must be
+    # seeded BEFORE their runs — this pins it.
+    wh = "https://whitehouse.gov/x"
+    assert principal_relation(wh, "Bill Clinton", date(1998, 1, 27)) is \
+        PrincipalRelation.SELF
+    assert principal_relation(
+        "https://clintonwhitehouse4.archives.gov/WH/New/html/x.html",
+        "Bill Clinton", date(1998, 1, 27)) is PrincipalRelation.SELF
+    assert principal_relation(wh, "George W. Bush", date(2006, 1, 31)) is \
+        PrincipalRelation.SELF
+    assert principal_relation(
+        "https://georgewbush-whitehouse.archives.gov/news/releases/2006/x.html",
+        "George W. Bush", date(2006, 1, 31)) is PrincipalRelation.SELF
+    # Cross-era symmetry still holds.
+    assert principal_relation(wh, "Bill Clinton", date(2006, 1, 31)) is \
+        PrincipalRelation.INDEPENDENT
