@@ -504,7 +504,13 @@ class VerdictBundle(BaseModel):
     evidence_count: int = Field(default=0)
     sources_consulted: list[dict] = Field(
         default_factory=list,
-        description="Full retrieved evidence pack (ALL items, not just cited): each {id, source, url, tier, snippet}",
+        description=(
+            "Full retrieved evidence pack (ALL items, not just cited): each "
+            "{id, source, url, tier, snippet, supports_claim, relevance_score} "
+            "(the stance/relevance fields ride along since shared_pack_v2 — "
+            "supports_claim True/False = bearing on the core assertion, "
+            "None = ambiguous/unscored)"
+        ),
     )
     cache_hit: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)

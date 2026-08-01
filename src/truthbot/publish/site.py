@@ -33,6 +33,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from truthbot.models import VerdictBundle, VerdictLabel
+from truthbot.verify.principals import PrincipalRelation, principal_relation
 from truthbot.verify.source_tiers import TIER_BUCKET, TIER_DISPLAY, classify_tier
 
 logger = logging.getLogger(__name__)
@@ -760,7 +761,8 @@ def _evidence_list_html(
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
 
 
-def _sources_consulted_html(sources: list[dict], anchor_base: str = "") -> str:
+def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
+                            self_ids: Optional[set[str]] = None) -> str:
     """Render the FULL retrieved evidence pack (all items, not just cited).
 
     Independent of what the verdict cited: a claim can have a non-empty pack
@@ -770,9 +772,14 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "") -> str:
     ``anchor_base`` (per-claim unique) makes each pack item a link target
     (``id="{anchor_base}-E5"``) so E-id mentions in model reasoning can jump
     here (2026-07-19 review follow-up).
+
+    ``self_ids`` (PR-A2.1): pack ids whose source org is the speaker's own
+    principal — those items carry a "speaker's own org" badge so the reader
+    can see at a glance which records are the claimant's.
     """
     if not sources:
         return ""
+    self_ids = self_ids or set()
     items: list[str] = []
     for src in sources:
         url = (src.get("url") or "").strip()
@@ -782,6 +789,10 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "") -> str:
         tier = (src.get("tier") or "").strip()
         snippet = (src.get("snippet") or "").strip()
         badge = _tier_badge(url)
+        if str(src.get("id") or "").strip() in self_ids:
+            badge += ('<span class="ev-self" title="This source is the speaker&#39;s '
+                      'own organization (administration, party, or campaign at the '
+                      'time of the speech).">speaker&#39;s own org</span>')
         short = url.replace("https://", "").replace("http://", "")
         if len(short) > 80:
             short = short[:77] + "…"
@@ -1424,12 +1435,35 @@ def _verdict_panel(site_report) -> str:
             'private individuals\' stories with no independent public record to check.</p>\n'
         )
 
+    # Honest-abstention chip (PR-A2.1 / T1.2): decompose the abstentions so an
+    # evidence-AVAILABILITY abstention ("only witness is the claimant") is never
+    # read as an integrity signal. Terms sum to claim_count; every number is
+    # re-derivable from claims.json (consistency.py checks it). Rendered only
+    # when the sub-state exists so legacy reports are byte-identical.
+    n_split = dist_strict.get("Models split", 0)
+    n_selfsrc = sum(1 for b in site_report.checkable_bundles
+                    if _is_self_sourced_unverified(b))
+    selfsource_chip_html = ""
+    if n_selfsrc:
+        n_decided = claim_count - uv_bucket - n_split
+        parts = [f"{n_decided} decided",
+                 f"{n_selfsrc} unverified — self-sourced only",
+                 f"{uv_bucket - n_selfsrc} unverifiable — other"]
+        if n_split:
+            parts.append(f"{n_split} models split")
+        selfsource_chip_html = (
+            '<p class="vp-selfsource-chip" '
+            f'title="{_esc(SELF_SOURCED_TITLE)}">' + _esc(" · ".join(parts))
+            + '</p>\n'
+        )
+
     return (
         '<section class="verdict-panel">\n'
         + '  <div class="vp-headline">' + text_col + widget + '</div>\n'
         + headline_stats_html
         + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
+        + selfsource_chip_html
         + anecdote_note_html
         + source_row_html
         + '</section>\n'
@@ -2148,6 +2182,60 @@ def _is_anecdote_unverifiable(bundle: VerdictBundle) -> bool:
             and bundle.consensus.consensus_label == VerdictLabel.UNVERIFIABLE)
 
 
+#: Honest-abstention sub-state (PR-A2.1 / Evidential Role Axis Phase 1).
+#: "The only witness is the claimant" is a FINDING, not an evasion: the quality
+#: gate failed, the pack's only bearing items are the speaker's own
+#: organization, and no independent S1–S3 item bears on the core assertion —
+#: so the reader is told exactly that instead of a bare "Unverifiable".
+#: Display only; verdicts, gates and weights are untouched in this phase.
+SELF_SOURCED_PILL = "Unverified — self-sourced only"
+SELF_SOURCED_TITLE = (
+    "The evidence gate failed and every source bearing on this claim is the "
+    "speaker's own organization (administration, party, or campaign at the "
+    "time of the speech). Self-records can confirm a claim was made — never, "
+    "on their own, that it is true. No independent top-tier source was found."
+)
+#: Mirrors ``verdict.consolidator.GATE_INSUFFICIENT`` — site.py is string-typed
+#: by design (like the coarse projections); the pin lives in the render tests.
+GATE_INSUFFICIENT = "insufficient-qualifying-evidence"
+_INDEPENDENT_TIERS = ("Government", "Wire", "Established")  # S1–S3 tier values
+
+
+def _self_source_ids(bundle: VerdictBundle) -> set[str]:
+    """Pack ids of consulted sources whose org is the speaker's own principal
+    (era-scoped SELF relation), for the per-item badge on the source strip."""
+    return {
+        str(s.get("id") or "").strip()
+        for s in (getattr(bundle, "sources_consulted", None) or [])
+        if principal_relation(s.get("url", ""), bundle.speaker, bundle.date_str)
+        is PrincipalRelation.SELF
+    } - {""}
+
+
+def _is_self_sourced_unverified(bundle: VerdictBundle) -> bool:
+    """True when the claim renders "Unverified — self-sourced only" (T1.1):
+    gate-forced Unverifiable AND ≥1 bearing (on-core) SELF item AND zero
+    independent bearing S1–S3 items. Anecdotes keep their genre pill — the
+    genre limit is the more specific finding."""
+    if _is_anecdote_unverifiable(bundle):
+        return False
+    consensus = bundle.consensus
+    if (consensus.consensus_label != VerdictLabel.UNVERIFIABLE
+            or consensus.consensus_verdict == "Models split"
+            or getattr(consensus.provenance, "evidence_gate", "") != GATE_INSUFFICIENT):
+        return False
+    has_bearing_self = False
+    for src in getattr(bundle, "sources_consulted", None) or []:
+        if src.get("supports_claim") is None:  # not bearing on the core assertion
+            continue
+        rel = principal_relation(src.get("url", ""), bundle.speaker, bundle.date_str)
+        if rel is PrincipalRelation.SELF:
+            has_bearing_self = True
+        elif (src.get("tier") or "") in _INDEPENDENT_TIERS:
+            return False  # an independent S1–S3 item bears — not self-sourced-only
+    return has_bearing_self
+
+
 def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
                           rel: str = "../") -> str:
     """The Layer A → PCA panel → CRM-114 chain, rendered as a compact strip.
@@ -2222,6 +2310,12 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         label = lenient_attr = strict_attr = ANECDOTE_PILL
         pill_title = ANECDOTE_TITLE
         anecdote_cls = " pill-anecdote"
+    # Self-sourced-only treatment (PR-A2.1): same both-axes text swap as the
+    # anecdote pill so the lens toggle can't restore a bare "Unverifiable".
+    elif _is_self_sourced_unverified(bundle):
+        label = lenient_attr = strict_attr = SELF_SOURCED_PILL
+        pill_title = SELF_SOURCED_TITLE
+        anecdote_cls = " pill-self-sourced"
     n = str(idx).zfill(2)
 
     context_html = ''
@@ -2402,7 +2496,9 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     consulted = list(getattr(bundle, "sources_consulted", None) or [])
     consulted_html = ""
     if consulted:
-        consulted_inner = _sources_consulted_html(consulted, anchor_base=_anchor_base)
+        consulted_inner = _sources_consulted_html(
+            consulted, anchor_base=_anchor_base,
+            self_ids=_self_source_ids(bundle))
         if consulted_inner:
             # Collapsed by default (2026-07-19 review): the snippet verbiage is
             # audit detail, not first-read content — one click away, not in the way.
@@ -3688,6 +3784,33 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-pill.pill-anecdote, .toc-pill.pill-anecdote {
   outline: 1.5px dashed rgba(255,255,255,0.65);
   outline-offset: -3.5px;
+}
+/* Self-sourced-only abstention (PR-A2.1): Unverifiable color family, solid
+   double-rule outline — "the only witness is the claimant", not "we failed". */
+.claim-pill.pill-self-sourced {
+  outline: 3px double rgba(255,255,255,0.65);
+  outline-offset: -4.5px;
+}
+/* Per-item marker on the Sources-consulted strip: this record is the
+   speaker's own organization (era-scoped principal match). */
+.ev-self {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  padding: 0.05rem 0.3rem;
+  margin-right: 0.4rem;
+  white-space: nowrap;
+}
+/* Abstention-decomposition chip under the verdict bars (PR-A2.1 T1.2). */
+.vp-selfsource-chip {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin: 0.35rem 0 0;
 }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {
@@ -7153,6 +7276,18 @@ class SitePublisher:
         self._ensure_structure()
         self._copy_assets()
 
+        # Backfill speaker/date onto bundles that bridged without them
+        # (PR-A2.1). The bridge only threads speaker/date_str when the claim
+        # dicts carry them; the offline artifact path ({"sid","text","context",
+        # "layer_a"}) does not, leaving bundle.speaker="Unknown". The report
+        # knows both, and the principal-relation display (self-sourced-only
+        # pill/badges/chip) needs them per bundle.
+        for bundle in site_report.bundles:
+            if not bundle.speaker or bundle.speaker == "Unknown":
+                bundle.speaker = site_report.speaker
+            if not bundle.date_str:
+                bundle.date_str = site_report.date_str
+
         # Write report page
         report_html = _render_report(site_report)
         report_path = self._root / "reports" / f"{site_report.report_slug}.html"
@@ -7356,6 +7491,12 @@ class SitePublisher:
                 "panel_by_role":   {k: list(v) for k, v in
                                     getattr(bundle.consensus.provenance,
                                             "panel_by_role", {}).items()},
+                # PR-A2.1: the T2.4 gate code and the rendered honest-abstention
+                # sub-state, exported so the report chip's decomposition is
+                # re-derivable from claims.json alone (consistency.py checks it).
+                "evidence_gate":   getattr(bundle.consensus.provenance,
+                                           "evidence_gate", ""),
+                "self_sourced_only": _is_self_sourced_unverified(bundle),
             },
             "url": f"claims/{bundle.claim.id}.html",
         }

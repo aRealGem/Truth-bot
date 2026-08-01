@@ -65,6 +65,16 @@ truth-bot's output defensible as non-partisan, and it is guarded twice:
 (model provenance, Principle 2). The regex keys on speaker/source vocabulary precisely so
 model-provenance conditionals stay legal.
 
+**Relational use is not conditioning (PR-A2.1 note; full re-wording is a D11
+line-item):** `verify/principals.py` computes an era-scoped *relation* between a
+source's org and the speaker (`principal_relation(url, speaker, utterance_date)`).
+That is speaker identity used **relationally** — an argument to a total function
+computed identically for every speaker, with every person-naming fact in a
+versioned data table (`principals.json`, same precedent as `source_tiers.json`
+naming `obamawhitehouse.archives.gov`) — never **conditionally** (no code path
+branches on who is being analyzed). Phase 1 consumes the relation for display
+only ("Unverified — self-sourced only"); any epistemic use is gated on D11.
+
 ## I4 — citations ⊆ evidence pack
 
 A verdict may only cite evidence that was actually in its pack. `check_i4_citations`

@@ -191,6 +191,31 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
                 violations.append(
                     f"{slug} [{axis}]: chip {frame_cls} shows {got}, derived {want}")
 
+    # Self-sourced-only abstention chip (PR-A2.1 T1.2): its decomposition must
+    # re-derive from claims.json — decided/self-sourced/other(/split) sum to
+    # claim_count, with the self-sourced count read off the exported
+    # provenance.self_sourced_only flags.
+    m = re.search(r'vp-selfsource-chip[^>]*>(\d+) decided · (\d+) unverified — '
+                  r'self-sourced only · (\d+) unverifiable — other'
+                  r'(?: · (\d+) models split)?', page)
+    if m:
+        got = [int(g) for g in m.groups() if g is not None]
+        dist = _coarse_dist(report_claims, "strict")
+        uv = dist.get("Unverifiable", 0)
+        split = dist.get("Models split", 0)
+        selfsrc = sum(1 for c in report_claims
+                      if c.get("provenance", {}).get("self_sourced_only"))
+        want = [claim_count - uv - split, selfsrc, uv - selfsrc]
+        if split:
+            want.append(split)
+        if got != want:
+            violations.append(
+                f"{slug}: self-source chip shows {got}, derived {want}")
+        if sum(got) != claim_count:
+            violations.append(
+                f"{slug}: self-source chip terms sum to {sum(got)}, "
+                f"claim_count is {claim_count}")
+
     # Anecdote footnote must reconcile with the derived Unverifiable bucket.
     m = re.search(r'vp-anecdote-note[^>]*>(\d+) of the (\d+) Unverifiable', page)
     if m:
