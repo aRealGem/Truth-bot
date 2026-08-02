@@ -45,6 +45,11 @@ from truthbot.publish.site import (
 )
 
 
+# Default public base URL (no TRUTHBOT_SITE_URL in the test env) — absolute
+# canonical/og:url/og:image links resolve against this (1.10).
+_BASE = "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca"
+
+
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
 
@@ -216,7 +221,9 @@ class TestSocialHead:
         assert '<meta property="og:site_name" content="truth-bot">' in html
         assert '<meta property="og:title" content="My Title">' in html
         assert '<meta property="og:description" content="My desc">' in html
-        assert '<meta property="og:image" content="../assets/social-card.png">' in html
+        # Images are ABSOLUTE (1.10): crawlers don't resolve relative og:image.
+        assert (f'<meta property="og:image" content="{_BASE}/assets/social-card.png">'
+                in html)
         assert '<meta property="og:image:width" content="1200">' in html
         assert '<meta property="og:image:height" content="630">' in html
         assert 'property="og:image:alt"' in html
@@ -226,8 +233,41 @@ class TestSocialHead:
         assert '<meta name="twitter:card" content="summary_large_image">' in html
         assert '<meta name="twitter:title" content="T">' in html
         assert '<meta name="twitter:description" content="D">' in html
-        assert '<meta name="twitter:image" content="./assets/social-card.png">' in html
+        assert (f'<meta name="twitter:image" content="{_BASE}/assets/social-card.png">'
+                in html)
         assert 'name="twitter:image:alt"' in html
+
+    def test_meta_description_defaults_to_og_description_and_escapes(self):
+        html = _social_head("./", "T", 'Desc & "quoted" <text>')
+        assert ('<meta name="description" content="Desc &amp; '
+                '&quot;quoted&quot; &lt;text&gt;">') in html
+        override = _social_head("./", "T", "OG desc",
+                                meta_description="Meta only")
+        assert '<meta name="description" content="Meta only">' in override
+        assert '<meta property="og:description" content="OG desc">' in override
+
+    def test_canonical_and_og_url_absolute_when_page_path_given(self):
+        html = _social_head("../", "T", "D",
+                            page_path="reports/2026-03-04-x-abc123.html")
+        assert (f'<link rel="canonical" '
+                f'href="{_BASE}/reports/2026-03-04-x-abc123.html">') in html
+        assert (f'<meta property="og:url" '
+                f'content="{_BASE}/reports/2026-03-04-x-abc123.html">') in html
+        # Index (page_path="") canonicalizes to the site root with a slash.
+        index = _social_head("./", "T", "D", page_path="")
+        assert f'<link rel="canonical" href="{_BASE}/">' in index
+        # No page_path → no canonical/og:url at all (e.g. the 404 page).
+        bare = _social_head("./", "T", "D")
+        assert "canonical" not in bare
+        assert "og:url" not in bare
+
+    def test_site_url_env_override_respected(self, monkeypatch):
+        monkeypatch.setenv("TRUTHBOT_SITE_URL", "https://truthbot.example.org/")
+        html = _social_head("./", "T", "D", page_path="about.html")
+        assert ('<link rel="canonical" '
+                'href="https://truthbot.example.org/about.html">') in html
+        assert ('<meta property="og:image" content='
+                '"https://truthbot.example.org/assets/social-card.png">') in html
 
     def test_feed_link_opt_in_only(self):
         without = _social_head("./", "T", "D")
@@ -242,7 +282,6 @@ class TestSocialHead:
         html = _social_head("../", "T", "D")
         assert '"../favicon.ico"' in html
         assert '"../assets/favicon-32.png"' in html
-        assert '"../assets/social-card.png"' in html
         assert '"./favicon.ico"' not in html
 
     def test_html_escapes_title_and_description(self):
@@ -273,7 +312,7 @@ class TestPageShells:
             og_description="desc",
         )
         assert '"../favicon.ico"' in html
-        assert '"../assets/social-card.png"' in html
+        assert f'"{_BASE}/assets/social-card.png"' in html
         assert 'property="og:type" content="article"' in html
         # No feed link on non-index pages
         assert "atom+xml" not in html
@@ -419,6 +458,41 @@ class TestRenderers:
         assert 'property="og:title" content="404 Not Found — truth-bot"' in html
         # 404 intentionally has no footer by design
         assert 'class="footer-hash"' not in html
+
+    def test_render_404_has_no_canonical_or_og_url(self):
+        """The 404 page is the one shell WITHOUT a canonical/og:url (1.10):
+        it serves at arbitrary URLs, so any canonical would be a lie."""
+        html = _render_404()
+        assert 'rel="canonical"' not in html
+        assert 'property="og:url"' not in html
+
+    def test_render_report_canonical_matches_slug(self, site_report):
+        html = _render_report(site_report)
+        expected = f"{_BASE}/{site_report.report_url}"
+        assert f'<link rel="canonical" href="{expected}">' in html
+        assert f'<meta property="og:url" content="{expected}">' in html
+        assert '<meta name="description" content=' in html
+
+    def test_render_claim_page_canonical_matches_claim_id(self, site_report):
+        bundle = site_report.bundles[0]
+        html = _render_claim_page(bundle, site_report)
+        expected = f"{_BASE}/claims/{bundle.claim.id}.html"
+        assert f'<link rel="canonical" href="{expected}">' in html
+        assert f'<meta property="og:url" content="{expected}">' in html
+
+    def test_render_index_canonical_is_site_root(self):
+        html = _render_index([], {"total_claims": 0, "total_leaders": 0,
+                                  "avg_consensus": 0.0})
+        assert f'<link rel="canonical" href="{_BASE}/">' in html
+        assert f'<meta property="og:url" content="{_BASE}/">' in html
+        # The banned index phrase must not ride in via the meta description
+        # (consistency bans "primary sources" on index; the description
+        # reuses the page's own og_description, never the module default).
+        assert "primary sources" not in html
+
+    def test_render_about_canonical(self):
+        html = _render_about()
+        assert f'<link rel="canonical" href="{_BASE}/about.html">' in html
 
     def test_render_truthy_has_social_head_and_footer_hash(self):
         html = _render_truthy()

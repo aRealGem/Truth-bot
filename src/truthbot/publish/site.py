@@ -1872,29 +1872,51 @@ def _social_head(
     og_type: str = "website",
     og_image_alt: str = "truth-bot: automated political fact-checking with multi-model consensus",
     include_feed_link: bool = False,
+    page_path: Optional[str] = None,
+    meta_description: Optional[str] = None,
 ) -> str:
-    """Emit favicon links, Open Graph meta, Twitter Card meta, and optional feed link.
+    """Emit favicon links, description/canonical meta, Open Graph meta,
+    Twitter Card meta, and optional feed link.
 
     `rel` is the path prefix to reach the site root from the page
     (`./` for root pages, `../` for pages in `reports/` or `claims/`).
+
+    ``page_path`` (1.10) is the page's site-relative path ("" for the index,
+    ``None`` to omit): when given, a ``<link rel=canonical>`` and matching
+    ``og:url`` are emitted absolute against ``_site_url()``. The social-card
+    images are always absolute — crawlers don't resolve relative og:image
+    URLs against the page. ``meta_description`` defaults to the page's own
+    ``og_description`` (NOT the module default — the index bans phrases the
+    default contains).
     """
     twitter_desc = og_description
+    desc = og_description if meta_description is None else meta_description
+    image_abs = f"{_site_url()}/assets/social-card.png"
     parts = [
         f'  <link rel="icon" href="{rel}favicon.ico" sizes="any">\n',
         f'  <link rel="icon" href="{rel}assets/favicon-32.png" type="image/png" sizes="32x32">\n',
         f'  <link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png">\n',
+        f'  <meta name="description" content="{_esc(desc)}">\n',
+    ]
+    if page_path is not None:
+        canonical = f"{_site_url()}/{page_path}" if page_path else f"{_site_url()}/"
+        parts += [
+            f'  <link rel="canonical" href="{_esc(canonical)}">\n',
+            f'  <meta property="og:url" content="{_esc(canonical)}">\n',
+        ]
+    parts += [
         f'  <meta property="og:type" content="{_esc(og_type)}">\n',
         '  <meta property="og:site_name" content="truth-bot">\n',
         f'  <meta property="og:title" content="{_esc(og_title)}">\n',
         f'  <meta property="og:description" content="{_esc(og_description)}">\n',
-        f'  <meta property="og:image" content="{rel}assets/social-card.png">\n',
+        f'  <meta property="og:image" content="{_esc(image_abs)}">\n',
         '  <meta property="og:image:width" content="1200">\n',
         '  <meta property="og:image:height" content="630">\n',
         f'  <meta property="og:image:alt" content="{_esc(og_image_alt)}">\n',
         '  <meta name="twitter:card" content="summary_large_image">\n',
         f'  <meta name="twitter:title" content="{_esc(og_title)}">\n',
         f'  <meta name="twitter:description" content="{_esc(twitter_desc)}">\n',
-        f'  <meta name="twitter:image" content="{rel}assets/social-card.png">\n',
+        f'  <meta name="twitter:image" content="{_esc(image_abs)}">\n',
         f'  <meta name="twitter:image:alt" content="{_esc(og_image_alt)}">\n',
     ]
     if include_feed_link:
@@ -1913,6 +1935,7 @@ def _page_index(
     og_title: str = "truth-bot — Automated Political Fact-Checking",
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "website",
+    page_path: str = "",
 ) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
@@ -1929,7 +1952,8 @@ def _page_index(
         # Keep in sync with --bg in CSS.
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("./", og_title, og_description, og_type=og_type, include_feed_link=True)
+        + _social_head("./", og_title, og_description, og_type=og_type,
+                       include_feed_link=True, page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -1956,6 +1980,7 @@ def _page_report(
     og_title: Optional[str] = None,
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "article",
+    page_path: Optional[str] = None,
 ) -> str:
     stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     foot_html = (
@@ -1972,7 +1997,8 @@ def _page_report(
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("../", _og_title, og_description, og_type=og_type)
+        + _social_head("../", _og_title, og_description, og_type=og_type,
+                       page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="../assets/styles.css">\n'
@@ -1997,6 +2023,7 @@ def _page_about(
     og_title: Optional[str] = None,
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "website",
+    page_path: Optional[str] = None,
 ) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
@@ -2012,7 +2039,8 @@ def _page_about(
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("./", _og_title, og_description, og_type=og_type)
+        + _social_head("./", _og_title, og_description, og_type=og_type,
+                       page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -2036,6 +2064,7 @@ def _page_truthy(
     footer: str = "",
     og_title: Optional[str] = None,
     og_description: str = _DEFAULT_OG_DESCRIPTION,
+    page_path: Optional[str] = None,
 ) -> str:
     """Fun / mascot page shell — same chrome as about, no truthbot.js (inline _TRUTHY_FUN_SCRIPT in body)."""
     foot_html = (
@@ -2052,7 +2081,8 @@ def _page_truthy(
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("./", _og_title, og_description, og_type="website")
+        + _social_head("./", _og_title, og_description, og_type="website",
+                       page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -6365,6 +6395,7 @@ def _render_report(site_report: SiteReport) -> str:
         og_title=_report_og_title,
         og_description=_report_og_desc,
         og_type="article",
+        page_path=site_report.report_url,
     )
 
 
@@ -6493,6 +6524,7 @@ def _render_statement_triage(site_report: SiteReport) -> str:
             f"{site_report.display_date} remarks, and the pipeline stage that excluded each."
         ),
         og_type="article",
+        page_path=f"reports/{site_report.triage_slug}.html",
     )
 
 
@@ -6553,6 +6585,7 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
         og_title=_claim_og_title,
         og_description=_claim_og_desc,
         og_type="article",
+        page_path=f"claims/{bundle.claim.id}.html",
     )
 
 
@@ -6623,6 +6656,7 @@ def _render_truthy() -> str:
             "Truthy McTruthface is truth-bot's citizen-funded fact-checking mascot. "
             "A fact-check for every citizen."
         ),
+        page_path="truthy.html",
     )
 
 
@@ -6911,6 +6945,7 @@ def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
             "fact-check panel — pairwise agreement, truthy bias, lone-outlier "
             "splits."
         ),
+        page_path="model-insights.html",
     )
 
 
@@ -7000,6 +7035,7 @@ def _render_model_insights_v2(reports: list[dict], claims: list[dict]) -> str:
                        "arbiter side-taking, and severity overrides for every "
                        "published report.",
         og_type="website",
+        page_path="model-insights.html",
     )
 
 
@@ -7058,6 +7094,7 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
         og_description="Public changelog of corrected verdicts: claim, old and "
                        "new verdict, reason, and date.",
         og_type="website",
+        page_path="corrections.html",
     )
 
 
@@ -7265,6 +7302,7 @@ def _render_about() -> str:
             "evidence, and a second-stage severity check."
         ),
         og_type="website",
+        page_path="about.html",
     )
 
 
