@@ -25,7 +25,6 @@ from truthbot.models import (
     VerdictLabel,
 )
 from truthbot.publish.site import (
-    FEED_XML_TEMPLATE,
     SiteReport,
     SitePublisher,
     _page_about,
@@ -431,24 +430,27 @@ class TestRenderers:
 
 
 class TestPublisherAssets:
-    def test_feed_template_has_placeholder(self):
-        assert "[SITE_URL]" in FEED_XML_TEMPLATE
-        assert "<feed" in FEED_XML_TEMPLATE
-
-    def test_copy_assets_places_social_files_and_feed(self, tmp_dir):
+    def test_copy_assets_places_social_files(self, tmp_dir):
         pub = SitePublisher(site_root=str(tmp_dir))
         pub._ensure_structure()
         pub._copy_assets()
 
         assert (tmp_dir / "favicon.ico").exists()
-        assert (tmp_dir / "feed.xml").exists()
         assert (tmp_dir / "assets" / "social-card.png").exists()
         assert (tmp_dir / "assets" / "favicon-32.png").exists()
         assert (tmp_dir / "assets" / "apple-touch-icon.png").exists()
+        # The feed is DATA, not a static asset (remediation v2, 1.5): it
+        # renders from the reports index inside publish(), so the asset
+        # copier alone writes none. Rendering covered in tests/publish/test_feed.py.
+        assert not (tmp_dir / "feed.xml").exists()
 
+    def test_publish_writes_feed_with_report_entry(self, site_report, tmp_dir):
+        pub = SitePublisher(site_root=str(tmp_dir))
+        pub.publish(site_report)
         feed_text = (tmp_dir / "feed.xml").read_text(encoding="utf-8")
-        assert "[SITE_URL]" in feed_text
-        assert "truth-bot" in feed_text
+        assert "[SITE_URL]" not in feed_text
+        assert "<entry>" in feed_text
+        assert "Test Politician" in feed_text
 
     def test_report_meta_includes_tier_counts(self, site_report, tmp_dir):
         pub = SitePublisher(site_root=str(tmp_dir))

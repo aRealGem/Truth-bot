@@ -139,39 +139,10 @@ BETA_BADGE_HTML = (
 )
 BETA_TEXT_SUFFIX = ' (beta)' if IS_BETA else ''
 
-# Atom feed template. [SITE_URL] is a placeholder replaced when a production
-# domain is configured. Entries are appended by the pipeline at the marker below.
-FEED_XML_TEMPLATE = f"""\
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>truth-bot{BETA_TEXT_SUFFIX}</title>
-  <subtitle>Automated political fact-checking with multi-model consensus</subtitle>
-  <link href="[SITE_URL]/feed.xml" rel="self" type="application/atom+xml"/>
-  <link href="[SITE_URL]/" rel="alternate" type="text/html"/>
-  <link href="[SITE_URL]/corrections.html" rel="related" type="text/html" title="Corrections"/>
-  <updated>2026-04-21T19:18:00Z</updated>
-  <id>urn:truth-bot:feed</id>
-  <author>
-    <name>truth-bot pipeline</name>
-  </author>
-  <generator version="{PIPELINE_VERSION}">truth-bot{BETA_TEXT_SUFFIX}</generator>
-  <rights>Data sourced from public speeches and cited web evidence.</rights>
-
-  <entry>
-    <title>Donald Trump \u2014 March 04, 2026</title>
-    <link href="[SITE_URL]/reports/2026-03-04-donald-trump-165937.html" rel="alternate" type="text/html"/>
-    <id>urn:truth-bot:report:2026-03-04-donald-trump-165937</id>
-    <published>2026-03-04T00:00:00Z</published>
-    <updated>2026-04-21T19:18:00Z</updated>
-    <summary type="text">5 claims checked. Verdict: Largely False (3 of 5 claims). Multi-model AI fact-check of address to Joint Session of Congress at U.S. Capitol.</summary>
-    <category term="fact-check"/>
-    <category term="speech"/>
-  </entry>
-
-  <!-- Pipeline appends new <entry> blocks here as reports are generated -->
-
-</feed>
-"""
+# The Atom feed is RENDERED from the reports index at publish time \u2014 see
+# ``_render_feed`` (remediation v2, 1.5). The old static FEED_XML_TEMPLATE
+# (verbatim [SITE_URL] placeholder, one hand-typed phantom entry, frozen
+# <updated> stamp) is gone.
 
 # Google Fonts link tags (exact — do not modify)
 _GOOGLE_FONTS = """\
@@ -7312,6 +7283,97 @@ def _render_404() -> str:
     )
 
 
+# ── Atom feed (remediation v2, 1.5) ──────────────────────────────────────────
+
+
+def _iso_utc(dt: datetime) -> str:
+    """ISO-8601 UTC with Z suffix; naive datetimes are assumed UTC."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _feed_display_date(date_str: str) -> str:
+    """'2026-03-04' → 'March 04, 2026'; anything unparseable passes through."""
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").strftime("%B %d, %Y")
+    except (TypeError, ValueError):
+        return date_str or "Unknown date"
+
+
+def _render_feed(reports: list[dict], site_url: str) -> str:
+    """Render the Atom feed — one <entry> per reports.json row (the caller
+    passes the freshly sorted index, newest speech first).
+
+    Every value derives from the index row: link/id from the report url,
+    <published> from the speech date, <updated> from the row's per-publish
+    ``generated_at`` stamp (speech-date fallback for legacy rows), the
+    summary from the strict-lens family verdict via ``aggregation``. The
+    feed-level <updated> is the max entry <updated>. All text is
+    XML-escaped. Replaces the static template whose phantom entry and
+    [SITE_URL] placeholder shipped verbatim (1.5).
+    """
+    from xml.sax.saxutils import escape, quoteattr
+
+    entry_blocks: list[str] = []
+    updated_stamps: list[str] = []
+    for r in reports:
+        url = str(r.get("url", ""))
+        stem = Path(url).stem
+        title = f"{r.get('speaker', '')} — {_feed_display_date(r.get('date', ''))}"
+        published = (f"{r['date']}T00:00:00Z" if r.get("date")
+                     else str(r.get("generated_at", "")))
+        updated = str(r.get("generated_at", "") or published)
+        updated_stamps.append(updated)
+        claim_count = r.get("claim_count", 0)
+        dist = (r.get("verdict_distribution_strict")
+                or _agg_project_dist(r.get("verdict_distribution") or {}, "strict"))
+        fam = _agg_family_verdict(dist)
+        summary = (
+            f"{claim_count} claim{'s' if claim_count != 1 else ''} checked. "
+            f"Verdict: {fam.label} — {fam.ratio_text}. "
+            "Multi-model AI fact-check with cited sources."
+        )
+        entry_blocks.append(
+            "  <entry>\n"
+            f"    <title>{escape(title)}</title>\n"
+            f"    <link href={quoteattr(f'{site_url}/{url}')} "
+            'rel="alternate" type="text/html"/>\n'
+            f"    <id>urn:truth-bot:report:{escape(stem)}</id>\n"
+            f"    <published>{escape(published)}</published>\n"
+            f"    <updated>{escape(updated)}</updated>\n"
+            f'    <summary type="text">{escape(summary)}</summary>\n'
+            '    <category term="fact-check"/>\n'
+            '    <category term="speech"/>\n'
+            "  </entry>\n"
+        )
+
+    feed_updated = (max(updated_stamps) if updated_stamps
+                    else _iso_utc(datetime.now(timezone.utc)))
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<feed xmlns="http://www.w3.org/2005/Atom">\n'
+        f"  <title>truth-bot{BETA_TEXT_SUFFIX}</title>\n"
+        "  <subtitle>Automated political fact-checking with multi-model "
+        "consensus</subtitle>\n"
+        f"  <link href={quoteattr(site_url + '/feed.xml')} rel=\"self\" "
+        'type="application/atom+xml"/>\n'
+        f"  <link href={quoteattr(site_url + '/')} rel=\"alternate\" "
+        'type="text/html"/>\n'
+        f"  <link href={quoteattr(site_url + '/corrections.html')} "
+        'rel="related" type="text/html" title="Corrections"/>\n'
+        f"  <updated>{escape(feed_updated)}</updated>\n"
+        "  <id>urn:truth-bot:feed</id>\n"
+        "  <author>\n    <name>truth-bot pipeline</name>\n  </author>\n"
+        f'  <generator version="{PIPELINE_VERSION}">'
+        f"truth-bot{BETA_TEXT_SUFFIX}</generator>\n"
+        "  <rights>Data sourced from public speeches and cited web "
+        "evidence.</rights>\n\n"
+        + "".join(entry_blocks)
+        + "</feed>\n"
+    )
+
+
 # ── SitePublisher ─────────────────────────────────────────────────────────────
 
 class SitePublisher:
@@ -7401,6 +7463,10 @@ class SitePublisher:
         self._write_reports_index(reports_index)
         self._write_claims_index(claims_index)
 
+        # Atom feed renders from the sorted index (1.5) — one entry per
+        # report, absolute links via TRUTHBOT_SITE_URL.
+        self._write_feed(reports_index)
+
         # Regenerate index
         stats = self._compute_stats(reports_index, claims_index)
         index_html = _render_index(reports_index, stats)
@@ -7440,7 +7506,6 @@ class SitePublisher:
         self._write(self._root / "assets" / "truthbot.js", JS)
         self._copy_icons()
         self._copy_social_assets()
-        self._write_feed()
 
     def _copy_icons(self) -> None:
         """Copy package-shipped icon SVGs to the site's assets/icons/ folder."""
@@ -7469,10 +7534,14 @@ class SitePublisher:
             (self._root / "favicon.ico").write_bytes(ico_src.read_bytes())
             logger.debug("Copied favicon.ico to site root")
 
-    def _write_feed(self) -> None:
-        """Write Atom feed template to site root. Placeholder [SITE_URL] preserved."""
-        (self._root / "feed.xml").write_text(FEED_XML_TEMPLATE, encoding="utf-8")
-        logger.debug("Wrote feed.xml")
+    def _write_feed(self, reports: list[dict]) -> None:
+        """Render + write the Atom feed from the freshly sorted reports index
+        — one entry per published report (1.5). Called from ``publish`` after
+        the index is written, never from the asset copier: the feed is data,
+        not a static asset."""
+        (self._root / "feed.xml").write_text(
+            _render_feed(reports, _site_url()), encoding="utf-8")
+        logger.debug("Wrote feed.xml (%d entries)", len(reports))
 
     def _write(self, path: Path, content: str) -> None:
         path.write_text(content, encoding="utf-8")
@@ -7508,6 +7577,11 @@ class SitePublisher:
         return {
             "id":                  sr.report_id,
             "date":                sr.date_str,
+            # Publish stamp for the feed's per-entry <updated> (1.5).
+            # Deterministic when the caller sets SiteReport.generated_at
+            # (e.g. from artifact data); otherwise it is the dataclass
+            # default — wall clock at SiteReport construction.
+            "generated_at":        _iso_utc(sr.generated_at),
             "speaker":             sr.speaker,
             "role":                sr.role,
             "venue":               sr.venue,

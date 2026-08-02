@@ -412,6 +412,59 @@ def _check_bucket_invariants(reports: list[dict], claims: list[dict]) -> list[st
     return violations
 
 
+def check_feed(site_root: Path, reports: list[dict]) -> list[str]:
+    """Validate feed.xml against the reports index (remediation v2, 1.5).
+
+    Violations: the legacy [SITE_URL] placeholder anywhere, unparseable XML,
+    entry count != len(reports), an entry link whose page is missing under
+    ``site_root``, duplicate entry ids, or a feed-level <updated> that is
+    not the max entry <updated>."""
+    import xml.etree.ElementTree as ET
+    from urllib.parse import urlparse
+
+    site_root = Path(site_root)
+    feed_path = site_root / "feed.xml"
+    if not feed_path.exists():
+        return ["feed.xml: file missing"]
+    text = feed_path.read_text(encoding="utf-8")
+    violations: list[str] = []
+    if "[SITE_URL]" in text:
+        violations.append("feed.xml: legacy [SITE_URL] placeholder present")
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError as exc:
+        violations.append(f"feed.xml: XML parse error: {exc}")
+        return violations
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    entries = root.findall("a:entry", ns)
+    if len(entries) != len(reports):
+        violations.append(
+            f"feed.xml: {len(entries)} entries, reports.json has "
+            f"{len(reports)} reports")
+    ids = [e.findtext("a:id", default="", namespaces=ns) for e in entries]
+    dupes = {i for i in ids if ids.count(i) > 1}
+    if dupes:
+        violations.append(f"feed.xml: duplicate entry ids: {sorted(dupes)}")
+    updated = [e.findtext("a:updated", default="", namespaces=ns)
+               for e in entries]
+    feed_updated = root.findtext("a:updated", default="", namespaces=ns)
+    if entries and feed_updated != max(updated):
+        violations.append(
+            f"feed.xml: feed <updated> {feed_updated!r} != max entry "
+            f"<updated> {max(updated)!r}")
+    for e, eid in zip(entries, ids):
+        link = e.find("a:link", ns)
+        href = link.get("href", "") if link is not None else ""
+        # Entry links are {site_url}/reports/<slug>.html — the trailing two
+        # path segments locate the page under the site root.
+        rel = "/".join(urlparse(href).path.split("/")[-2:])
+        if not rel or not (site_root / rel).exists():
+            violations.append(
+                f"feed.xml: entry {eid or href}: linked page {rel!r} "
+                "missing under site root")
+    return violations
+
+
 def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
     """Verify the whole rendered site. Returns a list of violations (empty
     when every checked figure derives cleanly from data/*.json).
@@ -473,10 +526,14 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
         if p.exists() and banned in p.read_text(encoding="utf-8"):
             violations.append(f"{fname}: banned phrase present: '{banned}'")
 
-    # ── Remediation-v2 strict bucket lints (1.6) ─────────────────────────
+    # ── Remediation-v2 strict lints (1.5 + 1.6) ──────────────────────────
+    # Gated because the COMMITTED site-pca/ tree predates the regeneration
+    # (old static feed.xml, cards without the political bucket); every
+    # fresh render runs them (default True).
     if strict_buckets:
         violations.extend(_check_index_tier_buckets(index_html, reports))
         violations.extend(_check_bucket_invariants(reports, claims))
+        violations.extend(check_feed(site_root, reports))
 
     # ── Per-report pages ─────────────────────────────────────────────────
     for report in reports:
