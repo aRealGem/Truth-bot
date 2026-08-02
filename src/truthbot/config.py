@@ -170,6 +170,20 @@ class Settings:
         return Path(_optional("TRUTHBOT_SITE_ROOT", "/var/www/truthbot"))
 
     @property
+    def site_url(self) -> str:
+        """Public base URL of the published static site (no trailing slash).
+
+        Every absolute self-link (canonical/og:url tags, feed.xml entries)
+        derives from this one value. Override with ``TRUTHBOT_SITE_URL`` when
+        the site moves to a custom domain; the default is the githack mirror
+        of the committed ``site-pca/`` tree.
+        """
+        return _optional(
+            "TRUTHBOT_SITE_URL",
+            "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca",
+        ).rstrip("/")
+
+    @property
     def openai_api_key(self) -> str:
         return _optional("OPENAI_API_KEY", "")
 

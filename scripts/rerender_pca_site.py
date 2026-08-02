@@ -101,6 +101,7 @@ def render_artifact(path: Path, publisher: SitePublisher, role: str,
         bundles=out.bundles,
         characterization=list(d.get("characterization") or []),
         panel_roster=dict(d.get("roster") or {}),
+        speech_id=str(meta.get("speech_id") or ""),
     )
     report_path = publisher.publish(site_report)
     print(f"{meta.get('speech_id')}: {len(out.bundles)} bundles → {report_path}")

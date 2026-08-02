@@ -1145,7 +1145,8 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
 
 def _publish_bundles(args, bundles: list, date, source_url: str,
                      characterization: Optional[list] = None,
-                     panel_roster: Optional[dict] = None) -> None:
+                     panel_roster: Optional[dict] = None,
+                     speech_id: str = "") -> None:
     """Shared publish tail: bundles → SiteReport → static site (+ link/JSON checks).
 
     Used by both the legacy and the v2 (PCA) verify paths so they emit byte-identical
@@ -1165,6 +1166,7 @@ def _publish_bundles(args, bundles: list, date, source_url: str,
         bundles=bundles,
         characterization=list(characterization or []),
         panel_roster=dict(panel_roster or {}),
+        speech_id=speech_id,
     )
     site_root = getattr(args, "site_root", None)
     publisher = SitePublisher(site_root=site_root)
@@ -1422,7 +1424,8 @@ def _run_publish_pca(args) -> None:
 
     _publish_bundles(args, result.bundles, date, source_url,
                      characterization=getattr(result, "characterization", None),
-                     panel_roster=getattr(result, "roster", None))
+                     panel_roster=getattr(result, "roster", None),
+                     speech_id=speech_id)
 
 
 def _run_publish(args) -> None:

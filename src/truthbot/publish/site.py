@@ -25,6 +25,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -140,6 +141,17 @@ def _url_display_host(url: str) -> str:
 GITHUB_URL = "https://github.com/aRealGem/Truth-bot"
 PIPELINE_VERSION = "0.2.0"
 
+# Public base URL of the published site. Mirrors ``settings.site_url`` in
+# truthbot.config, but read from the environment directly so the render layer
+# keeps its zero-config-import convention (same reason SitePublisher reads
+# TRUTHBOT_SITE_ROOT itself).
+_DEFAULT_SITE_URL = "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca"
+
+
+def _site_url() -> str:
+    """Base URL for absolute self-links (canonical / og:url / feed entries)."""
+    return os.environ.get("TRUTHBOT_SITE_URL", _DEFAULT_SITE_URL).rstrip("/")
+
 # Pre-1.0 releases are flagged "Beta" next to the version string everywhere the
 # version is rendered. Flips off automatically when PIPELINE_VERSION crosses 1.0.
 IS_BETA = PIPELINE_VERSION.split(".", 1)[0] == "0"
@@ -218,6 +230,11 @@ class SiteReport:
     # A per-RUN fact (one roster judges the whole run), rendered once in the report
     # provenance. Default empty → legacy-clean (no composition block rendered).
     panel_roster: dict = field(default_factory=dict)
+    # Stable speech identity (DC-3'): e.g. "obama_2014". When set, the report
+    # slug derives its suffix from this id instead of the per-run UUID, so
+    # re-rendering the same speech reuses the same URL. Default empty →
+    # legacy UUID-suffixed slugs.
+    speech_id: str = ""
 
     @property
     def date_str(self) -> str:
@@ -301,7 +318,15 @@ class SiteReport:
 
     @property
     def report_slug(self) -> str:
-        short = self.report_id[:6]  # first 6 chars of UUID — unique per run
+        # DC-3' stable slugs: when the report knows its speech identity, the
+        # suffix is a deterministic hash of speech_id — every re-render of the
+        # same speech lands on the same URL (no more one-orphaned-page-per-
+        # publish). Legacy callers without a speech_id keep the per-run UUID
+        # prefix, which is unique per publish by construction.
+        if self.speech_id:
+            short = hashlib.sha1(self.speech_id.encode("utf-8")).hexdigest()[:6]
+        else:
+            short = self.report_id[:6]  # first 6 chars of UUID — unique per run
         return f"{self.date_str}-{_slug(self.speaker)}-{short}"
 
     @property
@@ -7765,6 +7790,7 @@ def _site_report_from_artifact(artifact: dict) -> SiteReport:
         transcript_source_url=meta.get("source_url", "") or "",
         bundles=[],
         characterization=list(artifact.get("characterization", []) or []),
+        speech_id=str(meta.get("speech_id", "") or ""),
     )
 
 
