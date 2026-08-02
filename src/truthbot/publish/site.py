@@ -2230,8 +2230,20 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     if prov.panel_votes:
         parts.append(f"PCA panel: {_pca_vote_tally(prov.panel_votes)}")
     if prov.crm114_final:
+        # Explicit auto-adjustment disclosure (remediation v2, 1.12): a
+        # discriminator override is named as what it is. Public copy keeps
+        # the "Severity Classifier" name — the internal CRM-114 identifier is
+        # deliberately reader-invisible (test_site_render_pca policy).
         stage1 = prov.crm114_stage1 or "?"
-        parts.append(f"Severity Classifier: {stage1}→{prov.crm114_final}")
+        parts.append(f"Auto-adjusted: {stage1}→{prov.crm114_final} "
+                     f"(Severity Classifier)")
+    # Standing agreed-verdict audit marker (1.12): deterministic-lint
+    # findings disclosed on the strip; the queue bit reads as under review.
+    audit_flags = list(getattr(prov, "audit_flags", None) or [])
+    if audit_flags:
+        suffix = " · queued for review" if getattr(prov, "audit_queue",
+                                                   False) else ""
+        parts.append(f"audit: {', '.join(audit_flags)}{suffix}")
     if not parts:
         return ""
     chain = _esc(" → ".join(parts))
@@ -7540,6 +7552,12 @@ class SitePublisher:
                 "evidence_gate":   getattr(bundle.consensus.provenance,
                                            "evidence_gate", ""),
                 "self_sourced_only": _is_self_sourced_unverified(bundle),
+                # Standing agreed-verdict audit (remediation v2, 1.12):
+                # deterministic-lint findings + the human-review queue bit.
+                "audit_flags":     list(getattr(bundle.consensus.provenance,
+                                                "audit_flags", None) or []),
+                "audit_queue":     bool(getattr(bundle.consensus.provenance,
+                                                "audit_queue", False)),
             },
             "url": f"claims/{bundle.claim.id}.html",
         }

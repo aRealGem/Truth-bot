@@ -394,6 +394,116 @@ def test_joining_forces_fixture_is_gate_forced_and_skipped_by_audit_rows():
     assert row in va.select_model_audit_rows([row], k=0, seed=0)
 
 
+# ── pipeline / publish wiring (remediation v2, 1.12) ─────────────────────────
+
+def test_run_pca_verify_stamps_audit_provenance_and_writes_queue(tmp_path):
+    """Offline end-to-end: the audit stage runs post-verdict, pre-bridge —
+    rows and bundle provenance carry audit_flags/audit_queue, and queued rows
+    land in the re-adjudication JSONL (human inbox; no model call exists
+    anywhere on this path)."""
+    from truthbot.verdict import publish_pipeline as pp
+
+    sents = [{"sid": "sp:0000",
+              "text": "Inflation fell to 1.7 percent in 2025.",
+              "context": ""}]
+
+    def classify(rows):
+        return [{"sid": s["sid"], "label": "check-worthy", "text": s["text"],
+                 "context": s.get("context", "")} for s in rows]
+
+    def adjudicate(chunk):
+        rows = [{"sid": c["sid"], "status": "resolved", "verdict": "FALSE",
+                 "confidence": 0.9, "citations": [],
+                 # rationale ignores the claim's measure → measure_alignment
+                 "reasoning": "Sources broadly dispute the rosy picture.",
+                 "votes": {"FALSE": 3}} for c in chunk]
+        return rows, {"packs": {}, "cost_usd": 0.0}
+
+    qpath = tmp_path / "readjudication_queue.jsonl"
+    res = pp.run_pca_verify(sents, layer_a_fn=classify,
+                            adjudicate_fn=adjudicate,
+                            audit_queue_path=qpath)
+    assert res.rows[0]["audit_queue"] is True
+    assert "measure_alignment" in res.rows[0]["audit_flags"]
+    prov = res.bundles[0].consensus.provenance
+    assert prov.audit_queue is True
+    assert "measure_alignment" in prov.audit_flags
+    recs = [json.loads(l) for l in qpath.read_text().splitlines()]
+    assert recs == [{"sid": "sp:0000", "speech_id": "sp",
+                     "lints": recs[0]["lints"], "ts": recs[0]["ts"]}]
+    assert "measure_alignment" in recs[0]["lints"]
+
+
+def test_run_pca_verify_clean_rows_write_no_queue_file(tmp_path):
+    from truthbot.verdict import publish_pipeline as pp
+
+    sents = [{"sid": "sp:0000",
+              "text": "Inflation fell to 1.7 percent in 2025.",
+              "context": ""}]
+
+    def classify(rows):
+        return [{"sid": s["sid"], "label": "check-worthy", "text": s["text"],
+                 "context": s.get("context", "")} for s in rows]
+
+    def adjudicate(chunk):
+        rows = [{"sid": c["sid"], "status": "resolved", "verdict": "TRUE",
+                 "confidence": 0.9, "citations": [],
+                 "reasoning": "BLS confirms 1.7% for 2025.",
+                 "votes": {"TRUE": 3}} for c in chunk]
+        return rows, {"packs": {}, "cost_usd": 0.0}
+
+    qpath = tmp_path / "readjudication_queue.jsonl"
+    res = pp.run_pca_verify(sents, layer_a_fn=classify,
+                            adjudicate_fn=adjudicate, audit_queue_path=qpath)
+    assert res.rows[0]["audit_flags"] == []
+    assert res.rows[0]["audit_queue"] is False
+    assert not qpath.exists()          # queue file only appears when needed
+    assert res.bundles[0].consensus.provenance.audit_flags == []
+
+
+def test_provenance_strip_discloses_auto_adjustment_and_audit_marker():
+    from truthbot.publish import site
+    from truthbot.verdict import bridge
+
+    row = {"sid": "s:0", "status": "resolved", "verdict": "FALSE",
+           "confidence": 0.8, "citations": [],
+           "reasoning": "Contradicted by BLS.",
+           "votes": {"MISLEADING": 2, "FALSE": 1}, "split": False,
+           "escalated": False,
+           "crm114": {"stage1": "MISLEADING", "final": "FALSE"},
+           "audit_flags": ["invented_referent", "measure_alignment"],
+           "audit_queue": True}
+    claim = {"sid": "s:0", "text": "A claim.",
+             "layer_a": {"label": "check-worthy", "source": "A2"}}
+    b = bridge.bridge([row], [claim]).bundles[0]
+    html = site._pca_provenance_strip(b)
+    assert "Auto-adjusted: MISLEADING→FALSE (Severity Classifier)" in html
+    assert "audit: invented_referent, measure_alignment · queued for review" in html
+    # reader-facing copy never says CRM-114 (established naming policy)
+    assert "CRM-114" not in html
+
+
+def test_claims_json_provenance_carries_audit_fields(tmp_path):
+    # the claims.json exporter includes audit_flags/audit_queue so the next
+    # regen publishes them (and consistency can later gate on them).
+    from types import SimpleNamespace
+
+    from truthbot.publish.site import SitePublisher
+    from truthbot.verdict import bridge
+
+    row = {"sid": "s:0", "status": "resolved", "verdict": "TRUE",
+           "confidence": 0.9, "citations": [], "reasoning": "ok",
+           "votes": {"TRUE": 3}, "split": False, "escalated": False,
+           "audit_flags": ["baseline_selection"], "audit_queue": False}
+    claim = {"sid": "s:0", "text": "A claim.",
+             "layer_a": {"label": "check-worthy", "source": "A2"}}
+    b = bridge.bridge([row], [claim]).bundles[0]
+    pub = SitePublisher(site_root=tmp_path)
+    meta = pub._claim_meta(b, SimpleNamespace(report_id="r1"))
+    assert meta["provenance"]["audit_flags"] == ["baseline_selection"]
+    assert meta["provenance"]["audit_queue"] is False
+
+
 def test_olympics_fixture_legitimately_fires_invented_referent():
     # trump_2026:0090 — the single calibration hit over all 530 published
     # rows: the rationale's "Summer Games" appears nowhere in claim, context,

@@ -331,6 +331,23 @@ def check_run_artifacts(repo_root) -> list[str]:
                 if url and is_excluded_factchecker(url):
                     violations.append(
                         f"{run_id} {sid}: fact-check URL in evidence: {url}")
+
+        # Standing agreed-verdict audit coverage (remediation v2, 1.12) —
+        # REPORT-ONLY: rows the Severity Classifier auto-adjusted
+        # (crm114.final set) that carry no audit stamp (the pre-audit
+        # artifacts all do, until the Phase-3 regeneration re-runs them
+        # through publish_pipeline.apply_verdict_audit).
+        # TODO(Phase 3 publish gate): promote this report line to a hard
+        # violation — a published crm114-overridden row without audit
+        # coverage must fail the build once the regen lands.
+        uncovered = sum(
+            1 for r in artifact.get("rows") or []
+            if ((r.get("crm114") or {}).get("final")) and "audit_flags" not in r)
+        if uncovered:
+            logger.info(
+                "pca run %s (%s): %d crm114-overridden row(s) lack "
+                "agreed-verdict audit coverage (report-only until the "
+                "Phase-3 gate)", run_id[:8], speech_id, uncovered)
     return violations
 
 

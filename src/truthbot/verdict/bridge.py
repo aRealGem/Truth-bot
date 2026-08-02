@@ -259,6 +259,10 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         # writer uses the model field's own name.
         evidence_gate=str(row.get("evidence_gate")
                           or row.get("provenance_code") or ""),
+        # Standing agreed-verdict audit (remediation v2, 1.12): stamped onto
+        # the row by publish_pipeline's audit stage just before bridging.
+        audit_flags=[str(f) for f in (row.get("audit_flags") or [])],
+        audit_queue=bool(row.get("audit_queue") or False),
     )
 
 

@@ -439,6 +439,23 @@ class VerdictProvenance(BaseModel):
             "quota-met packs and all pre-v2 runs."
         ),
     )
+    audit_flags: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Deterministic agreed-verdict audit findings (remediation v2, "
+            "1.12): lint names from verdict.verdict_audit that fired on this "
+            "row at publish time (e.g. 'invented_referent'). Empty on clean "
+            "rows and on all pre-audit runs."
+        ),
+    )
+    audit_queue: bool = Field(
+        default=False,
+        description=(
+            "True when a queue-action audit finding (measure_alignment) "
+            "routed this row to metrics/audits/readjudication_queue.jsonl "
+            "for HUMAN review. Never triggers a model call by itself."
+        ),
+    )
 
 
 class ConsensusVerdict(BaseModel):

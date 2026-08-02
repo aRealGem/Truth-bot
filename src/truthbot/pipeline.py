@@ -1384,6 +1384,7 @@ def _run_publish_pca(args) -> None:
         def budget_check() -> float:
             return budget_cap - (proxy_key_spend() - _start_spend)
 
+    from truthbot.config import settings as _settings
     result = publish_pipeline.run_pca_verify(
         sentences,
         layer_a_fn=layer_a_fn,
@@ -1395,6 +1396,11 @@ def _run_publish_pca(args) -> None:
         journal_path=journal_path,
         budget_check=budget_check,
         prebuilt_layer_a=prebuilt_layer_a,
+        # Standing agreed-verdict audit queue (remediation v2, 1.12): rows a
+        # queue-action lint routed to human review. Append-only; approval and
+        # any re-adjudication spend stay with jackie.
+        audit_queue_path=(Path(_settings.metrics_dir) / "audits"
+                          / "readjudication_queue.jsonl"),
     )
     print(f"Layer A: {result.n_check_worthy}/{result.n_sentences} check-worthy; "
           f"adjudicated in {result.n_chunks} chunk(s); spend ${result.cost_usd:.4f}")

@@ -35,10 +35,11 @@ def test_resolved_pca_card_speaks_panel_vote_vocabulary_with_provenance():
     assert "1 of 1" not in html
     # provenance chain surfaced (Layer A + tally + Severity Classifier override).
     # The two-stage FALSE-vs-MISLEADING discriminator is shown to readers as
-    # "Severity Classifier"; the internal identifier remains "CRM-114".
+    # "Severity Classifier"; the internal identifier remains "CRM-114". Since
+    # remediation v2 (1.12) the override line names itself an auto-adjustment.
     assert "Layer A: check-worthy (A2)" in html
     assert "PCA panel: Misleading ×2, False ×1" in html
-    assert "Severity Classifier: MISLEADING→FALSE" in html
+    assert "Auto-adjusted: MISLEADING→FALSE (Severity Classifier)" in html
     # No reader-facing "CRM-114" anywhere in the rendered card (provenance strip,
     # tooltip, or the reasoning-body override annotation).
     assert "CRM-114" not in html
