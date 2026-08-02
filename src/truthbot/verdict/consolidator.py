@@ -35,6 +35,7 @@ from typing import Optional, Sequence
 from truthbot.domains import is_substantive_url
 from truthbot.models import Evidence, SourceTier
 from truthbot.verify.factcheck_exclusion import is_excluded_factchecker
+from truthbot.verify.mutable_endpoints import is_mutable_latest
 
 from . import era_lint
 
@@ -63,6 +64,9 @@ _TIER_RANK = {
 _T13 = {SourceTier.GOVERNMENT, SourceTier.WIRE, SourceTier.ESTABLISHED}
 
 
+POST_SPEECH_NOTE = "post-speech · context-only"
+
+
 @dataclass(frozen=True)
 class ConsolidatedItem:
     """One v2 pack item plus its merge provenance."""
@@ -73,6 +77,11 @@ class ConsolidatedItem:
     # (claim_shape + relation_of supplied). Rides into the panel payload so an
     # attribution-only self record is visibly non-probative to the seats.
     role: str = ""
+    # Post-speech band (remediation v2, 1.3): dated after the utterance but
+    # within the fair-game window. Admitted for context, NEVER verdict-bearing
+    # (cannot credit the quota) — same-speech fact-checks and reaction
+    # coverage live in exactly this band.
+    post_speech: bool = False
 
     def to_payload_v2(self) -> dict:
         ev = self.evidence
@@ -86,6 +95,8 @@ class ConsolidatedItem:
         }
         if self.role and self.role != "normal":
             payload["role"] = self.role
+        if self.post_speech:
+            payload["era_note"] = POST_SPEECH_NOTE
         return payload
 
 
@@ -206,6 +217,11 @@ def consolidate(
         if not is_substantive_url(url):
             _drop("non-substantive-url")
             continue
+        if is_mutable_latest(url):
+            # Live latest-release pointers drift out of the claim's era no
+            # matter what date retrieval saw (remediation v2, 1.3).
+            _drop("mutable-latest-endpoint")
+            continue
         d = era_lint.item_date(ev.published_at, ev.snippet or "")
         contemp = _contemporaneous(d)
         if contemp is False and era_mode != "lenient":
@@ -216,7 +232,10 @@ def consolidate(
             continue
         if contemp is False:
             result.retrospective += 1
-        item = ConsolidatedItem(evidence=ev, draw_round=draw_round, retriever=label)
+        post = (utterance is not None and d is not None
+                and utterance < d <= era_lint.fair_game_end(utterance))
+        item = ConsolidatedItem(evidence=ev, draw_round=draw_round,
+                                retriever=label, post_speech=post)
         era_class[id(item)] = 0 if contemp else (1 if contemp is None else 2)
         kept.append(item)
 
@@ -274,6 +293,10 @@ def consolidate(
         result.dropped["pack-cap"] = len(kept) - max_items
 
     def _quota_credit(it: ConsolidatedItem) -> bool:
+        if it.post_speech:
+            # Post-speech band is context-only — it can inform, never decide
+            # (remediation v2, 1.3).
+            return False
         if it.evidence.source_tier in _T13 and _bearing(it.evidence):
             return True
         # Lenient: an era-contemporaneous GOVERNMENT document counts even
@@ -297,9 +320,11 @@ def consolidate(
         independent = sum(1 for it in result.items
                           if it.role == "normal" and _quota_credit(it))
         corroborants = sum(1 for it in result.items
-                           if it.role == "corroborant" and _bearing(it.evidence))
+                           if it.role == "corroborant" and _bearing(it.evidence)
+                           and not it.post_speech)
         primary = sum(1 for it in result.items
-                      if it.role == "primary-record" and _bearing(it.evidence))
+                      if it.role == "primary-record" and _bearing(it.evidence)
+                      and not it.post_speech)
         credits = independent + corroborants + min(1, primary)
         result.quota_met = (credits >= MIN_BEARING_T13
                             and (independent >= 1 or corroborants >= 1))

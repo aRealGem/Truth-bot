@@ -27,7 +27,7 @@ from hydramind.invariants import check_i5_provenance
 from truthbot.verify.retrievers import Retriever
 
 from . import era_lint, speech_context
-from .consolidator import PACK_CAP_V2, consolidate
+from .consolidator import PACK_CAP_V2, POST_SPEECH_NOTE, consolidate
 from .evidence_pack import EvidencePack, PackItem, _retrieved_iso, _sha256, window_for
 
 logger = logging.getLogger(__name__)
@@ -76,6 +76,7 @@ def build_evidence_pack_v2(
     shortlist_runner: Optional[ShortlistRunner] = None,
     claim_shape: str = "",
     relation_of=None,
+    era_exempt: bool = False,
 ) -> EvidencePack:
     """Assemble a shared_pack_v2 ``EvidencePack`` for one claim.
 
@@ -97,6 +98,16 @@ def build_evidence_pack_v2(
     machinery for every speaker (I3-relational)."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
+    if utterance is None and not era_exempt:
+        # Fail CLOSED (remediation v2, 1.3): an unregistered speech date used
+        # to silently disable ALL era gating (speech_date_for -> None meant
+        # _contemporaneous had nothing to check and assert_pack_within_era
+        # no-opped). The Obama-2014 rescue leg shipped 2026-dated evidence
+        # into a 2014 speech exactly this way.
+        raise era_lint.EraLintError(
+            f"no utterance date registered for {sid!r} — the era gate cannot "
+            "run. Call speech_context.register_speech_date() first, or pass "
+            "era_exempt=True for a deliberately dateless build.")
     # Historical-era policy (wiki projects:truthbot:historical-era-design):
     # pre-web speeches run lenient — unless the claim is (heuristically) a
     # prediction, which must never be judged with hindsight.
@@ -162,6 +173,8 @@ def build_evidence_pack_v2(
             published_at=(ev.published_at.date().isoformat()
                           if ev.published_at else None),
             role=getattr(cit, "role", "") or "",
+            era_note=(POST_SPEECH_NOTE if getattr(cit, "post_speech", False)
+                      else ""),
         )
         check_i5_provenance(item.provenance())   # I5: fail closed at entry
         return item
@@ -177,5 +190,6 @@ def build_evidence_pack_v2(
                 for i, cit in enumerate(res.pre_cap_items, start=1)]
     pack = EvidencePack(sid=sid, window=window, items=items,
                         gate_code=res.gate_code, pool=pool)
-    era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
+    if not era_exempt:
+        era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
     return pack

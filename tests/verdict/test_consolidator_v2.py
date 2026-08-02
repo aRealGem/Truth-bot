@@ -228,3 +228,69 @@ def test_pre_cap_pool_is_exposed_and_supersets_the_pack() -> None:
     assert len(res.pre_cap_items) == 14
     assert res.pre_cap_items[:PACK_CAP_V2] == res.items
     assert res.dropped.get("pack-cap") == 4
+
+
+# ── remediation v2 (1.3): post-speech band + mutable endpoints ───────────────
+
+
+def test_post_speech_items_admitted_but_never_credit_quota() -> None:
+    # Dated after the utterance but within fair-game: admitted for context,
+    # flagged, and excluded from the decided-verdict quota.
+    post = [_ev(f"https://a.com/{i}", tier=SourceTier.GOVERNMENT,
+                pub="2026-02-26") for i in range(2)]
+    res = consolidate("s", [("R1", post)], utterance=UTT, window=WINDOW)
+    assert [it.post_speech for it in res.items] == [True, True]
+    assert all(it.to_payload_v2()["era_note"] == "post-speech · context-only"
+               for it in res.items)
+    assert not res.quota_met and res.gate_code == GATE_INSUFFICIENT
+    # The same items dated on/before the utterance credit normally.
+    pre = [_ev(f"https://a.com/{i}", tier=SourceTier.GOVERNMENT,
+               pub="2026-02-20") for i in range(2)]
+    res2 = consolidate("s", [("R1", pre)], utterance=UTT, window=WINDOW)
+    assert res2.quota_met
+    assert "era_note" not in res2.items[0].to_payload_v2()
+
+
+def test_post_speech_flag_survives_role_annotation() -> None:
+    from truthbot.verify.principals import PrincipalRelation
+
+    items = [_ev("https://a.com/1", tier=SourceTier.GOVERNMENT, pub="2026-02-26"),
+             _ev("https://b.com/2", tier=SourceTier.GOVERNMENT, pub="2026-02-20")]
+    res = consolidate("s", [("R1", items)], utterance=UTT, window=WINDOW,
+                      claim_shape="c-exist",
+                      relation_of=lambda ev: PrincipalRelation.INDEPENDENT)
+    flags = {it.evidence.source_url: it.post_speech for it in res.items}
+    assert flags["https://a.com/1"] is True
+    assert flags["https://b.com/2"] is False
+
+
+def test_mutable_latest_endpoints_dropped_with_telemetry() -> None:
+    live = _ev("https://www.bls.gov/news.release/empsit.htm",
+               tier=SourceTier.GOVERNMENT, pub="2026-02-20")
+    archived = _ev("https://www.bls.gov/news.release/archives/empsit_02072026.htm",
+                   tier=SourceTier.GOVERNMENT, pub="2026-02-20")
+    res = consolidate("s", [("R1", [live, archived])],
+                      utterance=UTT, window=WINDOW)
+    urls = [it.evidence.source_url for it in res.items]
+    assert live.source_url not in urls
+    assert archived.source_url in urls
+    assert res.dropped["mutable-latest-endpoint"] == 1
+
+
+def test_v2_builder_fails_closed_without_speech_date() -> None:
+    import pytest
+
+    from truthbot.verdict.era_lint import EraLintError
+    from truthbot.verdict.evidence_pack_v2 import build_evidence_pack_v2
+
+    class _R:
+        label = "R1"
+
+        def shortlist(self, claim_text, *, context="", utterance=None, window=None):
+            return []
+
+    with pytest.raises(EraLintError, match="no utterance date registered"):
+        build_evidence_pack_v2("unregistered_speech_xyz:0001", "c", (_R(),))
+    pack = build_evidence_pack_v2("unregistered_speech_xyz:0001", "c", (_R(),),
+                                  era_exempt=True)
+    assert pack.items == []

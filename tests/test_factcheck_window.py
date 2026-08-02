@@ -117,9 +117,18 @@ def test_pack_drops_dated_items_outside_era_window():
     assert "https://example.com/undated" in urls          # undated items pass
 
 
-def test_pack_keeps_dated_items_when_window_unknown():
+def test_pack_fails_closed_when_speech_date_unknown():
+    # Remediation v2 (1.3): an unregistered speech date used to silently
+    # disable era gating; the build now fails closed unless the caller
+    # explicitly declares the build dateless.
+    import pytest
+
+    from truthbot.verdict.era_lint import EraLintError
+
     p = _Provider([_ev("https://a/x", datetime(2026, 2, 9))])
-    pack = build_evidence_pack("mystery_2099:1", "c", p)   # no registered speech date
+    with pytest.raises(EraLintError, match="no utterance date registered"):
+        build_evidence_pack("mystery_2099:1", "c", p)
+    pack = build_evidence_pack("mystery_2099:1", "c", p, era_exempt=True)
     assert [it.source_url for it in pack.items] == ["https://a/x"]
 
 

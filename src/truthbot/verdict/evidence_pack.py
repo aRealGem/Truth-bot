@@ -91,6 +91,10 @@ class PackItem:
     # attribution-only | plain-s5 | "" (legacy / normal). Display + payload
     # metadata; NOT part of the I5 provenance quad.
     role: str = ""
+    # Era note (remediation v2, 1.3): "post-speech · context-only" for items
+    # dated after the utterance but within fair-game. Display + payload
+    # metadata; such items never credit the quota. NOT part of the I5 quad.
+    era_note: str = ""
 
     def provenance(self) -> dict:
         """The I5 provenance record (``url/retrieved_at/sha256/tier`` required)."""
@@ -121,6 +125,10 @@ class PackItem:
         # normal — pre-shape packs carry the exact prior payload.
         if self.role and self.role != "normal":
             payload["role"] = self.role
+        # Post-speech band (remediation v2, 1.3): the panel is told the item
+        # may inform context but must not decide the verdict.
+        if self.era_note:
+            payload["era_note"] = self.era_note
         return payload
 
 
@@ -266,6 +274,7 @@ def build_evidence_pack(
     today: Optional[date] = None,
     max_items: int = DEFAULT_MAX_ITEMS,
     context: str = "",
+    era_exempt: bool = False,
 ) -> EvidencePack:
     """Fetch, dedup, rank, cap, and provenance-stamp evidence for one claim.
 
@@ -274,6 +283,14 @@ def build_evidence_pack(
     — a provenance gap fails closed here, at evidence entry, not at verdict time."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
+    if utterance is None and not era_exempt:
+        # Fail CLOSED (remediation v2, 1.3): an unregistered speech date used
+        # to silently disable ALL era gating — the Obama-2014 rescue leg
+        # shipped 2026-dated evidence into a 2014 speech this way.
+        raise era_lint.EraLintError(
+            f"no utterance date registered for {sid!r} — the era gate cannot "
+            "run. Call speech_context.register_speech_date() first, or pass "
+            "era_exempt=True for a deliberately dateless build.")
     claim = Claim(transcript_id=sid.split(":", 1)[0], text=claim_text, context=context or None)
     raw = provider.get_evidence(claim, window=window)
     raw = [ev for ev in raw if _within_window(ev, window)]
@@ -300,5 +317,6 @@ def build_evidence_pack(
     pack = EvidencePack(sid=sid, window=window, items=items)
     # T1.1: the build FAILS on era violations — defense in depth behind the
     # two filters above (a violation here means a filter regressed).
-    era_lint.assert_pack_within_era(pack, utterance)
+    if not era_exempt:
+        era_lint.assert_pack_within_era(pack, utterance)
     return pack

@@ -197,7 +197,10 @@ def test_build_evidence_pack_v2_uses_shortlist_runner():
 
     from truthbot.verdict import evidence_pack_v2, speech_context
 
-    speech_context.register_speech_date("rt:0000", date(2026, 1, 1))
+    # the lookup key is the sid's SPEECH PREFIX ("rt", not "rt:0000") — the
+    # old full-sid registration was dead weight the fail-open era gate never
+    # noticed; fail-closed (remediation v2, 1.3) does.
+    speech_context.register_speech_date("rt", date(2026, 1, 1))
     seen = {"pools": 0}
 
     class _FakeR:
