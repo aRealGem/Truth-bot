@@ -194,3 +194,67 @@ def test_repo_corrections_file_is_valid_and_matches_audit() -> None:
         assert rec["confidence"] >= 0.8
         assert rec["shipped_verdict"] == e["old_verdict"]
         assert rec["suggested_verdict"] == e["new_verdict"]
+
+
+# ── Empty-state vs ledger display (remediation v2, 1.11) ─────────────────────
+#
+# Root cause of the shipped bug: rerender_pca_site.py --corrections skip
+# passed corrections=None to SitePublisher while still passing notes, so
+# corrections.html rendered the 2026-07-21 audit note AND "No corrections
+# have been issued" at once. The flag now governs apply_to_artifact only;
+# the page always renders the full ledger, and the empty state appears
+# ONLY when the ledger itself is empty.
+
+
+def test_corrections_page_with_entries_and_notes_has_no_empty_state() -> None:
+    html = _render_corrections([ENTRY], notes=[
+        {"date": "2026-07-21", "text": "Audit note."}])
+    assert "No corrections have been issued" not in html
+    assert "corrections-table" in html
+    assert "Audit note." in html
+
+
+def test_corrections_page_truly_empty_ledger_renders_empty_state() -> None:
+    html = _render_corrections([], notes=[])
+    assert "No corrections have been issued" in html
+    assert "corrections-table" not in html
+
+
+def test_check_site_flags_page_with_both_table_and_empty_state(tmp_path: Path) -> None:
+    """The both-present state is impossible via _render_corrections; the
+    lint catches a caller that stitches the page together inconsistently."""
+    from tests.test_site_render_aggregates import _make_bundle, _make_site_report
+    from truthbot.models import VerdictLabel
+    from truthbot.publish.consistency import check_site
+    from truthbot.publish.site import SitePublisher
+
+    pub = SitePublisher(site_root=tmp_path, corrections=[ENTRY])
+    pub.publish(_make_site_report([_make_bundle(
+        VerdictLabel.TRUE, coarse_lenient="True", coarse_strict="True")]))
+    page = tmp_path / "corrections.html"
+    assert "corrections-table" in page.read_text()
+    violations = check_site(tmp_path)
+    assert not any("corrections.html" in v for v in violations)
+
+    # Tamper: append the empty-state sentence next to the rendered table.
+    page.write_text(page.read_text().replace(
+        "</table>",
+        "</table><p class=\"dim\">No corrections have been issued for the "
+        "currently published reports.</p>"))
+    violations = check_site(tmp_path)
+    assert any("corrections.html" in v and "BOTH" in v for v in violations)
+
+
+def test_rerender_script_passes_full_ledger_for_display_on_skip() -> None:
+    """The script wires the FULL ledger into SitePublisher regardless of
+    --corrections apply|skip; only apply_to_artifact consumes the gated
+    list. Pin the wiring at source level (running main() needs artifacts)."""
+    import re
+    from pathlib import Path as _P
+
+    src = (_P(__file__).resolve().parents[2] /
+           "scripts" / "rerender_pca_site.py").read_text(encoding="utf-8")
+    assert re.search(
+        r"SitePublisher\(site_root=args\.site_root,\s*corrections=corrections",
+        src), "publisher must receive the full ledger for display"
+    assert "render_artifact(p, publisher, args.role, corrections=apply_corr)" in src

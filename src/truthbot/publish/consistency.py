@@ -537,6 +537,20 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
         if p.exists() and banned in p.read_text(encoding="utf-8"):
             violations.append(f"{fname}: banned phrase present: '{banned}'")
 
+    # ── Corrections page state (remediation v2, 1.11) ────────────────────
+    # The entries table and the empty-state sentence are mutually exclusive
+    # by construction in _render_corrections; both at once means the caller
+    # rendered notes/entries inconsistently (the --corrections skip bug:
+    # audit note + "No corrections have been issued" on one page).
+    corrections_page = site_root / "corrections.html"
+    if corrections_page.exists():
+        text = corrections_page.read_text(encoding="utf-8")
+        if ("corrections-table" in text
+                and "No corrections have been issued" in text):
+            violations.append(
+                "corrections.html: renders BOTH the corrections entries "
+                "table and the empty-state sentence")
+
     # ── Remediation-v2 strict lints (1.5 + 1.6) ──────────────────────────
     # Gated because the COMMITTED site-pca/ tree predates the regeneration
     # (old static feed.xml, cards without the political bucket); every

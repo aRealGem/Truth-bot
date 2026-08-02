@@ -150,8 +150,14 @@ def main() -> None:
         print(f"corrections on file: {len(corrections)}"
               + (" (SKIPPED — superseded by re-adjudicated artifacts)"
                  if args.corrections == "skip" else ""))
+    # --corrections governs apply_to_artifact ONLY. The corrections PAGE
+    # always renders the full ledger (remediation v2, 1.11): with 'skip' the
+    # old code passed corrections=None to the publisher while still passing
+    # notes, so corrections.html showed the 2026-07-21 audit note AND the
+    # "No corrections have been issued" empty state at once. The empty
+    # state must appear only when the ledger itself is empty.
     apply_corr = corrections if args.corrections == "apply" else None
-    publisher = SitePublisher(site_root=args.site_root, corrections=apply_corr,
+    publisher = SitePublisher(site_root=args.site_root, corrections=corrections,
                               correction_notes=load_notes(REPO / "data" / "corrections.json"))
     for p in paths:
         render_artifact(p, publisher, args.role, corrections=apply_corr)
