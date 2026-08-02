@@ -30,8 +30,12 @@ committed ``site-pca/`` tree so hand-typed numbers cannot merge.
 from __future__ import annotations
 
 import json
+import logging
 import re
+from datetime import date
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 # The two families + abstentions, mirroring site._TRUE_FAMILY /
 # site._ADVERSE_FAMILY. Imported lazily in check_site to avoid a cycle.
@@ -237,6 +241,102 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
             violations.append(
                 f"{slug}: footnote anecdote count {n_anec_uv} != derived "
                 f"{anec_uv_derived} from claims.json layer_a_claim_type")
+    return violations
+
+
+# ── Published run-artifact invariants (remediation v2, 1.4) ──────────────────
+#
+# metrics/pca_runs/methodology_manifest.json pins every stored artifact to the
+# methodology GENERATION it was produced under. Runs labeled with the
+# manifest's current_generation must satisfy the current invariants; runs with
+# older generations are permanently legacy — reported, never re-assertable —
+# which is what blocks re-publishing them as-is.
+
+#: Utterance date per speech, for the era lint over stored artifacts (their
+#: meta.date agrees, but the lint must not depend on artifact self-report).
+_SPEECH_DATES = {
+    "trump_2026": date(2026, 2, 24),
+    "biden_2022": date(2022, 3, 1),
+    "obama_2014": date(2014, 1, 28),
+    "clinton_1998": date(1998, 1, 27),
+    "gwbush_2006": date(2006, 1, 31),
+}
+
+#: PR-A2.2 / T2.1 saturation cap, mirrored from
+#: truthbot.verdict.consolidator.MAX_S5 (imported lazily in the checker to
+#: keep this module render-side-import-free).
+_MAX_S5_PER_SID = 3
+
+
+def check_run_artifacts(repo_root) -> list[str]:
+    """Assert the current-generation invariants over stored pca_runs artifacts.
+
+    For every run the methodology manifest labels ``current_generation``:
+      (i)   per-claim POLITICAL-tier item count <= 3 (the S5 saturation cap),
+      (ii)  zero era violations (fair-game window from the speech-date map,
+            via :func:`truthbot.verdict.era_lint.lint_pack_items`),
+      (iii) zero fact-check URLs in evidence
+            (:func:`truthbot.verify.factcheck_exclusion.is_excluded_factchecker`).
+
+    Runs with OLDER generations produce logged report lines, never failures —
+    they are legacy by construction and the manifest is what keeps them from
+    being re-published as-is. Returns the violation list (empty = pass).
+
+    TODO (D11.2 credit-identity check, gated on generation "v2.4+"): recompute
+    the decided-verdict credit set from principal relations and assert no
+    decided claim rests solely on the speaker's own record. Not implementable
+    over v2.3 artifacts — evidential roles are not stored on artifact evidence
+    and the principals recompute belongs to the Phase-3 regeneration.
+    """
+    from truthbot.verdict.era_lint import lint_pack_items
+    from truthbot.verify.factcheck_exclusion import is_excluded_factchecker
+
+    repo_root = Path(repo_root)
+    runs_dir = repo_root / "metrics" / "pca_runs"
+    manifest = _load_json(runs_dir / "methodology_manifest.json")
+    current = manifest["current_generation"]
+    violations: list[str] = []
+
+    for run_id, row in manifest["runs"].items():
+        path = runs_dir / f"{run_id}.json"
+        if not path.exists():
+            violations.append(f"{run_id}: manifest row but artifact file missing")
+            continue
+        if row.get("generation") != current:
+            logger.info(
+                "pca run %s (%s): legacy generation %r%s — reported, not "
+                "re-assertable under %r", run_id[:8], row.get("speech_id"),
+                row.get("generation"),
+                " [published]" if row.get("published") else "", current)
+            continue
+
+        artifact = _load_json(path)
+        speech_id = row.get("speech_id", "")
+        utterance = _SPEECH_DATES.get(speech_id)
+        if utterance is None:
+            violations.append(
+                f"{run_id}: no utterance date known for speech {speech_id!r} "
+                "— the era invariant cannot be asserted (fail closed)")
+            continue
+        evidence = artifact.get("evidence")
+        if evidence is None:
+            violations.append(f"{run_id}: current-generation run stores no evidence")
+            continue
+
+        for sid, items in evidence.items():
+            pol = sum(1 for it in items if it.get("source_tier") == "Political")
+            if pol > _MAX_S5_PER_SID:                                    # (i)
+                violations.append(
+                    f"{run_id} {sid}: {pol} POLITICAL-tier items exceed the "
+                    f"<={_MAX_S5_PER_SID} S5 cap")
+            era, _, _ = lint_pack_items(sid, items, utterance)           # (ii)
+            for v in era:
+                violations.append(f"{run_id} {sid}: era violation — {v.message}")
+            for it in items:                                             # (iii)
+                url = it.get("source_url") or ""
+                if url and is_excluded_factchecker(url):
+                    violations.append(
+                        f"{run_id} {sid}: fact-check URL in evidence: {url}")
     return violations
 
 
