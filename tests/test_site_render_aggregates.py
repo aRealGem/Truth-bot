@@ -1,18 +1,17 @@
-"""Render-side tests for the lens-aware aggregate displays + frontier cleanup.
+"""Render-side tests for the aggregate displays + frontier cleanup.
 
-What this file pins (everything that round 2 of the projection work shipped):
+What this file pins:
 
 * ``SiteReport.verdict_distribution_lenient`` / ``verdict_distribution_strict``
   produce the projected 5-bucket histograms and round-trip the engine's
-  ``LENIENT_PROJECTION`` / ``STRICT_PROJECTION``.
-* ``_verdict_panel(site_report)`` renders BOTH lens variants of the
-  headline + ratio + verdict bar, with ``data-lens-axis`` markup so the
-  lens toggle JS can flip them in lockstep with per-claim pills.
-* ``_toc(bundles)`` mini-pills carry ``data-coarse-lenient`` /
-  ``data-coarse-strict`` attrs and the shared ``.lens-pill`` class
-  (so the toggle finds them alongside headline pills).
-* ``_report_card(report_meta)`` renders Lenient + Strict aggregate
-  segment bars and headlines in paired ``[data-lens-axis]`` blocks.
+  ``LENIENT_PROJECTION`` / ``STRICT_PROJECTION`` (the lenient export is
+  deprecated data-compat only — single-axis since remediation v2, 1.8).
+* ``_verdict_panel(site_report)`` renders ONE headline + ratio + verdict
+  bar from the strict distribution — no lens markup anywhere (the
+  Strict/Lenient toggle was removed as structurally inert: the PCA verdict
+  contract projects identically on both axes; DC-4').
+* ``_toc(bundles)`` mini-pills and ``_report_card(report_meta)`` render the
+  same single strict axis.
 * The per-model strip on a claim card no longer renders any
   ``model-tier-wrap`` element — that "frontier"/"batch" chip was
   retired (2026-04-29) per the editorial decision that the panel is
@@ -36,7 +35,6 @@ from truthbot.publish.aggregation import project_dist
 from truthbot.publish.site import (
     COARSE_LENIENT_PROJECTION,
     COARSE_STRICT_PROJECTION,
-    CSS,
     SiteReport,
     _adapter_run_stats,
     _claim_card,
@@ -307,14 +305,14 @@ def test_headline_verdict_coarse_dominant_models_split_is_abstention() -> None:
     assert cls == "neutral"
 
 
-# ── _verdict_panel renders both lens axes ─────────────────────────────────────
+# ── _verdict_panel renders ONE strict-axis aggregate (1.8 / DC-4') ───────────
 
 
-def test_verdict_panel_renders_both_lens_aggregates_strict_first() -> None:
-    """2026-04-30: Strict became the published default. Both lens
-    blocks still render server-side, but Strict comes first in DOM
-    order and stays visible on initial paint while Lenient ships
-    ``hidden``. Non-JS clients therefore see Strict."""
+def test_verdict_panel_single_axis_no_lens_markup() -> None:
+    """Remediation v2 (1.8 / DC-4'): the Strict/Lenient toggle was removed
+    as structurally inert — the PCA verdict contract projects identically
+    on both axes. The panel renders one strict headline + ratio + bar and
+    carries NO lens markup at all."""
     bundles = [
         _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
         _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
@@ -322,47 +320,29 @@ def test_verdict_panel_renders_both_lens_aggregates_strict_first() -> None:
     ]
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
-    assert 'data-lens-axis="lenient"' in html
-    assert 'data-lens-axis="strict"' in html
-    # Strict comes first now.
-    strict_idx  = html.index('data-lens-axis="strict"')
-    lenient_idx = html.index('data-lens-axis="lenient"')
-    assert strict_idx < lenient_idx
-    assert 'data-lens-axis="lenient" hidden' in html
-    assert 'data-lens-axis="strict" hidden' not in html
-
-
-def test_verdict_panel_bar_blocks_carry_lens_caption() -> None:
-    """Each bar block is now self-labeled so the reader knows which
-    lens they're seeing without consulting the chip."""
-    bundles = [
-        _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
-    ]
-    sr = _make_site_report(bundles)
-    html = _verdict_panel(sr)
-    assert "Strict lens" in html
-    assert "Lenient lens" in html
-    # Captions live inside their own data-lens-axis block — assert that
-    # the Strict caption appears before the Lenient caption (strict-first).
-    assert html.index("Strict lens") < html.index("Lenient lens")
-
-
-def test_verdict_panel_lens_semantics_binary_vs_graded() -> None:
-    """2026-07-25 lens semantics: BOTH lenses headline the percent-true number
-    (jackie: no more word-grades); Strict vs Lenient still differ through the
-    coarse projections feeding each lens's distribution. The 6-bucket label
-    (e.g. "Exaggerated") never appears as a headline. Here the same bundles
-    project all-Truthy under Lenient (→ 100% True) and all-Falsey under
-    Strict (→ 0% True)."""
-    bundles = [_make_bundle(VerdictLabel.EXAGGERATED,
-                             coarse_lenient="Truthy", coarse_strict="Falsey")] * 3
-    sr = _make_site_report(bundles)
-    html = _verdict_panel(sr)
+    assert "data-lens-axis" not in html
+    assert "lens-target" not in html
+    assert "Strict lens" not in html and "Lenient lens" not in html
+    # Exactly one headline block, rendered from the STRICT distribution:
+    # 1 Truthy of 3 decided (Falsey + False adverse) → 33% True.
     import re
     headlines = re.findall(r'<div class="vp-verdict[^"]*">([^<]+)</div>', html)
-    assert any(h.strip() == "100% True" for h in headlines)      # lenient projection
-    assert any(h.strip() == "0% True" for h in headlines)        # strict projection
+    assert headlines == ["33% True"]
+    # The 6-bucket fine label never appears as a headline.
     assert not any("Exaggerated" in h for h in headlines)
+
+
+def test_verdict_panel_headline_is_family_verdict_band_display() -> None:
+    """DC-4' band note (A3): the FamilyVerdict label IS the band display —
+    the percent-true figure whose color class carries the band. It renders
+    on the report header via ``_verdict_panel`` (and on index cards via
+    ``_report_card``); there is no separate band-word chip."""
+    bundles = [_make_bundle(VerdictLabel.TRUE,
+                            coarse_lenient="True", coarse_strict="True")] * 4
+    sr = _make_site_report(bundles)
+    html = _verdict_panel(sr)
+    assert '<div class="vp-verdict vt-true">100% True</div>' in html
+    assert "4 of 4 decided claims rated True" in html
 
 
 def test_models_engaged_counts_panel_seats_not_reconciled_cards() -> None:
@@ -387,70 +367,60 @@ def test_models_engaged_counts_panel_seats_not_reconciled_cards() -> None:
     assert n == len({mv.adapter_name for b in bundles for mv in b.model_verdicts})
 
 
-def test_binary_verdict_percent_true_headline() -> None:
-    """2026-07-25 (jackie): both lenses show the percent-true number — same
-    families, same decided-claims denominator, abstentions disclosed via the
-    ratio. Color (not words) carries the lean: >75% green, 50-75% inclusive
-    yellow (vt-mid), under 50% red."""
-    from truthbot.publish.site import _binary_verdict
-    label, cls, ratio = _binary_verdict({"True": 3, "Falsey": 1, "Unverifiable": 4})
+def test_family_verdict_percent_true_headline() -> None:
+    """2026-07-25 (jackie): the headline is the percent-true number — one
+    family computation, one decided-claims denominator, abstentions
+    disclosed via the ratio. Color (not words) carries the lean: >75%
+    green, 50-75% inclusive yellow (vt-mid), under 50% red. Backs
+    ``aggregation.family_verdict`` through the site-side wrapper."""
+    from truthbot.publish.site import _family_verdict
+    label, cls, ratio = _family_verdict({"True": 3, "Falsey": 1, "Unverifiable": 4})
     assert label == "75% True" and ratio == "3 of 4 decided claims rated True"
     assert cls == "vt-mid"                             # 75% is yellow's top edge
-    label, cls, _r = _binary_verdict({"True": 19, "Falsey": 1})    # 95%
+    label, cls, _r = _family_verdict({"True": 19, "Falsey": 1})    # 95%
     assert label == "95% True" and cls == "vt-true"
-    label, cls, _r = _binary_verdict({"True": 1, "Misleading": 3})
+    label, cls, _r = _family_verdict({"True": 1, "Misleading": 3})
     assert label == "25% True" and cls == "vt-false"
-    label, cls, _r = _binary_verdict({"True": 2, "Misleading": 2})
+    label, cls, _r = _family_verdict({"True": 2, "Misleading": 2})
     assert label == "50% True" and cls == "vt-mid"     # yellow's bottom edge
-    label, cls, _r = _binary_verdict({"True": 10, "Falsey": 9})    # 52.6%
+    label, cls, _r = _family_verdict({"True": 10, "Falsey": 9})    # 52.6%
     assert label == "53% True" and cls == "vt-mid"
-    label, cls, _r = _binary_verdict({"True": 9, "Falsey": 10})    # 47.4%
+    label, cls, _r = _family_verdict({"True": 9, "Falsey": 10})    # 47.4%
     assert label == "47% True" and cls == "vt-false"   # under 50% is red
-    label, _cls, _r = _binary_verdict({"Unverifiable": 3, "Models split": 1})
+    label, _cls, _r = _family_verdict({"Unverifiable": 3, "Models split": 1})
     assert label == "Unverifiable"
-    label, _cls, _r = _binary_verdict({})
+    label, _cls, _r = _family_verdict({})
     assert label == "No claims evaluated"
 
 
-# ── TOC mini-pill carries lens-pill class + both data attrs ──────────────────
+# ── TOC mini-pill renders the strict projection (single axis) ────────────────
 
 
-def test_toc_pill_carries_both_coarse_attrs_and_lens_pill_class() -> None:
+def test_toc_pill_renders_strict_projection_label() -> None:
     bundles = [
         _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
         _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
     ]
     html = _toc(bundles)
-    # Shared marker class so the JS finds TOC pills alongside headline pills.
-    assert "lens-pill" in html
-    # Both data attrs present per pill.
-    assert html.count('data-coarse-lenient="Truthy"') == 2
-    # Strict diverges on the second pill (Exaggerated → Falsey under Strict).
-    assert 'data-coarse-strict="Truthy"' in html
-    assert 'data-coarse-strict="Falsey"' in html
+    # Visible text is the strict coarse label; no lens data-attrs remain.
+    assert ">Truthy</span>" in html
+    assert ">Falsey</span>" in html
+    assert "data-coarse" not in html
+    assert "lens-pill" not in html
 
 
 def test_toc_pill_falls_back_for_legacy_bundles() -> None:
     bundles = [_make_bundle(VerdictLabel.MOSTLY_TRUE)]   # empty coarse_*
     html = _toc(bundles)
-    assert 'data-coarse-lenient="Truthy"' in html        # projected on the fly
-    assert 'data-coarse-strict="Truthy"' in html
+    assert ">Truthy</span>" in html                      # projected on the fly
 
 
-# ── _report_card (index per-report card) renders both axes ───────────────────
+# ── _report_card (index per-report card) renders the strict axis ─────────────
 
 
-def test_css_hidden_attribute_hides_lens_axis_under_flex_display() -> None:
-    """Without this rule, `.report-bar` / `.report-counts` ``display:flex``
-    overrides the HTML ``hidden`` attribute and *both* lens bars show on
-    index cards — only one bar should be visible at a time."""
-    assert "[data-lens-axis][hidden]" in CSS
-    assert "display: none !important" in CSS
-
-
-def test_report_card_renders_paired_lens_axis_blocks_strict_first() -> None:
-    """Same Strict-first DOM order as the verdict panel — landing-page
-    cards reflect the published default."""
+def test_report_card_renders_single_strict_axis_block() -> None:
+    """Remediation v2 (1.8): index cards render ONE strict-axis headline +
+    rail + bar + counts — no paired lens blocks, no lens captions."""
     r = {
         "id": "rid", "url": "reports/r.html",
         "speaker": "X", "date": "2026-03-04", "venue": "v",
@@ -469,34 +439,31 @@ def test_report_card_renders_paired_lens_axis_blocks_strict_first() -> None:
         "tier_counts": {},
     }
     html = _report_card(r)
-    assert 'data-lens-axis="lenient"' in html
-    assert 'data-lens-axis="strict"' in html
-    assert 'data-lens-axis="lenient" hidden' in html
-    assert 'data-lens-axis="strict" hidden' not in html
-    # Captions name the active lens.
-    assert "Strict lens" in html
-    assert "Lenient lens" in html
-    # Lenient says all 5 are Truthy; Strict splits 3 Truthy / 2 Falsey.
+    assert "data-lens-axis" not in html
+    assert "lens-target" not in html
+    assert "Strict lens" not in html and "Lenient lens" not in html
+    # Strict splits 3 Truthy / 2 Falsey; the headline is the percent-true
+    # band display (FamilyVerdict label): 3 of 5 decided → 60% True.
     assert "Truthy" in html
     assert "Falsey" in html
+    assert "60% True" in html
 
 
 def test_report_card_legacy_entry_falls_back_to_on_the_fly_projection() -> None:
     """An older reports.json entry that only has the 6-bucket
-    ``verdict_distribution`` must still render lens-aware aggregates."""
+    ``verdict_distribution`` must still render the strict aggregate."""
     r = {
         "id": "rid", "url": "reports/r.html",
         "speaker": "X", "date": "2026-03-04", "venue": "v",
         "claim_count": 5,
         "verdict_distribution": {"Mostly True": 3, "Exaggerated": 2},
-        # NO verdict_distribution_lenient / _strict — pre-projection era.
+        # NO verdict_distribution_strict — pre-projection era.
         "tier_counts": {},
     }
     html = _report_card(r)
-    assert 'data-lens-axis="lenient"' in html
-    assert 'data-lens-axis="strict"' in html
-    # Lenient should still surface Truthy.
+    # Strict projection on the fly: Mostly True → Truthy, Exaggerated → Falsey.
     assert "Truthy" in html
+    assert "Falsey" in html
 
 
 # ── Frontier badge cleanup + methodology pin ──────────────────────────────────
@@ -533,7 +500,7 @@ def test_methodology_line_still_says_frontier_language_models() -> None:
     assert "frontier language model" in html
 
 
-# ── Round 3: "% truthy or better" lens-aware stat ─────────────────────────────
+# ── Round 3: "% truthy or better" headline-frame stat ────────────────────────
 
 
 def test_verdict_panel_promotes_truthy_and_false_into_headline_frames() -> None:
@@ -562,18 +529,18 @@ def test_verdict_panel_promotes_truthy_and_false_into_headline_frames() -> None:
     assert truthy_idx < grid_idx, "Truthy frame must precede the stats grid"
 
 
-def test_headline_frames_are_lens_paired_strict_first() -> None:
-    """Each frame holds two ``data-lens-axis`` spans (strict + lenient);
-    Strict ships visible, Lenient ships ``hidden``."""
+def test_headline_frames_render_plain_strict_values() -> None:
+    """Each frame holds one plain percentage — the strict family share.
+    No lens-target spans remain (remediation v2, 1.8)."""
     bundles = [
         _make_bundle(VerdictLabel.MOSTLY_TRUE, coarse_lenient="Truthy", coarse_strict="Truthy"),
         _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
     ]
     sr = _make_site_report(bundles)
     html = _verdict_panel(sr)
-    # Both axes present in headline-frame markup
-    assert '<span class="lens-target" data-lens-axis="strict">' in html
-    assert '<span class="lens-target" data-lens-axis="lenient" hidden>' in html
+    # 1 Truthy of 2 decided → 50% in both frames, rendered as plain values.
+    assert '<div class="vp-stat-num">50%</div>' in html
+    assert "lens-target" not in html
 
 
 def test_truthy_or_better_uses_decided_denominator() -> None:
@@ -591,8 +558,7 @@ def test_truthy_or_better_uses_decided_denominator() -> None:
     html = _verdict_panel(sr)
     # 2 truthy of 3 DECIDED → 67%. The retired all-claims convention
     # would render 2/4 = 50%.
-    assert '<span class="lens-target" data-lens-axis="strict">67%</span>' in html
-    assert '<span class="lens-target" data-lens-axis="lenient" hidden>67%</span>' in html
+    assert '<div class="vp-stat-num">67%</div>' in html
 
 
 def test_false_or_worse_uses_headline_family_over_decided() -> None:
@@ -613,8 +579,7 @@ def test_false_or_worse_uses_headline_family_over_decided() -> None:
     false_frame_idx = html.index("vp-stat-false")
     next_frame_close = html.index('</div>', html.index('</div>', false_frame_idx) + 1)
     false_frame_html = html[false_frame_idx : next_frame_close + 200]
-    assert 'data-lens-axis="strict">67%' in false_frame_html
-    assert 'data-lens-axis="lenient" hidden>67%' in false_frame_html
+    assert 'vp-stat-num">67%' in false_frame_html
 
 
 # ── Round 3: site-wide Truthy mute persistence contract ─────────────────────
@@ -628,25 +593,26 @@ def test_embedded_js_contains_truthy_mute_storage_key() -> None:
     assert "isTruthyFunPage" in JS  # fun-page exclusion path stays in place
 
 
-def test_embedded_js_default_lens_is_strict() -> None:
-    """2026-04-30 editorial flip: the published default editorial-lens
-    flipped from Lenient to Strict. Pin the JS constant so a rename or
-    accidental flip-back surfaces immediately. Stored user preference
-    still wins on revisit — only the unset default is asserted here."""
+def test_embedded_js_has_no_lens_toggle() -> None:
+    """Remediation v2 (1.8 / DC-4'): the editorial-lens toggle IIFE is gone
+    from the shipped JS — it flipped between two byte-identical
+    presentations under the PCA verdict contract. Pin its absence so it
+    can't quietly return."""
     from truthbot.publish.site import JS
-    assert "var DEFAULT_LENS = 'strict';" in JS
-    # Storage key itself unchanged (existing localStorage values still work).
-    assert "var STORAGE_KEY = 'editorial-lens';" in JS
+    assert "editorial-lens" not in JS
+    assert "DEFAULT_LENS" not in JS
+    assert "applyLens" not in JS
+    assert "data-lens-axis" not in JS
 
 
-def test_status_bar_lens_chip_defaults_to_strict() -> None:
-    """The chip ships with ``data-lens="strict"`` and the visible value
-    is "Strict" — matches the JS default so non-JS clients stay in
-    sync with what the JS would write on first paint."""
+def test_status_bar_has_no_lens_chip() -> None:
+    """The status bar ships without the retired Strict/Lenient chip."""
     from truthbot.publish.site import _status_bar
     html = _status_bar(model_count=4, stamp="x")
-    assert 'data-lens="strict"' in html
-    assert "<span class=\"lens-value\">Strict</span>" in html
+    assert "editorial-lens" not in html
+    assert "lens-value" not in html
+    # The rest of the bar is intact.
+    assert "Operational" in html and "4 Models" in html
 
 
 def test_truthy_tap_hint_includes_label_span_for_state_aware_text() -> None:

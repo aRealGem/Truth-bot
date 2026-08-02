@@ -214,6 +214,11 @@ class SiteReport:
     def verdict_distribution_lenient(self) -> dict[str, int]:
         """5-bucket histogram on the Lenient projection axis.
 
+        Deprecated — single-axis since remediation v2 (1.8 / DC-4'); no
+        rendered surface reads it and under the PCA verdict contract it
+        equals the strict distribution. Kept because the field still ships
+        in reports.json for data compatibility.
+
         Folding is delegated to ``aggregation.coarse_label``: the stored
         ``coarse_lenient_label`` wins when present (post-projection bundles),
         legacy bundles project the fine label on the fly, and split /
@@ -514,14 +519,6 @@ def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
     """
     fam = _agg_family_verdict(dist)
     return fam.label, fam.css, fam.ratio_text
-
-
-def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """Both lenses now show the same percent-true headline (jackie,
-    2026-07-25) — the Strict/Lenient distinction lives in the graded vs
-    coarse DISTRIBUTIONS below the headline, not in the headline wording.
-    One computation, one presentation: delegates to ``_family_verdict``."""
-    return _family_verdict(dist)
 
 
 def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
@@ -1154,15 +1151,18 @@ def _verdict_panel(site_report) -> str:
     claim_count = len(site_report.checkable_bundles)
     model_count, model_hint = _models_engaged(site_report)
     agree_rate  = site_report.model_agreement_rate
-    # 5-bucket Truthy-scale aggregates rendered side-by-side; the Lens
-    # chip swaps them in lockstep with the per-claim headline pills.
-    # Strict is the published default (matches the per-claim pill + lens chip).
-    dist_lenient = site_report.verdict_distribution_lenient
-    dist_strict  = site_report.verdict_distribution_strict
-    # Lens semantics (2026-07-19): Lenient = the simple Truthy/Falsey lean,
-    # Strict = the graded family bands — two presentations of one computation.
-    headline_lenient, hcls_lenient, ratio_text_lenient = _binary_verdict(dist_lenient)
-    headline_strict,  hcls_strict,  ratio_text_strict  = _family_verdict(dist_strict)
+    # Single-axis presentation (remediation v2, 1.8 / DC-4'): the report
+    # renders the Strict 5-bucket aggregate only. The Strict/Lenient toggle
+    # was structurally inert — the PCA verdict contract emits only
+    # True/False/Misleading/Unverifiable, whose projections are identical on
+    # both axes, so every published pill was byte-identical under either
+    # lens. One distribution, one presentation.
+    dist_strict = site_report.verdict_distribution_strict
+    # DC-4' band note (A3): the FamilyVerdict label IS the band display —
+    # since 2026-07-25 it is the percent-true figure ("56% True", color
+    # carries the band) and it already renders here on report headers and in
+    # ``_report_card`` on index cards. No separate band-word chip exists.
+    headline_strict, hcls_strict, ratio_text_strict = _family_verdict(dist_strict)
 
     # Mascot mood derives from the published headline (remediation T0.3), not
     # the independent truthy-score rollup. Since 2026-07-25 the headline TEXT
@@ -1197,20 +1197,12 @@ def _verdict_panel(site_report) -> str:
         + '</div>'
     )
 
-    # Two paired headline+ratio blocks, one per lens. Strict is the
-    # published default (2026-04-30 editorial flip from Lenient) so it
-    # ships first and visible; Lenient ships ``hidden`` and the lens
-    # chip flips them. Non-JS clients therefore see Strict.
+    # Single headline+ratio block (the paired strict/lenient twin blocks
+    # left with the lens toggle, remediation v2 1.8).
     text_col = (
         '<div class="vp-text-col">'
-        + '<div class="vp-headline-lens" data-lens-axis="strict">'
         + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
         + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
-        + '</div>'
-        + '<div class="vp-headline-lens" data-lens-axis="lenient" hidden>'
-        + '<div class="vp-verdict ' + hcls_lenient + '">' + _esc(headline_lenient) + '</div>'
-        + '<div class="vp-ratio">' + _esc(ratio_text_lenient) + '</div>'
-        + '</div>'
         + '</div>'
     )
 
@@ -1220,23 +1212,17 @@ def _verdict_panel(site_report) -> str:
     # IDENTICAL to the headline (remediation T0.3): the two families
     # over decided claims, abstentions (Unverifiable / Models split)
     # excluded — the chips and the "N of M decided" ratio can never
-    # disagree. Both frames are lens-aware via the paired
-    # data-lens-axis pattern; Strict is the published default.
+    # disagree.
     def _pct(numerator: int, total: int) -> str:
         return format(numerator / total, '.0%') if total else "0%"
 
     # Family math comes from the same FamilyVerdict the headline used (1.6) —
     # chips and headline literally share one computation.
     _fam_strict = _agg_family_verdict(dist_strict)
-    _fam_lenient = _agg_family_verdict(dist_lenient)
     t_strict,  f_strict,  decided_strict  = (
         _fam_strict.true_count, _fam_strict.adverse_count, _fam_strict.decided)
-    t_lenient, f_lenient, decided_lenient = (
-        _fam_lenient.true_count, _fam_lenient.adverse_count, _fam_lenient.decided)
     truthy_pct_strict  = _pct(t_strict,  decided_strict)
-    truthy_pct_lenient = _pct(t_lenient, decided_lenient)
     false_pct_strict   = _pct(f_strict,  decided_strict)
-    false_pct_lenient  = _pct(f_lenient, decided_lenient)
 
     truthy_frame_title = (
         "True-leaning family (True + Mostly True + Truthy) over decided "
@@ -1254,10 +1240,7 @@ def _verdict_panel(site_report) -> str:
         + '    <div class="vp-headline-stat vp-stat-truthy" title="' + _esc(truthy_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_TRUTHY_RATE, size=42) + '</div>\n'
         + '      <div class="vp-stat-body">\n'
-        + '        <div class="vp-stat-num">'
-        + '<span class="lens-target" data-lens-axis="strict">' + truthy_pct_strict + '</span>'
-        + '<span class="lens-target" data-lens-axis="lenient" hidden>' + truthy_pct_lenient + '</span>'
-        + '</div>\n'
+        + '        <div class="vp-stat-num">' + truthy_pct_strict + '</div>\n'
         + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
         + '        <div class="vp-stat-hint">true-leaning / decided claims</div>\n'
         + '      </div>\n'
@@ -1265,10 +1248,7 @@ def _verdict_panel(site_report) -> str:
         + '    <div class="vp-headline-stat vp-stat-false" title="' + _esc(false_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_FALSE_RATE, size=42) + '</div>\n'
         + '      <div class="vp-stat-body">\n'
-        + '        <div class="vp-stat-num">'
-        + '<span class="lens-target" data-lens-axis="strict">' + false_pct_strict + '</span>'
-        + '<span class="lens-target" data-lens-axis="lenient" hidden>' + false_pct_lenient + '</span>'
-        + '</div>\n'
+        + '        <div class="vp-stat-num">' + false_pct_strict + '</div>\n'
         + '        <div class="vp-stat-lbl">False or worse</div>\n'
         + '        <div class="vp-stat-hint">false-leaning / decided claims</div>\n'
         + '      </div>\n'
@@ -1297,28 +1277,11 @@ def _verdict_panel(site_report) -> str:
         '  </div>\n'
     )
 
-    # Lens-aware verdict bar + legend. Same paired-element pattern as the
-    # headline above. Both axes are 5-bucket so the segment colors match
-    # the per-claim pill palette (Truthy / Falsey gradient stops).
-    #
-    # Each block now carries a ``vp-lens-caption`` so the reader knows
-    # which lens they're seeing (the legend below the bar lists buckets,
-    # not the active rubric). Strict block is rendered first and visible
-    # by default — Lenient ships ``hidden`` and the lens chip flips it.
-    bar_html_lenient = _verdict_bar_html(dist_lenient, order=AGGREGATE_BAR_ORDER,
-                                         family_rail=True)
-    bar_html_strict  = _verdict_bar_html(dist_strict,  order=AGGREGATE_BAR_ORDER,
-                                         family_rail=True)
-    bar_html = (
-        '<div class="vp-bar-lens" data-lens-axis="strict">'
-        + '<div class="vp-lens-caption">Strict lens</div>'
-        + bar_html_strict
-        + '</div>'
-        + '<div class="vp-bar-lens" data-lens-axis="lenient" hidden>'
-        + '<div class="vp-lens-caption">Lenient lens</div>'
-        + bar_html_lenient
-        + '</div>'
-    )
+    # Verdict bar + legend on the one published distribution. The segment
+    # colors match the per-claim pill palette (Truthy / Falsey gradient
+    # stops); the family rail brackets the same totals the headline uses.
+    bar_html = _verdict_bar_html(dist_strict, order=AGGREGATE_BAR_ORDER,
+                                 family_rail=True)
 
     model_names = sorted({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
     model_str = ' · '.join(model_names) if model_names else 'Multi-model'
@@ -1793,27 +1756,15 @@ def _models_engaged(site_report) -> tuple[int, str]:
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
-    # Editorial-lens chip toggles the headline-pill projection between
-    # Strict (default since 2026-04-30) and Lenient. The chip is hidden
-    # by default and the toggle JS reveals it on pages that have any
-    # claim pills to flip.
-    lens_chip = (
-        '    <button type="button" class="editorial-lens" data-lens="strict" hidden '
-        'title="Toggle the report verdict between the Strict lens (graded: Largely/Mostly '
-        'True/False over decided claims, Mixed for coin-flips) and the Lenient lens '
-        '(simple overall lean: Truthy or Falsey). Same claims, same counts — two '
-        'presentations.">\n'
-        '      <span class="lens-label">Lens:</span>\n'
-        '      <span class="lens-value">Strict</span>\n'
-        '    </button>\n'
-    )
+    # The Strict/Lenient editorial-lens chip was removed here (remediation
+    # v2, 1.8 / DC-4'): the toggle was structurally inert under the PCA
+    # verdict contract — both projections rendered identical pills.
     return (
         '<div class="status-bar">\n'
         '  <div class="row">\n'
         '    <span class="live">Operational</span>\n'
         f'    <span>Pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>\n'
         f'    <span>{model_str}</span>\n'
-        + lens_chip +
         f'    <span class="stamp">{_esc(stamp)}</span>\n'
         '  </div>\n'
         '</div>\n'
@@ -2284,38 +2235,31 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     # echo "Unverifiable" for split rows (audit V6).
     fine_label = _agg_fine_label(consensus.consensus_verdict,
                                  consensus.consensus_label.value)
-    # Headline defaults to the Strict 5-bucket projection (2026-04-30
-    # editorial flip from Lenient). Older cached bundles (pre-projection-
-    # layer) carry blank coarse fields; on this surface they ECHO the fine
-    # label (passed as the stored value below) so toggling is a visual no-op
-    # rather than a broken render — while split rows still pass through
-    # coarse_label's non-folding rule on every axis.
-    _stored_lenient = (consensus.coarse_lenient_label or "").strip()
+    # Headline renders the Strict 5-bucket projection — the one published
+    # axis since the lens toggle was removed (remediation v2, 1.8 / DC-4';
+    # under the PCA verdict contract both projections are identical anyway).
+    # Older cached bundles (pre-projection-layer) carry blank coarse fields;
+    # on this surface they ECHO the fine label (passed as the stored value
+    # below) so legacy reports re-render without rebuilding their bundles —
+    # while split rows still pass through coarse_label's non-folding rule.
     _stored_strict = (consensus.coarse_strict_label or "").strip()
-    lenient_attr = _agg_coarse_label(
-        fine_label, _stored_lenient or fine_label, "lenient")
-    strict_attr = _agg_coarse_label(
+    label = _agg_coarse_label(
         fine_label, _stored_strict or fine_label, "strict")
-    label = strict_attr
     css = _verdict_css(label)
-    fine_css = _verdict_css(fine_label)
-    lenient_css = _verdict_css(lenient_attr)
-    strict_css = _verdict_css(strict_attr)
-    # Guest-anecdote treatment: swap the pill TEXT on both lens axes (so the
-    # Lenient/Strict toggle can't restore "Unverifiable") but keep the
-    # Unverifiable color family; the dashed pill border marks the genre.
+    # Guest-anecdote treatment: swap the pill TEXT but keep the Unverifiable
+    # color family; the dashed pill border marks the genre.
     anecdote = _is_anecdote_unverifiable(bundle)
-    pill_title = ("Headline shows the 5-bucket coarse projection. Per-model strip below uses "
-                  "the 6-bucket fine scale. Use the Editorial lens chip to toggle Lenient/Strict.")
+    pill_title = ("Headline shows the 5-bucket coarse published verdict. "
+                  "The per-model strip below keeps the 6-bucket fine labels for audit.")
     anecdote_cls = ""
     if anecdote:
-        label = lenient_attr = strict_attr = ANECDOTE_PILL
+        label = ANECDOTE_PILL
         pill_title = ANECDOTE_TITLE
         anecdote_cls = " pill-anecdote"
-    # Self-sourced-only treatment (PR-A2.1): same both-axes text swap as the
-    # anecdote pill so the lens toggle can't restore a bare "Unverifiable".
+    # Self-sourced-only treatment (PR-A2.1): same text swap as the anecdote
+    # pill — an honest sub-state, never a bare "Unverifiable".
     elif _is_self_sourced_unverified(bundle):
-        label = lenient_attr = strict_attr = SELF_SOURCED_PILL
+        label = SELF_SOURCED_PILL
         pill_title = SELF_SOURCED_TITLE
         anecdote_cls = " pill-self-sourced"
     n = str(idx).zfill(2)
@@ -2563,10 +2507,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="claim-head-icon")
         + f'    <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
         '  </span>'
-        f'  <span class="claim-pill claim-pill-headline lens-pill v-{css}{anecdote_cls}"'
-        f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
-        f' data-coarse-lenient="{_esc(lenient_attr)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
-        f' data-coarse-strict="{_esc(strict_attr)}" data-coarse-strict-css="{_esc(strict_css)}"'
+        f'  <span class="claim-pill claim-pill-headline v-{css}{anecdote_cls}"'
         f' title="{_esc(pill_title)}">'
         f'{_esc(label)}</span>'
         f'  {triage_badge}'
@@ -2637,29 +2578,21 @@ def _toc(bundles: list[VerdictBundle]) -> str:
         # bundles with blank coarse fields project the fine label on the fly.
         fine_label = _agg_fine_label(consensus.consensus_verdict,
                                      consensus.consensus_label.value)
-        coarse_lenient = _agg_coarse_label(
-            fine_label, consensus.coarse_lenient_label, "lenient")
-        coarse_strict = _agg_coarse_label(
+        # The mini-pill shows the Strict coarse projection — the one
+        # published axis (remediation v2, 1.8), same fold as the claim
+        # card's headline pill.
+        default_label = _agg_coarse_label(
             fine_label, consensus.coarse_strict_label, "strict")
-        # Default text is Strict (matches the published default lens
-        # since the 2026-04-30 flip).
-        default_label = coarse_strict
-        default_css   = _verdict_css(default_label)
-        fine_css      = _verdict_css(fine_label)
-        lenient_css   = _verdict_css(coarse_lenient)
-        strict_css    = _verdict_css(coarse_strict)
+        default_css = _verdict_css(default_label)
         toc_anecdote_cls = ""
         if _is_anecdote_unverifiable(b):
-            # Mirror the claim card's guest-anecdote pill on both lens axes.
-            default_label = coarse_lenient = coarse_strict = ANECDOTE_PILL
+            # Mirror the claim card's guest-anecdote pill.
+            default_label = ANECDOTE_PILL
             toc_anecdote_cls = " pill-anecdote"
         items.append(
             f'<a class="toc-item" href="#claim-{i}">'
             f'  <span class="toc-num">{str(i).zfill(2)}</span>'
-            f'  <span class="toc-pill lens-pill v-{default_css}{toc_anecdote_cls}"'
-            f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
-            f' data-coarse-lenient="{_esc(coarse_lenient)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
-            f' data-coarse-strict="{_esc(coarse_strict)}" data-coarse-strict-css="{_esc(strict_css)}">'
+            f'  <span class="toc-pill v-{default_css}{toc_anecdote_cls}">'
             f'{_esc(default_label)}</span>'
             f'  <span class="toc-text">"{_esc(b.claim.text)}"</span>'
             '  <span class="toc-jump">↓</span>'
@@ -2671,50 +2604,43 @@ def _toc(bundles: list[VerdictBundle]) -> str:
 def _report_card(r: dict) -> str:
     claim_count = r.get("claim_count", 0)
 
-    # 5-bucket coarse-axis aggregates for both lenses. Falls back to
-    # projecting the legacy 6-bucket distribution if a report predates
-    # the projection layer (older reports.json entries).
+    # Strict 5-bucket coarse-axis aggregate — the one published axis
+    # (remediation v2, 1.8). Falls back to projecting the legacy 6-bucket
+    # distribution if a report predates the projection layer (older
+    # reports.json entries).
     fine_dist = r.get("verdict_distribution", {}) or {}
-    dist_lenient = (r.get("verdict_distribution_lenient")
-                    or _agg_project_dist(fine_dist, "lenient"))
     dist_strict = (r.get("verdict_distribution_strict")
                    or _agg_project_dist(fine_dist, "strict"))
 
-    def _card_axis_html(d: dict[str, int], axis: str = "strict") -> tuple[str, str, str, str, str]:
-        """Return (headline_html, ratio_text, segs_html, counts_html, rail_html)
-        for one axis. Strict lens = graded family bands; Lenient lens = simple
-        Truthy/Falsey. rail_html is the family rail tying the headline's
-        leaning totals to the bar."""
-        if axis == "lenient":
-            headline, cls, ratio_text = _binary_verdict(d)
-        else:
-            headline, cls, ratio_text = _family_verdict(d)
-        # Every bucket renders, Models split included — the card bar must sum
-        # to claim_count just like the report-page bar (remediation T0.2).
-        total_named = sum(d.values()) or 1
-        segs_inner: list[str] = []
-        counts_inner: list[str] = []
-        for label in AGGREGATE_BAR_ORDER:
-            count = d.get(label, 0)
-            if not count:
-                continue
-            segs_inner.append(
-                f'<div class="seg v-{_verdict_css(label)}" '
-                f'style="width:{count/total_named*100:.1f}%"></div>'
-            )
-            counts_inner.append(
-                f'<div class="ct"><span class="swatch v-{_verdict_css(label)}"></span>'
-                f'{_esc(label)} <span class="n">{count}</span></div>'
-            )
-        head_html = (
-            f'<span class="label {cls}">{_esc(headline)}</span>'
-            f'<span class="ratio">{_esc(ratio_text)}</span>'
+    # Headline (percent-true FamilyVerdict label — the band display, DC-4'),
+    # segment bar, per-bucket counts, and the family rail tying the
+    # headline's leaning totals to the bar.
+    headline, cls, ratio_text = _family_verdict(dist_strict)
+    # Every bucket renders, Models split included — the card bar must sum
+    # to claim_count just like the report-page bar (remediation T0.2).
+    total_named = sum(dist_strict.values()) or 1
+    segs_inner: list[str] = []
+    counts_inner: list[str] = []
+    for label in AGGREGATE_BAR_ORDER:
+        count = dist_strict.get(label, 0)
+        if not count:
+            continue
+        segs_inner.append(
+            f'<div class="seg v-{_verdict_css(label)}" '
+            f'style="width:{count/total_named*100:.1f}%"></div>'
         )
-        rail = _family_rail_html(d, AGGREGATE_BAR_ORDER, rail_class="report-family-rail")
-        return head_html, ratio_text, "".join(segs_inner), "".join(counts_inner), rail
-
-    head_lenient, _ratio_lenient, segs_lenient, counts_lenient, rail_lenient = _card_axis_html(dist_lenient, axis="lenient")
-    head_strict,  _ratio_strict,  segs_strict,  counts_strict,  rail_strict  = _card_axis_html(dist_strict, axis="strict")
+        counts_inner.append(
+            f'<div class="ct"><span class="swatch v-{_verdict_css(label)}"></span>'
+            f'{_esc(label)} <span class="n">{count}</span></div>'
+        )
+    head_strict = (
+        f'<span class="label {cls}">{_esc(headline)}</span>'
+        f'<span class="ratio">{_esc(ratio_text)}</span>'
+    )
+    rail_strict = _family_rail_html(dist_strict, AGGREGATE_BAR_ORDER,
+                                    rail_class="report-family-rail")
+    segs_strict = "".join(segs_inner)
+    counts_strict = "".join(counts_inner)
 
     meta_bits = []
     if r.get("date"):
@@ -2750,20 +2676,12 @@ def _report_card(r: dict) -> str:
         f'      <div class="report-meta">{meta}</div>'
         '    </div>'
         '    <div class="verdict-pill">'
-        f'      <span class="lens-target" data-lens-axis="strict">{head_strict}</span>'
-        f'      <span class="lens-target" data-lens-axis="lenient" hidden>{head_lenient}</span>'
+        f'      <span>{head_strict}</span>'
         '    </div>'
         '  </div>'
-        '  <div class="report-bar-row">'
-        f'    <div class="report-bar-caption lens-target" data-lens-axis="strict">Strict lens</div>'
-        f'    <div class="report-bar-caption lens-target" data-lens-axis="lenient" hidden>Lenient lens</div>'
-        '  </div>'
-        f'  <div class="lens-target" data-lens-axis="strict">{rail_strict}</div>'
-        f'  <div class="lens-target" data-lens-axis="lenient" hidden>{rail_lenient}</div>'
-        f'  <div class="report-bar lens-target" data-lens-axis="strict">{segs_strict}</div>'
-        f'  <div class="report-bar lens-target" data-lens-axis="lenient" hidden>{segs_lenient}</div>'
-        f'  <div class="report-counts lens-target" data-lens-axis="strict">{counts_strict}</div>'
-        f'  <div class="report-counts lens-target" data-lens-axis="lenient" hidden>{counts_lenient}</div>'
+        f'  {rail_strict}'
+        f'  <div class="report-bar">{segs_strict}</div>'
+        f'  <div class="report-counts">{counts_strict}</div>'
         '  <div class="report-cta">'
         f'    <span class="src">{claim_count} claim{"s" if claim_count != 1 else ""}</span>'
         + src_tiers_html +
@@ -2785,9 +2703,7 @@ def _agg_bar(
     """Site-wide aggregate verdict bar + legend.
 
     ``order`` defaults to the 6-bucket ``VERDICT_ORDER`` for backward
-    compat, but the index renderer now passes ``COARSE_VERDICT_ORDER`` for
-    both Lenient and Strict aggregate views (rendered side-by-side and
-    swapped by the lens toggle).
+    compat; aggregate callers pass a coarse-axis order.
     """
     label_order = order if order is not None else VERDICT_ORDER
     total = sum(verdict_totals.get(l, 0) for l in label_order) or 1
@@ -3403,13 +3319,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.35rem;
 }
 
-/* Paired editorial-lens blocks: ``hidden`` must win over display:flex on
-   `.report-bar` / `.report-counts` / etc. Otherwise index report cards
-   stack *both* Strict and Lenient bars at once (user only wants one bar). */
-[data-lens-axis][hidden] {
-  display: none !important;
-}
-
 /* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
 .report-bar {
   display: flex;
@@ -3418,18 +3327,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0.25rem 0 1rem;
 }
 .report-bar .seg { transition: filter 200ms ease; }
-.report-bar-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6rem;
-}
-.report-bar-caption {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-muted);
-}
 
 .report-counts {
   display: flex;
@@ -3558,14 +3455,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 
 /* Big verdict bar inside the panel */
 .vp-bar-wrap { padding: 1.5rem 1.75rem; }
-.vp-lens-caption {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink-muted);
-  margin-bottom: 0.5rem;
-}
 .vp-bar {
   display: flex;
   height: 38px;
@@ -4482,46 +4371,6 @@ hr.rule-light {
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }
 .vt-split        { color: var(--v-split); }
-
-/* ── Editorial-lens chip (status bar) ──────────────────────────────────────
-   Toggles the headline pill between the Lenient and Strict 5-bucket
-   projections. Hidden by default; the toggle JS reveals it once it has
-   wired up at least one ``.claim-pill-headline`` element on the page. */
-.editorial-lens {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.1rem 0.55rem;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-.editorial-lens:hover,
-.editorial-lens:focus-visible {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: var(--ink-faint);
-  outline: none;
-}
-.editorial-lens .lens-label {
-  color: var(--ink-faint);
-  text-transform: uppercase;
-}
-.editorial-lens .lens-value {
-  font-weight: 600;
-}
-.editorial-lens[data-lens="strict"] .lens-value {
-  color: var(--v-falsey);
-}
-.editorial-lens[data-lens="lenient"] .lens-value {
-  color: var(--v-truthy);
-}
-
 
 /* [20] Truthy SVG internal animations ────────────────────────────────── */
 /* These drive Truthy's idle behavior, eye states, and pose changes.
@@ -5516,142 +5365,6 @@ JS = """\
   }
 
   // Run init immediately if DOM is already parsed; otherwise wait
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-})();
-
-/* ─────────────────────────────────────────────────────────────────────
-   Editorial-lens toggle — flips every Truthy-scale display between the
-   Strict (default since 2026-04-30) and Lenient 5-bucket coarse-axis
-   projections.
-
-   Two render patterns are toggled together so the page never goes
-   internally inconsistent (e.g. headline says "Mostly Truthy" while the
-   verdict bar still shows the Strict aggregate):
-
-   1) PER-PILL SWAP — in-place text+class rewrite on individual pills.
-      Used by the per-claim headline pill (claim card) and the
-      per-claim TOC mini-pill on report pages. Both wear ``.lens-pill``
-      and carry the data-coarse-{lenient,strict} attribute pair.
-
-   2) PAIRED-AXIS SWAP — show/hide complementary blocks pre-rendered
-      server-side. Used by aggregate views: the verdict-panel headline
-      + ratio + bar, the per-report cards on the index, and any future
-      lens-aware aggregate. Each block wears ``[data-lens-axis="X"]``
-      and the toggle simply flips the ``hidden`` attribute.
-
-   The per-model strip pills (Anthropic / OpenAI / Gemini / xAI) are
-   NEVER touched — they keep the 6-bucket fine labels for audit.
-
-   Body data attribute ``document.body.dataset.lens`` is also set so
-   any lens-aware CSS rule can react.
-
-   Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
-   Default: strict (2026-04-30 editorial flip from Lenient — Strict
-   tracks more closely with the reference set per FitnessScorer Run 5
-   and stays the conservative default for non-JS clients). Stored
-   user preference still wins on revisit.
-   No-op if the page has nothing toggleable (e.g. about, 404).
-   ───────────────────────────────────────────────────────────────────── */
-(function() {
-  'use strict';
-
-  var STORAGE_KEY = 'editorial-lens';
-  var DEFAULT_LENS = 'strict';
-  var ALL_PILL_CSS_CLASSES = [
-    'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
-    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey', 'v-split'
-  ];
-
-  function readLens() {
-    try {
-      var v = localStorage.getItem(STORAGE_KEY);
-      return (v === 'strict' || v === 'lenient') ? v : DEFAULT_LENS;
-    } catch (e) {
-      return DEFAULT_LENS;
-    }
-  }
-
-  function writeLens(lens) {
-    try { localStorage.setItem(STORAGE_KEY, lens); } catch (e) { /* ignore */ }
-  }
-
-  function applyLensToPill(pill, lens) {
-    var label, cssSlug;
-    if (lens === 'strict') {
-      label = pill.getAttribute('data-coarse-strict') || pill.getAttribute('data-fine-label') || '';
-      cssSlug = pill.getAttribute('data-coarse-strict-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
-    } else {
-      label = pill.getAttribute('data-coarse-lenient') || pill.getAttribute('data-fine-label') || '';
-      cssSlug = pill.getAttribute('data-coarse-lenient-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
-    }
-    if (!label) return;
-    pill.textContent = label;
-    for (var i = 0; i < ALL_PILL_CSS_CLASSES.length; i++) {
-      pill.classList.remove(ALL_PILL_CSS_CLASSES[i]);
-    }
-    pill.classList.add('v-' + cssSlug);
-  }
-
-  function applyLensToAxisPairs(lens) {
-    /* Show the block tagged with the active lens, hide the other.
-       Idempotent — safe to call repeatedly. */
-    var blocks = document.querySelectorAll('[data-lens-axis]');
-    for (var i = 0; i < blocks.length; i++) {
-      var axis = blocks[i].getAttribute('data-lens-axis');
-      if (axis === lens) {
-        blocks[i].hidden = false;
-      } else {
-        blocks[i].hidden = true;
-      }
-    }
-  }
-
-  function applyLens(lens) {
-    /* 1) per-pill text+class swap (headline pill + TOC pill) */
-    var pills = document.querySelectorAll('.lens-pill');
-    for (var i = 0; i < pills.length; i++) {
-      applyLensToPill(pills[i], lens);
-    }
-    /* 2) paired-axis show/hide for aggregate displays */
-    applyLensToAxisPairs(lens);
-    /* 3) body data-attr so any lens-aware CSS rule can react */
-    if (document.body) document.body.setAttribute('data-lens', lens);
-    /* 4) chip state */
-    var chip = document.querySelector('.editorial-lens');
-    if (chip) {
-      chip.setAttribute('data-lens', lens);
-      var valEl = chip.querySelector('.lens-value');
-      if (valEl) valEl.textContent = (lens === 'strict') ? 'Strict' : 'Lenient';
-      chip.setAttribute('aria-pressed', lens === 'strict' ? 'true' : 'false');
-    }
-  }
-
-  function init() {
-    var pills = document.querySelectorAll('.lens-pill');
-    var axisBlocks = document.querySelectorAll('[data-lens-axis]');
-    var chip = document.querySelector('.editorial-lens');
-    var hasToggleableContent = pills.length > 0 || axisBlocks.length > 0;
-    if (!hasToggleableContent) {
-      if (chip) chip.hidden = true;
-      return;
-    }
-    var lens = readLens();
-    applyLens(lens);
-    if (chip) {
-      chip.hidden = false;
-      chip.addEventListener('click', function() {
-        var current = chip.getAttribute('data-lens') || DEFAULT_LENS;
-        var next = (current === 'lenient') ? 'strict' : 'lenient';
-        writeLens(next);
-        applyLens(next);
-      });
-    }
-  }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
@@ -7346,7 +7059,7 @@ def _render_feed(reports: list[dict], site_url: str) -> str:
     Every value derives from the index row: link/id from the report url,
     <published> from the speech date, <updated> from the row's per-publish
     ``generated_at`` stamp (speech-date fallback for legacy rows), the
-    summary from the strict-lens family verdict via ``aggregation``. The
+    summary from the strict-axis family verdict via ``aggregation``. The
     feed-level <updated> is the max entry <updated>. All text is
     XML-escaped. Replaces the static template whose phantom entry and
     [SITE_URL] placeholder shipped verbatim (1.5).
@@ -7630,11 +7343,13 @@ class SitePublisher:
             "panel_roster":        dict(getattr(sr, "panel_roster", None) or {}),
             "triage_count":        len(getattr(sr, "characterization", None) or []),
             "verdict_distribution": sr.verdict_distribution,
-            # 5-bucket coarse-axis distributions for lens-aware aggregate
-            # rendering on the index page (and external consumers of
-            # reports.json that want the Truthy-scale histogram). The
-            # 6-bucket ``verdict_distribution`` above is kept for backward
-            # compat with anyone already reading reports.json.
+            # 5-bucket coarse-axis distributions (Truthy-scale histograms)
+            # for the index renderer and external consumers of reports.json.
+            # The 6-bucket ``verdict_distribution`` above is kept for
+            # backward compat with anyone already reading reports.json.
+            # ``verdict_distribution_lenient`` is deprecated — single-axis
+            # since remediation v2 (1.8 / DC-4'); it equals strict under the
+            # PCA verdict contract and ships only for data compatibility.
             "verdict_distribution_lenient": sr.verdict_distribution_lenient,
             "verdict_distribution_strict":  sr.verdict_distribution_strict,
             "model_agreement_rate": round(sr.model_agreement_rate, 3),
@@ -7729,7 +7444,7 @@ class SitePublisher:
             for label, cnt in r.get("verdict_distribution", {}).items():
                 verdict_totals[label] = verdict_totals.get(label, 0) + cnt
 
-        # 5-bucket coarse-axis aggregates for the lens-aware index. Both
+        # 5-bucket coarse-axis aggregates for the stats export. Both
         # axes are summed across whichever per-report fields exist; legacy
         # reports.json entries that predate the projection layer simply
         # contribute 0s. The renderer falls back to projecting from the

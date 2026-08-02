@@ -11,7 +11,8 @@ hand-typed constant). This module re-derives the load-bearing figures from
 the HTML actually says; any mismatch is a build failure.
 
 Scope: the checks cover the site's quantitative claim surfaces — index
-program stats, per-report verdict bars (both lenses), family rails, header
+program stats, per-report verdict bars (strict axis — the single published
+presentation since remediation v2, 1.8), family rails, header
 chips, headline ratios, the anecdote footnote — plus tagline guards for
 wording that must stay off the site until later remediation phases restore
 it with evidence (T0.5/T0.6). Purely decorative numbers (CSS, dates,
@@ -80,25 +81,25 @@ def _bar_segment_counts(lens_html: str) -> dict[str, int]:
             for m in re.finditer(r'title="([^":]+): (\d+)"', lens_html)}
 
 
-def _lens_blocks(page: str) -> dict[str, str]:
-    """Slice the verdict-panel bar wrap into its strict/lenient lens blocks.
+def _bar_wrap_block(page: str) -> str | None:
+    """Slice out the verdict-panel bar wrap (single-block parsing).
 
-    Nested divs defeat a close-tag regex, so this slices on the block
-    *openers*: wrap start → lenient opener bounds the strict block; lenient
-    opener → the anecdote note / source row bounds the lenient block. Only
-    bar segments carry ``title="Label: N"`` annotations inside the wrap, so
-    the slices are safe inputs for _bar_segment_counts."""
+    Nested divs defeat a close-tag regex, so this slices on markers: wrap
+    start → the anecdote note / source row. Only bar segments carry
+    ``title="Label: N"`` annotations inside the wrap, so the slice is a safe
+    input for _bar_segment_counts. Single-axis since remediation v2 (1.8 /
+    DC-4'): fresh renders carry ONE strict bar; committed pre-remediation
+    pages still carry the hidden lenient twin, whose annotations are
+    byte-identical to strict's (the PCA verdict contract projects the same
+    on both axes), so parsing the whole wrap stays exact either way —
+    duplicate ``Label: N`` pairs collapse in the dict."""
     start = page.find('<div class="vp-bar-wrap">')
     if start < 0:
-        return {}
+        return None
     end_markers = [i for i in (page.find('vp-anecdote-note', start),
                                page.find('class="source-row"', start)) if i > 0]
     end = min(end_markers) if end_markers else len(page)
-    wrap = page[start:end]
-    lenient_at = wrap.find('data-lens-axis="lenient"')
-    if lenient_at < 0:
-        return {"strict": wrap}
-    return {"strict": wrap[:lenient_at], "lenient": wrap[lenient_at:]}
+    return page[start:end]
 
 
 def check_report_page(page: str, report: dict, report_claims: list[dict]) -> list[str]:
@@ -138,54 +139,55 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
                 f"{slug}: verdict_distribution {stored_fine} != "
                 f"claims.json-derived {derived_fine}")
 
-    blocks = _lens_blocks(page)
-    for axis in ("strict", "lenient"):
-        dist = _coarse_dist(report_claims, axis)
-        # Verdict bar segments (title="Label: N") must reproduce the derived
-        # bucketing exactly and sum to claim_count (T0.2 acceptance).
-        lens_html = blocks.get(axis)
-        if lens_html is None:
-            violations.append(f"{slug}: no {axis} verdict bar found")
-            continue
-        segs = _bar_segment_counts(lens_html)
+    # Single-axis pass (remediation v2, 1.8 / DC-4'): the published surface
+    # renders the STRICT distribution only, so the checker re-derives and
+    # asserts that one axis. (Committed pre-remediation pages still carry a
+    # hidden lenient twin whose figures are identical under the PCA verdict
+    # contract — see _bar_wrap_block.)
+    dist_strict = _coarse_dist(report_claims, "strict")
+    # Verdict bar segments (title="Label: N") must reproduce the derived
+    # bucketing exactly and sum to claim_count (T0.2 acceptance).
+    wrap_html = _bar_wrap_block(page)
+    if wrap_html is None:
+        violations.append(f"{slug}: no verdict bar found")
+    else:
+        segs = _bar_segment_counts(wrap_html)
         if sum(segs.values()) != claim_count:
             violations.append(
-                f"{slug} [{axis}]: bar segments sum to {sum(segs.values())}, "
+                f"{slug}: bar segments sum to {sum(segs.values())}, "
                 f"claim_count is {claim_count}")
-        derived = {k: v for k, v in dist.items() if v}
+        derived = {k: v for k, v in dist_strict.items() if v}
         if segs != derived:
             violations.append(
-                f"{slug} [{axis}]: bar segments {segs} != derived buckets {derived}")
+                f"{slug}: bar segments {segs} != derived buckets {derived}")
 
-        # Header chips: family shares over DECIDED claims, same convention as
-        # the headline (T0.3).
-        t, f, decided = _families(dist)
-        # Headline ratio text.
-        lean = "true-leaning" if t >= f else "false-leaning"
-        fam_count = t if t >= f else f
-        expected_ratio = f"{fam_count} of {decided} decided claims {lean}"
-        if decided and expected_ratio not in page:
-            violations.append(
-                f"{slug} [{axis}]: expected headline ratio '{expected_ratio}' not found")
+    # Headline ratio text: family shares over DECIDED claims, same
+    # convention as the headline (T0.3).
+    t, f, decided = _families(dist_strict)
+    lean = "true-leaning" if t >= f else "false-leaning"
+    fam_count = t if t >= f else f
+    expected_ratio = f"{fam_count} of {decided} decided claims {lean}"
+    if decided and expected_ratio not in page:
+        violations.append(
+            f"{slug}: expected headline ratio '{expected_ratio}' not found")
 
-    # Chips render one span per lens inside the two vp-headline-stat frames.
-    dist_strict = _coarse_dist(report_claims, "strict")
-    dist_lenient = _coarse_dist(report_claims, "lenient")
+    # Header chips inside the two vp-headline-stat frames. Fresh renders
+    # carry one plain value; committed pre-remediation pages wrap it in a
+    # lens-target span (the leading optional-span matches the strict value,
+    # which renders first there).
     for frame_cls, pick in (("vp-stat-truthy", 0), ("vp-stat-false", 1)):
         m = re.search(
-            r'class="vp-headline-stat %s.*?data-lens-axis="strict">([\d%%]+)</span>'
-            r'.*?data-lens-axis="lenient"[^>]*>([\d%%]+)</span>' % frame_cls,
+            r'class="vp-headline-stat %s.*?vp-stat-num">'
+            r'(?:<span[^>]*>)?([\d%%]+)' % frame_cls,
             page, re.S)
         if not m:
             violations.append(f"{slug}: chip frame {frame_cls} not found")
             continue
-        for axis, got in (("strict", m.group(1)), ("lenient", m.group(2))):
-            dist = dist_strict if axis == "strict" else dist_lenient
-            t, f, decided = _families(dist)
-            want = _fmt_pct((t, f)[pick], decided)
-            if got != want:
-                violations.append(
-                    f"{slug} [{axis}]: chip {frame_cls} shows {got}, derived {want}")
+        got = m.group(1)
+        want = _fmt_pct((t, f)[pick], decided)
+        if got != want:
+            violations.append(
+                f"{slug}: chip {frame_cls} shows {got}, derived {want}")
 
     # Self-sourced-only abstention chip (PR-A2.1 T1.2): its decomposition must
     # re-derive from claims.json — decided/self-sourced/other(/split) sum to
