@@ -1,6 +1,6 @@
 {
  "worksheet": "DC-5 Phase-2 regeneration dry-run",
- "generated_from": "bbe4a25922b84e66e4fd704a376fd95d53a45124",
+ "generated_from": "a8adf8ef94995e39f6d254d003747a37d6027e3f",
  "rules_note": "removals: fc-excluded (factcheck_exclusion_reason), era-violation (BOTH coded expected_claim_window AND fair-game utterance+7d), mutable-endpoint (is_mutable_latest), s5-capped (POLITICAL survivors beyond first 3 in candidate order). post-speech (utterance < d <= +7d) items become context-only, not removed. Credit rule: >=2 bearing, non-post-speech survivors with NEW tier in {Government, Wire, Established}; POLITICAL never credits. Pool candidate sets used where journaled (clinton_1998, gwbush_2006, obama_2014 rescue sids); trump/biden are pack-only \u2014 losses measurable, gains need retrieval.",
  "per_report": [
   {
@@ -6621,16 +6621,16 @@
    "totals": {
     "claims": 92,
     "decided": 83,
-    "claims_losing_items": 20,
-    "cited_losses": 12,
+    "claims_losing_items": 17,
+    "cited_losses": 8,
     "rationale_losses": 0,
-    "context_only_cited": 23,
-    "would_gate": 19,
-    "items_removed": 53,
+    "context_only_cited": 25,
+    "would_gate": 18,
+    "items_removed": 47,
     "removed_by_rule": {
      "fc-excluded": 0,
      "era-violation": 0,
-     "mutable-endpoint": 6,
+     "mutable-endpoint": 0,
      "s5-capped": 47
     },
     "post_speech_items": 127,
@@ -6640,40 +6640,23 @@
     {
      "sid": "clinton_1998:0006",
      "verdict": "TRUE",
-     "impact": "cited-item-lost",
-     "verdict_cited_lost": true,
+     "impact": "context-only-cited",
+     "verdict_cited_lost": false,
      "pool_used": false,
      "dispositions": {
       "fc-excluded": 0,
       "era-violation": 0,
-      "mutable-endpoint": 2,
+      "mutable-endpoint": 0,
       "s5-capped": 0,
-      "kept": 6,
+      "kept": 8,
       "post_speech": 2,
       "tier_flip": 2
      },
-     "lost": [
-      {
-       "e": 1,
-       "url": "https://www.bls.gov/news.release/history/empsit_010998.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": true,
-       "in_rationale": false
-      },
-      {
-       "e": 3,
-       "url": "https://www.bls.gov/news.release/history/cpi_011498.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": true,
-       "in_rationale": false
-      }
-     ],
+     "lost": [],
      "quota": {
       "credits_before_ish": 5,
-      "credits_after": 1,
-      "would_gate": true
+      "credits_after": 3,
+      "would_gate": false
      }
     },
     {
@@ -7170,27 +7153,19 @@
     {
      "sid": "clinton_1998:0107",
      "verdict": "TRUE",
-     "impact": "cited-item-lost",
-     "verdict_cited_lost": true,
+     "impact": "none",
+     "verdict_cited_lost": false,
      "pool_used": false,
      "dispositions": {
       "fc-excluded": 0,
       "era-violation": 0,
-      "mutable-endpoint": 1,
+      "mutable-endpoint": 0,
       "s5-capped": 1,
-      "kept": 8,
+      "kept": 9,
       "post_speech": 0,
       "tier_flip": 4
      },
      "lost": [
-      {
-       "e": 1,
-       "url": "https://www.bls.gov/news.release/history/empsit_010998.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": true,
-       "in_rationale": false
-      },
       {
        "e": 8,
        "url": "https://clintonwhitehouse5.archives.gov/textonly/WH/Work/091697.html",
@@ -7202,7 +7177,7 @@
      ],
      "quota": {
       "credits_before_ish": 6,
-      "credits_after": 2,
+      "credits_after": 3,
       "would_gate": false
      }
     },
@@ -7378,37 +7353,6 @@
       "credits_before_ish": 3,
       "credits_after": 1,
       "would_gate": true
-     }
-    },
-    {
-     "sid": "clinton_1998:0167",
-     "verdict": "MISLEADING",
-     "impact": "cited-item-lost",
-     "verdict_cited_lost": true,
-     "pool_used": false,
-     "dispositions": {
-      "fc-excluded": 0,
-      "era-violation": 0,
-      "mutable-endpoint": 1,
-      "s5-capped": 0,
-      "kept": 7,
-      "post_speech": 1,
-      "tier_flip": 1
-     },
-     "lost": [
-      {
-       "e": 3,
-       "url": "https://www.bls.gov/news.release/history/famee_061697.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": true,
-       "in_rationale": false
-      }
-     ],
-     "quota": {
-      "credits_before_ish": 6,
-      "credits_after": 3,
-      "would_gate": false
      }
     },
     {
@@ -7834,39 +7778,22 @@
     {
      "sid": "clinton_1998:0300",
      "verdict": "TRUE",
-     "impact": "cited-item-lost",
-     "verdict_cited_lost": true,
+     "impact": "context-only-cited",
+     "verdict_cited_lost": false,
      "pool_used": false,
      "dispositions": {
       "fc-excluded": 0,
       "era-violation": 0,
-      "mutable-endpoint": 2,
+      "mutable-endpoint": 0,
       "s5-capped": 0,
-      "kept": 7,
+      "kept": 9,
       "post_speech": 1,
       "tier_flip": 4
      },
-     "lost": [
-      {
-       "e": 3,
-       "url": "https://www.bls.gov/news.release/history/empsit_010998.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": true,
-       "in_rationale": false
-      },
-      {
-       "e": 7,
-       "url": "https://www.bls.gov/news.release/history/laus_120397.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": false,
-       "in_rationale": false
-      }
-     ],
+     "lost": [],
      "quota": {
       "credits_before_ish": 2,
-      "credits_after": 2,
+      "credits_after": 3,
       "would_gate": false
      }
     },
@@ -8063,16 +7990,16 @@
    "totals": {
     "claims": 48,
     "decided": 42,
-    "claims_losing_items": 21,
+    "claims_losing_items": 20,
     "cited_losses": 9,
     "rationale_losses": 0,
     "context_only_cited": 9,
-    "would_gate": 7,
-    "items_removed": 39,
+    "would_gate": 6,
+    "items_removed": 36,
     "removed_by_rule": {
      "fc-excluded": 0,
      "era-violation": 0,
-     "mutable-endpoint": 4,
+     "mutable-endpoint": 1,
      "s5-capped": 35
     },
     "post_speech_items": 58,
@@ -8452,42 +8379,17 @@
      "dispositions": {
       "fc-excluded": 0,
       "era-violation": 0,
-      "mutable-endpoint": 3,
+      "mutable-endpoint": 0,
       "s5-capped": 0,
-      "kept": 6,
+      "kept": 9,
       "post_speech": 3,
       "tier_flip": 1
      },
-     "lost": [
-      {
-       "e": 2,
-       "url": "https://www.bls.gov/news.release/history/empsit_02032006.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": false,
-       "in_rationale": false
-      },
-      {
-       "e": 4,
-       "url": "https://www.bls.gov/news.release/history/empsit_06032005.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": false,
-       "in_rationale": false
-      },
-      {
-       "e": 6,
-       "url": "https://www.bls.gov/news.release/history/empsit_07082005.txt",
-       "disposition": "mutable-endpoint",
-       "reason": "live latest-release pointer",
-       "was_cited": false,
-       "in_rationale": false
-      }
-     ],
+     "lost": [],
      "quota": {
       "credits_before_ish": 7,
-      "credits_after": 1,
-      "would_gate": true
+      "credits_after": 3,
+      "would_gate": false
      }
     },
     {
@@ -9034,16 +8936,16 @@
  "totals": {
   "claims": 530,
   "decided": 479,
-  "claims_losing_items": 153,
-  "cited_losses": 82,
+  "claims_losing_items": 149,
+  "cited_losses": 78,
   "rationale_losses": 0,
-  "context_only_cited": 111,
-  "would_gate": 110,
-  "items_removed": 315,
+  "context_only_cited": 113,
+  "would_gate": 108,
+  "items_removed": 306,
   "removed_by_rule": {
    "fc-excluded": 15,
    "era-violation": 48,
-   "mutable-endpoint": 37,
+   "mutable-endpoint": 28,
    "s5-capped": 215
   },
   "post_speech_items": 531,
@@ -9051,7 +8953,7 @@
  },
  "scope_option_a_minimal": {
   "definition": "every sid with cited-item-lost OR would-gate",
-  "count": 166,
+  "count": 161,
   "sids": [
    "biden_2022:0019",
    "biden_2022:0031",
@@ -9086,7 +8988,6 @@
    "biden_2022:0420",
    "biden_2022:0428",
    "biden_2022:0437",
-   "clinton_1998:0006",
    "clinton_1998:0021",
    "clinton_1998:0025",
    "clinton_1998:0026",
@@ -9097,27 +8998,23 @@
    "clinton_1998:0055",
    "clinton_1998:0083",
    "clinton_1998:0090",
-   "clinton_1998:0107",
    "clinton_1998:0131",
    "clinton_1998:0132",
    "clinton_1998:0134",
    "clinton_1998:0135",
    "clinton_1998:0136",
    "clinton_1998:0146",
-   "clinton_1998:0167",
    "clinton_1998:0199",
    "clinton_1998:0225",
    "clinton_1998:0279",
    "clinton_1998:0289",
    "clinton_1998:0290",
-   "clinton_1998:0300",
    "clinton_1998:0313",
    "gwbush_2006:0033",
    "gwbush_2006:0047",
    "gwbush_2006:0052",
    "gwbush_2006:0057",
    "gwbush_2006:0106",
-   "gwbush_2006:0134",
    "gwbush_2006:0147",
    "gwbush_2006:0155",
    "gwbush_2006:0156",

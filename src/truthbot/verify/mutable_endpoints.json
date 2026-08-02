@@ -4,8 +4,8 @@
     {
       "domain": "bls.gov",
       "prefix": "/news.release/",
-      "immutable_markers": ["/archives/"],
-      "note": "live latest-release pointers (empsit.htm, jolts.htm, ...); archived releases live under /news.release/archives/ with embedded dates"
+      "immutable_markers": ["/archives/", "/history/"],
+      "note": "live latest-release pointers (empsit.htm, jolts.htm, ...); archived releases live under /news.release/archives/ and /news.release/history/ with embedded dates"
     },
     {
       "domain": "bls.gov",
