@@ -1,0 +1,764 @@
+schema: truthbot-tier-registry v1
+version: 2026-08-02
+
+# ============================================================================
+# THE versioned source of tier truth (remediation v2, item 1.2 / DC-2a).
+#
+# Supersedes source_tiers.json (quarantine/2026-08-02T2030Z/). Loaded by
+# truthbot.verify.tier_registry; consumed through the source_tiers facade
+# (classify_tier / classify_tier_ex) by pipeline AND renderer — one file,
+# one implementation.
+#
+# Evaluation order (tier_registry.classify_tier_ex):
+#   1. longest-suffix domain entry:
+#        a. its ordered path_classes, first match wins (an explicit path_class
+#           overrides every generic default),
+#        b. entry semantics by tier/press:
+#           - non-government tiers (political/wire/established/factcheck/other)
+#             apply on ALL remaining paths,
+#           - government + press=none  -> GOVERNMENT on all paths (protected
+#             statistical/record function, DC-2a delta 2),
+#           - government + press=established -> the nonpartisan carve-out:
+#             stat data prefixes stay GOVERNMENT, stat press prefixes demote
+#             to ESTABLISHED, default GOVERNMENT,
+#           - government + press=demote (default) -> generic defaults apply:
+#             data-hub host label / data segment -> GOVERNMENT, press prefix
+#             or press segment -> POLITICAL, else GOVERNMENT,
+#           - quarantine -> generic defaults apply (data yes, press no,
+#             substantive prefixes survive), fallback POLITICAL. Used for
+#             house.gov / senate.gov, whose member & committee subdomains are
+#             partisan by construction.
+#   2. unmapped .gov/.mil/.int host -> generic defaults (identical to the
+#      quarantine pipeline), fallback POLITICAL with reason
+#      "quarantine-unmapped-gov" (fail closed — S-6; .mil/.int used to fail
+#      OPEN to GOVERNMENT, changed by DC-2a delta 3),
+#   3. unmapped non-gov host -> OTHER ("unmapped-non-gov").
+#
+# Every entry carries a one-line rationale and a date. Extend consciously,
+# not reflexively.
+# ============================================================================
+
+defaults:
+  # "Data yes" (D7, jackie 2026-07-31): if ANY exact path segment is one of
+  # these, the URL is structured data / statistical record and survives to
+  # GOVERNMENT even nested under a press prefix (cbp.gov/newsroom/stats/...).
+  # Exact-segment match, never substring.
+  data_segments:
+    [stats, statistics, data, dataset, datasets, timeseries, series, tables]
+
+  # "Press no": press-shop path prefixes on a government-class host demote to
+  # POLITICAL. Prefix match on the lowercased path start.
+  # /news-releases and /opa/pr added 2026-08-02 (DC-2a delta 4: DOJ Office of
+  # Public Affairs press releases live at justice.gov/opa/pr/*).
+  press_prefixes:
+    - /news/
+    - /news-releases
+    - /newsroom
+    - /news-room
+    - /press-releases
+    - /press-release
+    - /pressreleases
+    - /press/
+    - /media/press
+    - /blog
+    - /articles/
+    - /statements
+    - /remarks
+    - /briefing
+    - /opa/pr
+
+  # Press-shop path SEGMENTS (exact match, any depth) — catches press releases
+  # nested past the prefix rules: justice.gov/usao-dc/pr/*, ed.gov/about/news/
+  # press-release/*, epa.gov/.../newsreleases/*. Checked AFTER data_segments
+  # (data still wins) and only on demote/quarantine/unmapped pipelines.
+  press_segments:
+    [pr, press-release, press-releases, pressreleases, newsreleases]
+
+  # Allowlist that survives the quarantine: paths carrying primary documents,
+  # data, or statute rather than messaging (applies on quarantine entries and
+  # unmapped gov-class hosts; a mapped government entry does not need it — its
+  # fallback is already GOVERNMENT).
+  substantive_prefixes:
+    - /data
+    - /datasets
+    - /statistics
+    - /stats
+    - /publication
+    - /publications
+    - /report
+    - /reports
+    - /documents
+    - /document
+    - /bill
+    - /bills
+    - /legislative
+    - /budget
+    - /appropriations
+    - /cfr
+    - /uscode
+    - /regulations
+    - /rulemaking
+    - /federal-register
+    - /app/details
+    - /content/pkg
+    - /files
+    - /pdf
+    - /tables
+    - /survey
+    - /research
+    - /programs
+    - /about
+
+  # Open-data hubs where the data signal is in the HOST, not the path (P129:
+  # datahub.hhs.gov). Leading-label match only, never substring.
+  data_hub_host_labels: [data, datahub, datasets, opendata, data-hub]
+
+  # The nonpartisan carve-out's own lists (press=established entries): real
+  # data on press-looking paths stays GOVERNMENT (bls.gov/news.release/* is
+  # the monthly jobs report); a genuine press-shop path is ESTABLISHED —
+  # demoted, not condemned.
+  stat_data_prefixes:
+    - /news.release
+    - /newsreleases/archive
+    - /opub
+    - /cps
+    - /ces
+    - /data
+    - /timeseries
+    - /publication
+    - /reports
+    - /series
+  stat_press_prefixes:
+    - /newsroom
+    - /press-releases
+    - /bls/newsrels
+    - /news/press
+    - /media/releases
+    - /news-events/news-releases
+
+unknown:
+  non_gov: other            # unmapped non-gov host -> OTHER (T6)
+  gov_mil_int: quarantine   # unmapped .gov/.mil/.int -> QUARANTINE (fail closed; S-6)
+
+entries:
+  # ── DC-2a delta 1: ALL NINE executive mirrors -> political ────────────────
+  - domain: whitehouse.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: obamawhitehouse.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: bidenwhitehouse.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: trumpwhitehouse.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: georgewbush-whitehouse.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: clintonwhitehouse3.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: clintonwhitehouse4.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: clintonwhitehouse5.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+  - domain: clintonwhitehouse6.archives.gov
+    tier: political
+    rationale: "presidential press shop — one tier across ALL administrations; ministerial-record handling lives in the evidential-role axis"
+    date: 2026-08-02
+
+  # ── party & campaign organs (migrated from source_tiers.json) ─────────────
+  - domain: democrats.org
+    tier: political
+    rationale: "party organ — political speech by construction"
+    date: 2026-08-02
+  - domain: gop.com
+    tier: political
+    rationale: "party organ — political speech by construction"
+    date: 2026-08-02
+  - domain: rnc.org
+    tier: political
+    rationale: "party organ — political speech by construction"
+    date: 2026-08-02
+  - domain: dnc.org
+    tier: political
+    rationale: "party organ — political speech by construction"
+    date: 2026-08-02
+  - domain: ndrc.org
+    tier: political
+    rationale: "party-aligned campaign organ"
+    date: 2026-08-02
+  - domain: actblue.com
+    tier: political
+    rationale: "campaign fundraising platform"
+    date: 2026-08-02
+  - domain: winred.com
+    tier: political
+    rationale: "campaign fundraising platform"
+    date: 2026-08-02
+  - domain: donaldjtrump.com
+    tier: political
+    rationale: "campaign site"
+    date: 2026-08-02
+  - domain: joebiden.com
+    tier: political
+    rationale: "campaign site"
+    date: 2026-08-02
+  - domain: berniesanders.com
+    tier: political
+    rationale: "campaign site"
+    date: 2026-08-02
+  - domain: kamalaharris.com
+    tier: political
+    rationale: "campaign site"
+    date: 2026-08-02
+
+  # ── DC-2a delta 2: protected statistical/record functions (press: none —
+  #    GOVERNMENT regardless of press framing; the demote criterion is
+  #    partisan-principal AND comms-function, and these fail the first prong) ─
+  - domain: bls.gov
+    tier: government
+    press: none
+    rationale: "Bureau of Labor Statistics — career-run principal statistical agency; its press shop announces the data it IS (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: bea.gov
+    tier: government
+    press: none
+    rationale: "Bureau of Economic Analysis — principal statistical agency (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: cbo.gov
+    tier: government
+    press: none
+    rationale: "Congressional Budget Office — nonpartisan scorekeeper (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: govinfo.gov
+    tier: government
+    press: none
+    rationale: "GPO's official-document repository — ministerial record (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: census.gov
+    tier: government
+    press: none
+    rationale: "Census Bureau INCLUDING /newsroom — nonpartisan statistical agency; fails the partisan-principal prong (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: cdc.gov
+    tier: government
+    press: none
+    rationale: "CDC incl. stacks/archive/data subdomains — public-health statistical record (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: ucr.fbi.gov
+    tier: government
+    press: none
+    rationale: "FBI Uniform Crime Reporting — national crime statistics (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: clerk.house.gov
+    tier: government
+    press: none
+    rationale: "Clerk of the House — nonpartisan officer, roll-call record (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: uscourts.gov
+    tier: government
+    press: none
+    rationale: "federal judiciary administrative record (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: supremecourt.gov
+    tier: government
+    press: none
+    rationale: "Supreme Court opinions and orders — primary record (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: federalreserve.gov
+    tier: government
+    press: none
+    rationale: "Federal Reserve Board — monetary-policy record and statistics (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: federalregister.gov
+    tier: government
+    press: none
+    rationale: "the Federal Register — ministerial regulatory record (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: nces.ed.gov
+    tier: government
+    press: none
+    rationale: "National Center for Education Statistics — principal statistical agency (DC-2a delta 2)"
+    date: 2026-08-02
+  - domain: pubmed.ncbi.nlm.nih.gov
+    tier: government
+    press: none
+    rationale: "PubMed bibliographic index — scientific record (DC-2a delta 2)"
+    date: 2026-08-02
+
+  # delta-2 path-scoped protections on otherwise press-demoting hosts
+  - domain: fbi.gov
+    tier: government
+    rationale: "federal law-enforcement agency; UCR/CJIS statistical paths protected, /news stays press-demoted (DC-2a deltas 2+3)"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /cjis, tier: government, note: "CJIS statistical/record function (DC-2a delta 2)"}
+      - {prefix: /services/cjis, tier: government, note: "CJIS statistical/record function (DC-2a delta 2)"}
+  - domain: cms.gov
+    tier: government
+    rationale: "Centers for Medicare & Medicaid Services; actuarial and research paths protected (DC-2a deltas 2+3)"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /oact, tier: government, note: "Office of the Actuary (DC-2a delta 2)"}
+      - {prefix: /data-research, tier: government, note: "CMS data & research (DC-2a delta 2)"}
+      - {prefix: /research-statistics-data-and-systems, tier: government, note: "CMS statistics (DC-2a delta 2)"}
+  - domain: irs.gov
+    tier: government
+    rationale: "IRS — bulletins/statistics/pubs are administrative record (DC-2a deltas 2+3)"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /statistics, tier: government, note: "Statistics of Income (DC-2a delta 2)"}
+      - {prefix: /pub, tier: government, note: "IRS publications (DC-2a delta 2)"}
+  - domain: home.treasury.gov
+    tier: government
+    rationale: "Treasury main site; analytic paths protected, /news stays demoted (DC-2a deltas 2+3)"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /system, tier: government, note: "Treasury data/system files (DC-2a delta 2)"}
+      - {prefix: /policy-issues, tier: government, note: "Treasury policy analysis (DC-2a delta 2)"}
+      - {prefix: /data, tier: government, note: "Treasury data (DC-2a delta 2)"}
+
+  # ── Congress: chamber hosts stay quarantined (member/committee sites are
+  #    partisan by construction); record paths carved in ─────────────────────
+  - domain: senate.gov
+    tier: quarantine
+    rationale: "member & committee sites are partisan by construction; Secretary of the Senate record paths carved in, /newsroom keeps its demotion (DC-2a delta 2)"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /newsroom, tier: political, note: "chamber/member press shop"}
+      - {prefix: /legislative, tier: government, note: "roll-call votes & legislative record — nonpartisan Secretary of the Senate (DC-2a delta 2)"}
+  - domain: house.gov
+    tier: quarantine
+    rationale: "member & committee sites are partisan by construction; clerk.house.gov and uscode.house.gov carry their own entries"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /newsroom, tier: political, note: "chamber/member press shop"}
+  - domain: jec.senate.gov
+    tier: political
+    rationale: "congressional committee majority/minority-staff publications (DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: uscode.house.gov
+    tier: government
+    press: established
+    rationale: "Office of the Law Revision Counsel — statute text, nonpartisan record"
+    date: 2026-08-02
+
+  # ── nonpartisan carve-out (press: established — migrated from
+  #    source_tiers.json nonpartisan_sources; data paths GOVERNMENT, genuine
+  #    press-shop paths ESTABLISHED, default GOVERNMENT) ──────────────────────
+  - domain: gao.gov
+    tier: government
+    press: established
+    rationale: "Government Accountability Office — nonpartisan audit arm of Congress"
+    date: 2026-08-02
+  - domain: crs.gov
+    tier: government
+    press: established
+    rationale: "Congressional Research Service — nonpartisan"
+    date: 2026-08-02
+  - domain: congress.gov
+    tier: government
+    press: established
+    rationale: "Library of Congress legislative record — bills, votes, Congressional Record"
+    date: 2026-08-02
+  - domain: eia.gov
+    tier: government
+    press: established
+    rationale: "Energy Information Administration — principal statistical agency"
+    date: 2026-08-02
+  - domain: bjs.ojp.gov
+    tier: government
+    press: established
+    rationale: "Bureau of Justice Statistics — principal statistical agency"
+    date: 2026-08-02
+  - domain: nass.usda.gov
+    tier: government
+    press: established
+    rationale: "National Agricultural Statistics Service"
+    date: 2026-08-02
+  - domain: ers.usda.gov
+    tier: government
+    press: established
+    rationale: "USDA Economic Research Service"
+    date: 2026-08-02
+  - domain: mymarketnews.ams.usda.gov
+    tier: government
+    press: established
+    rationale: "USDA AMS Market News — market data despite the 'news' name"
+    date: 2026-08-02
+  - domain: ofac.treasury.gov
+    tier: government
+    press: established
+    rationale: "OFAC sanctions lists — primary enforcement record"
+    date: 2026-08-02
+  - domain: stlouisfed.org
+    tier: government
+    press: established
+    rationale: "St. Louis Fed (FRASER + FRED) — canonical archival host of government statistics on a .org"
+    date: 2026-08-02
+  - domain: fjc.gov
+    tier: government
+    press: established
+    rationale: "Federal Judicial Center — judiciary research/record"
+    date: 2026-08-02
+  - domain: ecfr.gov
+    tier: government
+    press: established
+    rationale: "electronic Code of Federal Regulations — ministerial record"
+    date: 2026-08-02
+  - domain: gpo.gov
+    tier: government
+    press: established
+    rationale: "Government Publishing Office — official documents"
+    date: 2026-08-02
+  - domain: archives.gov
+    tier: government
+    press: established
+    rationale: "National Archives — record custodian (the White House mirrors under it carry their own political entries, longest suffix wins)"
+    date: 2026-08-02
+  - domain: loc.gov
+    tier: government
+    press: established
+    rationale: "Library of Congress"
+    date: 2026-08-02
+  - domain: sec.gov
+    tier: government
+    press: established
+    rationale: "SEC filings — primary regulatory record"
+    date: 2026-08-02
+  - domain: uspto.gov
+    tier: government
+    press: established
+    rationale: "Patent and Trademark Office — administrative record"
+    date: 2026-08-02
+  - domain: nih.gov
+    tier: government
+    press: established
+    rationale: "National Institutes of Health — science agency"
+    date: 2026-08-02
+  - domain: nsf.gov
+    tier: government
+    press: established
+    rationale: "National Science Foundation — science agency"
+    date: 2026-08-02
+  - domain: nasa.gov
+    tier: government
+    press: established
+    rationale: "NASA — science agency"
+    date: 2026-08-02
+  - domain: noaa.gov
+    tier: government
+    press: established
+    rationale: "NOAA — science/statistical agency"
+    date: 2026-08-02
+  - domain: usgs.gov
+    tier: government
+    press: established
+    rationale: "US Geological Survey — science agency"
+    date: 2026-08-02
+  - domain: nist.gov
+    tier: government
+    press: established
+    rationale: "NIST — standards/science agency"
+    date: 2026-08-02
+
+  # ── D7 disposition: capped at ESTABLISHED ─────────────────────────────────
+  - domain: aspe.hhs.gov
+    tier: established
+    rationale: "HHS ASPE — appointee-led research office; credible-secondary, not primary nonpartisan record (D7, jackie 2026-07-31)"
+    date: 2026-08-02
+
+  # ── DC-2a delta 3/4: census-enumerated .gov/.mil/.int hosts (>=3 distinct
+  #    stored URLs) — base government, generic press/data classes apply ──────
+  - domain: justice.gov
+    tier: government
+    rationale: "Department of Justice — filings/reports are record; OPA and USAO press releases demote via generic press classes (DC-2a delta 4)"
+    date: 2026-08-02
+  - domain: nato.int
+    tier: government
+    rationale: "treaty-established intergovernmental org — primary-source class (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: who.int
+    tier: government
+    rationale: "World Health Organization — intergovernmental health agency (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: unfccc.int
+    tier: government
+    rationale: "UN Framework Convention on Climate Change — treaty record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: esa.int
+    tier: government
+    rationale: "European Space Agency — intergovernmental science org (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: reliefweb.int
+    tier: government
+    rationale: "UN OCHA humanitarian reporting service (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: army.mil
+    tier: government
+    rationale: "US Army — service record/documents; press paths demote via generics (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: navy.mil
+    tier: government
+    rationale: "US Navy incl. history.navy.mil — service record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: uscg.mil
+    tier: government
+    rationale: "US Coast Guard incl. news.uscg.mil — press paths demote via generics (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: darpa.mil
+    tier: government
+    rationale: "DARPA — research agency (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: defense.gov
+    tier: government
+    rationale: "DoD incl. media/comptroller subdomains — budget docs and testimony are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: war.gov
+    tier: government
+    rationale: "DoD rebranded host — same treatment as defense.gov (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: state.gov
+    tier: government
+    rationale: "State Department incl. archived 1997-2001/2001-2009/2009-2017/2017-2021/2021-2025 mirrors (suffix match) — country reports are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: dhs.gov
+    tier: government
+    rationale: "DHS — immigration statistics are record; press paths demote via generics (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: cbp.gov
+    tier: government
+    rationale: "Customs and Border Protection — encounter/seizure statistics are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: ice.gov
+    tier: government
+    rationale: "Immigration and Customs Enforcement — enforcement record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: dol.gov
+    tier: government
+    rationale: "Department of Labor — guidance/technical releases are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: ed.gov
+    tier: government
+    rationale: "Department of Education incl. eric/fsapartners subdomains (census, DC-2a delta 3)"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /about/news, tier: political, note: "ED press shop lives under /about/news — nested past the generic prefixes"}
+  - domain: energy.gov
+    tier: government
+    rationale: "Department of Energy (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: hhs.gov
+    tier: government
+    rationale: "Health and Human Services; aspe.hhs.gov carries its own S3 entry (census, DC-2a delta 3)"
+    date: 2026-08-02
+    path_classes:
+      - {prefix: /about/news, tier: political, note: "HHS press shop lives under /about/news — nested past the generic prefixes"}
+  - domain: ustr.gov
+    tier: government
+    rationale: "US Trade Representative — agreements/reports are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: jct.gov
+    tier: government
+    rationale: "Joint Committee on Taxation — nonpartisan committee staff (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: mpdc.dc.gov
+    tier: government
+    rationale: "DC Metropolitan Police — crime statistics/record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: epa.gov
+    tier: government
+    rationale: "EPA incl. nepis document repository and archive subdomain (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: va.gov
+    tier: government
+    rationale: "Veterans Affairs — benefits/health record; news.va.gov carries its own political entry (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: news.va.gov
+    tier: political
+    rationale: "VA press/blog host — the press function is in the hostname (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: ssa.gov
+    tier: government
+    rationale: "Social Security Administration — actuarial trustee reports are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: fda.gov
+    tier: government
+    rationale: "Food and Drug Administration — regulatory record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: transportation.gov
+    tier: government
+    rationale: "Department of Transportation (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: dot.gov
+    tier: government
+    rationale: "DOT operating administrations (highways.dot.gov, fmcsa.dot.gov) (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: bts.gov
+    tier: government
+    rationale: "Bureau of Transportation Statistics incl. rosap repository (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: commerce.gov
+    tier: government
+    rationale: "Department of Commerce incl. archived mirrors (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: usda.gov
+    tier: government
+    rationale: "USDA — statistical subdomains carry their own nonpartisan entries (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: sba.gov
+    tier: government
+    rationale: "Small Business Administration — IG reports/documents are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: opm.gov
+    tier: government
+    rationale: "Office of Personnel Management (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: ojp.gov
+    tier: government
+    rationale: "Office of Justice Programs; bjs.ojp.gov carries its own nonpartisan entry (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: hud.gov
+    tier: government
+    rationale: "Housing and Urban Development (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: usitc.gov
+    tier: government
+    rationale: "US International Trade Commission — independent, quasi-judicial (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: medpac.gov
+    tier: government
+    rationale: "Medicare Payment Advisory Commission — nonpartisan congressional agency (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: eac.gov
+    tier: government
+    rationale: "Election Assistance Commission — independent bipartisan commission (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: acf.gov
+    tier: government
+    rationale: "HHS Administration for Children and Families (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: medicaid.gov
+    tier: government
+    rationale: "CMS Medicaid policy guidance — administrative record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: dni.gov
+    tier: government
+    rationale: "Office of the Director of National Intelligence — threat assessments are record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: usaid.gov
+    tier: government
+    rationale: "USAID — press releases demote via generic press segments (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: reginfo.gov
+    tier: government
+    rationale: "OMB/OIRA regulatory agenda — ministerial record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: genome.gov
+    tier: government
+    rationale: "NIH National Human Genome Research Institute (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: ahrq.gov
+    tier: government
+    rationale: "Agency for Healthcare Research and Quality incl. meps.ahrq.gov survey data (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: data.gov
+    tier: government
+    rationale: "federal open-data catalog incl. catalog.data.gov (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: fiscal.treasury.gov
+    tier: government
+    rationale: "Treasury Bureau of the Fiscal Service — financial reports of the US government (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: fiscaldata.treasury.gov
+    tier: government
+    rationale: "Treasury Fiscal Data — statistical/data host (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: 9-11commission.gov
+    tier: government
+    rationale: "9/11 Commission report — commission record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: capitol.texas.gov
+    tier: government
+    rationale: "Texas Legislature bill text/status — legislative record (census, DC-2a delta 3)"
+    date: 2026-08-02
+  - domain: governor.ny.gov
+    tier: political
+    rationale: "governor's press office — partisan-principal comms function, the whitehouse.gov analog at state level (census, DC-2a delta 3)"
+    date: 2026-08-02
+
+  # ── wire services ─────────────────────────────────────────────────────────
+  - domain: apnews.com
+    tier: wire
+    rationale: "Associated Press"
+    date: 2026-08-02
+  - domain: reuters.com
+    tier: wire
+    rationale: "Reuters"
+    date: 2026-08-02
+
+  # ── established outlets ───────────────────────────────────────────────────
+  - domain: nytimes.com
+    tier: established
+    rationale: "established national outlet"
+    date: 2026-08-02
+  - domain: washingtonpost.com
+    tier: established
+    rationale: "established national outlet"
+    date: 2026-08-02
+  - domain: bbc.com
+    tier: established
+    rationale: "established international outlet"
+    date: 2026-08-02
+  - domain: bbc.co.uk
+    tier: established
+    rationale: "established international outlet"
+    date: 2026-08-02
+  - domain: nbcnews.com
+    tier: established
+    rationale: "established national outlet"
+    date: 2026-08-02
+  - domain: cbsnews.com
+    tier: established
+    rationale: "established national outlet"
+    date: 2026-08-02
+  - domain: abcnews.go.com
+    tier: established
+    rationale: "established national outlet"
+    date: 2026-08-02
+  - domain: npr.org
+    tier: established
+    rationale: "established national outlet"
+    date: 2026-08-02
+
+  # ── fact-checkers (tier exists for classification; pack admission is
+  #    separately excluded by truthbot.verify.factcheck_exclusion) ───────────
+  - domain: politifact.com
+    tier: factcheck
+    rationale: "fact-checking outlet"
+    date: 2026-08-02
+  - domain: factcheck.org
+    tier: factcheck
+    rationale: "fact-checking outlet"
+    date: 2026-08-02
+  - domain: snopes.com
+    tier: factcheck
+    rationale: "fact-checking outlet"
+    date: 2026-08-02
+  - domain: fullfact.org
+    tier: factcheck
+    rationale: "fact-checking outlet"
+    date: 2026-08-02

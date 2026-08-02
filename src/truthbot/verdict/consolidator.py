@@ -36,6 +36,7 @@ from truthbot.domains import is_substantive_url
 from truthbot.models import Evidence, SourceTier
 from truthbot.verify.factcheck_exclusion import factcheck_exclusion_reason
 from truthbot.verify.mutable_endpoints import is_mutable_latest
+from truthbot.verify.tier_registry import QUARANTINE_REASON, classify_tier_ex
 
 from . import era_lint
 
@@ -111,6 +112,12 @@ class ConsolidationResult:
     # is recorded — {"url", "reason", "retriever"} — and journaled with the
     # pack. Exclusions are never silent.
     excluded_fc: list[dict] = field(default_factory=list)
+    # Quarantine telemetry (remediation v2, 1.2 / S-6): kept items whose tier
+    # came from the fail-closed quarantine of an unmapped government-class
+    # host (tier_registry reason "quarantine-unmapped-gov"). They are KEPT —
+    # classified POLITICAL, so they can never credit the quota — but journaled
+    # so an unmapped-host burst is visible instead of silently bottom-tiered.
+    quarantined: list[str] = field(default_factory=list)
     retrospective: int = 0           # lenient mode: admitted post-era items
     # The full post-filter/post-quota candidate list BEFORE the pack cap, in
     # final order (PR-A2.2). Persisting this is what makes "would claim X have
@@ -246,6 +253,10 @@ def consolidate(
         item = ConsolidatedItem(evidence=ev, draw_round=draw_round,
                                 retriever=label, post_speech=post)
         era_class[id(item)] = 0 if contemp else (1 if contemp is None else 2)
+        # Quarantine telemetry (1.2): computed once per kept item; cheap and
+        # additive — the classification itself is unchanged.
+        if classify_tier_ex(url)[1] == QUARANTINE_REASON:
+            result.quarantined.append(url)
         kept.append(item)
 
     # T6 quota: keep at most MAX_T6 OTHER items, dropping the lowest-priority

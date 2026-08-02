@@ -157,6 +157,11 @@ class EvidencePack:
     # dropped as fact-checker content and why — journaled with the pack,
     # never part of the panel payload. Exclusions are never silent.
     excluded_fc: list[dict] = field(default_factory=list)
+    # Quarantine telemetry (remediation v2, 1.2 / S-6): URLs of kept items
+    # whose POLITICAL tier came from the fail-closed quarantine of an unmapped
+    # government-class host ("quarantine-unmapped-gov"), not from a mapped
+    # rule — journaled with the pack, never part of the panel payload.
+    quarantined: list[str] = field(default_factory=list)
 
     @property
     def ids(self) -> list[str]:

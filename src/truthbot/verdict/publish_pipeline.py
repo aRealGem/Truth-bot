@@ -193,6 +193,12 @@ def append_packs_journal(path, sid: str, pack) -> None:
     excluded = getattr(pack, "excluded_fc", None) or []
     if excluded:
         rec["excluded_fc"] = list(excluded)
+    # Remediation v2 (1.2): kept items tiered by the fail-closed quarantine of
+    # an unmapped government-class host are journaled per claim, so a burst of
+    # unmapped hosts is visible instead of silently bottom-tiered.
+    quarantined = getattr(pack, "quarantined", None) or []
+    if quarantined:
+        rec["quarantined"] = list(quarantined)
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("a", encoding="utf-8") as fh:
