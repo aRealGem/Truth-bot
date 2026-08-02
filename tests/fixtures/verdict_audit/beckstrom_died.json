@@ -1,0 +1,99 @@
+{
+ "_frozen_from": "metrics/pca_runs/23939712… (published artifact, run prefix 23939712)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0469",
+  "text": "Sarah Beckstrom died in order to defend our capital.",
+  "context": "Shouldn't have been in our country. || Sarah Beckstrom died in order to defend our capital. || And we are honored to be joined by her wonderful parents."
+ },
+ "row": {
+  "sid": "trump_2026:0469",
+  "status": "resolved",
+  "verdict": "TRUE",
+  "confidence": 0.925,
+  "citations": [
+   "E1",
+   "E2",
+   "E3",
+   "E7",
+   "E9"
+  ],
+  "reasoning": "Multiple Government and Wire sources confirm Beckstrom died of wounds sustained on National Guard patrol defending D.C., supporting the core assertion without exaggeration.",
+  "votes": {
+   "TRUE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "TRUE"
+   ],
+   "critic": [
+    "TRUE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2025-11-27] Official DC National Guard release confirms Spc. Sarah Beckstrom died from wounds sustained in D.C. shooting while on duty.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://dc.ng.mil/Public-Affairs/News-Release/Article/4344097/wva-national-guard-soldier-dies-following-dc-shooting/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-01-09] Official U.S. Attorney press release: defendant indicted for ambush that killed Spc. Sarah Beckstrom while she was patrolling near the White House.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.justice.gov/usao-dc/pr/lakanwal-newly-indicted-shooting-guardsmen-near-white-house-killed-sarah-beckstrom",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-12-08] Official U.S. Army article: Beckstrom, killed on Guard patrol near White House, laid to rest with military honors.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.army.mil/article/289528/spc_sarah_beckstrom_laid_to_rest_at_west_virginia_national_cemetery",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-12-11] Army article: fatally wounded in the line of duty in DC shooting near Farragut Square while on patrol.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.war.gov/News/News-Stories/Article/Article/4357779/west-virginia-guardsman-laid-to-rest/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-12-10] DoD/DVIDS account: Beckstrom fatally wounded in line of duty while supporting Operation D.C. Safe and Beautiful, died from wounds.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.dvidshub.net/news/553691/spc-sarah-beckstrom-laid-rest-wva-national-cemetery",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2026-02-24] Official Congressional Record reproducing the State of the Union phrase: “Sarah Beckstrom died in order to defend our capital.”",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24-senate.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-11-27] Establishes Beckstrom died after being shot while serving on National Guard patrol in Washington, D.C.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.npr.org/2025/11/27/nx-s1-5622955/national-guard-shooting-washington-dc-updates",
+   "source_tier": "Established"
+  },
+  {
+   "snippet": "[2025-11-27] Obituary confirms death from Nov 26 DC shooting; notes Army National Guard service and military honors.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.doddreedfh.com/obituaries/sarah-beckstrom",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-11-28] AP wire reporting Beckstrom was shot and killed while deployed in Washington to bolster public safety; quotes official statements.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://apnews.com/article/b070b093743b016ce32005f800087873",
+   "source_tier": "Wire"
+  },
+  {
+   "snippet": "[2026-02-24] CBS News: parents attended State of the Union; reports Beckstrom was killed in an ambush-style attack while patrolling in D.C.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.cbsnews.com/news/state-of-the-union-special-guest-trump-parents-of-national-guard-sarah-beckstrom/",
+   "source_tier": "Established"
+  }
+ ]
+}

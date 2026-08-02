@@ -1,0 +1,67 @@
+{
+ "_frozen_from": "metrics/pca_runs/28965cdf… (published artifact, run prefix 28965cdf)",
+ "speech_id": "obama_2014",
+ "utterance": "2014-01-28",
+ "claim": {
+  "sid": "obama_2014:0045",
+  "text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans and military spouses.",
+  "context": "Michelle’s Let’s Move partnership with schools, businesses, and local leaders has helped bring down childhood obesity rates for the first time in thirty years – an achievement that will improve lives and reduce health care costs for decades to come. || The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans and military spouses. || Taking a page from that playbook, the White House just organized a College Opportunity Summit where already, 150 universities, businesses, and nonprofits have made concrete commitments to reduce inequality in access to higher education – and help every hardworking kid go to college and succeed when they get to campus."
+ },
+ "row": {
+  "sid": "obama_2014:0045",
+  "status": "resolved",
+  "verdict": "UNVERIFIABLE",
+  "confidence": null,
+  "citations": [],
+  "reasoning": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval.",
+  "votes": {},
+  "by_role": {},
+  "split": false,
+  "escalated": false,
+  "provenance_code": "insufficient-qualifying-evidence"
+ },
+ "evidence": [
+  {
+   "snippet": "Official Joining Forces employment page documenting employer commitments to hire/train veterans and military spouses; primary source for the cumulative figure.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://obamawhitehouse.archives.gov/joiningforces/issues/employment",
+   "source_tier": "Political"
+  },
+  {
+   "snippet": "[2013-04-30] Official release says 290,000 hired/trained and 435,000 additional commitments, distinguishing actual outcomes from pledges.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/04/30/president-obama-vice-president-biden-first-lady-michelle-obama-and-dr-ji",
+   "source_tier": "Political"
+  },
+  {
+   "snippet": "[2013-08-10] Official WH fact sheet: ~290,000 veterans/spouses hired or trained via Joining Forces plus 435,000 in new commitments — the running tally approaching 400,000.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/08/10/fact-sheet-obama-administration-s-work-honor-our-military-families-and-v/",
+   "source_tier": "Political"
+  },
+  {
+   "snippet": "[2013-11-09] Official presidential weekly address: 290k hired/trained with commitment to over 400k more.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201300771/html/DCPD-201300771.htm",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2014-01-28] Established outlet reports SOTU: Joining Forces encouraged hire/train of nearly 400k.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://thehill.com/blogs/defcon-hill/policy-strategy/196765-obama-highlights-veterans-struggle-sacrifice-in-state-of/",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2014-02-10] Reports Obama statement: nearly 400k veterans/spouses hired under Joining Forces.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.washingtonexaminer.com/news/606377/carter-dole-spouses-join-military-families-effort/",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2014-03-20] Official BLS 2013 veteran employment data provides labor-market context but does not measure Joining Forces hires.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.bls.gov/news.release/archives/vet_03202014.htm",
+   "source_tier": "Government"
+  }
+ ]
+}

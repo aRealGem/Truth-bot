@@ -1,0 +1,78 @@
+{
+ "_frozen_from": "metrics/pca_runs/23939712… (published artifact, run prefix 23939712)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0090",
+  "text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer version right in Los Angeles.",
+  "context": "Thank you very much. || I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer version right in Los Angeles. || We're going to do a good job in Los Angeles."
+ },
+ "row": {
+  "sid": "trump_2026:0090",
+  "status": "resolved",
+  "verdict": "FALSE",
+  "confidence": 0.8500000000000001,
+  "citations": [
+   "E2",
+   "E3"
+  ],
+  "reasoning": "The Olympic flame is lit in Ancient Olympia, Greece — not in America — as E2 (Milano Cortina 2026 flame lit in Greece) and E3 (LA28 flame lighting begins the torch journey, not lit on U.S. soil) show; the core claim that the next torch lighting occurs in America is contradicted, even though LA 2028 is genuinely the next Summer Games.",
+  "votes": {
+   "FALSE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "FALSE"
+   ],
+   "critic": [
+    "FALSE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2026-01-14] In-window overview weeks before utterance confirms 2028 Summer Olympics in Los Angeles, July 14-30, 2028.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://spectrumlocalnews.com/us/snplus/sports/2026/01/14/la28-2028-olympics-what-we-know-so-far",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-11-26] IOC press release: Olympic flame for Milano Cortina 2026 was lit in Ancient Olympia, Greece (not in the U.S.).",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://newsroom.olympics.com/record/1675",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-01-23] City of Long Beach strategic roadmap lists ‘Olympic Flame Lit/Torch Journey Starts 15/02/2028’ and ‘Torch Arrives in City of Los Angeles 04/07/2028.’",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.longbeach.gov/globalassets/city-manager/media-library/documents/memos-to-the-mayor-tabbed-file-list-folders/2025/january-23--2025---2028-olympic-and-paralympic-games-update---strategic-roadmap",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-09-17] AP reports the 2028 Los Angeles Olympics run July 14-30 with ceremony venues in Los Angeles/Inglewood.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://apnews.com/article/los-angeles-2028-olympics-ceremonies-dc2c32700cf9ea7f0cf8867f0c7d3494",
+   "source_tier": "Wire"
+  },
+  {
+   "snippet": "[2026-02-12] AP refers to the 2028 Los Angeles Olympics and details baseball dates at Dodger Stadium.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://apnews.com/article/mlb-owners-meetings-rob-manfred-1f7c1b476ec37fd428d838bac1f101aa",
+   "source_tier": "Wire"
+  },
+  {
+   "snippet": "CBS confirms LA Memorial Coliseum and SoFi as 2028 Olympic ceremony venues in Los Angeles.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.cbsnews.com/amp/losangeles/news/2028-olympics-paralympic-games-los-angeles-l28",
+   "source_tier": "Established"
+  },
+  {
+   "snippet": "Established outlet reporting IOC green light for Los Angeles to host the 2028 Olympics.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.cbsnews.com/amp/news/los-angeles-hosts-2028-olympics-ioc-evaluation",
+   "source_tier": "Established"
+  }
+ ]
+}

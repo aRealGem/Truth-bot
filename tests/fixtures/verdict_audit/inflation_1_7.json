@@ -1,0 +1,100 @@
+{
+ "_frozen_from": "metrics/pca_runs/23939712… (published artifact, run prefix 23939712)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0031",
+  "text": "And in the last three months of 2025, it was down to 1.7 percent.",
+  "context": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years. || And in the last three months of 2025, it was down to 1.7 percent. || Gasoline, which reached a peak of over $6 a gallon in some states."
+ },
+ "row": {
+  "sid": "trump_2026:0031",
+  "status": "resolved",
+  "verdict": "FALSE",
+  "confidence": 0.925,
+  "citations": [
+   "E1",
+   "E2",
+   "E3",
+   "E5",
+   "E8",
+   "E10"
+  ],
+  "reasoning": "Every government/wire measure of Q4 2025 core inflation (core CPI ~2.7%, core PCE ~2.7-3.0%, Q4 annualized ~2.7-2.8%) contradicts the claimed 1.7% figure.",
+  "votes": {
+   "FALSE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "FALSE"
+   ],
+   "critic": [
+    "FALSE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2026-01-13] Official BLS CPI release for Dec 2025 (final month of Q4); core CPI ran ~2.7% annual, 0.2%/mo — not 1.7%.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-02-20] BEA Dec 2025 Personal Income & Outlays: core PCE (ex food & energy) rose 3.0% year‑over‑year in Dec 2025, not 1.7%.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.bea.gov/sites/default/files/2026-02/pi1225.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-02-20] BEA advance Q4 2025 GDP release: quarterly core PCE price index rose ~2.7-2.8% annualized, contradicting a 1.7% figure.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.bea.gov/sites/default/files/2026-02/gdp4q25-adv.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-02-20] BEA PCE data page (Feb 2026 release) shows core PCE ~3.0% YoY in December 2025, contradicting 1.7%.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.bea.gov/data/personal-consumption-expenditures-price-index",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-02-20] BEA landing page for the Q4 2025 advance GDP/PCE estimate; core PCE annualized ~2.7%, well above 1.7%.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.bea.gov/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "FRED series for Core CPI (All Items Less Food & Energy) historical data.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://fred.stlouisfed.org/series/CPILFESL",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "BEA official core PCE (ex food/energy) data page — primary series to derive the Q4 2025 three-month annualized rate.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-01-22] FRED series for PCE excluding food & energy (BEA data) shows December 2025 core PCE roughly 3.0% YoY, inconsistent with 1.7%.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://fred.stlouisfed.org/series/PCEPILFE",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-12-18] Nov 2025 CPI report with core YoY at 2.6%; covers Q4 start.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.reuters.com/business/us-annual-consumer-prices-increase-less-than-expected-november-2025-12-18/",
+   "source_tier": "Wire"
+  },
+  {
+   "snippet": "[2025-11-03] Treasury Q3 2025 report: core CPI ~3.0% YoY, monthly ~0.3%; no 1.7%.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://home.treasury.gov/news/press-releases/sb0301",
+   "source_tier": "Government"
+  }
+ ]
+}

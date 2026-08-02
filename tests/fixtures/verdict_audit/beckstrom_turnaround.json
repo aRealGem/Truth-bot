@@ -1,0 +1,102 @@
+{
+ "_frozen_from": "metrics/pca_runs/23939712… (published artifact, run prefix 23939712)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0461",
+  "text": "One of the brave service members who helped achieve this stunning turnaround was 20-year-old West Virginia Army National Guard Specialist, Sarah Beckstrom.",
+  "context": "One of the sick people. || One of the brave service members who helped achieve this stunning turnaround was 20-year-old West Virginia Army National Guard Specialist, Sarah Beckstrom. || After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted."
+ },
+ "row": {
+  "sid": "trump_2026:0461",
+  "status": "resolved",
+  "verdict": "TRUE",
+  "confidence": 0.95,
+  "citations": [
+   "E2",
+   "E3",
+   "E6",
+   "E7"
+  ],
+  "reasoning": "official sources confirm Sarah Beckstrom was a 20-year-old West Virginia Army National Guard Specialist deployed in D.C. and had volunteered to extend her deployment",
+  "votes": {
+   "TRUE": 2,
+   "FALSE": 1
+  },
+  "by_role": {
+   "proposer": [
+    "TRUE"
+   ],
+   "critic": [
+    "FALSE"
+   ],
+   "arbiter": [
+    "TRUE"
+   ]
+  },
+  "split": true,
+  "escalated": true
+ },
+ "evidence": [
+  {
+   "snippet": "[2026-02-24] Official Congressional Record (State of the Union transcript) quoting that Beckstrom was 20, extended deployment, and 'her rank was going to be lifted'.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-12-11] Confirms 20yo Spc. Sarah Beckstrom, WV ARNG MP, DC deployment Aug 2025, honors/voluntary service.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.nationalguard.mil/News/Article-View/Article/4357078/spc-sarah-beckstrom-laid-to-rest-at-west-virginia-national-cemetery/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-12-12] West Virginia National Guard official article confirming Beckstrom’s age, rank (Spc.), unit, DC mobilization, and service details.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.wv.ng.mil/News/Article_View/Article/4363043/spc-sarah-beckstrom-laid-to-rest-at-wva-national-cemetery/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-12-11] Official bio: enlisted post-grad, Fort Leonard Wood training, Aug DC mobilization, quiet professional dedication.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.army.mil/article/289528/spc_sarah_beckstrom_laid_to_rest_at_west_virginia_national_cemetery",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-11-27] Obit details: 20yo, WV ARNG 863rd MP, Aug deployment to DC Op Safe & Beautiful, volunteered Nov/Dec extension.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.doddreedfh.com/obituaries/sarah-beckstrom",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-12-09] Senate resolution honoring Beckstrom states she was 20 and that she and Wolfe had volunteered to extend their deployments.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.congress.gov/bill/119th-congress/senate-resolution/537/text",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-11-27] Confirms Spc. Beckstrom, 20, Summersville WV, enlisted 2023, MP in DC for safety operation, killed on duty.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://dc.ng.mil/Public-Affairs/News-Release/Article/4344097/wva-national-guard-soldier-dies-following-dc-shooting/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-12-04] Presidential proclamation honoring Spc. Sarah Beckstrom, WV ARNG, flags at half-staff.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.whitehouse.gov/presidential-actions/2025/12/honoring-the-memory-of-specialist-sarah-beckstrom-west-virginia-army-national-guard/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-11-28] New York Times report naming Specialist Sarah Beckstrom (20) as the West Virginia Guardsman shot in the November D.C. ambush.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://vi.web-platforms-vi.nyti.nyt.net/2025/11/28/us/politics/dc-shooting-victims-beckstrom-wolfe.html",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-12-23] Details ambush killing of Spc. Beckstrom while on patrol with WV NG in DC Nov 2025.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.justice.gov/usao-dc/pr/suspect-killing-national-guardsman-sarah-beckstrom-charged-complaint-new-federal-counts",
+   "source_tier": "Government"
+  }
+ ]
+}
