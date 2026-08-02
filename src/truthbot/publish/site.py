@@ -6860,6 +6860,49 @@ def _render_model_insights_redirect() -> str:
     )
 
 
+# ── Report alias stubs (DC-3' — stable slugs, dead URLs redirect) ────────────
+#
+# data/report_aliases.json maps every dead report URL (per-run UUID slugs
+# orphaned by past re-publishes, recovered from git history, plus the
+# committed slugs that rotate to stable at the next regen) to its speech's
+# STABLE speech_id-derived slug. SitePublisher emits a redirect stub at each
+# old filename whenever the target exists in the rendered site, so no
+# previously shared link 404s after a regeneration.
+
+#: Repo ledger of old-slug → stable-slug filenames (both under reports/).
+_REPORT_ALIASES_PATH = (Path(__file__).resolve().parents[3]
+                        / "data" / "report_aliases.json")
+
+
+def _load_report_aliases(path: Optional[Path] = None) -> dict[str, str]:
+    """Load the alias ledger; missing file → no aliases (fresh checkouts,
+    downstream users of the package without the repo data dir)."""
+    p = Path(path) if path else _REPORT_ALIASES_PATH
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+    except (FileNotFoundError, OSError):
+        return {}
+    return dict(doc.get("aliases") or {})
+
+
+def _render_report_alias_stub(new_name: str) -> str:
+    """Redirect stub for a dead report URL — modeled on
+    ``_render_model_insights_redirect``: meta-refresh + rel=canonical to the
+    stable page, one honest sentence for anyone who lands here."""
+    canonical = f"{_site_url()}/reports/{new_name}"
+    return (
+        '<!doctype html>\n<html lang="en">\n<head>\n'
+        '  <meta charset="utf-8">\n'
+        f'  <meta http-equiv="refresh" content="0; url=./{new_name}">\n'
+        f'  <link rel="canonical" href="{canonical}">\n'
+        '  <title>Report moved — truth-bot</title>\n'
+        '</head>\n<body>\n'
+        '  <p>This report was re-adjudicated and republished. '
+        f'<a href="./{new_name}">Continue to the current report</a>.</p>\n'
+        '</body>\n</html>\n'
+    )
+
+
 def _render_about() -> str:
     """Render the about/method page (PCA-era architecture; refreshed 2026-07-20;
     reconciled against shipped behavior in remediation v2, 1.9)."""
@@ -7198,7 +7241,8 @@ class SitePublisher:
 
     def __init__(self, site_root: Optional[str | Path] = None,
                  corrections: Optional[list[dict]] = None,
-                 correction_notes: Optional[list[dict]] = None) -> None:
+                 correction_notes: Optional[list[dict]] = None,
+                 report_aliases: Optional[dict[str, str]] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
@@ -7208,6 +7252,13 @@ class SitePublisher:
         # rendered on corrections.html each publish. Empty → empty-state page.
         self._corrections: list[dict] = list(corrections or [])
         self._correction_notes: list[dict] = list(correction_notes or [])
+        # Dead-URL → stable-slug redirect ledger (DC-3'). Defaults to the
+        # repo's data/report_aliases.json; stubs are only ever emitted for
+        # aliases whose TARGET page exists in this site root, so synthetic /
+        # test publishes are unaffected by the repo ledger.
+        self._report_aliases: dict[str, str] = (
+            dict(report_aliases) if report_aliases is not None
+            else _load_report_aliases())
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -7299,6 +7350,12 @@ class SitePublisher:
                     _render_corrections(self._corrections,
                                         self._correction_notes))
 
+        # Redirect stubs for dead report URLs (DC-3'): whenever a stable
+        # target page exists in this render, every aliased old filename gets
+        # a meta-refresh + canonical stub so previously shared links keep
+        # resolving after the slug rotation.
+        self._write_alias_stubs()
+
         return report_path.resolve()
 
     def site_url(self, site_report: SiteReport, base_url: str = "http://expressionpi.home.arpa/truthbot") -> str:
@@ -7342,6 +7399,22 @@ class SitePublisher:
         if ico_src.exists():
             (self._root / "favicon.ico").write_bytes(ico_src.read_bytes())
             logger.debug("Copied favicon.ico to site root")
+
+    def _write_alias_stubs(self) -> None:
+        """Emit reports/{old}.html redirect stubs for every alias whose
+        stable target exists in this site root (DC-3').
+
+        Self-alias guard: old == new is skipped (a ledger row that maps a
+        stable slug to itself must never overwrite the real page). Aliases
+        whose target is absent are skipped silently — they belong to
+        speeches not (yet) published into this root."""
+        for old_name, new_name in self._report_aliases.items():
+            if old_name == new_name:
+                continue
+            if not (self._root / "reports" / new_name).exists():
+                continue
+            self._write(self._root / "reports" / old_name,
+                        _render_report_alias_stub(new_name))
 
     def _write_feed(self, reports: list[dict]) -> None:
         """Render + write the Atom feed from the freshly sorted reports index
