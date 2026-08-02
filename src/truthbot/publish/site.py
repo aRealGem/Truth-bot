@@ -1463,7 +1463,10 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
     coverage / model-id / mode / tool-URL grounding / no_response
     counters. Coverage denominator is ``len(checkable_bundles)`` —
     every bundle is expected to carry one verdict per registered
-    adapter; missing or ``no_response`` rows count against coverage.
+    adapter; genuinely missing or ``no_response`` rows count against
+    coverage, while PCA split claims (panel voted, no consensus — the
+    bridge emits zero ModelVerdicts for them) count as covered and are
+    tallied separately in ``split_contributed`` (1.7).
     """
     from collections import defaultdict
     bundles = list(site_report.checkable_bundles)
@@ -1477,6 +1480,7 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
             "tiers": defaultdict(int),
             "verdicts_total": 0,
             "no_response": 0,
+            "split_contributed": 0,
             "mrs_total": 0,
             "web_total": 0,
         }
@@ -1505,15 +1509,24 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
             slot["mrs_total"] += len(getattr(mv, "model_reported_sources", None) or [])
             slot["web_total"] += len(mv.web_sources or [])
 
-    # Backfill no_response when an adapter produced ZERO verdicts on a
-    # bundle (rare but possible if engine skipped it entirely). For
-    # every adapter present at all, count missing-bundle rows as
-    # no_response so coverage = (total_claims - missing) / total_claims.
+    # Backfill when an adapter produced ZERO verdicts on a bundle. Two very
+    # different causes used to look identical here (remediation v2, 1.7):
+    # a PCA split claim bridges with model_verdicts=[] because the panel
+    # VOTED but did not converge — that is a disclosed process outcome, not
+    # a coverage hole — while a genuine engine miss really is one. Classify
+    # per bundle via the consensus provenance: panel_votes non-empty means
+    # the panel ran, so the claim counts as covered ("split_contributed");
+    # only true absence counts as no_response and can degrade the run.
     all_adapters = set(per_adapter.keys())
     for bundle in bundles:
         present = seen_per_bundle.get(bundle.claim.id, set())
+        prov = getattr(bundle.consensus, "provenance", None)
+        panel_ran = bool(prov and prov.panel_votes)
         for missing in all_adapters - present:
-            per_adapter[missing]["no_response"] += 1
+            if panel_ran:
+                per_adapter[missing]["split_contributed"] += 1
+            else:
+                per_adapter[missing]["no_response"] += 1
 
     rows: "list[dict[str, Any]]" = []
     for name in sorted(per_adapter):
@@ -1552,6 +1565,7 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
                 "mrs_total": mrs_total,
                 "web_total": web_total,
                 "grounding_pct": grounding_pct,
+                "split_contributed": slot["split_contributed"],
                 "degraded": coverage_pct < _DEGRADED_COVERAGE_THRESHOLD,
             }
         )
@@ -1613,6 +1627,12 @@ def _run_manifest_html(site_report) -> str:
         )
         if r["degraded"]:
             cov_text = f'<strong>{cov_text}</strong>'
+        if r.get("split_contributed"):
+            _n_split = r["split_contributed"]
+            cov_text += (
+                f' <span class="run-manifest-pct">· {_n_split} split '
+                f'(panel voted, no consensus)</span>'
+            )
         if r["grounding_pct"] is None:
             grounding_text = '<span class="run-manifest-pct">—</span>'
         else:
@@ -1653,10 +1673,25 @@ def _run_manifest_html(site_report) -> str:
             + '</p>'
         )
 
-    summary_text = (
-        f'Run manifest · {len(rows)} model{"s" if len(rows) != 1 else ""} '
-        f'· {total_claims} claim{"s" if total_claims != 1 else ""}'
-    )
+    # PCA runs (panel_roster present) headline the DISTINCT seat models —
+    # counting the bridge's single reconciled adapter row as "1 model"
+    # under-reported a 3-model panel (1.7; same fix class as
+    # ``_models_engaged``). Legacy multi-adapter runs keep the row count.
+    seats = (getattr(site_report, "panel_roster", None) or {}).get("seats") or {}
+    seat_models = {m for ms in seats.values() for m in (ms or []) if m}
+    if seat_models:
+        n_seat = len(seat_models)
+        summary_text = (
+            f'Run manifest · {n_seat} seat model{"s" if n_seat != 1 else ""} '
+            f'· {total_claims} claim{"s" if total_claims != 1 else ""}'
+        )
+        adapter_th = "Panel"
+    else:
+        summary_text = (
+            f'Run manifest · {len(rows)} model{"s" if len(rows) != 1 else ""} '
+            f'· {total_claims} claim{"s" if total_claims != 1 else ""}'
+        )
+        adapter_th = "Adapter"
     if degraded_rows:
         summary_text += f' · {len(degraded_rows)} degraded'
 
@@ -1670,7 +1705,7 @@ def _run_manifest_html(site_report) -> str:
         + '<div class="run-manifest-body">'
         + '<table class="run-manifest-table">'
         + '<thead><tr>'
-        + '<th>Adapter</th>'
+        + f'<th>{adapter_th}</th>'
         + '<th>Model</th>'
         + '<th>Mode</th>'
         + '<th>Coverage</th>'
@@ -6511,14 +6546,33 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
     _claim_text_trunc = bundle.claim.text[:60]
     _claim_og_title = f"Claim: {_claim_text_trunc} — truth-bot"
     _verdict_label = bundle.consensus.consensus_verdict
-    _total_models = len(bundle.model_verdicts)
-    _agree_models = sum(
-        1 for mv in bundle.model_verdicts
-        if mv.label.value == _verdict_label
-    )
+    # Agreement meta speaks panel-vote vocabulary on PCA bundles (1.7): the
+    # bridge collapses the panel to ONE reconciled ModelVerdict (zero on a
+    # split), so the old adapter tally read "1 of 1 models agree" — or
+    # "0 of 0" on splits. panel_votes preserves the real seat tally. Legacy
+    # multi-adapter bundles (no votes) keep the adapter-count wording.
+    _votes = dict(getattr(bundle.consensus.provenance, "panel_votes", {}) or {})
+    if _votes and _verdict_label == "Models split":
+        _agree_text = "Panel split — no consensus."
+    elif _votes:
+        _n_seats = sum(_votes.values())
+        _agree_text = (
+            f"{max(_votes.values())} of {_n_seats} "
+            f"seat{'s' if _n_seats != 1 else ''} agree."
+        )
+    else:
+        _total_models = len(bundle.model_verdicts)
+        _agree_models = sum(
+            1 for mv in bundle.model_verdicts
+            if mv.label.value == _verdict_label
+        )
+        _agree_text = (
+            f"{_agree_models} of {_total_models} "
+            f"model{'s' if _total_models != 1 else ''} agree."
+        )
     _claim_og_desc = (
         f"Verdict: {_verdict_label}. "
-        f"{_agree_models} of {_total_models} model{'s' if _total_models != 1 else ''} agree. "
+        f"{_agree_text} "
         "Checked against a shared, cited evidence pack."
     )
     return _page_report(

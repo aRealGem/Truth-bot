@@ -116,7 +116,8 @@ def _make_bundle(
     )
 
 
-def _make_site_report(bundles: list[VerdictBundle]) -> SiteReport:
+def _make_site_report(bundles: list[VerdictBundle],
+                      panel_roster: dict | None = None) -> SiteReport:
     return SiteReport(
         report_id="00000000-1111-2222-3333-444444444444",
         speaker="Test Speaker",
@@ -129,6 +130,7 @@ def _make_site_report(bundles: list[VerdictBundle]) -> SiteReport:
         source_of_claims_professional_public_title="President",
         event="Test Event",
         channel="",
+        panel_roster=dict(panel_roster or {}),
     )
 
 
@@ -1082,6 +1084,145 @@ def test_run_manifest_handles_legacy_bundle_with_no_mrs() -> None:
     html = _run_manifest_html(sr)
     # All four adapters render the em-dash for grounding.
     assert html.count(">—<") >= 4
+
+
+def _pca_split_bundle(claim_id_suffix: str,
+                      votes: dict[str, int] | None = None) -> VerdictBundle:
+    """A PCA split claim exactly as the bridge emits it: the panel VOTED
+    (provenance.panel_votes non-empty) but did not converge, so the bundle
+    carries ZERO ModelVerdicts and a "Models split" verdict."""
+    from truthbot.models import VerdictProvenance
+    claim = Claim(
+        transcript_id="t",
+        text=f"split claim {claim_id_suffix}",
+        speaker="Speaker",
+        context="ctx",
+        category="economy",
+        is_checkable=True,
+    )
+    consensus = ConsensusVerdict(
+        claim_id=claim.id,
+        model_verdicts=[],
+        consensus_label=VerdictLabel.UNVERIFIABLE,
+        consensus_verdict="Models split",
+        confidence=Confidence.LOW,
+        agreement=False,
+        consensus_strength="none",
+        explanation="Panel split — no consensus verdict.",
+        coarse_lenient_label="Models split",
+        coarse_lenient_strength="none",
+        coarse_strict_label="Models split",
+        coarse_strict_strength="none",
+        provenance=VerdictProvenance(
+            panel_votes=dict(votes or {"True": 1, "False": 1, "Misleading": 1}),
+            panel_split=True,
+        ),
+    )
+    return VerdictBundle(
+        claim=claim,
+        speaker="Speaker",
+        date_str="2026-03-04",
+        model_verdicts=[],
+        consensus=consensus,
+    )
+
+
+def test_run_manifest_split_claim_counts_as_covered_not_degraded() -> None:
+    """Remediation v2 (1.7): a split claim bridges with model_verdicts=[],
+    which the old missing-adapter backfill counted as no_response — every
+    split rendered as "N unavailable" plus a degraded-consensus banner.
+    The panel DID vote; coverage stays N/N, the split is disclosed on the
+    coverage cell, and no banner fires."""
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL),
+        _bundle_with_panel(claim_id_suffix="1", panel=_FOUR_ADAPTER_PANEL),
+        _pca_split_bundle("2"),
+    ]
+    sr = _make_site_report(bundles)
+    rows = _adapter_run_stats(sr)
+    assert all(r["coverage_present"] == 3 for r in rows)
+    assert all(r["split_contributed"] == 1 for r in rows)
+    assert not any(r["degraded"] for r in rows)
+    html = _run_manifest_html(sr)
+    assert "run-manifest-banner" not in html
+    assert "Degraded consensus" not in html
+    assert "unavailable" not in html
+    assert "1 split (panel voted, no consensus)" in html
+    assert "3/3" in html
+
+
+def test_run_manifest_split_and_genuine_miss_disambiguated() -> None:
+    """A genuine adapter miss (no_response verdict) still degrades even when
+    a split claim is present — only the split is exempt."""
+    panel_with_gemini_miss = [
+        ("anthropic", "claude-opus-4-7", "batch", False),
+        ("openai", "gpt-5.4", "batch", False),
+        ("gemini", "gemini-2.5-pro", "live", True),  # no_response
+        ("xai", "grok-4", "live", False),
+    ]
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0", panel=panel_with_gemini_miss),
+        _bundle_with_panel(claim_id_suffix="1", panel=_FOUR_ADAPTER_PANEL),
+        _pca_split_bundle("2"),
+    ]
+    sr = _make_site_report(bundles)
+    rows = {r["name"]: r for r in _adapter_run_stats(sr)}
+    assert rows["gemini"]["degraded"]
+    assert rows["gemini"]["coverage_present"] == 2       # 3 - 1 genuine miss
+    assert rows["gemini"]["split_contributed"] == 1
+    assert not rows["anthropic"]["degraded"]
+    html = _run_manifest_html(sr)
+    assert "Degraded consensus" in html
+    assert "gemini contributed 2 of 3 claims (1 unavailable)" in html
+
+
+def test_run_manifest_summary_counts_seat_models_for_pca_runs() -> None:
+    """PCA runs headline the distinct seat models, not the single reconciled
+    adapter row — "1 model" under-reported a 3-model panel (1.7)."""
+    roster = {"name": "dev", "seats": {"proposer": ["gpt-5.4"],
+                                       "critic": ["claude-opus-4-7"],
+                                       "arbiter": ["gemini-2.5-pro"]}}
+    bundles = [
+        _bundle_with_panel(claim_id_suffix="0",
+                           panel=[("pca", "reconciled", "live", False)]),
+        _pca_split_bundle("1"),
+    ]
+    html = _run_manifest_html(_make_site_report(bundles, panel_roster=roster))
+    assert "Run manifest · 3 seat models · 2 claims" in html
+    assert "<th>Panel</th>" in html
+    assert "<th>Adapter</th>" not in html
+    # Legacy report (no roster): row-count wording + Adapter header remain.
+    legacy_html = _run_manifest_html(_make_site_report(
+        [_bundle_with_panel(claim_id_suffix="0", panel=_FOUR_ADAPTER_PANEL)]))
+    assert "Run manifest · 4 models · 1 claim" in legacy_html
+    assert "<th>Adapter</th>" in legacy_html
+
+
+def test_claim_page_meta_speaks_seat_votes() -> None:
+    """Claim-page og:description reads the panel tally (1.7): resolved PCA
+    claims say "K of N seats agree", splits say "Panel split — no
+    consensus.", and legacy bundles keep the adapter-count wording."""
+    from truthbot.models import VerdictProvenance
+    from truthbot.publish.site import _render_claim_page
+
+    resolved = _bundle_with_panel(claim_id_suffix="0",
+                                  panel=[("pca", "reconciled", "live", False)])
+    resolved.consensus.provenance = VerdictProvenance(
+        panel_votes={"True": 2, "False": 1})
+    resolved.consensus.consensus_verdict = "True"
+    sr = _make_site_report([resolved])
+    html = _render_claim_page(resolved, sr)
+    assert "2 of 3 seats agree." in html
+    assert "models agree" not in html
+
+    split = _pca_split_bundle("1", votes={"True": 1, "False": 1, "Misleading": 1})
+    html = _render_claim_page(split, _make_site_report([split]))
+    assert "Panel split — no consensus." in html
+
+    legacy = _bundle_with_panel(claim_id_suffix="2", panel=_FOUR_ADAPTER_PANEL)
+    legacy.consensus.consensus_verdict = "True"
+    html = _render_claim_page(legacy, _make_site_report([legacy]))
+    assert "4 of 4 models agree." in html
 
 
 def test_render_report_inserts_run_manifest_after_methodology() -> None:
