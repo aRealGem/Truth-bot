@@ -32,6 +32,7 @@ from truthbot.models import (
     VerdictBundle,
     VerdictLabel,
 )
+from truthbot.publish.aggregation import project_dist
 from truthbot.publish.site import (
     COARSE_LENIENT_PROJECTION,
     COARSE_STRICT_PROJECTION,
@@ -40,7 +41,6 @@ from truthbot.publish.site import (
     _adapter_run_stats,
     _claim_card,
     _headline_verdict_coarse,
-    _project_dist,
     _report_card,
     _render_report,
     _run_manifest_html,
@@ -187,7 +187,7 @@ def test_project_dist_collapses_mostly_true_plus_exaggerated_under_lenient() -> 
     Mostly True + Exaggerated counts merge into Truthy."""
     fine = {"True": 1, "Mostly True": 3, "Exaggerated": 2, "Misleading": 0,
             "False": 0, "Unverifiable": 1}
-    out = _project_dist(fine, COARSE_LENIENT_PROJECTION)
+    out = project_dist(fine, "lenient")
     assert out["True"] == 1
     assert out["Truthy"] == 5            # 3 Mostly True + 2 Exaggerated
     assert out["Falsey"] == 0
@@ -198,9 +198,21 @@ def test_project_dist_collapses_mostly_true_plus_exaggerated_under_lenient() -> 
 def test_project_dist_separates_exaggerated_from_truthy_under_strict() -> None:
     fine = {"True": 1, "Mostly True": 3, "Exaggerated": 2, "Misleading": 1,
             "False": 0, "Unverifiable": 0}
-    out = _project_dist(fine, COARSE_STRICT_PROJECTION)
+    out = project_dist(fine, "strict")
     assert out["Truthy"] == 3            # only Mostly True under Strict
     assert out["Falsey"] == 3            # 2 Exaggerated + 1 Misleading
+
+
+def test_project_dist_never_folds_split_into_unverifiable() -> None:
+    """Audit V6 (remediation v2, 1.6): a legacy fine distribution carrying a
+    "Models split" bucket passes it through verbatim — the old inline fold
+    projected it to Unverifiable, laundering a process outcome into an
+    evidence outcome."""
+    fine = {"True": 2, "Models split": 3, "Unverifiable": 1}
+    for axis in ("lenient", "strict"):
+        out = project_dist(fine, axis)
+        assert out["Models split"] == 3
+        assert out["Unverifiable"] == 1
 
 
 # ── SiteReport coarse distributions ───────────────────────────────────────────

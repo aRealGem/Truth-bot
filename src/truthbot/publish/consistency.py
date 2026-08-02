@@ -35,10 +35,15 @@ import re
 from datetime import date
 from pathlib import Path
 
+from truthbot.publish.aggregation import (COARSE_VERDICT_ORDER,
+                                          TIER_LINE_ORDER,
+                                          distribution_from_claims,
+                                          family_verdict)
+
 logger = logging.getLogger(__name__)
 
-# The two families + abstentions, mirroring site._TRUE_FAMILY /
-# site._ADVERSE_FAMILY. Imported lazily in check_site to avoid a cycle.
+# Abstention buckets (kept for reference by external callers; the family
+# math itself delegates to aggregation.family_verdict).
 _ABSTAIN = {"Unverifiable", "Models split"}
 
 
@@ -56,30 +61,17 @@ def _claims_for_report(claims: list[dict], report_id: str) -> list[dict]:
 
 
 def _coarse_dist(report_claims: list[dict], axis: str) -> dict[str, int]:
-    """Re-derive one lens's aggregate distribution from claims.json —
-    the single bucketing every rendered breakdown must match (T0.2).
-    Mirrors SiteReport._coarse_distribution: stored coarse label when
-    present, else the fine label projected through the site's maps."""
-    from truthbot.publish.site import (COARSE_LENIENT_PROJECTION,
-                                       COARSE_STRICT_PROJECTION)
-    projection = (COARSE_STRICT_PROJECTION if axis == "strict"
-                  else COARSE_LENIENT_PROJECTION)
-    dist: dict[str, int] = {}
-    for c in report_claims:
-        if c.get("consensus_verdict") == "Models split":
-            label = "Models split"
-        else:
-            label = (c.get(f"coarse_{axis}_label")
-                     or projection.get(c.get("consensus_verdict", ""), "Unverifiable"))
-        dist[label] = dist.get(label, 0) + 1
-    return dist
+    """Re-derive one lens's aggregate distribution from claims.json — the
+    single bucketing every rendered breakdown must match (T0.2). Since
+    remediation v2 (1.6) this DELEGATES to the same
+    ``aggregation.distribution_from_claims`` the renderer uses; the old
+    hand-kept mirror of SiteReport._coarse_distribution is gone."""
+    return distribution_from_claims(report_claims, axis)
 
 
 def _families(dist: dict[str, int]) -> tuple[int, int, int]:
-    from truthbot.publish.site import _ADVERSE_FAMILY, _TRUE_FAMILY
-    t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
-    f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
-    return t, f, t + f
+    fam = family_verdict(dist)
+    return fam.true_count, fam.adverse_count, fam.decided
 
 
 def _bar_segment_counts(lens_html: str) -> dict[str, int]:
@@ -340,9 +332,96 @@ def check_run_artifacts(repo_root) -> list[str]:
     return violations
 
 
-def check_site(site_root: Path) -> list[str]:
+def _check_index_tier_buckets(index_html: str, reports: list[dict]) -> list[str]:
+    """Remediation v2 (1.6): the Sources line on every index card must
+    reproduce reports.json tier_counts exactly — every nonzero bucket,
+    political included (the old hand-kept order silently dropped it, hiding
+    162 sources on the Trump card). Parses the machine-readable
+    ``data-tier-counts`` attribute on ``.src-tiers``."""
+    violations: list[str] = []
+    for r in reports[:20]:  # the index renders the first 20 cards
+        url = r.get("url", "")
+        slug = url or r.get("id", "?")
+        tier_counts = r.get("tier_counts") or {}
+        want = {k: v for k, v in tier_counts.items() if v}
+        start = index_html.find(f'href="{url}" class="report"')
+        if start < 0:
+            violations.append(f"index: no report card found for {slug}")
+            continue
+        card = index_html[start:index_html.find("</a>", start)]
+        m = re.search(r'class="src-tiers" data-tier-counts="([^"]*)"', card)
+        if not m:
+            if want:
+                violations.append(
+                    f"index card {slug}: no machine-readable Sources chip "
+                    f"(data-tier-counts) but tier_counts has {want}")
+            continue
+        got = {k: int(v) for k, v in
+               (pair.split(":") for pair in m.group(1).split() if ":" in pair)}
+        if got != want:
+            violations.append(
+                f"index card {slug}: Sources chip buckets {got} != "
+                f"reports.json tier_counts {want}")
+        if sum(got.values()) != sum(tier_counts.values()):
+            violations.append(
+                f"index card {slug}: Sources chip sums to {sum(got.values())}, "
+                f"tier_counts sum to {sum(tier_counts.values())}")
+    return violations
+
+
+#: Buckets the aggregate bar can actually render (aggregation.AGGREGATE_BAR_ORDER
+#: is the family-grouped union of both axes) — a nonzero count outside this set
+#: would silently vanish from every rendered bar.
+def _check_bucket_invariants(reports: list[dict], claims: list[dict]) -> list[str]:
+    """Remediation v2 (1.6) strict lints (ii)+(iii): per-report bucket sums
+    equal claim_count with every nonzero bucket renderable, and the
+    site-wide aggregate (sum of per-report distributions) accounts for
+    every claim in claims.json exactly once, on every axis."""
+    from truthbot.publish.aggregation import AGGREGATE_BAR_ORDER
+    renderable = set(AGGREGATE_BAR_ORDER)
+    violations: list[str] = []
+    totals: dict[str, int] = {"verdict_distribution": 0,
+                              "verdict_distribution_lenient": 0,
+                              "verdict_distribution_strict": 0}
+    for r in reports:
+        slug = r.get("url", r.get("id", "?"))
+        claim_count = r.get("claim_count", 0)
+        for key in totals:
+            dist = r.get(key)
+            if dist is None:
+                continue
+            totals[key] += sum(dist.values())
+            if sum(dist.values()) != claim_count:   # (ii) — also checked in
+                # check_report_page for the fine dist; repeated here so the
+                # strict pass reports it even for index-only renders.
+                violations.append(
+                    f"{slug}: {key} sums to {sum(dist.values())}, "
+                    f"claim_count is {claim_count}")
+            if key != "verdict_distribution":
+                ghost = {k: v for k, v in dist.items()
+                         if v and k not in renderable}
+                if ghost:
+                    violations.append(
+                        f"{slug}: {key} buckets {ghost} are outside "
+                        "AGGREGATE_BAR_ORDER and would not render")
+    for key, total in totals.items():               # (iii)
+        if total != len(claims):
+            violations.append(
+                f"site-wide: {key} buckets sum to {total} across reports.json, "
+                f"claims.json has {len(claims)} entries")
+    return violations
+
+
+def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
     """Verify the whole rendered site. Returns a list of violations (empty
-    when every checked figure derives cleanly from data/*.json)."""
+    when every checked figure derives cleanly from data/*.json).
+
+    ``strict_buckets`` gates the remediation-v2 lints (index Sources-chip
+    buckets, per-report/site-wide bucket sums). Default True — every fresh
+    render must satisfy them. The COMMITTED site-pca/ tree predates the
+    remediation regeneration (its cards were rendered without the political
+    bucket), so tests/test_site_consistency.py lints it with
+    ``strict_buckets=False`` until the Phase-2 regen flips it to True."""
     site_root = Path(site_root)
     violations: list[str] = []
     reports = _load_json(site_root / "data" / "reports.json")
@@ -393,6 +472,11 @@ def check_site(site_root: Path) -> list[str]:
         p = site_root / fname
         if p.exists() and banned in p.read_text(encoding="utf-8"):
             violations.append(f"{fname}: banned phrase present: '{banned}'")
+
+    # ── Remediation-v2 strict bucket lints (1.6) ─────────────────────────
+    if strict_buckets:
+        violations.extend(_check_index_tier_buckets(index_html, reports))
+        violations.extend(_check_bucket_invariants(reports, claims))
 
     # ── Per-report pages ─────────────────────────────────────────────────
     for report in reports:

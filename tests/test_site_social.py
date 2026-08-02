@@ -303,10 +303,28 @@ class TestReportCardSrcTiers:
             "tier_counts": {"gov": 3, "wire": 2, "news": 0, "fc": 1, "other": 0},
         }
         html = _report_card(r)
-        assert '<span class="src-tiers">' in html
+        assert '<span class="src-tiers"' in html
+        # Machine-readable mirror for consistency.check_site (remediation v2).
+        assert 'data-tier-counts="gov:3 wire:2 fc:1"' in html
         assert "3 gov" in html
         assert "2 wire" in html
         assert "1 fc" in html
+
+    def test_political_bucket_renders(self):
+        """Remediation v2 (1.6): the press/political bucket ships on the
+        Sources line — the old hand-kept order omitted it entirely (162
+        hidden sources on the Trump card)."""
+        r = {
+            "speaker": "Speaker",
+            "url": "reports/x.html",
+            "verdict_distribution": {"False": 1},
+            "claim_count": 1,
+            "tier_counts": {"gov": 3, "wire": 0, "news": 0, "fc": 0,
+                            "political": 162, "other": 5},
+        }
+        html = _report_card(r)
+        assert "162 press/political" in html
+        assert 'data-tier-counts="gov:3 political:162 other:5"' in html
 
     def test_omits_zero_buckets_but_surfaces_other(self):
         r = {
@@ -317,7 +335,7 @@ class TestReportCardSrcTiers:
             "tier_counts": {"gov": 2, "wire": 0, "news": 0, "fc": 0, "other": 99},
         }
         html = _report_card(r)
-        assert '<span class="src-tiers">' in html
+        assert '<span class="src-tiers"' in html
         assert "2 gov" in html
         # Zero buckets are suppressed
         assert "0 wire" not in html

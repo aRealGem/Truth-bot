@@ -34,6 +34,26 @@ from pathlib import Path
 from typing import Any, Optional
 
 from truthbot.models import VerdictBundle, VerdictLabel
+# Bucket orders, projections, family sets, and the one folding rule live in
+# ``truthbot.publish.aggregation`` (remediation v2, 1.6) — the single source
+# of truth this render layer and the consistency checker both import. The
+# public names are re-exported here for backward compat with existing
+# importers of ``publish.site``.
+from truthbot.publish.aggregation import (
+    ADVERSE_FAMILY as _ADVERSE_FAMILY,
+    AGGREGATE_BAR_ORDER,
+    COARSE_LENIENT_PROJECTION,
+    COARSE_STRICT_PROJECTION,
+    COARSE_VERDICT_ORDER,
+    TIER_LINE_ORDER,  # noqa: F401  (re-export)
+    TRUE_FAMILY as _TRUE_FAMILY,
+    coarse_label as _agg_coarse_label,
+    distribution_from_claims as _agg_distribution_from_claims,
+    family_verdict as _agg_family_verdict,
+    fine_label as _agg_fine_label,
+    project_dist as _agg_project_dist,
+    sources_line as _agg_sources_line,
+)
 from truthbot.verify.principals import PrincipalRelation, principal_relation
 from truthbot.verify.source_tiers import TIER_BUCKET, TIER_DISPLAY, classify_tier
 
@@ -60,48 +80,6 @@ VERDICT_CSS: dict[str, str] = {
 
 # Display order for the verdict bar legend (always show all 6)
 VERDICT_ORDER = ["True", "Mostly True", "Exaggerated", "Misleading", "False", "Unverifiable"]
-
-# 5-bucket coarse-axis "Truthy scale" — used by every aggregate display
-# (verdict panel, TOC pills, report cards, index totals). Order is most
-# positive → most negative so segment-bar renderers can iterate it directly.
-# Source rubric: ``eval/sotu-2026/findings-review.md`` Part H.
-COARSE_VERDICT_ORDER = ["True", "Truthy", "Unverifiable", "Falsey", "False"]
-
-# Aggregate BAR order — family-grouped union of the coarse and fine axes.
-# When the Falsey umbrella left the PCA per-claim pills (2026-07-19), the
-# aggregate bars kept iterating COARSE_VERDICT_ORDER, so fine-labeled PCA
-# claims (Misleading, Exaggerated, Mostly True) silently vanished from the
-# graph while the headline still counted them in its family totals — "95 of
-# 132 false-leaning" with only 44 visible on the bar (jackie, 2026-07-20).
-# This order includes both axes' labels, contiguous by family (true family →
-# abstain → adverse family), so the bar shows every decided claim and the
-# family rail's brackets equal the headline's totals by construction.
-AGGREGATE_BAR_ORDER = ["True", "Mostly True", "Truthy",
-                       "Unverifiable", "Models split",
-                       "Exaggerated", "Misleading", "Falsey", "False"]
-
-# Mirror of LENIENT_PROJECTION / STRICT_PROJECTION in
-# ``src/truthbot/verify/engine.py``, but keyed on the *fine-axis label string*
-# (not the ``VerdictLabel`` enum) so this module can stay string-typed. The
-# two must stay in lockstep — see test_consensus_projection.py for the
-# canonical mapping invariants.
-COARSE_LENIENT_PROJECTION: dict[str, str] = {
-    "True":         "True",
-    "Mostly True":  "Truthy",
-    "Exaggerated":  "Truthy",
-    "Misleading":   "Falsey",
-    "False":        "False",
-    "Unverifiable": "Unverifiable",
-}
-
-COARSE_STRICT_PROJECTION: dict[str, str] = {
-    "True":         "True",
-    "Mostly True":  "Truthy",
-    "Exaggerated":  "Falsey",   # diverges from Lenient
-    "Misleading":   "Falsey",
-    "False":        "False",
-    "Unverifiable": "Unverifiable",
-}
 
 VERDICT_EMOJI: dict[str, str] = {
     "True":          "✅",
@@ -252,14 +230,12 @@ class SiteReport:
     def verdict_distribution(self) -> dict[str, int]:
         dist: dict[str, int] = {v: 0 for v in VERDICT_CSS}
         for b in self.checkable_bundles:
-            # PCA split claims carry consensus_label=UNVERIFIABLE (never silently
-            # dropped) but a "Models split" verdict. Count them in their own bucket
-            # rather than folding them into Unverifiable — the coarse distributions
-            # already keep the two distinct, and the headline should match.
-            if b.consensus.consensus_verdict == "Models split":
-                label = "Models split"
-            else:
-                label = b.consensus.consensus_label.value
+            # PCA split / no-verdict claims carry consensus_label=UNVERIFIABLE
+            # (never silently dropped) but a distinct verdict text. Count them
+            # in their own bucket rather than folding them into Unverifiable —
+            # aggregation.fine_label is the one rule for this.
+            label = _agg_fine_label(b.consensus.consensus_verdict,
+                                    b.consensus.consensus_label.value)
             dist[label] = dist.get(label, 0) + 1
         return dist
 
@@ -267,46 +243,34 @@ class SiteReport:
     def verdict_distribution_lenient(self) -> dict[str, int]:
         """5-bucket histogram on the Lenient projection axis.
 
-        Reads ``coarse_lenient_label`` straight off the bundle's
-        ``ConsensusVerdict`` when present (post-projection bundles). Falls
-        back to projecting ``consensus_label`` on the fly via
-        ``COARSE_LENIENT_PROJECTION`` for legacy bundles whose coarse
-        fields are still empty strings — keeps render output consistent
-        regardless of when the cache was last refreshed.
+        Folding is delegated to ``aggregation.coarse_label``: the stored
+        ``coarse_lenient_label`` wins when present (post-projection bundles),
+        legacy bundles project the fine label on the fly, and split /
+        no-verdict rows pass through verbatim (audit V6: never folded to
+        Unverifiable).
         """
-        return self._coarse_distribution(
-            label_attr="coarse_lenient_label",
-            projection=COARSE_LENIENT_PROJECTION,
-        )
+        return self._coarse_distribution("lenient")
 
     @property
     def verdict_distribution_strict(self) -> dict[str, int]:
         """5-bucket histogram on the Strict projection axis (Exaggerated → Falsey)."""
-        return self._coarse_distribution(
-            label_attr="coarse_strict_label",
-            projection=COARSE_STRICT_PROJECTION,
-        )
+        return self._coarse_distribution("strict")
 
-    def _coarse_distribution(
-        self,
-        label_attr: str,
-        projection: dict[str, str],
-    ) -> dict[str, int]:
-        dist: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
-        # Add a "Models split" bucket alongside the 5 coarse buckets so the
-        # split-projection guardrail in engine._project_consensus shows up in
-        # aggregates rather than being silently dropped. Renderers can choose
-        # to fold it into "Mixed verdict" presentation.
-        dist["Models split"] = 0
-        for b in self.checkable_bundles:
-            stored = getattr(b.consensus, label_attr, "") or ""
-            if stored:
-                label = stored
-            else:
-                fine = b.consensus.consensus_label.value
-                label = projection.get(fine, "Unverifiable")
-            dist[label] = dist.get(label, 0) + 1
-        return dist
+    def _coarse_distribution(self, axis: str) -> dict[str, int]:
+        # Delegates to aggregation.distribution_from_claims — the same
+        # function consistency.py re-derives every published aggregate with,
+        # so the renderer and the checker cannot drift (1.6).
+        rows = [
+            {
+                "consensus_verdict": _agg_fine_label(
+                    b.consensus.consensus_verdict,
+                    b.consensus.consensus_label.value),
+                f"coarse_{axis}_label": getattr(
+                    b.consensus, f"coarse_{axis}_label", "") or "",
+            }
+            for b in self.checkable_bundles
+        ]
+        return _agg_distribution_from_claims(rows, axis)
 
     @property
     def model_agreement_rate(self) -> float:
@@ -567,49 +531,18 @@ def _pretty_model_label(adapter: str, model_id: str = "") -> str:
     return " ".join(pieces) or adapter or "model"
 
 
-# Family aggregation for headline verdicts (2026-07-19 editorial review):
-# a report that is 72% False+Misleading must headline "Largely False", not
-# "Mixed verdict" just because no single adverse bucket crossed a threshold.
-# True-leaning and false-leaning labels aggregate into two families over
-# DECIDED claims; Unverifiable / Models split / No verdict are abstentions
-# and stay out of the denominator.
-_TRUE_FAMILY: frozenset[str] = frozenset({"True", "Mostly True", "Truthy"})
-_ADVERSE_FAMILY: frozenset[str] = frozenset(
-    {"False", "Falsey", "Misleading", "Exaggerated"})
+# Family aggregation for headline verdicts: the family sets + the percent-true
+# math live in ``truthbot.publish.aggregation`` (single source of truth, 1.6);
+# ``_TRUE_FAMILY`` / ``_ADVERSE_FAMILY`` above are re-exported aliases.
 
 
 def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """Percent-true headline (jackie, 2026-07-25: "just show percent true" —
-    supersedes the 2026-07-19 graded bands, whose 'Mostly True' read as an
-    endorsement at 55% truthiness).
-
-    Returns (label_text, css_class, ratio_text). The label is the TRUE-family
-    share of DECIDED claims, e.g. '56% True' — the same families and the same
-    decided-claims denominator the bands used (Unverifiable / Models split /
-    No verdict are abstentions, out of the denominator, and disclosed by the
-    ratio text). Color bands (jackie, 2026-07-25): true-share > 75% green,
-    50-75% inclusive yellow (vt-mid), under 50% red — the words never grade,
-    the number speaks.
-    A report with claims but zero decided verdicts headlines 'Unverifiable'.
+    """Percent-true headline — thin wrapper over
+    :func:`truthbot.publish.aggregation.family_verdict` (see its docstring
+    for the bands + rationale). Returns (label_text, css_class, ratio_text).
     """
-    total = sum(dist.values())
-    if total == 0:
-        return "No claims evaluated", "neutral", "0 claims checked"
-    t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
-    f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
-    decided = t + f
-    if decided == 0:
-        return "Unverifiable", "neutral", f"{total} claims checked"
-    share = t / decided
-    label = f"{round(100 * share)}% True"
-    ratio = f"{t} of {decided} decided claims rated True"
-    if share > 0.75:
-        css = f"vt-{_verdict_css('True')}"
-    elif share >= 0.50:
-        css = "vt-mid"
-    else:
-        css = f"vt-{_verdict_css('False')}"
-    return label, css, ratio
+    fam = _agg_family_verdict(dist)
+    return fam.label, fam.css, fam.ratio_text
 
 
 def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
@@ -1321,13 +1254,14 @@ def _verdict_panel(site_report) -> str:
     def _pct(numerator: int, total: int) -> str:
         return format(numerator / total, '.0%') if total else "0%"
 
-    def _family_split(dist: dict[str, int]) -> tuple[int, int, int]:
-        t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
-        f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
-        return t, f, t + f
-
-    t_strict,  f_strict,  decided_strict  = _family_split(dist_strict)
-    t_lenient, f_lenient, decided_lenient = _family_split(dist_lenient)
+    # Family math comes from the same FamilyVerdict the headline used (1.6) —
+    # chips and headline literally share one computation.
+    _fam_strict = _agg_family_verdict(dist_strict)
+    _fam_lenient = _agg_family_verdict(dist_lenient)
+    t_strict,  f_strict,  decided_strict  = (
+        _fam_strict.true_count, _fam_strict.adverse_count, _fam_strict.decided)
+    t_lenient, f_lenient, decided_lenient = (
+        _fam_lenient.true_count, _fam_lenient.adverse_count, _fam_lenient.decided)
     truthy_pct_strict  = _pct(t_strict,  decided_strict)
     truthy_pct_lenient = _pct(t_lenient, decided_lenient)
     false_pct_strict   = _pct(f_strict,  decided_strict)
@@ -2309,21 +2243,26 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
                 standalone: bool = False, panel_roster: Optional[dict] = None) -> str:
     claim = bundle.claim
     consensus = bundle.consensus
-    fine_label = consensus.consensus_label.value
+    # Folding through aggregation (1.6): a split / no-verdict claim reads its
+    # verdict text on EVERY axis — including data-fine-label, which used to
+    # echo "Unverifiable" for split rows (audit V6).
+    fine_label = _agg_fine_label(consensus.consensus_verdict,
+                                 consensus.consensus_label.value)
     # Headline defaults to the Strict 5-bucket projection (2026-04-30
     # editorial flip from Lenient). Older cached bundles (pre-projection-
-    # layer) carry blank coarse fields; in that case fall back to the
-    # fine label so existing reports still render.
-    coarse_lenient = (consensus.coarse_lenient_label or "").strip()
-    coarse_strict = (consensus.coarse_strict_label or "").strip()
-    label = coarse_strict or fine_label
+    # layer) carry blank coarse fields; on this surface they ECHO the fine
+    # label (passed as the stored value below) so toggling is a visual no-op
+    # rather than a broken render — while split rows still pass through
+    # coarse_label's non-folding rule on every axis.
+    _stored_lenient = (consensus.coarse_lenient_label or "").strip()
+    _stored_strict = (consensus.coarse_strict_label or "").strip()
+    lenient_attr = _agg_coarse_label(
+        fine_label, _stored_lenient or fine_label, "lenient")
+    strict_attr = _agg_coarse_label(
+        fine_label, _stored_strict or fine_label, "strict")
+    label = strict_attr
     css = _verdict_css(label)
-    # Pre-compute both axes for the JS toggle. When projections are absent
-    # (legacy bundles), data-* attrs echo the fine label so toggling becomes
-    # a visual no-op rather than a broken render.
     fine_css = _verdict_css(fine_label)
-    lenient_attr = coarse_lenient or fine_label
-    strict_attr = coarse_strict or fine_label
     lenient_css = _verdict_css(lenient_attr)
     strict_css = _verdict_css(strict_attr)
     # Guest-anecdote treatment: swap the pill TEXT on both lens axes (so the
@@ -2657,18 +2596,15 @@ def _toc(bundles: list[VerdictBundle]) -> str:
     items = []
     for i, b in enumerate(bundles, 1):
         consensus = b.consensus
-        fine_label = consensus.consensus_label.value
-        # Coarse-axis labels with on-the-fly fallback for legacy bundles
-        # whose coarse fields are still empty. Same fallback pattern used
-        # on the per-claim headline pill in _claim_card.
-        coarse_lenient = (
-            consensus.coarse_lenient_label
-            or COARSE_LENIENT_PROJECTION.get(fine_label, "Unverifiable")
-        )
-        coarse_strict = (
-            consensus.coarse_strict_label
-            or COARSE_STRICT_PROJECTION.get(fine_label, "Unverifiable")
-        )
+        # Folding through aggregation (1.6): split / no-verdict rows keep
+        # their verdict text on every axis (never "Unverifiable"); legacy
+        # bundles with blank coarse fields project the fine label on the fly.
+        fine_label = _agg_fine_label(consensus.consensus_verdict,
+                                     consensus.consensus_label.value)
+        coarse_lenient = _agg_coarse_label(
+            fine_label, consensus.coarse_lenient_label, "lenient")
+        coarse_strict = _agg_coarse_label(
+            fine_label, consensus.coarse_strict_label, "strict")
         # Default text is Strict (matches the published default lens
         # since the 2026-04-30 flip).
         default_label = coarse_strict
@@ -2703,12 +2639,10 @@ def _report_card(r: dict) -> str:
     # projecting the legacy 6-bucket distribution if a report predates
     # the projection layer (older reports.json entries).
     fine_dist = r.get("verdict_distribution", {}) or {}
-    dist_lenient = r.get("verdict_distribution_lenient") or _project_dist(
-        fine_dist, COARSE_LENIENT_PROJECTION
-    )
-    dist_strict = r.get("verdict_distribution_strict") or _project_dist(
-        fine_dist, COARSE_STRICT_PROJECTION
-    )
+    dist_lenient = (r.get("verdict_distribution_lenient")
+                    or _agg_project_dist(fine_dist, "lenient"))
+    dist_strict = (r.get("verdict_distribution_strict")
+                   or _agg_project_dist(fine_dist, "strict"))
 
     def _card_axis_html(d: dict[str, int], axis: str = "strict") -> tuple[str, str, str, str, str]:
         """Return (headline_html, ratio_text, segs_html, counts_html, rail_html)
@@ -2754,18 +2688,21 @@ def _report_card(r: dict) -> str:
     meta = '<span class="sep">·</span>'.join(meta_bits)
 
     tier_counts = r.get("tier_counts") or {}
-    # "other" ships too (remediation F6): it is the largest cited-source
-    # bucket on both SOTU reports — omitting it made the chip row read as if
-    # only vetted tiers fed the verdicts.
-    _tier_label_order = [("gov", "gov"), ("wire", "wire"), ("news", "news"),
-                         ("fc", "fc"), ("other", "other")]
-    _tier_parts = [
-        f'{tier_counts.get(key, 0)} {label}'
-        for key, label in _tier_label_order
-        if tier_counts.get(key, 0)
-    ]
+    # Every nonzero bucket ships, via aggregation.sources_line (1.6):
+    # "other" since remediation F6, and "press/political" since remediation
+    # v2 — the old hand-kept order omitted the political bucket entirely,
+    # hiding 162 sources on the Trump card. The data-tier-counts attribute
+    # is the machine-readable mirror consistency.check_site lints against
+    # reports.json tier_counts.
+    _tier_pairs = _agg_sources_line(tier_counts)
+    _tier_parts = [f'{count} {label}' for label, count in _tier_pairs]
+    _tier_attr = " ".join(
+        f"{key}:{tier_counts.get(key, 0)}"
+        for key, _label in TIER_LINE_ORDER if tier_counts.get(key, 0)
+    )
     src_tiers_html = (
-        f'    <span class="src-tiers">Sources: {" · ".join(_tier_parts)}</span>'
+        f'    <span class="src-tiers" data-tier-counts="{_esc(_tier_attr)}">'
+        f'Sources: {" · ".join(_tier_parts)}</span>'
         if _tier_parts else ''
     )
 
@@ -2800,22 +2737,9 @@ def _report_card(r: dict) -> str:
     )
 
 
-def _project_dist(
-    fine_dist: dict[str, int], projection: dict[str, str]
-) -> dict[str, int]:
-    """Project a 6-bucket distribution onto the 5-bucket coarse axis.
-
-    Used by ``_report_card`` and the index-aggregate path to backfill the
-    coarse fields when a ``reports.json`` entry predates the projection
-    layer (older runs). Counts that map to the same coarse bucket are
-    summed (e.g. ``Mostly True + Exaggerated → Truthy`` under Lenient).
-    """
-    out: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
-    out["Models split"] = 0
-    for fine_label, cnt in fine_dist.items():
-        coarse = projection.get(fine_label, "Unverifiable")
-        out[coarse] = out.get(coarse, 0) + cnt
-    return out
+# ``_project_dist`` moved to ``aggregation.project_dist`` (1.6) — with the
+# non-folding fix: a "Models split" fine bucket now passes through instead of
+# being projected to Unverifiable.
 
 
 def _agg_bar(
@@ -7656,22 +7580,22 @@ class SitePublisher:
             for label, cnt in (r.get("verdict_distribution_strict") or {}).items():
                 verdict_totals_strict[label] = verdict_totals_strict.get(label, 0) + cnt
         # Fallback projection for legacy reports.json entries that have only
-        # the 6-bucket verdict_distribution. We project each report's
-        # 6-bucket dist into both axes and add it in.
+        # the 6-bucket verdict_distribution: aggregation.project_dist per
+        # axis (1.6) — its non-folding rule keeps a legacy "Models split"
+        # fine bucket out of Unverifiable, unlike the old inline fold.
         for r in reports:
             if r.get("verdict_distribution_lenient") and r.get("verdict_distribution_strict"):
                 continue
             fine = r.get("verdict_distribution") or {}
-            for fine_label, cnt in fine.items():
-                if not r.get("verdict_distribution_lenient"):
-                    lenient_label = COARSE_LENIENT_PROJECTION.get(fine_label, "Unverifiable")
-                    verdict_totals_lenient[lenient_label] = (
-                        verdict_totals_lenient.get(lenient_label, 0) + cnt
+            if not r.get("verdict_distribution_lenient"):
+                for label, cnt in _agg_project_dist(fine, "lenient").items():
+                    verdict_totals_lenient[label] = (
+                        verdict_totals_lenient.get(label, 0) + cnt
                     )
-                if not r.get("verdict_distribution_strict"):
-                    strict_label = COARSE_STRICT_PROJECTION.get(fine_label, "Unverifiable")
-                    verdict_totals_strict[strict_label] = (
-                        verdict_totals_strict.get(strict_label, 0) + cnt
+            if not r.get("verdict_distribution_strict"):
+                for label, cnt in _agg_project_dist(fine, "strict").items():
+                    verdict_totals_strict[label] = (
+                        verdict_totals_strict.get(label, 0) + cnt
                     )
 
         # Distinct leaders reviewed
