@@ -34,7 +34,7 @@ from typing import Optional, Sequence
 
 from truthbot.domains import is_substantive_url
 from truthbot.models import Evidence, SourceTier
-from truthbot.verify.factcheck_exclusion import is_excluded_factchecker
+from truthbot.verify.factcheck_exclusion import factcheck_exclusion_reason
 from truthbot.verify.mutable_endpoints import is_mutable_latest
 
 from . import era_lint
@@ -107,6 +107,10 @@ class ConsolidationResult:
     quota_met: bool = False
     gate_code: str = ""              # GATE_INSUFFICIENT when forced-UV applies
     dropped: dict[str, int] = field(default_factory=dict)  # reason -> count
+    # Per-item fact-check exclusion log (remediation v2, 1.1): every FC drop
+    # is recorded — {"url", "reason", "retriever"} — and journaled with the
+    # pack. Exclusions are never silent.
+    excluded_fc: list[dict] = field(default_factory=list)
     retrospective: int = 0           # lenient mode: admitted post-era items
     # The full post-filter/post-quota candidate list BEFORE the pack cap, in
     # final order (PR-A2.2). Persisting this is what makes "would claim X have
@@ -211,8 +215,13 @@ def consolidate(
             _drop("duplicate-url")
             continue
         seen.add(key)
-        if is_excluded_factchecker(url) or ev.source_tier == SourceTier.FACTCHECK:
+        fc_reason = factcheck_exclusion_reason(url)
+        if not fc_reason and ev.source_tier == SourceTier.FACTCHECK:
+            fc_reason = "tier:factcheck"
+        if fc_reason:
             _drop("factcheck-excluded")
+            result.excluded_fc.append(
+                {"url": url, "reason": fc_reason, "retriever": label})
             continue
         if not is_substantive_url(url):
             _drop("non-substantive-url")

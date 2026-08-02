@@ -153,6 +153,10 @@ class EvidencePack:
     # it exists so the packs journal can persist what the cap discarded and a
     # cap/quota change can be measured offline without re-retrieval.
     pool: list[PackItem] = field(default_factory=list)
+    # Fact-check exclusion log (remediation v2, 1.1): what the consolidator
+    # dropped as fact-checker content and why — journaled with the pack,
+    # never part of the panel payload. Exclusions are never silent.
+    excluded_fc: list[dict] = field(default_factory=list)
 
     @property
     def ids(self) -> list[str]:

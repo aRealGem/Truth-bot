@@ -1,6 +1,6 @@
 {
-  "schema": "truthbot-factcheck-blocklist v1",
-  "comment": "Evidence v2 (P67.7 / remediation T2.1): fact-checker domains and paths excluded from model-facing evidence packs in shared_pack_v2 mode. Fact-checker VERDICTS are gold-side only — never in model context (locked project invariant). Gold-side use of these sources is unchanged. Domains match by registered-domain suffix; path_prefix entries block only that path on the domain.",
+  "schema": "truthbot-factcheck-blocklist v2",
+  "comment": "Evidence v2 (P67.7 / T2.1; hardened remediation-v2 1.1, DC-1 approved 2026-08-02): fact-checker sources excluded from model-facing evidence packs. Fact-checker VERDICTS are gold-side only — never in model context (locked invariant S-1). v2 adds article-level exclusion: 'path_patterns' regexes match any URL path on ANY domain; 'verticals' are per-domain regexes for outlets whose fact-check sections don't live under one prefix; 'allowlist' entries always win (government program pages whose path happens to contain 'factcheck'). Measured 2026-08-02: v1 rules excluded 772 distinct stored URLs, v2 catches 120 more with one .gov false positive (allowlisted class). Snippet/title text matching was considered and REJECTED (DC-1): evidence has no title field and snippets are model prose.",
   "domains": [
     "politifact.com",
     "factcheck.org",
@@ -16,5 +16,18 @@
     {"domain": "apnews.com", "prefix": "/ap-fact-check"},
     {"domain": "washingtonpost.com", "prefix": "/politics/fact-checker"},
     {"domain": "washingtonpost.com", "prefix": "/news/fact-checker"}
+  ],
+  "path_patterns": [
+    "fact[-_ ]?check(s|ing|ed|er)?"
+  ],
+  "verticals": [
+    {"domain": "cbsnews.com", "pattern": "fact[-_]?check"},
+    {"domain": "abcnews.go.com", "pattern": "fact[-_ ]?check"},
+    {"domain": "abcnews.com", "pattern": "fact[-_ ]?check"},
+    {"domain": "nbcnews.com", "pattern": "fact[-_]?check"},
+    {"domain": "washingtonpost.com", "pattern": "fact[-_]?check"}
+  ],
+  "allowlist": [
+    {"domain": "mn.gov", "prefix": "/dhs/program-integrity/factcheck"}
   ]
 }

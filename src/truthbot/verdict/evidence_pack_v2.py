@@ -189,7 +189,8 @@ def build_evidence_pack_v2(
         pool = [_pack_item(i, cit)
                 for i, cit in enumerate(res.pre_cap_items, start=1)]
     pack = EvidencePack(sid=sid, window=window, items=items,
-                        gate_code=res.gate_code, pool=pool)
+                        gate_code=res.gate_code, pool=pool,
+                        excluded_fc=list(res.excluded_fc))
     if not era_exempt:
         era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
     return pack

@@ -188,6 +188,11 @@ def append_packs_journal(path, sid: str, pack) -> None:
                             items=list(pool))
         rec["pool"] = [ev.model_dump(mode="json")
                        for ev in bridge_mod._pack_to_evidence(sid, shim)]
+    # Remediation v2 (1.1): fact-check exclusions are journaled per claim —
+    # never silently dropped.
+    excluded = getattr(pack, "excluded_fc", None) or []
+    if excluded:
+        rec["excluded_fc"] = list(excluded)
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("a", encoding="utf-8") as fh:
