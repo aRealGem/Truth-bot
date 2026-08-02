@@ -33,6 +33,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+from truthbot.models import SourceTier as _SourceTier
 from truthbot.models import VerdictBundle, VerdictLabel
 # Bucket orders, projections, family sets, and the one folding rule live in
 # ``truthbot.publish.aggregation`` (remediation v2, 1.6) — the single source
@@ -97,14 +98,43 @@ STRENGTH_LABEL: dict[str, str] = {
     "single": "Single model",
 }
 
-TIER_TABLE = [
-    ("Government",  ".gov, .mil, .int — BLS, BEA, CBO, Census, NATO, etc.",   "Highest"),
-    ("Wire",        "AP, Reuters",                                              "High"),
-    ("Established", "NYT, WaPo, BBC, NPR, CBS, NBC, ABC",                      "Medium-High"),
-    ("Academic",    "Peer-reviewed journals, university presses",               "Medium-High"),
-    ("Fact-check",  "PolitiFact, FactCheck.org, Snopes, FullFact",             "Medium"),
-    ("Other",       "Blogs, opinion sites, social media, unverified sources",   "Low"),
-]
+# About-page prose per tier: (name, example sources, trust weight), keyed by
+# the SourceTier enum. Display CODES and the tier set itself DERIVE from
+# ``truthbot.verify.source_tiers.TIER_DISPLAY`` — the shipped ladder — via
+# ``_tier_table_rows()``, so the About table cannot drift from the registry
+# again (the old hand-typed table lacked T7·Pol entirely; remediation v2, 1.9).
+_TIER_TABLE_PROSE: "dict[Any, tuple[str, str, str]]" = {
+    _SourceTier.GOVERNMENT: (
+        "Government", ".gov, .mil, .int — BLS, BEA, CBO, Census, NATO, etc.", "Highest"),
+    _SourceTier.WIRE: ("Wire", "AP, Reuters", "High"),
+    _SourceTier.ESTABLISHED: (
+        "Established", "NYT, WaPo, BBC, NPR, CBS, NBC, ABC", "Medium-High"),
+    _SourceTier.ACADEMIC: (
+        "Academic", "Peer-reviewed journals, university presses", "Medium-High"),
+    _SourceTier.FACTCHECK: (
+        "Fact-check", "PolitiFact, FactCheck.org, Snopes, FullFact — "
+        "excluded from evidence packs (see footnote)", "Excluded from packs"),
+    _SourceTier.OTHER: (
+        "Other", "Blogs, opinion sites, social media, unverified sources", "Low"),
+    _SourceTier.POLITICAL: (
+        "Political", "Campaign sites, party organs, an agency's press-release "
+        "path class", "Lowest — attribution only"),
+}
+
+
+def _tier_table_rows() -> list[tuple[str, str, str]]:
+    """(tier cell, sources cell, trust-weight cell) per shipped tier.
+
+    Iterates ``TIER_DISPLAY`` (the registry-backed ladder, in rank order
+    T1..T7) so every shipped tier — T7·Pol included — appears exactly once;
+    a registry tier without prose still renders (enum name, no examples)
+    rather than silently vanishing."""
+    rows: list[tuple[str, str, str]] = []
+    for tier, (code, _css) in TIER_DISPLAY.items():
+        name, sources, weight = _TIER_TABLE_PROSE.get(
+            tier, (tier.value.title(), "", "—"))
+        rows.append((f"{code} {name}".strip(), sources, weight))
+    return rows
 
 def _url_display_host(url: str) -> str:
     """Return a display-friendly hostname from a URL."""
@@ -6831,18 +6861,37 @@ def _render_model_insights_redirect() -> str:
 
 
 def _render_about() -> str:
-    """Render the about/method page (PCA-era architecture; refreshed 2026-07-20)."""
+    """Render the about/method page (PCA-era architecture; refreshed 2026-07-20;
+    reconciled against shipped behavior in remediation v2, 1.9)."""
+    # The pack-cap copy renders from the pipeline constant so the About page
+    # cannot drift from the consolidator again (it said "six" while
+    # PACK_CAP_V2 was 10). Local import: consolidator is pipeline-side and
+    # the render layer stays import-light at module level.
+    from truthbot.verdict.consolidator import PACK_CAP_V2
+    _cap_words = {6: "six", 8: "eight", 10: "ten", 12: "twelve"}
+    pack_cap_word = _cap_words.get(PACK_CAP_V2, str(PACK_CAP_V2))
+
     prompt_text = _pca_prompt_text()
     phash = _prompt_hash()
 
+    # Rows derive from the shipped tier registry (TIER_DISPLAY) — all seven
+    # tiers, T7·Pol included — so this table cannot drift from what the
+    # pipeline actually assigns (remediation v2, 1.9).
     tier_rows = "".join(
         f'<tr><td><strong>{_esc(t)}</strong></td><td>{_esc(d)}</td><td>{_esc(q)}</td></tr>'
-        for t, d, q in TIER_TABLE
+        for t, d, q in _tier_table_rows()
     )
     tier_table = (
         f'<table class="tier-table">'
         f'<tr><th>Tier</th><th>Sources</th><th>Trust weight</th></tr>'
         f'{tier_rows}</table>'
+        f'<p class="dim" style="margin-top:0.5rem;font-size:0.85rem">'
+        f'Fact-check organizations (T5·FC) are excluded from evidence packs '
+        f'by design — the panel reaches its own verdicts from primary '
+        f'sources rather than inheriting another checker\'s ruling; they '
+        f'appear only in gold-side evaluation. Political-tier items '
+        f'(T7·Pol) are admissible only to confirm a claim was made — they '
+        f'can never decide a verdict.</p>'
     )
 
     models_list = (
@@ -6875,8 +6924,8 @@ def _render_about() -> str:
         "<li><strong>One panel, one pass:</strong> The proposer→critic→arbiter structure "
         "and the second-stage Severity Classifier are the accuracy mechanism, and boundary "
         "calls (False vs Misleading) remain the hardest cases.</li>"
-        "<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in an evidence pack "
-        "(up to ten items) assembled at run time. If retrieval misses the decisive source "
+        f"<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in an evidence pack "
+        f"(up to {pack_cap_word} items) assembled at run time. If retrieval misses the decisive source "
         "and the pack fails the quality bar, the claim is forced to Unverifiable — the "
         "panel is instructed not to fill gaps from memory.</li>"
         "<li><strong>No cross-claim context:</strong> Each claim is judged independently. "
@@ -6908,11 +6957,12 @@ def _render_about() -> str:
         f'though a sentence may name its own speaker.</p>'
         f'<p style="margin-top:0.75rem"><strong>2 · Evidence retrieval.</strong> For each '
         f'claim, a small model writes targeted search queries (the era\'s fiscal year, the '
-        f'specific statistic or program named), and the pipeline fetches candidates via web '
-        f'search plus fact-check databases — time-scoped to the claim\'s era so a 2026 '
-        f'article cannot decide a 2022 claim. Candidates are scored for relevance to the '
+        f'specific statistic or program named), and the pipeline fetches candidates via '
+        f'web-search connectors — time-scoped to the claim\'s era so a 2026 '
+        f'article cannot decide a 2022 claim. Fact-check sites are excluded from the '
+        f'candidate pool by design. Candidates are scored for relevance to the '
         f'claim, deduplicated, stripped of non-evidence (homepages, listing pages), and '
-        f'capped at six items ranked by relevance, then source trust. Every pack item '
+        f'capped at {pack_cap_word} items ranked by relevance, then source trust. Every pack item '
         f'carries a URL, retrieval timestamp, and content hash.</p>'
         f'<p style="margin-top:0.75rem"><strong>3 · The verdict panel (PCA).</strong> A '
         f'<em>proposer</em> drafts a verdict from the evidence; a <em>critic</em> '
@@ -6921,7 +6971,7 @@ def _render_about() -> str:
         f'Unverifiable — and must cite pack items by id (the E1, E2… ids you see in '
         f'reasoning and source lists; citations outside the pack are rejected). A '
         f'genuine tie is either resolved by the Severity Classifier — recorded on the '
-        f'claim\'s provenance strip — or published as "Panel split"; a tie is never '
+        f'claim\'s provenance strip — or published as "Models split"; a tie is never '
         f'dropped without a visible trace. The panel is speaker-blind in its inputs: '
         f'the speaker\'s name is withheld as metadata, though the claim text itself '
         f'may still identify the speaker.</p>'
@@ -6935,7 +6985,9 @@ def _render_about() -> str:
         f'check against. Those claims still run the full panel, but when they come back '
         f'unverifiable they are labeled <em>Anecdote</em> — a limit of the genre, not a '
         f'failed verification. An anecdote the press independently investigated gets a '
-        f'real verdict.</p>'
+        f'real verdict. The anecdote count ships as a footnote beneath each report\'s '
+        f'aggregate verdict bar, so the reader can see how much of the Unverifiable '
+        f'bucket is this genre.</p>'
         f'<div class="pipeline-diagram" aria-label="Pipeline diagram">'
         f'<span class="pd-node">Transcript</span><span class="pd-arrow">→</span>'
         f'<span class="pd-node">Check-worthiness triage<br><small>A1 + A2, speaker withheld</small></span>'
@@ -6951,18 +7003,21 @@ def _render_about() -> str:
         f'</div>'
         f'<h3 style="margin-top:1.5rem">How to read a report</h3>'
         f'<p><strong>Per-claim pill.</strong> Each claim headlines the panel\'s own verdict '
-        f'(True, False, Misleading, Unverifiable — or Anecdote / Panel split). The '
+        f'(True, False, Misleading, Unverifiable — or Anecdote / Models split). The '
         f'provenance strip beneath the verdict shows the full chain: how the claim was '
         f'routed, what each seat predicted, the vote tally, and any Severity Classifier '
         f'override. E-ids in the reasoning link to the exact evidence item cited.</p>'
         f'<p style="margin-top:0.75rem"><strong>Report headline &amp; leaning totals.</strong> '
-        f'Claims aggregate into two families — true-leaning (True) and false-leaning (False '
-        f'+ Misleading) — over <em>decided</em> claims only; Unverifiable, Anecdote, and '
-        f'Panel split are abstentions and stay out of the denominator. The headline band is '
-        f'the dominant family\'s share of decided claims: ≥70% "Largely," ≥55% "Mostly," '
-        f'under 55% "Mixed verdict." The family rail above each verdict bar brackets the '
-        f'same totals on the graph itself, so the headline\'s "N of M decided claims '
-        f'X-leaning" is always visibly derivable.</p>'
+        f'Claims aggregate into two families — true-leaning (True, Mostly True, Truthy) '
+        f'and false-leaning (False, Falsey, Misleading, Exaggerated) — over '
+        f'<em>decided</em> claims only; Unverifiable, Anecdote, and '
+        f'Models split are abstentions and stay out of the denominator. The headline is '
+        f'the true-leaning family\'s share of decided claims, shown as a percentage '
+        f'("56% True"); its color carries the band — green above 75%, yellow from 50% '
+        f'to 75%, red below 50%. The words never grade; the number speaks. The family '
+        f'rail above each verdict bar brackets the same totals on the graph itself, so '
+        f'the headline\'s "N of M decided claims X-leaning" is always visibly '
+        f'derivable.</p>'
         f'<p style="margin-top:0.75rem"><strong>Display conventions.</strong> Aggregate '
         f'bars show every claim, including a distinct <em>Models split</em> segment for '
         f'panel deadlocks — segments always sum to the report\'s claim count. Guest '
@@ -6975,17 +7030,20 @@ def _render_about() -> str:
         f'severity overrides. Each report\'s <em>Statement Triage</em> page carries its '
         f'falsifiability ratio: the share of the speech that made a checkable claim at '
         f'all, a statistic about the genre rather than the speaker.</p>'
-        f'<p style="margin-top:0.75rem"><strong>The Lens chip</strong> flips between two '
-        f'presentations of the same computation: <em>Lenient</em> shows the simple '
-        f'Truthy/Falsey lean; <em>Strict</em> (the default) shows the graded bands. The two '
-        f'lenses share the Mixed band and the decided-claims denominator — they can never '
-        f'disagree about whether a report is a toss-up.</p>'
+        f'<p style="margin-top:0.75rem"><strong>One presentation.</strong> Every surface '
+        f'— per-claim pills, report headline, verdict bars, index cards — renders the '
+        f'same strict 5-bucket scale from one computation: the "%-True" headline over '
+        f'decided claims, with the color band as its only grading. (An earlier '
+        f'Strict/Lenient toggle was removed: under the current verdict contract the two '
+        f'presentations were identical, so the switch did nothing.)</p>'
         f'<h3 style="margin-top:1.5rem">Who\'s on the panel</h3>'
         f'{models_list}'
         f'<h3 style="margin-top:1.5rem">Source tier hierarchy</h3>'
         f'<p>Evidence items carry a trust tier assigned from the source\'s registered '
-        f'domain. Relevance to the claim ranks first; tier breaks ties and is what the '
-        f'panel is told to weigh on conflicting evidence.</p>'
+        f'domain and path class (e.g. an agency\'s press-release path ranks T7·Pol '
+        f'while its statistical releases rank T1·Gov). Relevance to the claim ranks '
+        f'first; tier breaks ties and is what the panel is told to weigh on '
+        f'conflicting evidence.</p>'
         f'{tier_table}'
         f'<h3 style="margin-top:1.5rem">Known limitations</h3>'
         f'{limitations}'

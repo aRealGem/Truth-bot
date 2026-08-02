@@ -521,9 +521,18 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
             violations.append(
                 "model-insights.html: expected the v2 per-seat page or the "
                 "About redirect stub; the v1 pseudo-model page must not ship")
-    for fname, banned in (("index.html", "primary sources"),
-                          ("about.html", "comparable accuracy"),
-                          ("about.html", "never silently broken")):
+    banned_pairs = [("index.html", "primary sources"),
+                    ("about.html", "comparable accuracy"),
+                    ("about.html", "never silently broken")]
+    if strict_buckets:
+        # Remediation v2 (1.9) About reconciliation: copy that contradicts
+        # shipped behavior must not re-enter. Gated with the other v2 lints
+        # because the COMMITTED pre-regen about.html still carries all three
+        # (the Phase-2 regen rewrites it and flips the flag to True).
+        banned_pairs += [("about.html", "capped at six"),
+                         ("about.html", "fact-check databases"),
+                         ("about.html", "Panel split")]
+    for fname, banned in banned_pairs:
         p = site_root / fname
         if p.exists() and banned in p.read_text(encoding="utf-8"):
             violations.append(f"{fname}: banned phrase present: '{banned}'")
