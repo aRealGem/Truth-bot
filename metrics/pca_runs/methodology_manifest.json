@@ -73,6 +73,11 @@
       "speech_id": "gwbush_2006",
       "generation": "v2.3-role-axis-s5cap",
       "published": false
+    },
+    "d0010426-2e8f-4449-b839-60f85d923d56": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
     }
   }
 }
