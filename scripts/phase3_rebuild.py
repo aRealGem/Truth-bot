@@ -112,6 +112,63 @@ def load_artifact(speech: str) -> dict:
     return json.loads(artifact_path(speech).read_text(encoding="utf-8"))
 
 
+SHAPE_SIDECAR_SCHEMA = "truthbot-shape-backfill v1"
+
+
+def load_sidecar_shapes(path: Path, speech: str, source_run: str) -> dict[str, str]:
+    """Load a scripts/backfill_claim_shapes.py sidecar and return its non-empty
+    ``{sid: shape}`` map. Fails loudly on a schema/speech/source-run mismatch —
+    never silently apply another speech's (or another artifact revision's)
+    shapes."""
+    doc = json.loads(Path(path).read_text(encoding="utf-8"))
+    if doc.get("schema") != SHAPE_SIDECAR_SCHEMA:
+        raise ValueError(f"{path}: schema {doc.get('schema')!r} != "
+                         f"{SHAPE_SIDECAR_SCHEMA!r}")
+    if doc.get("speech_id") != speech:
+        raise ValueError(f"{path}: speech_id {doc.get('speech_id')!r} != "
+                         f"{speech!r}")
+    if source_run and doc.get("source_run") != source_run:
+        raise ValueError(f"{path}: source_run {doc.get('source_run')!r} != "
+                         f"{source_run!r} (sidecar built from a different "
+                         "artifact)")
+    return {sid: shape for sid, shape in (doc.get("shapes") or {}).items()
+            if shape}
+
+
+def merge_sidecar_shapes(claims: list[dict], shapes: Mapping[str, str]) -> int:
+    """Fill ``layer_a.claim_shape`` from the sidecar for claims LACKING one —
+    in memory only (the on-disk source artifact is never touched, and
+    ``write_new_artifact`` re-reads the artifact, so the new artifact's
+    claims stay verbatim). A shape already present in the artifact is NEVER
+    overridden. Returns how many claims were filled."""
+    n = 0
+    for c in claims:
+        la = c.get("layer_a") or {}
+        if la.get("claim_shape"):
+            continue                       # artifact shape wins, always
+        shape = shapes.get(c.get("sid", ""))
+        if shape:
+            la["claim_shape"] = shape
+            c["layer_a"] = la
+            n += 1
+    return n
+
+
+def shape_refusal(n_shaped: int, n_claims: int,
+                  legacy_ok: bool) -> Optional[str]:
+    """--go guard for the one-methodology goal: a speech with shapeless
+    claims (pre-role-axis artifact, or a partial sidecar) must not be
+    rebuilt under the legacy quota by ACCIDENT. None = clear to run."""
+    if legacy_ok or n_shaped >= n_claims:
+        return None
+    return (f"REFUSING --go: {n_claims - n_shaped}/{n_claims} claims have no "
+            "claim shape, so this rebuild would run the LEGACY evidential-"
+            "role quota — breaking one-methodology-corpus-wide. Backfill "
+            "first (scripts/backfill_claim_shapes.py --speech <id> --go) and "
+            "pass --shapes-sidecar PATH, or pass --legacy-quota-ok to run "
+            "legacy DELIBERATELY. No spend attempted.")
+
+
 def go_refusal(environ: Mapping[str, str], budget: Optional[float]) -> Optional[str]:
     """The two --go refusals, testable without argparse. None = clear to run."""
     if budget is None or budget <= 0:
@@ -516,6 +573,14 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=0,
                     help="first N claims only (smoke slice; artifact is NOT "
                          "written until the full speech is banked)")
+    ap.add_argument("--shapes-sidecar", default=None, metavar="PATH",
+                    help="shapes_backfill_<speech>.json from "
+                         "scripts/backfill_claim_shapes.py — fills claim "
+                         "shapes for claims LACKING one (never overrides an "
+                         "artifact shape)")
+    ap.add_argument("--legacy-quota-ok", action="store_true",
+                    help="allow --go on a speech with shapeless claims "
+                         "(legacy evidential-role quota) — deliberate only")
     args = ap.parse_args()
 
     if args.estimate:
@@ -532,6 +597,11 @@ def main() -> None:
     speech_context.register_speech_date(args.speech, spec["date"])
 
     art = load_artifact(args.speech)
+    n_from_sidecar = 0
+    if args.shapes_sidecar:
+        sidecar_shapes = load_sidecar_shapes(
+            Path(args.shapes_sidecar), args.speech, art.get("run_id", ""))
+        n_from_sidecar = merge_sidecar_shapes(art["claims"], sidecar_shapes)
     n_shapes = shape_registry.register_claim_shapes(art["claims"])
     chunk_journal, packs_journal = journal_paths(args.speech)
     from truthbot.verdict import publish_pipeline
@@ -545,7 +615,8 @@ def main() -> None:
           f"(run {art.get('run_id', '?')[:8]})")
     print(f"  claims: {n_claims} (identity preserved verbatim)"
           + (f"; --limit slice: first {args.limit}" if args.limit else ""))
-    print(f"  claim shapes registered from layer_a: {n_shapes}/{n_claims}"
+    print(f"  claim shapes registered: {n_shapes}/{n_claims} "
+          f"({n_from_sidecar} from sidecar)"
           + ("" if n_shapes else " (pre-role-axis artifact — legacy quota; "
              "relation_of still applies)"))
     print(f"  chunk journal: {chunk_journal}")
@@ -560,6 +631,9 @@ def main() -> None:
         print("\n($0 plan only — add --estimate for the cost projection, or "
               "--go --budget USD to spend)")
         return
+    refusal = shape_refusal(n_shapes, n_claims, args.legacy_quota_ok)
+    if refusal:
+        sys.exit(refusal)
     run_rebuild(args)
 
 
