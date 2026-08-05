@@ -262,3 +262,93 @@ def test_estimate_is_offline_and_ranged():
     lo, hi = n * p3.PER_CLAIM_EST[0], n * p3.PER_CLAIM_EST[1]
     assert f"${lo:.2f} - ${hi:.2f}" in report
     assert "$0" in report.splitlines()[0]          # explicitly a $0 projection
+
+
+# ── transient-failure resilience (added 2026-08-05 after two long runs died
+#    on single infrastructure blips: a proxy read timeout 60 claims into
+#    biden, a worker-lane failure 80 claims into obama) ────────────────────
+
+def test_transient_classifier_matches_infra_blips_only():
+    import http.client
+    import socket
+    import urllib.error
+
+    from phase3_rebuild import BudgetHalt, _is_transient
+
+    for exc in (TimeoutError("timed out"),
+                socket.timeout("timed out"),
+                ConnectionResetError("reset by peer"),
+                urllib.error.URLError("unreachable"),
+                http.client.RemoteDisconnected("closed")):
+        assert _is_transient(exc), exc
+
+    class WorkerCallError(RuntimeError):
+        pass
+
+    assert _is_transient(WorkerCallError("lane died"))
+    # Real defects and the budget breaker must NOT be retried.
+    assert not _is_transient(ValueError("bad row"))
+    assert not _is_transient(KeyError("sid"))
+    assert not _is_transient(BudgetHalt("over cap"))
+
+
+def test_chunk_retries_transient_then_succeeds(monkeypatch):
+    from phase3_rebuild import _adjudicate_chunk
+
+    monkeypatch.setattr("phase3_rebuild.time.sleep", lambda _s: None)
+    calls = {"n": 0}
+
+    class _Adj:
+        def adjudicate(self, hm, chunk, **kw):
+            calls["n"] += 1
+            if calls["n"] < 3:
+                raise TimeoutError("timed out")
+            return ["row"], {}, {"packs": {}}
+
+    rows, _m, notes = _adjudicate_chunk(_Adj(), None, [], None, idx=1)
+    assert rows == ["row"] and calls["n"] == 3 and notes == {"packs": {}}
+
+
+def test_chunk_gives_up_cleanly_after_retries(monkeypatch):
+    from phase3_rebuild import ChunkFailed, _adjudicate_chunk
+
+    monkeypatch.setattr("phase3_rebuild.time.sleep", lambda _s: None)
+
+    class _Adj:
+        def adjudicate(self, hm, chunk, **kw):
+            raise TimeoutError("timed out")
+
+    with pytest.raises(ChunkFailed, match="attempts failed"):
+        _adjudicate_chunk(_Adj(), None, [], None, idx=7)
+
+
+def test_budget_halt_is_never_retried(monkeypatch):
+    from phase3_rebuild import BudgetHalt, _adjudicate_chunk
+
+    monkeypatch.setattr("phase3_rebuild.time.sleep", lambda _s: None)
+    calls = {"n": 0}
+
+    class _Adj:
+        def adjudicate(self, hm, chunk, **kw):
+            calls["n"] += 1
+            raise BudgetHalt("over cap")
+
+    with pytest.raises(BudgetHalt):
+        _adjudicate_chunk(_Adj(), None, [], None, idx=1)
+    assert calls["n"] == 1, "the cap must halt on the first raise"
+
+
+def test_programming_errors_surface_immediately(monkeypatch):
+    from phase3_rebuild import _adjudicate_chunk
+
+    monkeypatch.setattr("phase3_rebuild.time.sleep", lambda _s: None)
+    calls = {"n": 0}
+
+    class _Adj:
+        def adjudicate(self, hm, chunk, **kw):
+            calls["n"] += 1
+            raise ValueError("malformed row")
+
+    with pytest.raises(ValueError):
+        _adjudicate_chunk(_Adj(), None, [], None, idx=1)
+    assert calls["n"] == 1, "real defects must not be masked by retries"

@@ -97,6 +97,64 @@ class BudgetHalt(RuntimeError):
     chunk)."""
 
 
+class ChunkFailed(RuntimeError):
+    """A chunk exhausted its transient-failure retries."""
+
+
+# How many times a chunk is re-attempted after a transient infrastructure
+# failure (proxy read timeout, connection reset, worker-lane blip), and the
+# backoff between attempts. A multi-hour rebuild WILL meet one of these: the
+# 2026-08-05 biden leg died on a single urlopen timeout after 60 banked
+# claims, and the obama leg on a worker-lane failure after 80. Chunks are the
+# journal's unit of work, so re-attempting one is safe — nothing is banked
+# until it succeeds; the only cost is that chunk's retrieval.
+CHUNK_RETRIES = 3
+CHUNK_BACKOFF_S = (30, 120, 300)
+
+
+def _is_transient(exc: BaseException) -> bool:
+    """True for infrastructure blips worth retrying — never for budget or
+    programming errors (BudgetHalt is caught upstream; EraLintError and
+    friends are real defects that must surface loudly)."""
+    import http.client
+    import socket
+    import urllib.error
+
+    transient = (TimeoutError, socket.timeout, ConnectionError,
+                 urllib.error.URLError, http.client.HTTPException)
+    if isinstance(exc, transient):
+        return True
+    # HydraMind wraps worker/lane failures; match by name so this module does
+    # not import the transport just to reference its exception type.
+    return type(exc).__name__ in {"WorkerCallError", "LaneError"}
+
+
+def _adjudicate_chunk(adjudicator, hm, chunk, pack_builder, idx: int):
+    """adjudicate() with bounded retries on transient failures."""
+    last: Optional[BaseException] = None
+    for attempt in range(1, CHUNK_RETRIES + 1):
+        try:
+            return adjudicator.adjudicate(
+                hm, chunk, roster="prod", pack_builder=pack_builder,
+                two_stage=True)
+        except BudgetHalt:
+            raise                      # the cap is never retried
+        except Exception as exc:       # noqa: BLE001 — classified below
+            if not _is_transient(exc):
+                raise
+            last = exc
+            if attempt == CHUNK_RETRIES:
+                break
+            wait = CHUNK_BACKOFF_S[min(attempt - 1, len(CHUNK_BACKOFF_S) - 1)]
+            print(f"chunk {idx}: transient {type(exc).__name__} "
+                  f"({exc}) — attempt {attempt}/{CHUNK_RETRIES}, "
+                  f"retrying in {wait}s", flush=True)
+            time.sleep(wait)
+    raise ChunkFailed(
+        f"{CHUNK_RETRIES} attempts failed; last: "
+        f"{type(last).__name__}: {last}")
+
+
 # ── $0 helpers (import-safe: no proxy/key imports at module level) ───────────
 
 def artifact_path(speech: str) -> Path:
@@ -486,11 +544,17 @@ def run_rebuild(args) -> None:
             break
         t0, s0 = time.time(), proxy_lane.proxy_key_spend()
         try:
-            rows, manifest, notes = adjudicator.adjudicate(
-                hm, chunk, roster="prod", pack_builder=pack_builder,
-                two_stage=True)
+            rows, manifest, notes = _adjudicate_chunk(
+                adjudicator, hm, chunk, pack_builder, idx)
         except BudgetHalt as exc:
             halted = f"BUDGET HALT mid-chunk {idx}: {exc}"
+            print(halted)
+            break
+        except ChunkFailed as exc:
+            # A transient infrastructure failure that outlasted its retries.
+            # Stop CLEANLY rather than tracebacking: every prior chunk is
+            # banked, so the same command resumes where this left off.
+            halted = f"TRANSIENT HALT at chunk {idx}: {exc}"
             print(halted)
             break
         s1, t1 = proxy_lane.proxy_key_spend(), time.time()
