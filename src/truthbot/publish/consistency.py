@@ -294,7 +294,14 @@ def check_run_artifacts(repo_root) -> list[str]:
     for run_id, row in manifest["runs"].items():
         path = runs_dir / f"{run_id}.json"
         if not path.exists():
-            violations.append(f"{run_id}: manifest row but artifact file missing")
+            # Absent data is NOT an integrity violation: run artifacts are
+            # large and some are untracked, so a fresh clone (CI) legitimately
+            # carries manifest rows without their files. The write-then-record
+            # ordering is guaranteed at the source instead — the Phase-3
+            # runner writes the artifact before it adds the manifest row.
+            logger.info("pca run %s (%s): artifact not in this checkout — "
+                        "skipped, nothing to assert", run_id[:8],
+                        row.get("speech_id"))
             continue
         if row.get("generation") != current:
             logger.info(

@@ -75,3 +75,47 @@ def test_manifest_is_complete_over_the_runs_directory():
                if p.name != MANIFEST.name}
     missing = on_disk - set(m["runs"])
     assert not missing, f"artifacts without a manifest row: {sorted(missing)}"
+
+
+def test_absent_artifact_is_skipped_not_a_violation(tmp_path):
+    """A manifest row whose artifact file is not in the checkout must not read
+    as an integrity failure — CI clones carry the manifest without the large
+    (partly untracked) run artifacts. Regression: this failed CI on 2026-08-03
+    while passing locally, where every artifact happens to exist."""
+    runs = tmp_path / "metrics" / "pca_runs"
+    runs.mkdir(parents=True)
+    (runs / "methodology_manifest.json").write_text(json.dumps({
+        "schema": "truthbot-methodology-manifest v1",
+        "current_generation": "v2.3-role-axis-s5cap",
+        "generations": {"v2.3-role-axis-s5cap": "current"},
+        "runs": {"deadbeef-0000-0000-0000-000000000000": {
+            "speech_id": "gwbush_2006", "generation": "v2.3-role-axis-s5cap",
+            "published": False}},
+    }))
+    assert check_run_artifacts(tmp_path) == []
+
+
+def test_present_artifact_still_fails_on_violation(tmp_path):
+    """The gate keeps its teeth: a PRESENT current-generation artifact that
+    breaks an invariant (here: a fact-check URL in the pack) still fails."""
+    runs = tmp_path / "metrics" / "pca_runs"
+    runs.mkdir(parents=True)
+    run_id = "deadbeef-0000-0000-0000-000000000001"
+    (runs / "methodology_manifest.json").write_text(json.dumps({
+        "schema": "truthbot-methodology-manifest v1",
+        "current_generation": "v2.3-role-axis-s5cap",
+        "generations": {"v2.3-role-axis-s5cap": "current"},
+        "runs": {run_id: {"speech_id": "gwbush_2006",
+                          "generation": "v2.3-role-axis-s5cap",
+                          "published": False}},
+    }))
+    (runs / f"{run_id}.json").write_text(json.dumps({
+        "run_id": run_id, "meta": {"speech_id": "gwbush_2006"},
+        "claims": [], "rows": [],
+        "evidence": {"gwbush_2006:0001": [{
+            "source_url": "https://www.politifact.com/factchecks/x/",
+            "source_tier": "Established", "published_at": "2006-01-30",
+            "snippet": "x"}]},
+    }))
+    assert any("factcheck" in v.lower() or "fact-check" in v.lower()
+               for v in check_run_artifacts(tmp_path))
