@@ -88,6 +88,11 @@
       "speech_id": "biden_2022",
       "generation": "v2.3-role-axis-s5cap",
       "published": false
+    },
+    "4ee5a251-9b3c-49be-9283-0ac062ac2c10": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
     }
   }
 }
