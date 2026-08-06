@@ -1,0 +1,1179 @@
+#!/usr/bin/env python3
+"""DC-6 review package — the human-judgement surface for the Phase-3 rebuild ($0).
+
+Phase 3 re-adjudicated all five SOTU speeches on generation
+``v2.3-role-axis-s5cap``. The new artifacts are committed but UNPUBLISHED
+(``methodology_manifest.json`` marks them ``published: false``); the live
+``site-pca/`` tree still renders the old runs. Before anything is published a
+human has to be able to see, in one place:
+
+* how many verdicts moved, in which direction, and on which claims;
+* whether the era-parity claim survives — i.e. whether the modern speeches got
+  gated harder than the historical ones (old vs new decided-rate, side by side);
+* what the rebuild cost, split into ledger-true proxy spend and off-proxy
+  ESTIMATES at list rates;
+* what the public corrections ledger would say if this shipped.
+
+Everything here is derived deterministically from artifacts already on disk —
+the five ``metrics/remediation_v2/phase3_<speech>_verdict_diff.json`` files, the
+``metrics/pca_runs/`` artifacts they name, the Phase-2 dry-run worksheet, and
+the run logs. NO model or API calls. Nothing under ``site-pca/`` is touched.
+
+Usage (repo root)::
+
+    PYTHONPATH=. .venv/bin/python scripts/dc6_package.py \
+        --new-site /tmp/dc6-site [--old-site site-pca] [--write-archive]
+
+Outputs (all under ``metrics/remediation_v2/``)::
+
+    dc6_review.json / dc6_review.md         corpus + per-speech + every changed claim
+    dc6_corrections_entries.json            one entry per changed verdict
+    dc6_corrections_ledger_proposed.json    the PROPOSED post-reset data/corrections.json
+
+``--write-archive`` additionally writes ``data/corrections-archive-<date>.json``
+(a copy of the current ledger). It is purely additive; ``data/corrections.json``
+is never modified by this script — the reset is a reviewable proposal, applied
+at publish time under jackie's gate.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from collections import Counter
+from pathlib import Path
+from typing import Any, Iterable, Optional
+
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "src"))
+sys.path.insert(0, str(REPO))
+
+DIFF_DIR = REPO / "metrics" / "remediation_v2"
+RUNS_DIR = REPO / "metrics" / "pca_runs"
+
+#: Speech order used in every report section — chronological by utterance.
+SPEECH_ORDER = ["clinton_1998", "gwbush_2006", "obama_2014", "biden_2022",
+                "trump_2026"]
+
+SPEAKERS = {"clinton_1998": "Bill Clinton", "gwbush_2006": "George W. Bush",
+            "obama_2014": "Barack Obama", "biden_2022": "Joe Biden",
+            "trump_2026": "Donald Trump"}
+
+#: Display vocabulary, in the site's family order (true → abstain → adverse).
+#: "Mostly True" is carried even though this corpus has none, because the fine
+#: axis can emit it and a distribution table that silently drops a live label
+#: is exactly the class of bug remediation v2 exists to kill.
+DISPLAY_ORDER = ["True", "Mostly True", "Misleading", "False", "Unverifiable",
+                 "Models split"]
+
+#: Buckets that are NOT a substantive ruling. decided-rate = 1 - share of these.
+ABSTAIN = {"Unverifiable", "Models split"}
+
+#: Change classes, most consequential first — a claim that moved between two
+#: substantive verdicts is the one a reader must look at.
+CLASS_ORDER = ["decided_to_decided_changed", "newly_gated", "newly_decided",
+               "split_changes", "other"]
+
+CLASS_TITLE = {
+    "decided_to_decided_changed": "Decided → decided (verdict flipped between substantive rulings)",
+    "newly_gated": "Newly gated (was decided, now withheld as Unverifiable)",
+    "newly_decided": "Newly decided (was withheld/split, now a substantive ruling)",
+    "split_changes": "Split changes (model-split status changed)",
+    "other": "Other / unclassified",
+}
+
+#: Verdict-contract label → published display label.
+LABEL_DISPLAY = {
+    "TRUE": "True",
+    "MOSTLY TRUE": "Mostly True",
+    "MISLEADING": "Misleading",
+    "FALSE": "False",
+    "UNVERIFIABLE": "Unverifiable",
+    "GATED-UNVERIFIABLE": "Unverifiable",
+    "MODELS SPLIT": "Models split",
+    "NO VERDICT": "Models split",
+}
+
+#: The four verdicts data/corrections.json's loader accepts (mirrors
+#: truthbot.publish.corrections._VALID_VERDICTS — imported at runtime for the
+#: real check; duplicated here only so the module reads standalone).
+LEDGER_VERDICTS = {"TRUE", "FALSE", "MISLEADING", "UNVERIFIABLE"}
+
+REBUILD_DATE = "2026-08-06"
+GENERATION = "v2.3-role-axis-s5cap"
+CORRECTION_SOURCE = f"phase3-rebuild-{REBUILD_DATE} ({GENERATION})"
+
+# ── Spend ledger ──────────────────────────────────────────────────────────
+# proxy_usd  = LiteLLM proxy key spend — LEDGER-TRUE (the proxy billed it).
+# offproxy_usd = models called OUTSIDE the proxy, costed at published list
+#                rates from token counts — an ESTIMATE, not a receipt.
+# stated_usd = the per-speech figure quoted in the DC-6 brief; carried so the
+#              report can flag where the brief and the run logs disagree
+#              instead of quietly preferring one.
+SPEND: dict[str, dict[str, Any]] = {
+    "gwbush_2006": {"legs": 1, "proxy_usd": 0.2479, "offproxy_usd": 2.8344,
+                    "stated_usd": 3.08,
+                    "note": "single leg, 10 chunks"},
+    "clinton_1998": {"legs": 1, "proxy_usd": 0.8791, "offproxy_usd": 5.9663,
+                     "stated_usd": 6.85,
+                     "note": "single leg, 19 chunks"},
+    "obama_2014": {"legs": 2, "proxy_usd": 0.7577, "offproxy_usd": 6.4780,
+                   "stated_usd": 7.24,
+                   "note": ("leg 1 banked 80/96 rows (proxy $0.6586, off-proxy "
+                            "est $5.4007) before an L-W worker failure; leg 2 "
+                            "ran the remaining 16 (proxy $0.0991, off-proxy est "
+                            "$1.0773)")},
+    "biden_2022": {"legs": 2, "proxy_usd": 0.7361, "offproxy_usd": 7.6371,
+                   "stated_usd": 8.00,
+                   "note": ("leg 1 banked 60/111 rows (proxy $0.3480, off-proxy "
+                            "est $4.3690) before a browsing-model timeout; leg 2 "
+                            "ran the remaining 51 (proxy $0.3881, off-proxy est "
+                            "$3.2681)")},
+    "trump_2026": {"legs": 1, "proxy_usd": 1.7272, "offproxy_usd": 11.8864,
+                   "stated_usd": 13.61,
+                   "note": "single leg, 37 chunks"},
+}
+
+#: Claim-shape backfill sidecars (haiku on the L-P proxy) — ledger-true.
+SHAPE_BACKFILL_USD = 0.63
+
+#: Corpus total quoted in the DC-6 brief, for the same flag-don't-smooth check.
+STATED_TOTAL_USD = 38.8
+
+
+# ── loading ───────────────────────────────────────────────────────────────
+def _read_json(path: Path) -> Any:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def load_diffs(diff_dir: Path = DIFF_DIR) -> list[dict]:
+    """The five per-speech verdict diffs, in SPEECH_ORDER."""
+    found = {}
+    for path in sorted(Path(diff_dir).glob("phase3_*_verdict_diff.json")):
+        doc = _read_json(path)
+        found[doc["speech_id"]] = doc
+    order = [s for s in SPEECH_ORDER if s in found]
+    order += [s for s in sorted(found) if s not in SPEECH_ORDER]
+    return [found[s] for s in order]
+
+
+def load_run(run_id: str, runs_dir: Path = RUNS_DIR) -> Optional[dict]:
+    """Artifact for a run id (accepts the 8-char short form)."""
+    for path in Path(runs_dir).glob("*.json"):
+        if path.stem == run_id or path.stem.startswith(run_id):
+            return _read_json(path)
+    return None
+
+
+def display(label: str) -> str:
+    """Verdict-contract label → published display label."""
+    return LABEL_DISPLAY.get(str(label).strip().upper(), str(label))
+
+
+def _truncate(text: str, limit: int) -> str:
+    text = " ".join(str(text or "").split())
+    return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
+
+
+# ── aggregation ───────────────────────────────────────────────────────────
+def aggregate(diffs: Iterable[dict]) -> dict:
+    """Corpus + per-speech totals over the five verdict diffs.
+
+    ``claims`` is the diff's ``n_compared`` — the number of sids the rebuild
+    actually re-adjudicated. It is NOT necessarily the old run's row count:
+    see ``coverage`` below, which surfaces any sid the old run carried and the
+    new one does not (that gap is a publish-blocking fact, not a rounding
+    error, so it is reported rather than absorbed)."""
+    per_speech: dict[str, dict] = {}
+    totals = Counter()
+    for d in diffs:
+        counts = dict(d["counts"])
+        changed = sum(v for k, v in counts.items() if k != "unchanged")
+        row = {
+            "speech_id": d["speech_id"],
+            "speaker": SPEAKERS.get(d["speech_id"], ""),
+            "old_run_id": d.get("rebuild_of", ""),
+            "new_run_id": d.get("new_run_id", ""),
+            "claims": d["n_compared"],
+            "unchanged": counts.get("unchanged", 0),
+            "decided_to_decided_changed": counts.get("decided_to_decided_changed", 0),
+            "newly_gated": counts.get("newly_gated", 0),
+            "newly_decided": counts.get("newly_decided", 0),
+            "split_changes": counts.get("split_changes", 0),
+            "other": counts.get("other", 0),
+            "changed_total": changed,
+            "gate_forced_new": d.get("gate_forced_new", 0),
+        }
+        per_speech[d["speech_id"]] = row
+        for key in ("claims", "unchanged", "decided_to_decided_changed",
+                    "newly_gated", "newly_decided", "split_changes", "other",
+                    "changed_total", "gate_forced_new"):
+            totals[key] += row[key]
+    return {"corpus": dict(totals), "per_speech": per_speech}
+
+
+def _dist_from_tally(tally: dict) -> dict[str, int]:
+    """Verdict-contract tally → display distribution over DISPLAY_ORDER."""
+    out = {label: 0 for label in DISPLAY_ORDER}
+    for label, count in (tally or {}).items():
+        out[display(label)] = out.get(display(label), 0) + count
+    return out
+
+
+def decided_rate(dist: dict[str, int]) -> dict:
+    """decided = every claim NOT in an abstain bucket (Unverifiable / split)."""
+    total = sum(dist.values())
+    decided = sum(c for label, c in dist.items() if label not in ABSTAIN)
+    return {"decided": decided, "total": total,
+            "rate": round(decided / total, 4) if total else 0.0}
+
+
+def distributions(diffs: Iterable[dict]) -> dict:
+    """Old vs new verdict distribution + decided-rate, per speech and corpus.
+
+    NOTE the denominators: ``old_tally`` counts the OLD artifact's rows and
+    ``new_tally`` the NEW artifact's rows. Where a rebuild dropped a sid the
+    two differ, and the decided-rate comparison is over different denominators
+    — flagged per speech via ``denominator_mismatch`` rather than normalised
+    away."""
+    per_speech: dict[str, dict] = {}
+    old_corpus, new_corpus = Counter(), Counter()
+    for d in diffs:
+        old = _dist_from_tally(d["old_tally"])
+        new = _dist_from_tally(d["new_tally"])
+        old_corpus.update(old)
+        new_corpus.update(new)
+        old_rate, new_rate = decided_rate(old), decided_rate(new)
+        per_speech[d["speech_id"]] = {
+            "speech_id": d["speech_id"],
+            "speaker": SPEAKERS.get(d["speech_id"], ""),
+            "old": old, "new": new,
+            "old_decided": old_rate, "new_decided": new_rate,
+            "decided_rate_delta": round(new_rate["rate"] - old_rate["rate"], 4),
+            "denominator_mismatch": old_rate["total"] != new_rate["total"],
+        }
+    old_c = {label: old_corpus.get(label, 0) for label in DISPLAY_ORDER}
+    new_c = {label: new_corpus.get(label, 0) for label in DISPLAY_ORDER}
+    old_rate, new_rate = decided_rate(old_c), decided_rate(new_c)
+    # Era parity is the load-bearing claim of the whole remediation: a
+    # methodology that gates the modern speech harder than the historical ones
+    # produces a politically-shaped result. Measure the SPREAD of decided-rates
+    # across speeches, old vs new — narrowing = more parity, widening = less.
+    old_rates = {s: v["old_decided"]["rate"] for s, v in per_speech.items()}
+    new_rates = {s: v["new_decided"]["rate"] for s, v in per_speech.items()}
+
+    def _spread(rates: dict[str, float]) -> dict:
+        if not rates:
+            return {"min": 0.0, "max": 0.0, "spread": 0.0, "min_speech": "",
+                    "max_speech": ""}
+        lo = min(rates, key=rates.get)
+        hi = max(rates, key=rates.get)
+        return {"min": rates[lo], "max": rates[hi],
+                "spread": round(rates[hi] - rates[lo], 4),
+                "min_speech": lo, "max_speech": hi}
+
+    old_spread, new_spread = _spread(old_rates), _spread(new_rates)
+    return {
+        "per_speech": per_speech,
+        "corpus": {"old": old_c, "new": new_c,
+                   "old_decided": old_rate, "new_decided": new_rate,
+                   "decided_rate_delta": round(new_rate["rate"] - old_rate["rate"], 4)},
+        "era_parity": {
+            "old_spread": old_spread,
+            "new_spread": new_spread,
+            "spread_delta": round(new_spread["spread"] - old_spread["spread"], 4),
+            "narrowed": new_spread["spread"] < old_spread["spread"],
+        },
+    }
+
+
+def coverage(diffs: Iterable[dict], runs_dir: Path = RUNS_DIR) -> list[dict]:
+    """Per speech: old row count vs new row count vs sids compared.
+
+    The verdict diff iterates the NEW rows, so a sid the old run adjudicated
+    and the new one never saw is invisible in it. That is precisely the kind
+    of silent drop this package must not smooth over."""
+    out = []
+    for d in diffs:
+        old = load_run(d.get("rebuild_of", ""), runs_dir) or {}
+        new = load_run(d.get("new_run_id", ""), runs_dir) or {}
+        old_sids = [r.get("sid") for r in (old.get("rows") or [])]
+        new_sids = {r.get("sid") for r in (new.get("rows") or [])}
+        dropped = sorted(s for s in old_sids if s not in new_sids)
+        old_claim_sids = {c.get("sid") for c in (old.get("claims") or [])}
+        old_verdicts = {r.get("sid"): r.get("verdict")
+                        for r in (old.get("rows") or [])}
+        out.append({
+            "speech_id": d["speech_id"],
+            "old_rows": len(old_sids),
+            "old_claims": len(old_claim_sids),
+            "new_rows": len(new_sids),
+            "compared": d["n_compared"],
+            "dropped_sids": dropped,
+            "dropped_detail": [
+                {"sid": s, "old_verdict": old_verdicts.get(s),
+                 # An old row with no matching claim record is an ORPHAN: the
+                 # publisher had no text for it and rendered "(claim text
+                 # unavailable)". Dropping it removes a broken card, not data.
+                 "had_claim_record": s in old_claim_sids}
+                for s in dropped],
+            "added_sids": sorted(new_sids - set(old_sids)),
+        })
+    return out
+
+
+# ── changed claims ────────────────────────────────────────────────────────
+def changed_claims(diffs: Iterable[dict], runs_dir: Path = RUNS_DIR,
+                   text_limit: int = 140, rationale_limit: int = 200) -> list[dict]:
+    """Every claim whose outcome moved, with the NEW panel rationale."""
+    rows: list[dict] = []
+    for d in diffs:
+        new_run = load_run(d.get("new_run_id", ""), runs_dir) or {}
+        reasoning = {r.get("sid"): (r.get("reasoning") or "")
+                     for r in (new_run.get("rows") or [])}
+        full_text = {c.get("sid"): (c.get("text") or "")
+                     for c in (new_run.get("claims") or [])}
+        for entry in d["per_sid"]:
+            if entry["category"] == "unchanged":
+                continue
+            sid = entry["sid"]
+            text = full_text.get(sid) or entry.get("text") or ""
+            rows.append({
+                "sid": sid,
+                "speech_id": d["speech_id"],
+                "speaker": SPEAKERS.get(d["speech_id"], ""),
+                "claim_text": _truncate(text, text_limit),
+                "claim_text_full": " ".join(str(text).split()),
+                "old_label": entry["old"],
+                "new_label": entry["new"],
+                "old_verdict": display(entry["old"]),
+                "new_verdict": display(entry["new"]),
+                "change_class": entry["category"],
+                "rationale": _truncate(reasoning.get(sid, ""), rationale_limit),
+            })
+    rows.sort(key=lambda r: (CLASS_ORDER.index(r["change_class"])
+                             if r["change_class"] in CLASS_ORDER else 99,
+                             SPEECH_ORDER.index(r["speech_id"])
+                             if r["speech_id"] in SPEECH_ORDER else 99,
+                             r["sid"]))
+    return rows
+
+
+# ── corrections entries ───────────────────────────────────────────────────
+_DISPOSITION_LABEL = {
+    "fc-excluded": "fact-check-excluded",
+    "era-violation": "era-invalid (published after the speech)",
+    "s5-capped": "over-cap political",
+    "mutable-endpoint": "mutable live-endpoint",
+}
+
+_CLASS_CAUSE = {
+    "decided_to_decided_changed":
+        "the panel reached a different substantive verdict on the rebuilt evidence pack",
+    "newly_gated":
+        "the rebuilt pack no longer clears the evidence gate "
+        "(insufficient-qualifying-evidence), so the claim is reported "
+        "Unverifiable instead of decided",
+    "newly_decided":
+        "the rebuilt pack cleared the evidence gate, so the panel returned a "
+        "substantive verdict where the prior run withheld one",
+    "split_changes":
+        "the panel's model votes changed split status on the rebuilt pack",
+    "other": "",
+}
+
+GENERIC_CAUSE = ("re-adjudicated under the unified v2.3 pipeline (evidence pack "
+                 "rebuilt under the corrected tier registry, era gate, and "
+                 "political-source cap)")
+
+
+def load_dc5_dispositions(path: Path = DIFF_DIR / "dc5_worksheet.json") -> dict[str, dict]:
+    """sid → the Phase-2 dry-run's projected evidence losses for that claim.
+
+    This is the dry run's PROJECTION over the old pack, not a measurement of
+    the rebuilt pack. Reasons that quote it say so."""
+    path = Path(path)
+    if not path.exists():
+        return {}
+    doc = _read_json(path)
+    out: dict[str, dict] = {}
+    for report in doc.get("per_report") or []:
+        for claim in report.get("claims") or []:
+            disp = claim.get("dispositions") or {}
+            removed = {k: v for k, v in disp.items()
+                       if k in _DISPOSITION_LABEL and v}
+            if removed:
+                out[claim["sid"]] = removed
+    return out
+
+
+def _dc5_clause(removed: dict[str, int]) -> str:
+    parts = [f"{n} {_DISPOSITION_LABEL[k]}"
+             for k, n in sorted(removed.items(), key=lambda kv: -kv[1])]
+    total = sum(removed.values())
+    return (f"the Phase-2 dry run projected the prior pack losing {total} "
+            f"evidence item(s) under the corrected rules ("
+            + ", ".join(parts) + ")")
+
+
+def build_reason(change: dict, dispositions: dict[str, dict]) -> str:
+    """Factual, specific where derivable; the approved generic line otherwise."""
+    clauses = []
+    cause = _CLASS_CAUSE.get(change["change_class"], "")
+    # "decided" in the diff's vocabulary includes panel UNVERIFIABLE (the panel
+    # ruled that the claim cannot be checked) — distinct from a gate-forced
+    # withholding. Saying "a different substantive verdict" for a move into or
+    # out of panel-UNVERIFIABLE would misdescribe it, so name it precisely.
+    if change["change_class"] == "decided_to_decided_changed":
+        old_u = str(change["old_label"]).strip().upper() == "UNVERIFIABLE"
+        new_u = str(change["new_label"]).strip().upper() == "UNVERIFIABLE"
+        if new_u:
+            cause = ("the panel itself returned Unverifiable on the rebuilt "
+                     "evidence pack (a panel ruling, not an evidence-gate "
+                     "withholding)")
+        elif old_u:
+            cause = ("the panel reached a substantive verdict on the rebuilt "
+                     "evidence pack where it previously ruled the claim "
+                     "unverifiable")
+    if cause:
+        clauses.append(cause)
+    removed = dispositions.get(change["sid"])
+    if removed:
+        clauses.append(_dc5_clause(removed))
+    if not clauses:
+        return GENERIC_CAUSE[0].upper() + GENERIC_CAUSE[1:] + "."
+    head = (f"Re-adjudicated on the unified {GENERATION} pipeline "
+            f"({REBUILD_DATE}): ")
+    return head + "; ".join(clauses) + "."
+
+
+def ledger_verdicts(change: dict) -> tuple[Optional[str], Optional[str], str]:
+    """(old, new, reason-if-unrepresentable) in the ledger's vocabulary.
+
+    ``data/corrections.json``'s loader accepts only TRUE/FALSE/MISLEADING/
+    UNVERIFIABLE and rejects an entry whose old and new verdict are equal. Two
+    real transitions in this corpus fall outside that vocabulary:
+
+    * anything touching "Models split" — the ledger has no split label;
+    * panel UNVERIFIABLE → gate-forced UNVERIFIABLE — a real provenance change
+      (the claim is now withheld by the evidence gate rather than by the
+      panel) that collapses to the same published badge.
+
+    Those changes are still reported in the DC-6 review; they just cannot be
+    expressed as a public correction, which is a statement about the ledger's
+    vocabulary, not a reason to drop them."""
+    old = str(change["old_label"]).strip().upper()
+    new = str(change["new_label"]).strip().upper()
+    if old == "GATED-UNVERIFIABLE":
+        old = "UNVERIFIABLE"
+    if new == "GATED-UNVERIFIABLE":
+        new = "UNVERIFIABLE"
+    if old not in LEDGER_VERDICTS or new not in LEDGER_VERDICTS:
+        return None, None, ("verdict outside the corrections vocabulary "
+                            f"({change['old_verdict']} → {change['new_verdict']})")
+    if old == new:
+        return None, None, ("published badge unchanged — provenance-only move "
+                            f"({change['old_label']} → {change['new_label']})")
+    return old, new, ""
+
+
+def correction_entries(changes: Iterable[dict],
+                       dispositions: Optional[dict[str, dict]] = None,
+                       date: str = REBUILD_DATE) -> dict:
+    """One record per changed verdict, split into ledger-eligible entries and
+    changes the ledger schema cannot express."""
+    dispositions = dispositions or {}
+    entries: list[dict] = []
+    non_ledger: list[dict] = []
+    for change in changes:
+        old, new, blocked = ledger_verdicts(change)
+        reason = build_reason(change, dispositions)
+        if blocked:
+            non_ledger.append({
+                "sid": change["sid"],
+                "speech_id": change["speech_id"],
+                "old_label": change["old_label"],
+                "new_label": change["new_label"],
+                "old_verdict": change["old_verdict"],
+                "new_verdict": change["new_verdict"],
+                "change_class": change["change_class"],
+                "reason": reason,
+                "excluded_because": blocked,
+            })
+            continue
+        entries.append({
+            "sid": change["sid"],
+            "speech_id": change["speech_id"],
+            "old_verdict": old,
+            "new_verdict": new,
+            "reason": reason,
+            "date": date,
+            "source": CORRECTION_SOURCE,
+        })
+    entries.sort(key=lambda e: e["sid"])
+    non_ledger.sort(key=lambda e: e["sid"])
+    return {
+        "schema": "truthbot-dc6-corrections-entries v1",
+        "generated": date,
+        "generation": GENERATION,
+        "usage": ("PUBLICATION RECORD, not an input to apply_to_artifact. The "
+                  "rebuilt artifacts already carry the new verdicts, so "
+                  "applying these entries would fail closed on the old_verdict "
+                  "check. Render the rebuilt corpus with --corrections skip."),
+        "changed_total": len(entries) + len(non_ledger),
+        "ledger_eligible": len(entries),
+        "not_ledger_representable": len(non_ledger),
+        "entries": entries,
+        "non_ledger_changes": non_ledger,
+    }
+
+
+# ── ledger clean-slate reset ──────────────────────────────────────────────
+def proposed_ledger(current: dict, entries: list[dict],
+                    archive_name: str, date: str = REBUILD_DATE,
+                    n_non_ledger: int = 0) -> dict:
+    """The PROPOSED post-reset data/corrections.json.
+
+    Clean slate: every pre-existing entry and note is archived to
+    ``archive_name`` and the live ledger carries the rebuild entries plus one
+    factual note. The note states only what is verifiable from this package —
+    it makes no claim about which way any individual verdict moved before
+    2026-08-06."""
+    n_old = len(current.get("entries") or [])
+    n_notes = len(current.get("notes") or [])
+    note = (
+        f"On {date} the entire five-speech corpus was re-adjudicated from "
+        f"scratch on the unified {GENERATION} pipeline (corrected source-tier "
+        "registry, fail-closed era gate, and per-claim cap on political "
+        f"sources). {len(entries)} claims are published with a verdict that "
+        "differs from the previously published run and are listed below. The "
+        f"{n_old} correction entr{'y' if n_old == 1 else 'ies'} and "
+        f"{n_notes} note{'' if n_notes == 1 else 's'} issued before that date "
+        "described the superseded run; they are archived verbatim in "
+        f"{archive_name} and no longer describe what this site publishes."
+        + (f" A further {n_non_ledger} claims changed in a way this ledger's "
+           "vocabulary cannot express (model-split transitions, and claims "
+           "withheld by the evidence gate rather than by the panel); they are "
+           "itemised in the DC-6 review package."
+           if n_non_ledger else "")
+    )
+    return {
+        "schema": current.get("schema", "truthbot-corrections v1"),
+        "notes": [{"date": date, "text": note}],
+        "entries": list(entries),
+    }
+
+
+# ── badge diff ────────────────────────────────────────────────────────────
+def _norm_text(text: str) -> str:
+    return re.sub(r"\s+", " ", str(text or "")).strip().lower()
+
+
+def _site_claims(site_root: Path) -> list[dict]:
+    """(speaker, claim_text, verdict) triples out of a rendered site tree."""
+    site_root = Path(site_root)
+    claims = _read_json(site_root / "data" / "claims.json")
+    reports = _read_json(site_root / "data" / "reports.json")
+    speaker_by_report = {r.get("id") or r.get("report_id"): r.get("speaker", "")
+                         for r in reports}
+    return [{
+        "id": c.get("id", ""),
+        "speaker": speaker_by_report.get(c.get("report_id"), ""),
+        "claim_text": c.get("claim_text", ""),
+        "verdict": c.get("consensus_verdict", ""),
+    } for c in claims]
+
+
+def badge_diff(old_claims: list[dict], new_claims: list[dict]) -> dict:
+    """Old vs new published badges, keyed on (speaker, normalised claim text).
+
+    Claim ids are minted per render (``uuid4`` in rerender_pca_site.py), so an
+    id-keyed diff matches nothing and reports "everything changed" — vacuous.
+    ``id_overlap`` proves that in-band: it is the count of ids common to both
+    sites, and it should be 0 for two independent renders."""
+    def key(c):
+        return (c["speaker"], _norm_text(c["claim_text"]))
+
+    old_by, new_by = {}, {}
+    dup_old, dup_new = 0, 0
+    for c in old_claims:
+        if key(c) in old_by:
+            dup_old += 1
+        old_by[key(c)] = c
+    for c in new_claims:
+        if key(c) in new_by:
+            dup_new += 1
+        new_by[key(c)] = c
+
+    matched = sorted(set(old_by) & set(new_by))
+    changes = []
+    for k in matched:
+        if old_by[k]["verdict"] != new_by[k]["verdict"]:
+            changes.append({
+                "speaker": k[0],
+                "claim_text": _truncate(new_by[k]["claim_text"], 140),
+                "old_verdict": old_by[k]["verdict"],
+                "new_verdict": new_by[k]["verdict"],
+            })
+    only_old = [{"speaker": k[0], "claim_text": _truncate(old_by[k]["claim_text"], 140),
+                 "verdict": old_by[k]["verdict"]}
+                for k in sorted(set(old_by) - set(new_by))]
+    only_new = [{"speaker": k[0], "claim_text": _truncate(new_by[k]["claim_text"], 140),
+                 "verdict": new_by[k]["verdict"]}
+                for k in sorted(set(new_by) - set(old_by))]
+    id_overlap = len({c["id"] for c in old_claims} & {c["id"] for c in new_claims})
+    return {
+        "keyed_on": "(speaker, normalised claim_text)",
+        "old_claims": len(old_claims),
+        "new_claims": len(new_claims),
+        "matched": len(matched),
+        "only_old": len(only_old),
+        "only_new": len(only_new),
+        "verdict_changes": len(changes),
+        "duplicate_keys_old": dup_old,
+        "duplicate_keys_new": dup_new,
+        "id_overlap": id_overlap,
+        "id_keying_would_be_vacuous": id_overlap == 0,
+        "changes": changes,
+        "only_old_claims": only_old,
+        "only_new_claims": only_new,
+    }
+
+
+def renderer_selection(runs_dir: Path = RUNS_DIR) -> dict[str, str]:
+    """speech_id → run id the renderer WILL choose, by its own rule.
+
+    Mirrors ``scripts/rerender_pca_site.py``: newest-mtime evidence-bearing
+    artifact per speech_id. Recomputing it here is how we assert the staged
+    render actually consumed the five rebuilds rather than trusting the log."""
+    latest: dict[str, str] = {}
+    for path in sorted(Path(runs_dir).glob("*.json"),
+                       key=lambda p: p.stat().st_mtime):
+        try:
+            doc = _read_json(path)
+        except (ValueError, OSError):
+            continue
+        if "evidence" not in doc:
+            continue
+        speech = (doc.get("meta") or {}).get("speech_id") or path.stem
+        latest[speech] = path.stem
+    return latest
+
+
+def reconcile(badge: dict, agg: dict, entries_doc: dict) -> dict:
+    """Does the rendered badge diff agree with the per-speech verdict diffs?
+
+    They count different things where the published badge collapses two
+    contract labels onto one word (panel UNVERIFIABLE and gate-forced
+    UNVERIFIABLE both render "Unverifiable"), so the expected identity is::
+
+        badge verdict_changes == changed_total - badge-invisible changes
+
+    where the badge-invisible set is exactly the provenance-only moves the
+    corrections builder already had to set aside."""
+    changed_total = agg["corpus"]["changed_total"]
+    invisible = [c for c in entries_doc["non_ledger_changes"]
+                 if c["old_verdict"] == c["new_verdict"]]
+    expected = changed_total - len(invisible)
+    return {
+        "per_speech_changed_total": changed_total,
+        "badge_invisible_changes": len(invisible),
+        "badge_invisible_sids": [c["sid"] for c in invisible],
+        "expected_badge_changes": expected,
+        "actual_badge_changes": badge["verdict_changes"],
+        "agree": expected == badge["verdict_changes"],
+        "delta": badge["verdict_changes"] - expected,
+    }
+
+
+# ── spend ─────────────────────────────────────────────────────────────────
+def spend_table(diffs: Iterable[dict]) -> dict:
+    per_speech = []
+    proxy = offproxy = stated = 0.0
+    for d in diffs:
+        sid = d["speech_id"]
+        s = SPEND.get(sid, {})
+        p, o = float(s.get("proxy_usd", 0.0)), float(s.get("offproxy_usd", 0.0))
+        st = float(s.get("stated_usd", 0.0))
+        proxy += p
+        offproxy += o
+        stated += st
+        per_speech.append({
+            "speech_id": sid,
+            "speaker": SPEAKERS.get(sid, ""),
+            "old_run_id": d.get("rebuild_of", ""),
+            "new_run_id": d.get("new_run_id", ""),
+            "claims": d["n_compared"],
+            "legs": s.get("legs", 1),
+            "proxy_usd_ledger_true": round(p, 4),
+            "offproxy_usd_ESTIMATE": round(o, 4),
+            "log_total_usd": round(p + o, 4),
+            "brief_stated_usd": st,
+            "delta_vs_brief": round((p + o) - st, 4),
+            "note": s.get("note", ""),
+        })
+    log_total = proxy + offproxy
+    discrepancies = [r for r in per_speech if abs(r["delta_vs_brief"]) >= 0.01]
+    return {
+        "per_speech": per_speech,
+        "shape_backfill_usd_ledger_true": SHAPE_BACKFILL_USD,
+        "proxy_usd_ledger_true": round(proxy + SHAPE_BACKFILL_USD, 4),
+        "offproxy_usd_ESTIMATE": round(offproxy, 4),
+        "log_derived_total_usd": round(log_total + SHAPE_BACKFILL_USD, 4),
+        "brief_stated_per_speech_sum_usd": round(stated, 2),
+        "brief_stated_total_usd": STATED_TOTAL_USD,
+        "cost_basis": {
+            "proxy": "ledger-true — billed by the LiteLLM proxy key",
+            "off_proxy": ("ESTIMATE — models called outside the proxy, costed "
+                          "from token counts at published list rates"),
+        },
+        "discrepancies": [
+            f"{r['speech_id']}: run logs total ${r['log_total_usd']:.4f} vs "
+            f"${r['brief_stated_usd']:.2f} stated in the DC-6 brief "
+            f"({r['delta_vs_brief']:+.4f})" for r in discrepancies
+        ] + ([
+            f"corpus: run logs total ${log_total + SHAPE_BACKFILL_USD:.4f} "
+            f"(incl. ${SHAPE_BACKFILL_USD:.2f} shape backfill) vs "
+            f"~${STATED_TOTAL_USD:.2f} stated in the brief; the brief's "
+            f"per-speech figures themselves sum to ${stated:.2f} BEFORE the "
+            "backfill, so the stated total appears to double-count the "
+            "backfill as already included"
+        ] if abs((log_total + SHAPE_BACKFILL_USD) - STATED_TOTAL_USD) >= 0.01 else []),
+    }
+
+
+# ── markdown ──────────────────────────────────────────────────────────────
+def _pct(rate: float) -> str:
+    return f"{rate * 100:.1f}%"
+
+
+def _table(headers: list[str], rows: list[list[str]]) -> list[str]:
+    out = ["| " + " | ".join(headers) + " |",
+           "|" + "|".join("---" for _ in headers) + "|"]
+    out += ["| " + " | ".join(str(c) for c in row) + " |" for row in rows]
+    return out
+
+
+def render_markdown(review: dict) -> str:
+    agg, dist = review["aggregate"], review["distributions"]
+    L: list[str] = []
+    A = L.append
+    A("# DC-6 review package — Phase-3 rebuild vs published corpus")
+    A("")
+    A(f"Generated `{review['generated']}` · generation `{review['generation']}` · "
+      "$0 (derived from artifacts on disk; no model calls).")
+    A("")
+    A("**This is a review surface, not a publish.** The rebuilt artifacts are "
+      "committed with `published: false`; `site-pca/` still serves the old runs. "
+      "Read the changed-claim tables below and decide.")
+    A("")
+
+    # Headline
+    c = agg["corpus"]
+    A("## 1. Headline")
+    A("")
+    A(f"- Claims re-adjudicated: **{c['claims']}**")
+    A(f"- Unchanged: **{c['unchanged']}** · Changed: **{c['changed_total']}** "
+      f"({c['changed_total'] / c['claims'] * 100:.1f}%)")
+    A("- Decided → decided (flipped between substantive verdicts): "
+      f"**{c['decided_to_decided_changed']}**")
+    A(f"- Newly gated (decided → withheld): **{c['newly_gated']}**")
+    A(f"- Newly decided (withheld → decided): **{c['newly_decided']}**")
+    A(f"- Split changes: **{c['split_changes']}** · Other: **{c['other']}**")
+    A(f"- Gate-forced Unverifiable in the new runs: **{c['gate_forced_new']}**")
+    A("")
+    corpus = dist["corpus"]
+    A(f"- Corpus decided-rate: **{_pct(corpus['old_decided']['rate'])}** "
+      f"({corpus['old_decided']['decided']}/{corpus['old_decided']['total']}) → "
+      f"**{_pct(corpus['new_decided']['rate'])}** "
+      f"({corpus['new_decided']['decided']}/{corpus['new_decided']['total']}), "
+      f"{corpus['decided_rate_delta'] * 100:+.1f} pts")
+    A("")
+
+    # Flags
+    if review.get("flags"):
+        A("## 2. Flags — read these before anything else")
+        A("")
+        for flag in review["flags"]:
+            A(f"- **{flag}**")
+        A("")
+    else:
+        A("## 2. Flags")
+        A("")
+        A("- none")
+        A("")
+
+    # Per-speech
+    A("## 3. Per-speech change counts")
+    A("")
+    rows = [[r["speech_id"], r["speaker"], r["claims"], r["unchanged"],
+             r["decided_to_decided_changed"], r["newly_gated"],
+             r["newly_decided"], r["split_changes"], r["changed_total"]]
+            for r in (agg["per_speech"][s] for s in SPEECH_ORDER
+                      if s in agg["per_speech"])]
+    rows.append(["**corpus**", "", c["claims"], c["unchanged"],
+                 c["decided_to_decided_changed"], c["newly_gated"],
+                 c["newly_decided"], c["split_changes"], c["changed_total"]])
+    L += _table(["speech", "speaker", "claims", "unchanged", "dec→dec",
+                 "newly gated", "newly decided", "splits", "changed"], rows)
+    A("")
+
+    # Distribution
+    A("## 4. Verdict distribution — old vs new")
+    A("")
+    A("Old = the published run's rows; new = the rebuilt run's rows. "
+      "`decided` = every claim that is not Unverifiable and not a model split.")
+    A("")
+    for sid in SPEECH_ORDER:
+        if sid not in dist["per_speech"]:
+            continue
+        d = dist["per_speech"][sid]
+        A(f"### {d['speaker']} — `{sid}`")
+        A("")
+        rows = [["old"] + [d["old"].get(v, 0) for v in DISPLAY_ORDER]
+                + [f"{d['old_decided']['decided']}/{d['old_decided']['total']}",
+                   _pct(d["old_decided"]["rate"])],
+                ["new"] + [d["new"].get(v, 0) for v in DISPLAY_ORDER]
+                + [f"{d['new_decided']['decided']}/{d['new_decided']['total']}",
+                   _pct(d["new_decided"]["rate"])]]
+        L += _table(["run"] + DISPLAY_ORDER + ["decided", "decided-rate"], rows)
+        A("")
+        A(f"decided-rate change: **{d['decided_rate_delta'] * 100:+.1f} pts**"
+          + ("  ⚠ old and new denominators differ — see flags"
+             if d["denominator_mismatch"] else ""))
+        A("")
+    A("### Corpus")
+    A("")
+    rows = [["old"] + [corpus["old"].get(v, 0) for v in DISPLAY_ORDER]
+            + [f"{corpus['old_decided']['decided']}/{corpus['old_decided']['total']}",
+               _pct(corpus["old_decided"]["rate"])],
+            ["new"] + [corpus["new"].get(v, 0) for v in DISPLAY_ORDER]
+            + [f"{corpus['new_decided']['decided']}/{corpus['new_decided']['total']}",
+               _pct(corpus["new_decided"]["rate"])]]
+    L += _table(["run"] + DISPLAY_ORDER + ["decided", "decided-rate"], rows)
+    A("")
+    A("**Era parity** — decided-rate, oldest speech to newest, old → new:")
+    A("")
+    parity = [f"`{sid}` {_pct(dist['per_speech'][sid]['old_decided']['rate'])} → "
+              f"{_pct(dist['per_speech'][sid]['new_decided']['rate'])}"
+              for sid in SPEECH_ORDER if sid in dist["per_speech"]]
+    A("- " + "  ·  ".join(parity))
+    A("")
+    ep = dist["era_parity"]
+    A(f"Spread across speeches (max − min decided-rate): "
+      f"**{_pct(ep['old_spread']['spread'])}** old "
+      f"(`{ep['old_spread']['max_speech']}` {_pct(ep['old_spread']['max'])} vs "
+      f"`{ep['old_spread']['min_speech']}` {_pct(ep['old_spread']['min'])}) → "
+      f"**{_pct(ep['new_spread']['spread'])}** new "
+      f"(`{ep['new_spread']['max_speech']}` {_pct(ep['new_spread']['max'])} vs "
+      f"`{ep['new_spread']['min_speech']}` {_pct(ep['new_spread']['min'])}), "
+      f"{ep['spread_delta'] * 100:+.1f} pts — "
+      f"**{'NARROWED' if ep['narrowed'] else 'WIDENED'}**.")
+    A("")
+    if not ep["narrowed"]:
+        A("> The unified pipeline did NOT equalise decided-rates across eras; "
+          "it spread them further apart. A reader should not read this rebuild "
+          "as having produced era parity in outcome — it produced one "
+          "methodology, applied uniformly, whose per-speech decided-rates "
+          "differ more than before. Judge the publish on that basis.")
+        A("")
+
+    # Changed claims
+    A("## 5. Every changed claim")
+    A("")
+    A("Ordered by consequence: verdicts that flipped between two substantive "
+      "rulings first, then claims newly withheld, then claims newly decided, "
+      "then split changes. Rationale is the NEW panel's reasoning.")
+    A("")
+    by_class: dict[str, list[dict]] = {}
+    for change in review["changed_claims"]:
+        by_class.setdefault(change["change_class"], []).append(change)
+    for cls in CLASS_ORDER:
+        items = by_class.get(cls) or []
+        if not items:
+            continue
+        A(f"### {CLASS_TITLE[cls]} — {len(items)} claim(s)")
+        A("")
+        for sid in SPEECH_ORDER:
+            speech_items = [i for i in items if i["speech_id"] == sid]
+            if not speech_items:
+                continue
+            A(f"#### {SPEAKERS.get(sid, sid)} — `{sid}` ({len(speech_items)})")
+            A("")
+            for item in speech_items:
+                A(f"- **`{item['sid']}`** · {item['old_verdict']} → "
+                  f"**{item['new_verdict']}**")
+                A(f"  - claim: {item['claim_text']}")
+                A(f"  - new rationale: {item['rationale'] or '(none recorded)'}")
+            A("")
+
+    # Spend
+    spend = review["spend"]
+    A("## 6. Spend + provenance")
+    A("")
+    A("`proxy` is **ledger-true** (billed by the LiteLLM proxy key). "
+      "`off-proxy` is an **ESTIMATE** — models called outside the proxy, costed "
+      "from token counts at published list rates.")
+    A("")
+    rows = [[r["speech_id"], f"`{r['old_run_id'][:8]}` → `{r['new_run_id'][:8]}`",
+             r["claims"], r["legs"], f"${r['proxy_usd_ledger_true']:.4f}",
+             f"${r['offproxy_usd_ESTIMATE']:.4f}", f"${r['log_total_usd']:.4f}",
+             f"${r['brief_stated_usd']:.2f}", f"{r['delta_vs_brief']:+.4f}"]
+            for r in spend["per_speech"]]
+    rows.append(["shape backfill", "(haiku sidecars)", "—", "—",
+                 f"${spend['shape_backfill_usd_ledger_true']:.2f}", "$0.0000",
+                 f"${spend['shape_backfill_usd_ledger_true']:.2f}", "—", "—"])
+    rows.append(["**total**", "", "", "",
+                 f"${spend['proxy_usd_ledger_true']:.4f}",
+                 f"${spend['offproxy_usd_ESTIMATE']:.4f}",
+                 f"${spend['log_derived_total_usd']:.4f}",
+                 f"${spend['brief_stated_total_usd']:.2f}", ""])
+    L += _table(["speech", "old run → new run", "claims", "legs",
+                 "proxy (ledger-true)", "off-proxy (ESTIMATE)", "log total",
+                 "brief stated", "Δ"], rows)
+    A("")
+    for note in (r for r in spend["per_speech"] if r["legs"] > 1):
+        A(f"- `{note['speech_id']}`: {note['note']}")
+    A("")
+    if spend["discrepancies"]:
+        A("**Spend discrepancies (not smoothed):**")
+        A("")
+        for d in spend["discrepancies"]:
+            A(f"- {d}")
+        A("")
+
+    # Render + badge diff
+    if review.get("render"):
+        r = review["render"]
+        A("## 7. Staged render + badge diff")
+        A("")
+        A(f"- site root: `{r['site_root']}` (staged; `site-pca/` untouched)")
+        A("- artifacts picked by the renderer: "
+          + ", ".join(f"`{a['speech_id']}`→`{a['run_id'][:8]}`"
+                      for a in r["artifacts"]))
+        A(f"- all five NEW artifacts selected: **{r['picked_all_new']}**")
+        verdict = ("PASS — 0 violations" if not r["violations"]
+                   else f"{len(r['violations'])} VIOLATION(S)")
+        A(f"- `check_site(strict_buckets=True)`: **{verdict}**")
+        for v in r["violations"]:
+            A(f"  - {v}")
+        A("")
+        b = review["badge_diff"]
+        A(f"- badge diff keyed on {b['keyed_on']}: matched **{b['matched']}**, "
+          f"only-old **{b['only_old']}**, only-new **{b['only_new']}**, "
+          f"verdict changes **{b['verdict_changes']}**")
+        A(f"- id overlap between the two renders: **{b['id_overlap']}** — "
+          f"id-keying would be vacuous: **{b['id_keying_would_be_vacuous']}**")
+        for c_ in b["only_old_claims"]:
+            A(f"  - only-old: {c_['speaker']} — {c_['claim_text']} [{c_['verdict']}]")
+        for c_ in b["only_new_claims"]:
+            A(f"  - only-new: {c_['speaker']} — {c_['claim_text']} [{c_['verdict']}]")
+        A("")
+        rec = review["reconciliation"]
+        A(f"- reconciliation: per-speech diffs report {rec['per_speech_changed_total']} "
+          f"changes; {rec['badge_invisible_changes']} of them are invisible on the "
+          f"published badge (panel-Unverifiable → gate-forced-Unverifiable), so the "
+          f"badge diff should show {rec['expected_badge_changes']} and shows "
+          f"{rec['actual_badge_changes']} — **{'AGREE' if rec['agree'] else 'DISAGREE'}**")
+        A("")
+
+    # Corrections
+    corr = review["corrections"]
+    A("## 8. Proposed corrections ledger")
+    A("")
+    A(f"- changed verdicts: **{corr['changed_total']}**")
+    A(f"- expressible as public corrections: **{corr['ledger_eligible']}**")
+    A(f"- not expressible in the ledger vocabulary: **{corr['not_ledger_representable']}** "
+      "(model-split transitions; and claims that moved from panel-Unverifiable "
+      "to gate-forced-Unverifiable, which publish the same badge)")
+    A(f"- archive target: `{corr['archive_path']}` "
+      f"({corr['archived_entries']} entries + {corr['archived_notes']} note(s))")
+    A(f"- proposed live ledger: {corr['proposed_entries']} entries + 1 note")
+    A("")
+    A("`data/corrections.json` is NOT modified by this script. The reset is "
+      "applied at publish time, under the gate.")
+    A("")
+    A("**Publish mechanics:** these entries are a PUBLICATION RECORD of what "
+      "the rebuild changed — they must not be re-applied to the artifacts. "
+      "`apply_to_artifact` fails closed when an entry's `old_verdict` does not "
+      "match the row, and the rebuilt rows already carry the NEW verdicts. "
+      "Render with `--corrections skip`; the corrections page still publishes "
+      "the full ledger and its note.")
+    A("")
+    return "\n".join(L) + "\n"
+
+
+# ── driver ────────────────────────────────────────────────────────────────
+def build_review(new_site: Optional[Path] = None,
+                 old_site: Optional[Path] = None,
+                 diff_dir: Path = DIFF_DIR,
+                 runs_dir: Path = RUNS_DIR) -> tuple[dict, dict, dict]:
+    diffs = load_diffs(diff_dir)
+    agg = aggregate(diffs)
+    dist = distributions(diffs)
+    cov = coverage(diffs, runs_dir)
+    changes = changed_claims(diffs, runs_dir)
+    dispositions = load_dc5_dispositions(diff_dir / "dc5_worksheet.json")
+    entries_doc = correction_entries(changes, dispositions)
+
+    flags: list[str] = []
+    ep = dist["era_parity"]
+    if not ep["narrowed"]:
+        flags.append(
+            "era parity: the spread of decided-rates across the five speeches "
+            f"WIDENED from {ep['old_spread']['spread'] * 100:.1f} pts to "
+            f"{ep['new_spread']['spread'] * 100:.1f} pts "
+            f"({ep['new_spread']['min_speech']} is now the least-decided at "
+            f"{ep['new_spread']['min'] * 100:.1f}% vs "
+            f"{ep['new_spread']['max_speech']} at "
+            f"{ep['new_spread']['max'] * 100:.1f}%). The rebuild unified the "
+            "METHOD; it did not equalise the OUTCOME")
+    for c in cov:
+        if c["dropped_sids"]:
+            orphans = [x["sid"] for x in c["dropped_detail"]
+                       if not x["had_claim_record"]]
+            detail = "; ".join(
+                f"{x['sid']} (old verdict {x['old_verdict']}, "
+                + ("ORPHAN — the published run had no claim record for it and "
+                   "rendered '(claim text unavailable)'"
+                   if not x["had_claim_record"] else
+                   "had a claim record — real content loss")
+                + ")" for x in c["dropped_detail"])
+            flags.append(
+                f"{c['speech_id']}: {len(c['dropped_sids'])} sid(s) present in "
+                f"the published run ({c['old_rows']} rows) are ABSENT from the "
+                f"rebuild ({c['new_rows']} rows) and were never re-adjudicated "
+                f"— {detail}. Publishing changes that report's claim count from "
+                f"{c['old_rows']} to {c['new_rows']}"
+                + (f"; {len(orphans)} of the dropped sid(s) were orphan rows, so "
+                   "the drop removes a broken card rather than losing a checked "
+                   "claim" if orphans else ""))
+        if c["added_sids"]:
+            flags.append(f"{c['speech_id']}: {len(c['added_sids'])} sid(s) are "
+                         f"new in the rebuild — {', '.join(c['added_sids'])}")
+
+    review: dict[str, Any] = {
+        "schema": "truthbot-dc6-review v1",
+        "generated": REBUILD_DATE,
+        "generation": GENERATION,
+        "aggregate": agg,
+        "distributions": dist,
+        "coverage": cov,
+        "changed_claims": changes,
+        "spend": spend_table(diffs),
+    }
+
+    if new_site is not None:
+        from truthbot.publish.consistency import check_site
+        new_claims = _site_claims(new_site)
+        reports = _read_json(Path(new_site) / "data" / "reports.json")
+        selected = renderer_selection(runs_dir)
+        picked, wrong = [], []
+        for d in diffs:
+            expected = d.get("new_run_id", "")
+            actual = selected.get(d["speech_id"], "")
+            picked.append({"speech_id": d["speech_id"], "run_id": actual,
+                           "expected_run_id": expected, "ok": actual == expected})
+            if actual != expected:
+                wrong.append(f"{d['speech_id']}: renderer selects "
+                             f"{actual[:8] or '(none)'}, rebuild is {expected[:8]}")
+        violations = [str(v) for v in check_site(Path(new_site), strict_buckets=True)]
+        review["render"] = {
+            "site_root": str(new_site),
+            "reports": len(reports),
+            "claims": len(new_claims),
+            "artifacts": picked,
+            "picked_all_new": not wrong,
+            "selection_errors": wrong,
+            "violations": violations,
+        }
+        flags += wrong
+        if old_site is not None:
+            badge = badge_diff(_site_claims(old_site), new_claims)
+            review["badge_diff"] = badge
+            rec = reconcile(badge, agg, entries_doc)
+            review["reconciliation"] = rec
+            if not rec["agree"]:
+                flags.append(
+                    f"badge diff ({rec['actual_badge_changes']}) and per-speech "
+                    f"verdict diffs ({rec['expected_badge_changes']} expected "
+                    f"after {rec['badge_invisible_changes']} badge-invisible "
+                    f"move(s)) DISAGREE by {rec['delta']:+d} — investigate "
+                    "before publishing")
+            if badge["only_old"] or badge["only_new"]:
+                flags.append(
+                    f"badge diff: {badge['only_old']} claim(s) present only in "
+                    f"the published site and {badge['only_new']} only in the "
+                    "staged render")
+            if violations:
+                flags.append(f"check_site(strict_buckets=True): "
+                             f"{len(violations)} violation(s)")
+
+    flags += review["spend"]["discrepancies"]
+    review["flags"] = flags
+    return review, entries_doc, {"diffs": diffs}
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--new-site", default=None,
+                    help="staged render root (e.g. /tmp/dc6-site); enables the "
+                         "consistency gate + badge diff")
+    ap.add_argument("--old-site", default=str(REPO / "site-pca"),
+                    help="published site root for the badge diff (read-only)")
+    ap.add_argument("--out-dir", default=str(DIFF_DIR))
+    ap.add_argument("--write-archive", action="store_true",
+                    help=f"also write data/corrections-archive-{REBUILD_DATE}.json")
+    args = ap.parse_args()
+
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    new_site = Path(args.new_site) if args.new_site else None
+    old_site = Path(args.old_site) if (args.old_site and new_site) else None
+
+    review, entries_doc, _ = build_review(new_site, old_site)
+
+    ledger_path = REPO / "data" / "corrections.json"
+    current = _read_json(ledger_path)
+    archive_name = f"data/corrections-archive-{REBUILD_DATE}.json"
+    proposed = proposed_ledger(current, entries_doc["entries"], archive_name,
+                               n_non_ledger=entries_doc["not_ledger_representable"])
+
+    review["corrections"] = {
+        "changed_total": entries_doc["changed_total"],
+        "ledger_eligible": entries_doc["ledger_eligible"],
+        "not_ledger_representable": entries_doc["not_ledger_representable"],
+        "archive_path": archive_name,
+        "archived_entries": len(current.get("entries") or []),
+        "archived_notes": len(current.get("notes") or []),
+        "proposed_entries": len(proposed["entries"]),
+    }
+
+    (out_dir / "dc6_corrections_entries.json").write_text(
+        json.dumps(entries_doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (out_dir / "dc6_corrections_ledger_proposed.json").write_text(
+        json.dumps(proposed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (out_dir / "dc6_review.json").write_text(
+        json.dumps(review, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (out_dir / "dc6_review.md").write_text(render_markdown(review), encoding="utf-8")
+
+    if args.write_archive:
+        (REPO / archive_name).write_text(
+            json.dumps(current, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"archived current ledger → {archive_name}")
+
+    print(f"DC-6 package → {out_dir}/dc6_review.{{json,md}}, "
+          f"dc6_corrections_entries.json, dc6_corrections_ledger_proposed.json")
+    c = review["aggregate"]["corpus"]
+    print(f"  {c['claims']} claims · {c['changed_total']} changed "
+          f"({c['decided_to_decided_changed']} dec→dec, {c['newly_gated']} gated, "
+          f"{c['newly_decided']} decided, {c['split_changes']} split)")
+    print(f"  corrections: {entries_doc['ledger_eligible']} ledger-eligible, "
+          f"{entries_doc['not_ledger_representable']} not representable")
+    for flag in review["flags"]:
+        print(f"  FLAG: {flag}")
+
+
+if __name__ == "__main__":
+    main()
