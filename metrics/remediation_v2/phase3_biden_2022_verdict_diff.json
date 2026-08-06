@@ -1,0 +1,808 @@
+{
+  "speech_id": "biden_2022",
+  "rebuild_of": "7208bbbb-c802-4155-932f-d0cc66803b24",
+  "new_run_id": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+  "old_tally": {
+    "UNVERIFIABLE": 7,
+    "TRUE": 96,
+    "MISLEADING": 4,
+    "Models split": 3,
+    "FALSE": 1
+  },
+  "new_tally": {
+    "UNVERIFIABLE": 17,
+    "TRUE": 86,
+    "MISLEADING": 5,
+    "FALSE": 1,
+    "Models split": 2
+  },
+  "n_compared": 111,
+  "counts": {
+    "unchanged": 91,
+    "decided_to_decided_changed": 3,
+    "newly_gated": 12,
+    "newly_decided": 3,
+    "split_changes": 2,
+    "other": 0
+  },
+  "gate_forced_new": 16,
+  "per_sid": [
+    {
+      "sid": "biden_2022:0017",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Groups of citizens blocking tanks with their bodies."
+    },
+    {
+      "sid": "biden_2022:0019",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” Th"
+    },
+    {
+      "sid": "biden_2022:0025",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That’s why the NATO Alliance was created to secure peace and stability in Europe after World War 2."
+    },
+    {
+      "sid": "biden_2022:0026",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The United States is a member along with 29 other nations."
+    },
+    {
+      "sid": "biden_2022:0030",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Putin’s latest attack on Ukraine was premeditated and unprovoked."
+    },
+    {
+      "sid": "biden_2022:0045",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Putin is now isolated from the world more than ever."
+    },
+    {
+      "sid": "biden_2022:0031",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "He rejected repeated efforts at diplomacy."
+    },
+    {
+      "sid": "biden_2022:0038",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We spent months building a coalition of other freedom-loving nations from Europe and the Americas to Asia and Africa to "
+    },
+    {
+      "sid": "biden_2022:0040",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We shared with the world in advance what we knew Putin was planning and precisely how he would try to falsely justify hi"
+    },
+    {
+      "sid": "biden_2022:0046",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Together with our allies, we are right now enforcing powerful economic sanctions."
+    },
+    {
+      "sid": "biden_2022:0051",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The US Department of Justice is assembling a dedicated task force to go after the crimes of Russian oligarchs."
+    },
+    {
+      "sid": "biden_2022:0047",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We are cutting off Russia’s largest banks from the international financial system."
+    },
+    {
+      "sid": "biden_2022:0048",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Preventing Russia’s central bank from defending the Russian Ruble, making Putin’s $630 Billion “war fund” worthless."
+    },
+    {
+      "sid": "biden_2022:0055",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The Ruble has lost 30 percent of its value."
+    },
+    {
+      "sid": "biden_2022:0056",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The Russian stock market has lost 40 percent of its value and trading remains suspended."
+    },
+    {
+      "sid": "biden_2022:0062",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We are giving more than $1 Billion in direct assistance to Ukraine."
+    },
+    {
+      "sid": "biden_2022:0066",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For that purpose, we’ve mobilized American ground forces, air squadrons, and ship deployments to protect NATO countries "
+    },
+    {
+      "sid": "biden_2022:0073",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And a proud Ukrainian people, who have known 30 years of independence, have repeatedly shown that they will not tolerate"
+    },
+    {
+      "sid": "biden_2022:0078",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Tonight, I can announce that the United States has worked with 30 other countries to release 60 million barrels of oil f"
+    },
+    {
+      "sid": "biden_2022:0079",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "America will lead that effort, releasing 30 million barrels from our own Strategic Petroleum Reserve."
+    },
+    {
+      "sid": "biden_2022:0087",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And we see unity among the people who are gathering in cities in large crowds around the world, even in Russia, to demon"
+    },
+    {
+      "sid": "biden_2022:0100",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I remember when my dad had to leave our home in Scranton, Pennsylvania to find work."
+    },
+    {
+      "sid": "biden_2022:0102",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That’s why one of the first things I did as President was fight to pass the American Rescue Plan."
+    },
+    {
+      "sid": "biden_2022:0107",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It delivered immediate economic relief for tens of millions of Americans."
+    },
+    {
+      "sid": "biden_2022:0110",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "And unlike the $2-trillion tax cut passed in the previous administration that benefitted the top 1 percent of Americans,"
+    },
+    {
+      "sid": "biden_2022:0114",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in "
+    },
+    {
+      "sid": "biden_2022:0115",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Our economy grew at a rate of 5.7 percent last year, the strongest growth in nearly 40 years, the first step in bringing"
+    },
+    {
+      "sid": "biden_2022:0116",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For the past 40 years, we were told that if we gave tax breaks to those at the very top, the benefits would trickle down"
+    },
+    {
+      "sid": "biden_2022:0117",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "But that trickle-down theory led to weaker economic growth, lower wages, bigger deficits, and the widest gap between tho"
+    },
+    {
+      "sid": "biden_2022:0124",
+      "old": "UNVERIFIABLE",
+      "new": "UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "America used to have the best roads, bridges, and airports on Earth."
+    },
+    {
+      "sid": "biden_2022:0125",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Now our infrastructure is ranked 13th in the world."
+    },
+    {
+      "sid": "biden_2022:0127",
+      "old": "Models split",
+      "new": "MISLEADING",
+      "category": "newly_decided",
+      "text": "That’s why it was so important to pass the Bipartisan Infrastructure Law—the most sweeping investment to rebuild America"
+    },
+    {
+      "sid": "biden_2022:0136",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "4,000 projects have already been announced."
+    },
+    {
+      "sid": "biden_2022:0137",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And tonight, I’m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrep"
+    },
+    {
+      "sid": "biden_2022:0139",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The federal government spends about $600 Billion a year to keep the country safe and secure."
+    },
+    {
+      "sid": "biden_2022:0146",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "If you travel 20 miles east of Columbus, Ohio, you’ll find 1,000 empty acres of land."
+    },
+    {
+      "sid": "biden_2022:0154",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Intel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to"
+    },
+    {
+      "sid": "biden_2022:0155",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "That would be one of the biggest investments in manufacturing in American history."
+    },
+    {
+      "sid": "biden_2022:0140",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "There’s been a law on the books for almost a century to make sure taxpayers’ dollars support American jobs and businesse"
+    },
+    {
+      "sid": "biden_2022:0148",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This is where Intel, the American company that helped build Silicon Valley, is going to build its $20 billion semiconduc"
+    },
+    {
+      "sid": "biden_2022:0168",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "GM is making the largest investment in its history—$7 billion to build electric vehicles, creating 4,000 jobs in Michiga"
+    },
+    {
+      "sid": "biden_2022:0165",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Companies are choosing to build new factories here, when just a few years ago, they would have built them overseas."
+    },
+    {
+      "sid": "biden_2022:0167",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Ford is investing $11 billion to build electric vehicles, creating 11,000 jobs across the country."
+    },
+    {
+      "sid": "biden_2022:0169",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "All told, we created 369,000 new manufacturing jobs in America just last year."
+    },
+    {
+      "sid": "biden_2022:0171",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "As Ohio Senator Sherrod Brown says, “It’s time to bury the label “Rust Belt.” It’s time."
+    },
+    {
+      "sid": "biden_2022:0194",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Top business leaders and most Americans support my plan."
+    },
+    {
+      "sid": "biden_2022:0172",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But with all the bright spots in our economy, record job growth and higher wages, too many families are struggling to ke"
+    },
+    {
+      "sid": "biden_2022:0177",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The pandemic also disrupted global supply chains."
+    },
+    {
+      "sid": "biden_2022:0180",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, there weren’t enough semiconductors to make all the cars that people wanted to buy."
+    },
+    {
+      "sid": "biden_2022:0181",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And guess what, prices of automobiles went up."
+    },
+    {
+      "sid": "biden_2022:0200",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Insulin costs about $10 a vial to make."
+    },
+    {
+      "sid": "biden_2022:0197",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "One in ten Americans has diabetes."
+    },
+    {
+      "sid": "biden_2022:0199",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "He and his dad both have Type 1 diabetes, which means they need insulin every day."
+    },
+    {
+      "sid": "biden_2022:0201",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But drug companies charge families like Joshua and his dad up to 30 times more."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their "
+    },
+    {
+      "sid": "biden_2022:0216",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Many families pay up to $14,000 a year for child care per child."
+    },
+    {
+      "sid": "biden_2022:0229",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Just last year, 55 Fortune 500 corporations earned $40 billion in profits and paid zero dollars in federal income tax."
+    },
+    {
+      "sid": "biden_2022:0232",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We got more than 130 countries to agree on a global minimum tax rate so companies can’t get out of paying their taxes at"
+    },
+    {
+      "sid": "biden_2022:0240",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The previous Administration not only ballooned the deficit with tax cuts for the very wealthy and corporations, it under"
+    },
+    {
+      "sid": "biden_2022:0242",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We’re going after the criminals who stole billions in relief money meant for small businesses and millions of Americans."
+    },
+    {
+      "sid": "biden_2022:0244",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "By the end of this year, the deficit will be down to less than half what it was before I took office."
+    },
+    {
+      "sid": "biden_2022:0245",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "The only president ever to cut the deficit by more than one trillion dollars in a single year."
+    },
+    {
+      "sid": "biden_2022:0250",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We see it happening with ocean carriers moving goods in and out of America."
+    },
+    {
+      "sid": "biden_2022:0251",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "During the pandemic, these foreign-owned companies raised prices by as much as 1,000 percent and made record profits."
+    },
+    {
+      "sid": "biden_2022:0253",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And as Wall Street firms take over more nursing homes, quality in those homes has gone down and costs have gone up."
+    },
+    {
+      "sid": "biden_2022:0266",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July."
+    },
+    {
+      "sid": "biden_2022:0267",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Just a few days ago, the Centers for Disease Control and Prevention—the CDC—issued new mask guidelines."
+    },
+    {
+      "sid": "biden_2022:0268",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Under these new guidelines, most Americans in most of the country can now be mask free."
+    },
+    {
+      "sid": "biden_2022:0277",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "If you’re vaccinated and boosted, you have the highest degree of protection."
+    },
+    {
+      "sid": "biden_2022:0282",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "If you get COVID-19, the Pfizer pill reduces your chances of ending up in the hospital by 90 percent."
+    },
+    {
+      "sid": "biden_2022:0285",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And we’re launching the “Test to Treat” initiative so people can get tested at a pharmacy, and if they’re positive, rece"
+    },
+    {
+      "sid": "biden_2022:0283",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We’ve ordered more of these pills than anyone in the world."
+    },
+    {
+      "sid": "biden_2022:0284",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month."
+    },
+    {
+      "sid": "biden_2022:0288",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And on testing, we have made hundreds of millions of tests available for you to order for free."
+    },
+    {
+      "sid": "biden_2022:0289",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Even if you already ordered free tests tonight, I am announcing that you can order more from covidtests.gov starting nex"
+    },
+    {
+      "sid": "biden_2022:0311",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation."
+    },
+    {
+      "sid": "biden_2022:0291",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Over the past year, we’ve gotten much better at detecting new variants."
+    },
+    {
+      "sid": "biden_2022:0305",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And with 75 percent of adult Americans fully vaccinated and hospitalizations down by 77 percent, most Americans can remo"
+    },
+    {
+      "sid": "biden_2022:0306",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We achieved this because we provided free vaccines, treatments, tests, and masks."
+    },
+    {
+      "sid": "biden_2022:0321",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I recently visited the New York City Police Department days after the funerals of Officer Wilbert Mora and his partner, "
+    },
+    {
+      "sid": "biden_2022:0322",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "They were responding to a 9-1-1 call when a man shot and killed them with a stolen gun."
+    },
+    {
+      "sid": "biden_2022:0323",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Officer Mora was 27 years old."
+    },
+    {
+      "sid": "biden_2022:0324",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Officer Rivera was 22."
+    },
+    {
+      "sid": "biden_2022:0332",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That’s why the Justice Department required body cameras, banned chokeholds, and restricted no-knock warrants for its off"
+    },
+    {
+      "sid": "biden_2022:0333",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That’s why the American Rescue Plan provided $350 billion that cities, states, and counties can use to hire more police "
+    },
+    {
+      "sid": "biden_2022:0362",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges "
+    },
+    {
+      "sid": "biden_2022:0347",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In state after state, new laws have been passed, not only to suppress the vote, but to subvert entire elections."
+    },
+    {
+      "sid": "biden_2022:0353",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Tonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army vete"
+    },
+    {
+      "sid": "biden_2022:0356",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson."
+    },
+    {
+      "sid": "biden_2022:0365",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "At our border, we’ve installed new technology like cutting-edge scanners to better detect drug smuggling."
+    },
+    {
+      "sid": "biden_2022:0366",
+      "old": "Models split",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "We’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers."
+    },
+    {
+      "sid": "biden_2022:0373",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "That’s why immigration reform is supported by everyone from labor unions to religious leaders to the US Chamber of Comme"
+    },
+    {
+      "sid": "biden_2022:0368",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We’re securing commitments and supporting partners in South and Central America to host more refugees and secure their o"
+    },
+    {
+      "sid": "biden_2022:0376",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The constitutional right affirmed in Roe v."
+    },
+    {
+      "sid": "biden_2022:0377",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Wade—standing precedent for half a century—is under attack as never before."
+    },
+    {
+      "sid": "biden_2022:0385",
+      "old": "TRUE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "I signed 80 bipartisan bills into law last year."
+    },
+    {
+      "sid": "biden_2022:0387",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And soon, we’ll strengthen the Violence Against Women Act that I first wrote three decades ago."
+    },
+    {
+      "sid": "biden_2022:0397",
+      "old": "TRUE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "I believe in recovery, and I celebrate the 23 million Americans in recovery."
+    },
+    {
+      "sid": "biden_2022:0400",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The American Rescue Plan gave schools money to hire teachers and help students make up for lost learning."
+    },
+    {
+      "sid": "biden_2022:0403",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Children were also struggling before the pandemic."
+    },
+    {
+      "sid": "biden_2022:0412",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "My administration is providing assistance with job training and housing, and now helping lower-income veterans get VA ca"
+    },
+    {
+      "sid": "biden_2022:0414",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "One was stationed at bases and breathing in toxic smoke from “burn pits” that incinerated wastes of war—medical and haza"
+    },
+    {
+      "sid": "biden_2022:0420",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "One of those soldiers was my son Major Beau Biden."
+    },
+    {
+      "sid": "biden_2022:0427",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Combat medic in Kosovo and Iraq."
+    },
+    {
+      "sid": "biden_2022:0428",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Stationed near Baghdad, just yards from burn pits the size of football fields."
+    },
+    {
+      "sid": "biden_2022:0437",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The VA is pioneering new ways of linking toxic exposures to diseases, already helping more veterans get benefits."
+    },
+    {
+      "sid": "biden_2022:0431",
+      "old": "UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "He loved building Legos with their daughter."
+    },
+    {
+      "sid": "biden_2022:0432",
+      "old": "Models split",
+      "new": "MISLEADING",
+      "category": "newly_decided",
+      "text": "But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body."
+    },
+    {
+      "sid": "biden_2022:0442",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Cancer is the #2 cause of death in America—second only to heart disease."
+    },
+    {
+      "sid": "biden_2022:0443",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last month, I announced our plan to supercharge the Cancer Moonshot that President Obama asked me to lead six years ago."
+    },
+    {
+      "sid": "biden_2022:0447",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It’s based on DARPA—the Defense Department project that led to the Internet, GPS, and so much more."
+    }
+  ]
+}
