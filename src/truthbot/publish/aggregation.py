@@ -154,7 +154,7 @@ def project_dist(fine_dist: dict[str, int], axis: str) -> dict[str, int]:
 
 
 def distribution_from_claims(rows: list[dict], axis: str) -> dict[str, int]:
-    """One lens's aggregate distribution from per-claim rows.
+    """One axis's aggregate distribution from per-claim rows.
 
     ``rows`` are claim dicts carrying ``consensus_verdict`` and (optionally)
     ``coarse_{axis}_label`` — the shape of ``data/claims.json`` entries.

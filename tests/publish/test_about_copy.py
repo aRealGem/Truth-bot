@@ -82,3 +82,30 @@ def test_no_lens_toggle_described(about_html: str) -> None:
     assert "Lens chip" not in about_html
     assert "One presentation" in about_html
     assert "%-True" in about_html
+
+
+def test_no_lens_wording_anywhere(about_html: str) -> None:
+    """R-1 (owner ruling: no lens UI at all). Not just the chip — the page
+    must not use the word, name the retired Strict/Lenient toggle, or carry
+    its markup hooks. The 1.8 pass left a parenthetical explaining the
+    removed toggle, which still taught the reader a vocabulary the site no
+    longer has."""
+    assert not re.search(r"\bLens\b", about_html)
+    assert "Strict/Lenient" not in about_html
+    for hook in ("editorial-lens", "lens-label", "lens-value",
+                 "lens-target", "lens-pill", "data-lens"):
+        assert hook not in about_html
+
+
+def test_grading_posture_documented(about_html: str) -> None:
+    """R-1.4: ONE sentence, in prose, in the section that explains the
+    grading/verdict vocabulary — claims are graded as spoken, and absolutes
+    are read literally. This is what replaces the lens paragraph: the reader
+    is told the posture instead of being offered a switch."""
+    start = about_html.index("One presentation")
+    posture = about_html[start:about_html.index("<h3", start)]
+    assert "one grading posture" in posture
+    assert "graded as spoken" in posture
+    assert "read literally" in posture
+    for absolute in ("record", "never", "always", "first ever"):
+        assert absolute in posture, f"absolute {absolute!r} not documented"

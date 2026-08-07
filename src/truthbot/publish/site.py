@@ -7088,9 +7088,9 @@ def _render_about() -> str:
         f'<p style="margin-top:0.75rem"><strong>One presentation.</strong> Every surface '
         f'— per-claim pills, report headline, verdict bars, index cards — renders the '
         f'same strict 5-bucket scale from one computation: the "%-True" headline over '
-        f'decided claims, with the color band as its only grading. (An earlier '
-        f'Strict/Lenient toggle was removed: under the current verdict contract the two '
-        f'presentations were identical, so the switch did nothing.)</p>'
+        f'decided claims, with the color band as its only grading. There is one grading '
+        f'posture and no reader-selectable alternative: claims are graded as spoken, and '
+        f'absolutes — "record", "never", "always", "first ever" — are read literally.</p>'
         f'<h3 style="margin-top:1.5rem">Who\'s on the panel</h3>'
         f'{models_list}'
         f'<h3 style="margin-top:1.5rem">Source tier hierarchy</h3>'
@@ -7520,6 +7520,9 @@ class SitePublisher:
             # strings on legacy bundles deserialize cleanly; downstream
             # consumers can detect "post-projection" data by checking for
             # non-empty ``coarse_lenient_label``.
+            # ``coarse_lenient_*`` is deprecated — audit/data-only, never
+            # rendered; the site is single-axis (strict) since remediation v2
+            # (1.8 / DC-4' / R-1) and these ship for compat alone.
             "coarse_lenient_label":   bundle.consensus.coarse_lenient_label,
             "coarse_lenient_strength": bundle.consensus.coarse_lenient_strength,
             "coarse_strict_label":     bundle.consensus.coarse_strict_label,

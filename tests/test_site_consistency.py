@@ -10,6 +10,7 @@ rendered without the political bucket), so it is linted with
 ``strict_buckets=False``; the Phase-2 regen flips it to True."""
 from __future__ import annotations
 
+import re
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,7 +19,7 @@ import pytest
 
 from truthbot.models import (Claim, Confidence, ConsensusVerdict,
                              ModelVerdict, VerdictBundle, VerdictLabel)
-from truthbot.publish.consistency import check_site
+from truthbot.publish.consistency import _check_no_lens_ui, check_site
 from truthbot.publish.site import SitePublisher, SiteReport
 
 _SITE = Path(__file__).resolve().parent.parent / "site-pca"
@@ -119,3 +120,70 @@ def test_fresh_render_passes_strict_lints(tmp_path) -> None:
     index_html = (tmp_path / "index.html").read_text(encoding="utf-8")
     assert "press/political" in index_html
     assert 'data-tier-counts="' in index_html
+
+
+# ── R-1: no lens UI anywhere ─────────────────────────────────────────────────
+
+
+def test_fresh_render_has_no_lens_ui_anywhere(tmp_path) -> None:
+    """R-1: a fresh render carries NO lens UI on ANY page — the word, the
+    chip class, the paired-axis attributes, or the toggle's JS constant.
+
+    Swept over every HTML/CSS/JS file the publisher writes, not a hand-picked
+    page list: the two previous removal passes each left a remnant on a
+    surface nobody thought to re-check (the status-bar chip, then the
+    ``[data-lens-axis][hidden]`` rule in the stylesheet)."""
+    sr = SiteReport(
+        report_id=str(uuid.uuid4()),
+        speaker="Synthetic Speaker",
+        role="President",
+        date=datetime(2026, 3, 4),
+        venue="Test Hall",
+        transcript_source_url="https://example.org/transcript",
+        bundles=[_bundle(VerdictLabel.TRUE, "True", "True",
+                         urls=["https://www.bls.gov/cpi.htm"]),
+                 _bundle(VerdictLabel.FALSE, "False", "False",
+                         urls=["https://example-blog.net/post"])],
+        generated_at=datetime(2026, 8, 1, 12, 0, tzinfo=timezone.utc),
+        speech_id="synthetic_2026",
+    )
+    SitePublisher(site_root=str(tmp_path)).publish(sr)
+
+    assert _check_no_lens_ui(tmp_path) == []
+    # Belt and braces: the raw sweep, independent of the lint's pattern list.
+    offenders = [p.relative_to(tmp_path).as_posix()
+                 for p in sorted(tmp_path.rglob("*"))
+                 if p.is_file() and p.suffix.lower() in {".html", ".css", ".js"}
+                 and re.search(r"\bLens\b", p.read_text(encoding="utf-8"))]
+    assert offenders == []
+
+
+def test_lens_lint_is_strict_gated_and_actually_fires(tmp_path) -> None:
+    """The lint has teeth (it flags a reintroduced chip) AND is gated, so the
+    committed pre-remediation ``site-pca/`` tree — which still renders the
+    chip on every page — stays lintable at ``strict_buckets=False``."""
+    page = tmp_path / "regression.html"
+    page.write_text(
+        '<button class="editorial-lens" data-lens="strict">'
+        '<span class="lens-label">Lens:</span>'
+        '<span class="lens-value">Strict</span></button>',
+        encoding="utf-8")
+    fired = _check_no_lens_ui(tmp_path)
+    assert fired and all(v.startswith("regression.html:") for v in fired)
+
+    # Word-boundary matching: a source URL or headline naming Zelenskyy must
+    # not be mistaken for the chip (``Lens`` is a substring of ``Lenskyy``).
+    page.write_text('<a href="https://x/zelenskyy-speech">Zelenskyy</a>',
+                    encoding="utf-8")
+    assert _check_no_lens_ui(tmp_path) == []
+
+
+def test_committed_site_pca_still_carries_the_chip_hence_the_gate() -> None:
+    """Documents WHY the lint is strict-gated rather than unconditional: the
+    committed tree is pre-remediation output and still renders the chip. If
+    this ever goes green the gate can be dropped along with the flag."""
+    if not (_SITE / "about.html").exists():
+        pytest.skip("site-pca tree not present")
+    assert _check_no_lens_ui(_SITE), (
+        "site-pca no longer carries lens UI — retire the strict gate on "
+        "_check_no_lens_ui and delete this test")

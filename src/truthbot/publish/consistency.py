@@ -15,8 +15,9 @@ program stats, per-report verdict bars (strict axis — the single published
 presentation since remediation v2, 1.8), family rails, header
 chips, headline ratios, the anecdote footnote — plus tagline guards for
 wording that must stay off the site until later remediation phases restore
-it with evidence (T0.5/T0.6). Purely decorative numbers (CSS, dates,
-pipeline version strings) are out of scope.
+it with evidence (T0.5/T0.6), and a sweep for retired UI that must never
+render again (R-1: the editorial-lens chip). Purely decorative numbers
+(CSS, dates, pipeline version strings) are out of scope.
 
 Usage::
 
@@ -61,7 +62,7 @@ def _claims_for_report(claims: list[dict], report_id: str) -> list[dict]:
 
 
 def _coarse_dist(report_claims: list[dict], axis: str) -> dict[str, int]:
-    """Re-derive one lens's aggregate distribution from claims.json — the
+    """Re-derive one axis's aggregate distribution from claims.json — the
     single bucketing every rendered breakdown must match (T0.2). Since
     remediation v2 (1.6) this DELEGATES to the same
     ``aggregation.distribution_from_claims`` the renderer uses; the old
@@ -74,10 +75,10 @@ def _families(dist: dict[str, int]) -> tuple[int, int, int]:
     return fam.true_count, fam.adverse_count, fam.decided
 
 
-def _bar_segment_counts(lens_html: str) -> dict[str, int]:
-    """Parse ``title="Label: N"`` segment annotations out of one lens block."""
+def _bar_segment_counts(wrap_html: str) -> dict[str, int]:
+    """Parse ``title="Label: N"`` segment annotations out of the bar wrap."""
     return {m.group(1): int(m.group(2))
-            for m in re.finditer(r'title="([^":]+): (\d+)"', lens_html)}
+            for m in re.finditer(r'title="([^":]+): (\d+)"', wrap_html)}
 
 
 def _bar_wrap_block(page: str) -> str | None:
@@ -86,12 +87,13 @@ def _bar_wrap_block(page: str) -> str | None:
     Nested divs defeat a close-tag regex, so this slices on markers: wrap
     start → the anecdote note / source row. Only bar segments carry
     ``title="Label: N"`` annotations inside the wrap, so the slice is a safe
-    input for _bar_segment_counts. Single-axis since remediation v2 (1.8 /
-    DC-4'): fresh renders carry ONE strict bar; committed pre-remediation
-    pages still carry the hidden lenient twin, whose annotations are
-    byte-identical to strict's (the PCA verdict contract projects the same
-    on both axes), so parsing the whole wrap stays exact either way —
-    duplicate ``Label: N`` pairs collapse in the dict."""
+    input for _bar_segment_counts. ONE block, ONE axis (remediation v2, 1.8 /
+    DC-4' / R-1): a fresh render emits a single strict bar and there is no
+    per-axis branch left to parse. The committed pre-remediation pages still
+    carry a hidden second bar whose annotations are byte-identical to strict's
+    (the PCA verdict contract projects the same on both axes), so the whole-wrap
+    slice stays exact on them too — duplicate ``Label: N`` pairs collapse in
+    the dict."""
     start = page.find('<div class="vp-bar-wrap">')
     if start < 0:
         return None
@@ -625,6 +627,52 @@ def _check_bucket_invariants(reports: list[dict], claims: list[dict]) -> list[st
     return violations
 
 
+#: Lens-UI fingerprints. The first entry is the user-visible WORD — matched on
+#: word boundaries so "Zelenskyy"/"Lenskyy" in a source URL or headline cannot
+#: masquerade as the retired chip. The rest are the markup hooks the toggle
+#: used to hang off; they are not reader-visible on their own, but any of them
+#: surviving means a lens code path is still rendering.
+_LENS_UI_PATTERNS: list[tuple[str, str]] = [
+    (r"\bLens\b", 'the user-visible word "Lens"'),
+    (r"editorial-lens", "the editorial-lens chip class"),
+    (r"lens-label", "the lens-label span"),
+    (r"lens-value", "the lens-value span"),
+    (r"lens-target", "a lens-target span"),
+    (r"lens-pill", "a lens-pill class"),
+    (r"data-lens", "a data-lens* attribute"),
+    (r"DEFAULT_LENS", "the DEFAULT_LENS JS constant"),
+]
+
+
+def _check_no_lens_ui(site_root: Path) -> list[str]:
+    """R-1: NO lens UI anywhere on the rendered site (owner ruling).
+
+    The Strict/Lenient toggle is gone and there is exactly one grading
+    posture, so no rendered page — HTML, CSS, or JS — may show the word
+    "Lens" or carry the markup the toggle hung off. Walks every asset the
+    publisher writes rather than a hand-listed set of pages, because the last
+    two removal passes each left a remnant on a surface nobody thought to
+    check (the status-bar chip, then the paired-axis CSS).
+
+    STRICT-GATED on purpose: the COMMITTED ``site-pca/`` tree predates the
+    removal and still renders the chip on every page, which is precisely why
+    this lint is only asserted against fresh renders.
+    """
+    violations: list[str] = []
+    for path in sorted(site_root.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in {".html", ".css", ".js"}:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        rel = path.relative_to(site_root).as_posix()
+        for pattern, what in _LENS_UI_PATTERNS:
+            if re.search(pattern, text):
+                violations.append(f"{rel}: lens UI remnant — {what} is present")
+    return violations
+
+
 def check_feed(site_root: Path, reports: list[dict]) -> list[str]:
     """Validate feed.xml against the reports index (remediation v2, 1.5).
 
@@ -683,11 +731,12 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
     when every checked figure derives cleanly from data/*.json).
 
     ``strict_buckets`` gates the remediation-v2 lints (index Sources-chip
-    buckets, per-report/site-wide bucket sums). Default True — every fresh
-    render must satisfy them. The COMMITTED site-pca/ tree predates the
-    remediation regeneration (its cards were rendered without the political
-    bucket), so tests/test_site_consistency.py lints it with
-    ``strict_buckets=False`` until the Phase-2 regen flips it to True."""
+    buckets, per-report/site-wide bucket sums, feed validity, and the R-1
+    no-lens-UI sweep). Default True — every fresh render must satisfy them.
+    The COMMITTED site-pca/ tree predates the remediation regeneration (its
+    cards were rendered without the political bucket, and every page still
+    carries the retired lens chip), so tests/test_site_consistency.py lints it
+    with ``strict_buckets=False`` until the Phase-2 regen flips it to True."""
     site_root = Path(site_root)
     violations: list[str] = []
     reports = _load_json(site_root / "data" / "reports.json")
@@ -770,6 +819,7 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
         violations.extend(_check_index_tier_buckets(index_html, reports))
         violations.extend(_check_bucket_invariants(reports, claims))
         violations.extend(check_feed(site_root, reports))
+        violations.extend(_check_no_lens_ui(site_root))
 
     # ── Per-report pages ─────────────────────────────────────────────────
     for report in reports:
