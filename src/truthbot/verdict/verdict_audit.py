@@ -38,6 +38,14 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Any, Iterable, Optional
 
+# A6: ONE superlative list for the whole codebase. The shape lint owns it;
+# this module imports it. Do not fork a second copy here.
+from truthbot.checkworthy.shape_lint import (  # noqa: F401  (re-exported)
+    SUPERLATIVE_RX,
+    SUPERLATIVE_TOKENS,
+    has_superlative,
+)
+
 # Same "decided" vocabulary as the one-off model harness (prior art): the
 # agreed-verdict problem class is a CONFIDENT published call. UNVERIFIABLE is
 # an abstention — audited only via the gate-forced arm of the model-pass
@@ -70,6 +78,49 @@ def _ev_texts(evidence_items: Optional[Iterable[Any]]) -> list[str]:
             out.extend(str(getattr(it, k, "") or "")
                        for k in ("snippet", "source_name"))
     return [t for t in out if t]
+
+
+# ── citation → pack-item resolution (A6) ─────────────────────────────────────
+#
+# ``rows[].citations`` are E-refs ("E4") addressing the claim's evidence pack.
+# In-process ``PackItem`` objects carry their own ``pack_id``; the published
+# artifact stores a plain LIST whose ORDER is the pack order and whose ``id``
+# is a content uuid, not an E-ref. Resolution therefore prefers a real
+# ``pack_id`` and falls back to 1-based position — the addressing the pack
+# builder assigns (``pack_id=f"E{i}"``).
+
+_EREF_RX = re.compile(r"^E(\d+)$", re.IGNORECASE)
+
+
+def _field(item: Any, name: str) -> Any:
+    return item.get(name) if isinstance(item, dict) else getattr(item, name, None)
+
+
+def _pack_id(item: Any) -> str:
+    """The item's own E-ref, or "" when it has none (artifact dicts)."""
+    raw = _field(item, "pack_id") or _field(item, "id") or ""
+    raw = str(raw).strip().upper()
+    return raw if _EREF_RX.match(raw) else ""
+
+
+def cited_items(evidence_items: Optional[Iterable[Any]],
+                citations: Optional[Iterable[str]]) -> list[Any]:
+    """The pack items a row actually cited, in citation order.
+
+    Unresolvable refs are dropped silently — a citation outside the pack is
+    an I4 violation caught at adjudication, not an audit-lint concern."""
+    items = list(evidence_items or [])
+    by_ref = {pid: it for it in items if (pid := _pack_id(it))}
+    out: list[Any] = []
+    for ref in citations or []:
+        key = str(ref).strip().upper()
+        if key in by_ref:
+            out.append(by_ref[key])
+            continue
+        m = _EREF_RX.match(key)
+        if m and 1 <= int(m.group(1)) <= len(items):
+            out.append(items[int(m.group(1)) - 1])
+    return out
 
 
 def _strip_commas_in_numbers(text: str) -> str:
@@ -458,6 +509,102 @@ def lint_invented_referent(claim_text: str, reasoning: str,
         FLAG)
 
 
+# ── superlative anti-gaming (A6 / D11 rev-B) ─────────────────────────────────
+#
+# The gaming vector the shape lint closes on the CLAIM side has a mirror on the
+# VERDICT side: a superlative ("record numbers", "largest decline in recorded
+# history") is a claim about a whole distribution, and the one class of source
+# that can never establish it is the speaker's own press shop asserting it.
+# When a superlative claim ships DECIDED on citations that are exclusively
+# SELF/S5 — POLITICAL tier and/or an evidential role from the D11.2 SELF
+# column — or exclusively preliminary/projected data, the verdict rests on the
+# assertion it was supposed to test.
+#
+# Signed-off effect (D11 anti-gaming rule): force C-EVAL×SELF handling
+# (attribution-only, weight 0) or escalate to the arbiter. In this
+# DETERMINISTIC pass the effect is an ``action="queue"`` finding — the row
+# lands in the human re-adjudication queue. Nothing here calls a model or
+# re-adjudicates on its own: zero-unauthorized-spend is a standing project
+# rule, and "escalate to arbiter" is a spend decision a human makes.
+
+#: Evidential roles from the D11.2 SELF column (``verdict.evidential_role``).
+#: CORROBORANT (PARTICIPANT) and NORMAL are deliberately absent — a
+#: participant's record is independent enough to bear on a superlative.
+SELF_ROLES = {"primary-record", "plain-s5", "attribution-only"}
+
+#: The S5 tier value (``SourceTier.POLITICAL``), lowercased for comparison.
+SELF_TIER = "political"
+
+# Provisionality markers. Conservative on purpose: a superlative resting on a
+# figure the source itself calls provisional is the trump_2026:0023 shape
+# ("CCJ PROJECTS…", "FBI confirmation NOT YET AVAILABLE"). Hedges of degree
+# ("potentially", "likely") are excluded — they qualify the superlative, not
+# the vintage of the data, and calibration showed them queueing sound rows.
+_PRELIMINARY_RX = re.compile(
+    r"\bpreliminary\b|\bprovisional\b|\bunaudited\b"
+    r"|\bproject(?:s|ed|ing|ion|ions)\b|\bon\s+pace\b|\bon\s+track\s+to\b"
+    r"|\bpremature\b|\badvance\s+estimate\b|\binitial\s+estimate\b"
+    r"|\bsubject\s+to\s+revision\b"
+    r"|\bnot\s+yet\s+(?:available|confirmed|final|finalized|released|reported)\b"
+    r"|\bif\s+(?:the\s+)?\w+(?:\s+\w+){0,2}\s+confirms?\b",
+    re.IGNORECASE)
+
+
+def _is_self_s5(item: Any) -> bool:
+    """POLITICAL tier, or an evidential role from the D11.2 SELF column."""
+    tier = _field(item, "source_tier")
+    tier = str(getattr(tier, "value", tier) or "").strip().lower()
+    role = _field(item, "role")
+    role = str(getattr(role, "value", role) or "").strip().lower()
+    return tier == SELF_TIER or role in SELF_ROLES
+
+
+def _is_preliminary(item: Any) -> bool:
+    return bool(_PRELIMINARY_RX.search(str(_field(item, "snippet") or "")))
+
+
+def lint_superlative_self_citation(claim_text: str, reasoning: str,
+                                   evidence_items=None,
+                                   utterance: Optional[date] = None,
+                                   *, citations: Optional[Iterable[str]] = None,
+                                   ) -> Optional[AuditFinding]:
+    """QUEUE: a superlative claim decided on citations that are EXCLUSIVELY
+    the speaker's own record (SELF/S5) and/or preliminary-flagged data.
+
+    Skipped when the claim carries no superlative token
+    (:data:`SUPERLATIVE_TOKENS`, shared with the shape lint) or when the row
+    cited nothing — an uncited row is an abstention or a gate-forced
+    Unverifiable, both of which belong to other arms of the audit. One
+    independent, final-vintage citation is enough to clear the lint: the rule
+    targets verdicts with NO non-self, non-provisional support at all."""
+    if not has_superlative(claim_text or ""):
+        return None
+    cited = cited_items(evidence_items, citations)
+    if not cited:
+        return None
+    self_refs: list[str] = []
+    prelim_refs: list[str] = []
+    for n, item in enumerate(cited, 1):
+        ref = _pack_id(item) or f"#{n}"
+        if _is_self_s5(item):
+            self_refs.append(ref)
+        elif _is_preliminary(item):
+            prelim_refs.append(ref)
+        else:
+            return None  # an independent, final-vintage citation clears it
+    parts = []
+    if self_refs:
+        parts.append(f"{len(self_refs)} self/S5 ({', '.join(self_refs)})")
+    if prelim_refs:
+        parts.append(f"{len(prelim_refs)} preliminary ({', '.join(prelim_refs)})")
+    return AuditFinding(
+        "superlative_self_citation",
+        f"superlative claim decided on {len(cited)} citation(s), all "
+        f"non-probative for a superlative: {'; '.join(parts)} — D11 rev-B "
+        "requires C-EVAL×SELF handling (weight 0) or arbiter escalation",
+        QUEUE)
+
+
 #: (name, fn, adverse_only) — the deterministic tier, in run order.
 ALL_LINTS: list[tuple[str, Any, bool]] = [
     ("measure_alignment", lint_measure_alignment, False),
@@ -468,25 +615,34 @@ ALL_LINTS: list[tuple[str, Any, bool]] = [
     ("baseline_selection", lint_baseline_selection, False),
     ("colloquial_recency", lint_colloquial_recency, True),
     ("invented_referent", lint_invented_referent, False),
+    ("superlative_self_citation", lint_superlative_self_citation, False),
 ]
+
+#: Lints that need more than the four positional arguments. Keyed by function
+#: so :func:`run_lints` stays a loop instead of a chain of ``is`` checks.
+_EXTRA_KWARGS: dict[Any, tuple[str, ...]] = {
+    lint_invented_referent: ("claim_context",),
+    lint_superlative_self_citation: ("citations",),
+}
 
 
 # ── orchestration ────────────────────────────────────────────────────────────
 
 def run_lints(claim_text: str, reasoning: str, evidence_items=None,
               utterance: Optional[date] = None, *, claim_context: str = "",
+              citations: Optional[Iterable[str]] = None,
               adverse: bool = True) -> list[AuditFinding]:
     """All deterministic lints over one row. ``adverse`` gates the
-    adverse-only lints (colloquial_recency)."""
+    adverse-only lints (colloquial_recency); ``citations`` are the row's
+    E-refs (needed by superlative_self_citation to resolve which pack items
+    the verdict actually leaned on)."""
+    extra = {"claim_context": claim_context, "citations": citations}
     findings: list[AuditFinding] = []
     for name, fn, adverse_only in ALL_LINTS:
         if adverse_only and not adverse:
             continue
-        if fn is lint_invented_referent:
-            f = fn(claim_text, reasoning, evidence_items, utterance,
-                   claim_context=claim_context)
-        else:
-            f = fn(claim_text, reasoning, evidence_items, utterance)
+        kwargs = {k: extra[k] for k in _EXTRA_KWARGS.get(fn, ())}
+        f = fn(claim_text, reasoning, evidence_items, utterance, **kwargs)
         if f is not None:
             findings.append(f)
     return findings
@@ -534,6 +690,7 @@ def audit_rows(claims: list[dict], rows: list[dict],
             claim.get("text", ""), row.get("reasoning") or "",
             _pack_items(evidence, sid), utt,
             claim_context=claim.get("context", "") or "",
+            citations=row.get("citations") or (),
             adverse=verdict in ADVERSE)
         out[sid] = {
             "audit_flags": [f.lint for f in findings],

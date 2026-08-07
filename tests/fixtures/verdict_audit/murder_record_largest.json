@@ -1,0 +1,103 @@
+{
+ "_frozen_from": "metrics/pca_runs/4ee5a251… (Phase-3 rebuild artifact, run prefix 4ee5a251)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0023",
+  "text": "And last year the murder rate saw its single largest decline in recorded history.",
+  "context": "The flow of deadly fentanyl across our border is down by a record 56 percent in one year. || And last year the murder rate saw its single largest decline in recorded history. || This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years."
+ },
+ "row": {
+  "sid": "trump_2026:0023",
+  "status": "resolved",
+  "verdict": "MISLEADING",
+  "confidence": 0.69,
+  "citations": [
+   "E2",
+   "E6"
+  ],
+  "reasoning": "available 2025 data showed a large preliminary decline, but the record-setting national claim was only a projection and AP reported FBI confirmation was not yet available as of the utterance",
+  "votes": {
+   "MISLEADING": 2,
+   "FALSE": 1
+  },
+  "by_role": {
+   "proposer": [
+    "MISLEADING"
+   ],
+   "critic": [
+    "FALSE"
+   ],
+   "arbiter": [
+    "MISLEADING"
+   ]
+  },
+  "split": true,
+  "escalated": true
+ },
+ "evidence": [
+  {
+   "snippet": "[2026-01-29] Near-primary CCJ year-end data: homicide down 21% in 2025, likely lowest ever once FBI reports nationwide figures.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://counciloncj.org/crime-trends-in-u-s-cities-year-end-2025-update/",
+   "source_tier": "Other",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-01] CCJ Jan 2026: 35‑city homicides down 21%; projects ~4.0/100k and says it could be largest single‑year drop since 1900.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://counciloncj.org/crime-trends-in-u-s-cities-year-end-2025-update/?stream=top",
+   "source_tier": "Other",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2025-08-05] FBI official release: 2024 murder/non-negligent manslaughter fell 14.9%, the largest one-year national homicide decline on record.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics",
+   "source_tier": "Political",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2025-06-09] FBI official quarterly UCR data documenting the steep 2024 murder decline underpinning the record-drop claim.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.fbi.gov/news/press-releases/fbi-releases-2024-quarterly-crime-report-and-use-of-force-data-update-q2",
+   "source_tier": "Political",
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-22] CBS News coverage of the CCJ study: ‘‘Murders plummeted more than 20%’’ and calls it the single‑largest one‑year drop in the study’s data.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.cbsnews.com/news/murders-plummet-crime-trends-2025/",
+   "source_tier": "Established",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-02-24] AP Fact Focus cautions the White House claim is premature — CCJ projects a possibility but nationwide FBI confirmation was not yet available.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://apnews.com/article/87b184f7a38e65fa97d27c05ba2497fa",
+   "source_tier": "Wire",
+   "supports_claim": false,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2025-08-05] Established outlet: FBI 2024 report shows crime down in every category, homicides down ~15% year over year.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.cbsnews.com/news/fbi-crime-report-2025/",
+   "source_tier": "Established",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "White House cites CCJ: murder rate plummeted to lowest since 1900, biggest one-year drop in recorded history.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.whitehouse.gov/articles/2026/01/icymi-murder-rate-plunges-to-125-year-low-as-president-trump-restores-law-and-order/",
+   "source_tier": "Political",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  }
+ ]
+}

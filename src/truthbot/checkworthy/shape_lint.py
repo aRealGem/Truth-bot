@@ -17,6 +17,12 @@ in the PR for line-item review):
   * bare "half"/"created"/"saved" over-fire on ministerial phrasing ("we
     created a program"); they count only in outcome form ("cut … in half",
     "created/saved <quantity>").
+
+**The superlative list in this module is the single source of truth** (A6).
+``truthbot.verdict.verdict_audit`` imports :data:`SUPERLATIVE_RX` for the
+anti-gaming audit lint rather than keeping a second copy — two lists would
+drift, and a superlative that is loud enough to force a shape is by
+construction loud enough to be worth auditing on the verdict side.
 """
 from __future__ import annotations
 
@@ -26,15 +32,63 @@ import re
 MINISTERIAL_SHAPES = {"c-exist", "c-count"}
 FORCED_SHAPE = "c-eval"
 
-_SUPERLATIVE = re.compile(
-    r"\b(largest|biggest|smallest|first|last|most|least|best|worst|record|"
-    r"historic|unprecedented|strongest|fastest|greatest|highest|lowest)\b"
+#: Bare superlative words (D11 sign-off list, unchanged).
+SUPERLATIVE_WORDS: tuple[str, ...] = (
+    "largest", "biggest", "smallest", "first", "last", "most", "least",
+    "best", "worst", "record", "historic", "unprecedented", "strongest",
+    "fastest", "greatest", "highest", "lowest",
+)
+
+#: Rev-B additions (A6): multi-word superlative-scope markers the bare word
+#: list cannot express. "first-ever" is nominally reachable through ``first``
+#: — it is carried explicitly so the published token list and the compiled
+#: regex are the same list, with no "well, ``first`` covers it" footnote.
+#: "in recorded history" is genuinely new: ``\brecord\b`` does not match
+#: "recorded". "in N years" is the superlative-SCOPE idiom ("the lowest level
+#: in more than five years"); the qualifier list deliberately excludes
+#: forward-looking framing ("in the next ten years"), which is a plan, not a
+#: superlative.
+SUPERLATIVE_PHRASES: tuple[str, ...] = (
+    "first-ever", "never before", "in recorded history", "in N years",
+)
+
+#: The merged, published token list — words + rev-B phrases, in the order the
+#: PR description quotes them.
+SUPERLATIVE_TOKENS: tuple[str, ...] = SUPERLATIVE_WORDS + SUPERLATIVE_PHRASES
+
+_NUMBER = (r"(?:\d[\d,]*|one|two|three|four|five|six|seven|eight|nine|ten|"
+           r"eleven|twelve|fifteen|twenty|thirty|forty|fifty|sixty|seventy|"
+           r"eighty|ninety|hundred)")
+#: "in N years" — bare, or behind a magnitude qualifier. NOT "in the next N
+#: years" / "within N years": those are promises, and the ministerial-shape
+#: lint must not drag a plan into c-eval.
+_IN_N_YEARS = (rf"\bin\s+(?:more\s+than\s+|over\s+|nearly\s+|almost\s+|"
+               rf"at\s+least\s+|under\s+|fewer\s+than\s+|less\s+than\s+)?"
+               rf"{_NUMBER}\s+years\b")
+
+SUPERLATIVE_RX = re.compile(
+    r"\b(?:" + "|".join(SUPERLATIVE_WORDS) + r")\b"
+    # rev-B phrases
+    r"|\bfirst[- ]ever\b"
+    r"|\bnever\s+before\b"
+    r"|\b(?:in\s+)?recorded\s+history\b"
+    rf"|{_IN_N_YEARS}"
     # morphological "-est" only in superlative position ("the …est") and not
     # for lexical -est words that aren't superlatives at all
     r"|\bthe\s+(?!(?:harvest|interest|honest|modest|earnest|protest|arrest|"
     r"request|conquest|tempest|contest|forest|west|east|rest|test|midwest|"
     r"northwest|southwest|northeast|southeast)\b)\w+est\b",
     re.IGNORECASE)
+
+#: Historical private alias — the shape lint's own reference to the shared
+#: pattern. Kept so this module reads the way it always did.
+_SUPERLATIVE = SUPERLATIVE_RX
+
+
+def has_superlative(text: str) -> bool:
+    """True when ``text`` carries any token from :data:`SUPERLATIVE_TOKENS`.
+    The one predicate both the shape lint and the verdict audit call."""
+    return bool(SUPERLATIVE_RX.search(text or ""))
 _COMPARATIVE = re.compile(
     r"\b(more|less|fewer|higher|lower|better|worse|faster|greater)\b"
     r"(?:\s+\S+){0,4}\s+than\b"

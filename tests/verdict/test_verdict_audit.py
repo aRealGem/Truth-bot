@@ -309,6 +309,149 @@ def test_audit_rows_accepts_evidence_packs_and_artifact_dicts():
     assert out2["s:0000"]["audit_flags"] == []
 
 
+# ── superlative_self_citation (queue) — A6 / D11 rev-B ───────────────────────
+
+SUPER = "We deported illegal alien criminals at record numbers."
+
+
+def _ev(*specs):
+    """[(tier, snippet[, role]), …] → artifact-shaped pack items."""
+    out = []
+    for spec in specs:
+        tier, snippet = spec[0], spec[1]
+        item = {"source_tier": tier, "snippet": snippet,
+                "source_name": "src", "source_url": "https://example.gov/x"}
+        if len(spec) > 2:
+            item["role"] = spec[2]
+        out.append(item)
+    return out
+
+
+def test_superlative_fires_when_every_citation_is_self_s5():
+    pack = _ev(("Wire", "AP: removals totalled 271,484 in FY2024."),
+               ("Political", "DHS touts record 527,000+ removals."),
+               ("Political", "DHS: historic removal year."))
+    f = va.lint_superlative_self_citation(
+        SUPER, "Official DHS releases support record-number removals.",
+        pack, UTT, citations=["E2", "E3"])
+    assert f is not None
+    assert f.lint == "superlative_self_citation" and f.action == va.QUEUE
+    # the finding names the effect the D11 rule prescribes
+    assert "C-EVAL" in f.detail and "arbiter" in f.detail
+
+
+def test_superlative_fires_when_every_citation_is_preliminary():
+    pack = _ev(("Other", "CCJ PROJECTS a ~21% homicide drop for 2025."),
+               ("Wire", "AP: FBI confirmation was not yet available."))
+    f = va.lint_superlative_self_citation(
+        "Last year the murder rate saw its single largest decline in "
+        "recorded history.",
+        "Preliminary data showed a large decline.", pack, UTT,
+        citations=["E1", "E2"])
+    assert f is not None and f.action == va.QUEUE
+    assert "preliminary" in f.detail
+
+
+def test_superlative_cleared_by_one_independent_final_citation():
+    pack = _ev(("Political", "DHS touts record removals."),
+               ("Government", "DHS OHSS monthly removal tables, FY2025."))
+    assert va.lint_superlative_self_citation(
+        SUPER, "Reasoning.", pack, UTT, citations=["E1", "E2"]) is None
+
+
+def test_superlative_skips_non_superlative_claims_and_uncited_rows():
+    pack = _ev(("Political", "DHS press release."))
+    # no superlative token in the claim
+    assert va.lint_superlative_self_citation(
+        "We removed 271,484 people in fiscal 2024.", "Reasoning.", pack, UTT,
+        citations=["E1"]) is None
+    # cited nothing: an abstention / gate-forced row, not this lint's class
+    assert va.lint_superlative_self_citation(
+        SUPER, "Reasoning.", pack, UTT, citations=[]) is None
+    assert va.lint_superlative_self_citation(
+        SUPER, "Reasoning.", pack, UTT) is None
+
+
+def test_superlative_reads_the_evidential_role_as_well_as_the_tier():
+    # A GOVERNMENT-tier item can still be the speaker's own record; the D11.2
+    # role axis is what says so.
+    pack = _ev(("Government", "Agency record of the act.", "primary-record"),
+               ("Government", "Agency statement.", "attribution-only"))
+    f = va.lint_superlative_self_citation(
+        SUPER, "Reasoning.", pack, UTT, citations=["E1", "E2"])
+    assert f is not None and "self/S5" in f.detail
+    # a CORROBORANT (participant) role is independent enough — no finding
+    pack2 = _ev(("Government", "Agency record.", "primary-record"),
+                ("Government", "Participant record.", "corroborant"))
+    assert va.lint_superlative_self_citation(
+        SUPER, "Reasoning.", pack2, UTT, citations=["E1", "E2"]) is None
+
+
+def test_cited_items_resolves_by_pack_id_then_by_pack_order():
+    items = [{"pack_id": "E1", "snippet": "a"}, {"pack_id": "E2", "snippet": "b"}]
+    assert [i["snippet"] for i in va.cited_items(items, ["E2"])] == ["b"]
+    # artifact shape: no E-ref on the item, so position addresses the pack
+    plain = [{"id": "uuid-a", "snippet": "a"}, {"id": "uuid-b", "snippet": "b"}]
+    assert [i["snippet"] for i in va.cited_items(plain, ["E2", "E9", "junk"])] == ["b"]
+
+
+def test_superlative_lint_is_registered_and_reachable_through_run_lints():
+    assert "superlative_self_citation" in [n for n, _, _ in va.ALL_LINTS]
+    pack = _ev(("Political", "DHS touts record removals."))
+    names = [f.lint for f in va.run_lints(
+        SUPER, "Official DHS releases support the record framing.",
+        pack, UTT, citations=["E1"], adverse=False)]
+    assert "superlative_self_citation" in names
+    # audit_rows threads the row's citations through for free
+    out = va.audit_rows(
+        [{"sid": "s:0000", "text": SUPER}],
+        [{"sid": "s:0000", "verdict": "TRUE", "citations": ["E1"],
+          "reasoning": "Official DHS releases support the record framing."}],
+        {"s:0000": pack}, UTT)
+    assert out["s:0000"]["audit_queue"] is True
+    assert "superlative_self_citation" in out["s:0000"]["audit_flags"]
+
+
+# ── the shared superlative token list (A6: ONE list, two modules) ────────────
+
+def test_superlative_token_list_is_shared_with_the_shape_lint():
+    from truthbot.checkworthy import shape_lint
+
+    assert va.SUPERLATIVE_RX is shape_lint.SUPERLATIVE_RX
+    assert va.SUPERLATIVE_TOKENS is shape_lint.SUPERLATIVE_TOKENS
+
+
+def test_superlative_token_list_carries_the_rev_b_additions():
+    from truthbot.checkworthy.shape_lint import SUPERLATIVE_TOKENS, has_superlative
+
+    # the D11 sign-off words survive verbatim …
+    for tok in ("largest", "biggest", "smallest", "first", "last", "most",
+                "least", "best", "worst", "record", "historic",
+                "unprecedented", "strongest", "fastest", "greatest",
+                "highest", "lowest"):
+        assert tok in SUPERLATIVE_TOKENS
+        assert has_superlative(f"It was the {tok} one.")
+    # … and the rev-B additions are live
+    for tok in ("first-ever", "never before", "in recorded history",
+                "in N years"):
+        assert tok in SUPERLATIVE_TOKENS
+    assert has_superlative("This is the first-ever such program.")
+    assert has_superlative("Never before has the deficit fallen this far.")
+    assert has_superlative("The single largest decline in recorded history.")
+    assert has_superlative("The lowest level in more than five years.")
+    assert has_superlative("The lowest number in over 125 years.")
+
+
+def test_superlative_rev_b_additions_do_not_swallow_forward_looking_plans():
+    from truthbot.checkworthy.shape_lint import enforce_shape, has_superlative
+
+    # "in the next N years" is a promise, not a superlative scope.
+    assert not has_superlative("We will build it in the next ten years.")
+    assert not has_superlative("The program runs within four years.")
+    assert enforce_shape("We will hire 5,000 agents in the next four years.",
+                         "c-count") == "c-count"
+
+
 # ── Phase-3 model-pass selection (pure; no model calls) ──────────────────────
 
 def test_select_model_audit_rows_mandatory_plus_seeded_sample():
@@ -352,6 +495,7 @@ SOUND_FIXTURES = [
     "inflation_1_7",          # trump_2026:0031
     "dei_ended",              # trump_2026:0056
     "college_opportunity",    # obama_2014:0046
+    "murder_record_biggest",  # trump_2026:0024 (A6 negative control)
 ]
 
 
@@ -365,6 +509,7 @@ def _lint_fixture(fx):
         fx["claim"]["text"], fx["row"].get("reasoning") or "",
         fx["evidence"], date.fromisoformat(fx["utterance"]),
         claim_context=fx["claim"].get("context", "") or "",
+        citations=fx["row"].get("citations") or (),
         adverse=verdict in va.ADVERSE)
 
 
@@ -379,6 +524,40 @@ def test_sound_true_fixtures_produce_no_findings_at_all():
     for name in ("beckstrom_died", "biden_gdp_5_7", "deficit_half",
                  "college_opportunity"):
         assert _lint_fixture(_load_fixture(name)) == []
+
+
+# ── A6 frozen fixtures: the superlative gaming shape, as it really shipped ──
+
+def test_record_removals_fixture_queues_on_self_only_citations():
+    """trump_2026:0343 shipped TRUE on a 'record numbers' superlative citing
+    E4/E5/E7 — three DHS self-releases — while the AP item (E9) that could
+    have borne independently on the count sat UNCITED. Exactly the D11 rev-B
+    gaming shape."""
+    fx = _load_fixture("record_removals_dhs")
+    assert fx["row"]["verdict"] == "TRUE"
+    assert fx["row"]["citations"] == ["E4", "E5", "E7"]
+    assert all(fx["evidence"][int(c[1:]) - 1]["source_tier"] == "Political"
+               for c in fx["row"]["citations"])
+    # the AP corroborant is in the pack, just not cited
+    assert fx["evidence"][8]["source_tier"] == "Wire"
+    findings = {f.lint: f for f in _lint_fixture(fx)}
+    assert findings["superlative_self_citation"].action == va.QUEUE
+
+
+def test_murder_record_pair_fixtures_split_on_the_preliminary_arm():
+    """trump_2026:0023 / :0024 rate the SAME statistic. 0023 leans entirely on
+    projected/unconfirmed data (CCJ projection + an AP note that FBI
+    confirmation was not yet available) and queues; 0024 cites independent,
+    unhedged reporting and stays clean. That asymmetry — one queued, one not,
+    on one statistic — is why the pair also carries a COHERENCE case in the
+    DC-6' acceptance suite."""
+    largest = _load_fixture("murder_record_largest")
+    biggest = _load_fixture("murder_record_biggest")
+    assert largest["claim"]["sid"] == "trump_2026:0023"
+    assert biggest["claim"]["sid"] == "trump_2026:0024"
+    assert [f.lint for f in _lint_fixture(largest)] == [
+        "superlative_self_citation"]
+    assert _lint_fixture(biggest) == []
 
 
 def test_joining_forces_fixture_is_gate_forced_and_skipped_by_audit_rows():
