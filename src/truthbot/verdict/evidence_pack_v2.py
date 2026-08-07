@@ -21,10 +21,13 @@ from __future__ import annotations
 
 import logging
 from datetime import date
-from typing import Callable, Optional, Sequence
+from typing import TYPE_CHECKING, Callable, Optional, Sequence
 
 from hydramind.invariants import check_i5_provenance
 from truthbot.verify.retrievers import Retriever
+
+if TYPE_CHECKING:      # import-light: the hint only, never the brave/httpx tail
+    from truthbot.verify.relevance import PackScorer
 
 from . import era_lint, speech_context
 from .consolidator import (PACK_CAP_V2, POST_SPEECH_NOTE, consolidate,
@@ -78,6 +81,7 @@ def build_evidence_pack_v2(
     claim_shape: str = "",
     relation_of=None,
     era_exempt: bool = False,
+    scorer: Optional["PackScorer"] = None,
 ) -> EvidencePack:
     """Assemble a shared_pack_v2 ``EvidencePack`` for one claim.
 
@@ -96,7 +100,27 @@ def build_evidence_pack_v2(
     quota (see ``consolidate``). ``relation_of`` is closed over speaker +
     utterance by the CALLER (typically the publish CLI's pack_builder), so
     this builder still receives no speaker — the callable is identical
-    machinery for every speaker (I3-relational)."""
+    machinery for every speaker (I3-relational).
+
+    ``scorer`` (remediation v2, B1b — owner ruling Q-1): the relevance/stance
+    scoring hook, ``(claim_text, list[Evidence]) -> None``, mutating in place.
+    Called on the merged shortlist candidates BEFORE ``consolidate`` so the
+    quota's ``_bearing`` test sees REAL stance — which is the whole fix. The v2
+    path historically never scored: R1/R2/R3 went straight into ``consolidate``,
+    so every item kept the 0.5 relevance default and any ``None`` stance could
+    never credit ``MIN_BEARING_T13``, gate-forcing Unverifiable on packs that
+    held perfectly good evidence.
+
+    It is INJECTED, never built here: scoring is MODEL SPEND, so the caller owns
+    that decision (production callers keep it behind a default-off
+    ``--score-evidence`` flag pending DC-B1 sign-off), and the ``None`` default
+    keeps every existing caller — and every offline test — byte-identical and
+    free. Build one with ``verify.relevance.build_scorer()``.
+
+    Exceptions from ``scorer`` deliberately PROPAGATE (unlike a dead retriever,
+    which is soft): ``relevance.score_evidence`` already fails soft on model
+    errors, so what escapes is either a real defect or a deliberate budget halt
+    — and a budget breaker that got swallowed here would defeat its purpose."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
     if utterance is None and not era_exempt:
@@ -144,13 +168,34 @@ def build_evidence_pack_v2(
         results = runner(pool, lambda r: _call_one(r, ctx))
         return [(r.label + label_suffix, sl) for r, sl in zip(pool, results)]
 
+    # URLs already sent to the scorer — the retry round scores only its NEW
+    # candidates, so a rescued claim never pays twice for the same page.
+    scored_urls: set[str] = set()
+
+    def _score(pairs) -> None:
+        """Score the not-yet-scored candidates of these shortlists, in place."""
+        if scorer is None:
+            return
+        batch = []
+        for _label, shortlist in pairs:
+            for ev in shortlist:
+                key = (ev.source_url or "").lower().rstrip("/")
+                if not key or key in scored_urls:
+                    continue
+                scored_urls.add(key)
+                batch.append(ev)
+        if batch:
+            scorer(claim_text, batch)
+
     shortlists = _shortlists(retrievers, "", context)
+    _score(shortlists)               # BEFORE consolidate — the quota sees stance
     res = consolidate(sid, shortlists, utterance=utterance, window=window,
                       max_items=max_items, era_mode=mode,
                       claim_shape=claim_shape, relation_of=relation_of)
     if not res.quota_met:
         retry = _shortlists(retry_retrievers or retrievers, "-retry",
                             _RETRY_FOCUS + context)
+        _score(retry)
         res = consolidate(sid, shortlists + retry, utterance=utterance,
                           window=window, max_items=max_items, era_mode=mode,
                           claim_shape=claim_shape, relation_of=relation_of)
@@ -190,11 +235,15 @@ def build_evidence_pack_v2(
         pool = [_pack_item(i, cit)
                 for i, cit in enumerate(res.pre_cap_items, start=1)]
     # Scoring coverage (Phase A, A1) — computed over the CAPPED pack, the set
-    # the panel and the quota actually see. On the v2 path this is expected to
-    # report 0 scored / N default relevance every time: the R1/R2/R3 shortlists
-    # reach consolidate() without passing through
-    # ``verify.relevance.score_evidence``. Recording it is what turns that from
-    # a call-graph fact into a measurable, journaled, lintable one.
+    # the panel and the quota actually see. It reads the SAME mutated Evidence
+    # the scorer wrote through (_pack_item copies relevance_score /
+    # supports_claim off each item), so it needs no wiring of its own: with
+    # ``scorer=None`` it reports 0 scored / N default relevance, which is the
+    # pre-B1b v2 path — R1/R2/R3 reaching consolidate() without ever passing
+    # through ``verify.relevance.score_evidence``; with a scorer supplied it
+    # reports scored>0 and the run becomes fit-to-gate
+    # (publish.consistency.is_fit_to_gate). Recording it is what turns that
+    # from a call-graph fact into a measurable, journaled, lintable one.
     pack = EvidencePack(sid=sid, window=window, items=items,
                         gate_code=res.gate_code, pool=pool,
                         excluded_fc=list(res.excluded_fc),

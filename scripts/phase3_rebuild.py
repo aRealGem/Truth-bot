@@ -514,10 +514,24 @@ def run_rebuild(args) -> None:
     def relation_of(ev):
         return principal_relation(ev.source_url, speaker, utterance)
 
+    # Relevance/stance scoring (remediation v2, B1b) — opt-in, default OFF,
+    # and loud when the lane is missing: a rebuild that ASKED to score must
+    # not silently produce another all-default, unfit-to-gate artifact.
+    scorer = None
+    if getattr(args, "score_evidence", False):
+        from truthbot.verify.relevance import build_scorer
+        scorer = build_scorer()
+        if scorer is None:
+            sys.exit("REFUSING --score-evidence: no LiteLLM proxy key for the "
+                     "relevance/stance lane. No spend attempted.")
+        print("--score-evidence ON: +1 cheap Haiku call per claim (on-proxy, "
+              "so it lands in the ledger the budget breaker already reads).")
+
     def build_pack(sid: str, text: str, context: str):
         return build_evidence_pack_v2(
             sid, text, primary, retry_retrievers=retry, context=context,
-            claim_shape=shape_registry.shape_for(sid), relation_of=relation_of)
+            claim_shape=shape_registry.shape_for(sid), relation_of=relation_of,
+            scorer=scorer)
 
     start_spend = proxy_lane.proxy_key_spend()
     pack_builder = make_pack_builder(
@@ -645,6 +659,13 @@ def main() -> None:
     ap.add_argument("--legacy-quota-ok", action="store_true",
                     help="allow --go on a speech with shapeless claims "
                          "(legacy evidential-role quota) — deliberate only")
+    ap.add_argument("--score-evidence", dest="score_evidence",
+                    action="store_true",
+                    help="COSTS MONEY (default OFF, gated on DC-B1): score "
+                         "relevance + stance before consolidation so the T2.4 "
+                         "quota sees real stance instead of the nulls that "
+                         "gate-force Unverifiable. +1 cheap Haiku call per "
+                         "claim, on-proxy (inside the budget breaker's ledger)")
     args = ap.parse_args()
 
     if args.estimate:
@@ -685,6 +706,9 @@ def main() -> None:
              "relation_of still applies)"))
     print(f"  chunk journal: {chunk_journal}")
     print(f"  packs journal: {packs_journal}")
+    print("  relevance/stance scoring: "
+          + ("ON (--score-evidence, extra model spend)" if args.score_evidence
+             else "OFF (default — packs stay unscored/unfit-to-gate)"))
     print(f"  resume state: {len(done_rows)}/{n_claims} rows banked"
           + (f" (${banked_cost:.4f} prior proxy spend)" if done_rows else ""))
     print(f"  old verdict tally: {_tally(art['rows'])}")

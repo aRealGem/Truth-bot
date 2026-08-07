@@ -1052,7 +1052,8 @@ def _build_open_book_provider():
 
 def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
                            retriever_concurrency: int = 0,
-                           speaker: str = "", utterance=None):
+                           speaker: str = "", utterance=None,
+                           score_evidence: bool = False):
     """shared_pack_v2 (P67.9): bind the R1/R2/R3 retriever trio into the
     ``pack_builder`` hook (trio shortlists → deterministic consolidator →
     T2.4 quality gate). Fails LOUD when a lane is missing — a dead retriever
@@ -1075,7 +1076,14 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
     supplied, packs consolidate ROLE-AWARE — the principal relation closes
     over them here (identical machinery for every speaker, I3-relational) and
     each claim's Layer A shape comes from ``shape_registry``. Either absent →
-    legacy quota, bit-for-bit."""
+    legacy quota, bit-for-bit.
+
+    ``score_evidence`` (remediation v2, B1b): score relevance + stance at
+    retrieval time, so the T2.4 quota sees real stance instead of the nulls that
+    gate-force Unverifiable. Default OFF — it is EXTRA MODEL SPEND (one cheap
+    Haiku call per claim over the proxy) and stays gated on DC-B1 sign-off.
+    Fails LOUD when the proxy key is absent, exactly like a missing lane: a
+    run that ASKED to score must not quietly emit another all-default pack."""
     import os
     import shutil
 
@@ -1120,6 +1128,20 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
             retrieval_pool.parallel_shortlists, governor=governor,
             max_workers=(retriever_concurrency or None))
 
+    # Relevance/stance scoring (B1b) — opt-in, and loud when it cannot happen.
+    scorer = None
+    if score_evidence:
+        from truthbot.verify.relevance import build_scorer
+        scorer = build_scorer()
+        if scorer is None:
+            print("BLOCKED (--score-evidence): no LiteLLM proxy key — the "
+                  "relevance/stance lane is unavailable, and running without "
+                  "it would emit another all-default, unfit-to-gate pack. "
+                  "No spend attempted.")
+            sys.exit(1)
+        print("--score-evidence ON: each claim's candidates get a cheap "
+              "relevance/stance call before consolidation (extra model spend).")
+
     relation_of = None
     if speaker and utterance is not None:
         from truthbot.verify.principals import principal_relation
@@ -1138,7 +1160,8 @@ def _build_v2_pack_builder(grok_fallback: bool = False, governor=None,
                                       retry_retrievers=retry, context=context,
                                       shortlist_runner=runner,
                                       claim_shape=shape_registry.shape_for(sid),
-                                      relation_of=relation_of)
+                                      relation_of=relation_of,
+                                      scorer=scorer)
 
     return pack_builder
 
@@ -1258,7 +1281,8 @@ def _run_publish_pca(args) -> None:
             retriever_concurrency=int(getattr(args, "retriever_concurrency", 0) or 0),
             # PR-A2.3: role-aware consolidation for every new v2 run.
             speaker=getattr(args, "speaker", "") or "",
-            utterance=date.date())
+            utterance=date.date(),
+            score_evidence=bool(getattr(args, "score_evidence", False)))
     else:
         provider = _build_open_book_provider()
         if provider is None:
@@ -1881,6 +1905,20 @@ def main() -> None:
             "v2 economy mode: grok (R3) researches ONLY claims whose first-pass "
             "pack fails the T2.4 quota (thin-evidence rescue), not every claim. "
             "R1+R2 primary measured recall 0.85 = full trio (2026-07-24 pilots)."
+        ),
+    )
+    pub_parser.add_argument(
+        "--score-evidence",
+        dest="score_evidence",
+        action="store_true",
+        help=(
+            "COSTS MONEY (default OFF, gated on DC-B1): score every candidate's "
+            "relevance + stance with a cheap Haiku call over the LiteLLM proxy "
+            "BEFORE consolidation, so the T2.4 quota sees real stance. Without "
+            "it the v2 path scores nothing, ~20-30%% of items keep a null "
+            "stance that cannot credit MIN_BEARING_T13, and packs holding good "
+            "evidence gate-force Unverifiable. Adds roughly one cheap call per "
+            "claim. No effect without --evidence-mode v2."
         ),
     )
     pub_parser.add_argument(

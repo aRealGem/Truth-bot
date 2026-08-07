@@ -59,7 +59,15 @@ _SCORE_SYSTEM = (
     'Return JSON only: {"scores": [{"i": 1, "relevance": 0.0, "supports": null}, ...]}.'
 )
 
+#: Longest snippet (characters) sent per item in the scoring payload.
+SCORE_SNIPPET_CHARS = 400
+
 _JSON_BLOCK_RX = re.compile(r"\{.*\}", re.DOTALL)
+
+#: A pack-level scorer: ``(claim_text, evidence) -> None``, mutating the list
+#: IN PLACE. This is the injection point ``build_evidence_pack_v2`` takes —
+#: distinct from ``LlmFn``, which is the raw transport underneath it.
+PackScorer = Callable[[str, list], None]
 
 
 def parse_json_loosely(text: str) -> dict:
@@ -160,6 +168,18 @@ def generate_queries(llm: LlmFn, claim_text: str, *, context: str = "",
     return queries[:n]
 
 
+def score_payload(claim_text: str, evidence: list[Evidence]) -> str:
+    """The EXACT user payload ``score_evidence`` sends for these items.
+
+    Factored out so a $0 cost estimator can measure the real prompt volume of a
+    stored pack (scripts/rescore_stored_packs.py --estimate) instead of guessing
+    at it — the estimate prices the same bytes the funded run would send."""
+    items = [{"i": i, "source": ev.source_name,
+              "snippet": (ev.snippet or "")[:SCORE_SNIPPET_CHARS]}
+             for i, ev in enumerate(evidence, start=1)]
+    return json.dumps({"claim": claim_text, "items": items})
+
+
 def score_evidence(llm: LlmFn, claim_text: str, evidence: list[Evidence]) -> None:
     """Cheap-model relevance / supports-refutes scoring, IN PLACE.
 
@@ -169,9 +189,7 @@ def score_evidence(llm: LlmFn, claim_text: str, evidence: list[Evidence]) -> Non
     evidence."""
     if not evidence:
         return
-    items = [{"i": i, "source": ev.source_name, "snippet": (ev.snippet or "")[:400]}
-             for i, ev in enumerate(evidence, start=1)]
-    payload = json.dumps({"claim": claim_text, "items": items})
+    payload = score_payload(claim_text, evidence)
     try:
         out = llm(_SCORE_SYSTEM, payload)
         scores = out.get("scores", [])
@@ -197,6 +215,35 @@ def score_evidence(llm: LlmFn, claim_text: str, evidence: list[Evidence]) -> Non
         supports = s.get("supports")
         if isinstance(supports, bool) or supports is None:
             ev.supports_claim = supports
+
+
+def build_scorer(*, model: str = DEFAULT_MODEL,
+                 score_cap: int = DEFAULT_SCORE_CAP,
+                 llm: Optional[LlmFn] = None) -> Optional[PackScorer]:
+    """Factory for the ``build_evidence_pack_v2(scorer=...)`` injection point.
+
+    Returns a ``PackScorer`` bound to the cheap proxy lane (Haiku via LiteLLM by
+    default), or ``None`` when no proxy key is configured — so a caller that
+    asked for scoring finds out LOUDLY that the lane is absent instead of
+    silently shipping another all-default pack (remediation v2, B1b).
+
+    **Calling the returned scorer is MODEL SPEND.** Every production caller
+    therefore keeps it behind an explicit, default-OFF flag (DC-B1); pass
+    ``llm`` to drive it from a stub in tests, which spends nothing.
+
+    ``score_cap`` bounds the per-call prompt: only the first ``score_cap`` items
+    are sent, matching ``RelevanceProvider``. Stored v2 packs cap at
+    ``PACK_CAP_V2`` (10), comfortably under the default 16."""
+    llm = llm if llm is not None else build_proxy_llm(model)
+    if llm is None:
+        return None
+
+    def scorer(claim_text: str, evidence: list) -> None:
+        # Slicing shares the Evidence objects, so the in-place writes land on
+        # the caller's list.
+        score_evidence(llm, claim_text, evidence[:score_cap])
+
+    return scorer
 
 
 class RelevanceProvider(EvidenceProvider):
