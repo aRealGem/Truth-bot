@@ -108,21 +108,33 @@ def append_chunk_journal(path, chunk_idx: int, rows: list[dict],
         fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
+def evidence_from_artifact_dict(evidence_by_sid: dict) -> dict:
+    """sid → serialized-Evidence list → sid → ``list[Evidence]``.
+
+    The exact inverse of how runs are persisted (``ev.model_dump(mode="json")``
+    over ``bridge._pack_to_evidence``), so it round-trips a stored artifact's
+    ``evidence`` dict, a chunk journal or a packs journal alike. Shared by
+    ``packs_from_evidence_dict`` and by scripts/rescore_stored_packs.py, which
+    needs the Evidence objects themselves — ``relevance.score_evidence`` mutates
+    them in place — rather than assembled packs."""
+    from truthbot.models import Evidence
+    return {sid: [Evidence.model_validate(d) for d in (evs or [])]
+            for sid, evs in (evidence_by_sid or {}).items()}
+
+
 def packs_from_evidence_dict(evidence_by_sid: dict,
                              gate_codes: Optional[dict] = None) -> dict:
     """sid → serialized-Evidence list → sid → EvidencePack. Shared decode for the
     chunk journal and the P120 Phase R packs journal. ``gate_codes`` (optional)
     restores each pack's T2.4 gate flag so a RESUMED gate-failed pack still forces
     Unverifiable instead of silently reopening as a thin pack."""
-    from truthbot.models import Evidence
     from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
 
     gate_codes = gate_codes or {}
     packs: dict[str, EvidencePack] = {}
-    for sid, evs in (evidence_by_sid or {}).items():
+    for sid, evs in evidence_from_artifact_dict(evidence_by_sid).items():
         items = []
-        for i, d in enumerate(evs, start=1):
-            ev = Evidence.model_validate(d)
+        for i, ev in enumerate(evs, start=1):
             items.append(PackItem(
                 pack_id=f"E{i}", source_name=ev.source_name,
                 source_url=ev.source_url, tier=ev.source_tier,

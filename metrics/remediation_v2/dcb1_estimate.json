@@ -1,0 +1,197 @@
+{
+  "schema": "truthbot-dcb1-estimate v1",
+  "generated": "2026-08-07",
+  "status": "NOTHING HAS BEEN RUN. No model or API call was made producing this document; no spend has occurred. Both deliverables are written and tested offline, and remain DC-B1-gated.",
+  "b1a_rescore": {
+    "model": "claude-haiku",
+    "lane": "LiteLLM proxy (ON-proxy \u2192 ledger-true, not estimated)",
+    "method": "exact score_evidence prompt per sid via relevance.score_payload, measured from the stored artifacts, at 4.0 chars/token, priced with hydramind.models.RATE_TABLE_USD_PER_MTOK['claude-haiku'] = (0.80, 4.00) USD/Mtok in/out",
+    "calls": 529,
+    "items": 4344,
+    "total_cost_usd_est": 0.4391,
+    "per_speech": {
+      "gwbush_2006": {
+        "calls": 48,
+        "items": 396,
+        "prompt_chars": 107155,
+        "reply_chars_est": 18984,
+        "tokens_in_est": 26789,
+        "tokens_out_est": 4746,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.0404,
+        "skipped_no_claim_text": []
+      },
+      "clinton_1998": {
+        "calls": 92,
+        "items": 792,
+        "prompt_chars": 209339,
+        "reply_chars_est": 37904,
+        "tokens_in_est": 52335,
+        "tokens_out_est": 9476,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.0798,
+        "skipped_no_claim_text": []
+      },
+      "obama_2014": {
+        "calls": 96,
+        "items": 799,
+        "prompt_chars": 208534,
+        "reply_chars_est": 38290,
+        "tokens_in_est": 52134,
+        "tokens_out_est": 9572,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.08,
+        "skipped_no_claim_text": []
+      },
+      "biden_2022": {
+        "calls": 111,
+        "items": 885,
+        "prompt_chars": 234402,
+        "reply_chars_est": 42486,
+        "tokens_in_est": 58600,
+        "tokens_out_est": 10622,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.0894,
+        "skipped_no_claim_text": []
+      },
+      "trump_2026": {
+        "calls": 182,
+        "items": 1472,
+        "prompt_chars": 394194,
+        "reply_chars_est": 70624,
+        "tokens_in_est": 98548,
+        "tokens_out_est": 17656,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.1495,
+        "skipped_no_claim_text": []
+      }
+    }
+  },
+  "b1b_readjudication": {
+    "per_claim_usd_low": 0.0642,
+    "per_claim_usd_high": 0.0748,
+    "per_claim_source": "measured full-stack cost/claim of the three NON-RESUMED phase-3 rebuilds (gwbush 0.0642, clinton 0.0744, trump 0.0748); the two resumed legs undercount because banked_cost carries only proxy spend across sessions, not the off-proxy R2/R3 estimate",
+    "max_candidate_pool_all_gate_forced": {
+      "claims": 87,
+      "low_usd": 5.59,
+      "high_usd": 6.51
+    },
+    "newly_gated_subset": {
+      "claims": 66,
+      "low_usd": 4.24,
+      "high_usd": 4.94
+    },
+    "partial_50pct_of_max": {
+      "claims": 44,
+      "low_usd": 2.82,
+      "high_usd": 3.29
+    },
+    "partial_50pct_of_newly_gated": {
+      "claims": 33,
+      "low_usd": 2.12,
+      "high_usd": 2.47
+    },
+    "named_extras": {
+      "claims": 6,
+      "low_usd": 0.39,
+      "high_usd": 0.45,
+      "sids": [
+        "trump_2026:0023",
+        "trump_2026:0024",
+        "trump_2026:0030",
+        "trump_2026:0031",
+        "trump_2026:0343",
+        "clinton_1998:0313"
+      ],
+      "note": "all six are currently DECIDED, not gate-forced \u2014 additive to any flip set, no overlap"
+    },
+    "upper_bound_all_plus_extras": {
+      "claims": 93,
+      "low_usd": 5.97,
+      "high_usd": 6.96
+    },
+    "midpoint_50pct_plus_extras": {
+      "claims": 50,
+      "low_usd": 3.21,
+      "high_usd": 3.74
+    }
+  },
+  "per_speech": {
+    "gwbush_2006": {
+      "claims": 48,
+      "items": 396,
+      "gate_forced": 7,
+      "newly_gated": 5,
+      "stance_null": 102,
+      "relevance_default": 396,
+      "rebuild_cost_usd": 3.0823,
+      "rebuild_cost_per_claim": 0.0642,
+      "resumed_run_cost_undercounts": false,
+      "rescore_cost_usd_est": 0.0404
+    },
+    "clinton_1998": {
+      "claims": 92,
+      "items": 792,
+      "gate_forced": 14,
+      "newly_gated": 11,
+      "stance_null": 222,
+      "relevance_default": 792,
+      "rebuild_cost_usd": 6.8453,
+      "rebuild_cost_per_claim": 0.0744,
+      "resumed_run_cost_undercounts": false,
+      "rescore_cost_usd_est": 0.0798
+    },
+    "obama_2014": {
+      "claims": 96,
+      "items": 799,
+      "gate_forced": 12,
+      "newly_gated": 7,
+      "stance_null": 187,
+      "relevance_default": 799,
+      "rebuild_cost_usd": 1.835,
+      "rebuild_cost_per_claim": 0.0191,
+      "resumed_run_cost_undercounts": true,
+      "rescore_cost_usd_est": 0.08
+    },
+    "biden_2022": {
+      "claims": 111,
+      "items": 885,
+      "gate_forced": 16,
+      "newly_gated": 12,
+      "stance_null": 181,
+      "relevance_default": 885,
+      "rebuild_cost_usd": 4.0042,
+      "rebuild_cost_per_claim": 0.0361,
+      "resumed_run_cost_undercounts": true,
+      "rescore_cost_usd_est": 0.0894
+    },
+    "trump_2026": {
+      "claims": 182,
+      "items": 1472,
+      "gate_forced": 38,
+      "newly_gated": 31,
+      "stance_null": 444,
+      "relevance_default": 1472,
+      "rebuild_cost_usd": 13.6136,
+      "rebuild_cost_per_claim": 0.0748,
+      "resumed_run_cost_undercounts": false,
+      "rescore_cost_usd_est": 0.1495
+    }
+  },
+  "totals": {
+    "items": 4344,
+    "claims": 529,
+    "gate_forced": 87,
+    "newly_gated": 66,
+    "rescore_usd_est": 0.4391,
+    "combined_low_usd": 3.65,
+    "combined_high_usd": 7.4
+  },
+  "recommended_cap_usd": 8.0,
+  "daily_cap_usd": 20.0
+}
