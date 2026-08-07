@@ -22,6 +22,73 @@ fold is impossible regardless of what the caller stored.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from urllib.parse import parse_qsl, urlencode, urlsplit
+
+# ── URL join key (remediation v2 Phase A, A5 / C-3(a)) ───────────────────────
+#
+# The renderer joins the URLs a model reported (ModelVerdict.web_sources) to the
+# claim's evidence-pack items so it can display the tier the pipeline STORED at
+# adjudication time instead of re-deriving one with today's rules. Both sides of
+# that join must be keyed identically or the join misses on cosmetic differences
+# — http vs https, a www., a trailing slash, a share-tracking query — and the
+# fallback RATE, which is the defect signal, becomes noise instead of a
+# measurement. Hence one normalizer, used on both sides, living in the leaf
+# module so the renderer, the build-time checker, and offline scripts all key
+# the same way.
+
+#: Query parameters that never identify a document — campaign/click/share
+#: trackers appended by the referrer, not the publisher. Dropped from the join
+#: key so the same article retrieved via two paths keys once. Any parameter
+#: starting ``utm_`` is dropped in addition to these.
+TRACKING_QUERY_PARAMS: frozenset[str] = frozenset({
+    "fbclid", "gclid", "gbraid", "wbraid", "msclkid", "yclid", "dclid",
+    "ref", "ref_src", "referrer", "mc_cid", "mc_eid", "igshid", "s_cid",
+})
+
+
+def _is_tracking_param(key: str) -> bool:
+    k = key.lower()
+    return k.startswith("utm_") or k in TRACKING_QUERY_PARAMS
+
+
+def normalize_url(url: str) -> str:
+    """Canonical join key for a source URL. NOT a URL — never render this.
+
+    Collapses the differences that are cosmetic for identity purposes:
+
+    * **scheme** — dropped entirely, so ``http://`` and ``https://`` key alike;
+    * **leading ``www.``** and the default ports 80/443 — dropped from the host,
+      which is also lowercased (hosts are case-insensitive);
+    * **trailing slashes** on the path — dropped (``/a/b/`` == ``/a/b``), while
+      path CASE is preserved because paths are case-sensitive;
+    * **tracking params** — ``utm_*`` plus :data:`TRACKING_QUERY_PARAMS`
+      dropped; the surviving query is sorted so parameter order cannot split
+      one document into two keys;
+    * **fragment** — dropped (``#section`` is a position in a document, not a
+      different document).
+
+    Empty/whitespace input returns ``""``, which callers must treat as
+    unjoinable rather than as a key that matches other empties.
+    """
+    raw = (url or "").strip()
+    if not raw:
+        return ""
+    # Scheme-relative and bare-host inputs still parse into a netloc.
+    parts = urlsplit(raw if "//" in raw.split("?", 1)[0] else "//" + raw)
+    host = parts.netloc.lower()
+    if "@" in host:                     # strip any userinfo
+        host = host.rsplit("@", 1)[-1]
+    for default_port in (":80", ":443"):
+        if host.endswith(default_port):
+            host = host[: -len(default_port)]
+    if host.startswith("www."):
+        host = host[4:]
+    path = parts.path.rstrip("/")
+    query = urlencode(sorted(
+        (k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True)
+        if not _is_tracking_param(k)))
+    return f"{host}{path}" + (f"?{query}" if query else "")
+
 
 # ── Bucket orders ─────────────────────────────────────────────────────────────
 

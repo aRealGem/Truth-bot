@@ -673,6 +673,119 @@ def _check_no_lens_ui(site_root: Path) -> list[str]:
     return violations
 
 
+# ── Rendered tier == stored tier (remediation v2 Phase A, A5 / C-3(a)) ───────
+#
+# The renderer used to classify every source URL at RENDER time, so a published
+# report could show a different evidence hierarchy than the artifact its
+# verdicts were written from (414/1543 and 272/918 items on the two published
+# modern reports). Now every pack item renders its stored tier and advertises
+# it as ``data-stored-tier``; this lint proves the badge next to it agrees.
+#
+# Two figures come out of the sweep:
+#   * VIOLATIONS — a badge that contradicts the stored tier sitting on the same
+#     element. There is no benign version of this; it means the join silently
+#     stopped working.
+#   * the FALLBACK RATE — the share of rendered tier badges that had no stored
+#     tier to use (``data-tier-src="classified"``). Reported, never asserted: a
+#     model can legitimately cite a URL that never entered the pack. It is the
+#     magnitude that matters, which is why it is surfaced rather than hidden.
+
+#: One rendered pack item: its stored tier plus the badge/source attributes.
+_LI_STORED_TIER_RE = re.compile(
+    r'<li\b[^>]*\bdata-stored-tier="([^"]*)"[^>]*>(.*?)</li>', re.S)
+_BADGE_RE = re.compile(
+    r'<span class="evidence-tier [^"]*" data-tier-src="(stored|classified)">'
+    r'([^<]*)</span>')
+
+
+def tier_render_telemetry(site_root: Path, reports: list[dict]) -> dict:
+    """Rendered-tier join telemetry over the report pages, per report + total.
+
+    ``{"per_report": {slug: {...}}, "total": {...}}`` where each row is
+    ``{joined, fallback, total, fallback_rate}`` counted off the rendered
+    ``data-tier-src`` attributes. Independent of reports.json — it measures the
+    HTML that actually shipped, so a renderer that reports one number and
+    prints another cannot hide.
+    """
+    site_root = Path(site_root)
+    per_report: dict[str, dict] = {}
+    tot_joined = tot_fallback = 0
+    for report in reports:
+        url = report.get("url", "")
+        page_path = site_root / url
+        if not url or not page_path.exists():
+            continue
+        page = page_path.read_text(encoding="utf-8")
+        srcs = [m.group(1) for m in _BADGE_RE.finditer(page)]
+        joined = sum(1 for s in srcs if s == "stored")
+        fallback = len(srcs) - joined
+        tot_joined += joined
+        tot_fallback += fallback
+        per_report[url] = {
+            "joined": joined, "fallback": fallback, "total": len(srcs),
+            "fallback_rate": round(fallback / len(srcs), 6) if srcs else 0.0}
+    total = tot_joined + tot_fallback
+    return {"per_report": per_report,
+            "total": {"joined": tot_joined, "fallback": tot_fallback,
+                      "total": total,
+                      "fallback_rate": (round(tot_fallback / total, 6)
+                                        if total else 0.0)}}
+
+
+def _check_rendered_tiers(site_root: Path, reports: list[dict]) -> list[str]:
+    """A5 lint: every JOINED item renders the tier the artifact stored.
+
+    Also logs the per-report and site-wide fallback rate — visible in the
+    render log next to the publisher's own printed figure.
+    """
+    from truthbot.models import SourceTier
+    from truthbot.verify.source_tiers import TIER_DISPLAY
+
+    site_root = Path(site_root)
+    violations: list[str] = []
+    for report in reports:
+        url = report.get("url", "")
+        page_path = site_root / url
+        if not url or not page_path.exists():
+            continue
+        page = page_path.read_text(encoding="utf-8")
+        for m in _LI_STORED_TIER_RE.finditer(page):
+            stored_raw, body = m.group(1), m.group(2)
+            badge = _BADGE_RE.search(body)
+            if badge is None:
+                violations.append(
+                    f"{url}: pack item stores tier {stored_raw!r} but renders "
+                    "no evidence-tier badge")
+                continue
+            src_attr, code = badge.group(1), badge.group(2)
+            try:
+                want = TIER_DISPLAY[SourceTier(stored_raw)][0]
+            except (ValueError, KeyError):
+                violations.append(
+                    f"{url}: pack item carries unknown stored tier "
+                    f"{stored_raw!r}")
+                continue
+            if code != want:
+                violations.append(
+                    f"{url}: pack item stores tier {stored_raw!r} (badge "
+                    f"{want}) but renders {code} — the render is not showing "
+                    "the tier the panel adjudicated on")
+            if src_attr != "stored":
+                violations.append(
+                    f"{url}: pack item has a stored tier {stored_raw!r} but "
+                    f"its badge is marked {src_attr!r} — the join was skipped")
+
+    tel = tier_render_telemetry(site_root, reports)
+    for slug, row in tel["per_report"].items():
+        logger.info("tier join %s: %d/%d stored, fallback rate %.1f%%",
+                    slug, row["joined"], row["total"],
+                    100 * row["fallback_rate"])
+    logger.info("tier join site-wide: %d/%d stored, fallback rate %.1f%%",
+                tel["total"]["joined"], tel["total"]["total"],
+                100 * tel["total"]["fallback_rate"])
+    return violations
+
+
 def check_feed(site_root: Path, reports: list[dict]) -> list[str]:
     """Validate feed.xml against the reports index (remediation v2, 1.5).
 
@@ -731,8 +844,9 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
     when every checked figure derives cleanly from data/*.json).
 
     ``strict_buckets`` gates the remediation-v2 lints (index Sources-chip
-    buckets, per-report/site-wide bucket sums, feed validity, and the R-1
-    no-lens-UI sweep). Default True — every fresh render must satisfy them.
+    buckets, per-report/site-wide bucket sums, feed validity, the R-1
+    no-lens-UI sweep, and the A5 rendered-tier == stored-tier join). Default
+    True — every fresh render must satisfy them.
     The COMMITTED site-pca/ tree predates the remediation regeneration (its
     cards were rendered without the political bucket, and every page still
     carries the retired lens chip), so tests/test_site_consistency.py lints it
@@ -820,6 +934,7 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
         violations.extend(_check_bucket_invariants(reports, claims))
         violations.extend(check_feed(site_root, reports))
         violations.extend(_check_no_lens_ui(site_root))
+        violations.extend(_check_rendered_tiers(site_root, reports))
 
     # ── Per-report pages ─────────────────────────────────────────────────
     for report in reports:

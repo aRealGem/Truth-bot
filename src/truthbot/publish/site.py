@@ -33,6 +33,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+from truthbot.models import SourceTier
 from truthbot.models import SourceTier as _SourceTier
 from truthbot.models import VerdictBundle, VerdictLabel
 # Bucket orders, projections, family sets, and the one folding rule live in
@@ -52,6 +53,7 @@ from truthbot.publish.aggregation import (
     distribution_from_claims as _agg_distribution_from_claims,
     family_verdict as _agg_family_verdict,
     fine_label as _agg_fine_label,
+    normalize_url as _normalize_url,
     project_dist as _agg_project_dist,
     sources_line as _agg_sources_line,
 )
@@ -582,28 +584,139 @@ def _headline_verdict_coarse(dist: dict[str, int]) -> tuple[str, str]:
 
 
 def _tier_bucket(url: str) -> str:
-    """Classify a source URL into one of: gov, wire, news, fc, political, other."""
+    """Classify a source URL into one of: gov, wire, news, fc, political, other.
+
+    Rules-only fallback for a URL with no stored tier — see
+    :func:`stored_tier_index` for why that is the exception, not the path."""
     return TIER_BUCKET[classify_tier(url)]
+
+
+# ── Stored-tier join (remediation v2 Phase A, A5 / C-3(a)) ───────────────────
+#
+# ``ModelVerdict.web_sources`` is a bare list of URL strings: it carries no
+# tier. Until now the renderer classified those URLs with classify_tier at
+# RENDER time, which means a published report was showing tiers derived from
+# whatever the registry said the day it was rendered — while the artifact
+# beside it stored the tiers the pipeline actually adjudicated on. On the two
+# published modern reports those disagreed on 414 of 1543 and 272 of 918 items.
+# A fact-check that displays a different evidence hierarchy than the one it
+# reasoned over is not reporting its own work.
+#
+# Owner ruling C-3(a): join web_sources to the claim's evidence-pack items by
+# NORMALIZED url, take the STORED tier on a hit, fall back to classify_tier on
+# a miss, and COUNT the misses so the fallback rate is a published number
+# rather than an assumption. A miss is legitimate (a model can cite a URL that
+# never entered the pack) but it is also exactly how tier drift would sneak
+# back in, so the rate is telemetry, not a detail: anything above a low single
+# digit percent is a defect signal, not background.
+
+
+def stored_tier_index(bundle) -> dict[str, SourceTier]:
+    """``normalize_url(item url) -> stored SourceTier`` for one claim's pack.
+
+    Built from ``VerdictBundle.sources_consulted`` — the FULL retrieved pack
+    (every item, not just the cited ones), each carrying the tier the pipeline
+    assigned at adjudication time. Unparseable tier strings are skipped rather
+    than coerced: a bogus stored value must show up as a join MISS in the
+    telemetry, not as a silently invented tier.
+    """
+    index: dict[str, SourceTier] = {}
+    for src in getattr(bundle, "sources_consulted", None) or []:
+        key = _normalize_url(src.get("url") or "")
+        if not key:
+            continue
+        try:
+            index[key] = SourceTier(src.get("tier"))
+        except ValueError:
+            continue
+    return index
+
+
+def _resolve_tier(url: str, index: "dict[str, SourceTier] | None",
+                  tally: "dict[str, int] | None" = None) -> tuple[SourceTier, bool]:
+    """``(tier, from_stored)`` for one URL against a stored-tier index.
+
+    Increments ``tally['joined']`` or ``tally['fallback']`` when given one, so
+    every caller that resolves a tier also measures the join.
+    """
+    key = _normalize_url(url)
+    stored = index.get(key) if (index and key) else None
+    if stored is not None:
+        if tally is not None:
+            tally["joined"] = tally.get("joined", 0) + 1
+        return stored, True
+    if tally is not None:
+        tally["fallback"] = tally.get("fallback", 0) + 1
+    return classify_tier(url), False
+
+
+def _new_tier_tally() -> dict[str, int]:
+    return {"joined": 0, "fallback": 0}
+
+
+def tier_join_rate(tally: dict[str, int]) -> dict[str, float | int]:
+    """Publishable telemetry row for a tally: totals + the fallback RATE."""
+    joined = int(tally.get("joined", 0))
+    fallback = int(tally.get("fallback", 0))
+    total = joined + fallback
+    return {"joined": joined, "fallback": fallback, "total": total,
+            "fallback_rate": round(fallback / total, 6) if total else 0.0}
+
+
+def tier_counts_with_join(site_report) -> tuple[dict[str, int], dict[str, int]]:
+    """``(tier bucket counts, join tally)`` for one report.
+
+    Same deduped tally the Sources line has always shown, except the tier now
+    comes from the claim's own evidence pack whenever the URL is in it. Dedup
+    is on the NORMALIZED url (it used to be on the raw string), so the same
+    document reached by http and https counts once instead of twice.
+    """
+    seen: set[str] = set()
+    counts = {"gov": 0, "wire": 0, "news": 0, "fc": 0, "political": 0, "other": 0}
+    tally = _new_tier_tally()
+    for bundle in site_report.checkable_bundles:
+        index = stored_tier_index(bundle)
+        for mv in bundle.model_verdicts:
+            for url in mv.web_sources or []:
+                key = _normalize_url(url)
+                if not key or key in seen:
+                    continue
+                seen.add(key)
+                tier, _ = _resolve_tier(url, index, tally)
+                counts[TIER_BUCKET[tier]] += 1
+    return counts, tally
 
 
 def _tier_counts_for_report(site_report) -> dict[str, int]:
     """Tally deduped source URLs per tier bucket across all checkable bundles."""
-    seen: set[str] = set()
-    counts = {"gov": 0, "wire": 0, "news": 0, "fc": 0, "political": 0, "other": 0}
-    for bundle in site_report.checkable_bundles:
-        for mv in bundle.model_verdicts:
-            for url in mv.web_sources or []:
-                if not url or url in seen:
-                    continue
-                seen.add(url)
-                counts[_tier_bucket(url)] += 1
-    return counts
+    return tier_counts_with_join(site_report)[0]
 
 
-def _tier_badge(url: str) -> str:
-    """Return an evidence-tier span for a source URL."""
-    code, css = TIER_DISPLAY[classify_tier(url)]
-    return f'<span class="evidence-tier {css}">{code}</span>'
+def _tier_badge(url: str, tier: "SourceTier | str | None" = None,
+                tally: "dict[str, int] | None" = None) -> str:
+    """Evidence-tier span for a source URL.
+
+    ``tier`` is the STORED tier when the caller has it (pack items carry one
+    directly; ``web_sources`` URLs get theirs from :func:`stored_tier_index`).
+    Without it the badge falls back to the render-time rules. The rendered
+    ``data-tier-src`` attribute records which of the two happened, so the
+    fallback rate is auditable from the HTML itself and the build-time lint can
+    assert rendered-tier == stored-tier on every joined item.
+    """
+    from_stored = tier is not None
+    if isinstance(tier, str):
+        try:
+            tier = SourceTier(tier)
+        except ValueError:
+            tier, from_stored = None, False
+    if tier is None:
+        tier, from_stored = _resolve_tier(url, None, tally)
+    elif tally is not None:
+        tally["joined"] = tally.get("joined", 0) + 1
+    code, css = TIER_DISPLAY[tier]
+    src_attr = "stored" if from_stored else "classified"
+    return (f'<span class="evidence-tier {css}" data-tier-src="{src_attr}">'
+            f'{code}</span>')
 
 
 # Layer 4 — anti-hallucination publish-layer rendering.
@@ -674,6 +787,8 @@ def _evidence_list_html(
     urls: list[str],
     *,
     classifications: "dict[str, str] | None" = None,
+    tier_index: "dict[str, SourceTier] | None" = None,
+    tally: "dict[str, int] | None" = None,
 ) -> str:
     """Render evidence URLs as evidence-list structure.
 
@@ -684,6 +799,11 @@ def _evidence_list_html(
 
     Without ``classifications`` every URL renders as verified (the
     pre-Layer-4 behavior), so older publish runs still look identical.
+
+    ``tier_index`` (A5 / C-3(a)) is the claim's ``stored_tier_index`` — these
+    URLs come from ``ModelVerdict.web_sources`` and carry no tier of their
+    own, so the badge is joined back to the evidence pack rather than
+    re-derived. ``tally`` accumulates the joined/fallback counts.
     """
     if not urls:
         return '<p style="font-size:0.88rem;color:var(--ink-muted)">No sources retrieved.</p>'
@@ -694,7 +814,8 @@ def _evidence_list_html(
             # Defense in depth — never render a known-broken URL even
             # if it slipped through filter-sidecar.
             continue
-        badge = _tier_badge(url)
+        _tier, _hit = _resolve_tier(url, tier_index, tally)
+        badge = _tier_badge(url, _tier if _hit else None)
         short = url.replace("https://", "").replace("http://", "")
         if len(short) > 80:
             short = short[:77] + "…"
@@ -718,7 +839,8 @@ def _evidence_list_html(
 
 
 def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
-                            self_ids: Optional[set[str]] = None) -> str:
+                            self_ids: Optional[set[str]] = None,
+                            tally: "dict[str, int] | None" = None) -> str:
     """Render the FULL retrieved evidence pack (all items, not just cited).
 
     Independent of what the verdict cited: a claim can have a non-empty pack
@@ -732,6 +854,12 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
     ``self_ids`` (PR-A2.1): pack ids whose source org is the speaker's own
     principal — those items carry a "speaker's own org" badge so the reader
     can see at a glance which records are the claimant's.
+
+    A5 / C-3(a): a pack item carries its OWN stored tier, so no join is needed
+    here — the badge renders that tier directly, and the item advertises it as
+    ``data-stored-tier`` so the build-time lint can prove the badge and the
+    stored value agree instead of eyeballing two spans that happen to sit next
+    to each other.
     """
     if not sources:
         return ""
@@ -744,7 +872,7 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
         name = (src.get("source") or "").strip()
         tier = (src.get("tier") or "").strip()
         snippet = (src.get("snippet") or "").strip()
-        badge = _tier_badge(url)
+        badge = _tier_badge(url, tier or None, tally)
         if str(src.get("id") or "").strip() in self_ids:
             badge += ('<span class="ev-self" title="This source is the speaker&#39;s '
                       'own organization (administration, party, or campaign at the '
@@ -763,8 +891,10 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
         pack_id = (src.get("id") or "").strip()
         id_html = f'<span class="ev-id">[{_esc(pack_id)}]</span>' if pack_id else ""
         li_anchor = f' id="{_esc(anchor_base)}-{_esc(pack_id)}"' if anchor_base and pack_id else ""
+        stored_attr = f' data-stored-tier="{_esc(tier)}"' if tier else ""
         items.append(
-            f'<li class="source-verified"{li_anchor}><span class="ev-mark">→</span>{id_html}{badge}'
+            f'<li class="source-verified"{li_anchor}{stored_attr}>'
+            f'<span class="ev-mark">→</span>{id_html}{badge}'
             f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
             f'{name_html}{tier_html}{snippet_html}</li>'
         )
@@ -2269,7 +2399,16 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
 
 
 def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
-                standalone: bool = False, panel_roster: Optional[dict] = None) -> str:
+                standalone: bool = False, panel_roster: Optional[dict] = None,
+                tier_tally: "dict[str, int] | None" = None) -> str:
+    """Render one claim card.
+
+    ``tier_tally`` (A5 / C-3(a)) is the optional measurement hook: pass a
+    :func:`_new_tier_tally` dict to count how many of THIS card's tier badges
+    came from the stored evidence pack vs. fell back to the render-time rules.
+    The published per-report figure is the deduped one from
+    :func:`tier_counts_with_join`; this hook measures the rendered surface.
+    """
     claim = bundle.claim
     consensus = bundle.consensus
     # Folding through aggregation (1.6): a split / no-verdict claim reads its
@@ -2482,11 +2621,16 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     # a claim with a non-empty pack but zero citations still shows its real
     # sources rather than a bare "No sources retrieved."
     consulted = list(getattr(bundle, "sources_consulted", None) or [])
+    # A5 / C-3(a): the pack is the tier authority for this claim. Built once
+    # here and used by BOTH source surfaces below, so the combined-evidence
+    # list (bare web_sources URLs, no tier of their own) shows the adjudicated
+    # tier rather than one re-derived at render time.
+    _tier_index = stored_tier_index(bundle)
     consulted_html = ""
     if consulted:
         consulted_inner = _sources_consulted_html(
             consulted, anchor_base=_anchor_base,
-            self_ids=_self_source_ids(bundle))
+            self_ids=_self_source_ids(bundle), tally=tier_tally)
         if consulted_inner:
             # Collapsed by default (2026-07-19 review): the snippet verbiage is
             # audit detail, not first-read content — one click away, not in the way.
@@ -2500,7 +2644,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     unverified_block = _model_cited_unverified_html(unverified_urls)
     if all_urls:
         evidence_inner = (
-            f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None)}'
+            f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None, tier_index=_tier_index, tally=tier_tally)}'
             f'{unverified_block}'
         )
     elif unverified_urls:
@@ -7295,6 +7439,17 @@ class SitePublisher:
             if not bundle.date_str:
                 bundle.date_str = site_report.date_str
 
+        # A5 / C-3(a): announce the stored-tier join BEFORE the pages go out,
+        # so a broken join is visible in the render log rather than only in
+        # reports.json after the fact.
+        _tier_tel = self._tier_meta(site_report)["tier_fallback"]
+        _tier_label = getattr(site_report, "speech_id", "") or site_report.report_id
+        print(f"tier join · {_tier_label}: "
+              f"{_tier_tel['joined']} of {_tier_tel['total']} cited URLs matched a "
+              f"stored evidence-pack tier · fallback rate "
+              f"{_tier_tel['fallback_rate']:.1%} ({_tier_tel['fallback']} "
+              f"re-derived at render time)", flush=True)
+
         # Write report page
         report_html = _render_report(site_report)
         report_path = self._root / "reports" / f"{site_report.report_slug}.html"
@@ -7467,6 +7622,22 @@ class SitePublisher:
         p = self._root / "data" / "claims.json"
         p.write_text(json.dumps(claims, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    def _tier_meta(self, sr: SiteReport) -> dict:
+        """Source-tier tally + the A5 join telemetry, as reports.json fields.
+
+        ``tier_fallback`` is the published measurement C-3(a) asks for: over
+        every deduped URL the models cited, how often the renderer found the
+        claim's stored tier (``joined``) and how often it had to re-derive one
+        (``fallback``). A miss is legitimate — a model can cite a URL that was
+        never in the pack — but the RATE is the signal: past a low single-digit
+        percent it means the join is broken or the packs are not the evidence
+        the verdicts were written from, and the tiers on the page stop being
+        the tiers the panel reasoned over. Published rather than logged so it
+        is reviewable after the fact, like every other figure on the site.
+        """
+        counts, tally = tier_counts_with_join(sr)
+        return {"tier_counts": counts, "tier_fallback": tier_join_rate(tally)}
+
     def _report_meta(self, sr: SiteReport) -> dict:
         return {
             "id":                  sr.report_id,
@@ -7497,7 +7668,7 @@ class SitePublisher:
             "verdict_distribution_strict":  sr.verdict_distribution_strict,
             "model_agreement_rate": round(sr.model_agreement_rate, 3),
             "url":                 sr.report_url,
-            "tier_counts":         _tier_counts_for_report(sr),
+            **self._tier_meta(sr),
             # New decomposed speaker/speech fields
             "source_of_claims":                          sr.source_of_claims or sr.speaker,
             "source_of_claims_professional_public_title": sr.source_of_claims_professional_public_title or sr.role,
