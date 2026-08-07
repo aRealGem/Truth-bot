@@ -199,6 +199,13 @@ def append_packs_journal(path, sid: str, pack) -> None:
     quarantined = getattr(pack, "quarantined", None) or []
     if quarantined:
         rec["quarantined"] = list(quarantined)
+    # Phase A (A1): scoring-coverage telemetry per pack — how much of the pack
+    # carries the untouched default relevance, and the stance True/False/None
+    # split. Same additive pattern as excluded_fc / quarantined above; absent
+    # on v1 packs and on journals written before the field existed.
+    scoring = getattr(pack, "scoring", None) or {}
+    if scoring:
+        rec["scoring"] = dict(scoring)
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("a", encoding="utf-8") as fh:

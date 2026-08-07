@@ -257,4 +257,9 @@ def test_rerender_script_passes_full_ledger_for_display_on_skip() -> None:
     assert re.search(
         r"SitePublisher\(site_root=args\.site_root,\s*corrections=corrections",
         src), "publisher must receive the full ledger for display"
-    assert "render_artifact(p, publisher, args.role, corrections=apply_corr)" in src
+    # Trailing bracket OR comma: the call grew a require_fit kwarg with the
+    # Phase-A publish gate; what this pins is that apply_corr is what reaches
+    # apply_to_artifact.
+    assert re.search(
+        r"render_artifact\(p, publisher, args\.role, corrections=apply_corr[,)]",
+        src)

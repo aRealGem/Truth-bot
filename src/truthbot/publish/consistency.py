@@ -262,6 +262,157 @@ _SPEECH_DATES = {
 _MAX_S5_PER_SID = 3
 
 
+# ── Fitness to gate (remediation v2 Phase A, A1) ─────────────────────────────
+#
+# The consolidator's quota (MIN_BEARING_T13) only credits items whose stance is
+# supports/refutes, and the T2.4 gate FORCES Unverifiable when the quota is
+# unmet. That machinery is only meaningful if the stance and relevance layers
+# actually RAN. On the v2 path they do not: build_evidence_pack_v2 wires the
+# R1/R2/R3 retrievers straight into consolidate(), and score_evidence — the
+# only writer of relevance_score/supports_claim — sits on the legacy v1
+# provider and the R4 archive retriever. A run in that state cannot be trusted
+# to distinguish "no qualifying evidence exists" from "nobody looked".
+#
+# Such a run is UNFIT TO GATE: its gate-forced Unverifiables are artifacts of
+# missing scoring, not findings. This is a REPORTED condition over stored
+# artifacts (check_run_fitness) and a HARD gate at publish time
+# (check_publish_gate) — deliberately not an artifact-lint violation, so
+# check_run_artifacts keeps meaning "the current-generation invariants hold".
+
+#: Stance-null ceiling. Above this share of items carrying supports_claim=None,
+#: too much of the pack is invisible to _bearing() for the quota — and hence
+#: for the forced-Unverifiable gate — to mean anything.
+#:
+#: WHY 0.15: the ten stored runs (5 published + 5 rebuilt) sit at 20.5%–34.2%
+#: stance-null, so any ceiling below 20.5% flags all ten. 0.15 is set one
+#: meaningful step BELOW the best observed run rather than at it: a ceiling
+#: tuned to the corpus (e.g. 0.35) would certify today's behavior as the
+#: standard, which is exactly the failure this lint exists to catch. 0.15
+#: still tolerates a genuinely ambiguous minority — a real stance layer that
+#: honestly returns "context" on ~1 item in 7 stays fit — while refusing a
+#: pack where a quarter of the evidence never got a stance at all. Every
+#: existing run failing this is the CORRECT outcome: they are all unfit.
+UNFIT_STANCE_NULL_RATE = 0.15
+
+
+def is_fit_to_gate(artifact) -> tuple[bool, str]:
+    """Is this run artifact's evidence scored well enough to GATE on?
+
+    Returns ``(fit, reason)``; ``reason`` is a one-line human explanation in
+    both directions. Unfit when (a) not a single item carries a real relevance
+    score — the whole run kept the 0.5 pydantic default, i.e. the relevance
+    layer never ran — or (b) the stance-null rate exceeds
+    :data:`UNFIT_STANCE_NULL_RATE`. Accepts the parsed artifact dict; works on
+    artifacts that predate ``EvidencePack.scoring`` because the telemetry is
+    recomputed from the stored evidence with the very same function the
+    pipeline writes.
+    """
+    from truthbot.verdict.consolidator import scoring_telemetry_from_artifact
+
+    evidence = artifact.get("evidence")
+    if evidence is None:
+        return False, "no evidence stored — nothing to gate on"
+    tel = scoring_telemetry_from_artifact(evidence)
+    n = tel["items"]
+    if not n:
+        return False, "evidence map is empty — nothing to gate on"
+    if not tel["relevance_scored"]:
+        return False, (
+            f"relevance is entirely default: 0 of {n} items scored "
+            f"(all carry the {0.5} pydantic default) — the relevance layer "
+            "never ran on this run")
+    if tel["stance_null_rate"] > UNFIT_STANCE_NULL_RATE:
+        return False, (
+            f"stance-null rate {tel['stance_null_rate']:.1%} exceeds the "
+            f"{UNFIT_STANCE_NULL_RATE:.0%} ceiling "
+            f"({tel['stance_null']} of {n} items carry no stance) — those "
+            "items cannot credit the quota, so the forced-Unverifiable gate "
+            "is measuring retrieval silence, not evidence")
+    return True, (
+        f"{tel['relevance_scored']} of {n} items relevance-scored, "
+        f"stance-null {tel['stance_null_rate']:.1%} "
+        f"(<= {UNFIT_STANCE_NULL_RATE:.0%})")
+
+
+def run_fitness_report(repo_root) -> list[dict]:
+    """Machine-readable fitness row per stored run artifact.
+
+    One dict per manifest run whose artifact is present in this checkout:
+    ``{run_id, speech_id, generation, published, items, packs, scored,
+    scored_rate, stance_null, stance_null_rate, fit_to_gate, reason}``.
+    Absent artifacts are skipped for the same reason check_run_artifacts skips
+    them (CI clones legitimately carry manifest rows without the large files).
+    """
+    from truthbot.verdict.consolidator import scoring_telemetry_from_artifact
+
+    repo_root = Path(repo_root)
+    runs_dir = repo_root / "metrics" / "pca_runs"
+    manifest = _load_json(runs_dir / "methodology_manifest.json")
+    rows: list[dict] = []
+    for run_id, row in manifest["runs"].items():
+        path = runs_dir / f"{run_id}.json"
+        if not path.exists():
+            continue
+        artifact = _load_json(path)
+        tel = scoring_telemetry_from_artifact(artifact.get("evidence") or {})
+        fit, reason = is_fit_to_gate(artifact)
+        rows.append({
+            "run_id": run_id,
+            "speech_id": row.get("speech_id", ""),
+            "generation": row.get("generation", ""),
+            "published": bool(row.get("published")),
+            "packs": tel["packs"],
+            "items": tel["items"],
+            "relevance_scored": tel["relevance_scored"],
+            "relevance_default": tel["relevance_default"],
+            "scored_rate": round(tel["scored_rate"], 6),
+            "stance_supports": tel["stance_supports"],
+            "stance_refutes": tel["stance_refutes"],
+            "stance_null": tel["stance_null"],
+            "stance_null_rate": round(tel["stance_null_rate"], 6),
+            "fit_to_gate": fit,
+            "reason": reason,
+        })
+    return rows
+
+
+def check_run_fitness(repo_root) -> list[str]:
+    """REPORTED (not violating) unfit-to-gate conditions over stored runs.
+
+    Returned as its OWN list so ``check_run_artifacts() == []`` keeps meaning
+    "the current-generation invariants hold" — a fitness problem is a
+    different class of defect (the evidence was never scored) from an
+    invariant breach (the pack broke a rule), and conflating them would make
+    the existing suite's ``violations == []`` assertion vacuous. The teeth are
+    at publish time: :func:`check_publish_gate`.
+    """
+    lines: list[str] = []
+    for row in run_fitness_report(repo_root):
+        if row["fit_to_gate"]:
+            continue
+        lines.append(
+            f"{row['run_id'][:8]} ({row['speech_id']}"
+            f"{', published' if row['published'] else ''}): unfit-to-gate — "
+            f"{row['reason']}")
+    return lines
+
+
+def check_publish_gate(artifact, label: str = "") -> list[str]:
+    """HARD publish-time gate: an unfit-to-gate run must not be published.
+
+    Returns violations (empty = publishable). The publish path
+    (``scripts/rerender_pca_site.py``) refuses to render an artifact this
+    rejects. Kept out of :func:`check_run_artifacts` on purpose — storing an
+    unfit run is fine and necessary (it is the evidence for the finding);
+    PUBLISHING its gate-forced verdicts as fact-check results is not.
+    """
+    fit, reason = is_fit_to_gate(artifact)
+    if fit:
+        return []
+    name = label or (artifact.get("meta") or {}).get("speech_id") or "artifact"
+    return [f"{name}: unfit-to-gate, refusing to publish — {reason}"]
+
+
 def check_run_artifacts(repo_root) -> list[str]:
     """Assert the current-generation invariants over stored pca_runs artifacts.
 
@@ -290,6 +441,11 @@ def check_run_artifacts(repo_root) -> list[str]:
     manifest = _load_json(runs_dir / "methodology_manifest.json")
     current = manifest["current_generation"]
     violations: list[str] = []
+
+    # Phase A (A1): scoring-coverage fitness is REPORTED here, never a
+    # violation — see check_run_fitness. The hard gate is check_publish_gate.
+    for line in check_run_fitness(repo_root):
+        logger.info("pca run %s", line)
 
     for run_id, row in manifest["runs"].items():
         path = runs_dir / f"{run_id}.json"

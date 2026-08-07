@@ -27,7 +27,8 @@ from hydramind.invariants import check_i5_provenance
 from truthbot.verify.retrievers import Retriever
 
 from . import era_lint, speech_context
-from .consolidator import PACK_CAP_V2, POST_SPEECH_NOTE, consolidate
+from .consolidator import (PACK_CAP_V2, POST_SPEECH_NOTE, consolidate,
+                           scoring_telemetry)
 from .evidence_pack import EvidencePack, PackItem, _retrieved_iso, _sha256, window_for
 
 logger = logging.getLogger(__name__)
@@ -188,10 +189,17 @@ def build_evidence_pack_v2(
     if len(res.pre_cap_items) > len(res.items):
         pool = [_pack_item(i, cit)
                 for i, cit in enumerate(res.pre_cap_items, start=1)]
+    # Scoring coverage (Phase A, A1) — computed over the CAPPED pack, the set
+    # the panel and the quota actually see. On the v2 path this is expected to
+    # report 0 scored / N default relevance every time: the R1/R2/R3 shortlists
+    # reach consolidate() without passing through
+    # ``verify.relevance.score_evidence``. Recording it is what turns that from
+    # a call-graph fact into a measurable, journaled, lintable one.
     pack = EvidencePack(sid=sid, window=window, items=items,
                         gate_code=res.gate_code, pool=pool,
                         excluded_fc=list(res.excluded_fc),
-                        quarantined=list(getattr(res, "quarantined", []) or []))
+                        quarantined=list(getattr(res, "quarantined", []) or []),
+                        scoring=scoring_telemetry(items))
     if not era_exempt:
         era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
     return pack

@@ -162,6 +162,14 @@ class EvidencePack:
     # government-class host ("quarantine-unmapped-gov"), not from a mapped
     # rule — journaled with the pack, never part of the panel payload.
     quarantined: list[str] = field(default_factory=list)
+    # Scoring-coverage telemetry (remediation v2 Phase A, A1):
+    # ``consolidator.scoring_telemetry`` over this pack's items — how many
+    # carry the untouched default relevance vs a real score, and the stance
+    # True/False/None split. Set by the v2 builder; empty on v1 packs.
+    # Journaled with the pack, never part of the panel payload. This is the
+    # number that makes "the v2 path never scores relevance or stance"
+    # visible on disk instead of inferable only by reading the call graph.
+    scoring: dict = field(default_factory=dict)
 
     @property
     def ids(self) -> list[str]:

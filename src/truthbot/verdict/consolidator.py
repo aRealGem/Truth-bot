@@ -28,9 +28,10 @@ evidence_pack v2.0 payload per item: {url, date, tier, stance, one_line_why}.
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Optional, Sequence
+from typing import Iterable, Optional, Sequence
 
 from truthbot.domains import is_substantive_url
 from truthbot.models import Evidence, SourceTier
@@ -66,6 +67,97 @@ _T13 = {SourceTier.GOVERNMENT, SourceTier.WIRE, SourceTier.ESTABLISHED}
 
 
 POST_SPEECH_NOTE = "post-speech · context-only"
+
+# ── Scoring-coverage telemetry (remediation v2 Phase A, A1) ──────────────────
+#
+# The v2 pack path NEVER scores relevance or stance. ``verify.relevance.
+# score_evidence`` — the only writer of ``relevance_score`` / ``supports_claim``
+# — is reachable from the legacy v1 provider (pipeline._build_open_book_provider)
+# and the R4 archive retriever ONLY; ``build_evidence_pack_v2`` wires the
+# R1/R2/R3 shortlists straight into :func:`consolidate`. So every v2 item keeps
+# the pydantic default relevance (models.py Evidence.relevance_score = 0.5) and
+# whatever stance the retriever's own JSON claimed — with retrievers.py mapping
+# stance "context" → None. Since ``_bearing`` requires True/False, those nulls
+# can never credit MIN_BEARING_T13 and the pack gate-forces Unverifiable.
+#
+# None of that was VISIBLE on disk: nothing recorded how much of a pack was
+# unscored. These helpers make the coverage a first-class, journaled number so
+# the condition is measurable (and lintable) instead of inferred.
+
+#: ``models.Evidence.relevance_score``'s pydantic default. An item still
+#: carrying it was never seen by the relevance layer. ``None`` counts as
+#: unscored too (``PackItem.relevance_score`` defaults to None on packs built
+#: with no relevance layer at all).
+DEFAULT_RELEVANCE_SCORE = 0.5
+
+#: Keys of the per-pack scoring telemetry dict, in report order.
+SCORING_KEYS = ("items", "relevance_scored", "relevance_default",
+                "stance_supports", "stance_refutes", "stance_null")
+
+
+def _field(obj, name):
+    """Read ``name`` off an attribute-style object OR a mapping.
+
+    Evidence, PackItem, ConsolidatedItem-wrapped Evidence and the plain dicts
+    stored in a run artifact's ``evidence`` map all answer the same two
+    questions; one accessor lets live packs and stored artifacts share ONE
+    telemetry implementation (so the lint over old artifacts and the field
+    written by new runs can never drift apart)."""
+    if isinstance(obj, Mapping):
+        return obj.get(name)
+    ev = getattr(obj, "evidence", None)
+    if ev is not None and not hasattr(obj, name):
+        obj = ev
+    return getattr(obj, name, None)
+
+
+def scoring_telemetry(items: Iterable) -> dict:
+    """Scoring coverage for one pack's items.
+
+    ``{items, relevance_scored, relevance_default, stance_supports,
+    stance_refutes, stance_null}`` — counts only, so the journal line stays
+    small. ``relevance_default`` counts items whose relevance is the untouched
+    0.5 default (or None, i.e. no relevance layer at all); everything else is
+    ``relevance_scored``. Stance counts partition the pack by
+    ``supports_claim`` True / False / None."""
+    tel = dict.fromkeys(SCORING_KEYS, 0)
+    for it in items:
+        tel["items"] += 1
+        rel = _field(it, "relevance_score")
+        if rel is None or rel == DEFAULT_RELEVANCE_SCORE:
+            tel["relevance_default"] += 1
+        else:
+            tel["relevance_scored"] += 1
+        stance = _field(it, "supports_claim")
+        if stance is True:
+            tel["stance_supports"] += 1
+        elif stance is False:
+            tel["stance_refutes"] += 1
+        else:
+            tel["stance_null"] += 1
+    return tel
+
+
+def scoring_telemetry_from_artifact(evidence: Mapping) -> dict:
+    """The SAME telemetry, summed over a STORED run artifact's ``evidence``
+    dict (``{sid: [evidence dict, …]}``).
+
+    Artifacts predating the ``EvidencePack.scoring`` field carry no telemetry
+    of their own, so the lint recomputes it from what is actually on disk.
+    Adds ``packs`` plus the two derived rates the fitness lint thresholds on
+    (0.0 on an empty artifact — no division by zero, no crash)."""
+    tel = dict.fromkeys(SCORING_KEYS, 0)
+    packs = 0
+    for items in (evidence or {}).values():
+        packs += 1
+        one = scoring_telemetry(items or [])
+        for k in SCORING_KEYS:
+            tel[k] += one[k]
+    n = tel["items"]
+    tel["packs"] = packs
+    tel["scored_rate"] = (tel["relevance_scored"] / n) if n else 0.0
+    tel["stance_null_rate"] = (tel["stance_null"] / n) if n else 0.0
+    return tel
 
 
 @dataclass(frozen=True)
