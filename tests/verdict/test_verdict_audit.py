@@ -452,6 +452,71 @@ def test_superlative_rev_b_additions_do_not_swallow_forward_looking_plans():
                          "c-count") == "c-count"
 
 
+# ── adjacent-claim coherence (A7) ────────────────────────────────────────────
+
+_C23 = "And last year the murder rate saw its single largest decline in recorded history."
+_C24 = ("This is the biggest decline, think of it, in recorded history—the "
+        "lowest number in over 125 years.")
+_R23 = ("available 2025 data showed a large preliminary decline, but the "
+        "record-setting national claim was only a projection")
+_R24 = ("contemporary reporting supported about a 21% homicide decline, the "
+        "largest one-year drop on record")
+
+
+def _pair(v_a, v_b, **row_extra):
+    claims = [{"sid": "sp:0023", "text": _C23}, {"sid": "sp:0024", "text": _C24}]
+    rows = [{"sid": "sp:0023", "verdict": v_a, "reasoning": _R23},
+            dict({"sid": "sp:0024", "verdict": v_b, "reasoning": _R24},
+                 **row_extra)]
+    return claims, rows
+
+
+def test_coherence_fires_on_contradictory_adjacent_verdicts():
+    conflicts = va.adjacent_coherence_conflicts(*_pair("MISLEADING", "TRUE"))
+    assert [c["sids"] for c in conflicts] == [["sp:0023", "sp:0024"]]
+    assert "decline" in conflicts[0]["shared_tokens"]
+
+
+def test_coherence_is_silent_when_the_pair_agrees():
+    assert va.adjacent_coherence_conflicts(*_pair("TRUE", "TRUE")) == []
+    assert va.adjacent_coherence_conflicts(*_pair("FALSE", "MISLEADING")) == []
+
+
+def test_coherence_accepts_an_explicit_annotation_as_the_escape_hatch():
+    for field in va.COHERENCE_ANNOTATION_FIELDS:
+        claims, rows = _pair("MISLEADING", "TRUE",
+                             **{field: "different vintages of the number"})
+        assert va.adjacent_coherence_conflicts(claims, rows) == []
+
+
+def test_coherence_skips_non_adjacent_abstaining_and_unengaged_pairs():
+    claims, rows = _pair("MISLEADING", "TRUE")
+    # six sentences apart is not "adjacent"
+    assert va.adjacent_coherence_conflicts(
+        [claims[0], dict(claims[1], sid="sp:0030")],
+        [rows[0], dict(rows[1], sid="sp:0030")]) == []
+    # an abstention is not a contradiction
+    assert va.adjacent_coherence_conflicts(*_pair("MISLEADING",
+                                                  "UNVERIFIABLE")) == []
+    # same statistic requires BOTH rationales to engage a shared, non-
+    # superlative token — surface adjacency alone is not enough
+    claims2, rows2 = _pair("MISLEADING", "TRUE")
+    rows2[1]["reasoning"] = "The figure is supported."
+    assert va.adjacent_coherence_conflicts(claims2, rows2) == []
+
+
+def test_same_statistic_requires_a_shared_non_superlative_token():
+    # both superlative, both rationales engage "decline"
+    assert va.same_statistic(_C23, _C24, _R23, _R24)
+    # only the superlative words overlap → not the same statistic
+    assert not va.same_statistic(
+        "It was the largest in recorded history.",
+        "That was the biggest in recorded history.",
+        "Largest indeed.", "Biggest indeed.")
+    # an empty rationale can hold no contradictory reasoning
+    assert not va.same_statistic(_C23, _C24, _R23, "")
+
+
 # ── Phase-3 model-pass selection (pure; no model calls) ──────────────────────
 
 def test_select_model_audit_rows_mandatory_plus_seeded_sample():

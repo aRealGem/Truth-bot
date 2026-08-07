@@ -26,3 +26,9 @@ jobs:
           pip install -e ".[dev]" || pip install -e . pytest pytest-asyncio
       - name: Test
         run: python -m pytest -q
+      # The DC-6' acceptance gate again, on its own, so the pre-publish check
+      # is a NAMED step in the run log rather than a handful of dots inside the
+      # full suite. Same tests, no extra cost — and if the marker ever gets
+      # deselected from the default run, this step still fails the build.
+      - name: DC-6' acceptance gate
+        run: python -m pytest -m acceptance -q

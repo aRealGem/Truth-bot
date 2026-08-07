@@ -30,6 +30,17 @@ Outputs (all under ``metrics/remediation_v2/``)::
     dc6_corrections_entries.json            one entry per changed verdict
     dc6_corrections_ledger_proposed.json    the PROPOSED post-reset data/corrections.json
 
+**Publish gate (A7).** This report is the human-judgement surface; the machine
+gate beside it is the named acceptance suite
+``tests/acceptance/test_dc6_acceptance_gate.py``, run as::
+
+    .venv/bin/python -m pytest -m acceptance -q
+
+It asserts the hand-adjudicated cases against the STAGED artifacts and must
+pass before anything here is published. Cases still blocked on the B1a
+re-score are marked ``xfail(strict=True)`` and will announce themselves as
+XPASS the moment that repair lands.
+
 ``--write-archive`` additionally writes ``data/corrections-archive-<date>.json``
 (a copy of the current ledger). It is purely additive; ``data/corrections.json``
 is never modified by this script — the reset is a reviewable proposal, applied

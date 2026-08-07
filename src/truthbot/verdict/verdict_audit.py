@@ -699,6 +699,129 @@ def audit_rows(claims: list[dict], rows: list[dict],
     return out
 
 
+# ── adjacent-claim coherence (A7) ────────────────────────────────────────────
+#
+# A speech says the same thing twice. The pipeline judges each sentence
+# independently, so nothing stops two ADJACENT claims about ONE statistic from
+# shipping on opposite sides of the truth axis with rationales that contradict
+# each other — trump_2026:0023 (MISLEADING: "only a projection") sitting next
+# to trump_2026:0024 (TRUE: "the largest one-year drop on record"), both about
+# the 2025 homicide decline. A reader sees a self-contradicting page.
+#
+# This is a PAIRWISE check, not a per-row lint, so it lives beside the lints
+# rather than in ALL_LINTS. The escape hatch is an explicit annotation: a pair
+# MAY disagree if the row says why (e.g. the two sentences really do rate
+# different vintages of the number), and the annotation is what makes that
+# visible instead of accidental.
+
+#: Truth-axis sides. A pair straddling these two sets is contradictory.
+_AFFIRMING = {"TRUE", "MOSTLY TRUE"}
+
+#: Row fields that count as the annotation escape hatch.
+COHERENCE_ANNOTATION_FIELDS = ("coherence_note", "annotation")
+
+_SID_RX = re.compile(r"^(?P<speech>.+):(?P<idx>\d+)$")
+_WORD_RX = re.compile(r"[A-Za-z][A-Za-z'’-]*")
+_COHERENCE_STOPWORDS = {
+    "this", "that", "these", "those", "with", "from", "have", "has", "had",
+    "been", "were", "was", "will", "your", "their", "there", "than", "then",
+    "when", "what", "which", "about", "into", "over", "under", "year",
+    "years", "think", "just", "also", "only", "more", "much", "very", "saw",
+    "its", "our", "the", "and", "but", "for", "not", "are", "you", "all",
+}
+
+
+def _sid_parts(sid: str) -> Optional[tuple[str, int]]:
+    m = _SID_RX.match(str(sid or ""))
+    return (m.group("speech"), int(m.group("idx"))) if m else None
+
+
+def _content_tokens(text: str) -> set[str]:
+    return {w.lower() for w in _WORD_RX.findall(text or "")
+            if len(w) > 3 and w.lower() not in _COHERENCE_STOPWORDS}
+
+
+def same_statistic(text_a: str, text_b: str,
+                   reasoning_a: str = "", reasoning_b: str = "",
+                   *, min_shared: int = 2) -> bool:
+    """Deterministic "these two sentences rate the same statistic, and both
+    rationales are actually about it".
+
+    Three conditions, each earning its keep against the real corpus:
+
+    1. both texts carry a superlative (this rule is about superlative pairs);
+    2. they share >= ``min_shared`` distinctive content tokens;
+    3. at least one shared token is NOT itself a superlative word AND appears
+       in BOTH rationales.
+
+    (3) is what separates a genuine restatement from mere adjacency. It keeps
+    trump_2026:0023/:0024 — both rationales argue about the *decline* — while
+    dropping trump_2026:0030/:0031, which share only "down"/"months" as
+    surface words while their rationales reason about two genuinely different
+    measures (a five-year low in the level vs. a three-month annualized rate).
+    An empty rationale never qualifies: with nothing said, there is no
+    contradictory rationale to find."""
+    if not (has_superlative(text_a) and has_superlative(text_b)):
+        return False
+    if not ((reasoning_a or "").strip() and (reasoning_b or "").strip()):
+        return False
+    shared = _content_tokens(text_a) & _content_tokens(text_b)
+    if len(shared) < min_shared:
+        return False
+    engaged_a, engaged_b = _content_tokens(reasoning_a), _content_tokens(reasoning_b)
+    return any(tok in engaged_a and tok in engaged_b
+               for tok in shared if not has_superlative(tok))
+
+
+def _annotated(row: dict) -> bool:
+    return any(str(row.get(f) or "").strip()
+               for f in COHERENCE_ANNOTATION_FIELDS)
+
+
+def adjacent_coherence_conflicts(claims: list[dict], rows: list[dict],
+                                 *, max_gap: int = 1) -> list[dict]:
+    """Adjacent claims rating the SAME statistic that carry CONTRADICTORY
+    rationales without an annotation.
+
+    ``max_gap`` is the sid-index distance that counts as adjacent (1 = the
+    next sentence). Returns one record per conflicting pair, sid-ordered.
+    Pure and offline."""
+    claim_by_sid = {c["sid"]: c for c in claims or [] if "sid" in c}
+    row_by_sid = {r["sid"]: r for r in rows or [] if "sid" in r}
+    ordered = sorted(
+        (p + (sid,) for sid in row_by_sid if (p := _sid_parts(sid))))
+    out: list[dict] = []
+    for i, (speech, idx, sid) in enumerate(ordered):
+        for speech_b, idx_b, sid_b in ordered[i + 1:]:
+            if speech_b != speech or idx_b - idx > max_gap:
+                break
+            row_a, row_b = row_by_sid[sid], row_by_sid[sid_b]
+            va_, vb = (str(row_a.get("verdict") or "").strip().upper(),
+                       str(row_b.get("verdict") or "").strip().upper())
+            if va_ not in DECIDED or vb not in DECIDED:
+                continue
+            if not ((va_ in _AFFIRMING) ^ (vb in _AFFIRMING)):
+                continue
+            text_a = (claim_by_sid.get(sid) or {}).get("text", "")
+            text_b = (claim_by_sid.get(sid_b) or {}).get("text", "")
+            if not same_statistic(text_a, text_b,
+                                  row_a.get("reasoning") or "",
+                                  row_b.get("reasoning") or ""):
+                continue
+            if _annotated(row_a) or _annotated(row_b):
+                continue
+            out.append({
+                "sids": [sid, sid_b],
+                "verdicts": [va_, vb],
+                "shared_tokens": sorted(
+                    _content_tokens(text_a) & _content_tokens(text_b)),
+                "detail": (f"{sid} ({va_}) and {sid_b} ({vb}) rate the same "
+                           "statistic with contradictory rationales and no "
+                           "annotation"),
+            })
+    return out
+
+
 def agreed_decided_rows(rows: list[dict]) -> list[dict]:
     """The one-off harness's selection, shared: non-escalated decided rows
     (the F8 agreed-verdict population)."""

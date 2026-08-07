@@ -57,6 +57,9 @@ python_functions = ["test_*"]
 addopts = "-m 'not live'"
 markers = [
     "live: hits real provider APIs and spends money; opt in via `pytest -m live`",
+    # The DC-6' publish gate (A7). Runs by default AND is addressable on its
+    # own as `pytest -m acceptance`, so the pre-publish check is one command.
+    "acceptance: DC-6' acceptance gate — named regression cases over the staged rebuild artifacts",
 ]
 
 [tool.ruff]
