@@ -33,7 +33,6 @@ from __future__ import annotations
 import json
 import logging
 import re
-from datetime import date
 from pathlib import Path
 
 from truthbot.publish.aggregation import (COARSE_VERDICT_ORDER,
@@ -246,15 +245,23 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
 # older generations are permanently legacy — reported, never re-assertable —
 # which is what blocks re-publishing them as-is.
 
-#: Utterance date per speech, for the era lint over stored artifacts (their
-#: meta.date agrees, but the lint must not depend on artifact self-report).
-_SPEECH_DATES = {
-    "trump_2026": date(2026, 2, 24),
-    "biden_2022": date(2022, 3, 1),
-    "obama_2014": date(2014, 1, 28),
-    "clinton_1998": date(1998, 1, 27),
-    "gwbush_2006": date(2006, 1, 31),
-}
+def _utterance_date(speech_id: str):
+    """Utterance date for the era lint over stored artifacts, or None.
+
+    Remediation v2 Phase A (A4): resolves through
+    ``verdict.speech_context.speech_date_for`` — the ONE map — instead of the
+    private mirror this module used to keep. Two maps meant a speech could be
+    pinned for the lint and unpinned for the pipeline (or the reverse) with
+    nothing to notice; the mirror was in fact more complete than the pipeline's
+    own map for three of the five speeches. It covers static pins AND runner
+    registrations (``register_speech_date``), which is precisely the "statically
+    pinned or runner-registered" test the publish gate applies below. Never
+    reads the artifact's self-reported meta.date: a run must not certify its
+    own era.
+    """
+    from truthbot.verdict.speech_context import speech_date_for
+
+    return speech_date_for(f"{speech_id}:0") if speech_id else None
 
 #: PR-A2.2 / T2.1 saturation cap, mirrored from
 #: truthbot.verdict.consolidator.MAX_S5 (imported lazily in the checker to
@@ -416,6 +423,13 @@ def check_publish_gate(artifact, label: str = "") -> list[str]:
 def check_run_artifacts(repo_root) -> list[str]:
     """Assert the current-generation invariants over stored pca_runs artifacts.
 
+    Over EVERY manifest row, any generation, artifact present or not (Phase A,
+    A4):
+      (0)   the row's ``speech_id`` resolves to an utterance date — statically
+            pinned in ``verdict.speech_context.SPEECH_DATE`` or runner-
+            registered. An unresolvable speech disables era gating entirely,
+            so it fails closed here rather than publishing ungated.
+
     For every run the methodology manifest labels ``current_generation``:
       (i)   per-claim POLITICAL-tier item count <= 3 (the S5 saturation cap),
       (ii)  zero era violations (fair-game window from the speech-date map,
@@ -447,6 +461,24 @@ def check_run_artifacts(repo_root) -> list[str]:
     for line in check_run_fitness(repo_root):
         logger.info("pca run %s", line)
 
+    # Phase A (A4) — speech-date fail-closed, asserted over EVERY manifest row
+    # regardless of generation or whether the artifact file is in the checkout.
+    # A speech_id that resolves to no utterance date (neither statically pinned
+    # in speech_context.SPEECH_DATE nor runner-registered) disables the era gate
+    # wholesale: era_lint has nothing to compare against, so post-speech
+    # evidence rides in unchallenged. This is the check that would have caught
+    # obama_2014, gwbush_2006 and clinton_1998 running unpinned, era-gated only
+    # by whichever runner happened to call register_speech_date() first.
+    for run_id, row in manifest["runs"].items():
+        speech_id = row.get("speech_id", "")
+        if _utterance_date(speech_id) is None:
+            violations.append(
+                f"{run_id}: speech_id {speech_id!r} resolves to no utterance "
+                "date — neither statically pinned in "
+                "verdict.speech_context.SPEECH_DATE nor runner-registered. The "
+                "era gate cannot run for this speech; pin it before publishing "
+                "(fail closed)")
+
     for run_id, row in manifest["runs"].items():
         path = runs_dir / f"{run_id}.json"
         if not path.exists():
@@ -469,11 +501,10 @@ def check_run_artifacts(repo_root) -> list[str]:
 
         artifact = _load_json(path)
         speech_id = row.get("speech_id", "")
-        utterance = _SPEECH_DATES.get(speech_id)
+        utterance = _utterance_date(speech_id)
         if utterance is None:
-            violations.append(
-                f"{run_id}: no utterance date known for speech {speech_id!r} "
-                "— the era invariant cannot be asserted (fail closed)")
+            # Already reported by the A4 pass above; skip the era invariant
+            # rather than assert it against nothing.
             continue
         evidence = artifact.get("evidence")
         if evidence is None:

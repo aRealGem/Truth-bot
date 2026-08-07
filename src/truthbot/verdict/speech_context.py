@@ -21,9 +21,24 @@ from typing import Optional
 from truthbot.verify.context.terms import expected_claim_window
 
 # sid prefix -> utterance (speech) date. Extend as the corpus grows.
+#
+# All FIVE corpus speeches are pinned here statically (remediation v2 Phase A,
+# A4). Only biden_2022 + trump_2026 used to be: the other three resolved to a
+# date solely because a runner called register_speech_date() at run time, so
+# any path that did NOT go through that runner — a re-render, a script, an
+# ad-hoc consolidation — saw speech_date_for() -> None and silently ran with
+# NO era gate at all. That is exactly how the Obama-2014 rescue leg shipped
+# 2026-dated evidence into a 2014 speech. Static pinning + the publish-side
+# check in publish.consistency.check_run_artifacts (every speech_id in a run
+# artifact must resolve to a date, statically or by registration) closes it in
+# both directions: nothing publishes on an unknown date, and the common case
+# needs no registration call to be safe.
 SPEECH_DATE: dict[str, date] = {
-    "biden_2022": date(2022, 3, 1),    # Biden SOTU, 2022-03-01
-    "trump_2026": date(2026, 2, 24),   # Trump SOTU, 2026-02-24
+    "clinton_1998": date(1998, 1, 27),  # Clinton SOTU, 1998-01-27
+    "gwbush_2006": date(2006, 1, 31),   # G.W. Bush SOTU, 2006-01-31
+    "obama_2014": date(2014, 1, 28),    # Obama SOTU, 2014-01-28
+    "biden_2022": date(2022, 3, 1),     # Biden SOTU, 2022-03-01
+    "trump_2026": date(2026, 2, 24),    # Trump SOTU, 2026-02-24
 }
 
 

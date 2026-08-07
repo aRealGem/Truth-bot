@@ -252,3 +252,76 @@ def test_rerender_allows_an_unfit_artifact_only_for_a_staged_review_render(tmp_p
         mod.render_artifact(path, publisher=None, role="President",
                             require_fit=False)
     assert "PUBLISH GATE FAILED" not in str(exc.value)
+
+
+# ── A4: speech dates must resolve, or nothing publishes ──────────────────────
+
+
+def _manifest_only(tmp_path, speech_id: str) -> Path:
+    runs = tmp_path / "metrics" / "pca_runs"
+    runs.mkdir(parents=True)
+    (runs / "methodology_manifest.json").write_text(json.dumps({
+        "schema": "truthbot-methodology-manifest v1",
+        "current_generation": "v2.3-role-axis-s5cap",
+        "generations": {"v2.3-role-axis-s5cap": "current",
+                        "pre-s5-tiering": "legacy"},
+        "runs": {"deadbeef-0000-0000-0000-000000000002": {
+            "speech_id": speech_id, "generation": "v2.3-role-axis-s5cap",
+            "published": False}},
+    }))
+    return tmp_path
+
+
+def test_unknown_speech_id_is_a_publish_violation(tmp_path):
+    """An unregistered speech disables era gating wholesale — era_lint has no
+    date to compare against — so it fails CLOSED before publication."""
+    violations = check_run_artifacts(_manifest_only(tmp_path, "reagan_1984"))
+    assert any("reagan_1984" in v and "no utterance date" in v
+               for v in violations)
+
+
+def test_a_statically_pinned_speech_satisfies_the_date_check(tmp_path):
+    assert check_run_artifacts(_manifest_only(tmp_path, "clinton_1998")) == []
+
+
+def test_a_runner_registered_speech_also_satisfies_the_date_check(tmp_path):
+    """"Statically pinned OR runner-registered" — a transcript outside the
+    pinned corpus publishes only after register_speech_date() ran for it."""
+    from datetime import date as _date
+
+    from truthbot.verdict import speech_context
+
+    root = _manifest_only(tmp_path, "carter_1979")
+    assert check_run_artifacts(root)                      # unpinned → violation
+    speech_context.register_speech_date("carter_1979", _date(1979, 1, 23))
+    try:
+        assert check_run_artifacts(root) == []
+    finally:
+        speech_context.SPEECH_DATE.pop("carter_1979", None)
+
+
+def test_the_date_check_covers_legacy_generations_too(tmp_path):
+    """The generation gate skips old runs for the S5/era/factcheck invariants;
+    the speech-date check must NOT be skippable that way — an unpinned speech
+    is a publish-path defect regardless of when the run was produced."""
+    runs = tmp_path / "metrics" / "pca_runs"
+    runs.mkdir(parents=True)
+    (runs / "methodology_manifest.json").write_text(json.dumps({
+        "schema": "truthbot-methodology-manifest v1",
+        "current_generation": "v2.3-role-axis-s5cap",
+        "generations": {"v2.3-role-axis-s5cap": "current",
+                        "pre-s5-tiering": "legacy"},
+        "runs": {"deadbeef-0000-0000-0000-000000000003": {
+            "speech_id": "reagan_1984", "generation": "pre-s5-tiering",
+            "published": True}},
+    }))
+    assert any("reagan_1984" in v for v in check_run_artifacts(tmp_path))
+
+
+@pytest.mark.skipif(not (REPO / "metrics" / "pca_runs").is_dir(),
+                    reason="metrics/pca_runs not present")
+def test_every_stored_run_speech_resolves_to_a_date():
+    speeches = {row["speech_id"] for row in _manifest()["runs"].values()}
+    from truthbot.verdict.speech_context import speech_date_for
+    for s in speeches:
+        assert speech_date_for(f"{s}:0001") is not None, s
