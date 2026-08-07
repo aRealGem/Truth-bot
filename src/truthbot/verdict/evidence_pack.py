@@ -248,13 +248,21 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
     Items without a URL are dropped — I5 requires a url, and an unaddressable
     snippet cannot be cited or re-verified.
 
-    Reserved fact-check slot (P67 Round B.5): once ranked, if no FactCheck-tier
-    item made the cap but one exists, swap the highest-relevance FactCheck item
-    into the last slot. A direct ruling (factcheck.org / PolitiFact) must not be
-    crowded out of the pack by on-topic background explainers — the biden_2022:0342
-    case, where a factcheck.org ruling fell E1→E4 and the panel flipped
-    FALSE→ABSTAIN. Exactly ONE slot is reserved: packs that already surface a
-    ruling, or that retrieved none, are unchanged."""
+    Fact-checker content is EXCLUDED, never reserved (remediation v2 Phase A,
+    A2). A "reserved fact-check slot" used to live here: if no FactCheck-tier
+    item made the cap but one existed, it displaced the last slot, so a
+    PolitiFact or factcheck.org ruling could not be crowded out (the
+    biden_2022:0342 case, P67 Round B.5). T2.1 then made the opposite call —
+    truth-bot reaches its own verdict from primary sources and must never
+    launder another outlet's ruling into its evidence — and the v2 consolidator
+    drops fact-checkers outright. The v1 builder kept FORCING one in. Nothing
+    on the v2 path called it, so no shipped verdict came from it; it sat here
+    as a trap for the next caller of build_evidence_pack, guaranteeing the one
+    item current policy most wants out of the pack. Exclusion now matches
+    consolidate(): the same ``factcheck_exclusion_reason`` domain/path rules,
+    plus the tier itself."""
+    from truthbot.verify.factcheck_exclusion import factcheck_exclusion_reason
+
     seen: set[str] = set()
     unique: list[Evidence] = []
     for ev in evidence:
@@ -265,6 +273,14 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
             # A homepage or listing index can never BE evidence — it only
             # points at a site (the snopes.com/?pagenum=3 pack-slot bug).
             continue
+        if factcheck_exclusion_reason(url) or ev.source_tier == SourceTier.FACTCHECK:
+            # T2.1, enforced on BOTH pack paths: another outlet's ruling is not
+            # our evidence. Same two-part test consolidate() applies (blocklist
+            # domain/path rules OR the FACTCHECK tier), so a retriever that
+            # tiers a ruling as Established is still caught, and a
+            # FACTCHECK-tiered host outside the blocklist is too.
+            logger.info("v1 pack: excluded fact-checker content %s", url)
+            continue
         key = url.lower().rstrip("/")
         if key in seen:
             continue
@@ -272,15 +288,7 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
         unique.append(ev)
     unique.sort(key=lambda e: (-(e.relevance_score if e.relevance_score is not None else 0.5),
                                _TIER_RANK.get(e.source_tier, 99)))  # stable
-    capped = unique[:max_items]
-    if capped and not any(e.source_tier == SourceTier.FACTCHECK for e in capped):
-        # unique is already relevance-then-tier sorted, so the first FactCheck is
-        # the best one. It can only be absent from a FULL cap (a shorter cap holds
-        # all of unique, ruling included), so displace the last, lowest-ranked slot.
-        ruling = next((e for e in unique if e.source_tier == SourceTier.FACTCHECK), None)
-        if ruling is not None and len(capped) == max_items:
-            capped[-1] = ruling
-    return capped
+    return unique[:max_items]
 
 
 def build_evidence_pack(

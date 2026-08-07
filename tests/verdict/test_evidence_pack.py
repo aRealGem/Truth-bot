@@ -136,7 +136,15 @@ def test_payload_omits_stance_when_unscored():
     assert set(item) == {"id", "source", "tier", "url", "snippet"}
 
 
-# ── P67 Round B.5: reserved fact-check slot ───────────────────────────────────
+# ── A2: fact-check content is EXCLUDED, never reserved ────────────────────────
+#
+# These three tests used to pin the opposite contract (P67 Round B.5's reserved
+# fact-check slot: a ruling that missed the cap displaced the last slot). T2.1
+# reversed the policy — truth-bot reaches its own verdict from primary sources
+# and must never launder another outlet's ruling into its evidence — and the v2
+# consolidator has excluded fact-checkers since. The v1 builder went on FORCING
+# one in. They are inverted here, not deleted, so the reversal is legible in
+# the history rather than looking like coverage that quietly vanished.
 
 def _relevant(url, tier, relevance):
     e = _ev(url, tier=tier)
@@ -144,36 +152,79 @@ def _relevant(url, tier, relevance):
     return e
 
 
-def test_factcheck_ruling_reserved_when_crowded_out():
-    # 6 highly-relevant explainers + one lower-relevance factcheck ruling. Without
-    # the reserved slot the ruling (rank-4 tier, 0.7 relevance) is capped out.
+def test_factcheck_ruling_is_excluded_not_reserved_when_crowded_out():
+    # WAS test_factcheck_ruling_reserved_when_crowded_out: 6 highly-relevant
+    # explainers + one lower-relevance ruling used to end up in the last slot.
     explainers = [_relevant(f"https://news{i}.com/story", SourceTier.ESTABLISHED, 0.9)
                   for i in range(6)]
     ruling = _relevant("https://politifact.com/factchecks/x", SourceTier.FACTCHECK, 0.7)
     pack = build_evidence_pack("trump_2026:3", "c", FakeProvider(explainers + [ruling]))
-    tiers = [it.tier for it in pack.items]
-    assert SourceTier.FACTCHECK in tiers
-    assert pack.items[-1].source_url == "https://politifact.com/factchecks/x"  # last slot
-    assert len(pack.items) == 6
+    assert SourceTier.FACTCHECK not in [it.tier for it in pack.items]
+    assert all("politifact" not in it.source_url for it in pack.items)
+    assert len(pack.items) == 6          # the cap is filled by real evidence
 
 
-def test_factcheck_already_in_cap_is_noop():
-    # A high-relevance ruling already ranks into the cap → no swap, natural order.
+def test_a_top_relevance_ruling_is_dropped_rather_than_ranked_first():
+    # WAS test_factcheck_already_in_cap_is_noop: a 0.95-relevance ruling used to
+    # rank E1 untouched. Relevance no longer buys a fact-checker a slot.
     ruling = _relevant("https://factcheck.org/x", SourceTier.FACTCHECK, 0.95)
     explainers = [_relevant(f"https://news{i}.com/story", SourceTier.ESTABLISHED, 0.9)
                   for i in range(6)]
     pack = build_evidence_pack("trump_2026:3", "c", FakeProvider([ruling] + explainers))
-    assert pack.items[0].source_url == "https://factcheck.org/x"  # ranked first, untouched
-    assert sum(it.tier == SourceTier.FACTCHECK for it in pack.items) == 1
+    assert pack.items[0].source_url == "https://news0.com/story"
+    assert sum(it.tier == SourceTier.FACTCHECK for it in pack.items) == 0
 
 
-def test_no_factcheck_pack_unchanged():
-    # No ruling retrieved → cap is pure relevance-then-tier, no reserved slot.
+def test_pack_without_any_ruling_is_byte_for_byte_what_it_always_was():
+    # WAS test_no_factcheck_pack_unchanged, and still true — the overwhelmingly
+    # common case is untouched by A2. Nothing about ordinary packs changed.
     explainers = [_relevant(f"https://news{i}.com/story", SourceTier.ESTABLISHED, 0.9)
                   for i in range(8)]
     pack = build_evidence_pack("trump_2026:3", "c", FakeProvider(explainers))
     assert len(pack.items) == 6
     assert all(it.tier == SourceTier.ESTABLISHED for it in pack.items)
+    assert [it.source_url for it in pack.items] == [
+        f"https://news{i}.com/story" for i in range(6)]
+
+
+@pytest.mark.parametrize("position", ["first", "middle", "last", "only",
+                                      "majority"])
+def test_no_factcheck_item_survives_under_any_candidate_ordering(position):
+    """The contract is unconditional: whatever order the provider yields, and
+    whatever share of the candidates are rulings, no FACTCHECK-tier item
+    reaches the pack. The old reserved slot was order-dependent (it fired only
+    on a FULL cap), which is exactly why it was easy to miss."""
+    def ruling(i):
+        return _relevant(f"https://politifact.com/factchecks/{i}",
+                         SourceTier.FACTCHECK, 0.99)
+
+    def real(i):
+        return _relevant(f"https://news{i}.com/story", SourceTier.ESTABLISHED, 0.5)
+
+    orderings = {
+        "first": [ruling(0)] + [real(i) for i in range(8)],
+        "middle": [real(i) for i in range(4)] + [ruling(0)]
+                  + [real(i) for i in range(4, 8)],
+        "last": [real(i) for i in range(8)] + [ruling(0)],
+        "only": [ruling(i) for i in range(3)],
+        "majority": [ruling(i) for i in range(5)] + [real(0), real(1)],
+    }
+    pack = build_evidence_pack("trump_2026:3", "c",
+                               FakeProvider(orderings[position]))
+    assert all(it.tier != SourceTier.FACTCHECK for it in pack.items)
+    assert all("politifact" not in it.source_url for it in pack.items)
+
+
+def test_a_ruling_mis_tiered_as_established_is_still_excluded():
+    """Belt and braces, matching consolidate(): the blocklist domain/path rules
+    catch a fact-checker a retriever tiered as ordinary reporting."""
+    mis_tiered = _relevant("https://www.snopes.com/fact-check/x",
+                           SourceTier.ESTABLISHED, 0.99)
+    pack = build_evidence_pack(
+        "trump_2026:3", "c",
+        FakeProvider([mis_tiered, _relevant("https://news0.com/story",
+                                            SourceTier.ESTABLISHED, 0.5)]))
+    assert [it.source_url for it in pack.items] == ["https://news0.com/story"]
 
 
 def test_pack_enforces_i5_on_malformed_evidence(monkeypatch):
