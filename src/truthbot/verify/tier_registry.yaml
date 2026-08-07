@@ -1,5 +1,5 @@
 schema: truthbot-tier-registry v1
-version: 2026-08-02
+version: 2026-08-07
 
 # ============================================================================
 # THE versioned source of tier truth (remediation v2, item 1.2 / DC-2a).
@@ -139,6 +139,53 @@ defaults:
 unknown:
   non_gov: other            # unmapped non-gov host -> OTHER (T6)
   gov_mil_int: quarantine   # unmapped .gov/.mil/.int -> QUARANTINE (fail closed; S-6)
+
+# ============================================================================
+# PATTERN RULES (remediation v2 Phase A, item A3) — classify a host CLASS.
+#
+# Entries below enumerate hosts; a pattern names the class they belong to.
+# Each rule carries the same fields an entry does (tier / press /
+# path_classes) and is applied by the identical machinery, so a pattern can
+# express anything an entry can — for every host in the class, including the
+# ones nobody has seen yet.
+#
+# Precedence (tier_registry.classify_tier_ex — entries and patterns rank
+# TOGETHER by specificity in dot-labels matched):
+#   * an exact entry for the FULL host beats a pattern matching it; ties go to
+#     the entry, so no pattern can override an explicit decision about a
+#     specific host,
+#   * a pattern beats a SHORTER suffix entry (3 labels > archives.gov's 2) and
+#     beats the generic/unknown policy,
+#   * a host matching NEITHER an entry nor a pattern is unchanged: unmapped
+#     .gov/.mil/.int still fail closed to quarantine POLITICAL, unmapped
+#     non-gov still OTHER. Patterns are additive only — they never widen the
+#     fallback.
+#
+# Fail-closed authoring guards (tier_registry._parse_pattern rejects at load):
+#   * a pattern must contain a wildcard (a literal host belongs in entries:),
+#   * its last TWO dot-labels must be literal, so no rule can claim a whole
+#     TLD or registry ("*.gov" is refused).
+# NOTE fnmatch semantics: "*" matches dots too. Write patterns to the full
+# host shape.
+# ============================================================================
+
+patterns:
+  - pattern: "clintonwhitehouse*.archives.gov"
+    tier: political
+    rationale: >-
+      Clinton White House archive mirrors — the same presidential press shop
+      as the other eight executive mirrors, one tier across ALL
+      administrations. WHY A PATTERN AND NOT MORE ENTRIES: the Phase-1
+      registry was seeded from hosts OBSERVED in stored evidence, so mirrors
+      3, 4, 5 and 6 earned entries while mirror 2 — which appears exactly
+      twice in the whole corpus — was never surfaced and silently inherited
+      the archives.gov Government tier, landing a presidential press page in
+      the top evidence tier alongside its identically-partisan siblings.
+      Enumeration fixes the instances you happened to see; a pattern fixes the
+      class, including clintonwhitehouse7+ if NARA ever mints one. The four
+      explicit entries stay (exact wins over pattern) as the observed record
+      of what the corpus actually contained.
+    date: 2026-08-07
 
 entries:
   # ── DC-2a delta 1: ALL NINE executive mirrors -> political ────────────────
