@@ -1,0 +1,16 @@
+{
+  "schema": "truthbot-computed-exhibit v1",
+  "series": "CPILFESL",
+  "source": "ALFRED",
+  "vintage_date": "2026-02-24",
+  "inputs": {
+    "2025-09-01": 330.418,
+    "2025-12-01": 331.814
+  },
+  "formula": "(Dec/Sep)^4 - 1",
+  "result": 0.01701,
+  "claim_ref": "trump_2026:0031",
+  "source_url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=CPILFESL&vintage_date=2026-02-24",
+  "span_months": 3,
+  "note": "Vintage-pinned: the same formula on the 2026-02-09 pre-revision vintage returns 1.605%, ~10bp lower. The vintage is part of the result."
+}

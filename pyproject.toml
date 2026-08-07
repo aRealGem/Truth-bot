@@ -54,12 +54,18 @@ python_functions = ["test_*"]
 # ``-m "not live"`` is the default so the smoke tests in ``tests/smoke/``
 # never fire during ordinary ``pytest`` / CI runs. Opt in with
 # ``pytest -m live`` when you actually want to burn real API budget.
-addopts = "-m 'not live'"
+# ``network`` rides the same convention for a different reason: those tests
+# cost nothing, but they'd make the default suite an internet client.
+addopts = "-m 'not live and not network'"
 markers = [
     "live: hits real provider APIs and spends money; opt in via `pytest -m live`",
     # The DC-6' publish gate (A7). Runs by default AND is addressable on its
     # own as `pytest -m acceptance`, so the pre-publish check is one command.
     "acceptance: DC-6' acceptance gate — named regression cases over the staged rebuild artifacts",
+    # Free and keyless (public ALFRED/BLS vintages), but still deselected by
+    # default: CI should not be an internet client. Opt in via
+    # `pytest -m network` to catch a silent upstream revision.
+    "network: hits a free public data endpoint; opt in via `pytest -m network`",
 ]
 
 [tool.ruff]

@@ -456,6 +456,18 @@ class VerdictProvenance(BaseModel):
             "for HUMAN review. Never triggers a model call by itself."
         ),
     )
+    computed_exhibit: dict = Field(
+        default_factory=dict,
+        description=(
+            "Computed exhibit (A8 / R-2): a pinned-vintage arithmetic "
+            "derivation attached to a numeric claim-vs-series comparison — "
+            "{series, source, vintage_date, inputs, formula, result, "
+            "claim_ref}. ADMISSIBLE ONLY for numeric claim-vs-series "
+            "comparison: publish.computed_exhibit.attach refuses to attach "
+            "one to a C-EVAL judgment. Empty on every other claim and on all "
+            "pre-A8 runs, so an empty dict renders exactly today's page."
+        ),
+    )
 
 
 class ConsensusVerdict(BaseModel):

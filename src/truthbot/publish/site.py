@@ -36,6 +36,7 @@ from typing import Any, Optional
 from truthbot.models import SourceTier
 from truthbot.models import SourceTier as _SourceTier
 from truthbot.models import VerdictBundle, VerdictLabel
+from truthbot.publish import computed_exhibit as _computed_exhibit
 # Bucket orders, projections, family sets, and the one folding rule live in
 # ``truthbot.publish.aggregation`` (remediation v2, 1.6) — the single source
 # of truth this render layer and the consistency checker both import. The
@@ -2641,6 +2642,18 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
                 '</details>'
             )
 
+    # Computed exhibit (A8 / R-2): the pinned-vintage arithmetic behind a
+    # numeric claim-vs-series comparison — formula, both input levels, and the
+    # vintage date. Empty for every claim that carries no exhibit (which is
+    # every claim on a pre-A8 run), so a page without one renders byte-for-byte
+    # as it does today. Admissibility — NEVER on a C-EVAL judgment — is
+    # enforced at attach time and re-checked here against the claim's shape.
+    _prov = bundle.consensus.provenance
+    computed_exhibit_html = _computed_exhibit.exhibit_html(
+        dict(getattr(_prov, "computed_exhibit", None) or {}),
+        claim_shape=getattr(_prov, "layer_a_claim_shape", ""),
+        esc=_esc)
+
     unverified_block = _model_cited_unverified_html(unverified_urls)
     if all_urls:
         evidence_inner = (
@@ -2702,6 +2715,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  {_claim_quote_html(claim)}'
         f'  {context_html}'
         f'  {caveat_html}'
+        f'  {computed_exhibit_html}'
         f'  {models_block}'
         f'  {evidence_html}'
         f'  {consulted_html}'
@@ -4053,6 +4067,60 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.15rem;
   color: var(--ink-faint);
 }
+/* Computed exhibit (A8 / R-2) — the arithmetic, both input levels, and the
+   data vintage. Deliberately a distinct block, not a badge tucked into the
+   provenance strip: R-2 wants a reader to be able to redo the division. */
+.computed-exhibit {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, #3b6ea5);
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+}
+.computed-exhibit .ce-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.computed-exhibit .ce-badge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent, #3b6ea5);
+}
+.computed-exhibit .ce-series {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-formula {
+  font-family: var(--mono);
+  margin: 0 0 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs {
+  list-style: none;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs li {
+  display: flex;
+  gap: 0.6rem;
+}
+.computed-exhibit .ce-date { color: var(--ink-muted); min-width: 6.5rem; }
+.computed-exhibit .ce-vintage,
+.computed-exhibit .ce-note {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-note { margin-top: 0.3rem; }
 /* Post-publication correction note (T1.5) — amber, can't be missed. */
 .pca-correction {
   margin-top: 0.25rem;
