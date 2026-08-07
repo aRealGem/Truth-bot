@@ -6,6 +6,7 @@
   "changed_total": 141,
   "ledger_eligible": 125,
   "not_ledger_representable": 16,
+  "dropped_total": 1,
   "entries": [
     {
       "sid": "biden_2022:0045",
@@ -1309,6 +1310,16 @@
       "change_class": "split_changes",
       "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the panel's model votes changed split status on the rebuilt pack.",
       "excluded_because": "verdict outside the corrections vocabulary (True → Models split)"
+    }
+  ],
+  "dropped_rows": [
+    {
+      "sid": "trump_2026:0311",
+      "speech_id": "trump_2026",
+      "old_label": "FALSE",
+      "kind": "orphan_row",
+      "reason": "Orphan row: the prior artifact carried a verdict row with NO matching claim record, so the published claims.json shows it as \"(claim text unavailable)\". The rebuild emits rows only for real claims, so it is gone. This is a count correction, not a verdict correction — no reader ever saw a fact-check here.",
+      "published_effect": "published row count 530 → 529; claim count unchanged at 529"
     }
   ]
 }

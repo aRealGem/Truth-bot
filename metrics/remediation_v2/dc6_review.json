@@ -617,6 +617,45 @@
       "added_sids": []
     }
   ],
+  "canonical_counts": {
+    "canonical_claims": 529,
+    "statement": "The corpus is 529 claims. The published 530 is 529 + 1 orphan row (trump_2026:0311) — a verdict row with no claim record, rendered as \"(claim text unavailable)\". The rebuilt artifacts carry no orphans.",
+    "old": {
+      "claims": 529,
+      "rows": 530,
+      "orphan_rows": [
+        "trump_2026:0311"
+      ]
+    },
+    "new": {
+      "claims": 529,
+      "rows": 529,
+      "orphan_rows": []
+    },
+    "published": {
+      "records": 530,
+      "placeholder_records": 1,
+      "placeholder_ids": [
+        "9d0d98cc-280c-4a2d-a007-e14a3870da48"
+      ]
+    },
+    "named_exclusions": [
+      {
+        "sid": "trump_2026:0311",
+        "why": "row with no claim record (orphan); never a fact-check"
+      }
+    ]
+  },
+  "dropped_rows": [
+    {
+      "sid": "trump_2026:0311",
+      "speech_id": "trump_2026",
+      "old_label": "FALSE",
+      "kind": "orphan_row",
+      "reason": "Orphan row: the prior artifact carried a verdict row with NO matching claim record, so the published claims.json shows it as \"(claim text unavailable)\". The rebuild emits rows only for real claims, so it is gone. This is a count correction, not a verdict correction — no reader ever saw a fact-check here.",
+      "published_effect": "published row count 530 → 529; claim count unchanged at 529"
+    }
+  ],
   "changed_claims": [
     {
       "sid": "clinton_1998:0007",
@@ -2541,7 +2580,7 @@
     ]
   },
   "render": {
-    "site_root": "/tmp/dc6-site-a10",
+    "site_root": "/tmp/dc6-site-a9",
     "reports": 5,
     "claims": 529,
     "artifacts": [

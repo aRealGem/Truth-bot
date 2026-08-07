@@ -123,6 +123,21 @@ Both bases are shown. The adjustment is an ARGUMENT — a reader who rejects it 
 
 Provenance of the anecdote flag: **529** claim(s) carried `layer_a.claim_type` in the rebuilt artifact, **0** were joined from the published `claims.json` by (speaker, normalised claim text), and **0** could not be resolved by either route. Unresolved claims stay in the adjusted denominator as non-anecdotes — reported here rather than assumed away, because counting an unclassified claim as 'not an anecdote' is a guess that moves the number in a known direction.
 
+## 4b. Canonical claim count
+
+The corpus is 529 claims. The published 530 is 529 + 1 orphan row (trump_2026:0311) — a verdict row with no claim record, rendered as "(claim text unavailable)". The rebuilt artifacts carry no orphans.
+
+| basis | claims | rows | orphan rows |
+|---|---|---|---|
+| old artifacts | 529 | 530 | trump_2026:0311 |
+| new artifacts (canonical) | 529 | 529 | — |
+| published claims.json | 530 | — | 1 placeholder record(s) |
+
+Named exclusions:
+- `trump_2026:0311` — row with no claim record (orphan); never a fact-check
+
+"Decided" in the parity metric means a substantive published ruling: True / Mostly True / Misleading / False. Unverifiable (panel OR gate-forced) and Models split are abstentions. The fold rules and the anecdote-adjusted variant are documented in `docs/run-schema.md`, which is written so an external reviewer can reproduce these counts without reading this packager.
+
 ## 5. Every changed claim
 
 Ordered by consequence: verdicts that flipped between two substantive rulings first, then claims newly withheld, then claims newly decided, then split changes. Rationale is the NEW panel's reasoning.
@@ -636,7 +651,7 @@ Ordered by consequence: verdicts that flipped between two substantive rulings fi
 
 ## 7. Staged render + badge diff
 
-- site root: `/tmp/dc6-site-a10` (staged; `site-pca/` untouched)
+- site root: `/tmp/dc6-site-a9` (staged; `site-pca/` untouched)
 - artifacts picked by the renderer: `clinton_1998`→`d0010426`, `gwbush_2006`→`74a89c5f`, `obama_2014`→`4de8a551`, `biden_2022`→`37744fc8`, `trump_2026`→`4ee5a251`
 - all five NEW artifacts selected: **True**
 - `check_site(strict_buckets=True)`: **PASS — 0 violations**

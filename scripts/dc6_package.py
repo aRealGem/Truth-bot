@@ -685,11 +685,133 @@ def ledger_verdicts(change: dict) -> tuple[Optional[str], Optional[str], str]:
     return old, new, ""
 
 
+def dropped_rows(diffs: Iterable[dict], runs_dir: Path = RUNS_DIR) -> list[dict]:
+    """Rows the rebuild DROPPED: present in the old artifact, gone from the new.
+
+    The verdict diff is built over the sids in the NEW artifact, so a dropped
+    row is invisible to every count derived from it — which is exactly how the
+    530-vs-529 discrepancy survived as long as it did. This walks the old
+    artifact instead.
+
+    A dropped row is an ORPHAN when the old artifact had no claim record for
+    it. trump_2026:0311 is the corpus's one orphan: a row with no claim, which
+    the published claims.json still carries and the site still renders as
+    "(claim text unavailable)". Dropping it removes a placeholder, not a
+    fact-check — but it MOVES A PUBLISHED COUNT, so it is ledgered."""
+    out: list[dict] = []
+    for d in diffs:
+        speech_id = d["speech_id"]
+        old = load_run(d.get("rebuild_of", ""), runs_dir) or {}
+        new = load_run(d.get("new_run_id", ""), runs_dir) or {}
+        if not old or not new:
+            continue
+        new_sids = {r.get("sid") for r in new.get("rows") or []}
+        old_claim_sids = {c.get("sid") for c in old.get("claims") or []}
+        for r in old.get("rows") or []:
+            sid = r.get("sid")
+            if sid in new_sids:
+                continue
+            orphan = sid not in old_claim_sids
+            out.append({
+                "sid": sid,
+                "speech_id": speech_id,
+                "old_label": outcome_label_local(r),
+                "kind": "orphan_row" if orphan else "dropped_claim",
+                "reason": (
+                    "Orphan row: the prior artifact carried a verdict row with "
+                    "NO matching claim record, so the published claims.json "
+                    "shows it as \"(claim text unavailable)\". The rebuild "
+                    "emits rows only for real claims, so it is gone. This is a "
+                    "count correction, not a verdict correction — no reader "
+                    "ever saw a fact-check here."
+                    if orphan else
+                    "The rebuild produced no row for this sid; it is absent "
+                    "from the republished corpus."),
+                "published_effect": (
+                    "published row count 530 → 529; claim count unchanged at 529"
+                    if orphan else "published row count reduced by one"),
+            })
+    out.sort(key=lambda e: e["sid"])
+    return out
+
+
+def outcome_label_local(row: dict) -> str:
+    """``phase3_rebuild.outcome_label`` without importing the runner (which
+    carries spend guards). Same three rules: gate-forced UV first, then the
+    verdict, then split/no-verdict."""
+    if (row.get("evidence_gate") or row.get("provenance_code") or "") \
+            == "insufficient-qualifying-evidence":
+        return "gated-UNVERIFIABLE"
+    if row.get("verdict") is not None:
+        return str(row["verdict"])
+    return "Models split" if row.get("split") else "No verdict"
+
+
+def canonical_counts(diffs: Iterable[dict], runs_dir: Path = RUNS_DIR,
+                     site_root: Optional[Path] = None) -> dict:
+    """THE canonical corpus count, with every exclusion named (A9).
+
+    The record disagreed with itself: 529 in the handoff, 530 in commit
+    e268dec's DC-4' tally, 183 vs 182 Trump rows. All three were true of
+    something, which is why nobody could close it. Measured here, once:
+
+    * old artifacts: 529 claims, 530 rows — the extra row is trump_2026:0311,
+      an orphan with no claim record;
+    * new artifacts: 529 claims, 529 rows — no orphans;
+    * published claims.json: 530 records, of which exactly one renders
+      "(claim text unavailable)".
+
+    So: **529 claims is canonical.** 530 was always 529 + 1 orphan row."""
+    site_root = Path(site_root) if site_root is not None else REPO / "site-pca"
+    old_claims = old_rows = new_claims = new_rows = 0
+    old_orphans: list[str] = []
+    new_orphans: list[str] = []
+    for d in diffs:
+        old = load_run(d.get("rebuild_of", ""), runs_dir) or {}
+        new = load_run(d.get("new_run_id", ""), runs_dir) or {}
+        for run, orphans in ((old, old_orphans), (new, new_orphans)):
+            claim_sids = {c.get("sid") for c in run.get("claims") or []}
+            orphans += [r.get("sid") for r in run.get("rows") or []
+                        if r.get("sid") not in claim_sids]
+        old_claims += len(old.get("claims") or [])
+        old_rows += len(old.get("rows") or [])
+        new_claims += len(new.get("claims") or [])
+        new_rows += len(new.get("rows") or [])
+
+    published = _site_claims(site_root)
+    placeholders = [c.get("id") for c in published
+                    if "(claim text unavailable)" in (c.get("claim_text") or "")]
+    return {
+        "canonical_claims": new_claims,
+        "statement": (
+            f"The corpus is {new_claims} claims. The published "
+            f"{len(published)} is {new_claims} + {len(placeholders)} orphan "
+            f"row ({', '.join(sorted(old_orphans)) or 'none'}) — a verdict row "
+            "with no claim record, rendered as \"(claim text unavailable)\". "
+            "The rebuilt artifacts carry no orphans."),
+        "old": {"claims": old_claims, "rows": old_rows,
+                "orphan_rows": sorted(old_orphans)},
+        "new": {"claims": new_claims, "rows": new_rows,
+                "orphan_rows": sorted(new_orphans)},
+        "published": {"records": len(published),
+                      "placeholder_records": len(placeholders),
+                      "placeholder_ids": placeholders},
+        "named_exclusions": [
+            {"sid": sid,
+             "why": "row with no claim record (orphan); never a fact-check"}
+            for sid in sorted(old_orphans)],
+    }
+
+
 def correction_entries(changes: Iterable[dict],
                        dispositions: Optional[dict[str, dict]] = None,
-                       date: str = REBUILD_DATE) -> dict:
+                       date: str = REBUILD_DATE,
+                       dropped: Optional[list[dict]] = None) -> dict:
     """One record per changed verdict, split into ledger-eligible entries and
-    changes the ledger schema cannot express."""
+    changes the ledger schema cannot express — plus ``dropped_rows``, the
+    rows that left the corpus entirely (A9). A drop has no old→new verdict
+    pair, so it can never be a ledger entry; it is recorded here because it
+    moves a PUBLISHED COUNT and the count is what the record disagreed about."""
     dispositions = dispositions or {}
     entries: list[dict] = []
     non_ledger: list[dict] = []
@@ -731,8 +853,10 @@ def correction_entries(changes: Iterable[dict],
         "changed_total": len(entries) + len(non_ledger),
         "ledger_eligible": len(entries),
         "not_ledger_representable": len(non_ledger),
+        "dropped_total": len(dropped or []),
         "entries": entries,
         "non_ledger_changes": non_ledger,
+        "dropped_rows": list(dropped or []),
     }
 
 
@@ -1166,6 +1290,37 @@ def render_markdown(review: dict) -> str:
             "that moves the number in a known direction.")
         A("")
 
+    # Canonical count reconciliation (A9)
+    cc = review.get("canonical_counts")
+    if cc:
+        A("## 4b. Canonical claim count")
+        A("")
+        A(cc["statement"])
+        A("")
+        L += _table(["basis", "claims", "rows", "orphan rows"], [
+            ["old artifacts", str(cc["old"]["claims"]), str(cc["old"]["rows"]),
+             ", ".join(cc["old"]["orphan_rows"]) or "—"],
+            ["new artifacts (canonical)", str(cc["new"]["claims"]),
+             str(cc["new"]["rows"]),
+             ", ".join(cc["new"]["orphan_rows"]) or "—"],
+            ["published claims.json", str(cc["published"]["records"]), "—",
+             f"{cc['published']['placeholder_records']} placeholder record(s)"],
+        ])
+        A("")
+        A("Named exclusions:")
+        for ex in cc["named_exclusions"]:
+            A(f"- `{ex['sid']}` — {ex['why']}")
+        if not cc["named_exclusions"]:
+            A("- none")
+        A("")
+        A("\"Decided\" in the parity metric means a substantive published "
+          "ruling: True / Mostly True / Misleading / False. Unverifiable "
+          "(panel OR gate-forced) and Models split are abstentions. The fold "
+          "rules and the anecdote-adjusted variant are documented in "
+          "`docs/run-schema.md`, which is written so an external reviewer can "
+          "reproduce these counts without reading this packager.")
+        A("")
+
     # Changed claims
     A("## 5. Every changed claim")
     A("")
@@ -1303,7 +1458,9 @@ def build_review(new_site: Optional[Path] = None,
     cov = coverage(diffs, runs_dir)
     changes = changed_claims(diffs, runs_dir)
     dispositions = load_dc5_dispositions(diff_dir / "dc5_worksheet.json")
-    entries_doc = correction_entries(changes, dispositions)
+    dropped = dropped_rows(diffs, runs_dir)
+    entries_doc = correction_entries(changes, dispositions, dropped=dropped)
+    counts = canonical_counts(diffs, runs_dir, old_site)
 
     flags: list[str] = []
     ep = dist["era_parity"]
@@ -1378,6 +1535,8 @@ def build_review(new_site: Optional[Path] = None,
         "distributions": dist,
         "anecdote_parity": anecdote,
         "coverage": cov,
+        "canonical_counts": counts,
+        "dropped_rows": dropped,
         "changed_claims": changes,
         "spend": spend_table(diffs),
     }
