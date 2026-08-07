@@ -19,6 +19,8 @@ Generated `2026-08-06` · generation `v2.3-role-axis-s5cap` · $0 (derived from 
 ## 2. Flags — read these before anything else
 
 - **era parity: the spread of decided-rates across the five speeches WIDENED from 4.3 pts to 10.6 pts (trump_2026 is now the least-decided at 73.1% vs clinton_1998 at 83.7%). The rebuild unified the METHOD; it did not equalise the OUTCOME**
+- **era parity flips between bases: the decided-rate spread WIDENED raw (+6.4 pts) but NARROWED with personal anecdotes excluded (-1.9 pts) — the parity reading depends on whether you count anecdotes as gate failures**
+- **trump_2026: the anecdote-parity denominator (182 compared sids) differs from section 4's tally — section 4 counts every row in each artifact, this section counts the sids the rebuild compared**
 - **trump_2026: 1 sid(s) present in the published run (183 rows) are ABSENT from the rebuild (182 rows) and were never re-adjudicated — trump_2026:0311 (old verdict FALSE, ORPHAN — the published run had no claim record for it and rendered '(claim text unavailable)'). Publishing changes that report's claim count from 183 to 182; 1 of the dropped sid(s) were orphan rows, so the drop removes a broken card rather than losing a checked claim**
 - **badge diff: 1 claim(s) present only in the published site and 0 only in the staged render**
 - **biden_2022: run logs total $8.3732 vs $8.00 stated in the DC-6 brief (+0.3732)**
@@ -98,6 +100,28 @@ decided-rate change: **-18.7 pts**  ⚠ old and new denominators differ — see 
 Spread across speeches (max − min decided-rate): **4.3%** old (`trump_2026` 91.8% vs `gwbush_2006` 87.5%) → **10.6%** new (`clinton_1998` 83.7% vs `trump_2026` 73.1%), +6.3 pts — **WIDENED**.
 
 > The unified pipeline did NOT equalise decided-rates across eras; it spread them further apart. A reader should not read this rebuild as having produced era parity in outcome — it produced one methodology, applied uniformly, whose per-speech decided-rates differ more than before. Judge the publish on that basis.
+
+### Anecdote-adjusted parity
+
+The raw decided-rate above counts every Unverifiable as a claim the pipeline failed to settle. For one genre that is the wrong reading: a claim typed `personal-anecdote` is a private individual's story told from the stage, and it usually has no public record to check — Unverifiable is the EXPECTED outcome, not a gate failure. The site already says so in the footnote under every verdict bar; this section applies the same logic to the parity number, because anecdote counts differ enormously between these speeches and an unadjusted spread partly measures speechwriting style rather than methodology.
+
+Both bases are shown. The adjustment is an ARGUMENT — a reader who rejects it can read the raw column and ignore the rest.
+
+| speech | compared | anecdotes | decided-rate raw (old → new) | anecdote-adjusted (old → new) | new: adj − raw |
+|---|---|---|---|---|---|
+| `clinton_1998` | 92 | 7 (7.6%) | 90.2% → 83.7% | 89.4% → 83.5% | -0.2 pts |
+| `gwbush_2006` | 48 | 1 (2.1%) | 87.5% → 83.3% | 87.2% → 83.0% | -0.4 pts |
+| `obama_2014` | 96 | 23 (24.0%) | 88.5% → 81.2% | 87.7% → 78.1% | -3.2 pts |
+| `biden_2022` | 111 | 9 (8.1%) | 91.0% → 82.9% | 92.2% → 81.4% | -1.5 pts |
+| `trump_2026` | 182 | 52 (28.6%) | 91.8% → 73.1% | 94.6% → 79.2% | +6.2 pts |
+| **corpus** | 529 | 92 | 90.4% → 79.4% | 91.1% → 80.8% | +1.4 pts |
+
+- **Raw spread** (max − min decided-rate across the five speeches): **4.3%** old (`trump_2026` 91.8% vs `gwbush_2006` 87.5%) → **10.6%** new (`clinton_1998` 83.7% vs `trump_2026` 73.1%), +6.4 pts — **WIDENED**.
+- **Anecdote-adjusted spread** (max − min decided-rate across the five speeches): **7.4%** old (`trump_2026` 94.6% vs `gwbush_2006` 87.2%) → **5.5%** new (`clinton_1998` 83.5% vs `obama_2014` 78.1%), -1.9 pts — **NARROWED**.
+
+> The two bases DISAGREE on direction. The era-parity finding above is therefore conditional on treating anecdote Unverifiables as gate failures — read both rows before drawing a conclusion.
+
+Provenance of the anecdote flag: **529** claim(s) carried `layer_a.claim_type` in the rebuilt artifact, **0** were joined from the published `claims.json` by (speaker, normalised claim text), and **0** could not be resolved by either route. Unresolved claims stay in the adjusted denominator as non-anecdotes — reported here rather than assumed away, because counting an unclassified claim as 'not an anecdote' is a guess that moves the number in a known direction.
 
 ## 5. Every changed claim
 
@@ -612,7 +636,7 @@ Ordered by consequence: verdicts that flipped between two substantive rulings fi
 
 ## 7. Staged render + badge diff
 
-- site root: `/tmp/dc6-site` (staged; `site-pca/` untouched)
+- site root: `/tmp/dc6-site-a10` (staged; `site-pca/` untouched)
 - artifacts picked by the renderer: `clinton_1998`→`d0010426`, `gwbush_2006`→`74a89c5f`, `obama_2014`→`4de8a551`, `biden_2022`→`37744fc8`, `trump_2026`→`4ee5a251`
 - all five NEW artifacts selected: **True**
 - `check_site(strict_buckets=True)`: **PASS — 0 violations**

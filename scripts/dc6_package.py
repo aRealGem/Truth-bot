@@ -288,6 +288,202 @@ def distributions(diffs: Iterable[dict]) -> dict:
     }
 
 
+# ── Anecdote-adjusted parity (remediation v2 Phase A, A10) ───────────────────
+#
+# The raw decided-rate treats every Unverifiable as a gate failure. For one
+# genre it is not: a private individual's story told from the stage usually has
+# no public record to check against, so "Unverifiable" is the CORRECT outcome,
+# not a miss. The site already says this (the anecdote footnote under every
+# verdict bar); the review generator did not, which meant the era-parity number
+# — the load-bearing claim of the whole remediation — was being read off a
+# denominator that penalises a speech for how many guests its author thanked.
+#
+# Trump's rebuild carries 52 anecdotes out of 182 claims and Bush's carries 1
+# out of 48, so this is not a rounding correction: it is the difference between
+# comparing methodologies and comparing speechwriting styles. Both bases are
+# reported side by side — the adjustment is an argument, and a reader who
+# rejects it must still be able to see the raw figure it was derived from.
+
+#: Layer-A claim type marking the anecdote genre. Same string the renderer
+#: keys on (``site._is_anecdote_unverifiable``) and the consistency checker
+#: re-derives the anecdote footnote from (``consistency.py``, the
+#: ``layer_a_claim_type`` read) — one convention, three consumers.
+ANECDOTE_CLAIM_TYPE = "personal-anecdote"
+
+
+def _site_claim_type_index(site_root: Path) -> dict[tuple[str, str], str]:
+    """``(speaker, normalised claim text) -> layer_a_claim_type`` from a
+    published site tree.
+
+    The fallback join for artifacts that do not carry the provenance inline.
+    Keyed on text rather than claim id because ids are minted per render
+    (``uuid4``) — the same reason ``badge_diff`` keys on text.
+    """
+    site_root = Path(site_root)
+    claims_path = site_root / "data" / "claims.json"
+    reports_path = site_root / "data" / "reports.json"
+    if not claims_path.exists() or not reports_path.exists():
+        return {}
+    reports = _read_json(reports_path)
+    speaker_by_report = {r.get("id") or r.get("report_id"): r.get("speaker", "")
+                         for r in reports}
+    index: dict[tuple[str, str], str] = {}
+    for c in _read_json(claims_path):
+        ctype = (c.get("provenance") or {}).get("layer_a_claim_type") or ""
+        if not ctype:
+            continue
+        key = (speaker_by_report.get(c.get("report_id"), ""),
+               _norm_text(c.get("claim_text", "")))
+        index[key] = ctype
+    return index
+
+
+def claim_types_for_speech(run: dict, speech_id: str,
+                           site_index: dict[tuple[str, str], str]
+                           ) -> tuple[dict[str, str], dict]:
+    """``(sid -> claim_type, join report)`` for one run artifact.
+
+    Prefers the artifact's own ``claims[].layer_a.claim_type``; falls back to
+    the published claims.json by (speaker, normalised claim text). A sid that
+    resolves through NEITHER is reported by sid, never silently counted as
+    "not an anecdote" — that would quietly inflate the adjusted denominator
+    with exactly the claims we failed to classify.
+    """
+    speaker = SPEAKERS.get(speech_id, "")
+    types: dict[str, str] = {}
+    from_artifact = from_site = 0
+    unresolved: list[str] = []
+    for claim in run.get("claims") or []:
+        sid = claim.get("sid", "")
+        if not sid:
+            continue
+        ctype = ((claim.get("layer_a") or {}).get("claim_type") or "").strip()
+        if ctype:
+            types[sid] = ctype
+            from_artifact += 1
+            continue
+        ctype = site_index.get((speaker, _norm_text(claim.get("text", ""))), "")
+        if ctype:
+            types[sid] = ctype
+            from_site += 1
+        else:
+            unresolved.append(sid)
+    return types, {"from_artifact": from_artifact, "from_claims_json": from_site,
+                   "unresolved": len(unresolved),
+                   "unresolved_sids": sorted(unresolved)}
+
+
+def _rate(labels: Iterable[str]) -> dict:
+    """decided-rate over a bare sequence of verdict-contract labels."""
+    labels = [display(x) for x in labels]
+    total = len(labels)
+    decided = sum(1 for x in labels if x not in ABSTAIN)
+    return {"decided": decided, "total": total,
+            "rate": round(decided / total, 4) if total else 0.0}
+
+
+def anecdote_parity(diffs: Iterable[dict], runs_dir: Path = RUNS_DIR,
+                    site_root: Optional[Path] = None) -> dict:
+    """Decided-rate per speech and corpus-wide, RAW and anecdote-adjusted.
+
+    Both bases are computed over the diff's ``per_sid`` list — the sids the
+    rebuild actually compared — so the raw and adjusted figures share a
+    denominator and differ ONLY by the anecdote exclusion. Where that set is
+    smaller than section 4's tally (a sid the rebuild dropped),
+    ``raw_matches_section4`` says so instead of the two quietly disagreeing.
+    """
+    site_root = Path(site_root) if site_root is not None else REPO / "site-pca"
+    site_index = _site_claim_type_index(site_root)
+
+    per_speech: dict[str, dict] = {}
+    join_totals = {"from_artifact": 0, "from_claims_json": 0, "unresolved": 0}
+    unresolved_sids: list[str] = []
+    corpus: dict[str, list[str]] = {"old_raw": [], "new_raw": [],
+                                    "old_adj": [], "new_adj": []}
+    for d in diffs:
+        speech_id = d["speech_id"]
+        run = load_run(d.get("new_run_id", ""), runs_dir) or {}
+        types, join = claim_types_for_speech(run, speech_id, site_index)
+        for key in join_totals:
+            join_totals[key] += join[key]
+        unresolved_sids += join["unresolved_sids"]
+
+        rows = d.get("per_sid") or []
+        anecdote_sids = {r["sid"] for r in rows
+                         if types.get(r["sid"]) == ANECDOTE_CLAIM_TYPE}
+        kept = [r for r in rows if r["sid"] not in anecdote_sids]
+
+        old_raw, new_raw = _rate([r["old"] for r in rows]), _rate([r["new"] for r in rows])
+        old_adj, new_adj = _rate([r["old"] for r in kept]), _rate([r["new"] for r in kept])
+        corpus["old_raw"] += [r["old"] for r in rows]
+        corpus["new_raw"] += [r["new"] for r in rows]
+        corpus["old_adj"] += [r["old"] for r in kept]
+        corpus["new_adj"] += [r["new"] for r in kept]
+
+        # How many of the excluded anecdotes were in fact abstentions — the
+        # size of the effect the adjustment is arguing about.
+        anecdote_rows = [r for r in rows if r["sid"] in anecdote_sids]
+        per_speech[speech_id] = {
+            "speech_id": speech_id,
+            "speaker": SPEAKERS.get(speech_id, ""),
+            "claims_compared": len(rows),
+            "anecdotes": len(anecdote_sids),
+            "anecdote_share": (round(len(anecdote_sids) / len(rows), 4)
+                               if rows else 0.0),
+            "anecdotes_abstained_new": sum(
+                1 for r in anecdote_rows if display(r["new"]) in ABSTAIN),
+            "old_raw": old_raw, "new_raw": new_raw,
+            "old_adjusted": old_adj, "new_adjusted": new_adj,
+            "delta_raw": round(new_raw["rate"] - old_raw["rate"], 4),
+            "delta_adjusted": round(new_adj["rate"] - old_adj["rate"], 4),
+            "raw_matches_section4":
+                sum(d["old_tally"].values()) == len(rows)
+                and sum(d["new_tally"].values()) == len(rows),
+            "join": join,
+        }
+
+    def _spread(rates: dict[str, float]) -> dict:
+        if not rates:
+            return {"min": 0.0, "max": 0.0, "spread": 0.0, "min_speech": "",
+                    "max_speech": ""}
+        lo, hi = min(rates, key=rates.get), max(rates, key=rates.get)
+        return {"min": rates[lo], "max": rates[hi],
+                "spread": round(rates[hi] - rates[lo], 4),
+                "min_speech": lo, "max_speech": hi}
+
+    spreads = {}
+    for basis, field in (("old_raw", "old_raw"), ("new_raw", "new_raw"),
+                         ("old_adjusted", "old_adjusted"),
+                         ("new_adjusted", "new_adjusted")):
+        spreads[basis] = _spread({s: v[field]["rate"]
+                                  for s, v in per_speech.items()})
+
+    return {
+        "anecdote_claim_type": ANECDOTE_CLAIM_TYPE,
+        "per_speech": per_speech,
+        "corpus": {
+            "old_raw": _rate(corpus["old_raw"]),
+            "new_raw": _rate(corpus["new_raw"]),
+            "old_adjusted": _rate(corpus["old_adj"]),
+            "new_adjusted": _rate(corpus["new_adj"]),
+        },
+        "spread": {
+            **spreads,
+            "raw_spread_delta": round(spreads["new_raw"]["spread"]
+                                      - spreads["old_raw"]["spread"], 4),
+            "adjusted_spread_delta": round(spreads["new_adjusted"]["spread"]
+                                           - spreads["old_adjusted"]["spread"], 4),
+            "raw_narrowed": (spreads["new_raw"]["spread"]
+                             < spreads["old_raw"]["spread"]),
+            "adjusted_narrowed": (spreads["new_adjusted"]["spread"]
+                                  < spreads["old_adjusted"]["spread"]),
+        },
+        "join": {**join_totals, "unresolved_sids": sorted(unresolved_sids),
+                 "site_root": str(site_root),
+                 "site_index_size": len(site_index)},
+    }
+
+
 def coverage(diffs: Iterable[dict], runs_dir: Path = RUNS_DIR) -> list[dict]:
     """Per speech: old row count vs new row count vs sids compared.
 
@@ -879,6 +1075,86 @@ def render_markdown(review: dict) -> str:
           "differ more than before. Judge the publish on that basis.")
         A("")
 
+    # ── A10: anecdote-adjusted parity ───────────────────────────────────────
+    ap = review.get("anecdote_parity")
+    if ap:
+        A("### Anecdote-adjusted parity")
+        A("")
+        A("The raw decided-rate above counts every Unverifiable as a claim the "
+          "pipeline failed to settle. For one genre that is the wrong reading: "
+          f"a claim typed `{ap['anecdote_claim_type']}` is a private "
+          "individual's story told from the stage, and it usually has no public "
+          "record to check — Unverifiable is the EXPECTED outcome, not a gate "
+          "failure. The site already says so in the footnote under every "
+          "verdict bar; this section applies the same logic to the parity "
+          "number, because anecdote counts differ enormously between these "
+          "speeches and an unadjusted spread partly measures speechwriting "
+          "style rather than methodology.")
+        A("")
+        A("Both bases are shown. The adjustment is an ARGUMENT — a reader who "
+          "rejects it can read the raw column and ignore the rest.")
+        A("")
+        rows = []
+        for sid in SPEECH_ORDER:
+            r = ap["per_speech"].get(sid)
+            if not r:
+                continue
+            rows.append([
+                f"`{sid}`", str(r["claims_compared"]),
+                f"{r['anecdotes']} ({_pct(r['anecdote_share'])})",
+                f"{_pct(r['old_raw']['rate'])} → {_pct(r['new_raw']['rate'])}",
+                f"{_pct(r['old_adjusted']['rate'])} → "
+                f"{_pct(r['new_adjusted']['rate'])}",
+                f"{(r['new_adjusted']['rate'] - r['new_raw']['rate']) * 100:+.1f} pts",
+            ])
+        c = ap["corpus"]
+        rows.append([
+            "**corpus**", str(c["new_raw"]["total"]),
+            str(c["new_raw"]["total"] - c["new_adjusted"]["total"]),
+            f"{_pct(c['old_raw']['rate'])} → {_pct(c['new_raw']['rate'])}",
+            f"{_pct(c['old_adjusted']['rate'])} → {_pct(c['new_adjusted']['rate'])}",
+            f"{(c['new_adjusted']['rate'] - c['new_raw']['rate']) * 100:+.1f} pts",
+        ])
+        L += _table(["speech", "compared", "anecdotes", "decided-rate raw "
+                     "(old → new)", "anecdote-adjusted (old → new)",
+                     "new: adj − raw"], rows)
+        A("")
+        for basis, label in (("raw", "Raw"), ("adjusted", "Anecdote-adjusted")):
+            old_s = ap["spread"][f"old_{basis}"]
+            new_s = ap["spread"][f"new_{basis}"]
+            A(f"- **{label} spread** (max − min decided-rate across the five "
+              f"speeches): **{_pct(old_s['spread'])}** old "
+              f"(`{old_s['max_speech']}` {_pct(old_s['max'])} vs "
+              f"`{old_s['min_speech']}` {_pct(old_s['min'])}) → "
+              f"**{_pct(new_s['spread'])}** new "
+              f"(`{new_s['max_speech']}` {_pct(new_s['max'])} vs "
+              f"`{new_s['min_speech']}` {_pct(new_s['min'])}), "
+              f"{ap['spread'][f'{basis}_spread_delta'] * 100:+.1f} pts — "
+              f"**{'NARROWED' if ap['spread'][f'{basis}_narrowed'] else 'WIDENED'}**.")
+        A("")
+        if ap["spread"]["raw_narrowed"] == ap["spread"]["adjusted_narrowed"]:
+            A("> Both bases agree on the direction, so the era-parity finding "
+              "above does not depend on how anecdotes are counted.")
+        else:
+            A("> The two bases DISAGREE on direction. The era-parity finding "
+              "above is therefore conditional on treating anecdote "
+              "Unverifiables as gate failures — read both rows before drawing "
+              "a conclusion.")
+        A("")
+        j = ap["join"]
+        A(f"Provenance of the anecdote flag: **{j['from_artifact']}** claim(s) "
+          f"carried `layer_a.claim_type` in the rebuilt artifact, "
+          f"**{j['from_claims_json']}** were joined from the published "
+          f"`claims.json` by (speaker, normalised claim text), and "
+          f"**{j['unresolved']}** could not be resolved by either route"
+          + (f" (`{'`, `'.join(j['unresolved_sids'][:10])}`)"
+             if j["unresolved_sids"] else "")
+          + ". Unresolved claims stay in the adjusted denominator as "
+            "non-anecdotes — reported here rather than assumed away, because "
+            "counting an unclassified claim as 'not an anecdote' is a guess "
+            "that moves the number in a known direction.")
+        A("")
+
     # Changed claims
     A("## 5. Every changed claim")
     A("")
@@ -1012,6 +1288,7 @@ def build_review(new_site: Optional[Path] = None,
     diffs = load_diffs(diff_dir)
     agg = aggregate(diffs)
     dist = distributions(diffs)
+    anecdote = anecdote_parity(diffs, runs_dir)
     cov = coverage(diffs, runs_dir)
     changes = changed_claims(diffs, runs_dir)
     dispositions = load_dc5_dispositions(diff_dir / "dc5_worksheet.json")
@@ -1029,6 +1306,35 @@ def build_review(new_site: Optional[Path] = None,
             f"{ep['new_spread']['max_speech']} at "
             f"{ep['new_spread']['max'] * 100:.1f}%). The rebuild unified the "
             "METHOD; it did not equalise the OUTCOME")
+    # A10: the era-parity verdict can differ between the two bases. When it
+    # does, say so — a spread that only widens because one speech had more
+    # guests is not the same finding as one that widens on the merits.
+    asp = anecdote["spread"]
+    if asp["raw_narrowed"] != asp["adjusted_narrowed"]:
+        flags.append(
+            "era parity flips between bases: the decided-rate spread "
+            f"{'NARROWED' if asp['raw_narrowed'] else 'WIDENED'} raw "
+            f"({asp['raw_spread_delta'] * 100:+.1f} pts) but "
+            f"{'NARROWED' if asp['adjusted_narrowed'] else 'WIDENED'} with "
+            f"personal anecdotes excluded "
+            f"({asp['adjusted_spread_delta'] * 100:+.1f} pts) — the parity "
+            "reading depends on whether you count anecdotes as gate failures")
+    if anecdote["join"]["unresolved"]:
+        flags.append(
+            f"anecdote parity: {anecdote['join']['unresolved']} claim(s) "
+            "carry no layer_a_claim_type in the artifact AND did not join to "
+            "the published claims.json by (speaker, normalised text) — they "
+            "are counted in the adjusted denominator as non-anecdotes, which "
+            "is an assumption, not a measurement: "
+            + ", ".join(anecdote["join"]["unresolved_sids"][:10]))
+    for sid, row in anecdote["per_speech"].items():
+        if not row["raw_matches_section4"]:
+            flags.append(
+                f"{sid}: the anecdote-parity denominator "
+                f"({row['claims_compared']} compared sids) differs from "
+                "section 4's tally — section 4 counts every row in each "
+                "artifact, this section counts the sids the rebuild compared")
+
     for c in cov:
         if c["dropped_sids"]:
             orphans = [x["sid"] for x in c["dropped_detail"]
@@ -1059,6 +1365,7 @@ def build_review(new_site: Optional[Path] = None,
         "generation": GENERATION,
         "aggregate": agg,
         "distributions": dist,
+        "anecdote_parity": anecdote,
         "coverage": cov,
         "changed_claims": changes,
         "spend": spend_table(diffs),
@@ -1171,6 +1478,12 @@ def main() -> None:
           f"{c['newly_decided']} decided, {c['split_changes']} split)")
     print(f"  corrections: {entries_doc['ledger_eligible']} ledger-eligible, "
           f"{entries_doc['not_ledger_representable']} not representable")
+    ap = review["anecdote_parity"]
+    print(f"  decided-rate (new): raw {ap['corpus']['new_raw']['rate']:.1%} · "
+          f"anecdote-adjusted {ap['corpus']['new_adjusted']['rate']:.1%} · "
+          f"spread raw {ap['spread']['new_raw']['spread']:.1%} vs adjusted "
+          f"{ap['spread']['new_adjusted']['spread']:.1%} · "
+          f"{ap['join']['unresolved']} claim(s) unjoined")
     for flag in review["flags"]:
         print(f"  FLAG: {flag}")
 

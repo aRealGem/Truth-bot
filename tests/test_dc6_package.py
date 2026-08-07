@@ -177,6 +177,191 @@ def test_era_parity_spread_direction(synthetic_diffs):
     assert parity["narrowed"] is False
 
 
+# ── anecdote-adjusted parity (A10) ───────────────────────────────────────────
+#
+# An Unverifiable on a personal anecdote is the expected outcome, not a gate
+# failure, so a decided-rate that counts it as one partly measures how many
+# guests a speech thanked. These pin the adjustment AND its honesty: both bases
+# reported, and unjoinable claims counted out loud rather than assumed.
+
+
+def _run_artifact(speech, types: dict[str, str]) -> dict:
+    """A run artifact carrying layer_a.claim_type for the given sids."""
+    return {"meta": {"speech_id": speech},
+            "rows": [{"sid": sid} for sid in types],
+            "claims": [{"sid": sid, "text": f"text for {sid}",
+                        "layer_a": {"claim_type": t} if t else {}}
+                       for sid, t in types.items()]}
+
+
+def _anecdote_diffs(tmp_path):
+    """clinton: 4 claims, no anecdotes. trump: 4 claims, 2 anecdotes, and both
+    anecdotes came back Unverifiable — the exact shape the adjustment is for."""
+    (tmp_path / "cli00000.json").write_text(json.dumps(_run_artifact(
+        "clinton_1998", {f"clinton_1998:000{i}": "statistical"
+                         for i in range(1, 5)})), encoding="utf-8")
+    (tmp_path / "tru00000.json").write_text(json.dumps(_run_artifact(
+        "trump_2026", {"trump_2026:0001": "statistical",
+                       "trump_2026:0002": "statistical",
+                       "trump_2026:0003": "personal-anecdote",
+                       "trump_2026:0004": "personal-anecdote"})),
+        encoding="utf-8")
+    clinton = _diff(
+        "clinton_1998", new_run="cli00000",
+        per_sid=[_entry("clinton_1998:0001", "TRUE", "TRUE", "unchanged"),
+                 _entry("clinton_1998:0002", "TRUE", "TRUE", "unchanged"),
+                 _entry("clinton_1998:0003", "TRUE", "TRUE", "unchanged"),
+                 _entry("clinton_1998:0004", "TRUE", "UNVERIFIABLE",
+                        "newly_gated")],
+        old_tally={"TRUE": 4}, new_tally={"TRUE": 3, "UNVERIFIABLE": 1})
+    trump = _diff(
+        "trump_2026", new_run="tru00000",
+        per_sid=[_entry("trump_2026:0001", "TRUE", "TRUE", "unchanged"),
+                 _entry("trump_2026:0002", "TRUE", "TRUE", "unchanged"),
+                 _entry("trump_2026:0003", "TRUE", "UNVERIFIABLE",
+                        "newly_gated"),
+                 _entry("trump_2026:0004", "TRUE", "UNVERIFIABLE",
+                        "newly_gated")],
+        old_tally={"TRUE": 4}, new_tally={"TRUE": 2, "UNVERIFIABLE": 2})
+    return [clinton, trump]
+
+
+def test_anecdote_adjustment_changes_the_denominator_not_the_numerator(tmp_path):
+    ap = dc6.anecdote_parity(_anecdote_diffs(tmp_path), runs_dir=tmp_path,
+                             site_root=tmp_path)
+    trump = ap["per_speech"]["trump_2026"]
+    assert trump["anecdotes"] == 2
+    assert trump["anecdotes_abstained_new"] == 2
+    # Raw: 2 of 4 decided. Adjusted: the 2 anecdotes leave the denominator,
+    # and both were abstentions, so the 2 decided claims are now 2 of 2.
+    assert trump["new_raw"] == {"decided": 2, "total": 4, "rate": 0.5}
+    assert trump["new_adjusted"] == {"decided": 2, "total": 2, "rate": 1.0}
+
+
+def test_a_speech_with_no_anecdotes_is_untouched_by_the_adjustment(tmp_path):
+    ap = dc6.anecdote_parity(_anecdote_diffs(tmp_path), runs_dir=tmp_path,
+                             site_root=tmp_path)
+    clinton = ap["per_speech"]["clinton_1998"]
+    assert clinton["anecdotes"] == 0
+    assert clinton["new_raw"] == clinton["new_adjusted"]
+
+
+def test_both_spreads_are_reported_and_can_disagree(tmp_path):
+    """The finding A10 exists to expose: raw says the gap widened, adjusted
+    says it closed. Reporting only one would have decided the question by
+    choosing a denominator."""
+    ap = dc6.anecdote_parity(_anecdote_diffs(tmp_path), runs_dir=tmp_path,
+                             site_root=tmp_path)
+    # raw new: clinton 75%, trump 50% → 25 pts apart.
+    assert ap["spread"]["new_raw"]["spread"] == pytest.approx(0.25)
+    # adjusted new: clinton 75%, trump 100% → 25 pts, but the other way round.
+    assert ap["spread"]["new_adjusted"]["spread"] == pytest.approx(0.25)
+    assert ap["spread"]["new_raw"]["min_speech"] == "trump_2026"
+    assert ap["spread"]["new_adjusted"]["min_speech"] == "clinton_1998"
+    assert ap["spread"]["raw_narrowed"] is False        # 0 pts → 25 pts
+    assert ap["spread"]["adjusted_narrowed"] is False
+
+
+def test_corpus_totals_are_the_sum_of_the_per_speech_populations(tmp_path):
+    ap = dc6.anecdote_parity(_anecdote_diffs(tmp_path), runs_dir=tmp_path,
+                             site_root=tmp_path)
+    assert ap["corpus"]["new_raw"]["total"] == 8
+    assert ap["corpus"]["new_adjusted"]["total"] == 6   # the 2 anecdotes drop
+    assert ap["corpus"]["new_raw"]["decided"] == ap["corpus"][
+        "new_adjusted"]["decided"] == 5
+
+
+def test_missing_claim_type_joins_from_the_published_claims_json(tmp_path):
+    """The artifact does not carry the provenance for one sid; the published
+    claims.json does, keyed on (speaker, normalised claim text)."""
+    (tmp_path / "tru00000.json").write_text(json.dumps({
+        "meta": {"speech_id": "trump_2026"},
+        "rows": [{"sid": "trump_2026:0001"}],
+        "claims": [{"sid": "trump_2026:0001",
+                    "text": "  A  guest's  story.  "}],   # no layer_a
+    }), encoding="utf-8")
+    site = tmp_path / "site"
+    (site / "data").mkdir(parents=True)
+    (site / "data" / "reports.json").write_text(json.dumps(
+        [{"id": "r1", "speaker": "Donald Trump"}]), encoding="utf-8")
+    (site / "data" / "claims.json").write_text(json.dumps(
+        [{"report_id": "r1", "claim_text": "A guest's story.",
+          "provenance": {"layer_a_claim_type": "personal-anecdote"}}]),
+        encoding="utf-8")
+
+    diff = _diff("trump_2026", new_run="tru00000",
+                 per_sid=[_entry("trump_2026:0001", "TRUE", "UNVERIFIABLE",
+                                 "newly_gated")],
+                 old_tally={"TRUE": 1}, new_tally={"UNVERIFIABLE": 1})
+    ap = dc6.anecdote_parity([diff], runs_dir=tmp_path, site_root=site)
+    assert ap["join"] == {"from_artifact": 0, "from_claims_json": 1,
+                          "unresolved": 0, "unresolved_sids": [],
+                          "site_root": str(site), "site_index_size": 1}
+    assert ap["per_speech"]["trump_2026"]["anecdotes"] == 1
+
+
+def test_an_unjoinable_claim_is_reported_not_silently_non_anecdote(tmp_path):
+    """Counting an unclassified claim as "not an anecdote" moves the adjusted
+    rate in a known direction, so the count has to be visible."""
+    (tmp_path / "tru00000.json").write_text(json.dumps({
+        "meta": {"speech_id": "trump_2026"},
+        "rows": [{"sid": "trump_2026:0009"}],
+        "claims": [{"sid": "trump_2026:0009", "text": "Unmatchable text."}],
+    }), encoding="utf-8")
+    diff = _diff("trump_2026", new_run="tru00000",
+                 per_sid=[_entry("trump_2026:0009", "TRUE", "TRUE",
+                                 "unchanged")],
+                 old_tally={"TRUE": 1}, new_tally={"TRUE": 1})
+    ap = dc6.anecdote_parity([diff], runs_dir=tmp_path, site_root=tmp_path)
+    assert ap["join"]["unresolved"] == 1
+    assert ap["join"]["unresolved_sids"] == ["trump_2026:0009"]
+    # Still counted — as a non-anecdote — but the flag above says so.
+    assert ap["per_speech"]["trump_2026"]["new_adjusted"]["total"] == 1
+
+
+def test_markdown_carries_both_bases_and_the_join_provenance(tmp_path):
+    ap = dc6.anecdote_parity(_anecdote_diffs(tmp_path), runs_dir=tmp_path,
+                             site_root=tmp_path)
+    md = dc6.render_markdown({
+        "aggregate": dc6.aggregate(_anecdote_diffs(tmp_path)),
+        "distributions": dc6.distributions(_anecdote_diffs(tmp_path)),
+        "anecdote_parity": ap, "coverage": [], "changed_claims": [],
+        "spend": dc6.spend_table(_anecdote_diffs(tmp_path)),
+        "flags": [], "generation": dc6.GENERATION,
+        "generated": dc6.REBUILD_DATE,
+        "corrections": {"changed_total": 0, "ledger_eligible": 0,
+                        "not_ledger_representable": 0, "archive_path": "x.json",
+                        "archived_entries": 0, "archived_notes": 0,
+                        "proposed_entries": 0},
+    })
+    assert "### Anecdote-adjusted parity" in md
+    assert "Raw spread" in md and "Anecdote-adjusted spread" in md
+    assert "Provenance of the anecdote flag" in md
+    assert "personal-anecdote" in md
+
+
+# ── the committed regeneration ───────────────────────────────────────────────
+
+
+def test_committed_review_carries_the_anecdote_parity_section():
+    """A10 output is committed, not just computable — the review file a human
+    reads has to contain both bases."""
+    review_path = _PKG / "dc6_review.json"
+    if not review_path.exists():
+        pytest.skip("DC-6 package not generated in this tree")
+    ap = json.loads(review_path.read_text("utf-8"))["anecdote_parity"]
+    assert ap["anecdote_claim_type"] == "personal-anecdote"
+    assert set(ap["per_speech"]) == set(dc6.SPEECH_ORDER)
+    for basis in ("old_raw", "new_raw", "old_adjusted", "new_adjusted"):
+        assert 0.0 < ap["corpus"][basis]["rate"] <= 1.0
+        assert ap["spread"][basis]["spread"] >= 0.0
+    md = (_PKG / "dc6_review.md").read_text("utf-8")
+    assert "### Anecdote-adjusted parity" in md
+    # The pre-A10 findings survive the regeneration untouched.
+    assert "**Era parity**" in md
+    assert "## 5. Every changed claim" in md
+
+
 # ── changed-claim listing ────────────────────────────────────────────────────
 
 def test_changed_claims_orders_the_most_consequential_class_first(

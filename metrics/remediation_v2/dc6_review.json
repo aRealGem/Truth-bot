@@ -303,6 +303,260 @@
       "narrowed": false
     }
   },
+  "anecdote_parity": {
+    "anecdote_claim_type": "personal-anecdote",
+    "per_speech": {
+      "clinton_1998": {
+        "speech_id": "clinton_1998",
+        "speaker": "Bill Clinton",
+        "claims_compared": 92,
+        "anecdotes": 7,
+        "anecdote_share": 0.0761,
+        "anecdotes_abstained_new": 1,
+        "old_raw": {
+          "decided": 83,
+          "total": 92,
+          "rate": 0.9022
+        },
+        "new_raw": {
+          "decided": 77,
+          "total": 92,
+          "rate": 0.837
+        },
+        "old_adjusted": {
+          "decided": 76,
+          "total": 85,
+          "rate": 0.8941
+        },
+        "new_adjusted": {
+          "decided": 71,
+          "total": 85,
+          "rate": 0.8353
+        },
+        "delta_raw": -0.0652,
+        "delta_adjusted": -0.0588,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 92,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "gwbush_2006": {
+        "speech_id": "gwbush_2006",
+        "speaker": "George W. Bush",
+        "claims_compared": 48,
+        "anecdotes": 1,
+        "anecdote_share": 0.0208,
+        "anecdotes_abstained_new": 0,
+        "old_raw": {
+          "decided": 42,
+          "total": 48,
+          "rate": 0.875
+        },
+        "new_raw": {
+          "decided": 40,
+          "total": 48,
+          "rate": 0.8333
+        },
+        "old_adjusted": {
+          "decided": 41,
+          "total": 47,
+          "rate": 0.8723
+        },
+        "new_adjusted": {
+          "decided": 39,
+          "total": 47,
+          "rate": 0.8298
+        },
+        "delta_raw": -0.0417,
+        "delta_adjusted": -0.0425,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 48,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "obama_2014": {
+        "speech_id": "obama_2014",
+        "speaker": "Barack Obama",
+        "claims_compared": 96,
+        "anecdotes": 23,
+        "anecdote_share": 0.2396,
+        "anecdotes_abstained_new": 2,
+        "old_raw": {
+          "decided": 85,
+          "total": 96,
+          "rate": 0.8854
+        },
+        "new_raw": {
+          "decided": 78,
+          "total": 96,
+          "rate": 0.8125
+        },
+        "old_adjusted": {
+          "decided": 64,
+          "total": 73,
+          "rate": 0.8767
+        },
+        "new_adjusted": {
+          "decided": 57,
+          "total": 73,
+          "rate": 0.7808
+        },
+        "delta_raw": -0.0729,
+        "delta_adjusted": -0.0959,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 96,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "biden_2022": {
+        "speech_id": "biden_2022",
+        "speaker": "Joe Biden",
+        "claims_compared": 111,
+        "anecdotes": 9,
+        "anecdote_share": 0.0811,
+        "anecdotes_abstained_new": 0,
+        "old_raw": {
+          "decided": 101,
+          "total": 111,
+          "rate": 0.9099
+        },
+        "new_raw": {
+          "decided": 92,
+          "total": 111,
+          "rate": 0.8288
+        },
+        "old_adjusted": {
+          "decided": 94,
+          "total": 102,
+          "rate": 0.9216
+        },
+        "new_adjusted": {
+          "decided": 83,
+          "total": 102,
+          "rate": 0.8137
+        },
+        "delta_raw": -0.0811,
+        "delta_adjusted": -0.1079,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 111,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "trump_2026": {
+        "speech_id": "trump_2026",
+        "speaker": "Donald Trump",
+        "claims_compared": 182,
+        "anecdotes": 52,
+        "anecdote_share": 0.2857,
+        "anecdotes_abstained_new": 22,
+        "old_raw": {
+          "decided": 167,
+          "total": 182,
+          "rate": 0.9176
+        },
+        "new_raw": {
+          "decided": 133,
+          "total": 182,
+          "rate": 0.7308
+        },
+        "old_adjusted": {
+          "decided": 123,
+          "total": 130,
+          "rate": 0.9462
+        },
+        "new_adjusted": {
+          "decided": 103,
+          "total": 130,
+          "rate": 0.7923
+        },
+        "delta_raw": -0.1868,
+        "delta_adjusted": -0.1539,
+        "raw_matches_section4": false,
+        "join": {
+          "from_artifact": 182,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      }
+    },
+    "corpus": {
+      "old_raw": {
+        "decided": 478,
+        "total": 529,
+        "rate": 0.9036
+      },
+      "new_raw": {
+        "decided": 420,
+        "total": 529,
+        "rate": 0.794
+      },
+      "old_adjusted": {
+        "decided": 398,
+        "total": 437,
+        "rate": 0.9108
+      },
+      "new_adjusted": {
+        "decided": 353,
+        "total": 437,
+        "rate": 0.8078
+      }
+    },
+    "spread": {
+      "old_raw": {
+        "min": 0.875,
+        "max": 0.9176,
+        "spread": 0.0426,
+        "min_speech": "gwbush_2006",
+        "max_speech": "trump_2026"
+      },
+      "new_raw": {
+        "min": 0.7308,
+        "max": 0.837,
+        "spread": 0.1062,
+        "min_speech": "trump_2026",
+        "max_speech": "clinton_1998"
+      },
+      "old_adjusted": {
+        "min": 0.8723,
+        "max": 0.9462,
+        "spread": 0.0739,
+        "min_speech": "gwbush_2006",
+        "max_speech": "trump_2026"
+      },
+      "new_adjusted": {
+        "min": 0.7808,
+        "max": 0.8353,
+        "spread": 0.0545,
+        "min_speech": "obama_2014",
+        "max_speech": "clinton_1998"
+      },
+      "raw_spread_delta": 0.0636,
+      "adjusted_spread_delta": -0.0194,
+      "raw_narrowed": false,
+      "adjusted_narrowed": true
+    },
+    "join": {
+      "from_artifact": 529,
+      "from_claims_json": 0,
+      "unresolved": 0,
+      "unresolved_sids": [],
+      "site_root": "/home/ccagent/truth-bot/site-pca",
+      "site_index_size": 529
+    }
+  },
   "coverage": [
     {
       "speech_id": "clinton_1998",
@@ -2287,7 +2541,7 @@
     ]
   },
   "render": {
-    "site_root": "/tmp/dc6-site",
+    "site_root": "/tmp/dc6-site-a10",
     "reports": 5,
     "claims": 529,
     "artifacts": [
@@ -3197,6 +3451,8 @@
   },
   "flags": [
     "era parity: the spread of decided-rates across the five speeches WIDENED from 4.3 pts to 10.6 pts (trump_2026 is now the least-decided at 73.1% vs clinton_1998 at 83.7%). The rebuild unified the METHOD; it did not equalise the OUTCOME",
+    "era parity flips between bases: the decided-rate spread WIDENED raw (+6.4 pts) but NARROWED with personal anecdotes excluded (-1.9 pts) — the parity reading depends on whether you count anecdotes as gate failures",
+    "trump_2026: the anecdote-parity denominator (182 compared sids) differs from section 4's tally — section 4 counts every row in each artifact, this section counts the sids the rebuild compared",
     "trump_2026: 1 sid(s) present in the published run (183 rows) are ABSENT from the rebuild (182 rows) and were never re-adjudicated — trump_2026:0311 (old verdict FALSE, ORPHAN — the published run had no claim record for it and rendered '(claim text unavailable)'). Publishing changes that report's claim count from 183 to 182; 1 of the dropped sid(s) were orphan rows, so the drop removes a broken card rather than losing a checked claim",
     "badge diff: 1 claim(s) present only in the published site and 0 only in the staged render",
     "biden_2022: run logs total $8.3732 vs $8.00 stated in the DC-6 brief (+0.3732)",
