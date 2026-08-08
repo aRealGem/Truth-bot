@@ -362,6 +362,68 @@ def test_committed_review_carries_the_anecdote_parity_section():
     assert "## 5. Every changed claim" in md
 
 
+# ── spend-basis disclosure (DC-B1 revision 4 carry-forward) ──────────────────
+#
+# The corpus spend total is TWO kinds of number added together (a proxy receipt
+# and a list-rate estimate), and the two resumed runs lost part of their
+# off-proxy leg outright. That was known when the DC-B1 estimate excluded them
+# from the per-claim rate basis — an exclusion that is only honest if the
+# reason travels with the total into the DC-6' final ledger instead of being
+# quietly inherited. These tests are what stops it disappearing in a future
+# regeneration.
+
+def _disclosure_says_everything(text: str) -> None:
+    assert "MIXED COST BASIS" in text
+    assert "LEDGER-TRUE" in text and "ESTIMATE" in text
+    for speech in dc6.RESUMED_SPEECHES:
+        assert speech in text
+    assert "LOWER BOUND" in text
+    assert "append_chunk_journal" in text     # the named mechanism, not a vibe
+
+
+def test_spend_table_carries_the_mixed_basis_and_undercount_disclosure(
+        synthetic_diffs):
+    spend = dc6.spend_table(synthetic_diffs)
+    _disclosure_says_everything(spend["basis_disclosure"])
+    assert spend["cost_basis"]["disclosure"] == spend["basis_disclosure"]
+    assert spend["cost_basis"]["mixed"] is True
+    assert spend["cost_basis"]["offproxy_is_lower_bound"] is True
+    assert spend["cost_basis"]["resumed_speeches"] == list(dc6.RESUMED_SPEECHES)
+
+
+def test_rendered_spend_section_states_the_disclosure(tmp_path):
+    """It has to be in the prose a human actually reads, not only in the JSON
+    nobody opens."""
+    md = dc6.render_markdown({
+        "aggregate": dc6.aggregate(_anecdote_diffs(tmp_path)),
+        "distributions": dc6.distributions(_anecdote_diffs(tmp_path)),
+        "anecdote_parity": dc6.anecdote_parity(
+            _anecdote_diffs(tmp_path), runs_dir=tmp_path, site_root=tmp_path),
+        "coverage": [], "changed_claims": [],
+        "spend": dc6.spend_table(_anecdote_diffs(tmp_path)),
+        "flags": [], "generation": dc6.GENERATION,
+        "generated": dc6.REBUILD_DATE,
+        "corrections": {"changed_total": 0, "ledger_eligible": 0,
+                        "not_ledger_representable": 0, "archive_path": "x.json",
+                        "archived_entries": 0, "archived_notes": 0,
+                        "proposed_entries": 0},
+    })
+    section = md.split("## 6. Spend + provenance", 1)[1]
+    assert "**Cost basis — read this before quoting any number below.**" in section
+    _disclosure_says_everything(section)
+
+
+def test_committed_review_carries_the_spend_basis_disclosure():
+    """And it is in the COMMITTED package, so a regeneration that drops it
+    fails here rather than shipping a total that reads like a receipt."""
+    review_path = _PKG / "dc6_review.json"
+    if not review_path.exists():
+        pytest.skip("DC-6 package not generated in this tree")
+    spend = json.loads(review_path.read_text("utf-8"))["spend"]
+    _disclosure_says_everything(spend["basis_disclosure"])
+    _disclosure_says_everything((_PKG / "dc6_review.md").read_text("utf-8"))
+
+
 # ── changed-claim listing ────────────────────────────────────────────────────
 
 def test_changed_claims_orders_the_most_consequential_class_first(

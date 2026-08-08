@@ -152,6 +152,56 @@ SHAPE_BACKFILL_USD = 0.63
 #: Corpus total quoted in the DC-6 brief, for the same flag-don't-smooth check.
 STATED_TOTAL_USD = 38.8
 
+#: The two speeches whose runs were interrupted and RESUMED. Named, not
+#: inferred from ``legs``, because the disclosure below is about these specific
+#: runs' accounting and must not silently start or stop applying if the leg
+#: bookkeeping changes.
+RESUMED_SPEECHES = ("obama_2014", "biden_2022")
+
+#: DC-B1 carry-forward obligation → the DC-6' final ledger.
+#:
+#: Two different honesty problems live in one total, and both have to be said
+#: out loud every time the total is quoted:
+#:
+#: 1. MIXED BASIS. ``proxy`` is a receipt; ``off-proxy`` is an estimate. Adding
+#:    them is the only way to get a corpus number, but the sum is not a
+#:    ledger-true figure and must never be presented as one.
+#: 2. RESUMED-LEG UNDERCOUNT. ``phase3_rebuild`` banks only PROXY spend in the
+#:    chunk journal (``append_chunk_journal`` is handed the ``proxy_key_spend``
+#:    delta), so a resumed session carries the prior leg's proxy cost forward
+#:    and drops that leg's off-proxy estimate entirely. The per-speech figures
+#:    in this table are reconstructed by hand from BOTH legs' logs, which
+#:    recovers what the runner's own SPEND line lost — but only down to the
+#:    last chunk that got banked. Both interrupted legs died *inside* the next
+#:    chunk, after its retrieval had already run, and that retrieval was never
+#:    printed or journalled. It is unrecoverable.
+#:
+#: Hence: the off-proxy component, and therefore the corpus total, is a LOWER
+#: BOUND. This is exactly why the DC-B1 estimate prices re-adjudication off the
+#: three single-session runs only (gwbush/clinton/trump, $0.0642–$0.0748 per
+#: claim) and excludes the two resumed ones.
+SPEND_BASIS_DISCLOSURE = (
+    "MIXED COST BASIS, AND A KNOWN UNDERCOUNT — this total is a lower bound, "
+    "not a receipt. `proxy` is LEDGER-TRUE: the LiteLLM proxy key was billed "
+    "and the figure is read back from that ledger. `off-proxy` is an ESTIMATE: "
+    "models called outside the proxy, costed from token counts at published "
+    "list rates. The two are summed here because there is no better corpus "
+    "number, but they are not the same kind of evidence. Separately, "
+    f"{' and '.join(RESUMED_SPEECHES)} were interrupted and RESUMED, and "
+    "phase3_rebuild banks only PROXY spend in the chunk journal "
+    "(append_chunk_journal is handed the proxy_key_spend delta), so a resumed "
+    "session carries the prior leg's proxy cost forward and DROPS that leg's "
+    "off-proxy estimate — which is why those two runs' self-reported totals "
+    "($1.8350 obama_2014, $4.0042 biden_2022) are far below the per-leg "
+    "figures reconstructed in this table. That reconstruction recovers only "
+    "what was banked: both legs died inside the following chunk, after its "
+    "retrieval had already run and before anything was journalled, and that "
+    "spend is unrecoverable. The off-proxy component — and therefore the "
+    "corpus total — is a LOWER BOUND, and the two resumed runs' per-claim "
+    "rates must not be used to price future work (DC-B1 prices off the three "
+    "single-session runs only)."
+)
+
 
 # ── loading ───────────────────────────────────────────────────────────────
 def _read_json(path: Path) -> Any:
@@ -1058,7 +1108,15 @@ def spend_table(diffs: Iterable[dict]) -> dict:
             "proxy": "ledger-true — billed by the LiteLLM proxy key",
             "off_proxy": ("ESTIMATE — models called outside the proxy, costed "
                           "from token counts at published list rates"),
+            "mixed": True,
+            "offproxy_is_lower_bound": True,
+            "resumed_speeches": list(RESUMED_SPEECHES),
+            "disclosure": SPEND_BASIS_DISCLOSURE,
         },
+        #: Top-level too: the DC-6' final ledger reads this key directly, and a
+        #: disclosure nested three levels down is a disclosure waiting to be
+        #: dropped by whatever assembles the next document.
+        "basis_disclosure": SPEND_BASIS_DISCLOSURE,
         "discrepancies": [
             f"{r['speech_id']}: run logs total ${r['log_total_usd']:.4f} vs "
             f"${r['brief_stated_usd']:.2f} stated in the DC-6 brief "
@@ -1354,9 +1412,8 @@ def render_markdown(review: dict) -> str:
     spend = review["spend"]
     A("## 6. Spend + provenance")
     A("")
-    A("`proxy` is **ledger-true** (billed by the LiteLLM proxy key). "
-      "`off-proxy` is an **ESTIMATE** — models called outside the proxy, costed "
-      "from token counts at published list rates.")
+    A("**Cost basis — read this before quoting any number below.** "
+      + spend["basis_disclosure"])
     A("")
     rows = [[r["speech_id"], f"`{r['old_run_id'][:8]}` → `{r['new_run_id'][:8]}`",
              r["claims"], r["legs"], f"${r['proxy_usd_ledger_true']:.4f}",

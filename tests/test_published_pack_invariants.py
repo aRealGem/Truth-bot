@@ -13,10 +13,13 @@ from pathlib import Path
 
 import pytest
 
-from truthbot.publish.consistency import (UNFIT_STANCE_NULL_RATE,
+from truthbot.publish.consistency import (RUN_COHORT_GLOSS, RUN_COHORT_ORDER,
+                                          UNFIT_STANCE_NULL_RATE,
                                           check_publish_gate,
                                           check_run_artifacts,
-                                          check_run_fitness, is_fit_to_gate,
+                                          check_run_fitness,
+                                          fitness_composition, fitness_finding,
+                                          is_fit_to_gate, run_cohort,
                                           run_fitness_report)
 
 REPO = Path(__file__).resolve().parents[1]
@@ -206,6 +209,84 @@ def test_fitness_is_reported_separately_and_never_as_an_invariant_violation():
     `violations == []` keeps meaning what it always meant."""
     assert check_run_fitness(REPO)
     assert check_run_artifacts(REPO) == []
+
+
+# ── the denominator that has to travel with the number ───────────────────────
+#
+# "Every stored run is unfit to gate" is stated over 17 artifacts on a site
+# that publishes 5 reports. A bare 17 beside a 5-report corpus is unreadable —
+# it looks either like triple-counting or like a much larger failure than it
+# is. So the composition (5 published + 5 rebuilt + 7 superseded) is computed,
+# not typed, and it is asserted everywhere the number appears.
+
+def test_run_cohort_splits_published_rebuilt_and_superseded():
+    current = "v2.3-role-axis-s5cap"
+    # Published is published whatever vintage it ran on — the live corpus is
+    # deliberately not all one generation.
+    assert run_cohort({"published": True, "generation": "pre-s5-tiering"},
+                      current) == "published"
+    assert run_cohort({"published": False, "generation": current},
+                      current) == "rebuilt"
+    assert run_cohort({"published": False, "generation": "pre-s5-cap"},
+                      current) == "superseded"
+
+
+def test_fitness_composition_spells_out_the_denominator():
+    rows = [{"cohort": "published"}] * 2 + [{"cohort": "superseded"}]
+    line = fitness_composition(rows)
+    assert line == ("3 stored run artifacts = 2 published (live on the site) "
+                    "+ 1 superseded (retained per archive-never-delete)")
+    # A cohort with no members is omitted, never printed as "0 rebuilt".
+    assert "rebuilt" not in line
+
+
+def test_every_cohort_has_a_gloss_and_a_place_in_the_order():
+    assert set(RUN_COHORT_ORDER) == set(RUN_COHORT_GLOSS)
+
+
+def test_fitness_report_rows_carry_their_cohort():
+    rows = run_fitness_report(REPO)
+    assert all(r["cohort"] in RUN_COHORT_GLOSS for r in rows)
+    assert {r["cohort"] for r in rows} == set(RUN_COHORT_ORDER)
+
+
+def test_the_lint_states_the_tally_with_its_denominator_and_names_cohorts():
+    """The bare 17 is the misreading risk, so the lint's own output carries the
+    composition on line one and a cohort on every run line."""
+    lines = check_run_fitness(REPO)
+    rows = run_fitness_report(REPO)
+    assert lines[0] == (f"{len(rows)} of {len(rows)} stored run artifacts "
+                        f"unfit to gate — {fitness_composition(rows)}")
+    for line in lines[1:]:
+        assert any(f", {c}" in line for c in RUN_COHORT_ORDER)
+
+
+def test_the_finding_text_carries_the_composition_too():
+    finding = fitness_finding(run_fitness_report(REPO))
+    assert fitness_composition(run_fitness_report(REPO)) in finding
+    assert "unfit to gate" in finding
+
+
+def test_committed_a1_report_is_what_the_generator_emits():
+    """The report artifact is generated, not hand-maintained — which is how the
+    finding text and the cohort split stay in one place. Regenerate with
+    scripts/emit_a1_fitness_report.py if this fails."""
+    import importlib.util
+
+    path = REPO / "metrics" / "remediation_v2" / "a1_fitness_report.json"
+    if not path.exists():
+        pytest.skip("A1 fitness report not generated in this tree")
+    spec = importlib.util.spec_from_file_location(
+        "emit_a1_fitness_report", REPO / "scripts" / "emit_a1_fitness_report.py")
+    emit = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(emit)
+
+    committed = json.loads(path.read_text("utf-8"))
+    fresh = emit.build_report(REPO, generated=committed["generated"])
+    assert committed == fresh
+    # And the finding a human reads names the denominator, not a bare count.
+    assert fitness_composition(fresh["runs"]) in committed["finding"]
+    assert set(committed["cohorts"]) == set(RUN_COHORT_ORDER)
 
 
 def test_publish_gate_refuses_an_unfit_run_and_passes_a_fit_one():

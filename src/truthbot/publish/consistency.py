@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from collections import Counter
 from pathlib import Path
 
 from truthbot.publish.aggregation import (COARSE_VERDICT_ORDER,
@@ -303,6 +304,75 @@ _MAX_S5_PER_SID = 3
 #: existing run failing this is the CORRECT outcome: they are all unfit.
 UNFIT_STANCE_NULL_RATE = 0.15
 
+#: Cohort → the one-phrase gloss that says what that cohort IS. The fitness
+#: finding is stated over 17 stored run artifacts, and 17 is a number nobody
+#: can interpret on its own: read against the five published reports it looks
+#: like triple-counting, and read against "the corpus" it looks like a bigger
+#: failure than it is. So the denominator travels with the number everywhere
+#: it is stated — in the report artifact, in the lint's own output, and in the
+#: DC-B1 packet. The glosses are here, once, so the three cannot drift.
+RUN_COHORT_GLOSS = {
+    "published": "live on the site",
+    "rebuilt": "staged, unpublished",
+    "superseded": "retained per archive-never-delete",
+}
+
+#: Cohort order for the composition line: newest/most consequential first.
+RUN_COHORT_ORDER = ("published", "rebuilt", "superseded")
+
+#: The A1 finding, in ONE place. ``{composition}`` is filled by
+#: :func:`fitness_composition` from the manifest, so the artifact, the lint and
+#: any future re-statement all quote the same sentence with the same
+#: denominator rather than a hand-copied one.
+A1_FINDING = (
+    "The v2 evidence path never scores relevance or stance: "
+    "verify/relevance.py::score_evidence is reachable only from the legacy v1 "
+    "provider (pipeline._build_open_book_provider) and the R4 archive "
+    "retriever, while build_evidence_pack_v2 wires R1/R2/R3 straight into "
+    "consolidate(). Result: relevance_score == 0.5 on 100% of items in ALL "
+    "stored runs, and supports_claim null on 20.5-34.2% (retrievers.py maps "
+    "stance 'context' -> None). consolidator._bearing() requires True/False, "
+    "so null items cannot credit MIN_BEARING_T13=2 and the T2.4 gate forces "
+    "Unverifiable. Every stored run is therefore unfit to gate — and \"every\" "
+    "means {composition}, not five: the finding covers the whole stored "
+    "record, of which the published site is one cohort."
+)
+
+
+def run_cohort(manifest_row: dict, current_generation: str) -> str:
+    """Which cohort a manifest row belongs to: published / rebuilt / superseded.
+
+    ``published`` is whatever the live site renders (any generation — the
+    published corpus is deliberately NOT all one vintage). Everything else
+    splits on generation: an unpublished run on the *current* generation is a
+    Phase-3 ``rebuilt`` artifact awaiting the DC-6 publish decision; an
+    unpublished run on an older generation is ``superseded`` and retained only
+    because the archive is never deleted from.
+    """
+    if manifest_row.get("published"):
+        return "published"
+    if (manifest_row.get("generation") or "") == current_generation:
+        return "rebuilt"
+    return "superseded"
+
+
+def fitness_composition(rows: list[dict]) -> str:
+    """The denominator, spelled out: "17 stored run artifacts = 5 published …".
+
+    Computed from the rows themselves so it can never disagree with the report
+    it annotates.
+    """
+    counts = Counter(r.get("cohort", "") for r in rows)
+    parts = [f"{counts[c]} {c} ({RUN_COHORT_GLOSS[c]})"
+             for c in RUN_COHORT_ORDER if counts.get(c)]
+    return (f"{len(rows)} stored run artifact{'' if len(rows) == 1 else 's'} = "
+            + " + ".join(parts))
+
+
+def fitness_finding(rows: list[dict]) -> str:
+    """:data:`A1_FINDING` with this checkout's composition substituted in."""
+    return A1_FINDING.format(composition=fitness_composition(rows))
+
 
 def is_fit_to_gate(artifact) -> tuple[bool, str]:
     """Is this run artifact's evidence scored well enough to GATE on?
@@ -347,16 +417,21 @@ def run_fitness_report(repo_root) -> list[dict]:
     """Machine-readable fitness row per stored run artifact.
 
     One dict per manifest run whose artifact is present in this checkout:
-    ``{run_id, speech_id, generation, published, items, packs, scored,
+    ``{run_id, speech_id, generation, published, cohort, items, packs, scored,
     scored_rate, stance_null, stance_null_rate, fit_to_gate, reason}``.
     Absent artifacts are skipped for the same reason check_run_artifacts skips
     them (CI clones legitimately carry manifest rows without the large files).
+
+    ``cohort`` (published / rebuilt / superseded, see :func:`run_cohort`) is
+    carried on every row so the headline count always has a denominator
+    attached — see :func:`fitness_composition`.
     """
     from truthbot.verdict.consolidator import scoring_telemetry_from_artifact
 
     repo_root = Path(repo_root)
     runs_dir = repo_root / "metrics" / "pca_runs"
     manifest = _load_json(runs_dir / "methodology_manifest.json")
+    current_generation = manifest.get("current_generation", "")
     rows: list[dict] = []
     for run_id, row in manifest["runs"].items():
         path = runs_dir / f"{run_id}.json"
@@ -370,6 +445,7 @@ def run_fitness_report(repo_root) -> list[dict]:
             "speech_id": row.get("speech_id", ""),
             "generation": row.get("generation", ""),
             "published": bool(row.get("published")),
+            "cohort": run_cohort(row, current_generation),
             "packs": tel["packs"],
             "items": tel["items"],
             "relevance_scored": tel["relevance_scored"],
@@ -394,14 +470,23 @@ def check_run_fitness(repo_root) -> list[str]:
     invariant breach (the pack broke a rule), and conflating them would make
     the existing suite's ``violations == []`` assertion vacuous. The teeth are
     at publish time: :func:`check_publish_gate`.
+
+    The FIRST line is the tally with its denominator spelled out
+    ("N of M stored run artifacts unfit to gate — M = 5 published … "), and
+    every run line names its cohort. Without that, a reader meeting "17" beside
+    a five-report site has no way to tell whether the lint is counting reports,
+    speeches or artifacts.
     """
-    lines: list[str] = []
-    for row in run_fitness_report(repo_root):
-        if row["fit_to_gate"]:
-            continue
+    rows = run_fitness_report(repo_root)
+    unfit = [r for r in rows if not r["fit_to_gate"]]
+    if not unfit:
+        return []
+    lines = [f"{len(unfit)} of {len(rows)} stored run artifacts unfit to gate "
+             f"— {fitness_composition(rows)}"]
+    for row in unfit:
         lines.append(
-            f"{row['run_id'][:8]} ({row['speech_id']}"
-            f"{', published' if row['published'] else ''}): unfit-to-gate — "
+            f"{row['run_id'][:8]} ({row['speech_id']}, {row['cohort']}"
+            f"{'' if row['published'] else ', unpublished'}): unfit-to-gate — "
             f"{row['reason']}")
     return lines
 

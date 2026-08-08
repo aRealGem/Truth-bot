@@ -1,12 +1,12 @@
 {
   "schema": "truthbot-a1-fitness-report v1",
   "generated": "2026-08-07",
-  "generator": "truthbot.publish.consistency.run_fitness_report(repo_root) — recomputes truthbot.verdict.consolidator.scoring_telemetry_from_artifact over each artifact's stored evidence dict, then is_fit_to_gate()",
+  "generator": "scripts/emit_a1_fitness_report.py — truthbot.publish.consistency.run_fitness_report(repo_root) recomputes truthbot.verdict.consolidator.scoring_telemetry_from_artifact over each artifact's stored evidence dict, then is_fit_to_gate(); cohorts via consistency.run_cohort, finding text from consistency.A1_FINDING",
   "threshold": {
     "unfit_stance_null_rate": 0.15,
     "note": "A run is unfit-to-gate when (a) NO item carries a real relevance score (all still on the 0.5 pydantic default) or (b) the stance-null rate exceeds the ceiling. Condition (a) alone condemns every run below."
   },
-  "finding": "The v2 evidence path never scores relevance or stance: verify/relevance.py::score_evidence is reachable only from the legacy v1 provider (pipeline._build_open_book_provider) and the R4 archive retriever, while build_evidence_pack_v2 wires R1/R2/R3 straight into consolidate(). Result: relevance_score == 0.5 on 100% of items in ALL stored runs, and supports_claim null on 20.5-34.2% (retrievers.py maps stance 'context' -> None). consolidator._bearing() requires True/False, so null items cannot credit MIN_BEARING_T13=2 and the T2.4 gate forces Unverifiable. Every stored run is therefore unfit to gate.",
+  "finding": "The v2 evidence path never scores relevance or stance: verify/relevance.py::score_evidence is reachable only from the legacy v1 provider (pipeline._build_open_book_provider) and the R4 archive retriever, while build_evidence_pack_v2 wires R1/R2/R3 straight into consolidate(). Result: relevance_score == 0.5 on 100% of items in ALL stored runs, and supports_claim null on 20.5-34.2% (retrievers.py maps stance 'context' -> None). consolidator._bearing() requires True/False, so null items cannot credit MIN_BEARING_T13=2 and the T2.4 gate forces Unverifiable. Every stored run is therefore unfit to gate — and \"every\" means 17 stored run artifacts = 5 published (live on the site) + 5 rebuilt (staged, unpublished) + 7 superseded (retained per archive-never-delete), not five: the finding covers the whole stored record, of which the published site is one cohort.",
   "cohorts": {
     "published": {
       "runs": 5,
@@ -36,6 +36,7 @@
       "speech_id": "biden_2022",
       "generation": "pre-s5-tiering",
       "published": true,
+      "cohort": "published",
       "packs": 111,
       "items": 918,
       "relevance_scored": 0,
@@ -46,14 +47,14 @@
       "stance_null": 189,
       "stance_null_rate": 0.205882,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 918 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "published"
+      "reason": "relevance is entirely default: 0 of 918 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "7c59e9e0-0062-487d-84e3-4af15ab94aab",
       "speech_id": "clinton_1998",
       "generation": "v2.3-role-axis-s5cap",
       "published": true,
+      "cohort": "published",
       "packs": 92,
       "items": 786,
       "relevance_scored": 0,
@@ -64,14 +65,14 @@
       "stance_null": 223,
       "stance_null_rate": 0.283715,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 786 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "published"
+      "reason": "relevance is entirely default: 0 of 786 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "92f39851-8870-4609-97f6-458798d5dbb8",
       "speech_id": "gwbush_2006",
       "generation": "v2.3-role-axis-s5cap",
       "published": true,
+      "cohort": "published",
       "packs": 48,
       "items": 425,
       "relevance_scored": 0,
@@ -82,14 +83,14 @@
       "stance_null": 93,
       "stance_null_rate": 0.218824,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 425 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "published"
+      "reason": "relevance is entirely default: 0 of 425 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "28965cdf-046e-4c87-a5d1-d21b6529c625",
       "speech_id": "obama_2014",
       "generation": "pre-s5-cap",
       "published": true,
+      "cohort": "published",
       "packs": 96,
       "items": 821,
       "relevance_scored": 0,
@@ -100,14 +101,14 @@
       "stance_null": 176,
       "stance_null_rate": 0.214373,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 821 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "published"
+      "reason": "relevance is entirely default: 0 of 821 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "23939712-59ea-449d-93f7-a0a0b449efd8",
       "speech_id": "trump_2026",
       "generation": "pre-s5-tiering",
       "published": true,
+      "cohort": "published",
       "packs": 183,
       "items": 1543,
       "relevance_scored": 0,
@@ -118,14 +119,14 @@
       "stance_null": 528,
       "stance_null_rate": 0.342191,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 1543 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "published"
+      "reason": "relevance is entirely default: 0 of 1543 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
       "speech_id": "biden_2022",
       "generation": "v2.3-role-axis-s5cap",
       "published": false,
+      "cohort": "rebuilt",
       "packs": 111,
       "items": 885,
       "relevance_scored": 0,
@@ -136,14 +137,14 @@
       "stance_null": 181,
       "stance_null_rate": 0.20452,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 885 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "rebuilt"
+      "reason": "relevance is entirely default: 0 of 885 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "d0010426-2e8f-4449-b839-60f85d923d56",
       "speech_id": "clinton_1998",
       "generation": "v2.3-role-axis-s5cap",
       "published": false,
+      "cohort": "rebuilt",
       "packs": 92,
       "items": 792,
       "relevance_scored": 0,
@@ -154,14 +155,14 @@
       "stance_null": 222,
       "stance_null_rate": 0.280303,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 792 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "rebuilt"
+      "reason": "relevance is entirely default: 0 of 792 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
       "speech_id": "gwbush_2006",
       "generation": "v2.3-role-axis-s5cap",
       "published": false,
+      "cohort": "rebuilt",
       "packs": 48,
       "items": 396,
       "relevance_scored": 0,
@@ -172,14 +173,14 @@
       "stance_null": 102,
       "stance_null_rate": 0.257576,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 396 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "rebuilt"
+      "reason": "relevance is entirely default: 0 of 396 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "4de8a551-ea99-440d-aca0-12a133e620e3",
       "speech_id": "obama_2014",
       "generation": "v2.3-role-axis-s5cap",
       "published": false,
+      "cohort": "rebuilt",
       "packs": 96,
       "items": 799,
       "relevance_scored": 0,
@@ -190,14 +191,14 @@
       "stance_null": 187,
       "stance_null_rate": 0.234043,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 799 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "rebuilt"
+      "reason": "relevance is entirely default: 0 of 799 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
       "speech_id": "trump_2026",
       "generation": "v2.3-role-axis-s5cap",
       "published": false,
+      "cohort": "rebuilt",
       "packs": 182,
       "items": 1472,
       "relevance_scored": 0,
@@ -208,14 +209,14 @@
       "stance_null": 444,
       "stance_null_rate": 0.30163,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 1472 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "rebuilt"
+      "reason": "relevance is entirely default: 0 of 1472 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "365f5caa-07cb-4d1b-a570-dcb02e1c5cbe",
       "speech_id": "biden_2022",
       "generation": "no-evidence",
       "published": false,
+      "cohort": "superseded",
       "packs": 0,
       "items": 0,
       "relevance_scored": 0,
@@ -226,14 +227,14 @@
       "stance_null": 0,
       "stance_null_rate": 0.0,
       "fit_to_gate": false,
-      "reason": "no evidence stored — nothing to gate on",
-      "cohort": "superseded"
+      "reason": "no evidence stored — nothing to gate on"
     },
     {
       "run_id": "577f6ff6-0e4b-47c6-aed9-83df855dddb7",
       "speech_id": "biden_2022",
       "generation": "pre-s5-tiering",
       "published": false,
+      "cohort": "superseded",
       "packs": 111,
       "items": 666,
       "relevance_scored": 0,
@@ -244,14 +245,14 @@
       "stance_null": 666,
       "stance_null_rate": 1.0,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 666 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "superseded"
+      "reason": "relevance is entirely default: 0 of 666 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "807edf03-484d-42ed-a9cb-b12b5c3d3f52",
       "speech_id": "biden_2022",
       "generation": "pre-s5-tiering",
       "published": false,
+      "cohort": "superseded",
       "packs": 111,
       "items": 666,
       "relevance_scored": 0,
@@ -262,14 +263,14 @@
       "stance_null": 666,
       "stance_null_rate": 1.0,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 666 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "superseded"
+      "reason": "relevance is entirely default: 0 of 666 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "6fdfde0e-1393-4a7a-9144-abd0fc48b5a1",
       "speech_id": "obama_2014",
       "generation": "pre-s5-cap",
       "published": false,
+      "cohort": "superseded",
       "packs": 96,
       "items": 822,
       "relevance_scored": 0,
@@ -280,14 +281,14 @@
       "stance_null": 176,
       "stance_null_rate": 0.214112,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 822 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "superseded"
+      "reason": "relevance is entirely default: 0 of 822 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "0e0d9336-10f7-4e5e-bf58-941b3790ad79",
       "speech_id": "trump_2026",
       "generation": "no-evidence",
       "published": false,
+      "cohort": "superseded",
       "packs": 0,
       "items": 0,
       "relevance_scored": 0,
@@ -298,14 +299,14 @@
       "stance_null": 0,
       "stance_null_rate": 0.0,
       "fit_to_gate": false,
-      "reason": "no evidence stored — nothing to gate on",
-      "cohort": "superseded"
+      "reason": "no evidence stored — nothing to gate on"
     },
     {
       "run_id": "5c321299-1c27-43b4-8c85-5d7b0b24edda",
       "speech_id": "trump_2026",
       "generation": "pre-s5-tiering",
       "published": false,
+      "cohort": "superseded",
       "packs": 167,
       "items": 1001,
       "relevance_scored": 0,
@@ -316,14 +317,14 @@
       "stance_null": 1001,
       "stance_null_rate": 1.0,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 1001 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "superseded"
+      "reason": "relevance is entirely default: 0 of 1001 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     },
     {
       "run_id": "5ebcabe3-05d9-4484-a8a5-e28e0bf883e1",
       "speech_id": "trump_2026",
       "generation": "pre-s5-tiering",
       "published": false,
+      "cohort": "superseded",
       "packs": 178,
       "items": 1068,
       "relevance_scored": 0,
@@ -334,8 +335,7 @@
       "stance_null": 1068,
       "stance_null_rate": 1.0,
       "fit_to_gate": false,
-      "reason": "relevance is entirely default: 0 of 1068 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run",
-      "cohort": "superseded"
+      "reason": "relevance is entirely default: 0 of 1068 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
     }
   ]
 }
