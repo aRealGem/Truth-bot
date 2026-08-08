@@ -283,9 +283,25 @@ def test_committed_a1_report_is_what_the_generator_emits():
 
     committed = json.loads(path.read_text("utf-8"))
     fresh = emit.build_report(REPO, generated=committed["generated"])
-    assert committed == fresh
+
+    # Compare only the runs whose artifact FILE is in this checkout. The report
+    # is a record of every stored artifact on the machine that generated it; a
+    # fresh clone (CI) carries only the tracked ones, so a whole-document
+    # equality would fail on data availability rather than on drift — the same
+    # confusion that broke CI on 2026-08-03. Rows we can regenerate must match
+    # exactly; rows we cannot see are not evidence of anything.
+    runs_dir = REPO / "metrics" / "pca_runs"
+    fresh_rows = {r["run_id"]: r for r in fresh["runs"]}
+    for row in committed["runs"]:
+        rid = row["run_id"]
+        if not (runs_dir / f"{rid}.json").exists():
+            continue
+        assert rid in fresh_rows, f"{rid}: artifact present but not regenerated"
+        assert row == fresh_rows[rid], f"{rid}: committed row != regenerated"
+    assert {r["run_id"] for r in fresh["runs"]} <= {r["run_id"] for r in committed["runs"]}, \
+        "generator saw an artifact the committed report does not record — regenerate"
     # And the finding a human reads names the denominator, not a bare count.
-    assert fitness_composition(fresh["runs"]) in committed["finding"]
+    assert fitness_composition(committed["runs"]) in committed["finding"]
     assert set(committed["cohorts"]) == set(RUN_COHORT_ORDER)
 
 
