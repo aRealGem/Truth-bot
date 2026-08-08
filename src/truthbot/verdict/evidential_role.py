@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from enum import Enum
 
+from truthbot.verdict.utterance_record import ROLE as _UTTERANCE_RECORD
 from truthbot.verify.principals import PrincipalRelation
 
 #: Ministerial shapes — records of the speaker's own official acts/quantities.
@@ -25,6 +26,13 @@ class EvidentialRole(str, Enum):
     ATTRIBUTION_ONLY = "attribution-only"  # c-eval × SELF: weight 0, satisfies nothing
     PLAIN_S5 = "plain-s5"                  # c-third × SELF: no special role
     NORMAL = "normal"                      # everything else: tier handling unchanged
+    # D15 (PROPOSED, flag-gated — docs/decisions/D15-utterance-derivative.md).
+    # A record of the UTTERANCE ITSELF: the transcript, the Congressional
+    # Record of the day, the archive copy. NOT a product of the D11.2 table
+    # below — it is f(url, snippet, speech_date), so it is assigned by
+    # ``verdict.utterance_record`` detection and is NEVER returned by
+    # :func:`evidential_role`. Quota credit 0; display allowed as provenance.
+    UTTERANCE_RECORD = _UTTERANCE_RECORD    # "utterance-record"
 
 
 def evidential_role(claim_shape: str | None,

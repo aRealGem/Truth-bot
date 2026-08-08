@@ -175,6 +175,12 @@ class ConsolidatedItem:
     # (cannot credit the quota) — same-speech fact-checks and reaction
     # coverage live in exactly this band.
     post_speech: bool = False
+    # D15 (flag-gated, default OFF): which ``verdict.utterance_record`` rule
+    # found this item to be a record of the SPEECH ITSELF ('' = no rule, or the
+    # flag is off). When set, ``role`` is forced to ``utterance-record`` and the
+    # item credits nothing. Kept ALONGSIDE ``role`` so the journal records WHICH
+    # rule fired, not merely that one did.
+    utterance_rule: str = ""
 
     def to_payload_v2(self) -> dict:
         ev = self.evidence
@@ -221,6 +227,13 @@ class ConsolidationResult:
     # {"normal": 6, "primary-record": 2, "attribution-only": 1}. Empty on
     # non-role-aware consolidations.
     role_tally: dict[str, int] = field(default_factory=dict)
+    # D15 utterance-record telemetry (flag-gated, default OFF): one
+    # {"url", "rule"} per kept item classified as a record of the speech
+    # itself. ALWAYS empty with the flag off — which is how a reader can tell
+    # "D15 found nothing here" from "D15 was not running". Unlike role_tally
+    # this is populated on role-aware AND legacy consolidations, because the
+    # exclusion does not depend on the claim shape.
+    utterance_records: list[dict] = field(default_factory=list)
 
     @property
     def schema_version(self) -> str:
@@ -234,6 +247,18 @@ def _bearing(ev: Evidence) -> bool:
     """An item 'bears on the core assertion' when the stance layer classified
     it as supports or refutes (not ambiguous context)."""
     return ev.supports_claim is True or ev.supports_claim is False
+
+
+def _d15_on(explicit: Optional[bool]) -> bool:
+    """Is the D15 utterance-record exclusion active for this consolidation?
+
+    ``None`` (the default) defers to the ``TRUTHBOT_D15_UTTERANCE_RECORD``
+    environment flag, which is OFF unless set — so production behaviour is
+    unchanged until the switch is thrown. An explicit True/False is the same
+    switch as an argument, for tests and the $0 blast-radius measurement."""
+    from truthbot.verdict import utterance_record
+
+    return utterance_record.flag_enabled() if explicit is None else bool(explicit)
 
 
 def _round_robin(shortlists: Sequence[tuple[str, Sequence[Evidence]]]):
@@ -260,6 +285,7 @@ def consolidate(
     era_mode: str = "strict",
     claim_shape: str = "",
     relation_of=None,
+    utterance_record: Optional[bool] = None,
 ) -> ConsolidationResult:
     """Assemble a shared_pack_v2 pack from retriever shortlists.
 
@@ -285,11 +311,32 @@ def consolidate(
     PARTICIPANT corroborant fills the independent slot, an ATTRIBUTION-ONLY
     item satisfies nothing, and a decided verdict always needs at least one
     non-self credit. With either absent, quota behavior is bit-for-bit
-    today's."""
+    today's.
+
+    D15 utterance-record exclusion (PROPOSED, FLAG-GATED, DEFAULT OFF — see
+    ``docs/decisions/D15-utterance-derivative.md``): ``utterance_record=None``
+    (the default) defers to ``TRUTHBOT_D15_UTTERANCE_RECORD``, which is unset
+    in production, so NOTHING about the gate changes until the owner ratifies.
+    Switched on, items ``verdict.utterance_record`` identifies as records of
+    THIS speech — the DCPD transcript, the day's Congressional Record, the
+    Weekly Compilation issue, the archive copy of the address, same-speech
+    recap coverage — take role ``utterance-record`` and credit the quota ZERO
+    on BOTH quota branches. They stay in the pack and stay displayed:
+    provenance, never proof. A claim may not witness itself."""
     result = ConsolidationResult(sid=sid)
     seen: set[str] = set()
     kept: list[ConsolidatedItem] = []
     era_class: dict[int, int] = {}   # id(item) -> 0 contemporaneous / 1 undated / 2 retro
+    d15_on = _d15_on(utterance_record)
+    # The REGISTERED speech date is the anchor every D15 rule checks against
+    # (a Congressional Record from another day is a different day's business).
+    # Resolved once per pack, and only when the flag is on, so the flag-off
+    # path does not even take the import.
+    d15_speech_date = None
+    if d15_on:
+        from truthbot.verdict import speech_context, utterance_record as _ur
+
+        d15_speech_date = speech_context.speech_date_for(sid)
 
     def _drop(reason: str) -> None:
         result.dropped[reason] = result.dropped.get(reason, 0) + 1
@@ -342,8 +389,17 @@ def consolidate(
             result.retrospective += 1
         post = (utterance is not None and d is not None
                 and utterance < d <= era_lint.fair_game_end(utterance))
+        # D15: decided HERE, from the URL + snippet + registered speech date,
+        # so the role is fixed before any ordering or capping and cannot
+        # depend on where the item happened to land in the pack.
+        u_rule = ""
+        if d15_on:
+            u_rule = _ur.utterance_record_rule(
+                url, ev.snippet or "", speech_date=d15_speech_date, item_date=d)
         item = ConsolidatedItem(evidence=ev, draw_round=draw_round,
-                                retriever=label, post_speech=post)
+                                retriever=label, post_speech=post,
+                                utterance_rule=u_rule,
+                                role=_ur.ROLE if u_rule else "")
         era_class[id(item)] = 0 if contemp else (1 if contemp is None else 2)
         # Quarantine telemetry (1.2): computed once per kept item; cheap and
         # additive — the classification itself is unchanged.
@@ -389,8 +445,13 @@ def consolidate(
         from dataclasses import replace
 
         from truthbot.verdict.evidential_role import evidential_role
-        roles = {id(it): evidential_role(claim_shape,
-                                         relation_of(it.evidence)).value
+        # A D15 utterance record keeps the role it was constructed with: it is
+        # the stronger statement (credit 0 on every branch), and it is decided
+        # by the document's identity rather than by the claim's shape, so the
+        # D11.2 table must not overwrite it.
+        roles = {id(it): (it.role if it.utterance_rule
+                          else evidential_role(claim_shape,
+                                               relation_of(it.evidence)).value)
                  for it in kept}
         kept = [replace(it, role=roles[id(it)]) for it in kept]
         # id()s changed with replace(); carry era classes across.
@@ -399,12 +460,22 @@ def consolidate(
         for it in kept:
             result.role_tally[it.role] = result.role_tally.get(it.role, 0) + 1
 
+    result.utterance_records = [{"url": it.evidence.source_url,
+                                 "rule": it.utterance_rule}
+                                for it in kept if it.utterance_rule]
+
     result.pre_cap_items = list(kept)
     result.items = kept[:max_items]
     if len(kept) > max_items:
         result.dropped["pack-cap"] = len(kept) - max_items
 
     def _quota_credit(it: ConsolidatedItem) -> bool:
+        if it.utterance_rule:
+            # D15: a record of the speech itself is provenance, not proof. It
+            # cannot credit the quota on ANY tier, in EITHER era mode — a
+            # transcript is a GOVERNMENT document and would otherwise sail
+            # through both the T1-3 branch and the lenient-GOVERNMENT branch.
+            return False
         if it.post_speech:
             # Post-speech band is context-only — it can inform, never decide
             # (remediation v2, 1.3).

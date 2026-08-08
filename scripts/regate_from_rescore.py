@@ -254,8 +254,16 @@ def breakdown_for(result, *, role_aware: bool, era_mode: str,
 
 
 def gate_once(sid: str, evidence: list, *, utterance: Optional[date],
-              claim_shape: str, relation_of, claim_text: str) -> tuple:
-    """Run the real gate over one stored pack. Returns (result, breakdown)."""
+              claim_shape: str, relation_of, claim_text: str,
+              utterance_record: Optional[bool] = None) -> tuple:
+    """Run the real gate over one stored pack. Returns (result, breakdown).
+
+    ``utterance_record`` is the D15 switch, handed straight to ``consolidate``.
+    ``None`` — the default, and what THIS script always passes — means "obey the
+    environment flag", which in production is OFF. The $0 D15 blast-radius
+    measurement (``scripts/measure_d15.py``) drives this same entry point with
+    an explicit True/False, so it can price the proposal without anything
+    depending on ambient environment."""
     from truthbot.verdict import consolidator, era_lint
     from truthbot.verdict.consolidator import consolidate
     from truthbot.verdict.evidence_pack import window_for
@@ -266,7 +274,8 @@ def gate_once(sid: str, evidence: list, *, utterance: Optional[date],
     result = consolidate(sid, [("stored", evidence)], utterance=utterance,
                          window=window, max_items=consolidator.PACK_CAP_V2,
                          era_mode=era_mode, claim_shape=claim_shape,
-                         relation_of=relation_of)
+                         relation_of=relation_of,
+                         utterance_record=utterance_record)
     return result, breakdown_for(result, role_aware=role_aware,
                                  era_mode=era_mode, utterance=utterance,
                                  window=window)

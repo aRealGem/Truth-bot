@@ -530,7 +530,12 @@ def lint_invented_referent(claim_text: str, reasoning: str,
 #: Evidential roles from the D11.2 SELF column (``verdict.evidential_role``).
 #: CORROBORANT (PARTICIPANT) and NORMAL are deliberately absent — a
 #: participant's record is independent enough to bear on a superlative.
-SELF_ROLES = {"primary-record", "plain-s5", "attribution-only"}
+#: ``utterance-record`` (D15) joins them: a transcript of the speaker SAYING
+#: the superlative is the purest case of a verdict resting on the assertion it
+#: was supposed to test. It can only appear when the D15 flag is on, so with
+#: the flag at its default this set matches nothing new.
+SELF_ROLES = {"primary-record", "plain-s5", "attribution-only",
+              "utterance-record"}
 
 #: The S5 tier value (``SourceTier.POLITICAL``), lowercased for comparison.
 SELF_TIER = "political"
