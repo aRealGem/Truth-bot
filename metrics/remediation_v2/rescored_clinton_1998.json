@@ -1,0 +1,4155 @@
+{
+  "schema": "truthbot-rescore-sidecar v1",
+  "speech_id": "clinton_1998",
+  "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+  "model": "claude-haiku",
+  "generated": "2026-08-08T15:26:37.422899+00:00",
+  "spend_usd": 0.194938,
+  "sids": {
+    "clinton_1998:0000": [
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/07/sonny-bono-is-killed-in-ski-crash/c698db9b-cedb-4ecd-9976-e8161df2a7bd/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-pt1-1-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/US/9801/06/bono.accident.pm/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.spokesman.com/stories/1997/oct/29/california-democrat-walter-capps-dies/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-28-president-on-death-of-rep-walter-capps.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://history.house.gov/People/Detail/10617",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0004": [
+      {
+        "source_url": "https://constitution.congress.gov/browse/article-2/section-3/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://constitution.congress.gov/browse/essay/artII-1/ALDE_00000243/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/CDOC-105hdoc178",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/presidential-documents-archive-guidebook/annual-messages-congress-the-state-the-union",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/library/politics/012898union-text-1.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/history.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/CDOC-105hdoc1/context",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0006": [
+      {
+        "source_url": "https://www.bls.gov/news.release/history/empsit_010998.txt",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/docs/releases/bls/bls_employnews_199712.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/housing/hvs/files/qtr497/q497tab7.txt",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bea.gov/news/1998/personal-income-and-outlays-december-1997",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-23-vp-announces-record-homeownership-level.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archives.hud.gov/news/1998/pr98-15.cfm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/history/cpi_121697.txt",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/real-earnings-9625/december-1997-705122/content/txt/realer_19980113",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.census.gov/housing/hvs/files/qtr497/q497tab5.txt",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0007": [
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1996/96sec1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1997/97sec2.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1997/97sec1.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-srv/politics/special/welfare/stories/wf081397a.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://acf.gov/css/report/fy1998-annual-report-congress",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-04-president-statement-on-fbi-crime-statistics.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997-0",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.tampabay.com/archive/1997/10/05/fbi-report-crime-rate-down-in-1996-for-5th-straight-year/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1996",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0021": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-19-1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/11/1997-11-05-vp-releases-4th-annual-national-performance-report.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-19-5.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.opm.gov/policy-data-oversight/data-analysis-documentation/federal-employment-reports/historical-tables/executive-branch-civilian-employment-since-1940/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://govinfo.library.unt.edu/npr/library/express/1997/110597.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://govinfo.library.unt.edu/npr/library/news/092096.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/opinions/1998/02/03/budget-whoppers/9cc488b3-cd89-4146-ab51-9cf1f46c4a7e/",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0025": [
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-28/pdf/CREC-1998-01-28.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.taxnotes.com/research/federal/other-documents/white-house-news/full-text-clintons-economic-plan-report-vision-change-america/14nk3",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-15-wall-street-conference-remarks.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GAOREPORTS-T-AIMD-OCE-98-83/pdf/GAOREPORTS-T-AIMD-OCE-98-83.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0026": [
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-3-1.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/showdoc.cfm?index=316&sequence=0&from=7",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.taxnotes.com/research/federal/legislative-documents/congressional-budget-office-reports/full-text-cbo-report-on-bright-economic-future/11hk8",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19980202-14467.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/02/03/first-balanced-federal-budget-in-30-years-offered-by-clinton/a1fa119b-9ff7-4f2d-85ee-6093196ca820/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.taxnotes.com/research/federal/legislative-documents/congressional-budget-office-reports/cbo-examines-budget-economic-outlook/w8yj",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0027": [
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19980202-14467.html",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/1998/01/05/1036769/clinton-proposals",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1998-jan-28-mn-13027-story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/10607",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-srv/politics/special/states/docs/sou98.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1998-TAB/pdf/BUDGET-1998-TAB.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0028": [
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19980202-14467.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-1999-TAB",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.c-span.org/program/white-house-event/1999-budget-release/74536",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0029": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19980202-14467.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1-doc-pg152.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/02/03/first-balanced-federal-budget-in-30-years-offered-by-clinton/a1fa119b-9ff7-4f2d-85ee-6093196ca820/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/rr2187",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD-4.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-1999-DB",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1998-jan-06-mn-5382-story.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0032": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-3-1.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.frbsf.org/research-and-insights/publications/economic-letter/1998/01/the-budget-deficit/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/bba-97.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://en.wikipedia.org/wiki/1997_United_States_federal_budget",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PLAW-105publ33/pdf/PLAW-105publ33.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-1999-TAB",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1997-CITIZENSGUIDE/html/BUDGET-1997-CITIZENSGUIDE-5.htm",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0035": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-taxpayer-relief-act-1997",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/07/1997-07-31-congress-passes-the-tax-cut-portion-of-the-budget.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.jct.gov/getattachment/def435ec-2c9e-46c6-9ca8-36945f02ca06/s-23-97.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/revenue0.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ34/PLAW-105publ34.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1997-08-11/pdf/WCPD-1997-08-11-Pg1192.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/012898.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.jct.gov/getattachment/8e76364f-e214-48c2-a8ee-67be06fd636a/x-39-97-2150.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0038": [
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gpo.gov/fdsys/pkg/BUDGET-1999-PER/pdf/BUDGET-1999-PER.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/1998/01/05/1036769/clinton-proposals",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.taxnotes.com/research/federal/legislative-documents/congressional-budget-office-reports/full-text-cbo-report-on-bright-economic-future/11hk8",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GAOREPORTS-T-AIMD-OCE-98-83/pdf/GAOREPORTS-T-AIMD-OCE-98-83.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/02/03/first-balanced-federal-budget-in-30-years-offered-by-clinton/a1fa119b-9ff7-4f2d-85ee-6093196ca820/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/senate-report/170/1",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0054": [
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-1997-book1/PPP-1997-book1-doc-pg109",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-9",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/SOU97/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOU97/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-1998-book1/PPP-1998-book1-doc-pg112-2",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/1997/02/18/1011271/clintons-education-proposals",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0055": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-9",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/SOU97/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOU97/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1997-book1/pdf/PPP-1997-book1.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/february-4-1997-state-union-address",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-pt1-1-2.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0056": [
+      {
+        "source_url": "https://www.gutenberg.org/cache/epub/5048/pg5048-images.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/New/html/19970908-7174.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/teaching-learning/clinton-school-plans-advance-on-some-fronts/1997/12",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19970908-7174.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-21-america-reads-challenge.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/bba-97.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fsapartners.ed.gov/fsa-print/publication/1985",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1997-book1/pdf/PPP-1997-book1-doc-pg77.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://listserv.ed.gov/archives/edinfo/archived/msg00179.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0057": [
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ78/PLAW-105publ78.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-09-fact-sheet-on-college-opportunity.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/010998.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/111397.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-signing-the-departments-labor-health-and-human-services-and-education-and-related-agencies-0",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/205/1",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.chronicle.com/article/clinton-signs-spending-bill-with-increases-for-pell-grants-and-the-nih",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1997-book1/pdf/PPP-1997-book1-doc-pg194.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-54/fiscal-year-1998-19048/fulltext",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/senate-report/58",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0058": [
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ34/PLAW-105publ34.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2014/text/pl",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2014",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-prior/p553--1997.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://efpls.ed.gov/bwr/tra97.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-irbs/irb98-03.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-tege/notice97-60.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.osfa.la.gov/newsline10.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-tege/notice97_53.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0059": [
+      {
+        "source_url": "https://www.irs.gov/pub/irs-tege/notice97-60.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-09-fact-sheet-on-college-opportunity.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ34/PLAW-105publ34.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-print/105th-congress/joint-committee-print/52240",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-taxpayer-relief-act-1997",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://lao.ca.gov/1998/0298_highered_tax_credits/0298_highered_tax_credits.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/97-915EPW.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.mass.gov/technical-information-release/tir-98-2-massachusetts-personal-income-tax-treatment-of-roth-and-education-iras",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0060": [
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ34/PLAW-105publ34.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-09-fact-sheet-on-college-opportunity.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2014",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-prior/p508--1998.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/Work/010998.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/rr1806",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs97/98015.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-taxpayer-relief-act-1997",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2014/text/enr",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.taxnotes.com/research/federal/cfr26/1.25A-3",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0061": [
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2014",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ34/PLAW-105publ34.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/bills/hr2014/BILLS-105hr2014enr.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://lao.ca.gov/1998/0298_highered_tax_credits/0298_highered_tax_credits.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://uscode.house.gov/view.xhtml?req=%28title%3A26+section%3A25A+edition%3Aprelim%29",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-irbs/irb97-46.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse2.archives.gov/WH/New/html/19970630-16084.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-irbs/irb97-51.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-prior/f8863--1998.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://lao.ca.gov/analysis_1998/p_and_i_1998/part_5a_highered_taxcredits_pandi98.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0071": [
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ78/PLAW-105publ78.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/11/1997-11-13-fact-sheets-on-labor-hhs-and-education-appropriations.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/111397.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/409",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2264",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/409/1",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-signing-the-departments-labor-health-and-human-services-and-education-and-0",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/11/1997-11-13-president-on-labor-hhs-and-education-appropriations.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/390/1",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED423293.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0077": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-26-fact-sheet-on-reducing-class-size.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-26-press-briefing-by-mike-mccurry.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs97/98015.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-7",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs97/97983.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.ed.gov/sites/ed/files/offices/OUS/Budget99/BudgetSum/pages/budget01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0083": [
+      {
+        "source_url": "https://www.npr.org/1997/08/19/1038260/promoting-students",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/06/27/jobs-at-stake-as-staff-members-at-7-chicago-schools-are-put-to-the-test/f284d18b-a295-4c5e-9000-4bbde3f6beae/",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.csmonitor.com/1997/0620/062097.edit.edit.3.html",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/Work/102897.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1996/10/02/chicago-puts-109-schools-on-probation/06db3095-31aa-4a34-b235-1d4f625c33ff/",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.edweek.org/leadership/opinion-grade-retention-doesnt-work/1997/09",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/10/29/clinton-praises-revived-chicago-schools-as-examples-for-nation/c5cc0546-0c1e-4892-bfca-387930c32d13/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0084": [
+      {
+        "source_url": "https://www.npr.org/1997/08/19/1038260/promoting-students",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/teaching-learning/increase-in-test-scores-leaves-chicago-officials-jubilant/1997/06",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.chicagotribune.com/1997/09/02/summer-lessons-3/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-30-remarks-by-president-to-conference-of-mayors.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/102897.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED419301.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0090": [
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-1998-book1/PPP-1998-book1-doc-pg112-2",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/WH/Work/091697.html",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/05/1997-05-19-proclamation-of-world-trade-week.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0091": [
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2018-03/gdp497a.txt",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.csmonitor.com/1997/1001/100197.us.us.1.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/WH/Work/091697.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/system/files/newsreleases/national/gdp/1997/gdp397a.txt",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2018-03/11-1997-67-1200_00001.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bea.gov/sites/default/files/2019-04/gdp397p.txt",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/survey-current-business-46/february-1998-9935/fulltext",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/ERP-1998/pdf/ERP-1998-frontmatter.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0101": [
+      {
+        "source_url": "https://www.gpo.gov/fdsys/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/New/99Budget/education.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PLAW-105publ78/pdf/PLAW-105publ78.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/congressional-report/105th-congress/senate-report/58",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cnn.com/ALLPOLITICS/1998/02/03/voters.voice/",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/1997/01/22/97-1528/job-training-partnership-act-employment-and-training-assistance-for-dislocated-workers-reallotment",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/104th-congress/house-report/659",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.gao.gov/products/128415",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/98-203.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0107": [
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://pegasus.law.columbia.edu/record/121113",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.95,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 0.95,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-print/105th-congress/ways-and-means-print/35610",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0113": [
+      {
+        "source_url": "https://www.imf.org/external/np/sec/pr/1997/PR9755.HTM",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.imf.org/external/np/sec/pr/1997/PR9750.HTM",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/business/1998/01/06/asian-currencies-again-fall/090720f4-781d-4665-9c1c-888bd5e562fd/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/1997/12/03/1037140/s-korean-economy",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0130": [
+      {
+        "source_url": "https://www.washingtonpost.com/wp-srv/politics/special/welfare/stories/wf081397a.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/EOP/CEA/Welfare/Technical_Report.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/EOP/CEA/Welfare/Report.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/GAOREPORTS-HEHS-97-74",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/111797.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997-0",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://paperzz.com/doc/7704972/pdf---urban-institute",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0131": [
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/SOU97/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/EOP/CEA/Welfare/Technical_Report.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/05/10/welfare-drop-attributed-to-economic-rise/1ed495ed-c1b2-4d69-a91b-6e076737caab/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-welfare-reform",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-pt1-1-1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997-0",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0132": [
+      {
+        "source_url": "https://www.acf.hhs.gov/ofa/resource/character/fy97/revsum",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/Work/100897.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/111797.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1998-1",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1997-07-14/pdf/WCPD-1997-07-14-Pg1028.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0134": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-state-of-the-union-gallery-with-the-first-lady.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/CREC-1998-01-27-pt1-PgH30-4.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/ALLPOLITICS/1998/01/27/sotu/transcripts/clinton/index2.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-pt1-PgH30-4.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-srv/politics/special/states/docs/sou98.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0135": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-state-of-the-union-gallery-with-the-first-lady.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/html/WCPD-1998-02-02-Pg129-2.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27-pt1-PgH30-4.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://edition.cnn.com/ALLPOLITICS/1998/01/27/sotu/transcripts/clinton/index2.html",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0136": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-state-of-the-union-gallery-with-the-first-lady.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://rosap.ntl.bts.gov/view/dot/85761/dot_85761_DS1.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-pt1-1-2.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-pt1-PgH30-4.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/ALLPOLITICS/1998/01/27/sotu/transcripts/clinton/index2.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0145": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PLAW-104publ191/pdf/PLAW-104publ191.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1996/08/1996-08-21-president-on-health-insurance-portability-act.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/104th-congress/house-bill/3103/all-actions",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/files/document/implementationpdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1996/08/22/president-signs-insurance-portability-bill-into-law/46ea70fe-50ee-4c17-8209-3f99045b123e/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1996-08-22-mn-36617-story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://time.com/archive/6929186/clinton-signs-health-care-reform/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0146": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1997-book2/html/PPP-1997-book2-doc-pg1053.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/february-4-1997-state-union-address",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-balanced-budget-act-1997",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/08/04/budget-deal-creates-health-care-quandary/ce867091-0a1d-4c62-ac99-f9cc1d6a2568/",
+        "relevance_score": 0.85,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/08/1997-08-05-president-statement-on-the-balanced-budget-act-of.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.medicaid.gov/federal-policy-guidance/downloads/SMD082797.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/05/22/child-health-plan-defeated-in-senate/c35bfa5e-b8be-4c02-a8d3-fe03dcf72445/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.finance.senate.gov/chairmans-news/roth-statement-on-state-childrens-health-insurance",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0148": [
+      {
+        "source_url": "https://www.everycrsreport.com/reports/97-913.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK233215/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-background-briefing-on-state-of-union-address.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9553445/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/10169548/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/hehs-97-160",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0156": [
+      {
+        "source_url": "https://www.census.gov/library/publications/1997/demo/p60-199.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-06-medicare-fact-sheet.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ebri.org/publications/research-publications/issue-briefs/content/sources-of-health-insurance-and-characteristics-of-the-uninsured-analysis-of-the-march-1997-current-population-survey-103",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ebri.org/retirement/retirement-security-projection-model/content/sources-of-health-insurance-and-characteristics-of-the-uninsured-analysis-of-the-march-1997-current-population-survey-103",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/GAOREPORTS-HEHS-97-150",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www2.census.gov/library/publications/1997/demo/p60-199.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0165": [
+      {
+        "source_url": "https://www.cdc.gov/mmwr/preview/mmwrhtml/00044348.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1996-08-28/pdf/X96-10828.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/FR-1996-08-28/X96-10828",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1997-pt14/pdf/GPO-CRECB-1997-pt14-7.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1997-pt4/pdf/GPO-CRECB-1997-pt4-4.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1996/11/1996-11-21-proclamation-of-great-american-smokeout-day.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nejm.org/doi/full/10.1056/NEJM199609263351321",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-pt1-PgH30-4.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://corporate.findlaw.com/litigation-disputes/executive-summary-of-the-regulations-restricting-the-sale-and.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0167": [
+      {
+        "source_url": "https://www.bls.gov/news.release/history/famee_061697.txt",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/1997/04/art3full.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/1997/04/art1full.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/1997/09/art1full.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://sociology.sas.upenn.edu/sites/default/files/jacobs%20overworked%20individuals%20or%20overworked%20families.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/economic-report-president-45/1998-8097/fulltext",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/1997/demo/p70-59.html",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/1997/demo/p70-57.html",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0169": [
+      {
+        "source_url": "https://www.congress.gov/105/crecb/1998/01/27/144/1/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/ALLPOLITICS/1996/debates/transcripts/1016/index16.shtml",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/the-presidents-radio-address-196",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/02/01-weekly-radio-address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/library/hot_releases/August_23_1996.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/02/02/president-to-take-up-unfinished-business-in-state-of-the-union/c52c04e9-5ebd-4ff0-8535-8c8609bdc0cd/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crec/1997/02/05/143/13/CREC-1997-02-05-pt1-PgS1038.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/oalj/PUBLIC/RULES_OF_PRACTICE/REFERENCES/FEDERAL_REGISTER/62_6690",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0170": [
+      {
+        "source_url": "https://www.dol.gov/sites/dolgov/files/OASP/evaluation/data/FMLA/FMLAReport1995.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GOVPUB-Y3-PURL-LPS6033/pdf/GOVPUB-Y3-PURL-LPS6033.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED407086.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/oasp/evaluation/data-repo/1995-fmla-surveys-data",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-12",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/html/PPP-1998-book1-doc-pg180-2.htm",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-pt1-PgH30-4.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1996/05/1996-05-01-presidents-statement-on-family-and-medical-leave-act.html",
+        "relevance_score": 0.75,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/national/1996/10/27/clinton-signs-family-leave-act-into-law-for-white-house-staff/c8abac63-1228-4660-970e-948144454357/",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      }
+    ],
+    "clinton_1998:0173": [
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/New/Childcare/about.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/New/Childcare/19971023-16352.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/WH/EOP/First_Lady/html/generalspeeches/1997/19971023-16352.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.cnn.com/ALLPOLITICS/1997/10/23/child.care/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/10/24/president-announces-child-care-initiatives/b0110b8d-f275-49f8-907b-f6fa8c0a73df/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/teaching-learning/president-clinton-unveils-proposals-to-upgrade-child-care/1997/10",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/136/archive-documents/chdcare.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0188": [
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1996/96sec2.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1996/96sec1.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1996",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ucr.fbi.gov/crime-in-the-u.s/1996/96sec3.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ojp.gov/ncjrs/virtual-library/abstracts/crime-united-states-1996-uniform-crime-reports-0",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bjs.ojp.gov/content/pub/pdf/cv96.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bjs.ojp.gov/press-release/criminal-victimization-1996-changes-1995-96-trends-1993-96",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-04-president-statement-on-fbi-crime-statistics.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ojp.gov/ncjrs/virtual-library/abstracts/crime-united-states-1996-uniform-crime-reports",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.tampabay.com/archive/1997/10/05/fbi-report-crime-rate-down-in-1996-for-5th-straight-year/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0192": [
+      {
+        "source_url": "https://ojp.gov/pdffiles/juvoff.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/pr/1997/September97/378ag.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ojjdp.ojp.gov/library/publications/juvenile-offenders-and-victims-1997-update-violence",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ojjdp.ojp.gov/sites/g/files/xyckuh176/files/pubs/juvoff/time.html",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED412319.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.csmonitor.com/1997/0408/040897.us.us.3.html",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1996-06-01-mn-10804-story.html",
+        "relevance_score": 0.75,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://ojjdp.ojp.gov/sites/g/files/xyckuh176/files/pubs/juvoff/sources.html",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0194": [
+      {
+        "source_url": "https://monitoringthefuture.org/wp-content/uploads/2021/02/pr97dec20drug.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-20-fact-sheet-to-accompany-radio-address-on-drug-use.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED473427.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://news.umich.edu/american-teens-drug-use-shows-signs-of-leveling-after-long-rise/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-20-press-briefing-by-donna-shalala-and-barry-mccaffrey.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ojp.gov/ncjrs/virtual-library/abstracts/national-survey-results-drug-use-monitoring-future-study-1975-6",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://nida.nih.gov/research-topics/trends-statistics/monitoring-future",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://catalog.data.gov/dataset/national-household-survey-on-drug-abuse-nhsda-1996",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archives.drugabuse.gov/DirReports/DirRep298/DirectorReport11.html",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.ojp.gov/ondcppubs/publications/pdf/budget98.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      }
+    ],
+    "clinton_1998:0195": [
+      {
+        "source_url": "https://www.ojp.gov/ondcppubs/publications/pdf/budget98.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/intell/library/news/1997/7454333-7459506.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ndsn.org/feb98/control.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ojp.gov/ondcppubs/pdf/strat_pt1.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1997-book1/html/PPP-1997-book1-doc-pg225-2.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0198": [
+      {
+        "source_url": "https://www.uscourts.gov/judges-judgeships/judicial-vacancies/archive-judicial-vacancies/1998/01/vacancies",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.uscourts.gov/judges-judgeships/judicial-vacancies/archive-judicial-vacancies/1998/01/summary",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.uscourts.gov/judges-judgeships/judicial-vacancies/archive-judicial-vacancies/1997/12/vacancies",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.uscourts.gov/judges-judgeships/judicial-vacancies/archive-judicial-vacancies/1998/01/emergencies",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/publicinfo/year-end/year-endreports.aspx",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/28/144/2/CREC-1998-01-28.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/02/rehnquist-sees-threat-to-judicial-system/e9c56243-dcaa-4ca6-b307-bc380fe6b9cf/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/19970124_96-567_43ce401464e4c1a1f84b58e36310559323bfaa36.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/link/crec/143/S/12570",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1998-jan-01-mn-4029-story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0199": [
+      {
+        "source_url": "https://slate.com/news-and-politics/1998/01/chief-justice-william-rehnquist.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://judicial-discipline-reform.org/statistics%26tables/SCt/SCt_yearend_reports.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/rehnquists-request",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/02/rehnquist-sees-threat-to-judicial-system/e9c56243-dcaa-4ca6-b307-bc380fe6b9cf/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/publicinfo/year-end/year-endreports.aspx",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/28/144/2/CREC-1998-01-28.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0210": [
+      {
+        "source_url": "http://congressionalresearch.com/98-51/document.php?study=NATO+A+BRIEF+HISTORY+OF+EXPANSION",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/en/about-us/official-texts-and-resources/official-texts/1997/07/08/madrid-declaration",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/en/about-us/official-texts-and-resources/official-texts/1997/05/27/founding-act",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.gao.gov/products/nsiad-97-209",
+        "relevance_score": 0.55,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/97-443F.html",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/en/news-and-events/articles/news/1997/05/27/nato-russia-summit-meeting-in-paris",
+        "relevance_score": 0.45,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/03/1997-03-21-press-conference-of-presidents-clinton-and-yeltsin.html",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://archives.nato.int/uploads/r/null/1/3/137930/0331_Summit_Madrid_Press_Info_1997_ENG.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0211": [
+      {
+        "source_url": "https://archives.nato.int/informationobject/502877",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://archives.nato.int/uploads/r/null/1/3/137930/0331_Summit_Madrid_Press_Info_1997_ENG.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.rferl.org/a/1087612.html",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://freedomhouse.org/sites/default/files/2020-02/Freedom_in_the_World_1997-1998_complete_book.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-pt1-1-2.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0215": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-22-remarks-by-president-and-first-lady-to-troops-in-bosnia.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/12/22/clinton-travels-to-bosnia-after-extending-us-military-mission-there/9b1e3779-771e-47c9-a643-34e2a2feb4a9/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.spokesman.com/stories/1997/dec/22/clinton-bears-christmas-tidings-to-troops-but/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/12/23/crowds-welcome-clinton-in-sarajevo/f0d430aa-8f36-4dba-9c16-7c57f0e5860e/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://commons.wikimedia.org/wiki/File:U.S._delegation_pose_for_a_group_photo_with_Air_Force_personnel_during_the_flight_to_Tuzla%2C_Bosnia_-_Flickr_-_The_Central_Intelligence_Agency.jpg",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0216": [
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/12/23/crowds-welcome-clinton-in-sarajevo/f0d430aa-8f36-4dba-9c16-7c57f0e5860e/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.refworld.org/reference/annualreport/usdos/1996/33132",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.icty.org/x/cases/mladic/trans/en/960701IT.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-22-remarks-by-the-president-to-people-of-sarajevo.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-22-remarks-by-president-and-first-lady-to-troops-in-bosnia.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/regions/eur/bosnia/bosnia_economic_recovery.html",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GAOREPORTS-NSIAD-98-138/pdf/GAOREPORTS-NSIAD-98-138.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.npr.org/programs/all-things-considered/1997/12/22/12986910",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0225": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-state-of-the-union-gallery-with-the-first-lady.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://edition.cnn.com/ALLPOLITICS/1998/01/27/sotu/guests/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-pt1-1-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-pt1-PgH30-4.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/1997/08/28/1038370/brcko-fighting",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0226": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-state-of-the-union-gallery-with-the-first-lady.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-01-27-pt1-1-2.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/special-guests-reflect-themes-of-1998-agenda/43c28b2f-cbe8-4819-a4c5-8ae3e3d9cb53/",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0227": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-state-of-the-union-gallery-with-the-first-lady.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/CREC-1998-01-27.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://teachingamericanhistory.org/document/state-of-the-union-address-1998/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1-doc-pg112-2.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/1997/08/28/1038370/brcko-fighting",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/WH/SOTU00/guest-gallery.html",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/special-guests-reflect-themes-of-1998-agenda/43c28b2f-cbe8-4819-a4c5-8ae3e3d9cb53/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0228": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-state-of-the-union-gallery-with-the-first-lady.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/09/02/bosnian-serbs-again-attack-us-troops/649b6dd6-6a08-4af4-b3ef-5b52a2f7faed/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/08/29/bosnian-serbs-backers-stone-american-troops/b6404d5f-e634-4c89-b2ec-52338771fa1e/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/special-guests-reflect-themes-of-1998-agenda/43c28b2f-cbe8-4819-a4c5-8ae3e3d9cb53/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rferl.org/a/1086304.html",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ohr.int/ohr_archive/ohr-bulletin-59-5-september-1997-4/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.csmonitor.com/1997/0911/091197.intl.intl.4.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/1997/08/28/1038370/brcko-fighting",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0234": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CDOC-105tdoc28/pdf/CDOC-105tdoc28.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-28-statement-on-the-comprehensive-test-ban-treaty.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/message-the-senate-transmitting-the-comprehensive-nuclear-test-ban-treaty-with",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://treaties.un.org/Pages/ShowMTDSGDetails.aspx?chapter=26&lang=en&mtdsg_no=XXVI-4&src=UNTSONLINE&tabid=3",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/treaty-document/105th-congress/28/document-text",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/1996/09/25/world/clinton-at-un-signs-treaty-banning-all-nuclear-testing.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foreign.senate.gov/publications/download/treaty-doc-105-28-comprehensive-nuclear-test-ban-treaty",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/global/arms/ctbtpage/test_ban_news/tbn17.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0236": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/global/arms/ctbtpage/president/excerpt.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.armscontrol.org/act/1998-01/arms-control-today/clinton-urges-senate-act-ctb-helms-calls-treaty-low-priority",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-28-statement-on-the-comprehensive-test-ban-treaty.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://usinfo.org/usia/usinfo.state.gov/topical/pol/arms/ctbt/factsupo.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/EOP/NSC/html/nsc-15.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/?isMobile=1",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0240": [
+      {
+        "source_url": "https://www.globalsecurity.org/wmd/library/news/iraq/un/s1997-774.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://digitallibrary.un.org/record/249321/files/S_1998_58-EN.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.intelligence.senate.gov/1998/01/28/hearings-current-and-projected-national-security-threats-united-states-january-28-1998/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/infocus/iraq/decade/sect2.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.0,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0241": [
+      {
+        "source_url": "https://digitallibrary.un.org/record/244637/files/S_1997_774-EN.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.armscontrol.org/act/1997_06-07/ekeus",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/1998/01/28/world/iraqis-must-end-defiance-on-arms-clinton-warns.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/statements/1998/980131.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0242": [
+      {
+        "source_url": "https://www.nytimes.com/1998/01/18/world/hussein-delivers-a-new-ultimatum-on-un-inspectors.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://press.un.org/en/1998/19980114.sc6468.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.un.org/Depts/unscom/s98-58.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/22/iraq-asks-un-for-freeze-in-access-requests/97de29e0-268d-48b3-9534-6cac65535395/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/13/iraq-threatens-to-stop-un-inspectors/1b341420-824e-4191-a058-593e7f344f65/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0243": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1-doc-pg112-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/wmd/library/news/iraq/1998/98012914_tpo.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02-Pg129-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/statements/1998/980128.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/documents/organization/185651.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/clinton-pledges-activist-agenda/78f61709-aad9-4a1e-96e2-8dfa9c15dc8a/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/WH/EOP/NSC/html/nsc-11.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/09/1997-09-23-president-letter-on-military-force-against-iraq.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0245": [
+      {
+        "source_url": "https://1997-2001.state.gov/global/arms/cwc_ratified.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1051/vote_105_1_00051.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/senate-resolution/75/all-info",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/treaty-document/103rd-congress/21",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://treaties.un.org/Pages/showActionDetails.aspx?clang=_en&objid=0800000280027a32",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/Work/042597.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.armscontrol.org/act/1997-04/press-releases/senate-gives-advice-and-consent-us-becomes-original-cwc-party",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1997-04-24/pdf/CREC-1997-04-24-pt1-PgS3570-2.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19970806-5591.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0247": [
+      {
+        "source_url": "https://www.armscontrol.org/act/1998-01/arms-control-today/strengthening-bwc-moving-toward-compliance-protocol",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://documents.un.org/doc/undoc/gen/g96/647/11/pdf/g9664711.pdf?OpenElement",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-28-fact-sheet-on-biological-weapons-convention.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CRECB-1998-pt1/pdf/GPO-CRECB-1998-pt1-1-1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://tile.loc.gov/storage-services/service/ll/llmlp/65002328_RC_May-Jun-1997/65002328_RC_May-Jun-1997.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CDOC-105hdoc178/pdf/CDOC-105hdoc178.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/clinton-proposes-inspections-for-germ-war-ban/375c46e6-daf4-4af5-90d5-50737c03e467/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0263": [
+      {
+        "source_url": "https://www.originalsources.com/Document.aspx?DocID=HKBUE697MT9VVB5",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1997-10-31/pdf/CREC-1997-10-31.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crec/1998/01/27/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/congressional-record/volume-143/issue-4/senate-section/article/S379-1",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-30-president-statement-on-campaign-finance-reform.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1997-11-04/pdf/CREC-1997-11-04-pt1-PgE2180-3.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/senate-bill/25",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://newspapers.swco.ttu.edu/server/api/core/bitstreams/9ad0bc7f-d01d-4133-ab88-08989ca984be/content",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0270": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/11/1997-11-05-vp-releases-4th-annual-national-performance-report.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-19-5.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://govinfo.library.unt.edu/npr/library/news/vpnprpt.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/ggd-96-94.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govexec.com/magazine/1997/02/report-card-on-downsizing/177/",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/104/crpt/hrpt861/CRPT-104hrpt861.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.congress.gov/crec/1998/01/27/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0274": [
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2676",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2676/all-info",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1997/11/05/CREC-1997-11-05-pt1-PgH10001-2.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.taxnotes.com/research/federal/legislative-documents/congressional-record/house-passes-irs-reform-bill-426-4/12bgb",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/11/06/with-little-opposition-or-debate-house-passes-bill-that-would-overhaul-irs/07572dad-752c-4f45-9ea6-1f8cb3f18162/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/97-984.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/364/1",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.grassley.senate.gov/news/news-releases/grassley-wins-support-pro-taxpayer-groups-irs-restructuring-bill",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/omb/legislative_sap_105-1_hr2676-h",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0279": [
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/WH/Work/121097.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/rr2106",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-15-wall-street-conference-remarks.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1997-03-07/pdf/97-5678.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/pubs/feds/1997/199707/199707pap.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/rced-97-21.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=9101PJOO.TXT",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0282": [
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/1963/text",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-balanced-budget-act-1997",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PLAW-105publ33",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/11/1997-11-19-statement-on-dc-appropriations-act.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/senate-report/75",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-district-columbia-appropriations-legislation",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/1963",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2607/all-info",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/congressional-report/105/senate-report/75",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/298/1",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0288": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/07/1997-07-16-presidential-memo-on-revised-air-quality-standards.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/809fdce1144e4b60852564d70041a8a6.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.epa.gov/ttn/pm/web/pdf/pmnaaqs.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/1a5be643484ac291852566e2006e3e1a.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/ogc-97-56",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.epa.gov/ttn/naaqs/web/pdf/o3naaqs.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.epa.gov/ttn/naaqs/ozone/web/html/o3fact.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-105shrg46427/html/CHRG-105shrg46427.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www3.epa.gov/ttn/naaqs/standards/pm/data/pmfact.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/epa-proposes-new-smog-standards/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0289": [
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1996/08/1996-08-12-president-at-yellowstone-protection-agreement-signing.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/pr/1996/August96/381enr.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-signing-the-new-world-mine-property-agreement-yellowstone-national-park-wyoming",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-department-the-interior-and-related-agencies-appropriations-act-1998",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/New/Tahoe/actions.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PLAW-104publ303",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1997-08-01/pdf/97-20497.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/07/27/clinton-gore-hail-effort-to-save-lake-tahoe/a1a3c6bd-caf2-4cf3-8a66-a605f9f411ee/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0290": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1997-05-01/pdf/97-11154.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/d29920c386cb44318525648100621fe5.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/ogc-97-41",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-earth-day-and-the-community-right-know-law-and-exchange-with-reporters",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/executive-order-13045-protection-children-from-environmental-health-risks-and-safety-risks",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/7d3a876ad4d9def485256481006679b1.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/1997/05/01",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=20012QGX.TXT",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/f28d05d2009f46038525649d005d1be2.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=200010N2.TXT",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0291": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1996-07-25/pdf/96-17837.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.fsis.usda.gov/policy/federal-register-rulemaking/federal-register-rules/pathogen-reduction-hazard-analysis-and",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1998-01-30/pdf/98-2297.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1998-01-30/pdf/98-2298.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK209121/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-1997-11-25/pdf/FR-1997-11-25.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/EOP/OSTP/html/foodsafe.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://corporate.findlaw.com/law-library/food-safety-initiative-fact-sheet.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://wwwnc.cdc.gov/eid/article/3/4/97-0403_article",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0295": [
+      {
+        "source_url": "https://archive.ipcc.ch/pdf/climate-changes-1995/ipcc-2nd-assessment/2nd-assessment-en.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://unfccc.int/cop3/resource/docs/1996/sbsta/07a01.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ucs.org/resources/world-scientists-call-action-kyoto-climate-summit",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/global/oes/fs_kyoto_climate_980115.html",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/11/12/consensus-emerges-earth-is-warming-now-what/b730baea-923c-4bf3-b764-5bfc68ec2cf6/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.giss.nasa.gov/pubs/abs/ha02900h.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epw.senate.gov/105th/lind0710.htm",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://unfccc.int/documents/2070",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.epw.senate.gov/105th/schn0710.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/opinions/1998/01/20/global-warming-the-respectability-of-dissent/d54d3787-5d4c-4fb2-8fbf-3314ee3b3cb3/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0296": [
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/Initiatives/Climate/19971211-1127.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-10-statement-by-the-president-on-climate-change.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/global/oes/fs_kyoto_climate_980115.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-11-remarks-by-the-vice-president-on-kyoto-agreement.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://unfccc.int/resource/docs/convkp/kpeng.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://unfccc.int/documents/2408",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/98-2ENR.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://treaties.un.org/pages/ViewDetails.aspx?chapter=27&clang=_en&mtdsg_no=XXVII-7-a&src=TREATY",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/12/12/long-road-ahead-for-global-warming-pact/f76af27b-fb4b-4233-ae64-47eaf6ea4466/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0300": [
+      {
+        "source_url": "https://www.epa.gov/sites/default/files/2017-11/documents/trends_report_1996.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/history/empsit_010998.txt",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/news/1998/gross-domestic-product-4th-quarter-1997-advance",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/system/files/2018-03/gdp497a.txt",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/eci_01271998.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/1998/02/art4full.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_01131998.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/a546c6bcd149e153852564600015d53b.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nepis.epa.gov/Exe/ZyNET.exe/2000D3SU.txt",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0313": [
+      {
+        "source_url": "https://www.federalregister.gov/documents/1997/06/17/97-16080/presidents-advisory-board-on-race",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/commencement-address-the-university-california-san-diego-la-jolla-california",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/executive-order-13050-presidents-advisory-board-race",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/Initiatives/OneAmerica/move.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/06/1997-06-12-fact-sheet-on-the-president-initiative-on-race.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1997-06-23/pdf/WCPD-1997-06-23-Pg873.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse2.archives.gov/Initiatives/OneAmerica/about.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-1998-book1/PPP-1998-book1-doc-pg112-2",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/06/15/in-building-one-america-all-citizens-must-serve/8f7855b0-414f-4b13-bb31-028db732c6e2/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0332": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-the-national-archives-and-records-administration-announcing-the-white-house",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/Initiatives/Millennium/what.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.archives.gov/federal-register/executive-orders/1998.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/Initiatives/Millennium/announcement.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/1997/08/16/us/the-president-looks-forward-to-millennium-and-vacation.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0337": [
+      {
+        "source_url": "https://www.ukoln.ac.uk/services/papers/bl/blri078/content/repor~13.htm",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nationalacademies.org/read/5128/chapter/3",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9381838/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/8657874/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0338": [
+      {
+        "source_url": "https://www.science.org/doi/10.1126/science.276.5321.2045",
+        "relevance_score": 0.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nejm.org/doi/10.1056/NEJM199702133360707",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/13355",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.genome.gov/10001213",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/sites/books/NBK22202/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9511928/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9511929/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3151108/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0339": [
+      {
+        "source_url": "https://www.genome.gov/10000485/1996-release-parkinsons-disease-gene",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9197268/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.genome.gov/10000900/1997-release-first-parkinsons-gene",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.science.org/doi/10.1126/science.276.5321.2045",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1997-06-27-mn-7305-story.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/8895469/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9221499/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9278044/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0344": [
+      {
+        "source_url": "https://www.nature.com/articles/ng0396-333",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nejm.org/doi/full/10.1056/NEJM199705153362003",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/8945470/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/8945471/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/8640221/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9162575/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9417630/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0350": [
+      {
+        "source_url": "https://www.gpo.gov/fdsys/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27-pt1-PgH1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://timeline.web.cern.ch/timeline-header/90",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.mit.edu/~mkgray/net/web-growth-summary.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1-doc-pg112-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19980127-27753.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ntia.gov/sites/default/files/data/dn/html/Chapter2.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0351": [
+      {
+        "source_url": "https://www.cs.columbia.edu/~hgs/internet/population.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://cps.ipums.org/cps/resources/cpr/p20-522.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/net-population-climbs/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www2.census.gov/programs-surveys/demo/tables/computer-internet/1997/p20-522/tab01a.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0355": [
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1996/10/1996-10-10-background-on-next-generation-internet-initiative.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nitrd.gov/historical/ngi/pubs/concept-Jul97/pdf/ngi-cp.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ipmall.info/sites/default/files/hosted_resources/ippresdocs/ippd_94.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.cnn.com/US/9610/10/clinton.internet/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www2.lbl.gov/Publications/Currents/Archive/Mar-7-1997.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/847/1",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0358": [
+      {
+        "source_url": "https://1997-2001.state.gov/global/oes/space/980129_space_agreement.html",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://2021-2025.state.gov/space-station-agreement-1998",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://aerospace.org/sites/default/files/policy_archives/Space%20Station%20Intergovernmental%20Agreement%20Jan98.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.nasa.gov/centers/johnson/news/releases/1996_1998/97-222.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/briefings/statements/1998/ps980130.html",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.esa.int/Newsroom/Press_Releases/European_ministers_and_officials_to_sign_Space_Station_agreements_in_Washington",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.state.gov/space-station-agreement-1998",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www3.nasa.gov/audience/formedia/archives/MP_Archive_98.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.newscientist.com/article/1844136-space-station-delay-hits-experiments/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GOVPUB-S-PURL-LPS114192/pdf/GOVPUB-S-PURL-LPS114192.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": null
+      }
+    ],
+    "clinton_1998:0360": [
+      {
+        "source_url": "https://www.npr.org/1998/01/16/1036940/return-to-space",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://d.lib.msu.edu/vvl/4000",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nasa.gov/centers/glenn/news/pressrel/1998/index.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nasa.gov/mission/mercury-atlas-6-friendship-7/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.science.gov/topicpages/s/shuttle%2Bcolumbia%2Bsts-87",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nasa.gov/people/biography-of-john-h-glenn/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0364": [
+      {
+        "source_url": "https://amhistory.si.edu/starspangledbanner/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nps.gov/fomc/learn/historyculture/the-star-spangled-banner.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.loc.gov/item/unk84105090/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/lifestyle/1998/01/29/flag-to-regain-its-old-glory/0303c8a8-42fc-4532-945a-aa9297f198e1/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.si.edu/spotlight/flag-day/banner-facts",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://guides.loc.gov/star-spangled-banner",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.va.gov/opa/publications/celebrate/ssbanner.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "clinton_1998:0365": [
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.archives.gov/press/press-releases/1998-8",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.archives.gov/press/press-releases/1997-14",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.archives.gov/founding-docs",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/lifestyle/1998/01/29/flag-to-regain-its-old-glory/0303c8a8-42fc-4532-945a-aa9297f198e1/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://amhistory.si.edu/starspangledbanner/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ]
+  },
+  "soft_failures": []
+}

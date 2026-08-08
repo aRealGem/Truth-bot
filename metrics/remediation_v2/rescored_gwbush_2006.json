@@ -1,0 +1,2087 @@
+{
+  "schema": "truthbot-rescore-sidecar v1",
+  "speech_id": "gwbush_2006",
+  "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+  "model": "claude-haiku",
+  "generated": "2026-08-08T15:23:50.759931+00:00",
+  "spend_usd": 0.084045,
+  "sids": {
+    "gwbush_2006:0019": [
+      {
+        "source_url": "https://9-11commission.gov/report/911Report.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://govinfo.library.unt.edu/911/report/911Report_Exec.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/a242727.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://govinfo.library.unt.edu/911/report/911Report_Ch2.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/s/ct/rls/crt/45392.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/s/ct/rls/crt/45394.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0024": [
+      {
+        "source_url": "https://freedomhouse.org/sites/default/files/2020-02/Freedom_in_the_World_2006_complete_book.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-13",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31-pt1-PgH15.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/text/index.html",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-2006-02-06/pdf/WCPD-2006-02-06.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/109/crec/2006/01/31/152/9/modified/CREC-2006-01-31-pt1-PgS366-3.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0025": [
+      {
+        "source_url": "https://freedomhouse.org/sites/default/files/2020-02/Freedom_in_the_World_2006_complete_book.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://freedomhouse.org/sites/default/files/Electoral%20Democracy%20Numbers%2C%20FIW%201989-2016.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31-pt1-PgH15.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0026": [
+      {
+        "source_url": "https://www.cnn.com/2005/WORLD/meast/12/15/iraq.elections/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.securitycouncilreport.org/atf/cf/%7B65BFCF9B-6D27-4E9C-8CD3-CF6E4FF96FF9%7D/Afgh%20SPRST2004%2035.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/pictures/afghan-elections/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.war.gov/Multimedia/Photos/igphoto/2002021831/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0027": [
+      {
+        "source_url": "https://freedomhouse.org/sites/default/files/2020-02/Freedom_in_the_World_2006_complete_book.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.christianpost.com/news/freedom-house-notes-progress-in-global-freedom-in-new-report.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/02/20050202-1.html",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/StateOfTheUnion/story?id=1563195",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0033": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/html/CREC-2006-01-31-pt1-PgH15-2.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://irp.fas.org/news/2005/10/dni101105.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31-pt1-PgH15.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/r/pa/ei/wh/rem/60153.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/security/library/report/2005/zawahiri-zarqawi-letter_9jul2005.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/recent-actions/20041201",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/11/text/20051130-2.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/infocus/iraq/iraq_strategy_nov2005.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/recent-actions/20041015",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0044": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-the-60th-anniversary-d-day-colleville-sur-mer-france",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sfgate.com/politics/article/Text-of-President-Bush-s-State-of-the-Union-2523564.php",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/05/20050507-8.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/05/20050503-5.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/r/pa/prs/ps/2005/56689.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://history.state.gov/milestones/1989-1992/fall-of-communism",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://history.army.mil/Portals/143/Images/Birthday/CMH_Pub_30-22.pdf?ver=KLVVn-bVbLpKNj_hIE2LLQ%3D%3D",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0047": [
+      {
+        "source_url": "https://9-11commission.gov/report/911Report.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/security/library/news/2005/05/sec-050504afps01.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/org/news/2004/040831-bush-qaeda.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/11/20051111-1.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0052": [
+      {
+        "source_url": "https://www.gao.gov/assets/a114763.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060110.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://apps.dtic.mil/sti/pdfs/ADA448111.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/wmd/library/news/iraq/2005/12/iraq-051223-usia02.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/wmd/library/news/iraq/2006/01/iraq-weeklyupdate-20060111.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/p/nea/rls/57465.htm",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/p/nea/rls/63423.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/p/io/rls/rm/77626.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2006/01/02/major-oil-refinery-in-iraq-reopens-span-classbankheadpolice-begin-escorting-deliveries-to-gas-stations-across-countryspan/9bddcace-0eb5-4a2a-9328-3ee95c2fc3a5/",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0056": [
+      {
+        "source_url": "https://2001-2009.state.gov/p/nea/rls/34057.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://press.un.org/en/2004/sc8117.doc.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rferl.org/a/1053557.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/p/nea/ci/iz/30758.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2004/06/20040628-9.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/a93572.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/r/pa/ei/pix/b/nea/iraq/54603.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2005/10/15/world/middleeast/iraqis-vote-on-new-constitution.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2004/06/text/20040628-9.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0057": [
+      {
+        "source_url": "https://www.globalsecurity.org/military/library/news/2005/12/mil-051201-usia01.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dvidshub.net/news/3603/operation-steel-curtain-moves-into-husaybah",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/11/20051130.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/11/text/20051130-2.html",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/p/nea/rls/63423.htm",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2005/11/07/us-iraqi-force-sweeps-syrian-border-area/5025720e-15fa-492a-a91f-393a5f06d4cd/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0074": [
+      {
+        "source_url": "https://www.nytimes.com/2005/12/03/national/03marine.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/military/library/news/2005/12/nr20051203-5180.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-12.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-12.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/military/library/news/2005/12/nr20051215-12152.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/StateOfTheUnion/story?id=1563195",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0095": [
+      {
+        "source_url": "https://www.hrw.org/world-report/2006/country-chapters/iran",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.un.org/sites/un2.un.org/files/2020/06/a60-parti_0.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/p/nea/ci/qa/77580.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/g/drl/rls/56548.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/p/nea/ci/ir/75234.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.state.gov/reports/2024-country-reports-on-human-rights-practices/iran",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0105": [
+      {
+        "source_url": "https://sarpn.org/documents/d0001112/P1227-FragileStatesfinal_Jan2005.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.unodc.org/documents/data-and-analysis/Africa_%20Report_full_2005.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/documents/organization/47255.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/j/tip/rls/tiprpt/2005/46616.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pdf.usaid.gov/pdf_docs/PDACA999.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.loc.gov/item/2005453211/",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0106": [
+      {
+        "source_url": "https://2001-2009.state.gov/documents/organization/43885.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/06/20050630-8.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/documents/organization/36287.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/06/20050630-7.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2004/11/20041109-4.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/108/plaws/publ199/PLAW-108publ199.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.state.gov/wp-content/uploads/2019/08/PEPFAR-2006-Annual-Report-to-Congress.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/a111575.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.heritage.org/trade/report/the-millennium-challenge-account-linking-aid-economic-freedom",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0115": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-911REPORT/pdf/GPO-911REPORT-24.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://9-11commission.gov/report/911Report_Exec.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.9-11commission.gov/report/911Report_Ch7.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060124-4.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://oig.justice.gov/sites/default/files/archive/special/0506/chapter5.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/gao-05-207.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://time.com/archive/6926056/did-the-nsa-lose-a-sept-11-hijacker/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://9-11commission.gov/archive/hearing10/9-11Commission_Hearing_2004-04-13.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://publicintegrity.org/politics/agencies-failed-to-share-intelligence-on-9-11-terrorists/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://9-11commission.gov/report/911Report_Ch7.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0116": [
+      {
+        "source_url": "https://www.9-11commission.gov/report/911Report_Ch7.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://govinfo.library.unt.edu/911/report/911Report_Ch7.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://oig.justice.gov/sites/default/files/archive/special/0506/chapter5.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://oig.justice.gov/reports/review-fbis-handling-intelligence-information-related-september-11-attacks-november-2004",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-2004-jun-17-na-reza17-story.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/12/20051219-1.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://abcnews.go.com/US/story?id=1533702",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/text-2006-state-of-the-union/",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0118": [
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/12/text/20051217.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/docs/whitepaperonnsalegalauthorities.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/sites/default/files/olc/opinions/2006/01/31/nsa-white-paper.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/ag/testimony/2006/ag-gonzales-feb06.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060122.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/docs/nsa_myth_v_reality.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2005/12/16/politics/bush-lets-us-spy-on-callers-without-courts.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.epic.org/privacy/surveillance/spotlight/0106/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2005/12/17/5060093/bush-defends-domestic-spying-program",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0119": [
+      {
+        "source_url": "https://www.justice.gov/archive/opa/docs/whitepaperonnsalegalauthorities.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/file/494501/dl",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/docs/nsa_myth_v_reality.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060122.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/ag/speeches/2006/ag_speech_0601241.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/R40888.html",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-2006-jan-20-na-spy20-story.html",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/StateOfTheUnion/story?id=1563195",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0120": [
+      {
+        "source_url": "https://www.justice.gov/olc/opinion/legal-authorities-supporting-activities-national-security-agency-described-president",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060122.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/ag/speeches/2006/ag_speech_0601241.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-dyn/content/article/2005/12/19/AR2005121901641_pf.html",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/intell/library/news/2005/intell-051219-rockefeller01.htm",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://pelosi.house.gov/news/press-releases/pelosi-requests-declassification-of-her-letter-on-nsa-activities",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/12/20051219-1.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fas.org/blogs/secrecy/2006/01/justice_dept_issues_white_pape/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-109shrg27443/pdf/CHRG-109shrg27443.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nytimes.com/2005/12/16/politics/bush-lets-us-spy-on-callers-without-courts.html",
+        "relevance_score": 0.65,
+        "supports_claim": false
+      }
+    ],
+    "gwbush_2006:0121": [
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060122.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-8.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/docs/nsa_myth_v_reality.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.jurist.org/thisday/wp-content/uploads/sites/6/2011/01/dojletter.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/ag/testimony/2006/ag-gonzales-feb06.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://irp.fas.org/news/2006/01/hayden012306.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/ag/speeches/2006/ag_speech_0601241.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/US/story?id=1533702",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2006/02/05/surveillance-net-yields-few-suspects-span-classbankheadnsas-hunt-for-terrorists-scrutinizes-thousands-of-americans-but-most-are-later-cleared-span/d47668c9-d9c0-4090-8f64-52eb8e70141d/",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      }
+    ],
+    "gwbush_2006:0133": [
+      {
+        "source_url": "https://bea.gov/news/2006/gross-domestic-product-fourth-quarter-2005-advance-estimates",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_200601.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2006/gross-domestic-product-fourth-quarter-2005-advance-estimates",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2006/01/oecd-economic-outlook-volume-2005-issue-2_g1gh4975/eco_outlook-v2005-2-en.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2006/feb/wk1/art02.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.imf.org/en/News/Articles/2015/09/28/04/53/pn05100",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/PAYEMS",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bea.gov/index.php/news/2006/gross-domestic-product-fourth-quarter-2005-advance-estimates",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/index.cfm/republicans/2006/1/gdp-growth-rate-slows-to-1.1-in-fourth-quarter-of-2005_476",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      }
+    ],
+    "gwbush_2006:0134": [
+      {
+        "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02032006.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/history/empsit_02032006.txt",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060106.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01062006.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/02/20060202-1.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/109/crec/2006/01/31/152/9/CREC-2006-01-31.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/02/20060203-3.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/press-releases-united-states-department-treasury-6111/volume-428-587270/fulltext",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-the-state-the-economy-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0147": [
+      {
+        "source_url": "https://www.congress.gov/109/crec/2006/02/01/152/10/CREC-2006-02-01-pt1-PgS387-5.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-the-state-the-economy-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-8.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gpo.gov/fdsys/pkg/CRECB-2006-pt1/pdf/CRECB-2006-pt1-issue-2006-02-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CRECB-2006-pt1/pdf/CRECB-2006-pt1-issue-2006-02-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/02/text/20060201-5.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/r/pa/ei/wh/rem/60153.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0148": [
+      {
+        "source_url": "https://www.bea.gov/index.php/news/2006/gross-domestic-product-fourth-quarter-2005-advance-estimates",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2005/gross-domestic-product-third-quarter-2005-preliminary-estimates",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2005/gross-domestic-product-second-quarter-2005-advance-estimates",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02032006.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-8.html",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0149": [
+      {
+        "source_url": "https://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-irbs/irb06-06.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/RS21863.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 0.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.irs.gov/irb/2005-27_IRB",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0154": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-2006-TAB/pdf/BUDGET-2006-TAB-10-9.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/02/20050207-11.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govexec.com/management/2004/06/bushs-best-laid-budget-plans-go-awry/16965/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://dtic.minsky.ai/index/ADA467535/pdf",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-54/fiscal-year-2006-19052/content/fulltext/BUDGET-2006-BUD-7",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-dyn/content/article/2006/02/04/AR2006020401179.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/usbudget/blueprint/budx.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0155": [
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/02/text/20060206-1.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/text/index.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-8.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-2007-5761/content/fulltext/BUDGET-2007-APP-5",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/109th-congress/house-event/LC12681/text",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2006-book1/pdf/PPP-2006-book1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/amp/wbna11169127",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.washingtonpost.com/wp-srv/politics/interactives/budget07/agencies.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-2006-feb-06-na-budget6-story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.heraldnet.com/2006/02/05/bush-budget-favors-guns-over-butter/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0156": [
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/02/20060206-2.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/02/text/20060206-1.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-2007-BUD",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-2007-PER/pdf/BUDGET-2007-PER.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-2007-PER",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-dyn/content/article/2006/02/04/AR2006020401179.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "http://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-2007-APP",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0160": [
+      {
+        "source_url": "https://www.census.gov/newsroom/releases/archives/facts_for_features_special_editions/cb06-ffse01-2.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/content/dam/Census/library/working-papers/2006/demo/2006babyboomers.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/content/dam/Census/library/publications/2005/demo/p23-209.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/2005/11/art3full.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/story/baby-boomers-start-hitting-60",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/the-graying-of-the-boomer-generation/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.wxxinews.org/npr-news/2005-12-09/retiring-boomers-pose-policy-challenge",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0163": [
+      {
+        "source_url": "https://www.cbo.gov/publication/21546",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://tile.loc.gov/storage-services/master/gdc/gdcebookspublic/20/23/69/30/17/2023693017/2023693017.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/rms052605.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/a202553.html",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/a111311.html",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/gao-04-793sp.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-05-318t",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.ssa.gov/OACT/TR/TR05/tr05.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/ReportsTrustFunds/downloads/tr2005.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/text-2006-state-of-the-union/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0165": [
+      {
+        "source_url": "https://www.cbo.gov/doc.cfm?index=10297",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/136/archive-documents/tr05_summary.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.socialsecurity.gov/OACT/TR/TR05/tr05.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/17558",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/RL32879.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/migrated_legacy_files//41051/ib.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2005/08/27/tilting-at-the-social-security-windmill/fee61c83-ab97-4a59-b1a8-93686d538443/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/109th-congress/house-event/LC13458/text",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/what-the-new-trustees-report-shows-about-social-security",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0171": [
+      {
+        "source_url": "https://ustr.gov/archive/Benefits_of_Trade/States/Section_Index.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/infocus/economy/20040310-more.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ustr.gov/archive/Document_Library/Press_Releases/2004/March/Bush_Administration_Sends_Annual_Trade_Report_to_Congress.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-8.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.commerce.gov/sites/default/files/migrated/reports/esaj.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-8.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/foreign-trade/Press-Release/edb/edbrel2004.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2006/02/01/america-is-addicted-to-oil/d9cf21ce-3294-450f-b0cc-9803455457ec/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.piie.com/publications/chapters_preview/5003/03iie5003.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0183": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-state-the-union-affordable-and-accessible-health-care",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-7.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.contemporaryobgyn.net/view/acog-releases-new-study-obgyn-workforce",
+        "relevance_score": 1.0,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-108shrg85062/html/CHRG-108shrg85062.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/15861999/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0185": [
+      {
+        "source_url": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=M&n=PET&s=MTTNTUS2",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/outlooks/steo/outlook.php",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=MTTNTUSPG2&f=M",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/about/new/?r=7530",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://edition.cnn.com/2006/POLITICS/01/31/sotu.energy/index.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://info.ornl.gov/sites/publications/Files/Pub57497.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2006/02/01/5182865/addictive-crude-oil-from-unstable-nations",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iea.org/reports/world-energy-outlook-2005",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/109th-congress/house-event/LC11586/text",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-6.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0187": [
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-6.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/ceq/advanced-energy.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-state-the-union-the-advanced-energy-initiative",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2001-2009.state.gov/e/eeb/rls/fs/2006/66871.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/documents/fy07highlightspdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.hydrogen.energy.gov/pdfs/5025_advanced_energy_initiative.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/sites/prod/files/edg/media/2006StrategicPlanSection5.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.heritage.org/environment/report/state-the-union-2006-dusting-the-old-energy-policy",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.energy.gov/cfo/articles/fy-2007-budget-justification",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0189": [
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060131-6.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/energy/index.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2006/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-state-the-union-the-advanced-energy-initiative",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/cmei/articles/fiscal-year-2007-budget-brief",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fossil.energy.gov/techline/techlines/2006/PrintVersion_1_25887_25887.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sfgate.com/politics/article/Text-of-President-Bush-s-State-of-the-Union-2523564.php",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0206": [
+      {
+        "source_url": "https://nces.ed.gov/nationsreportcard/pubs/main2005/2006453.aspx",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/teaching-learning/despite-nclb-laws-emphasis-on-reading-and-math-national-test-scores-show-little-change/2005/10",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://nces.ed.gov/nationsreportcard/pubs/main2005/2006451.aspx",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.pbs.org/newshour/education/education-july-dec05-naep_10-19",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.nationsreportcard.gov/mathematics/?grade=4",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nationsreportcard.gov/reading_math_2005/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/20060109-2.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0215": [
+      {
+        "source_url": "https://bjs.ojp.gov/content/pub/pdf/cv04.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www2.fbi.gov/ucr/cius_04/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bjs.ojp.gov/press-release/criminal-victimization-2004",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/pr/2004/October/04_ag_716.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.ojp.gov/sites/ojp/files/archives/pressreleases/2005/BJS05049.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/pr/2004/September/04_ag_611.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archives.fbi.gov/archives/news/stories/2005/october/crimestats_101705",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nbcnews.com/id/wbna9490082",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2005/09/26/crime-rate-remains-at-2003-level-study-says/a1447657-f21f-4ebf-aa00-09b685fcba34/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/story/crime-rate-holds-steady-at-record-low",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      }
+    ],
+    "gwbush_2006:0216": [
+      {
+        "source_url": "https://www.acf.hhs.gov/programs/ofa/annualreport6/ar6index.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-2005-1",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-2005",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://acf.gov/ofa/data/tanf-caseload-data-1996-2015",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.acf.hhs.gov/news/press/2004/TANF_TOTFAM_4th2003.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/250/247482.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-2004",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ssa.gov/policy/docs/statcomps/supplement/2005/prog_desc.html",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/migrated_legacy_files//68476/execsum_31.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/RL32760.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0217": [
+      {
+        "source_url": "https://www.justice.gov/archive/olp/pdf/ndcs06.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.umich.edu/illicit-drug-use-down-among-teens-prescription-drug-use-remains-high/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://record.umich.edu/articles/overall-illicit-drug-use-by-american-teens-continues-gradual-decline/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nih.gov/news-events/nida-sponsored-survey-shows-decrease-illicit-drug-use-among-nations-teens-prescription-drug-abuse-remains-high",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED503096.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nih.gov/node/30116",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/ndic/pubs11/12620/marijuana.htm",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0218": [
+      {
+        "source_url": "https://www.guttmacher.org/sites/default/files/pdfs/pubs/2005/05/18/ab_incidence.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/pdf/ss/ss5407.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/pdf/ss/ss5309.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://ftp.cdc.gov/pub/health_statistics/NCHS/Publications/DVD/DVD_3/Health_United_States/hus05.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/nchs/data/nvsr/nvsr54/nvsr54_02.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/222026",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0230": [
+      {
+        "source_url": "https://www.supremecourt.gov/about/oath/oathsofthecurrentcourt.aspx",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2006/POLITICS/01/31/alito/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/publicinfo/press/pressreleases/pr_01-31-06",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2005/POLITICS/09/29/roberts.nomination/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/nomination/109th-congress/801",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1092/vote_109_2_00002.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2006/01/31/5181091/alito-confirmed-as-newest-supreme-court-justice",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/print/text/20060131-2.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archive/opa/pr/2006/January/06_ag_053.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "gwbush_2006:0234": [
+      {
+        "source_url": "https://www.cnn.com/2006/POLITICS/01/31/alito/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2006-book1/pdf/PPP-2006-book1-doc-pg146-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2006/01/31/5180411/senate-confirms-alito-as-supreme-court-justice",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2005/07/01/4726127/justice-sandra-day-oconnor-retires",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-31-2006-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/publicinfo/press/pressreleases/pr_07-01-05",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2005/07/03/oconnor-leaving-supreme-court-after-24-years/1ffce9cd-a9ec-493b-b3f9-fc127e5caef3/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0245": [
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/03/20050307-6.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/stateoftheunion/2005/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-2005-book1/PPP-2005-book1-doc-pg543",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/10/20051027-1.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/policy-politics/white-house-convenes-discussion-on-youths/2005/11",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://digital.library.unt.edu/ark:/67531/metadc26006/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ojjdp.ojp.gov/sites/ojjdp/files/pubs/news_at_glance/212789/pfv.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0248": [
+      {
+        "source_url": "https://www.npr.org/2006/01/13/5155885/bush-visits-new-orleans-avoiding-protesters",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060131-10.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/12/text/20051221-10.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2006/01/text/20060112-3.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-the-nation-hurricane-katrina-recovery-from-new-orleans-louisiana",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2006-book1/pdf/PPP-2006-book1-doc-pg146-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/bush-hails-gulf-coast-progress/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-rebuilding-the-gulf-coast",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/2006/01/28/post-katrina-promises-unfulfilled-span-classbankheadon-the-gulf-coast-federal-recovery-effort-makes-halting-progress-span/504fb245-803b-4905-bf76-b44a4d7bce94/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0249": [
+      {
+        "source_url": "https://www.congress.gov/109/plaws/publ148/PLAW-109publ148.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/12/text/20051221-10.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/id/wbna10736718",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/6bcd7f845bde23ad8525710f00434f2f.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govexec.com/management/2006/01/agencies-tackle-massive-gulf-coast-waste-removal-challenge/20929/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://georgewbush-whitehouse.archives.gov/news/releases/2005/12/20051215-4.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2005/12/28/5072337/critics-corps-cant-fix-levees-by-hurricane-season",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://biotech.law.lsu.edu/katrina/ILIT/report/CH_7.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.army.mil/article/2703/army_corps_of_engineers_working_to_protect_new_orleans_from_the_next_hurricane",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/109th-congress/senate-event/LC12650/text",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "gwbush_2006:0256": [
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/5674/cdc_5674_DS1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/pdf/wk/mm5445.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/hiv/pdf/library/reports/surveillance/cdc-hiv-surveillance-report-2004-vol-16.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.scribd.com/document/702459493/Cdc-Hiv-Surveillance-Report-2004-Vol-16",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/pressrel/fs051117.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/21782/cdc_21782_DS1.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/MMWR/preview/mmwrhtml/mm5524a2.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.prb.org/resource/hiv-aids-and-african-americans-a-state-of-emergency/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/149129/cdc_149129_DS1.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ]
+  },
+  "soft_failures": []
+}
