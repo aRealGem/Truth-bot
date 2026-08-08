@@ -1,0 +1,1206 @@
+{
+  "schema": "truthbot-rescore-sidecar v1",
+  "speech_id": "clinton_1998",
+  "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+  "model": "claude-haiku",
+  "generated": "2026-08-08T17:25:00.080601+00:00",
+  "spend_usd": 0.108035,
+  "sids": {
+    "clinton_1998:0006": [
+      {
+        "source_url": "https://www.bls.gov/news.release/history/empsit_010998.txt",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "BLS employment data for Dec 1997 shows 4.7% unemployment and strong payroll growth, but snippet does not state the specific '14 million new jobs' figure or confirm it against the claim's assertion."
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/docs/releases/bls/bls_employnews_199712.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "BLS Dec 1997 data shows +3.2 million payroll jobs in 1997 and 4.7% unemployment; claim asserts 'more than 14 million new jobs' but snippet reports only 3.2M for the year, leaving the 14M figure unverified."
+      },
+      {
+        "source_url": "https://www.census.gov/housing/hvs/files/qtr497/q497tab7.txt",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Census homeownership data table for Q4 1997 is cited as primary source but the snippet does not state the actual rate or whether it is a historical record."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/1998/personal-income-and-outlays-december-1997",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "BEA personal income data shows 5.8% growth for 1997, directly supporting the 'incomes are rising' sub-claim."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-23-vp-announces-record-homeownership-level.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "White House cites Census Q3 1997 homeownership at 66.0%, described as highest ever, directly supporting the 'highest homeownership in history' claim."
+      },
+      {
+        "source_url": "https://archives.hud.gov/news/1998/pr98-15.cfm",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "HUD/Census data reports 1997 annual homeownership rate of 65.7%, explicitly stated as 'highest annual rate in U.S. history,' corroborating the homeownership claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/history/cpi_121697.txt",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "BLS CPI release from Dec 1997 indicates core inflation running at multi-decade lows, supporting the direction of the 'lowest core inflation in 30 years' claim but snippet does not state the specific 30-year comparison."
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/real-earnings-9625/december-1997-705122/content/txt/realer_19980113",
+        "relevance_score": 0.6,
+        "supports_claim": false,
+        "one_line_why": "BLS Real Earnings data shows real average weekly earnings fell 0.6% in December 1997, contradicting the 'incomes are rising' assertion for that month."
+      },
+      {
+        "source_url": "https://www.census.gov/housing/hvs/files/qtr497/q497tab5.txt",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Census homeownership time-series by quarter is cited as a tool to verify historical peaks but the snippet does not provide the actual rates or comparison."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "This is the State of the Union transcript containing the claim itself, not independent evidence; it is the source being fact-checked, not verification of its assertions."
+      }
+    ],
+    "clinton_1998:0027": [
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/New/html/19980202-14467.html",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Confirms 30-year deficit context and 1998 balanced budget proposal, but does not address the claim's specific assertion about six Presidents warning of deficit damage."
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House transcript of Clinton's Jan 27, 1998 SOTU containing the quoted sentence verbatim—direct primary source of the claim itself."
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Provides deficit-trajectory data supporting the 'three decades' framing, but does not verify the claim about six Presidents or their warnings."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1998-01-27/pdf/CREC-1998-01-27.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Congressional Record printing of the Jan 27, 1998 SOTU includes the line about six presidents over three decades—direct primary source."
+      },
+      {
+        "source_url": "https://www.npr.org/1998/01/05/1036769/clinton-proposals",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Covers Clinton's balanced-budget proposal context but does not address the specific claim about six Presidents warning of deficit damage."
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1998-jan-28-mn-13027-story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "LA Times reprint of Clinton's Jan 27, 1998 SOTU reproduces the exact claim about six Presidents over three decades."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "American Presidency Project primary record of the full 1998 SOTU text where the claim was uttered—direct source of the statement."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/10607",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Provides budget outlook and historical deficit context relevant to multi-decade deficit framing, but does not verify the claim about six Presidents or their warnings."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-srv/politics/special/states/docs/sou98.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Washington Post published transcript of the 1998 SOTU gives the full deficit passage in context, including the claim about six Presidents."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1998-TAB/pdf/BUDGET-1998-TAB.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "OMB Historical Tables provide official deficit/surplus data across decades, supporting the long-term deficit context but not the specific claim about six Presidents."
+      }
+    ],
+    "clinton_1998:0032": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-3-1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "OMB Historical Table 1.1 shows unified deficit fell from −$290,402M (1992) to −$21,943M (1997), a ~92% reduction, directly corroborating the claim's '90 percent' deficit cut.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.frbsf.org/research-and-insights/publications/economic-letter/1998/01/the-budget-deficit/",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Fed analysis documents sharp deficit decline from 4.7% of GDP (1992) to 0.3% (1997), consistent with ~90% reduction and supports the magnitude of improvement claimed.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/bba-97.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official CBO analysis of the Balanced Budget Act of 1997 directly documents the second 'visionary action' and 'historic bipartisan' agreement cited in the claim."
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "CBO Jan 8, 1998 report provides historical deficit tables and attributes improvement to policy and economic factors, supporting the claim's attribution to Congressional actions."
+      },
+      {
+        "source_url": "https://en.wikipedia.org/wiki/1997_United_States_federal_budget",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "FY1997 deficit of $22.6B (0.3% GDP) down from ~$290B in FY1992 yields ~92% reduction, directly confirming the '90 percent' cut claim.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PLAW-105publ33/pdf/PLAW-105publ33.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Public Law 105-33 (Balanced Budget Act of 1997) enacted Aug 5, 1997 is primary evidence of the 'truly historic bipartisan balanced budget agreement' cited."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "FY1999 budget document credits both 1993 and 1997 acts for deficit reduction, supporting the claim's attribution of improvement to these two Congressional actions."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-1999-TAB",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "OMB Historical Tables landing page is a reference tool for deficit data but does not itself state the figures or comparisons needed to verify the claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1997-CITIZENSGUIDE/html/BUDGET-1997-CITIZENSGUIDE-5.htm",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "OMB guide on deficit-and-debt history is background material on methodology but does not present the specific year-to-year figures or percentage reduction."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "St. Louis Fed dataset of annual federal surplus/deficit allows computation of FY1992-to-FY1997 percentage reduction, which yields ~90% when calculated.",
+        "arithmetic_hinge": true
+      }
+    ],
+    "clinton_1998:0035": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official State of the Union transcript contains the exact claim verbatim as spoken by the President."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/statement-signing-the-taxpayer-relief-act-1997",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Presidential signing statement confirms 1997 tax act included targeted middle-class cuts (child credit, education), corroborating the 'last year' reference and targeting assertion."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/07/1997-07-31-congress-passes-the-tax-cut-portion-of-the-budget.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "White House announcement confirms Congress passed 1997 tax cuts targeted at middle-class families, supporting the enacted and targeted elements of the claim."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official State of the Union transcript contains the exact claim as spoken, providing direct textual confirmation."
+      },
+      {
+        "source_url": "https://www.jct.gov/getattachment/def435ec-2c9e-46c6-9ca8-36945f02ca06/s-23-97.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "JCT Blue Book provides distributional and effective-rate tables for the 1997 act; relevance depends on whether tables show middle-class rates at 20-year lows, which cannot be assessed from description alone.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/revenue0.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "CBO document on budgetary implications and provisions is primary source material; relevance to the 20-year low rate claim depends on whether it contains effective tax rate comparisons across time, unclear from description.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ34/PLAW-105publ34.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Text of P.L. 105-34 confirms the Taxpayer Relief Act of 1997 was enacted and contained the targeted provisions referenced in the claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1997-08-11/pdf/WCPD-1997-08-11-Pg1192.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Presidential signing statement emphasizes middle-class relief, corroborating the targeting and enactment elements of the claim."
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/012898.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "CBO testimony discusses 1997 receipts and tax law effects on tax burdens; relevance to the 20-year low rate claim depends on whether testimony contains historical rate comparisons, unclear from description.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.jct.gov/getattachment/8e76364f-e214-48c2-a8ee-67be06fd636a/x-39-97-2150.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "JCT document describes 1997 legislation and distributional effects; relevance to the 20-year low rate claim depends on whether it contains historical effective rate data, unclear from description.",
+        "arithmetic_hinge": true
+      }
+    ],
+    "clinton_1998:0038": [
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "CBO Jan 1998 projection shows near-balance by FY1999 followed by surpluses of $151B (2001) and $209B (2002), directly matching the claim's structure."
+      },
+      {
+        "source_url": "https://www.gpo.gov/fdsys/pkg/BUDGET-1999-PER/pdf/BUDGET-1999-PER.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "OMB FY1999 budget projections explicitly show surpluses in years after 1999 under the administration's budget assumptions, corroborating the claim."
+      },
+      {
+        "source_url": "https://www.npr.org/1998/01/05/1036769/clinton-proposals",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Contemporaneous NPR coverage of Clinton's balanced-budget and surplus framing supports the claim's narrative, though not a primary data source."
+      },
+      {
+        "source_url": "https://www.taxnotes.com/research/federal/legislative-documents/congressional-budget-office-reports/full-text-cbo-report-on-bright-economic-future/11hk8",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "CBO Jan 1998 full report projects small deficits through 2000 then growing surpluses, matching the claim's conditional structure."
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Official SOTU text discusses balancing the budget and future surpluses, providing the speech context for the claim."
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Prior CBO Jan 1997 baseline showing deficits provides context for the turnaround but does not directly address the claim's assertion."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House transcript contains the exact quoted claim, confirming it was made in the SOTU address."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GAOREPORTS-T-AIMD-OCE-98-83/pdf/GAOREPORTS-T-AIMD-OCE-98-83.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "GAO testimony on long-term fiscal outlook provides background context but does not directly measure the near-term surplus projections claimed."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/02/03/first-balanced-federal-budget-in-30-years-offered-by-clinton/a1fa119b-9ff7-4f2d-85ee-6093196ca820/",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "WaPo reports administration's FY1999 surplus projection and notes disputes with CBO, confirming the administration's surplus claim existed."
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/senate-report/170/1",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Senate report on disagreement between CBO and administration over FY1999 surplus does not resolve whether the claim's conditional projection was accurate."
+      }
+    ],
+    "clinton_1998:0057": [
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ78/PLAW-105publ78.htm",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Confirms the Pell Grant maximum was raised to $3,000 by law in Nov 1997, but does not state the number of new recipients."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-09-fact-sheet-on-college-opportunity.html",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "References a White House fact sheet on the 1997 Pell expansion and added recipients, but the snippet does not quote or specify the number."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/010998.html",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Mentions a companion White House release on the Pell expansion enacted in 1997, but does not provide the recipient count."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/111397.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "White House statement directly states the action makes an additional 220,000 low- and moderate-income families newly eligible for Pell Grants."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-signing-the-departments-labor-health-and-human-services-and-education-and-related-agencies-0",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "President's signing remarks explicitly state the measure will serve an additional 220,000 students."
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/house-report/205/1",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "House Appropriations report estimated the Pell increase would add about 130,000 recipients, not 220,000."
+      },
+      {
+        "source_url": "https://www.chronicle.com/article/clinton-signs-spending-bill-with-increases-for-pell-grants-and-the-nih",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Confirms the FY1998 spending bill raising Pell Grants was signed, but does not specify the number of new recipients."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1997-book1/pdf/PPP-1997-book1-doc-pg194.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Provides context on the proposed Pell expansion from the budget proposal period, but does not state a specific recipient count."
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-54/fiscal-year-1998-19048/fulltext",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "President's FY1998 Budget projects at least 348,000 more students would enter the program, contradicting the 220,000 figure."
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/105th-congress/senate-report/58",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Describes the funding and maximum increase but does not provide the number of new recipients."
+      }
+    ],
+    "clinton_1998:0058": [
+      {
+        "source_url": "https://www.congress.gov/105/plaws/publ34/PLAW-105publ34.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Public Law 105-34 §202 directly enacted the student loan interest deduction effective Jan 1, 1998, confirming the claim's assertion that the deduction was created."
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2014/text/pl",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Same law and section confirmed again: Sec. 202/Subtitle A added the education loan interest deduction, corroborating the core claim."
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/house-bill/2014",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official Congress.gov record of H.R. 2014 (the enacted 1997 law) is the primary legislative document establishing the student loan interest deduction."
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-prior/p553--1997.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "IRS Publication 553 (Dec 1997) explains the student loan interest deduction effective 1998, confirming implementation of the tax benefit."
+      },
+      {
+        "source_url": "https://efpls.ed.gov/bwr/tra97.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Department of Education summary confirms the new deductibility of interest paid beginning 1998 under TRA97, supporting the claim."
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-irbs/irb98-03.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Internal Revenue Bulletin 1998-3 describes §221 (student loan interest deduction) and reporting requirements, confirming the deduction's existence and operation."
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-tege/notice97-60.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "IRS Notice 97-60 explains TRA '97 education incentives including the student loan interest deduction, corroborating the claim."
+      },
+      {
+        "source_url": "https://www.osfa.la.gov/newsline10.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "State financial-aid newsletter details the phased-in deduction ($1,000 in 1998) and income limits under the 1997 law, confirming the deduction's implementation."
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-tege/notice97_53.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "IRS Notice 97-53 addresses IRA/education withdrawal rules and Education IRA changes, not the student loan interest deduction itself."
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/SOTU98/address.html",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "White House State of the Union transcript (Jan 27, 1998) contains the quoted lines from the claim, confirming the source and context of the statement."
+      }
+    ],
+    "clinton_1998:0077": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1998-02-02/pdf/WCPD-1998-02-02.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official presidential documents compilation quotes the exact claim in full context, confirming the statement was made."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-26-fact-sheet-on-reducing-class-size.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "White House fact sheet from day before address explicitly lays out the 100,000-teacher and average-18 class-size goal for grades 1-3."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-26-press-briefing-by-mike-mccurry.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "White House press briefing states the President's pledge to hire 100,000 teachers and reduce 1st–3rd grade class size to 18."
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs97/98015.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "NCES baseline statistics on teachers and classrooms provide context for evaluating feasibility but do not directly confirm or deny the pledge itself."
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Congressional Record transcript of the 1998 State of the Union contains the precise statement being checked."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-7",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Primary transcript of the 1998 State of the Union contains the exact claim as uttered."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official archived transcript of the 1998 State of the Union contains the exact class-size/teacher pledge being checked."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official State of the Union transcript contains the quoted pledge to hire 100,000 teachers and reach 18-student average."
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs97/97983.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "NCES report on school and class size provides baseline statistics for context but does not directly address the pledge or its achievement."
+      },
+      {
+        "source_url": "https://www.ed.gov/sites/ed/files/offices/OUS/Budget99/BudgetSum/pages/budget01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Department of Education FY1999 budget summary describes the plan to recruit 100,000 teachers to reach 18 average, confirming the policy commitment."
+      }
+    ],
+    "clinton_1998:0091": [
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2018-03/gdp497a.txt",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "BEA advance release confirms exports were major contributor to Q4 1997 GDP growth, consistent with the claim's direction but does not quantify the one-third share."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-1998-book1/pdf/PPP-1998-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official transcript of 1998 SOTU contains the exact claim being fact-checked, confirming it was asserted."
+      },
+      {
+        "source_url": "https://www.csmonitor.com/1997/1001/100197.us.us.1.html",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Contemporary report states exports accounted for nearly half of growth (fall 1996–fall 1997), contradicting the one-third figure in the claim."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/textonly/WH/Work/091697.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "White House fact sheet directly states one-third of the nation's growth depended on overseas trade, matching the claim's core assertion."
+      },
+      {
+        "source_url": "https://www.bea.gov/system/files/newsreleases/national/gdp/1997/gdp397a.txt",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Primary BEA GDP release for Q3 1997 provides net exports contribution data but snippet does not state the specific one-third figure or overall share.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2018-03/11-1997-67-1200_00001.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "BEA/Census trade release confirms record-high export levels in 1997 and export-led growth, supporting the 'record high exports' and growth contribution elements."
+      },
+      {
+        "source_url": "https://www.congress.gov/105/crec/1998/01/27/144/1/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Congressional Record primary transcript of 1998 SOTU documents the exact claim being asserted."
+      },
+      {
+        "source_url": "https://bea.gov/sites/default/files/2019-04/gdp397p.txt",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Primary BEA preliminary Q3 1997 GDP release provides export contribution data but snippet does not state whether it equals one-third of total growth.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/survey-current-business-46/february-1998-9935/fulltext",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "BEA Survey documents large quarterly export increase (11.3% in Q4) and substantial contribution to GDP rise, supporting the record exports and growth contribution claims."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/ERP-1998/pdf/ERP-1998-frontmatter.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Economic Report of the President (Feb 1998) explicitly states about a third of recent economic growth came from exporting American goods/services, directly corroborating the one-third claim."
+      }
+    ],
+    "clinton_1998:0101": [
+      {
+        "source_url": "https://www.gpo.gov/fdsys/pkg/BUDGET-1999-BUD/pdf/BUDGET-1999-BUD.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official FY1999 budget document explicitly states dislocated worker training funding more than doubled since 1993, directly matching the claim's assertion."
+      },
+      {
+        "source_url": "https://clintonwhitehouse3.archives.gov/WH/New/99Budget/education.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Administration's FY99 budget release quantifies 171% expansion since 1993 ('well more than double'), directly corroborating the doubling claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PLAW-105publ78/pdf/PLAW-105publ78.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "Primary appropriations law for FY1998 provides actual funding level in effect near the claim date, but snippet does not state the 1993 baseline or comparison needed to verify doubling."
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "DOL budget shows 1996–1997 funding levels (~$1.12B to ~$1.25B) but does not provide 1993 baseline or explicit doubling comparison.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.congress.gov/congressional-report/105th-congress/senate-report/58",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Senate appropriations figure for FY1998 ($1.35B) is a single data point; without 1993 baseline it cannot verify the doubling claim."
+      },
+      {
+        "source_url": "https://www.cnn.com/ALLPOLITICS/1998/02/03/voters.voice/",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Coverage of Clinton's FY1999 budget proposal (which proposed tripling) is background commentary on policy intent, not a measurement of actual funding doubling since 1993."
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/1997/01/22/97-1528/job-training-partnership-act-employment-and-training-assistance-for-dislocated-workers-reallotment",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Federal Register reallotment notice is a primary record of program allotments but snippet does not state specific funding levels or 1993–present comparison."
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/104th-congress/house-report/659",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "House Appropriations report shows FY1997 Title III funding at ~$1.1B, a single year's figure without 1993 baseline to verify doubling.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/128415",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "GAO review of JTPA Title III spending patterns is relevant to pre-1993 vs. later comparison but snippet does not provide the actual figures or date confirmation."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/98-203.html",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "CRS analysis details FY1998–1999 funding levels (~$1.35B) but does not state 1993 baseline or explicit doubling comparison.",
+        "arithmetic_hinge": true
+      }
+    ],
+    "clinton_1998:0107": [
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "BLS employment series is the primary data needed to measure 'millions of new jobs' but snippet provides no actual figures or time period to compare against the claim."
+      },
+      {
+        "source_url": "https://pegasus.law.columbia.edu/record/121113",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Treaties in Force listing is relevant to counting 'hundreds of trade agreements' but snippet provides no actual count or comparison to the claim's assertion."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "This is the primary source document containing the exact quoted claim, confirming it was made on Jan 27, 1998, but does not itself verify the factual assertions within it."
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Independent transcript of the same Jan 27, 1998 State of the Union confirms the claim was made but does not verify its factual accuracy."
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-print/105th-congress/ways-and-means-print/35610",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "House Ways & Means committee print documents 1990s trade activity and agenda but snippet provides no specific count of agreements or jobs created to evaluate the claim."
+      }
+    ],
+    "clinton_1998:0130": [
+      {
+        "source_url": "https://www.washingtonpost.com/wp-srv/politics/special/welfare/stories/wf081397a.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Welfare rolls fell 3.4M (25%) since 1993, consistent with the claim's assertion of welfare replacement, though does not directly measure job placement."
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/EOP/CEA/Welfare/Technical_Report.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Documents 20% recipient drop (1993–1997) attributed to job growth and work policies, directly supporting the welfare-to-work transition claim."
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "HHS report shows declining AFDC/TANF caseloads with shifts toward employment and self-sufficiency, supporting the replacement narrative."
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/EOP/CEA/Welfare/Report.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "CEA documents 2.75M/20% caseload decline (1993–96) tied explicitly to work and waivers, directly supporting welfare-to-work claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/GAOREPORTS-HEHS-97-74",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "GAO documents program changes and caseload declines, consistent with welfare-to-work transition, though does not quantify employment outcomes."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/111797.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "White House report explicitly states 135,000+ recipients hired into jobs in 1997 with phrase 'checks becoming paychecks,' directly corroborating the claim."
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997-0",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Title indicates statutory report on caseload trends, but snippet provides no data or findings to evaluate against the claim."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official transcript of the State of the Union containing the exact quoted line confirms the claim was made by Clinton on January 27, 1998."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Contemporary news coverage summarizes falling welfare rolls and job claims from the State of the Union, corroborating the welfare-to-work narrative."
+      },
+      {
+        "source_url": "https://paperzz.com/doc/7704972/pdf---urban-institute",
+        "relevance_score": 0.6,
+        "supports_claim": false,
+        "one_line_why": "Urban Institute critique questions attribution of caseload decline solely to policy, introducing methodological doubt about the welfare-to-work causation claim."
+      }
+    ],
+    "clinton_1998:0132": [
+      {
+        "source_url": "https://www.acf.hhs.gov/ofa/resource/character/fy97/revsum",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "FY1997 caseload figures are relevant background for assessing whether a two-year-ahead claim is plausible, but the snippet does not state the figures themselves or compare them to any goal."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official transcript containing the exact claim and preceding goal statement is the primary source for what was claimed and when, but does not itself verify whether the goal was met or the timeline was accurate."
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/textonly/WH/Work/100897.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "White House announcement of 3.6M caseload decline since 1993 by October 1997 directly supports that the goal (implied to be a 2M decline by 2000) was already met before the January 1998 utterance, consistent with 'two full years ahead of sc"
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official transcript confirms the claim was made on Jan 27, 1998, but does not verify the factual accuracy of the claim itself."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/Work/111797.html",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "November 1997 White House statement tracking decline against the two-million-by-2000 goal is relevant to the timeline, but the snippet does not provide the specific figures needed to confirm the goal was met two years early."
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1998-1",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Official HHS/ASPE tables with AFDC/TANF data through 1997 are the primary data series relevant to measuring caseload decline, but the snippet does not state the actual figures or comparison to the goal."
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/january-27-1998-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Independent archive transcript of the Jan 27, 1998 SOTU confirms the claim was made, but does not verify its factual accuracy."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Contemporary news coverage of the SOTU and welfare statistics cited is relevant background, but the snippet does not provide the specific figures or independent verification of the two-year-ahead claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/WCPD-1997-07-14/pdf/WCPD-1997-07-14-Pg1028.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "Presidential documents recording welfare-reform remarks and goal framing are relevant to understanding what goal was set, but the snippet does not state the goal's deadline or figures."
+      }
+    ],
+    "clinton_1998:0148": [
+      {
+        "source_url": "https://www.everycrsreport.com/reports/97-913.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "CRS 1997 primer directly states HMO+PPO+POS enrollment sums to roughly 160 million Americans, matching the claim's figure exactly."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-8",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official transcript of President Clinton's Jan 27, 1998 State of the Union contains the quoted sentence, confirming the claim was made and the figure was stated."
+      },
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK233215/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "IOM 1997 report states 161 million Americans in managed-care plans at end of 1995, corroborating the 160 million figure within rounding."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-27-background-briefing-on-state-of-union-address.html",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "White House background briefing accompanying the State of the Union is contextual material but snippet does not specify whether it contains the 160 million figure or supporting data."
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9553445/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "1998 peer-reviewed review corroborates enrollment scale near 160 million in the relevant period."
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/10169548/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Peer-reviewed piece from Fall 1997 states approximately 160 million Americans in managed-care settings, directly matching the claim."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/hehs-97-160",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "GAO report from Aug 1997 provides authoritative managed-care data but snippet specifies only Medicare/HMO enrollment, not total managed-care enrollment figure."
+      }
+    ],
+    "clinton_1998:0156": [
+      {
+        "source_url": "https://www.census.gov/library/publications/1997/demo/p60-199.html",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Census P60-199 reports ~3 million uninsured in 55–64 age group in 1996, directly confirming 'millions' lack coverage."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1998/01/1998-01-06-medicare-fact-sheet.html",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "White House fact sheet frames coverage-loss mechanisms (retirement, layoff, benefit drops) but does not quantify how many lost coverage."
+      },
+      {
+        "source_url": "https://www.ebri.org/publications/research-publications/issue-briefs/content/sources-of-health-insurance-and-characteristics-of-the-uninsured-analysis-of-the-march-1997-current-population-survey-103",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "EBRI/Census CPS analysis is cited as a tool to test the claim's accuracy, but the snippet does not report the actual figure or finding."
+      },
+      {
+        "source_url": "https://www.ebri.org/retirement/retirement-security-projection-model/content/sources-of-health-insurance-and-characteristics-of-the-uninsured-analysis-of-the-march-1997-current-population-survey-103",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "EBRI analysis of March 1997 CPS reports ~3 million near-elderly (55–64) uninsured in 1996, corroborating 'millions' without coverage."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/GAOREPORTS-HEHS-97-150",
+        "relevance_score": 0.65,
+        "supports_claim": null,
+        "one_line_why": "GAO documents erosion of employer retiree coverage and increased risk of loss, but does not quantify how many actually lost insurance."
+      },
+      {
+        "source_url": "https://www2.census.gov/library/publications/1997/demo/p60-199.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Census publication with tables on uninsured counts by age group (55–64) for 1996 is a primary data source that would show millions uninsured."
+      }
+    ],
+    "clinton_1998:0167": [
+      {
+        "source_url": "https://www.bls.gov/news.release/history/famee_061697.txt",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "BLS data shows 63.9% of married-couple families with kids have both parents employed and 70.8% mother LFP in 1996, directly documenting increased parental workforce participation consistent with 'work harder' framing."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/1997/04/art3full.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "BLS Monthly Labor Review documents rise in dual-earner couples from 39% to 61% and married-mother labor force surge, directly supporting claim that more parents are working."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/1997/04/art1full.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Snippet mentions BLS review on long-run trends in hours of work but does not provide actual hours data or comparison needed to assess whether parents work 'harder than ever.'"
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/1997/09/art1full.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Documents continuing growth in women's and mothers' labor-force participation, supporting the claim that more parents are in the workforce, though 'working-parent load' is inferred rather than directly measured."
+      },
+      {
+        "source_url": "https://sociology.sas.upenn.edu/sites/default/files/jacobs%20overworked%20individuals%20or%20overworked%20families.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Jacobs/Gerson scholarship directly addresses the core claim by arguing combined family work hours rose, providing scholarly support for 'work harder than ever' even if individual hours remained stable."
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/title/economic-report-president-45/1998-8097/fulltext",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Economic Report of the President on new economy and working families is topically relevant but snippet does not convey specific findings or data bearing on whether parents work harder."
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/1997/demo/p70-59.html",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Census report on fathers as caregivers documents childcare arrangements but does not measure parental work intensity or hours, only the logistics of care during employment."
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/1997/demo/p70-57.html",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Census child-care update documents prevalence and complexity of care arrangements for employed mothers but does not measure whether parents work harder or longer hours."
+      }
+    ],
+    "clinton_1998:0194": [
+      {
+        "source_url": "https://monitoringthefuture.org/wp-content/uploads/2021/02/pr97dec20drug.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "MTF press release explicitly states drug use 'leveled or decelerated, not a clear overall decline,' directly contradicting the claim."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-20-fact-sheet-to-accompany-radio-address-on-drug-use.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "White House fact sheet cites 1997 MTF data showing teen drug use declining among 8th graders, supporting the claim's assertion of decline."
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED473427.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "SAMHSA/NHSDA household-survey data document rises in early 1990s and mixed/leveling trends by 1996–97, not broad declines."
+      },
+      {
+        "source_url": "https://news.umich.edu/american-teens-drug-use-shows-signs-of-leveling-after-long-rise/",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official MTF release shows 8th-grade illicit use declined for first time in six years, directly supporting a decline claim for that age group."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-20-press-briefing-by-donna-shalala-and-barry-mccaffrey.html",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "HHS/ONDCP briefing announces 1997 survey showing drug-use declines, supporting the claim."
+      },
+      {
+        "source_url": "https://www.ojp.gov/ncjrs/virtual-library/abstracts/national-survey-results-drug-use-monitoring-future-study-1975-6",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Underlying MTF report shows mixed picture: 8th-grade decline but marijuana still rising in 10th/12th grades, contradicting a broad 'drug use on the decline' claim."
+      },
+      {
+        "source_url": "https://nida.nih.gov/research-topics/trends-statistics/monitoring-future",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "NIDA page provides historical context only; snippet does not contain specific trend data or figures to evaluate the claim."
+      },
+      {
+        "source_url": "https://catalog.data.gov/dataset/national-household-survey-on-drug-abuse-nhsda-1996",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Primary 1996 NHSDA data show adolescent illicit use declined for first time since 1992, but overall adult trends roughly flat, not a broad decline."
+      },
+      {
+        "source_url": "https://archives.drugabuse.gov/DirReports/DirRep298/DirectorReport11.html",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "NIDA Director's Report summarizes MTF as 'mixed results, slowing increases and stabilization,' not a clear decline across drug use."
+      },
+      {
+        "source_url": "https://www.ojp.gov/ondcppubs/publications/pdf/budget98.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "ONDCP 1998 summary notes 1997 household-survey rates statistically unchanged from 1996, contradicting a decline claim."
+      }
+    ],
+    "clinton_1998:0210": [
+      {
+        "source_url": "http://congressionalresearch.com/98-51/document.php?study=NATO+A+BRIEF+HISTORY+OF+EXPANSION",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "CRS brief directly characterizes NATO as 'bulwark of America's successful Cold War strategy of containment,' corroborating the claim's core assertion about NATO's containment role."
+      },
+      {
+        "source_url": "https://clintonwhitehouse5.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Primary source (Clinton State of the Union) is the statement itself; if it contains the quoted claim, it is the measurement of what was asserted."
+      },
+      {
+        "source_url": "https://www.nato.int/en/about-us/official-texts-and-resources/official-texts/1997/07/08/madrid-declaration",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Madrid Declaration frames NATO's security role but does not directly address the 50-year containment claim or evaluate its success."
+      },
+      {
+        "source_url": "https://www.nato.int/en/about-us/official-texts-and-resources/official-texts/1997/05/27/founding-act",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "NATO–Russia Founding Act describes post–Cold War cooperation and shift away from confrontation, which is tangential to whether NATO contained communism for 50 years."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/nsiad-97-209",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "GAO report on enlargement discusses NATO's security role and costs but does not directly assess the 50-year containment claim."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/97-443F.html",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "CRS analysis of Madrid summit and enlargement rationale is contemporaneous context but does not directly evaluate NATO's 50-year containment record."
+      },
+      {
+        "source_url": "https://www.nato.int/en/news-and-events/articles/news/1997/05/27/nato-russia-summit-meeting-in-paris",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Press coverage of Paris summit highlights post–Cold War cooperation with Russia, not NATO's historical containment role."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1998/01/28/this-is-not-a-time-to-rest-it-is-a-time-to-build/655ca38e-b347-400e-878b-2c4f31c161a1/",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Media report of Clinton's State of the Union quoting his NATO line confirms the statement was made and provides contemporary context."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/03/1997-03-21-press-conference-of-presidents-clinton-and-yeltsin.html",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "White House press conference on NATO's transformation since the Cold War is background context but does not directly address the 50-year containment claim."
+      },
+      {
+        "source_url": "https://archives.nato.int/uploads/r/null/1/3/137930/0331_Summit_Madrid_Press_Info_1997_ENG.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Madrid summit press info records NATO's Cold War origins and the 1997 enlargement but does not evaluate the success of 50 years of containment."
+      }
+    ],
+    "clinton_1998:0216": [
+      {
+        "source_url": "https://www.washingtonpost.com/archive/politics/1997/12/23/crowds-welcome-clinton-in-sarajevo/f0d430aa-8f36-4dba-9c16-7c57f0e5860e/",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Contemporaneous report of thousands of Sarajevans in streets during late December 1997 directly corroborates the claim's assertion that children were visibly playing/present in streets at that time."
+      },
+      {
+        "source_url": "https://www.refworld.org/reference/annualreport/usdos/1996/33132",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "State Dept documentation of 1992–95 siege shelling and sniper fire establishes the 'two years ago' baseline of danger from which the contrast is drawn."
+      },
+      {
+        "source_url": "https://www.icty.org/x/cases/mladic/trans/en/960701IT.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "ICTY trial evidence of systematic sniping and shelling during the siege corroborates the historical condition ('hiding from snipers and shells') against which the 1997 change is measured."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-22-remarks-by-the-president-to-people-of-sarajevo.html",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Primary White House transcript from the Sarajevo visit itself documents Clinton describing the exact contrast—children/streets versus snipers-and-shells—that appears in the SOTU claim."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/12/1997-12-22-remarks-by-president-and-first-lady-to-troops-in-bosnia.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Official White House remarks from the December 22, 1997 Bosnia visit provide contemporaneous documentation of the presidential visit during which the observation was made."
+      },
+      {
+        "source_url": "https://1997-2001.state.gov/regions/eur/bosnia/bosnia_economic_recovery.html",
+        "relevance_score": 0.65,
+        "supports_claim": true,
+        "one_line_why": "State Dept account of infrastructure restoration (roads, trams, airport) by 1996–97 provides contextual support for the claim that normal life, including street activity, had returned."
+      },
+      {
+        "source_url": "https://clintonwhitehouse4.archives.gov/WH/SOTU98/address.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official SOTU transcript of January 27, 1998 contains the exact quoted sentence, confirming the claim's text and context."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GAOREPORTS-NSIAD-98-138/pdf/GAOREPORTS-NSIAD-98-138.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "GAO reconstruction report provides official baseline on post-siege recovery progress circa 1997–98, supporting the plausibility of the observed change in street conditions."
+      },
+      {
+        "source_url": "https://www.npr.org/programs/all-things-considered/1997/12/22/12986910",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Independent NPR coverage of the December 22, 1997 Sarajevo visit provides contemporaneous witness testimony to the city's conditions at the time the observation was made."
+      }
+    ],
+    "clinton_1998:0263": [
+      {
+        "source_url": "https://www.originalsources.com/Document.aspx?DocID=HKBUE697MT9VVB5",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "White House statement confirms Senate agreed to schedule a vote on campaign finance reform, corroborating the claim's core assertion of a scheduled vote."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1997-10-31/pdf/CREC-1997-10-31.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Senate record explicitly notes agreement to address McCain-Feingold 'come next March,' directly supporting the March timeline and bill identification."
+      },
+      {
+        "source_url": "https://www.congress.gov/crec/1998/01/27/CREC-1998-01-27-senate.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Senate floor statement from Jan 27, 1998 asserts a Senate vote by March 6, matching the claim's specific date and assertion almost verbatim."
+      },
+      {
+        "source_url": "https://www.congress.gov/congressional-record/volume-143/issue-4/senate-section/article/S379-1",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Documents the formal introduction of McCain-Feingold in 1997 but does not address the March 6 vote prediction or its likelihood."
+      },
+      {
+        "source_url": "https://clintonwhitehouse6.archives.gov/1997/10/1997-10-30-president-statement-on-campaign-finance-reform.html",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Primary source records Lott's agreement to schedule an early-1998 up-or-down vote on McCain-Feingold, the direct basis for the March 6 prediction."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-1997-11-04/pdf/CREC-1997-11-04-pt1-PgE2180-3.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "House record shows congressional leadership set March 6 as a timetable expectation for debate/vote, supporting the date and general commitment to a vote."
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/105th-congress/senate-bill/25",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Provides legislative history of S.25 but does not specifically address the March 6 vote prediction or its fulfillment."
+      },
+      {
+        "source_url": "https://newspapers.swco.ttu.edu/server/api/core/bitstreams/9ad0bc7f-d01d-4133-ab88-08989ca984be/content",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "AP report confirms agreement reached for a vote on campaign finance reform 'next spring,' corroborating the scheduled vote and timeframe."
+      }
+    ],
+    "clinton_1998:0339": [
+      {
+        "source_url": "https://www.genome.gov/10000485/1996-release-parkinsons-disease-gene",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "NHGRI press release explicitly documents the 'nine days' speed story for locating a Parkinson's gene on chromosome 4 in November 1996."
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9197268/",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Primary Science paper from June 1997 reports discovery of SNCA mutation in familial Parkinson's, confirming a gene was located, though does not specify the nine-day timeframe."
+      },
+      {
+        "source_url": "https://www.genome.gov/10000900/1997-release-first-parkinsons-gene",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official NIH/NHGRI announcement of alpha-synuclein as first Parkinson's gene with Collins citing rapid discovery, corroborating both the gene identification and speed claim."
+      },
+      {
+        "source_url": "https://www.science.org/doi/10.1126/science.276.5321.2045",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Primary Science paper by Polymeropoulos et al. identifying alpha-synuclein mutation in familial Parkinson's disease, confirming gene discovery though not the nine-day detail."
+      },
+      {
+        "source_url": "https://www.latimes.com/archives/la-xpm-1997-06-27-mn-7305-story.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Contemporary news report of alpha-synuclein mutation identification in inherited Parkinson's form, supporting the gene discovery claim without specifying timeline."
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/8895469/",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Primary paper mapping Parkinson's gene to chromosome 4q21-q23 in November 1996, explicitly noting the localization was done unusually fast, directly supporting the nine-day speed claim."
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9221499/",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "Contemporary report on gene discovery from June 1997 near the claim's utterance window, confirming the discovery occurred and was notable."
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/9278044/",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Later study linking alpha-synuclein to Lewy bodies in sporadic Parkinson's provides broader validation of the gene's role but does not address the nine-day discovery timeline."
+      }
+    ]
+  },
+  "soft_failures": []
+}

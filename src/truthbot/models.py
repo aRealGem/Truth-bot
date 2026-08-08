@@ -151,6 +151,27 @@ class Evidence(BaseModel):
         le=1.0,
         description="0–1 relevance to the claim",
     )
+    one_line_why: Optional[str] = Field(
+        None,
+        description=(
+            "The COMPARISON the stance rests on, in the scorer's words — the "
+            "claim's figure against this source's figure ('claim says 3.2M new "
+            "jobs; table row for Jan 2026 shows 2.9M'). None = never scored "
+            "with the B2 contract, in which case the pack payload falls back "
+            "to the snippet, which is what every earlier item carries."
+        ),
+    )
+    arithmetic_hinge: bool = Field(
+        default=False,
+        description=(
+            "The stance depends on ARITHMETIC THE SCORER PERFORMED over the "
+            "series — a maximum across a series, a ratio, a real-terms "
+            "deflation — rather than on a figure the source states outright. "
+            "Such a stance is a HYPOTHESIS for the panel, never proof, and "
+            "must not settle a verdict on its own; these items are collected "
+            "for computed-exhibit treatment (R-2, publish/computed_exhibit.py)."
+        ),
+    )
 
 
 class Verdict(BaseModel):

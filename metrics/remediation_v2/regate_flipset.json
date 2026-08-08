@@ -1,6 +1,6 @@
 {
   "schema": "truthbot-regate-flipset v1",
-  "generated": "2026-08-08T15:40:40.543011+00:00",
+  "generated": "2026-08-08T17:32:29.522685+00:00",
   "speeches": [
     "gwbush_2006",
     "clinton_1998",
@@ -12,10 +12,10 @@
   "speeches_partial_sidecar": [],
   "complete": true,
   "corpus_counts": {
-    "released": 32,
-    "still_gated": 55,
-    "newly_gated": 23,
-    "unchanged_decided": 419,
+    "released": 33,
+    "still_gated": 54,
+    "newly_gated": 27,
+    "unchanged_decided": 415,
     "not_rescored": 0
   },
   "corpus_claims": 529,
@@ -28,8 +28,8 @@
       "counts": {
         "released": 1,
         "still_gated": 6,
-        "newly_gated": 2,
-        "unchanged_decided": 39,
+        "newly_gated": 1,
+        "unchanged_decided": 40,
         "not_rescored": 0
       },
       "flips": [
@@ -64,41 +64,6 @@
             "role_aware": true,
             "era_mode": "strict",
             "quota_met": true,
-            "agrees": true
-          },
-          "baseline_reproduced": true
-        },
-        {
-          "sid": "gwbush_2006:0134",
-          "speech": "gwbush_2006",
-          "class": "newly_gated",
-          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
-          "claim_truncated": true,
-          "old_verdict": "TRUE",
-          "old_gate_code": "",
-          "claim_shape": "c-eval",
-          "before": {
-            "pack_items": 10,
-            "independent": 2,
-            "corroborant": 0,
-            "primary": 0,
-            "credits": 2,
-            "min_required": 2,
-            "role_aware": true,
-            "era_mode": "strict",
-            "quota_met": true,
-            "agrees": true
-          },
-          "after": {
-            "pack_items": 10,
-            "independent": 1,
-            "corroborant": 0,
-            "primary": 0,
-            "credits": 1,
-            "min_required": 2,
-            "role_aware": true,
-            "era_mode": "strict",
-            "quota_met": false,
             "agrees": true
           },
           "baseline_reproduced": true
@@ -154,8 +119,118 @@
         "mismatches": []
       },
       "breakdown_divergence": [],
-      "rescore_spend_usd": 0.084045,
-      "rescore_soft_failures": []
+      "rescore_spend_usd": 0.130378,
+      "rescore_spend_by_pass": {
+        "b1a": 0.084045,
+        "b2": 0.046333
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 48,
+        "b2": 11
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 396,
+        "supports": 281,
+        "refutes": 13,
+        "null": 102,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.25757575757575757
+      },
+      "stance_after": {
+        "items": 396,
+        "supports": 316,
+        "refutes": 23,
+        "null": 57,
+        "arithmetic_hinge": 12,
+        "null_rate": 0.14393939393939395
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_01062006.pdf",
+          "supports_claim": null,
+          "one_line_why": "BLS December 2005 payroll tables enable computing job growth over two-and-a-half years, but snippet does not state the computed total or Japan/EU comparison."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02032006.pdf",
+          "supports_claim": null,
+          "one_line_why": "BLS January 2006 monthly nonfarm payroll series covers Feb 2003–Jan 2006, permitting cumulative calculation, but snippet does not provide the computed total or Japan/EU comparison."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+          "supports_claim": null,
+          "one_line_why": "BLS December 2005 payroll data enables computing cumulative jobs since mid-2003, but snippet does not state the actual figure or comparison."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/history/empsit_02032006.txt",
+          "supports_claim": null,
+          "one_line_why": "BLS January 2006 primary nonfarm payroll series explicitly cited to verify ~4.6M cumulative U.S. job gain, but snippet does not state the actual figure or Japan/EU comparison."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://tile.loc.gov/storage-services/master/gdc/gdcebookspublic/20/23/69/30/17/2023693017/2023693017.pdf",
+          "supports_claim": false,
+          "one_line_why": "CBO Dec 2005 projects ~15% of GDP by 2030; characterization as 'majority share of federal outlays' is speculative and does not establish 60% of budget."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://www.cbo.gov/publication/21546",
+          "supports_claim": false,
+          "one_line_why": "CBO projects SS+Medicare+Medicaid at ~16% of GDP by 2030, not 60% of federal budget; these are different metrics (share of GDP vs. share of budget)."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://www.gao.gov/assets/a111311.html",
+          "supports_claim": false,
+          "one_line_why": "GAO-05-318T projects SS+Medicare+Medicaid at 15.6% of GDP in 2030, not 60% of federal budget; GDP share and budget share are distinct measures."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://www.gao.gov/assets/a202553.html",
+          "supports_claim": false,
+          "one_line_why": "GAO simulation shows S+M+M at ~14.8% of GDP in 2030; implication of 'over half of federal spending' is inference, not direct measurement of budget share."
+        },
+        {
+          "sid": "gwbush_2006:0187",
+          "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+          "source_url": "https://www.energy.gov/cfo/articles/fy-2007-budget-justification",
+          "supports_claim": null,
+          "one_line_why": "DOE CFO budget justification page hosts detailed spending figures but snippet does not state whether they sum to nearly $10 billion since 2001."
+        },
+        {
+          "sid": "gwbush_2006:0187",
+          "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+          "source_url": "https://www.energy.gov/documents/fy07highlightspdf",
+          "supports_claim": null,
+          "one_line_why": "DOE FY2007 Budget Highlights provides program-level funding data useful for verification but snippet does not state the cumulative since-2001 total."
+        },
+        {
+          "sid": "gwbush_2006:0217",
+          "claim": "Drug use among youth is down 19 percent since 2001.",
+          "source_url": "https://record.umich.edu/articles/overall-illicit-drug-use-by-american-teens-continues-gradual-decline/",
+          "supports_claim": true,
+          "one_line_why": "MTF operator reports past-month illicit teen drug use fell from ~19% (2001) to ~16% (2005), which is the ~19% decline the claim asserts."
+        },
+        {
+          "sid": "gwbush_2006:0217",
+          "claim": "Drug use among youth is down 19 percent since 2001.",
+          "source_url": "https://www.justice.gov/archive/olp/pdf/ndcs06.pdf",
+          "supports_claim": true,
+          "one_line_why": "White House cites MTF data showing 19.4% to 15.7%, which equals a 19% drop matching the claim exactly."
+        }
+      ]
     },
     {
       "speech": "clinton_1998",
@@ -165,11 +240,46 @@
       "counts": {
         "released": 6,
         "still_gated": 8,
-        "newly_gated": 4,
-        "unchanged_decided": 74,
+        "newly_gated": 6,
+        "unchanged_decided": 72,
         "not_rescored": 0
       },
       "flips": [
+        {
+          "sid": "clinton_1998:0006",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "We have more than 14 million new jobs, the lowest unemployment in 24 years, the lowest core inflation in 30 years; incom",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 4,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 4,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
         {
           "sid": "clinton_1998:0021",
           "speech": "clinton_1998",
@@ -381,6 +491,41 @@
           "baseline_reproduced": true
         },
         {
+          "sid": "clinton_1998:0210",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "For 50 years, NATO contained communism and kept America and Europe secure.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
           "sid": "clinton_1998:0211",
           "speech": "clinton_1998",
           "class": "newly_gated",
@@ -536,8 +681,125 @@
         "mismatches": []
       },
       "breakdown_divergence": [],
-      "rescore_spend_usd": 0.194938,
-      "rescore_soft_failures": []
+      "rescore_spend_usd": 0.302973,
+      "rescore_spend_by_pass": {
+        "b1a": 0.194938,
+        "b2": 0.108035
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 92,
+        "b2": 21
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 792,
+        "supports": 537,
+        "refutes": 33,
+        "null": 222,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.2803030303030303
+      },
+      "stance_after": {
+        "items": 792,
+        "supports": 643,
+        "refutes": 36,
+        "null": 113,
+        "arithmetic_hinge": 13,
+        "null_rate": 0.14267676767676768
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://en.wikipedia.org/wiki/1997_United_States_federal_budget",
+          "supports_claim": true,
+          "one_line_why": "FY1997 deficit of $22.6B (0.3% GDP) down from ~$290B in FY1992 yields ~92% reduction, directly confirming the '90 percent' cut claim."
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+          "supports_claim": true,
+          "one_line_why": "St. Louis Fed dataset of annual federal surplus/deficit allows computation of FY1992-to-FY1997 percentage reduction, which yields ~90% when calculated."
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://www.frbsf.org/research-and-insights/publications/economic-letter/1998/01/the-budget-deficit/",
+          "supports_claim": true,
+          "one_line_why": "Fed analysis documents sharp deficit decline from 4.7% of GDP (1992) to 0.3% (1997), consistent with ~90% reduction and supports the magnitude of improvement claimed."
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-3-1.pdf",
+          "supports_claim": true,
+          "one_line_why": "OMB Historical Table 1.1 shows unified deficit fell from −$290,402M (1992) to −$21,943M (1997), a ~92% reduction, directly corroborating the claim's '90 percent' deficit cut."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/012898.pdf",
+          "supports_claim": null,
+          "one_line_why": "CBO testimony discusses 1997 receipts and tax law effects on tax burdens; relevance to the 20-year low rate claim depends on whether testimony contains historical rate comparisons, unclear from description."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.cbo.gov/sites/default/files/revenue0.pdf",
+          "supports_claim": null,
+          "one_line_why": "CBO document on budgetary implications and provisions is primary source material; relevance to the 20-year low rate claim depends on whether it contains effective tax rate comparisons across time, unclear from description."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.jct.gov/getattachment/8e76364f-e214-48c2-a8ee-67be06fd636a/x-39-97-2150.pdf",
+          "supports_claim": null,
+          "one_line_why": "JCT document describes 1997 legislation and distributional effects; relevance to the 20-year low rate claim depends on whether it contains historical effective rate data, unclear from description."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.jct.gov/getattachment/def435ec-2c9e-46c6-9ca8-36945f02ca06/s-23-97.pdf",
+          "supports_claim": null,
+          "one_line_why": "JCT Blue Book provides distributional and effective-rate tables for the 1997 act; relevance depends on whether tables show middle-class rates at 20-year lows, which cannot be assessed from description alone."
+        },
+        {
+          "sid": "clinton_1998:0091",
+          "claim": "Today, record high exports account for fully one-third of our economic growth.",
+          "source_url": "https://bea.gov/sites/default/files/2019-04/gdp397p.txt",
+          "supports_claim": null,
+          "one_line_why": "Primary BEA preliminary Q3 1997 GDP release provides export contribution data but snippet does not state whether it equals one-third of total growth."
+        },
+        {
+          "sid": "clinton_1998:0091",
+          "claim": "Today, record high exports account for fully one-third of our economic growth.",
+          "source_url": "https://www.bea.gov/system/files/newsreleases/national/gdp/1997/gdp397a.txt",
+          "supports_claim": null,
+          "one_line_why": "Primary BEA GDP release for Q3 1997 provides net exports contribution data but snippet does not state the specific one-third figure or overall share."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+          "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+          "supports_claim": null,
+          "one_line_why": "DOL budget shows 1996–1997 funding levels (~$1.12B to ~$1.25B) but does not provide 1993 baseline or explicit doubling comparison."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+          "source_url": "https://www.congress.gov/committee-report/104th-congress/house-report/659",
+          "supports_claim": null,
+          "one_line_why": "House Appropriations report shows FY1997 Title III funding at ~$1.1B, a single year's figure without 1993 baseline to verify doubling."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+          "source_url": "https://www.everycrsreport.com/reports/98-203.html",
+          "supports_claim": null,
+          "one_line_why": "CRS analysis details FY1998–1999 funding levels (~$1.35B) but does not state 1993 baseline or explicit doubling comparison."
+        }
+      ]
     },
     {
       "speech": "obama_2014",
@@ -545,13 +807,48 @@
       "claims": 96,
       "sidecar_complete": true,
       "counts": {
-        "released": 4,
-        "still_gated": 8,
-        "newly_gated": 3,
-        "unchanged_decided": 81,
+        "released": 5,
+        "still_gated": 7,
+        "newly_gated": 5,
+        "unchanged_decided": 79,
         "not_rescored": 0
       },
       "flips": [
+        {
+          "sid": "obama_2014:0001",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
         {
           "sid": "obama_2014:0004",
           "speech": "obama_2014",
@@ -647,8 +944,8 @@
             "pack_items": 10,
             "independent": 0,
             "corroborant": 0,
-            "primary": 1,
-            "credits": 1,
+            "primary": 0,
+            "credits": 0,
             "min_required": 2,
             "role_aware": true,
             "era_mode": "strict",
@@ -693,6 +990,41 @@
           "baseline_reproduced": true
         },
         {
+          "sid": "obama_2014:0177",
+          "speech": "obama_2014",
+          "class": "released",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 8,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 8,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
           "sid": "obama_2014:0189",
           "speech": "obama_2014",
           "class": "newly_gated",
@@ -715,10 +1047,45 @@
           },
           "after": {
             "pack_items": 8,
-            "independent": 1,
+            "independent": 0,
             "corroborant": 0,
             "primary": 0,
-            "credits": 1,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0198",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "Right now, it helps about half of all parents at some point.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
             "min_required": 2,
             "role_aware": true,
             "era_mode": "strict",
@@ -813,8 +1180,83 @@
         "mismatches": []
       },
       "breakdown_divergence": [],
-      "rescore_spend_usd": 0.196485,
-      "rescore_soft_failures": []
+      "rescore_spend_usd": 0.294482,
+      "rescore_spend_by_pass": {
+        "b1a": 0.196485,
+        "b2": 0.097997
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 96,
+        "b2": 20
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 799,
+        "supports": 590,
+        "refutes": 22,
+        "null": 187,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.23404255319148937
+      },
+      "stance_after": {
+        "items": 799,
+        "supports": 676,
+        "refutes": 30,
+        "null": 93,
+        "arithmetic_hinge": 7,
+        "null_rate": 0.11639549436795996
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "obama_2014:0001",
+          "claim": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo",
+          "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+          "supports_claim": null,
+          "one_line_why": "BLS time series allows computation of the figure but snippet does not state the result; would require arithmetic to verify."
+        },
+        {
+          "sid": "obama_2014:0087",
+          "claim": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job c",
+          "source_url": "http://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+          "supports_claim": true,
+          "one_line_why": "GTM Research analysis of ~132,000 PV installations in 2013 yields approximately one system every four minutes, corroborating the claim's rate."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+          "supports_claim": true,
+          "one_line_why": "DOL official reference corroborates which states raised statutory minimum-wage rates in the relevant year."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "source_url": "https://www.dol.gov/agencies/whd/mw-consolidated",
+          "supports_claim": true,
+          "one_line_why": "DOL primary data table is the authoritative source for verifying which states changed minimum-wage laws in the relevant period; corroborates the five-state count."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "source_url": "https://www.dol.gov/agencies/whd/state/minimum-wage/tipped/2014",
+          "supports_claim": true,
+          "one_line_why": "Federal Labor table confirms NJ, NY, CT, and RI increases by early 2014; combined with CA from item 4, accounts for five states."
+        },
+        {
+          "sid": "obama_2014:0189",
+          "claim": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+          "source_url": "https://www.everycrsreport.com/files/20130226_R42973_44c181d93ef92acbbebebd1a13eb57774c7678a8.pdf",
+          "supports_claim": false,
+          "one_line_why": "CRS table shows 1981 minimum $3.35 = $8.61 in real (2013) dollars; $7.25 in 2014 is ~16% lower, not ~20%."
+        },
+        {
+          "sid": "obama_2014:0202",
+          "claim": "Today, most workers don’t have a pension.",
+          "source_url": "http://www.dol.gov/ebsa/pdf/2011pensionplanbulletin.pdf",
+          "supports_claim": null,
+          "one_line_why": "Source provides aggregate participant counts (~130M) across all pension plan types in 2011 but does not state what share of the total workforce this represents, making it impossible to assess the claim directly."
+        }
+      ]
     },
     {
       "speech": "biden_2022",
@@ -824,8 +1266,8 @@
       "counts": {
         "released": 5,
         "still_gated": 11,
-        "newly_gated": 4,
-        "unchanged_decided": 91,
+        "newly_gated": 5,
+        "unchanged_decided": 90,
         "not_rescored": 0
       },
       "flips": [
@@ -1005,6 +1447,41 @@
           "baseline_reproduced": true
         },
         {
+          "sid": "biden_2022:0211",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "claim_truncated": true,
+          "old_verdict": "MISLEADING",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
           "sid": "biden_2022:0244",
           "speech": "biden_2022",
           "class": "released",
@@ -1160,8 +1637,104 @@
         "mismatches": []
       },
       "breakdown_divergence": [],
-      "rescore_spend_usd": 0.215807,
-      "rescore_soft_failures": []
+      "rescore_spend_usd": 0.296257,
+      "rescore_spend_by_pass": {
+        "b1a": 0.215807,
+        "b2": 0.08045
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 111,
+        "b2": 18
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 885,
+        "supports": 678,
+        "refutes": 26,
+        "null": 181,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.20451977401129945
+      },
+      "stance_after": {
+        "items": 885,
+        "supports": 736,
+        "refutes": 42,
+        "null": 107,
+        "arithmetic_hinge": 10,
+        "null_rate": 0.12090395480225989
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "biden_2022:0114",
+          "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.htm",
+          "supports_claim": null,
+          "one_line_why": "References underlying establishment survey tables but does not state the aggregate 2021 figure needed to verify the claim."
+        },
+        {
+          "sid": "biden_2022:0114",
+          "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_12032021.htm",
+          "supports_claim": null,
+          "one_line_why": "Provides monthly data leading into the full-year total but does not state the 2021 aggregate figure itself."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+          "source_url": "https://www.bls.gov/ces/publications/highlights/2022/current-employment-statistics-highlights-01-2022.pdf",
+          "supports_claim": true,
+          "one_line_why": "BLS CES highlights show 12.559M in January 2022 and 12.190M in December 2020, which when subtracted yields 369,000."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+          "supports_claim": true,
+          "one_line_why": "Official BLS data shows manufacturing employment at 12.559M in Jan 2022 vs 12.190M in Dec 2020, yielding exactly 369,000 gain."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "source_url": "https://www.cms.gov/newsroom/fact-sheets/american-rescue-plan-and-marketplace",
+          "supports_claim": false,
+          "one_line_why": "CMS official reports ~$50/month per person (~$600/year), far below the $2,400/year per family claim."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "source_url": "https://www.congress.gov/117/meeting/house/111378/documents/HHRG-117-IF14-20210323-SD018.pdf",
+          "supports_claim": false,
+          "one_line_why": "Covered California shows average household net premium drop ~$119/month (~$1,428/year), below the $2,400/year per family claim."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "source_url": "https://www.kff.org/affordable-care-act/how-the-american-rescue-plan-act-affects-subsidies-for-marketplace-shoppers-and-people-who-are-uninsured/",
+          "supports_claim": false,
+          "one_line_why": "KFF analysis estimates ~$70/month (~$840/year) for typical individual purchasers, substantially below $2,400/year per family."
+        },
+        {
+          "sid": "biden_2022:0216",
+          "claim": "Many families pay up to $14,000 a year for child care per child.",
+          "source_url": "https://dhs.ri.gov/media/3066/download?language=en",
+          "supports_claim": true,
+          "one_line_why": "Rhode Island 75th-percentile infant center weekly rate of ~$289 calculates to ~$13.9k/yr, directly matching the $14k claim."
+        },
+        {
+          "sid": "biden_2022:0266",
+          "claim": "We’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.",
+          "source_url": "https://www.foxnews.com/us/number-covid-patients-us-hospitals-record-low",
+          "supports_claim": true,
+          "one_line_why": "Reports ~11,860 hospitalized average as 'lowest since summer 2021' with prior June 2021 low of 12,041, directly supporting claim that Feb/Mar 2022 reached July-level lows; date verification needed."
+        },
+        {
+          "sid": "biden_2022:0305",
+          "claim": "And with 75 percent of adult Americans fully vaccinated and hospitalizations down by 77 percent, most Americans can remo",
+          "source_url": "https://stacks.cdc.gov/view/cdc/114173",
+          "supports_claim": true,
+          "one_line_why": "CDC summary quantifies case/hospitalization declines from mid-January peak, providing basis for the 77% hospitalization reduction claim."
+        }
+      ]
     },
     {
       "speech": "trump_2026",
@@ -1176,6 +1749,41 @@
         "not_rescored": 0
       },
       "flips": [
+        {
+          "sid": "trump_2026:0043",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+          "claim_truncated": false,
+          "old_verdict": null,
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 5,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 5,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
         {
           "sid": "trump_2026:0054",
           "speech": "trump_2026",
@@ -1308,41 +1916,6 @@
             "corroborant": 0,
             "primary": 0,
             "credits": 0,
-            "min_required": 2,
-            "role_aware": true,
-            "era_mode": "strict",
-            "quota_met": false,
-            "agrees": true
-          },
-          "baseline_reproduced": true
-        },
-        {
-          "sid": "trump_2026:0182",
-          "speech": "trump_2026",
-          "class": "newly_gated",
-          "claim": "And the big story was how Donald Trump called the economy correctly and 22 Nobel Prize winners in economics didn't, they",
-          "claim_truncated": true,
-          "old_verdict": "FALSE",
-          "old_gate_code": "",
-          "claim_shape": "c-third",
-          "before": {
-            "pack_items": 10,
-            "independent": 3,
-            "corroborant": 0,
-            "primary": 0,
-            "credits": 3,
-            "min_required": 2,
-            "role_aware": true,
-            "era_mode": "strict",
-            "quota_met": true,
-            "agrees": true
-          },
-          "after": {
-            "pack_items": 10,
-            "independent": 1,
-            "corroborant": 0,
-            "primary": 0,
-            "credits": 1,
             "min_required": 2,
             "role_aware": true,
             "era_mode": "strict",
@@ -2102,8 +2675,188 @@
         "mismatches": []
       },
       "breakdown_divergence": [],
-      "rescore_spend_usd": 0.37197,
-      "rescore_soft_failures": []
+      "rescore_spend_usd": 0.579665,
+      "rescore_spend_by_pass": {
+        "b1a": 0.37197,
+        "b2": 0.207695
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 182,
+        "b2": 45
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 1472,
+        "supports": 797,
+        "refutes": 231,
+        "null": 444,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.3016304347826087
+      },
+      "stance_after": {
+        "items": 1472,
+        "supports": 827,
+        "refutes": 336,
+        "null": 309,
+        "arithmetic_hinge": 22,
+        "null_rate": 0.20991847826086957
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "trump_2026:0022",
+          "claim": "The flow of deadly fentanyl across our border is down by a record 56 percent in one year.",
+          "source_url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843827",
+          "supports_claim": false,
+          "one_line_why": "Claim asserts 56% drop in fentanyl flow; forensic-seizure data show only 28.8% → 23.2% (a 19.4% relative decline), contradicting the 56% figure."
+        },
+        {
+          "sid": "trump_2026:0030",
+          "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "supports_claim": false,
+          "one_line_why": "Official BLS core CPI for December 2025 = 2.6% YoY; this is recent but not demonstrably a five-year low without historical comparison, and does not corroborate the claim's framing of a downward-driven achievement."
+        },
+        {
+          "sid": "trump_2026:0030",
+          "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+          "source_url": "https://www.washingtonexaminer.com/news/white-house/4469755/trump-boasts-falling-inflation-during-joint-address-context/",
+          "supports_claim": true,
+          "one_line_why": "Press coverage reports core CPI 2.5% (year ending January) and administration's framing of 'lowest since March 2021,' which if accurate would support a five-year low claim (Feb 2026 minus 5 years ≈ Feb 2021)."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://alfred.stlouisfed.org/release?ob=pv&od=desc&rd=2026-01-13&rid=10",
+          "supports_claim": true,
+          "one_line_why": "ALFRED St. Louis Fed vintage data for CPILFESL (core CPI series) December 2025 provides official BLS series data used in three-month annualized calculations."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://www.bls.gov/cpi/tables/supplemental-files/home.htm",
+          "supports_claim": true,
+          "one_line_why": "BLS supplemental XLSX tables for December 2025 contain the precise seasonally-adjusted index series levels needed to verify the 1.7% three-month annualized calculation."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "supports_claim": true,
+          "one_line_why": "Primary BLS December 2025 CPI release is the direct source document from which the ~1.7% three-month annualized core rate is computed."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_10242025.htm",
+          "supports_claim": true,
+          "one_line_why": "Official BLS September 2025 CPI index level is a component input to the three-month annualized calculation spanning Q4 2025."
+        },
+        {
+          "sid": "trump_2026:0043",
+          "claim": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+          "source_url": "https://www.bea.gov/news/2025/new-foreign-direct-investment-united-states-2024",
+          "supports_claim": false,
+          "one_line_why": "Claim says 'less than $1 trillion in four long years'; snippet shows 2024 FDI was $151B, and notes it was below the 2014–2023 average, implying annual figures in that range—summing four years of ~$150B each yields ~$600B, well below $1T, bu"
+        },
+        {
+          "sid": "trump_2026:0046",
+          "claim": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
+          "source_url": "https://www.bea.gov/news/2024/new-foreign-direct-investment-united-states-2023",
+          "supports_claim": false,
+          "one_line_why": "BEA data for 2021–2023 shows cumulative FDI under $1 trillion, contradicting the claim's assertion of 'much more than $18 trillion for one year.'"
+        },
+        {
+          "sid": "trump_2026:0052",
+          "claim": "American oil production is up by more than 600,000 barrels a day and we just received from our new friend and partner, V",
+          "source_url": "https://www.energy.gov/articles/fact-sheet-president-trump-restoring-prosperity-safety-and-security-united-states-and",
+          "supports_claim": false,
+          "one_line_why": "Official DOE fact sheet cites ~380k bpd early flow rate; if sustained over six weeks (42 days) yields ~16M barrels, far short of 80M claimed received by late February."
+        },
+        {
+          "sid": "trump_2026:0055",
+          "claim": "Think about that, any time in the history of our country, more working today and 100 percent of all jobs created under m",
+          "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+          "supports_claim": true,
+          "one_line_why": "BLS CES total nonfarm series shows net increase from 158,268k (Jan 2025) to 158,592k (Jan 2026); combined with item 3, implies government employment declined, consistent with claim."
+        },
+        {
+          "sid": "trump_2026:0057",
+          "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+          "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-households-1.pdf",
+          "supports_claim": null,
+          "one_line_why": "Primary USDA/FNS household caseload data is relevant to SNAP trends but measures households rather than persons; snippet does not provide the figures needed to verify the 2.4M persons claim."
+        },
+        {
+          "sid": "trump_2026:0057",
+          "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+          "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-persons-1.pdf",
+          "supports_claim": null,
+          "one_line_why": "Primary USDA/FNS data series on SNAP participation is the measurement needed to verify the 2.4M reduction claim, but snippet does not state the actual figures or change."
+        },
+        {
+          "sid": "trump_2026:0137",
+          "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+          "source_url": "https://www.irs.gov/newsroom/what-to-know-about-the-no-tax-on-overtime-deduction",
+          "supports_claim": null,
+          "one_line_why": "IRS specifics on overtime deduction caps ($12,500 single/$25,000 joint) and phaseouts are essential to sizing the tax benefit but do not directly state Megan's $5,000 savings."
+        },
+        {
+          "sid": "trump_2026:0137",
+          "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+          "source_url": "https://www.irs.gov/newsroom/working-families-tax-cuts-individuals-and-workers",
+          "supports_claim": null,
+          "one_line_why": "Official IRS overview permits computation of whether $5,000 is plausible, but snippet does not itself state Megan's tax savings or confirm the claim's magnitude."
+        },
+        {
+          "sid": "trump_2026:0161",
+          "claim": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time ",
+          "source_url": "https://www.whitehouse.gov/wp-content/uploads/2025/03/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+          "supports_claim": false,
+          "one_line_why": "CEA projections show $303,800 at $5,000/yr (maximum), $154,800 at half-max ($2,500/yr), and $5,800 with no contributions; half-max is not modest and still required to exceed $100k."
+        },
+        {
+          "sid": "trump_2026:0208",
+          "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "supports_claim": false,
+          "one_line_why": "BLS 12-month CPI of 2.7% in Dec 2025 does not support a simple $34,000 per-family inflation charge; the claim requires cumulative calculation, not a single-year rate."
+        },
+        {
+          "sid": "trump_2026:0208",
+          "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+          "source_url": "https://www.bls.gov/opub/ted/2026/consumer-price-index-2025-in-review.htm",
+          "supports_claim": null,
+          "one_line_why": "Official BLS CPI documents provide the raw price-change data needed to verify whether inflation was 'record-setting' and to size cumulative burden, but snippet does not state the figures themselves."
+        },
+        {
+          "sid": "trump_2026:0219",
+          "claim": "The price of eggs is down 60 percent.",
+          "source_url": "https://data.bls.gov/timeseries/APU0000708111",
+          "supports_claim": true,
+          "one_line_why": "BLS data shows Mar 2025 peak $6.227/doz and Jan 2026 $2.577/doz, which equals a 59–60% decline, directly matching the claim."
+        },
+        {
+          "sid": "trump_2026:0295",
+          "claim": "Yet, half of all of working Americans still do not have access to a retirement plan with matching contributions from an ",
+          "source_url": "https://www.congress.gov/event/118th-congress/senate-event/LC73084/text",
+          "supports_claim": false,
+          "one_line_why": "Senate HELP materials cite roughly 50+ million workers not offered workplace plans, which at typical workforce size (~160M) implies ~31% lack access, not 50%."
+        },
+        {
+          "sid": "trump_2026:0583",
+          "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+          "source_url": "https://usafacts.org/reports/state-of-the-union/defense/",
+          "supports_claim": null,
+          "one_line_why": "USAFacts fact sheet compiling historical defense spending trends is directly relevant to judging whether FY2026 is 'record,' but snippet does not state the actual comparison or conclusion."
+        },
+        {
+          "sid": "trump_2026:0583",
+          "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+          "source_url": "https://www.congress.gov/crs-product/IN12641",
+          "supports_claim": null,
+          "one_line_why": "CRS NDAA authorization figure (~$890.6B) is a primary data series for national defense, but snippet does not clarify whether this is the total defense outlay, how it compares historically, or whether it constitutes a 'record.'"
+        }
+      ]
     }
   ],
   "released_sids": [
@@ -2121,6 +2874,7 @@
     "gwbush_2006:0133",
     "obama_2014:0056",
     "obama_2014:0153",
+    "obama_2014:0177",
     "obama_2014:0255",
     "obama_2014:0280",
     "trump_2026:0191",
@@ -2143,46 +2897,549 @@
   "newly_gated_sids": [
     "biden_2022:0100",
     "biden_2022:0124",
+    "biden_2022:0211",
     "biden_2022:0376",
     "biden_2022:0427",
+    "clinton_1998:0006",
     "clinton_1998:0101",
     "clinton_1998:0107",
+    "clinton_1998:0210",
     "clinton_1998:0211",
     "clinton_1998:0358",
-    "gwbush_2006:0134",
     "gwbush_2006:0217",
+    "obama_2014:0001",
     "obama_2014:0004",
     "obama_2014:0070",
     "obama_2014:0189",
+    "obama_2014:0198",
+    "trump_2026:0043",
     "trump_2026:0054",
     "trump_2026:0057",
     "trump_2026:0130",
     "trump_2026:0137",
-    "trump_2026:0182",
     "trump_2026:0341",
     "trump_2026:0450",
     "trump_2026:0487",
     "trump_2026:0665",
     "trump_2026:0667"
   ],
+  "stance": {
+    "before": {
+      "items": 4344,
+      "supports": 2883,
+      "refutes": 325,
+      "null": 1136
+    },
+    "after": {
+      "items": 4344,
+      "supports": 3198,
+      "refutes": 467,
+      "null": 679
+    }
+  },
+  "arithmetic_hinges": [
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_01062006.pdf",
+      "supports_claim": null,
+      "one_line_why": "BLS December 2005 payroll tables enable computing job growth over two-and-a-half years, but snippet does not state the computed total or Japan/EU comparison."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_02032006.pdf",
+      "supports_claim": null,
+      "one_line_why": "BLS January 2006 monthly nonfarm payroll series covers Feb 2003–Jan 2006, permitting cumulative calculation, but snippet does not provide the computed total or Japan/EU comparison."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+      "supports_claim": null,
+      "one_line_why": "BLS December 2005 payroll data enables computing cumulative jobs since mid-2003, but snippet does not state the actual figure or comparison."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/history/empsit_02032006.txt",
+      "supports_claim": null,
+      "one_line_why": "BLS January 2006 primary nonfarm payroll series explicitly cited to verify ~4.6M cumulative U.S. job gain, but snippet does not state the actual figure or Japan/EU comparison."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://tile.loc.gov/storage-services/master/gdc/gdcebookspublic/20/23/69/30/17/2023693017/2023693017.pdf",
+      "supports_claim": false,
+      "one_line_why": "CBO Dec 2005 projects ~15% of GDP by 2030; characterization as 'majority share of federal outlays' is speculative and does not establish 60% of budget."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://www.cbo.gov/publication/21546",
+      "supports_claim": false,
+      "one_line_why": "CBO projects SS+Medicare+Medicaid at ~16% of GDP by 2030, not 60% of federal budget; these are different metrics (share of GDP vs. share of budget)."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://www.gao.gov/assets/a111311.html",
+      "supports_claim": false,
+      "one_line_why": "GAO-05-318T projects SS+Medicare+Medicaid at 15.6% of GDP in 2030, not 60% of federal budget; GDP share and budget share are distinct measures."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://www.gao.gov/assets/a202553.html",
+      "supports_claim": false,
+      "one_line_why": "GAO simulation shows S+M+M at ~14.8% of GDP in 2030; implication of 'over half of federal spending' is inference, not direct measurement of budget share."
+    },
+    {
+      "sid": "gwbush_2006:0187",
+      "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+      "source_url": "https://www.energy.gov/cfo/articles/fy-2007-budget-justification",
+      "supports_claim": null,
+      "one_line_why": "DOE CFO budget justification page hosts detailed spending figures but snippet does not state whether they sum to nearly $10 billion since 2001."
+    },
+    {
+      "sid": "gwbush_2006:0187",
+      "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+      "source_url": "https://www.energy.gov/documents/fy07highlightspdf",
+      "supports_claim": null,
+      "one_line_why": "DOE FY2007 Budget Highlights provides program-level funding data useful for verification but snippet does not state the cumulative since-2001 total."
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "claim": "Drug use among youth is down 19 percent since 2001.",
+      "source_url": "https://record.umich.edu/articles/overall-illicit-drug-use-by-american-teens-continues-gradual-decline/",
+      "supports_claim": true,
+      "one_line_why": "MTF operator reports past-month illicit teen drug use fell from ~19% (2001) to ~16% (2005), which is the ~19% decline the claim asserts."
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "claim": "Drug use among youth is down 19 percent since 2001.",
+      "source_url": "https://www.justice.gov/archive/olp/pdf/ndcs06.pdf",
+      "supports_claim": true,
+      "one_line_why": "White House cites MTF data showing 19.4% to 15.7%, which equals a 19% drop matching the claim exactly."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://en.wikipedia.org/wiki/1997_United_States_federal_budget",
+      "supports_claim": true,
+      "one_line_why": "FY1997 deficit of $22.6B (0.3% GDP) down from ~$290B in FY1992 yields ~92% reduction, directly confirming the '90 percent' cut claim."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+      "supports_claim": true,
+      "one_line_why": "St. Louis Fed dataset of annual federal surplus/deficit allows computation of FY1992-to-FY1997 percentage reduction, which yields ~90% when calculated."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://www.frbsf.org/research-and-insights/publications/economic-letter/1998/01/the-budget-deficit/",
+      "supports_claim": true,
+      "one_line_why": "Fed analysis documents sharp deficit decline from 4.7% of GDP (1992) to 0.3% (1997), consistent with ~90% reduction and supports the magnitude of improvement claimed."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-3-1.pdf",
+      "supports_claim": true,
+      "one_line_why": "OMB Historical Table 1.1 shows unified deficit fell from −$290,402M (1992) to −$21,943M (1997), a ~92% reduction, directly corroborating the claim's '90 percent' deficit cut."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/012898.pdf",
+      "supports_claim": null,
+      "one_line_why": "CBO testimony discusses 1997 receipts and tax law effects on tax burdens; relevance to the 20-year low rate claim depends on whether testimony contains historical rate comparisons, unclear from description."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.cbo.gov/sites/default/files/revenue0.pdf",
+      "supports_claim": null,
+      "one_line_why": "CBO document on budgetary implications and provisions is primary source material; relevance to the 20-year low rate claim depends on whether it contains effective tax rate comparisons across time, unclear from description."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.jct.gov/getattachment/8e76364f-e214-48c2-a8ee-67be06fd636a/x-39-97-2150.pdf",
+      "supports_claim": null,
+      "one_line_why": "JCT document describes 1997 legislation and distributional effects; relevance to the 20-year low rate claim depends on whether it contains historical effective rate data, unclear from description."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.jct.gov/getattachment/def435ec-2c9e-46c6-9ca8-36945f02ca06/s-23-97.pdf",
+      "supports_claim": null,
+      "one_line_why": "JCT Blue Book provides distributional and effective-rate tables for the 1997 act; relevance depends on whether tables show middle-class rates at 20-year lows, which cannot be assessed from description alone."
+    },
+    {
+      "sid": "clinton_1998:0091",
+      "claim": "Today, record high exports account for fully one-third of our economic growth.",
+      "source_url": "https://bea.gov/sites/default/files/2019-04/gdp397p.txt",
+      "supports_claim": null,
+      "one_line_why": "Primary BEA preliminary Q3 1997 GDP release provides export contribution data but snippet does not state whether it equals one-third of total growth."
+    },
+    {
+      "sid": "clinton_1998:0091",
+      "claim": "Today, record high exports account for fully one-third of our economic growth.",
+      "source_url": "https://www.bea.gov/system/files/newsreleases/national/gdp/1997/gdp397a.txt",
+      "supports_claim": null,
+      "one_line_why": "Primary BEA GDP release for Q3 1997 provides net exports contribution data but snippet does not state the specific one-third figure or overall share."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+      "supports_claim": null,
+      "one_line_why": "DOL budget shows 1996–1997 funding levels (~$1.12B to ~$1.25B) but does not provide 1993 baseline or explicit doubling comparison."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "source_url": "https://www.congress.gov/committee-report/104th-congress/house-report/659",
+      "supports_claim": null,
+      "one_line_why": "House Appropriations report shows FY1997 Title III funding at ~$1.1B, a single year's figure without 1993 baseline to verify doubling."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "source_url": "https://www.everycrsreport.com/reports/98-203.html",
+      "supports_claim": null,
+      "one_line_why": "CRS analysis details FY1998–1999 funding levels (~$1.35B) but does not state 1993 baseline or explicit doubling comparison."
+    },
+    {
+      "sid": "obama_2014:0001",
+      "claim": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo",
+      "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+      "supports_claim": null,
+      "one_line_why": "BLS time series allows computation of the figure but snippet does not state the result; would require arithmetic to verify."
+    },
+    {
+      "sid": "obama_2014:0087",
+      "claim": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job c",
+      "source_url": "http://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+      "supports_claim": true,
+      "one_line_why": "GTM Research analysis of ~132,000 PV installations in 2013 yields approximately one system every four minutes, corroborating the claim's rate."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "supports_claim": true,
+      "one_line_why": "DOL official reference corroborates which states raised statutory minimum-wage rates in the relevant year."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "source_url": "https://www.dol.gov/agencies/whd/mw-consolidated",
+      "supports_claim": true,
+      "one_line_why": "DOL primary data table is the authoritative source for verifying which states changed minimum-wage laws in the relevant period; corroborates the five-state count."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "source_url": "https://www.dol.gov/agencies/whd/state/minimum-wage/tipped/2014",
+      "supports_claim": true,
+      "one_line_why": "Federal Labor table confirms NJ, NY, CT, and RI increases by early 2014; combined with CA from item 4, accounts for five states."
+    },
+    {
+      "sid": "obama_2014:0189",
+      "claim": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+      "source_url": "https://www.everycrsreport.com/files/20130226_R42973_44c181d93ef92acbbebebd1a13eb57774c7678a8.pdf",
+      "supports_claim": false,
+      "one_line_why": "CRS table shows 1981 minimum $3.35 = $8.61 in real (2013) dollars; $7.25 in 2014 is ~16% lower, not ~20%."
+    },
+    {
+      "sid": "obama_2014:0202",
+      "claim": "Today, most workers don’t have a pension.",
+      "source_url": "http://www.dol.gov/ebsa/pdf/2011pensionplanbulletin.pdf",
+      "supports_claim": null,
+      "one_line_why": "Source provides aggregate participant counts (~130M) across all pension plan types in 2011 but does not state what share of the total workforce this represents, making it impossible to assess the claim directly."
+    },
+    {
+      "sid": "biden_2022:0114",
+      "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.htm",
+      "supports_claim": null,
+      "one_line_why": "References underlying establishment survey tables but does not state the aggregate 2021 figure needed to verify the claim."
+    },
+    {
+      "sid": "biden_2022:0114",
+      "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_12032021.htm",
+      "supports_claim": null,
+      "one_line_why": "Provides monthly data leading into the full-year total but does not state the 2021 aggregate figure itself."
+    },
+    {
+      "sid": "biden_2022:0169",
+      "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+      "source_url": "https://www.bls.gov/ces/publications/highlights/2022/current-employment-statistics-highlights-01-2022.pdf",
+      "supports_claim": true,
+      "one_line_why": "BLS CES highlights show 12.559M in January 2022 and 12.190M in December 2020, which when subtracted yields 369,000."
+    },
+    {
+      "sid": "biden_2022:0169",
+      "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+      "supports_claim": true,
+      "one_line_why": "Official BLS data shows manufacturing employment at 12.559M in Jan 2022 vs 12.190M in Dec 2020, yielding exactly 369,000 gain."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+      "source_url": "https://www.cms.gov/newsroom/fact-sheets/american-rescue-plan-and-marketplace",
+      "supports_claim": false,
+      "one_line_why": "CMS official reports ~$50/month per person (~$600/year), far below the $2,400/year per family claim."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+      "source_url": "https://www.congress.gov/117/meeting/house/111378/documents/HHRG-117-IF14-20210323-SD018.pdf",
+      "supports_claim": false,
+      "one_line_why": "Covered California shows average household net premium drop ~$119/month (~$1,428/year), below the $2,400/year per family claim."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+      "source_url": "https://www.kff.org/affordable-care-act/how-the-american-rescue-plan-act-affects-subsidies-for-marketplace-shoppers-and-people-who-are-uninsured/",
+      "supports_claim": false,
+      "one_line_why": "KFF analysis estimates ~$70/month (~$840/year) for typical individual purchasers, substantially below $2,400/year per family."
+    },
+    {
+      "sid": "biden_2022:0216",
+      "claim": "Many families pay up to $14,000 a year for child care per child.",
+      "source_url": "https://dhs.ri.gov/media/3066/download?language=en",
+      "supports_claim": true,
+      "one_line_why": "Rhode Island 75th-percentile infant center weekly rate of ~$289 calculates to ~$13.9k/yr, directly matching the $14k claim."
+    },
+    {
+      "sid": "biden_2022:0266",
+      "claim": "We’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.",
+      "source_url": "https://www.foxnews.com/us/number-covid-patients-us-hospitals-record-low",
+      "supports_claim": true,
+      "one_line_why": "Reports ~11,860 hospitalized average as 'lowest since summer 2021' with prior June 2021 low of 12,041, directly supporting claim that Feb/Mar 2022 reached July-level lows; date verification needed."
+    },
+    {
+      "sid": "biden_2022:0305",
+      "claim": "And with 75 percent of adult Americans fully vaccinated and hospitalizations down by 77 percent, most Americans can remo",
+      "source_url": "https://stacks.cdc.gov/view/cdc/114173",
+      "supports_claim": true,
+      "one_line_why": "CDC summary quantifies case/hospitalization declines from mid-January peak, providing basis for the 77% hospitalization reduction claim."
+    },
+    {
+      "sid": "trump_2026:0022",
+      "claim": "The flow of deadly fentanyl across our border is down by a record 56 percent in one year.",
+      "source_url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843827",
+      "supports_claim": false,
+      "one_line_why": "Claim asserts 56% drop in fentanyl flow; forensic-seizure data show only 28.8% → 23.2% (a 19.4% relative decline), contradicting the 56% figure."
+    },
+    {
+      "sid": "trump_2026:0030",
+      "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+      "supports_claim": false,
+      "one_line_why": "Official BLS core CPI for December 2025 = 2.6% YoY; this is recent but not demonstrably a five-year low without historical comparison, and does not corroborate the claim's framing of a downward-driven achievement."
+    },
+    {
+      "sid": "trump_2026:0030",
+      "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+      "source_url": "https://www.washingtonexaminer.com/news/white-house/4469755/trump-boasts-falling-inflation-during-joint-address-context/",
+      "supports_claim": true,
+      "one_line_why": "Press coverage reports core CPI 2.5% (year ending January) and administration's framing of 'lowest since March 2021,' which if accurate would support a five-year low claim (Feb 2026 minus 5 years ≈ Feb 2021)."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://alfred.stlouisfed.org/release?ob=pv&od=desc&rd=2026-01-13&rid=10",
+      "supports_claim": true,
+      "one_line_why": "ALFRED St. Louis Fed vintage data for CPILFESL (core CPI series) December 2025 provides official BLS series data used in three-month annualized calculations."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://www.bls.gov/cpi/tables/supplemental-files/home.htm",
+      "supports_claim": true,
+      "one_line_why": "BLS supplemental XLSX tables for December 2025 contain the precise seasonally-adjusted index series levels needed to verify the 1.7% three-month annualized calculation."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+      "supports_claim": true,
+      "one_line_why": "Primary BLS December 2025 CPI release is the direct source document from which the ~1.7% three-month annualized core rate is computed."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_10242025.htm",
+      "supports_claim": true,
+      "one_line_why": "Official BLS September 2025 CPI index level is a component input to the three-month annualized calculation spanning Q4 2025."
+    },
+    {
+      "sid": "trump_2026:0043",
+      "claim": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+      "source_url": "https://www.bea.gov/news/2025/new-foreign-direct-investment-united-states-2024",
+      "supports_claim": false,
+      "one_line_why": "Claim says 'less than $1 trillion in four long years'; snippet shows 2024 FDI was $151B, and notes it was below the 2014–2023 average, implying annual figures in that range—summing four years of ~$150B each yields ~$600B, well below $1T, bu"
+    },
+    {
+      "sid": "trump_2026:0046",
+      "claim": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
+      "source_url": "https://www.bea.gov/news/2024/new-foreign-direct-investment-united-states-2023",
+      "supports_claim": false,
+      "one_line_why": "BEA data for 2021–2023 shows cumulative FDI under $1 trillion, contradicting the claim's assertion of 'much more than $18 trillion for one year.'"
+    },
+    {
+      "sid": "trump_2026:0052",
+      "claim": "American oil production is up by more than 600,000 barrels a day and we just received from our new friend and partner, V",
+      "source_url": "https://www.energy.gov/articles/fact-sheet-president-trump-restoring-prosperity-safety-and-security-united-states-and",
+      "supports_claim": false,
+      "one_line_why": "Official DOE fact sheet cites ~380k bpd early flow rate; if sustained over six weeks (42 days) yields ~16M barrels, far short of 80M claimed received by late February."
+    },
+    {
+      "sid": "trump_2026:0055",
+      "claim": "Think about that, any time in the history of our country, more working today and 100 percent of all jobs created under m",
+      "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+      "supports_claim": true,
+      "one_line_why": "BLS CES total nonfarm series shows net increase from 158,268k (Jan 2025) to 158,592k (Jan 2026); combined with item 3, implies government employment declined, consistent with claim."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+      "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-households-1.pdf",
+      "supports_claim": null,
+      "one_line_why": "Primary USDA/FNS household caseload data is relevant to SNAP trends but measures households rather than persons; snippet does not provide the figures needed to verify the 2.4M persons claim."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+      "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-persons-1.pdf",
+      "supports_claim": null,
+      "one_line_why": "Primary USDA/FNS data series on SNAP participation is the measurement needed to verify the 2.4M reduction claim, but snippet does not state the actual figures or change."
+    },
+    {
+      "sid": "trump_2026:0137",
+      "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+      "source_url": "https://www.irs.gov/newsroom/what-to-know-about-the-no-tax-on-overtime-deduction",
+      "supports_claim": null,
+      "one_line_why": "IRS specifics on overtime deduction caps ($12,500 single/$25,000 joint) and phaseouts are essential to sizing the tax benefit but do not directly state Megan's $5,000 savings."
+    },
+    {
+      "sid": "trump_2026:0137",
+      "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+      "source_url": "https://www.irs.gov/newsroom/working-families-tax-cuts-individuals-and-workers",
+      "supports_claim": null,
+      "one_line_why": "Official IRS overview permits computation of whether $5,000 is plausible, but snippet does not itself state Megan's tax savings or confirm the claim's magnitude."
+    },
+    {
+      "sid": "trump_2026:0161",
+      "claim": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time ",
+      "source_url": "https://www.whitehouse.gov/wp-content/uploads/2025/03/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+      "supports_claim": false,
+      "one_line_why": "CEA projections show $303,800 at $5,000/yr (maximum), $154,800 at half-max ($2,500/yr), and $5,800 with no contributions; half-max is not modest and still required to exceed $100k."
+    },
+    {
+      "sid": "trump_2026:0208",
+      "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+      "supports_claim": false,
+      "one_line_why": "BLS 12-month CPI of 2.7% in Dec 2025 does not support a simple $34,000 per-family inflation charge; the claim requires cumulative calculation, not a single-year rate."
+    },
+    {
+      "sid": "trump_2026:0208",
+      "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+      "source_url": "https://www.bls.gov/opub/ted/2026/consumer-price-index-2025-in-review.htm",
+      "supports_claim": null,
+      "one_line_why": "Official BLS CPI documents provide the raw price-change data needed to verify whether inflation was 'record-setting' and to size cumulative burden, but snippet does not state the figures themselves."
+    },
+    {
+      "sid": "trump_2026:0219",
+      "claim": "The price of eggs is down 60 percent.",
+      "source_url": "https://data.bls.gov/timeseries/APU0000708111",
+      "supports_claim": true,
+      "one_line_why": "BLS data shows Mar 2025 peak $6.227/doz and Jan 2026 $2.577/doz, which equals a 59–60% decline, directly matching the claim."
+    },
+    {
+      "sid": "trump_2026:0295",
+      "claim": "Yet, half of all of working Americans still do not have access to a retirement plan with matching contributions from an ",
+      "source_url": "https://www.congress.gov/event/118th-congress/senate-event/LC73084/text",
+      "supports_claim": false,
+      "one_line_why": "Senate HELP materials cite roughly 50+ million workers not offered workplace plans, which at typical workforce size (~160M) implies ~31% lack access, not 50%."
+    },
+    {
+      "sid": "trump_2026:0583",
+      "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+      "source_url": "https://usafacts.org/reports/state-of-the-union/defense/",
+      "supports_claim": null,
+      "one_line_why": "USAFacts fact sheet compiling historical defense spending trends is directly relevant to judging whether FY2026 is 'record,' but snippet does not state the actual comparison or conclusion."
+    },
+    {
+      "sid": "trump_2026:0583",
+      "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+      "source_url": "https://www.congress.gov/crs-product/IN12641",
+      "supports_claim": null,
+      "one_line_why": "CRS NDAA authorization figure (~$890.6B) is a primary data series for national defense, but snippet does not clarify whether this is the total defense outlay, how it compares historically, or whether it constitutes a 'record.'"
+    }
+  ],
+  "arithmetic_hinge_sids": [
+    "biden_2022:0114",
+    "biden_2022:0169",
+    "biden_2022:0211",
+    "biden_2022:0216",
+    "biden_2022:0266",
+    "biden_2022:0305",
+    "clinton_1998:0032",
+    "clinton_1998:0035",
+    "clinton_1998:0091",
+    "clinton_1998:0101",
+    "gwbush_2006:0134",
+    "gwbush_2006:0163",
+    "gwbush_2006:0187",
+    "gwbush_2006:0217",
+    "obama_2014:0001",
+    "obama_2014:0087",
+    "obama_2014:0177",
+    "obama_2014:0189",
+    "obama_2014:0202",
+    "trump_2026:0022",
+    "trump_2026:0030",
+    "trump_2026:0031",
+    "trump_2026:0043",
+    "trump_2026:0046",
+    "trump_2026:0052",
+    "trump_2026:0055",
+    "trump_2026:0057",
+    "trump_2026:0137",
+    "trump_2026:0161",
+    "trump_2026:0208",
+    "trump_2026:0219",
+    "trump_2026:0295",
+    "trump_2026:0583"
+  ],
   "costed_b1b": {
-    "released": 32,
+    "released": 33,
     "extras_named": 6,
     "extras_not_already_released": 6,
     "extras_overlapping_released": [],
-    "claims_to_adjudicate": 38,
+    "claims_to_adjudicate": 39,
     "per_claim_usd": [
       0.0642,
       0.0748
     ],
-    "cost_low_usd": 2.44,
-    "cost_high_usd": 2.84,
+    "cost_low_usd": 2.5,
+    "cost_high_usd": 2.92,
     "ceiling_usd": 10.0,
     "b1a_planned_usd": 0.44,
-    "b1a_observed_usd": 1.0632,
+    "b1a_observed_usd": 1.6038,
     "b1a_overran_plan": true,
-    "committed_b1a_usd": 1.06,
-    "remaining_usd": 8.94,
+    "committed_b1a_usd": 1.6,
+    "remaining_usd": 8.4,
     "fits_ceiling": true
   }
 }

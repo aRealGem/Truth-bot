@@ -190,8 +190,19 @@ class ConsolidatedItem:
             "date": ev.published_at.date().isoformat() if ev.published_at else None,
             "tier": ev.source_tier.value,
             "stance": stance,
-            "one_line_why": (ev.snippet or "").strip()[:200],
+            # B2: when the scorer stated the COMPARISON it made, that is a far
+            # better line than the snippet — it says why this item bears on the
+            # claim rather than merely what the page says. Falls back to the
+            # snippet, which is what every item scored before B2 carries.
+            "one_line_why": ((ev.one_line_why or "").strip()
+                             or (ev.snippet or "").strip())[:200],
         }
+        if getattr(ev, "arithmetic_hinge", False):
+            # The stance came from arithmetic the SCORER performed over the
+            # series, so it is a hypothesis for the seats to check, not a
+            # settled reading. Saying so in the payload is the point: the panel
+            # must not treat it as proof (R-2 computed-exhibit routing).
+            payload["arithmetic_hinge"] = True
         if self.role and self.role != "normal":
             payload["role"] = self.role
         if self.post_speech:

@@ -76,7 +76,8 @@ from backfill_claim_shapes import sidecar_path as shapes_sidecar_path  # noqa: E
 from phase3_rebuild import (SPEECHES, load_sidecar_shapes,  # noqa: E402
                             merge_sidecar_shapes)
 from rescore_stored_packs import (REBUILT_RUNS, SIDECAR_SCHEMA,  # noqa: E402
-                                  artifact_path, load_artifact, sidecar_path)
+                                  artifact_path, b2_sidecar_path,
+                                  load_artifact, sidecar_path)
 
 OUT_DIR = REPO / "metrics" / "remediation_v2"
 OUT_STEM = "regate_flipset"
@@ -143,6 +144,13 @@ def overlay_rescores(evidence: list, rescored: list[dict]) -> dict:
         matched_keys.add(join_key(url))
         ev.relevance_score = row.get("relevance_score")
         ev.supports_claim = row.get("supports_claim")
+        # B2 contract fields. Absent on B1a-vintage rows, so they are applied
+        # only when present — a B1a row must not blank a B2 row it is merged
+        # under, and the hinge in particular is never cleared by a later pass.
+        if row.get("one_line_why"):
+            ev.one_line_why = row["one_line_why"]
+        if row.get("arithmetic_hinge") is True:
+            ev.arithmetic_hinge = True
 
     unmatched_artifact = [ev.source_url for ev in evidence
                           if join_key(ev.source_url) not in matched_keys]
@@ -314,6 +322,88 @@ def load_rescore_sidecar(path: Path, speech: str, source_run: str) -> dict:
     return doc
 
 
+def merge_sidecars(*sidecars: Optional[dict]) -> dict:
+    """Merge re-score sidecars in PRECEDENCE ORDER — earliest first, latest
+    wins per sid.
+
+    B2 re-scored a targeted subset into its own file rather than editing B1a's,
+    because ``score_evidence`` rewrites a whole pack and merging in place would
+    have silently replaced B1a scores for items B2 never targeted. The merge is
+    therefore per-SID (the unit that was actually re-scored as a whole), not
+    per-item: a sid B2 touched takes B2's rows entirely, a sid it did not keeps
+    B1a's. Spend is SUMMED, because both passes really were paid for."""
+    out = {"schema": SIDECAR_SCHEMA, "speech_id": "", "source_run": "",
+           "model": "", "generated": "", "spend_usd": 0.0, "sids": {},
+           "soft_failures": [], "spend_by_pass": {}, "sids_by_pass": {}}
+    for i, doc in enumerate(sidecars):
+        if not doc:
+            continue
+        label = doc.get("pass_label") or f"pass{i}"
+        out["speech_id"] = doc.get("speech_id") or out["speech_id"]
+        out["source_run"] = doc.get("source_run") or out["source_run"]
+        out["model"] = doc.get("model") or out["model"]
+        out["generated"] = doc.get("generated") or out["generated"]
+        out["spend_usd"] += float(doc.get("spend_usd") or 0.0)
+        out["spend_by_pass"][label] = round(float(doc.get("spend_usd") or 0.0), 6)
+        out["sids_by_pass"][label] = len(doc.get("sids") or {})
+        out["sids"].update(doc.get("sids") or {})
+        for sid in doc.get("soft_failures") or []:
+            if sid not in out["soft_failures"]:
+                out["soft_failures"].append(sid)
+    out["spend_usd"] = round(out["spend_usd"], 6)
+    return out
+
+
+def stance_counts(artifact: dict, scored: Optional[dict] = None) -> dict:
+    """Stance census over EVERY stored item, before or after an overlay.
+
+    ``scored=None`` counts the artifact as it stands; passing a sidecar's
+    ``sids`` map counts what the overlay would make of it. This is the
+    stance-null rate the whole B leg is measured by, so it is computed from the
+    same rows the gate sees rather than from a separately-maintained tally."""
+    tel = {"items": 0, "supports": 0, "refutes": 0, "null": 0,
+           "arithmetic_hinge": 0}
+    for sid, evs in (artifact.get("evidence") or {}).items():
+        rows = {join_key(r.get("source_url") or ""): r
+                for r in ((scored or {}).get(sid) or [])}
+        for ev in evs or []:
+            tel["items"] += 1
+            row = rows.get(join_key(ev.get("source_url") or ""))
+            stance = row.get("supports_claim") if row else ev.get("supports_claim")
+            if stance is True:
+                tel["supports"] += 1
+            elif stance is False:
+                tel["refutes"] += 1
+            else:
+                tel["null"] += 1
+            if row and row.get("arithmetic_hinge") is True:
+                tel["arithmetic_hinge"] += 1
+    n = tel["items"]
+    tel["null_rate"] = (tel["null"] / n) if n else 0.0
+    return tel
+
+
+def hinge_items(artifact: dict, scored: dict) -> list[dict]:
+    """Every item the scorer marked ``arithmetic_hinge``, with its claim.
+
+    The reviewer-mandated guard: a stance the model reached by doing arithmetic
+    over a series (a peak, a ratio, a real-terms deflation) is a HYPOTHESIS for
+    the panel, not proof, and must not settle a verdict on its own. Collecting
+    them is what makes the routing to computed-exhibit treatment (R-2,
+    publish/computed_exhibit.py) possible instead of aspirational."""
+    claims = {c.get("sid"): (c.get("text") or "").strip()
+              for c in (artifact.get("claims") or [])}
+    out = []
+    for sid, rows in (scored or {}).items():
+        for row in rows or []:
+            if row.get("arithmetic_hinge") is True:
+                out.append({"sid": sid, "claim": claims.get(sid, "")[:CLAIM_TEXT_TRUNC],
+                            "source_url": row.get("source_url"),
+                            "supports_claim": row.get("supports_claim"),
+                            "one_line_why": row.get("one_line_why") or ""})
+    return sorted(out, key=lambda r: (r["sid"], r["source_url"] or ""))
+
+
 def regate_speech(speech: str, artifact: dict, sidecar: dict) -> dict:
     """Re-gate one speech. Pure: no I/O, no spend, no mutation of ``artifact``."""
     from truthbot.verdict import speech_context
@@ -421,7 +511,14 @@ def regate_speech(speech: str, artifact: dict, sidecar: dict) -> dict:
                               "mismatches": reproduction_mismatch},
         "breakdown_divergence": breakdown_divergence,
         "rescore_spend_usd": float(sidecar.get("spend_usd") or 0.0),
+        "rescore_spend_by_pass": dict(sidecar.get("spend_by_pass") or {}),
+        "rescore_sids_by_pass": dict(sidecar.get("sids_by_pass") or {}),
         "rescore_soft_failures": list(sidecar.get("soft_failures") or []),
+        # Stance census either side of the overlay — the number the B leg is
+        # judged by, computed from the rows the gate actually reads.
+        "stance_before": stance_counts(artifact),
+        "stance_after": stance_counts(artifact, scored),
+        "arithmetic_hinges": hinge_items(artifact, scored),
     }
 
 
@@ -492,6 +589,20 @@ def build_report(per_speech: list[dict], missing: list[str]) -> dict:
         "per_speech": per_speech,
         "released_sids": sorted(released),
         "newly_gated_sids": sorted(f["sid"] for f in newly),
+        "stance": {
+            "before": {k: sum(s["stance_before"][k] for s in per_speech)
+                       for k in ("items", "supports", "refutes", "null")},
+            "after": {k: sum(s["stance_after"][k] for s in per_speech)
+                      for k in ("items", "supports", "refutes", "null")},
+        },
+        # Reviewer-mandated: collected and REPORTED, deliberately given no
+        # gate effect of its own. A hinge stance must not settle a verdict, so
+        # these claims are routed to computed-exhibit treatment by a human,
+        # not silently promoted or demoted by this script.
+        "arithmetic_hinges": [h for s in per_speech
+                              for h in s["arithmetic_hinges"]],
+        "arithmetic_hinge_sids": sorted({h["sid"] for s in per_speech
+                                         for h in s["arithmetic_hinges"]}),
         "costed_b1b": costed_summary(
             released,
             b1a_observed_usd=sum(s["rescore_spend_usd"] for s in per_speech)),
@@ -620,6 +731,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--speech", action="append", choices=sorted(REBUILT_RUNS),
                     help="limit to this speech (repeatable); default all five")
     ap.add_argument("--out-dir", default=str(OUT_DIR))
+    ap.add_argument("--no-b2", action="store_true",
+                    help="ignore the B2 sidecars — reproduces the B1a-only "
+                         "flip set, which is how the two passes are compared")
     args = ap.parse_args(argv)
 
     speeches = args.speech or list(REBUILT_RUNS)
@@ -631,7 +745,18 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(f"SKIP {speech}: no B1a sidecar at {side} (still being written?)")
             continue
         artifact = load_artifact(artifact_path(speech))
-        sidecar = load_rescore_sidecar(side, speech, REBUILT_RUNS[speech])
+        b1a = load_rescore_sidecar(side, speech, REBUILT_RUNS[speech])
+        b1a["pass_label"] = "b1a"
+        # B2 re-scored a targeted subset into its own sidecar; merge it OVER
+        # B1a when it exists. Absent, this is exactly the B1a-only re-gate.
+        b2_path = b2_sidecar_path(speech)
+        b2 = None
+        if b2_path.exists() and not args.no_b2:
+            b2 = load_rescore_sidecar(b2_path, speech, REBUILT_RUNS[speech])
+            b2["pass_label"] = "b2"
+            print(f"  merging B2 sidecar: {len(b2.get('sids') or {})} sids, "
+                  f"${float(b2.get('spend_usd') or 0.0):.4f}")
+        sidecar = merge_sidecars(b1a, b2)
         res = regate_speech(speech, artifact, sidecar)
         per_speech.append(res)
         c = res["counts"]
@@ -675,7 +800,33 @@ def main(argv: Optional[list[str]] = None) -> int:
         print(f"NOTE: B1a planned ${k['b1a_planned_usd']:.2f}, sidecars record "
               f"${k['b1a_observed_usd']:.4f} spent — headroom is charged "
               "against the observed figure.")
-    print("no model calls were made; $0 spent.")
+    st = report["stance"]
+    print("\n── stance-null rate, per run ───────────────────────────────────")
+    print(f"  {'speech':<14}{'items':>7}{'null before':>13}{'null after':>12}"
+          f"{'  passes'}")
+    for s in per_speech:
+        b, a = s["stance_before"], s["stance_after"]
+        print(f"  {s['speech']:<14}{b['items']:>7}"
+              f"{b['null']:>8} {b['null_rate']:>4.1%}"
+              f"{a['null']:>7} {a['null_rate']:>4.1%}"
+              f"  {s['rescore_sids_by_pass']}")
+    nb, na = st["before"], st["after"]
+    print(f"  {'CORPUS':<14}{nb['items']:>7}"
+          f"{nb['null']:>8} {nb['null'] / max(nb['items'], 1):>4.1%}"
+          f"{na['null']:>7} {na['null'] / max(na['items'], 1):>4.1%}")
+
+    hinges = report["arithmetic_hinges"]
+    print("\n── arithmetic hinges (stance rests on the SCORER's arithmetic) ──")
+    print(f"  {len(hinges)} item(s) across "
+          f"{len(report['arithmetic_hinge_sids'])} claim(s). These are "
+          "HYPOTHESES, not proof:")
+    print("  route to computed-exhibit treatment (R-2, "
+          "publish/computed_exhibit.py); do NOT let them settle a verdict.")
+    for h in hinges:
+        print(f"    {h['sid']:<20} {h['source_url']}")
+        if h["one_line_why"]:
+            print(f"      why: {h['one_line_why']}")
+    print("\nno model calls were made; $0 spent.")
     return 0
 
 

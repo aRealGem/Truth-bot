@@ -113,6 +113,18 @@ def sidecar_path(speech: str) -> Path:
     return SIDECAR_DIR / f"rescored_{speech}.json"
 
 
+def b2_sidecar_path(speech: str) -> Path:
+    """The B2 re-score lands in its OWN sidecar, beside B1a's.
+
+    Deliberately not a merge-in-place. ``score_evidence`` rewrites every item in
+    a pack, so writing B2 into the B1a file would silently replace B1a's scores
+    for items B2 was not targeting — and there would be no way afterwards to
+    tell which vintage any given row came from. Two files, merged downstream in
+    a defined order (B1a first, B2 on top), keeps both records intact and keeps
+    the two spends separately attributable."""
+    return SIDECAR_DIR / f"rescored_b2_{speech}.json"
+
+
 def load_artifact(path: Path) -> dict:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
@@ -164,20 +176,48 @@ def write_sidecar(path: Path, doc: dict) -> None:
 def scored_rows(evidence: list) -> list[dict]:
     """The persisted shape: identity (source_url) + what scoring produced.
     source_url is the join key back onto the artifact — stable, and it is what
-    the pack dedup already keys on."""
-    return [{"source_url": ev.source_url,
-             "relevance_score": ev.relevance_score,
-             "supports_claim": ev.supports_claim}
-            for ev in evidence]
+    the pack dedup already keys on.
+
+    ``one_line_why`` and ``arithmetic_hinge`` (the B2 contract) are written
+    ONLY when the scorer actually produced them, so a B1a-vintage sidecar row
+    and a B2-vintage row stay visibly different on disk. Readers ignore keys
+    they do not know, which is what lets both vintages share one schema."""
+    rows = []
+    for ev in evidence:
+        row = {"source_url": ev.source_url,
+               "relevance_score": ev.relevance_score,
+               "supports_claim": ev.supports_claim}
+        if getattr(ev, "one_line_why", None):
+            row["one_line_why"] = ev.one_line_why
+        if getattr(ev, "arithmetic_hinge", False):
+            row["arithmetic_hinge"] = True
+        rows.append(row)
+    return rows
 
 
-def pending_sids(artifact: dict, sidecar: dict,
-                 texts: dict[str, str]) -> list[str]:
+def load_only_sids(path: Optional[str]) -> Optional[set]:
+    """Read a targeting list (a JSON array of sids) written by
+    ``scripts/b2_primary_series.py --write-sids``. None = no restriction."""
+    if not path:
+        return None
+    sids = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(sids, list) or not all(isinstance(s, str) for s in sids):
+        raise ValueError(f"{path}: expected a JSON array of sid strings")
+    return set(sids)
+
+
+def pending_sids(artifact: dict, sidecar: dict, texts: dict[str, str],
+                 only: Optional[set] = None) -> list[str]:
     """Resume filter: a sid already in the sidecar is never re-scored (never
-    re-spent on). Sids with no evidence or no claim text are skipped outright."""
+    re-spent on). Sids with no evidence or no claim text are skipped outright.
+
+    ``only`` narrows to a derived subset (B2). It is applied ON TOP of the
+    resume filter, never instead of it, so a targeted re-run still cannot pay
+    twice for the same sid in the same sidecar."""
     done = set(sidecar.get("sids") or {})
     return [sid for sid, evs in (artifact.get("evidence") or {}).items()
-            if evs and sid not in done and texts.get(sid)]
+            if evs and sid not in done and texts.get(sid)
+            and (only is None or sid in only)]
 
 
 def go_refusal(budget: Optional[float]) -> Optional[str]:
@@ -337,7 +377,8 @@ def run_rescore(args) -> int:
 
     texts = claim_texts(art)
     by_sid = evidence_from_artifact_dict(art.get("evidence") or {})
-    todo = pending_sids(art, sidecar, texts)
+    only = load_only_sids(getattr(args, "only_sids", None))
+    todo = pending_sids(art, sidecar, texts, only)
     if args.limit:
         todo = todo[:args.limit]
     banked = float(sidecar.get("spend_usd") or 0.0)
@@ -421,7 +462,7 @@ def run_rescore(args) -> int:
               + (" …" if len(sidecar['soft_failures']) > 10 else ""))
     if halted:
         print(f"\n{halted}")
-        remaining = len(pending_sids(art, sidecar, texts))
+        remaining = len(pending_sids(art, sidecar, texts, only))
         print(f"HALTED CLEANLY — {remaining} sids still unscored. Everything "
               "paid for is banked in the sidecar. Resume (re-spends only on "
               "unscored sids):")
@@ -459,6 +500,11 @@ def main(argv: Optional[list] = None) -> int:
                          "metrics/remediation_v2/rescored_<speech>.json)")
     ap.add_argument("--limit", type=int, default=0,
                     help="first N unscored sids only (smoke slice)")
+    ap.add_argument("--only-sids", default=None, metavar="PATH",
+                    help="JSON array of sids to restrict to — the B2 targeting "
+                         "list from scripts/b2_primary_series.py --write-sids. "
+                         "Applied ON TOP of the resume filter, so a targeted "
+                         "run still never pays twice for the same sid")
     args = ap.parse_args(argv)
 
     if args.estimate:
@@ -480,7 +526,8 @@ def main(argv: Optional[list] = None) -> int:
     out_path = Path(args.out) if args.out else sidecar_path(args.speech)
     sidecar = load_sidecar(out_path, args.speech, art.get("run_id", ""))
     texts = claim_texts(art)
-    todo = pending_sids(art, sidecar, texts)
+    only = load_only_sids(getattr(args, "only_sids", None))
+    todo = pending_sids(art, sidecar, texts, only)
     n_items = sum(len(art["evidence"].get(sid) or []) for sid in todo)
 
     print(f"B1a re-score plan — {args.speech}")

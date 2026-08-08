@@ -56,11 +56,42 @@ _SCORE_SYSTEM = (
     "topic but does not bear on the assertion; 0.0 = unrelated), and supports "
     "is true if the snippet corroborates the claim's core assertion, false if "
     "it contradicts it, null if it does neither or is unclear. "
-    'Return JSON only: {"scores": [{"i": 1, "relevance": 0.0, "supports": null}, ...]}.'
+    # ── B2: the data table is not "context" ──────────────────────────────────
+    # A primary series was the single largest source of stanceless Tier-1..3
+    # items: the scorer read a BLS table as background TO the claim rather than
+    # as the measurement OF it, so the best evidence in the pack credited
+    # nothing and the gate withheld a verdict it had the data to reach
+    # (trump_2026:0054, clinton_1998:0101).
+    "A PRIMARY DATA SERIES or OFFICIAL RECORD that CONTAINS the figure at "
+    "issue is not background: it is the measurement itself. Score it supports "
+    "or refutes according to what its own numbers show, never context. If the "
+    "series carries the quantity the claim asserts — an employment level, a "
+    "budget line, a case count, an appropriation — read the number and take a "
+    "side. Reserve context for genuine background: material on the same topic "
+    "that does not carry the quantity at issue, commentary, or an item whose "
+    "figures cannot be lined up against the claim at all. "
+    "State in one_line_why the COMPARISON YOU ACTUALLY MADE — the claim's "
+    "figure against the source's figure, in words, e.g. 'claim says 3.2M new "
+    "jobs; table row for Jan 2026 shows 2.9M'. Do not restate the snippet. "
+    # ── the arithmetic hinge (reviewer-mandated guard) ───────────────────────
+    "Set arithmetic_hinge true when your stance depends on ARITHMETIC YOU "
+    "performed over the series rather than on a figure the source states "
+    "outright — taking a maximum across a series, computing a ratio or a "
+    "share, deflating to real terms, or comparing two periods the source does "
+    "not itself compare. A stance reached that way is a hypothesis for the "
+    "panel to check, not a settled reading. Set it false when the source "
+    "states the comparison itself. "
+    'Return JSON only: {"scores": [{"i": 1, "relevance": 0.0, '
+    '"supports": null, "one_line_why": "", "arithmetic_hinge": false}, ...]}.'
 )
 
 #: Longest snippet (characters) sent per item in the scoring payload.
 SCORE_SNIPPET_CHARS = 400
+
+#: Longest stored ``one_line_why``. The pack payload truncates at 200, so this
+#: keeps the stored comparison a little richer than the rendered one without
+#: letting a runaway reply bloat the artifact.
+ONE_LINE_WHY_CHARS = 240
 
 _JSON_BLOCK_RX = re.compile(r"\{.*\}", re.DOTALL)
 
@@ -183,10 +214,17 @@ def score_payload(claim_text: str, evidence: list[Evidence]) -> str:
 def score_evidence(llm: LlmFn, claim_text: str, evidence: list[Evidence]) -> None:
     """Cheap-model relevance / supports-refutes scoring, IN PLACE.
 
-    Populates ``relevance_score`` and ``supports_claim`` on each item. Fails
-    soft: on any error the items keep their defaults (neutral 0.5), so a
-    scoring hiccup degrades to the old tier-only ranking rather than dropping
-    evidence."""
+    Populates ``relevance_score``, ``supports_claim`` and — under the B2
+    contract — ``one_line_why`` (the comparison the stance rests on) and
+    ``arithmetic_hinge`` (the stance came from arithmetic the SCORER did, so it
+    is a hypothesis for the panel rather than proof). Fails soft: on any error
+    the items keep their defaults (neutral 0.5), so a scoring hiccup degrades
+    to the old tier-only ranking rather than dropping evidence.
+
+    Both new fields are OPTIONAL on the wire. A model that answers with the
+    older three-key shape still scores normally — ``one_line_why`` stays None
+    and the payload falls back to the snippet — because an unparsed extra field
+    must never cost us the stance we paid for."""
     if not evidence:
         return
     payload = score_payload(claim_text, evidence)
@@ -215,6 +253,15 @@ def score_evidence(llm: LlmFn, claim_text: str, evidence: list[Evidence]) -> Non
         supports = s.get("supports")
         if isinstance(supports, bool) or supports is None:
             ev.supports_claim = supports
+        why = s.get("one_line_why")
+        if isinstance(why, str) and why.strip():
+            ev.one_line_why = why.strip()[:ONE_LINE_WHY_CHARS]
+        # Only a literal true marks the hinge. A missing or malformed field
+        # means "not asserted", and the guard must never be switched ON by
+        # accident — but note it is also never switched OFF here, so a merge
+        # cannot quietly clear a hinge an earlier pass recorded.
+        if s.get("arithmetic_hinge") is True:
+            ev.arithmetic_hinge = True
 
 
 def build_scorer(*, model: str = DEFAULT_MODEL,

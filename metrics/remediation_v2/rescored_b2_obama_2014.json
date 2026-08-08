@@ -1,0 +1,1156 @@
+{
+  "schema": "truthbot-rescore-sidecar v1",
+  "speech_id": "obama_2014",
+  "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+  "model": "claude-haiku",
+  "generated": "2026-08-08T17:26:47.127339+00:00",
+  "spend_usd": 0.097997,
+  "sids": {
+    "obama_2014:0000": [
+      {
+        "source_url": "https://nces.ed.gov/ccd/tables/AFGR0812.asp",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "NCES AFGR table shows 80.8% in 2011–12, highest in decades; claim asserts graduation rate at highest level in more than three decades."
+      },
+      {
+        "source_url": "https://new.every1graduates.org/wp-content/uploads/2013/02/Building-A-Grad-Nation-2013-Full-FINAL-web.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Civic Enterprises report documents national graduation rate crossing ~80%, highest since 1970s, corroborating the 'more than three decades' assertion."
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs2012/2012006.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": null,
+        "one_line_why": "Source is identified as a multi-decade completion-rate series needed to judge the claim but no specific figures or findings are provided in the snippet."
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs2013/2013309.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "NCES First Look documents rising graduation rates and methods for 2009–10 but does not state whether the rate reached a three-decade high."
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/coe/pdf/Indicator_COI/coe_coi_2013_05.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "NCES Condition of Education 2013 reports AFGR reaching ~78–80% with trend context, consistent with claim of highest level in more than three decades."
+      },
+      {
+        "source_url": "https://www.ed.gov/news/press-releases/states-report-new-high-school-graduation-rates-using-more-accurate-common-measure",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Announcement of common cohort graduation measure adoption is methodological background; does not directly address whether the rate reached a three-decade high."
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/dropout/ind_05.asp",
+        "relevance_score": 0.75,
+        "supports_claim": null,
+        "one_line_why": "Identifies AFGR as the historical metric underlying the 'three decades' framing but provides no specific figures or comparison to past decades."
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/coe/indicator/coi/high-school-graduation-rates?tid=4",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "NCES Condition of Education summarizes ACGR/AFGR trends and notes recent high measures but does not explicitly state whether it is the highest in more than three decades."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official transcript of the State of the Union address on Jan 28, 2014 contains the exact quoted claim, confirming it was made."
+      },
+      {
+        "source_url": "https://rollcall.com/2014/01/28/state-of-the-union-fact-sheet/",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "White House fact sheet from the address date documents the administration's graduation-rate backing for the claim, supporting its factual basis."
+      }
+    ],
+    "obama_2014:0001": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Primary BLS data source for the period but snippet does not state the actual job-gain figure."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Primary BLS monthly data source relevant to cumulative count but snippet does not provide the total figure."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/node/255651",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "White House fact sheet directly states 8.2 million private-sector jobs added since March 2010, matching the claim's 'more than eight million' assertion."
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_201312.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Primary archived BLS data source but snippet does not state the cumulative job figure itself."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/10/employment-situation-december",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "White House CEA explicitly states 8.2 million private-sector jobs added over 46 months, directly corroborating the claim."
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/index.cfm/republicans/analysis?id=A00EAA9A-701C-44B7-9F96-AB2799B81A1C",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Republican JEC analysis states approximately 8.2 million private-sector payroll growth since February 2010, supporting the eight-million figure."
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "BLS time series allows computation of the figure but snippet does not state the result; would require arithmetic to verify.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC553/text",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Senate hearing transcript cites approximately 8.2 million private-sector job gains since February 2010, corroborating the claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "BLS highlights on December 2013 private payroll trends are relevant context but snippet does not state the cumulative eight-million figure."
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Confirms the claim's source and exact wording but does not independently verify the job-creation figure."
+      }
+    ],
+    "obama_2014:0003": [
+      {
+        "source_url": "https://ers.usda.gov/sites/default/files/_laserfiche/outlooks/35780/41325_aes80.pdf?v=81052",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Confirms FY2013 as record year and documents recent export levels, supporting the claim's assertion of strong exports, though does not explicitly state the five-year period claim."
+      },
+      {
+        "source_url": "https://www.usda.gov/about-usda/news/press-releases/2013/12/20/fact-sheet-growing-markets-around-world-americas-agricultural-productivity",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Directly states FY2009-2013 is the strongest five-year period for ag exports in US history with $619B total, exactly matching the claim's core assertion."
+      },
+      {
+        "source_url": "https://www.fas.usda.gov/newsroom/statement-agriculture-secretary-tom-vilsack-us-agricultural-exports-2013",
+        "relevance_score": 0.5,
+        "supports_claim": true,
+        "one_line_why": "Confirms FY2013 record of $140.9B in exports, supporting the export strength context but not the five-year period claim."
+      },
+      {
+        "source_url": "https://www.usda.gov/sites/default/files/documents/FY_2015_Budget_Summary_and_Annual_Performance_Plan.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "USDA official budget document explicitly states 2009–2013 was the strongest five-year period for agricultural exports, directly corroborating the claim."
+      },
+      {
+        "source_url": "https://www.fas.usda.gov/newsroom/growing-markets-around-world-americas-agricultural-productivity",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "FAS fact sheet states 2009-2013 strongest five years with ~$230B increase over prior five-year period, directly supporting the five-year strength assertion."
+      },
+      {
+        "source_url": "https://content.govdelivery.com/accounts/USDAOC/bulletins/6a1c7b",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Shows FY2009-2012 generated $478B+ and notes trajectory toward new records, supporting export strength context but predates the full five-year claim."
+      },
+      {
+        "source_url": "https://ers.usda.gov/publications/outlook-reports/",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Describes a data series and forecast tool rather than stating a specific finding about the five-year export period."
+      },
+      {
+        "source_url": "https://www.ers.usda.gov/publications/35775",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Identifies a source document series without providing the substantive claim about five-year export strength."
+      },
+      {
+        "source_url": "https://esmis.nal.usda.gov/sites/default/release-files/6m311p28w/n870zr46x/6t053g726/AES-12-02-2013.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": true,
+        "one_line_why": "Confirms FY2013 record of $140B+ exports, supporting the export strength context but not the five-year period assertion."
+      },
+      {
+        "source_url": "https://www.growingproduce.com/vegetables/record-growth-projected-for-agricultural-exports/",
+        "relevance_score": 0.4,
+        "supports_claim": true,
+        "one_line_why": "Trade coverage corroborates record/projected ag exports, supporting the general export-strength narrative but lacks specificity on the five-year claim."
+      }
+    ],
+    "obama_2014:0004": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Official record explicitly identifies the asthma-prescription vignette as an illustrative composite, not a named case—contradicting the claim's implication of a real individual event."
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Confirms the president stated the line in the SOTU transcript but does not address whether the anecdote describes a real named case or a composite illustration."
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/affordable-care-act-adolescents-0",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Provides background on asthma prevalence and ACA coverage rules relevant to the topic but does not address the specific claim about a rural doctor or a particular child."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official transcript records the president saying the exact line but does not verify whether it describes a real named case or a composite."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official White House transcript contains the exact claim but does not address its factual status as a real case or composite illustration."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CPUB-113spub23/pdf/GPO-CPUB-113spub23.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official government publication of the 2014 SOTU includes the anecdote but does not verify whether it describes a real named case or a composite."
+      },
+      {
+        "source_url": "https://www.cms.gov/cciio/resources/fact-sheets-and-faqs/ehb-2-20-2013",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Provides background on the ACA's prescription drug coverage requirement relevant to affordability but does not address the specific claim about a rural doctor or child."
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/state-union-2014-excerpts/story?id=22269708",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "News excerpt includes the claim but does not verify whether it describes a real named case or a composite illustration."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-21",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Authoritative transcript explicitly identifies the line as one of several anonymous illustrative American portraits—confirming it is a composite, not a named real case."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/node/305034",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official transcript includes the cited anecdote but does not address whether it describes a real named case or a composite illustration."
+      }
+    ],
+    "obama_2014:0008": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Primary BLS data states December 2013 unemployment fell to 6.7%, lowest since October 2008 (over five years), directly matching the claim's assertion."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official BLS monthly jobs release confirms 6.7% unemployment in December 2013, lowest since October 2008, corroborating the claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/spotlight/2012/the-recession-of-2007-2009/home.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Historical unemployment series from 2012 provides context on 2008 rates but does not directly address or compare the December 2013 figure to the five-year threshold."
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/releases/opa/opa20140047",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Labor Department official statement corroborates the 6.7% December 2013 unemployment rate, supporting the claim's core assertion."
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "State of the Union transcript contains the quoted claim verbatim, confirming it was made and the underlying factual assertion (6.7% lowest in over five years) is what was stated."
+      },
+      {
+        "source_url": "https://www.rpc.senate.gov/policy-papers/december-2013-unemployment-report",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Senate policy paper contextualizes the rate by noting falling labor-force participation but does not contradict the factual claim that 6.7% was the lowest in over five years."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/jobs-report-economy-added-74000-jobs-in-december/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Wire coverage (Reuters via CBS) reports December 2013 unemployment at 6.7%, lowest since October 2008, directly supporting the claim."
+      },
+      {
+        "source_url": "https://www.foxnews.com/us/us-economy-adds-74k-jobs-unemployment-falls-to-6-7-percent-because-fewer-people-seek-work",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Wire report confirms 6.7% rate and lowest since October 2008; the qualification about labor-force participation does not refute the factual claim but adds context."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/economy-ended-2013-with-a-whimper/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Established outlet reports December unemployment at 6.7%, lowest since October 2008, corroborating the claim's core assertion."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/wonk/wp/2014/01/10/the-unemployment-rate-fell-to-6-7-percent-dont-celebrate/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Washington Post analysis of the BLS report confirms 6.7% in December 2013, noted as lowest since October 2008, supporting the claim."
+      }
+    ],
+    "obama_2014:0010": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "BLS data showing +9,000 manufacturing jobs in December 2013 and gains over 2013 confirms recent job additions, but does not directly address the 'first time since the 1990s' historical claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Snippet references BLS highlights on manufacturing employment trends but provides no specific figures or time-period comparisons to evaluate the claim."
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES3000000001",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "BLS CES time series documenting post-2010 uptrend in manufacturing employment directly addresses whether jobs have been added recently, supporting the claim's core assertion of job gains."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20131112.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "BLS data on October 2013 payrolls documents 2013 manufacturing change but snippet provides no figures to compare against the claim."
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official transcript contains the exact claim but is the source of the claim itself, not independent evidence evaluating its accuracy."
+      },
+      {
+        "source_url": "https://www.latimes.com/business/la-fi-mo-obama-sotu-manufacturing-20140128-story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "LA Times reports ~570,000 manufacturing jobs added since early 2010, directly corroborating recent job gains; does not address the 1990s comparison but supports the core assertion of current job additions."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official White House transcript establishes the claim's wording but is the source document itself, not independent evidence of its truth."
+      },
+      {
+        "source_url": "https://dockerhub.commerce.gov/blog/2014/01/30/delivering-american-economic-comeback.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Commerce Department cites over half-a-million manufacturing jobs added, directly supporting the claim that manufacturing is adding jobs; does not address the 1990s historical comparison."
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/state-union-2014-excerpts/story?id=22269708",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "ABC News excerpt of the State of the Union includes the claim but provides no independent data or analysis to evaluate its accuracy."
+      }
+    ],
+    "obama_2014:0031": [
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2019-02/gdp3q13_2nd_fax.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "BEA Q3-2013 GDP release directly reports corporate profits near record levels, matching the claim's assertion about profit levels after four years of growth."
+      },
+      {
+        "source_url": "http://eml.berkeley.edu/~saez/saez-UStopincomes-2012.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Saez data shows top decile income share at 50.4% in 2012, highest since 1917, directly supporting the claim that 'those at the top have never done better.'"
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/releases/z1/20131209/z1r-4.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "FRB Financial Accounts (Z.1) reports market value of corporate equities at record levels in 2013, corroborating the claim about stock prices being at record highs."
+      },
+      {
+        "source_url": "https://www.forbes.com/sites/maggiemcgrath/2013/12/31/markets-finish-2013-with-record-highs/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Dow and S&P 500 closing 2013 at record highs with S&P's best year since 1997 directly confirms the claim that stock prices have rarely been higher."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2014/gross-domestic-product-4th-quarter-and-annual-2013-advance-estimate",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "BEA GDP advance estimate documents corporate profits rising in 2013 with quarterly increases, supporting the claim about profit levels after four years of growth."
+      },
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2019-02/gdp3q13_3rd_0.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "BEA official NIPA corporate-profits figures for Q3 2013 document increases, directly supporting the claim about corporate profits being near record levels."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/SP500",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "FRED S&P 500 series shows index at 1848.36 on 12/31/2013, confirming record year-end levels and supporting the claim about stock prices at record highs."
+      },
+      {
+        "source_url": "https://www.bea.gov/data/income-saving/corporate-profits",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Generic reference to BEA corporate profits data series as a source to check, but no specific figures or time period provided to evaluate against the claim."
+      }
+    ],
+    "obama_2014:0070": [
+      {
+        "source_url": "https://www.sba.gov/sites/default/files/aboutsbaarticle/SBA%207a%20and%20504%20Gross%20Loan%20Approval%20Volume%20as%2009-30-13.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Primary SBA data through 9/30/2013 covers part of the five-year window but does not include comparative data across administrations needed to assess 'more than any other'."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/on-small-business/sba-backs-roughly-30-billion-in-small-business-loans-for-the-third-straight-year/2013/10/29/eb137e28-40da-11e3-a624-41d661b0bb78_story.html",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "FY2013 SBA lending figures ($29.6B, 54,106 loans) are within the five-year period but lack cross-administration comparison; note of 2011 peak is suggestive but does not establish relative ranking."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20130502_R40985_91d1f3b40b4c9c5f74064b47378ef0c2b11aca73.html",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "CRS SBA statistics through FY2012 cover part of the five-year window but do not provide comparative data across administrations."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2012/03/05/business-lending-showing-new-signs-strength",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "White House advocacy post on rising SBA lending during first term is promotional context but does not quantify absolute volumes or compare to prior administrations."
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/256/LGR-October-2013--cleared-for-transmittal-with-charts.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Treasury SBLF program data ($8.9B since 2009) addresses a related but distinct capital-access program, not the primary SBA loan programs central to the claim."
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/publications/other-reports/files/sbfreport2012.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Federal Reserve credit-availability report provides market context for small business lending but does not contain SBA loan volumes or cross-administration comparisons."
+      },
+      {
+        "source_url": "https://www.sba.gov/document/report-small-business-administration-loan-program-performance",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "Primary SBA fiscal-year loan tables are the core data source needed but snippet does not specify which years are included or whether cross-administration comparison is presented."
+      },
+      {
+        "source_url": "https://advocacy.sba.gov/wp-content/uploads/2019/07/rs427-2013-Small-Business-Lending-Study-Summary.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "SBA Advocacy baseline context on overall US small business lending in 2013 is background on market trends but does not address the claim's comparative assertion across administrations."
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "State of the Union transcript establishes the exact claim and timing (2014, five-year window = 2009–2013) but is the claim itself, not evidence for or against it."
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R41146",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "CRS historical SBA 7(a) program volumes across administrations is the type of source needed to verify 'more than any other' but snippet does not state whether it contains the cross-administration comparison."
+      }
+    ],
+    "obama_2014:0071": [
+      {
+        "source_url": "https://ustr.gov/about-us/policy-offices/press-office/speeches/transcripts/2014/January/Small-Business-AUSTR-testimony-Small-Business-Subcommittee-Ag-Energy-Tra",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "USTR testimony directly states nearly 98% of U.S. exporters are small firms and connects trade agreements to job creation, matching both the percentage and the causal claim."
+      },
+      {
+        "source_url": "https://blog.trade.gov/2013/05/13/u-s-exporters-reach-record-high-in-2011/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "ITA/Commerce blog explicitly confirms SMEs were 98% of 300,000+ U.S. exporters in 2011, directly corroborating the 98% figure."
+      },
+      {
+        "source_url": "https://www.census.gov/foreign-trade/Press-Release/edb/2013prelimprofile.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Primary Census/ITA Exporter Database is the official source for exporter counts and SME share; snippet indicates it contains the data underlying the 98% claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-113hhrg81701/pdf/CHRG-113hhrg81701.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "House Small Business hearing reproduces USTR statements confirming ~98% of exporters are small businesses and links trade to job creation."
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC27422/text",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Senate Banking Committee cites 295,000 SME exporters (2011) and Commerce estimate linking exports to manufacturing jobs, supporting both the SME share and job-creation nexus."
+      },
+      {
+        "source_url": "https://legacy.trade.gov/mas/ian/build/groups/public/@tg_ian/documents/webcontent/tg_ian_005410.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "ITA fact sheet profiles U.S. exporting companies and small-business share, consistent with the 98% assertion."
+      },
+      {
+        "source_url": "https://ustr.gov/tpp/overview-of-the-TPP",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "USTR overview of Trans-Pacific Partnership confirms the Asia-Pacific trade partnership referenced but does not address the 98% figure or job-creation mechanism."
+      },
+      {
+        "source_url": "https://2010-2014.commerce.gov/news/fact-sheets/2013/05/24/fact-sheet-national-export-initiative.html",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Commerce fact sheet reports ~295,000 SME exporters in 2011 accounting for 98% of identified exporters, directly matching the claim's percentage."
+      },
+      {
+        "source_url": "https://ustr.gov/issue-areas/small-business",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "USTR page ties small-business exporters to trade agreements and job creation, supporting the causal link in the claim."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/R42694.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "CRS background confirms ~97%–98% of exporting firms are SMEs, corroborating the 98% figure (though notes SMEs account for smaller export value, which does not contradict the claim)."
+      }
+    ],
+    "obama_2014:0087": [
+      {
+        "source_url": "https://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "GTM Research directly measured ~one US solar system installed every four minutes in 2013, matching the claim's first assertion exactly."
+      },
+      {
+        "source_url": "http://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "GTM Research analysis of ~132,000 PV installations in 2013 yields approximately one system every four minutes, corroborating the claim's rate.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Primary transcript confirms the exact claim was uttered on January 28, 2014, establishing it as a direct assertion by the speaker."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official transcript of the speech contains the exact claim verbatim, confirming its utterance."
+      },
+      {
+        "source_url": "https://www.bls.gov/green/solar_power/",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "BLS documentation that solar installation involves on-site construction work by installers, roofers, electricians, and plumbers directly supports the claim that these jobs cannot be outsourced."
+      },
+      {
+        "source_url": "http://blogs.reuters.com/breakingviews/2014/01/03/u-s-utilities-face-german-style-solar-burn/",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Reuters cites GTM's one-every-four-minutes finding in context of U.S. solar market growth, corroborating the installation rate claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/2013/article/implementing-the-2010-standard-occupational-classification-in-the-occupational-employment-statistics-program.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "BLS recognition of solar photovoltaic installers as a distinct U.S. occupation evidences domestic installation labor, supporting the non-outsourceable-jobs assertion."
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/statement-energy-secretary-ernest-moniz-2013-solar-jobs-census",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "DOE's 2013 Solar Jobs Census reports 142,698 domestic solar workers and installers, directly supporting the claim that installation jobs are performed by U.S. workers and cannot be outsourced."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20130404.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "BLS documentation of under 5,000 solar photovoltaic installers in May 2012 evidences a U.S. installation workforce, though the small number does not directly address the claim's rate or scale."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=12991",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "EIA analysis of 2012-2013 residential solar growth trends is topically related but does not provide the specific installation rate or workforce data needed to evaluate the claim."
+      }
+    ],
+    "obama_2014:0088": [
+      {
+        "source_url": "https://home.treasury.gov/system/files/131/General-Explanations-FY2014.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Treasury's official FY2014 Green Book specifies repeal of oil/gas/coal tax preferences at ~$4B/yr, directly matching the claim's figure."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20131030_R42374_9a8510e76ff6ba49ab12ce296044239303dcec75.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "CRS analysis of FY2014 budget repeal of oil/gas tax preferences shows $3.9B (≈$4B/year), corroborating the claim's magnitude."
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/131/Tax-Expenditures-FY2014.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Treasury/OMB tax-expenditure tables are relevant background on energy tax preferences but snippet does not state the specific annual figure claimed."
+      },
+      {
+        "source_url": "https://www.hamiltonproject.org/assets/legacy/files/downloads_and_links/THP_15WaysFedBudget_Prop5.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Brookings Hamilton Project quantifies eliminating fossil-fuel subsidies at roughly $4 billion annually, directly supporting the claim's figure."
+      },
+      {
+        "source_url": "https://www.jct.gov/getattachment/8bf84027-b7fe-4c13-a00f-0c36a3425cad/s-1-13-4504.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "JCT tax-expenditure estimates are relevant background source but snippet does not state the specific annual dollar amount at issue."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House transcript of the State of the Union contains the exact quoted '$4 billion a year' line, confirming the claim's source and figure."
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/03-06-FuelsandEnergy_Brief.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "CBO March 2012 used different accounting methodology and found smaller fossil-fuel tax/preference totals, contradicting the $4B annual figure."
+      }
+    ],
+    "obama_2014:0093": [
+      {
+        "source_url": "https://www.iea.org/reports/redrawing-the-energy-climate-map",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "IEA report directly states US had largest emissions decline of any country, matching claim's core assertion about US leading globally."
+      },
+      {
+        "source_url": "https://www.pbl.nl/en/publications/trends-in-global-co2-emissions-2013-report",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "Cross-country dataset shows US CO2 fell 4% in 2012 while China rose and EU fell less, supporting US outperformance claim."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=10691",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "EIA official data confirms US energy-related CO2 fell 3.8% in 2012 to lowest since 1994, corroborating downward trend but not directly comparing to other nations."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinEnergy/detail.php?id=14571",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official US source frames 2013 emissions over 10% below 2005 as eight-year decline, directly matching the claim's timeframe and magnitude assertion."
+      },
+      {
+        "source_url": "https://www.eia.gov/environment/emissions/carbon/",
+        "relevance_score": 0.65,
+        "supports_claim": true,
+        "one_line_why": "EIA data hub showing US energy-related CO2 trend 2005–2013 provides the underlying measurement series for the eight-year period claimed."
+      },
+      {
+        "source_url": "https://cbsnews.com/news/us-carbon-emissions-hit-18-year-low",
+        "relevance_score": 0.5,
+        "supports_claim": true,
+        "one_line_why": "Report of US carbon emissions hitting 18-year low corroborates downward trend but does not address international comparison or eight-year specificity."
+      }
+    ],
+    "obama_2014:0143": [
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED559916.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Mathematica report shows RTTT states adopted more RTT-promoted policies than non-RTTT states, supporting the claim that RTTT helped raise expectations through policy implementation."
+      },
+      {
+        "source_url": "https://www.tn.gov/former-governor-haslam/news/2013/11/7/tennessee-students-the-fastest-improving-in-the-nation.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Tennessee (Republican governor) reported fastest-improving NAEP performance in 2013, directly tied to reform push, supporting the performance-improvement claim."
+      },
+      {
+        "source_url": "https://nces.ed.gov/nationsreportcard/pubs/main2013/2014451.aspx",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Primary NAEP data source identified but snippet does not state specific figures or comparisons between RTTT and non-RTTT states needed to evaluate the claim."
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/gao-13-777.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": false,
+        "one_line_why": "GAO documents mixed implementation and challenges in RTTT states' teacher/principal evaluation systems, tempering the unqualified 'raise performance' claim."
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED580339.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "ED progress report on Tennessee reform implementation and gains is relevant background but snippet does not provide specific performance metrics to verify the claim."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-13-777",
+        "relevance_score": 0.6,
+        "supports_claim": false,
+        "one_line_why": "GAO finding of mixed and uneven teacher-evaluation implementation in RTTT states contradicts the straightforward claim that RTTT 'helped states raise performance.'"
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2012/04/20/press-briefing-press-secretary-jay-carney-and-secretary-education-arne-d",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "White House/ED statement directly asserts RTTT spurred 40+ states to raise standards with governors of both parties, matching the claim's core assertion."
+      },
+      {
+        "source_url": "https://www.chalkbeat.org/tennessee/2013/11/7/21091461/tennessee-students-lead-the-nation-in-growth-on-naep/",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Established outlet reports Tennessee's record NAEP growth linked to reforms, supporting the claim that RTTT helped raise performance."
+      },
+      {
+        "source_url": "https://www.edweek.org/ew/articles/2013/06/18/36laine.h32.html",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "NGA/CCSSO op-ed emphasizes Common Core as state-led effort developed by governors and chiefs, supporting the 'governors from both parties' element of the claim."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/local/education/common-core-foes-spreading-misinformation-duncan-says/2013/06/25/332e9574-ddc8-11e2-948c-d644453cf169_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Washington Post reports ED crediting governors from both parties and RTTT incentives for advancing standards adoption, directly supporting both the bipartisan and expectations-raising elements of the claim."
+      }
+    ],
+    "obama_2014:0165": [
+      {
+        "source_url": "https://www.bls.gov/cps/wlf-databook-2013.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "BLS databook directly states women were ~47% of labor force, which rounds to 'about half'"
+      },
+      {
+        "source_url": "https://www.bls.gov/cps/aa2012/cpsaat11.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "BLS annual-average table shows women at 47.0% of employed persons (2012), supporting 'about half'"
+      },
+      {
+        "source_url": "https://www.census.gov/newsroom/releases/archives/employment_occupations/cb12-225.html",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Census EEO tabulation reports women at 47.2% of labor force, explicitly characterized as 'about half'"
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "BLS Employment Situation shows women at ~47% of employed (Dec 2013), consistent with 'about half'"
+      },
+      {
+        "source_url": "https://www.bls.gov/cps/demographics/women-labor-force.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Generic reference to BLS overview without specific figures provided; cannot verify the claim's assertion"
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/reports/womens-databook/archive/womenlaborforce_2012.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "BLS report explicitly states women constitute 'nearly half the workforce'"
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/image/image_file/equal_pay-task_force_progress_report_june_10_2013.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "White House official statement directly asserts 'Women comprise nearly half of our workforce'"
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2012/ted_20120501.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "BLS Economics Daily reports women at about 47% of employed persons (2011), supporting 'about half'"
+      }
+    ],
+    "obama_2014:0166": [
+      {
+        "source_url": "https://www2.census.gov/library/publications/2013/demo/p60-245/p60-245.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Primary Census data directly states 2012 female-to-male earnings ratio was 0.765, exactly matching the claim's 77 cents assertion."
+      },
+      {
+        "source_url": "https://www.census.gov/newsroom/archives/2013-pr/cb13-165.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Census press release reports 2012 median earnings ratio of ~77%, directly corroborating the 77-cent claim."
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/2013/demo/p60-245.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Landing page for Census publication P60-245 is identified as the source of the annual 77-cent figure, confirming its official origin."
+      },
+      {
+        "source_url": "https://www.census.gov/content/dam/Census/newsroom/press-kits/2013/20130917_ip_slides_with_plotpoints.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Census newsroom materials explicitly show women's median earnings at about 77% of men's for full-time, year-round workers in 2012."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/reports/womens-earnings/archive/womensearnings_2012.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "BLS weekly-earnings methodology yields 81% for 2012, a different figure than 77%, but represents an alternative measurement approach rather than a contradiction of the Census annual statistic."
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/files/docs/publications/bls/reports/womensearnings_2012.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "BLS report using median usual weekly earnings finds 81% in 2012, a competing methodology that does not directly contradict the Census annual 77% figure."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20131104.htm",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "BLS note contrasts 81% weekly earnings with the 77-cent annual statistic, acknowledging both exist but via different methodologies."
+      },
+      {
+        "source_url": "https://www.pbs.org/newshour/nation/women-still-earned-77-cents-to-a-mans-dollar-in-2012",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Established outlet reports Census finding that women earned 77 cents per male dollar in 2012, directly supporting the claim."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20120314_R41897_b76b8a141e1579a2cad40c7b903b1bdac860082a.html",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "CRS overview cites ~77% raw female-to-male median earnings in prior years, providing historical context consistent with the 77-cent figure."
+      }
+    ],
+    "obama_2014:0177": [
+      {
+        "source_url": "https://webserver.rilin.state.ri.us/PublicLaws/law17/law17302-14.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Rhode Island passed a minimum wage increase law in 2013, effective January 1, 2014—one of the five states."
+      },
+      {
+        "source_url": "https://www.ncsl.org/research/labor-and-employment/2013-state-minimum-wage-legislation",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "NCSL enumeration of 2013 state minimum-wage legislation lists exactly five states (CA, CT, NY, RI, NJ) that enacted increases, matching the claim's count."
+      },
+      {
+        "source_url": "https://portal.ct.gov/malloy-archive/press-room/press-releases/2013/06-2013/gov-malloy-signs-minimum-wage-increase-into-law",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Connecticut signed a minimum wage increase law in June 2013—one of the five states."
+      },
+      {
+        "source_url": "https://archive.gov.ca.gov/archive/gov39/2013/09/25/news18224/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "California Governor signed AB 10 to raise minimum wage in September 2013—one of the five states."
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/mw-consolidated",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "DOL primary data table is the authoritative source for verifying which states changed minimum-wage laws in the relevant period; corroborates the five-state count.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://dol.ny.gov/history-minimum-wage-new-york-state",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "New York increased minimum wage effective December 31, 2013—one of the five states."
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "DOL official reference corroborates which states raised statutory minimum-wage rates in the relevant year.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/state/minimum-wage/tipped/2014",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Federal Labor table confirms NJ, NY, CT, and RI increases by early 2014; combined with CA from item 4, accounts for five states.",
+        "arithmetic_hinge": true
+      }
+    ],
+    "obama_2014:0189": [
+      {
+        "source_url": "https://www.everycrsreport.com/files/20130226_R42973_44c181d93ef92acbbebebd1a13eb57774c7678a8.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "CRS table shows 1981 minimum $3.35 = $8.61 in real (2013) dollars; $7.25 in 2014 is ~16% lower, not ~20%.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.epi.org/publication/raising-federal-minimum-wage-to-1010/",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "EPI explicitly calculates 1981 minimum in 2013 dollars as $8.24 versus $7.25 current, yielding ~12% decline, contradicting the ~20% claim."
+      },
+      {
+        "source_url": "https://council.seattle.gov/2014/01/17/history-and-background-on-the-minimum-wage/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Confirms erosion of purchasing power since Reagan era but does not quantify the specific percentage decline."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/data/cpiaucsl",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Identifies data source (BLS CPI-U) needed for inflation adjustment but does not itself state the resulting real-value comparison."
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/history/chart",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Provides nominal wage history ($3.35 in 1981, $7.25 in 2014) but does not perform or state the real-value calculation."
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC30593/text",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Senate hearing references real minimum-wage series and decline since early 1980s but snippet does not state the specific percentage."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/fact-sheet-opportunity-all-rewarding-hard-work",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "White House fact sheet context for the speech but snippet does not contain the wage-decline figure itself."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/epi_minimum_wage.pdf",
+        "relevance_score": 0.1,
+        "supports_claim": null,
+        "one_line_why": "Addresses minimum wage as share of median wage (different metric) rather than real-value decline since 1981."
+      }
+    ],
+    "obama_2014:0198": [
+      {
+        "source_url": "https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-returns-complete-report-publication-1304-basic-tables-part-2",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Provides annual EITC return count (~27–28M in 2011) but does not address lifetime or multi-year usage rates needed to evaluate 'at some point'."
+      },
+      {
+        "source_url": "https://www.cbpp.org/sites/default/files/atoms/files/6-26-12tax.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "CBPP report directly states almost half of taxpayers with children claimed EITC at least once over an 18-year period, matching the claim's 'at some point' framing."
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/federal-tax/eitc-and-child-tax-credit-promote-work-reduce-poverty-and-support-childrens",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "CBPP report states about half of taxpayers with children use EITC at least once over an 18-year period, directly supporting the 'about half' and 'at some point' assertion."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/50th_anniversary_cea_report_-_final_post_embargo.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "CEA report explicitly states ~50% claim EITC at some point over a multi-decade period, directly corroborating the claim's 'about half' and 'at some point' language."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/btn/volume-2/spending-patterns-of-families-receiving-means-tested-government-assistance.htm",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Provides denominator (27.1M families with children in 2011) but does not address EITC usage rates or lifetime participation."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "This is the claim itself as stated by President Obama; it is the assertion being fact-checked, not evidence for or against it."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official transcript containing the verbatim claim; confirms the statement was made but does not independently verify its accuracy."
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official 2014 SOTU transcript with the exact quoted line; confirms the claim was stated but does not verify its factual basis."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Government compilation of the SOTU claim; confirms the statement exists but does not provide independent evidence of its accuracy."
+      },
+      {
+        "source_url": "https://www.census.gov/data/tables/2012/demo/families/cps-2012.html",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Census data on parent/family counts provides potential denominator but does not itself report EITC usage rates or lifetime participation."
+      }
+    ],
+    "obama_2014:0202": [
+      {
+        "source_url": "https://www.bls.gov/ebs/publications/pdf/bulletin-2776-september-2013-employee-benefits-in-the-united-states-march-2013.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Claim says most workers don't have a pension; source shows only 15% of private-industry workers participated in defined-benefit pensions as of March 2013, meaning 85% did not."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20130103.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Claim says most workers don't have a pension; source shows only 18% of private-industry employees participated in defined-benefit plans in 2011, meaning 82% did not."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/ebs2_07172013.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Claim says most workers don't have a pension; source shows only 28% of civilian workers had access to defined-benefit pension plans, implying the majority lacked them."
+      },
+      {
+        "source_url": "https://www.ebri.org/content/full/ebri-s-2013-retirement-confidence-survey-perceived-savings-needs-outpace-reality-for-many-5175",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "Claim says most workers don't have a pension; source shows only 38% of workers currently contribute to a workplace retirement plan, meaning 62% do not."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/btn/volume-1/who-has-benefits-in-private-industry-in-2012.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Claim says most workers don't have a pension; source shows only 48% of private-industry workers participated in any retirement plan, meaning 52% did not."
+      },
+      {
+        "source_url": "https://www.ebri.org/docs/default-source/ebri-press-release/pr-1054.pdf?sfvrsn=832a362f_0",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Source is identified only as an EBRI release on participation trends contemporaneous with the claim but no specific figures are provided in the snippet."
+      },
+      {
+        "source_url": "http://www.dol.gov/ebsa/pdf/2011pensionplanbulletin.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Source provides aggregate participant counts (~130M) across all pension plan types in 2011 but does not state what share of the total workforce this represents, making it impossible to assess the claim directly.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.bls.gov/ebs/factsheets/defined-benefit-frozen-plans.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Source documents ongoing decline and freezing of defined-benefit pension plans, which is consistent with the claim that most workers don't have pensions, though it does not provide a specific participation figure."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/GAO-14-9",
+        "relevance_score": 0.65,
+        "supports_claim": true,
+        "one_line_why": "Source documents that defined-contribution (401(k)) plans dominate as primary retirement vehicles, implying defined-benefit pensions are not the norm, consistent with the claim that most workers don't have pensions."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20130719.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Source shows from March 2013 NCS data that defined-benefit access and participation are substantially lower than defined-contribution coverage, supporting the claim that most workers lack pensions."
+      }
+    ],
+    "obama_2014:0256": [
+      {
+        "source_url": "https://www.stateoig.gov/uploads/report/report_pdf_file/isp-i-13-25a_1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "State OIG documents ~300 military personnel at Embassy Baghdad in 2012 and ~170 authorized in 2013, directly contradicting 'all troops out'."
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/remarks-president-state-union-address/",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Transcript of the claim's utterance establishes when/where it was made but does not itself verify or refute the factual assertion."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Media coverage of the speech documents the claim but does not independently verify the underlying fact of troop presence or absence."
+      },
+      {
+        "source_url": "https://www.stateoig.gov/uploads/report/report_pdf_file/aud-mero-13-33_1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "State OIG staffing audit documents residual US military/OSC-I personnel in Iraq in 2013, contradicting the claim of complete withdrawal."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CPRT-112SPRT63954/html/CPRT-112SPRT63954.htm",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Senate print on the 2011 withdrawal and shift to civilian mission is background context but does not address residual military presence post-2011."
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/ei/pix/veterans/2013/217422.htm",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "State Dept. archived page showing U.S. military/personnel activity in Baghdad in 2013 indicates continued presence after the 2011 withdrawal."
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC30742/text",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "Senate hearing materials discussing U.S. personnel and advisory presence in Iraq after 2011 drawdown directly contradict 'all troops out'."
+      },
+      {
+        "source_url": "https://news.yahoo.com/enhanced-u-security-baghdad-embassy-includes-fewer-100-220657586.html",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Reports of fewer than 100 additional soldiers for embassy security document residual military presence, contradicting the claim of complete withdrawal."
+      },
+      {
+        "source_url": "https://www.army.mil/article/70048/the_office_of_security_cooperation_maintaining_a_presence_in_iraq_once_soldiers_go_home",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "US Army documentation of OSC-I maintaining military presence in Iraq after combat soldiers depart contradicts 'all troops out'."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/worldviews/wp/2014/01/29/obamas-six-big-foreign-policy-points-in-the-state-of-the-union/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Press analysis of SOTU claims and omissions is commentary on the speech but does not itself provide primary data on troop levels."
+      }
+    ]
+  },
+  "soft_failures": []
+}

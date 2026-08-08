@@ -1,19 +1,19 @@
 # Re-gate flip set — remediation v2, B1a → B1b
 
-Generated 2026-08-08T15:40:40.543011+00:00 · $0 (no model calls; deterministic arithmetic over stored artifacts + B1a sidecars).
+Generated 2026-08-08T17:32:29.522685+00:00 · $0 (no model calls; deterministic arithmetic over stored artifacts + B1a sidecars).
 
 ## Flip set by speech
 
 | speech | claims | released | still gated | newly gated | unchanged decided | not re-scored |
 |---|---:|---:|---:|---:|---:|---:|
-| gwbush_2006 | 48 | 1 | 6 | 2 | 39 | 0 |
-| clinton_1998 | 92 | 6 | 8 | 4 | 74 | 0 |
-| obama_2014 | 96 | 4 | 8 | 3 | 81 | 0 |
-| biden_2022 | 111 | 5 | 11 | 4 | 91 | 0 |
+| gwbush_2006 | 48 | 1 | 6 | 1 | 40 | 0 |
+| clinton_1998 | 92 | 6 | 8 | 6 | 72 | 0 |
+| obama_2014 | 96 | 5 | 7 | 5 | 79 | 0 |
+| biden_2022 | 111 | 5 | 11 | 5 | 90 | 0 |
 | trump_2026 | 182 | 16 | 22 | 10 | 134 | 0 |
-| **corpus** | **529** | **32** | **55** | **23** | **419** | **0** |
+| **corpus** | **529** | **33** | **54** | **27** | **415** | **0** |
 
-## Released — 32 claim(s)
+## Released — 33 claim(s)
 
 These were gate-forced Unverifiable for lack of stance signal. With B1a's scores their packs meet quota, so they need PCA re-adjudication (this is the B1b bill).
 
@@ -33,6 +33,7 @@ These were gate-forced Unverifiable for lack of stance signal. With B1a's scores
 | `gwbush_2006:0133` | UNVERIFIABLE | c-eval | ind 1 / corr 0 / prim 0 → 1 of 2 | ind 4 / corr 0 / prim 0 → 4 of 2 | Our economy is healthy and vigorous and growing faster than other major industrialized nations. |
 | `obama_2014:0056` | UNVERIFIABLE | c-third | ind 1 / corr 0 / prim 0 → 1 of 2 | ind 2 / corr 0 / prim 0 → 2 of 2 | And over half of big manufacturers say they’re thinking of insourcing jobs from abroad. |
 | `obama_2014:0153` | UNVERIFIABLE | c-third | ind 1 / corr 0 / prim 0 → 1 of 2 | ind 2 / corr 0 / prim 0 → 2 of 2 | But in the meantime, thirty states have raised pre-k funding on their own. |
+| `obama_2014:0177` | UNVERIFIABLE | c-third | ind 0 / corr 0 / prim 0 → 0 of 2 | ind 3 / corr 0 / prim 0 → 3 of 2 | In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs. |
 | `obama_2014:0255` | UNVERIFIABLE | c-third | ind 1 / corr 0 / prim 0 → 1 of 2 | ind 2 / corr 0 / prim 0 → 2 of 2 | When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan. |
 | `obama_2014:0280` | UNVERIFIABLE | c-eval | ind 0 / corr 0 / prim 0 → 0 of 2 | ind 4 / corr 0 / prim 0 → 4 of 2 | American diplomacy, backed by the threat of force, is why Syria’s chemical weapons are being eliminated, and we will con… |
 | `trump_2026:0191` | UNVERIFIABLE | c-eval | ind 1 / corr 0 / prim 0 → 1 of 2 | ind 3 / corr 0 / prim 0 → 3 of 2 | Many of the wars I settled was because of the threat of tariffs. |
@@ -52,7 +53,7 @@ These were gate-forced Unverifiable for lack of stance signal. With B1a's scores
 | `trump_2026:0616` | UNVERIFIABLE | c-eval | ind 1 / corr 0 / prim 0 → 1 of 2 | ind 2 / corr 0 / prim 0 → 2 of 2 | And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stoppe… |
 | `trump_2026:0639` | UNVERIFIABLE | c-third | ind 1 / corr 0 / prim 0 → 1 of 2 | ind 2 / corr 0 / prim 0 → 2 of 2 | But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the reg… |
 
-## Newly gated — 23 claim(s)
+## Newly gated — 27 claim(s)
 
 The repair WITHHOLDS these: they were decided, and with real stance their packs no longer meet quota. Re-adjudication cost $0 — a withheld claim needs no panel call.
 
@@ -60,22 +61,26 @@ The repair WITHHOLDS these: they were decided, and with real stance their packs 
 |---|---|---|---|---|---|
 | `biden_2022:0100` | TRUE | c-third | ind 3 / corr 0 / prim 0 → 3 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | I remember when my dad had to leave our home in Scranton, Pennsylvania to find work. |
 | `biden_2022:0124` | UNVERIFIABLE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | America used to have the best roads, bridges, and airports on Earth. |
+| `biden_2022:0211` | MISLEADING | c-eval | ind 3 / corr 0 / prim 0 → 3 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their … |
 | `biden_2022:0376` | TRUE | c-third | ind 3 / corr 0 / prim 0 → 3 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | The constitutional right affirmed in Roe v. |
 | `biden_2022:0427` | TRUE | c-third | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | Combat medic in Kosovo and Iraq. |
+| `clinton_1998:0006` | TRUE | c-eval | ind 4 / corr 0 / prim 0 → 4 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | We have more than 14 million new jobs, the lowest unemployment in 24 years, the lowest core inflation in 30 years; incom… |
 | `clinton_1998:0101` | TRUE | c-eval | ind 3 / corr 0 / prim 0 → 3 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | That's why we have more than doubled funding for training dislocated workers since 1993. |
 | `clinton_1998:0107` | TRUE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | And remember the big picture here: While we've been entering into hundreds of new trade agreements, we've been creating … |
+| `clinton_1998:0210` | TRUE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | For 50 years, NATO contained communism and kept America and Europe secure. |
 | `clinton_1998:0211` | TRUE | c-third | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | Now these three formerly Communist countries have said yes to democracy. |
 | `clinton_1998:0358` | MISLEADING | c-third | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | Beginning this year, 1998, men and women from 16 countries will build a foothold in the heavens, the international space… |
-| `gwbush_2006:0134` | TRUE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin… |
 | `gwbush_2006:0217` | TRUE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | Drug use among youth is down 19 percent since 2001. |
+| `obama_2014:0001` | TRUE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo… |
 | `obama_2014:0004` | UNVERIFIABLE | c-third | ind 3 / corr 0 / prim 0 → 3 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | A rural doctor gave a young child the first prescription to treat asthma that his mother could afford. |
-| `obama_2014:0070` | None | c-count | ind 1 / corr 0 / prim 1 → 2 of 2 | ind 0 / corr 0 / prim 1 → 1 of 2 | Over the past five years, my administration has made more loans to small business owners than any other. |
-| `obama_2014:0189` | MISLEADING | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here. |
+| `obama_2014:0070` | None | c-count | ind 1 / corr 0 / prim 1 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | Over the past five years, my administration has made more loans to small business owners than any other. |
+| `obama_2014:0189` | MISLEADING | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here. |
+| `obama_2014:0198` | TRUE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | Right now, it helps about half of all parents at some point. |
+| `trump_2026:0043` | None | c-third | ind 5 / corr 0 / prim 0 → 5 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | In four long years, the last administration got less than $1 trillion in new investment in the United States. |
 | `trump_2026:0054` | FALSE | c-eval | ind 3 / corr 0 / prim 0 → 3 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | More Americans are working today than at any time in the history of our country. |
 | `trump_2026:0057` | UNVERIFIABLE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off … |
 | `trump_2026:0130` | FALSE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republ… |
 | `trump_2026:0137` | UNVERIFIABLE | c-eval | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t… |
-| `trump_2026:0182` | FALSE | c-third | ind 3 / corr 0 / prim 0 → 3 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | And the big story was how Donald Trump called the economy correctly and 22 Nobel Prize winners in economics didn't, they… |
 | `trump_2026:0341` | TRUE | c-third | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being… |
 | `trump_2026:0450` | MISLEADING | c-third | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 1 / corr 0 / prim 0 → 1 of 2 | No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's fac… |
 | `trump_2026:0487` | UNVERIFIABLE | c-third | ind 2 / corr 0 / prim 0 → 2 of 2 | ind 0 / corr 0 / prim 0 → 0 of 2 | This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over. |
@@ -96,11 +101,11 @@ The repair WITHHOLDS these: they were decided, and with real stance their packs 
 
 ## Costed B1b summary
 
-- released (need re-adjudication): **32**
+- released (need re-adjudication): **33**
 - named extras: **6** (6 not already released)
-- **total claims to adjudicate: 38**
-- newly gated: 23 — **$0** (withholding needs no panel call)
-- implied cost at $0.0642–$0.0748/claim: **$2.44–$2.84**
-- ceiling $10.00, of which $1.06 is committed to B1a → $8.94 remaining; FITS
-- ⚠︎ B1a was planned at $0.44 but the sidecars record **$1.0632** actually spent; headroom above is charged against the observed figure, not the plan.
+- **total claims to adjudicate: 39**
+- newly gated: 27 — **$0** (withholding needs no panel call)
+- implied cost at $0.0642–$0.0748/claim: **$2.50–$2.92**
+- ceiling $10.00, of which $1.60 is committed to B1a → $8.40 remaining; FITS
+- ⚠︎ B1a was planned at $0.44 but the sidecars record **$1.6038** actually spent; headroom above is charged against the observed figure, not the plan.
 
