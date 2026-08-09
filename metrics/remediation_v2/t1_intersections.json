@@ -1,0 +1,241 @@
+{
+  "schema": "truthbot-t1-intersections v1",
+  "generated": "2026-08-09T22:58:54.216696+00:00",
+  "cost_usd": 0.0,
+  "inputs": {
+    "d15_blast_radius": "metrics/remediation_v2/d15_blast_radius.json",
+    "d15_vintage": "rescored",
+    "d15_vintage_note": "measure_d15.py loads the B1a sidecar only; regate_from_rescore.py merges B2 over B1a. T-4 re-runs both rules over the merged vintage and settles the difference.",
+    "regate_flipset": "metrics/remediation_v2/regate_flipset.json",
+    "flipset_generated": "2026-08-08T17:32:29.522685+00:00",
+    "d15_generated": "2026-08-08T17:08:47.828017+00:00"
+  },
+  "sets": {
+    "d15_newly_gated": {
+      "n": 50,
+      "sids": [
+        "biden_2022:0019",
+        "biden_2022:0137",
+        "biden_2022:0146",
+        "biden_2022:0154",
+        "biden_2022:0171",
+        "biden_2022:0284",
+        "biden_2022:0420",
+        "biden_2022:0431",
+        "clinton_1998:0027",
+        "clinton_1998:0090",
+        "clinton_1998:0134",
+        "clinton_1998:0135",
+        "clinton_1998:0195",
+        "clinton_1998:0225",
+        "clinton_1998:0227",
+        "clinton_1998:0236",
+        "clinton_1998:0243",
+        "clinton_1998:0350",
+        "gwbush_2006:0033",
+        "gwbush_2006:0189",
+        "obama_2014:0045",
+        "obama_2014:0114",
+        "obama_2014:0123",
+        "obama_2014:0125",
+        "obama_2014:0126",
+        "obama_2014:0153",
+        "obama_2014:0255",
+        "trump_2026:0098",
+        "trump_2026:0099",
+        "trump_2026:0102",
+        "trump_2026:0106",
+        "trump_2026:0111",
+        "trump_2026:0153",
+        "trump_2026:0255",
+        "trump_2026:0256",
+        "trump_2026:0279",
+        "trump_2026:0325",
+        "trump_2026:0329",
+        "trump_2026:0340",
+        "trump_2026:0343",
+        "trump_2026:0379",
+        "trump_2026:0402",
+        "trump_2026:0405",
+        "trump_2026:0482",
+        "trump_2026:0514",
+        "trump_2026:0638",
+        "trump_2026:0643",
+        "trump_2026:0659",
+        "trump_2026:0660",
+        "trump_2026:0664"
+      ]
+    },
+    "released": {
+      "n": 33,
+      "sids": [
+        "biden_2022:0146",
+        "biden_2022:0154",
+        "biden_2022:0155",
+        "biden_2022:0244",
+        "biden_2022:0311",
+        "clinton_1998:0021",
+        "clinton_1998:0028",
+        "clinton_1998:0090",
+        "clinton_1998:0194",
+        "clinton_1998:0350",
+        "clinton_1998:0364",
+        "gwbush_2006:0133",
+        "obama_2014:0056",
+        "obama_2014:0153",
+        "obama_2014:0177",
+        "obama_2014:0255",
+        "obama_2014:0280",
+        "trump_2026:0191",
+        "trump_2026:0279",
+        "trump_2026:0294",
+        "trump_2026:0310",
+        "trump_2026:0325",
+        "trump_2026:0329",
+        "trump_2026:0379",
+        "trump_2026:0402",
+        "trump_2026:0405",
+        "trump_2026:0428",
+        "trump_2026:0553",
+        "trump_2026:0554",
+        "trump_2026:0559",
+        "trump_2026:0564",
+        "trump_2026:0616",
+        "trump_2026:0639"
+      ]
+    },
+    "named_extras": {
+      "n": 6,
+      "sids": [
+        "trump_2026:0030",
+        "trump_2026:0031",
+        "trump_2026:0023",
+        "trump_2026:0024",
+        "trump_2026:0343",
+        "clinton_1998:0313"
+      ]
+    },
+    "d16_released": {
+      "n": 2,
+      "sids": [
+        "clinton_1998:0026",
+        "clinton_1998:0038"
+      ]
+    }
+  },
+  "intersections": {
+    "d15_x_released": {
+      "n": 12,
+      "sids": [
+        "biden_2022:0146",
+        "biden_2022:0154",
+        "clinton_1998:0090",
+        "clinton_1998:0350",
+        "obama_2014:0153",
+        "obama_2014:0255",
+        "trump_2026:0279",
+        "trump_2026:0325",
+        "trump_2026:0329",
+        "trump_2026:0379",
+        "trump_2026:0402",
+        "trump_2026:0405"
+      ],
+      "rules": {
+        "biden_2022:0146": [
+          "crec-congressional-record"
+        ],
+        "biden_2022:0154": [
+          "crec-congressional-record",
+          "dcpd-daily-compilation"
+        ],
+        "clinton_1998:0090": [
+          "crec-congressional-record",
+          "presidency-ucsb-address",
+          "recap-language",
+          "wcpd-weekly-compilation"
+        ],
+        "clinton_1998:0350": [
+          "crec-congressional-record",
+          "recap-language"
+        ],
+        "obama_2014:0153": [
+          "recap-language"
+        ],
+        "obama_2014:0255": [
+          "recap-language"
+        ],
+        "trump_2026:0279": [
+          "crec-congressional-record",
+          "dcpd-daily-compilation"
+        ],
+        "trump_2026:0325": [
+          "dcpd-daily-compilation",
+          "presidency-ucsb-address"
+        ],
+        "trump_2026:0329": [
+          "crec-congressional-record",
+          "dcpd-daily-compilation",
+          "recap-language"
+        ],
+        "trump_2026:0379": [
+          "crec-congressional-record",
+          "dcpd-daily-compilation"
+        ],
+        "trump_2026:0402": [
+          "crec-congressional-record",
+          "dcpd-daily-compilation",
+          "recap-language"
+        ],
+        "trump_2026:0405": [
+          "crec-congressional-record",
+          "dcpd-daily-compilation"
+        ]
+      }
+    },
+    "d15_x_named_extras": {
+      "n": 1,
+      "sids": [
+        "trump_2026:0343"
+      ],
+      "rules": {
+        "trump_2026:0343": [
+          "crec-congressional-record",
+          "dcpd-daily-compilation"
+        ]
+      }
+    },
+    "d15_x_d16_released": {
+      "n": 0,
+      "sids": []
+    }
+  },
+  "cross_checks": {
+    "released_x_named_extras": [],
+    "released_x_d16_released": [],
+    "named_extras_x_d16_released": [],
+    "d15_released_sids_empty": true
+  },
+  "wave": {
+    "planned_gross": 41,
+    "planned_formula": "33 released + 6 named extras + 2 from D16(alpha)",
+    "removed_by_d15": 13,
+    "removed_sids": [
+      "biden_2022:0146",
+      "biden_2022:0154",
+      "clinton_1998:0090",
+      "clinton_1998:0350",
+      "obama_2014:0153",
+      "obama_2014:0255",
+      "trump_2026:0279",
+      "trump_2026:0325",
+      "trump_2026:0329",
+      "trump_2026:0343",
+      "trump_2026:0379",
+      "trump_2026:0402",
+      "trump_2026:0405"
+    ],
+    "ceiling": 28,
+    "ceiling_is_upper_bound": true,
+    "ceiling_rationale": "D15 releases nothing in any speech or vintage, so re-gating with both rules active can only subtract from the released set. Nothing downstream adds a claim to the wave."
+  }
+}
