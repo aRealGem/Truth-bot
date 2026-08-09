@@ -3,6 +3,7 @@
 **Status:** PROPOSED. Implemented, tested, and **NOT ENABLED**.
 **Flag:** `TRUTHBOT_D15_UTTERANCE_RECORD` — unset (OFF) in production.
 **Blast radius measured:** `scripts/measure_d15.py` → `metrics/remediation_v2/d15_blast_radius.json` ($0, no model calls).
+**Combined with D16(α):** `scripts/d15_d16_era_breakdown.py` → `metrics/remediation_v2/d15_d16_era_breakdown.{json,md}` — the M-6 evenhandedness check. D15 only removes credit and D16(α) only adds it, so neither number means anything on its own; the NET per speech, the decided-rate on both bases, and the era-concentration finding live there.
 **Code:** `src/truthbot/verdict/utterance_record.py`, wired in `verdict/consolidator.py` and `verdict/evidential_role.py`.
 
 ---

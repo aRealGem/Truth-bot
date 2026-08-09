@@ -1,0 +1,1231 @@
+{
+  "schema": "truthbot-d15-d16-era-breakdown v1",
+  "generated": "2026-08-09T15:16:31.984117+00:00",
+  "flags": {
+    "d15": "TRUTHBOT_D15_UTTERANCE_RECORD (default OFF \u2014 NOT enabled)",
+    "d16": "TRUTHBOT_D16_STATISTICAL_RELEASE (default OFF \u2014 NOT enabled)"
+  },
+  "headline_vintage": "rescored",
+  "anecdote_claim_type": "personal-anecdote",
+  "decided_rate_convention": "before = what the artifacts ship; after = newly-gated claims forced Unverifiable, released claims counted as decided (UPPER bound; *_after_lower leaves them where they ship)",
+  "speeches": [
+    "gwbush_2006",
+    "clinton_1998",
+    "obama_2014",
+    "biden_2022",
+    "trump_2026"
+  ],
+  "speeches_missing_sidecar": [],
+  "vintages": {
+    "stored": {
+      "per_speech": [
+        {
+          "speech": "gwbush_2006",
+          "speaker": "George W. Bush",
+          "claims_measured": 48,
+          "anecdotes": 1,
+          "rows_without_a_verdict": 0,
+          "d15": {
+            "newly_gated": 1,
+            "newly_gated_sids": [
+              "gwbush_2006:0189"
+            ],
+            "newly_gated_shipping_true": 1,
+            "newly_gated_true_sids": [
+              "gwbush_2006:0189"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 1,
+            "newly_gated_sids": [
+              "gwbush_2006:0189"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -1
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 40,
+              "total": 48,
+              "rate": 0.8333
+            },
+            "raw_after": {
+              "decided": 39,
+              "total": 48,
+              "rate": 0.8125
+            },
+            "raw_after_lower": {
+              "decided": 39,
+              "total": 48,
+              "rate": 0.8125
+            },
+            "adjusted_before": {
+              "decided": 39,
+              "total": 47,
+              "rate": 0.8298
+            },
+            "adjusted_after": {
+              "decided": 38,
+              "total": 47,
+              "rate": 0.8085
+            },
+            "adjusted_after_lower": {
+              "decided": 38,
+              "total": 47,
+              "rate": 0.8085
+            },
+            "delta_raw": -0.0208,
+            "delta_adjusted": -0.0213
+          }
+        },
+        {
+          "speech": "clinton_1998",
+          "speaker": "Bill Clinton",
+          "claims_measured": 92,
+          "anecdotes": 7,
+          "rows_without_a_verdict": 1,
+          "d15": {
+            "newly_gated": 10,
+            "newly_gated_sids": [
+              "clinton_1998:0025",
+              "clinton_1998:0027",
+              "clinton_1998:0134",
+              "clinton_1998:0135",
+              "clinton_1998:0136",
+              "clinton_1998:0195",
+              "clinton_1998:0225",
+              "clinton_1998:0227",
+              "clinton_1998:0236",
+              "clinton_1998:0243"
+            ],
+            "newly_gated_shipping_true": 10,
+            "newly_gated_true_sids": [
+              "clinton_1998:0025",
+              "clinton_1998:0027",
+              "clinton_1998:0134",
+              "clinton_1998:0135",
+              "clinton_1998:0136",
+              "clinton_1998:0195",
+              "clinton_1998:0225",
+              "clinton_1998:0227",
+              "clinton_1998:0236",
+              "clinton_1998:0243"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 2,
+            "released_sids": [
+              "clinton_1998:0026",
+              "clinton_1998:0038"
+            ],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 10,
+            "newly_gated_sids": [
+              "clinton_1998:0025",
+              "clinton_1998:0027",
+              "clinton_1998:0134",
+              "clinton_1998:0135",
+              "clinton_1998:0136",
+              "clinton_1998:0195",
+              "clinton_1998:0225",
+              "clinton_1998:0227",
+              "clinton_1998:0236",
+              "clinton_1998:0243"
+            ],
+            "released": 2,
+            "released_sids": [
+              "clinton_1998:0026",
+              "clinton_1998:0038"
+            ],
+            "net": -8
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 77,
+              "total": 92,
+              "rate": 0.837
+            },
+            "raw_after": {
+              "decided": 69,
+              "total": 92,
+              "rate": 0.75
+            },
+            "raw_after_lower": {
+              "decided": 67,
+              "total": 92,
+              "rate": 0.7283
+            },
+            "adjusted_before": {
+              "decided": 71,
+              "total": 85,
+              "rate": 0.8353
+            },
+            "adjusted_after": {
+              "decided": 68,
+              "total": 85,
+              "rate": 0.8
+            },
+            "adjusted_after_lower": {
+              "decided": 66,
+              "total": 85,
+              "rate": 0.7765
+            },
+            "delta_raw": -0.087,
+            "delta_adjusted": -0.0353
+          }
+        },
+        {
+          "speech": "obama_2014",
+          "speaker": "Barack Obama",
+          "claims_measured": 96,
+          "anecdotes": 23,
+          "rows_without_a_verdict": 3,
+          "d15": {
+            "newly_gated": 6,
+            "newly_gated_sids": [
+              "obama_2014:0045",
+              "obama_2014:0066",
+              "obama_2014:0110",
+              "obama_2014:0114",
+              "obama_2014:0123",
+              "obama_2014:0126"
+            ],
+            "newly_gated_shipping_true": 4,
+            "newly_gated_true_sids": [
+              "obama_2014:0045",
+              "obama_2014:0066",
+              "obama_2014:0110",
+              "obama_2014:0123"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 6,
+            "newly_gated_sids": [
+              "obama_2014:0045",
+              "obama_2014:0066",
+              "obama_2014:0110",
+              "obama_2014:0114",
+              "obama_2014:0123",
+              "obama_2014:0126"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -6
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 78,
+              "total": 96,
+              "rate": 0.8125
+            },
+            "raw_after": {
+              "decided": 73,
+              "total": 96,
+              "rate": 0.7604
+            },
+            "raw_after_lower": {
+              "decided": 73,
+              "total": 96,
+              "rate": 0.7604
+            },
+            "adjusted_before": {
+              "decided": 57,
+              "total": 73,
+              "rate": 0.7808
+            },
+            "adjusted_after": {
+              "decided": 55,
+              "total": 73,
+              "rate": 0.7534
+            },
+            "adjusted_after_lower": {
+              "decided": 55,
+              "total": 73,
+              "rate": 0.7534
+            },
+            "delta_raw": -0.0521,
+            "delta_adjusted": -0.0274
+          }
+        },
+        {
+          "speech": "biden_2022",
+          "speaker": "Joe Biden",
+          "claims_measured": 111,
+          "anecdotes": 9,
+          "rows_without_a_verdict": 2,
+          "d15": {
+            "newly_gated": 8,
+            "newly_gated_sids": [
+              "biden_2022:0019",
+              "biden_2022:0137",
+              "biden_2022:0171",
+              "biden_2022:0284",
+              "biden_2022:0289",
+              "biden_2022:0420",
+              "biden_2022:0427",
+              "biden_2022:0431"
+            ],
+            "newly_gated_shipping_true": 8,
+            "newly_gated_true_sids": [
+              "biden_2022:0019",
+              "biden_2022:0137",
+              "biden_2022:0171",
+              "biden_2022:0284",
+              "biden_2022:0289",
+              "biden_2022:0420",
+              "biden_2022:0427",
+              "biden_2022:0431"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 8,
+            "newly_gated_sids": [
+              "biden_2022:0019",
+              "biden_2022:0137",
+              "biden_2022:0171",
+              "biden_2022:0284",
+              "biden_2022:0289",
+              "biden_2022:0420",
+              "biden_2022:0427",
+              "biden_2022:0431"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -8
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 92,
+              "total": 111,
+              "rate": 0.8288
+            },
+            "raw_after": {
+              "decided": 84,
+              "total": 111,
+              "rate": 0.7568
+            },
+            "raw_after_lower": {
+              "decided": 84,
+              "total": 111,
+              "rate": 0.7568
+            },
+            "adjusted_before": {
+              "decided": 83,
+              "total": 102,
+              "rate": 0.8137
+            },
+            "adjusted_after": {
+              "decided": 78,
+              "total": 102,
+              "rate": 0.7647
+            },
+            "adjusted_after_lower": {
+              "decided": 78,
+              "total": 102,
+              "rate": 0.7647
+            },
+            "delta_raw": -0.072,
+            "delta_adjusted": -0.049
+          }
+        },
+        {
+          "speech": "trump_2026",
+          "speaker": "Donald Trump",
+          "claims_measured": 182,
+          "anecdotes": 52,
+          "rows_without_a_verdict": 4,
+          "d15": {
+            "newly_gated": 23,
+            "newly_gated_sids": [
+              "trump_2026:0095",
+              "trump_2026:0098",
+              "trump_2026:0099",
+              "trump_2026:0102",
+              "trump_2026:0111",
+              "trump_2026:0130",
+              "trump_2026:0153",
+              "trump_2026:0255",
+              "trump_2026:0256",
+              "trump_2026:0340",
+              "trump_2026:0341",
+              "trump_2026:0343",
+              "trump_2026:0482",
+              "trump_2026:0487",
+              "trump_2026:0497",
+              "trump_2026:0514",
+              "trump_2026:0638",
+              "trump_2026:0643",
+              "trump_2026:0659",
+              "trump_2026:0660",
+              "trump_2026:0664",
+              "trump_2026:0665",
+              "trump_2026:0667"
+            ],
+            "newly_gated_shipping_true": 18,
+            "newly_gated_true_sids": [
+              "trump_2026:0095",
+              "trump_2026:0098",
+              "trump_2026:0099",
+              "trump_2026:0102",
+              "trump_2026:0111",
+              "trump_2026:0255",
+              "trump_2026:0340",
+              "trump_2026:0341",
+              "trump_2026:0343",
+              "trump_2026:0482",
+              "trump_2026:0497",
+              "trump_2026:0638",
+              "trump_2026:0643",
+              "trump_2026:0659",
+              "trump_2026:0660",
+              "trump_2026:0664",
+              "trump_2026:0665",
+              "trump_2026:0667"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 23,
+            "newly_gated_sids": [
+              "trump_2026:0095",
+              "trump_2026:0098",
+              "trump_2026:0099",
+              "trump_2026:0102",
+              "trump_2026:0111",
+              "trump_2026:0130",
+              "trump_2026:0153",
+              "trump_2026:0255",
+              "trump_2026:0256",
+              "trump_2026:0340",
+              "trump_2026:0341",
+              "trump_2026:0343",
+              "trump_2026:0482",
+              "trump_2026:0487",
+              "trump_2026:0497",
+              "trump_2026:0514",
+              "trump_2026:0638",
+              "trump_2026:0643",
+              "trump_2026:0659",
+              "trump_2026:0660",
+              "trump_2026:0664",
+              "trump_2026:0665",
+              "trump_2026:0667"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -23
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 133,
+              "total": 182,
+              "rate": 0.7308
+            },
+            "raw_after": {
+              "decided": 114,
+              "total": 182,
+              "rate": 0.6264
+            },
+            "raw_after_lower": {
+              "decided": 114,
+              "total": 182,
+              "rate": 0.6264
+            },
+            "adjusted_before": {
+              "decided": 103,
+              "total": 130,
+              "rate": 0.7923
+            },
+            "adjusted_after": {
+              "decided": 100,
+              "total": 130,
+              "rate": 0.7692
+            },
+            "adjusted_after_lower": {
+              "decided": 100,
+              "total": 130,
+              "rate": 0.7692
+            },
+            "delta_raw": -0.1044,
+            "delta_adjusted": -0.0231
+          }
+        }
+      ],
+      "spreads": {
+        "raw_before": {
+          "min": 0.7308,
+          "max": 0.837,
+          "spread": 0.1062,
+          "min_speech": "trump_2026",
+          "max_speech": "clinton_1998"
+        },
+        "raw_after": {
+          "min": 0.6264,
+          "max": 0.8125,
+          "spread": 0.1861,
+          "min_speech": "trump_2026",
+          "max_speech": "gwbush_2006"
+        },
+        "adjusted_before": {
+          "min": 0.7808,
+          "max": 0.8353,
+          "spread": 0.0545,
+          "min_speech": "obama_2014",
+          "max_speech": "clinton_1998"
+        },
+        "adjusted_after": {
+          "min": 0.7534,
+          "max": 0.8085,
+          "spread": 0.0551,
+          "min_speech": "obama_2014",
+          "max_speech": "gwbush_2006"
+        }
+      },
+      "corpus": {
+        "claims_measured": 529,
+        "d15_newly_gated": 48,
+        "d15_newly_gated_shipping_true": 41,
+        "d16_released": 2,
+        "combined_newly_gated": 48,
+        "combined_released": 2,
+        "combined_net": -46
+      },
+      "concentration": {
+        "rows": [
+          {
+            "speech": "gwbush_2006",
+            "speaker": "George W. Bush",
+            "claims": 48,
+            "claim_share": 0.0907,
+            "newly_gated": 1,
+            "gated_share": 0.0208,
+            "gated_rate_within_speech": 0.0208,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -1,
+            "net_rate_within_speech": -0.0208
+          },
+          {
+            "speech": "clinton_1998",
+            "speaker": "Bill Clinton",
+            "claims": 92,
+            "claim_share": 0.1739,
+            "newly_gated": 10,
+            "gated_share": 0.2083,
+            "gated_rate_within_speech": 0.1087,
+            "released": 2,
+            "released_share": 1.0,
+            "net": -8,
+            "net_rate_within_speech": -0.087
+          },
+          {
+            "speech": "obama_2014",
+            "speaker": "Barack Obama",
+            "claims": 96,
+            "claim_share": 0.1815,
+            "newly_gated": 6,
+            "gated_share": 0.125,
+            "gated_rate_within_speech": 0.0625,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -6,
+            "net_rate_within_speech": -0.0625
+          },
+          {
+            "speech": "biden_2022",
+            "speaker": "Joe Biden",
+            "claims": 111,
+            "claim_share": 0.2098,
+            "newly_gated": 8,
+            "gated_share": 0.1667,
+            "gated_rate_within_speech": 0.0721,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -8,
+            "net_rate_within_speech": -0.0721
+          },
+          {
+            "speech": "trump_2026",
+            "speaker": "Donald Trump",
+            "claims": 182,
+            "claim_share": 0.344,
+            "newly_gated": 23,
+            "gated_share": 0.4792,
+            "gated_rate_within_speech": 0.1264,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -23,
+            "net_rate_within_speech": -0.1264
+          }
+        ],
+        "withholding_top": {
+          "speech": "trump_2026",
+          "speaker": "Donald Trump",
+          "count": 23,
+          "share": 0.4792,
+          "claim_share": 0.344,
+          "concentrated": false
+        },
+        "release_top": {
+          "speech": "clinton_1998",
+          "speaker": "Bill Clinton",
+          "count": 2,
+          "share": 1.0,
+          "claim_share": 0.1739,
+          "concentrated": true
+        },
+        "withholding_rate_spread": {
+          "min": 0.0208,
+          "max": 0.1264,
+          "spread": 0.1056,
+          "min_speech": "gwbush_2006",
+          "max_speech": "trump_2026"
+        },
+        "withholding_rate_ratio": 6.08,
+        "rate_concentration_threshold": 2.0,
+        "rate_concentrated": true,
+        "verdict": "YES \u2014 the withholding effect concentrates by ERA. The rule fires on 12.6% of trump_2026's claims and 2.1% of gwbush_2006's, a ratio of 6.1x (spread 10.6%). This is the size-adjusted number and it is the one to read. By raw SHARE it is milder \u2014 the largest single share is Donald Trump at 48% of newly-gated claims on 34% of the corpus, an over-representation rather than a majority. Release lands entirely on Bill Clinton (100%), but on a base of only 2 claim(s) \u2014 too few to read as a pattern."
+      }
+    },
+    "rescored": {
+      "per_speech": [
+        {
+          "speech": "gwbush_2006",
+          "speaker": "George W. Bush",
+          "claims_measured": 48,
+          "anecdotes": 1,
+          "rows_without_a_verdict": 0,
+          "d15": {
+            "newly_gated": 2,
+            "newly_gated_sids": [
+              "gwbush_2006:0033",
+              "gwbush_2006:0189"
+            ],
+            "newly_gated_shipping_true": 2,
+            "newly_gated_true_sids": [
+              "gwbush_2006:0033",
+              "gwbush_2006:0189"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 2,
+            "newly_gated_sids": [
+              "gwbush_2006:0033",
+              "gwbush_2006:0189"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -2
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 40,
+              "total": 48,
+              "rate": 0.8333
+            },
+            "raw_after": {
+              "decided": 38,
+              "total": 48,
+              "rate": 0.7917
+            },
+            "raw_after_lower": {
+              "decided": 38,
+              "total": 48,
+              "rate": 0.7917
+            },
+            "adjusted_before": {
+              "decided": 39,
+              "total": 47,
+              "rate": 0.8298
+            },
+            "adjusted_after": {
+              "decided": 37,
+              "total": 47,
+              "rate": 0.7872
+            },
+            "adjusted_after_lower": {
+              "decided": 37,
+              "total": 47,
+              "rate": 0.7872
+            },
+            "delta_raw": -0.0416,
+            "delta_adjusted": -0.0426
+          }
+        },
+        {
+          "speech": "clinton_1998",
+          "speaker": "Bill Clinton",
+          "claims_measured": 92,
+          "anecdotes": 7,
+          "rows_without_a_verdict": 1,
+          "d15": {
+            "newly_gated": 10,
+            "newly_gated_sids": [
+              "clinton_1998:0027",
+              "clinton_1998:0090",
+              "clinton_1998:0134",
+              "clinton_1998:0135",
+              "clinton_1998:0195",
+              "clinton_1998:0225",
+              "clinton_1998:0227",
+              "clinton_1998:0236",
+              "clinton_1998:0243",
+              "clinton_1998:0350"
+            ],
+            "newly_gated_shipping_true": 8,
+            "newly_gated_true_sids": [
+              "clinton_1998:0027",
+              "clinton_1998:0134",
+              "clinton_1998:0135",
+              "clinton_1998:0195",
+              "clinton_1998:0225",
+              "clinton_1998:0227",
+              "clinton_1998:0236",
+              "clinton_1998:0243"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 2,
+            "released_sids": [
+              "clinton_1998:0026",
+              "clinton_1998:0038"
+            ],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 10,
+            "newly_gated_sids": [
+              "clinton_1998:0027",
+              "clinton_1998:0090",
+              "clinton_1998:0134",
+              "clinton_1998:0135",
+              "clinton_1998:0195",
+              "clinton_1998:0225",
+              "clinton_1998:0227",
+              "clinton_1998:0236",
+              "clinton_1998:0243",
+              "clinton_1998:0350"
+            ],
+            "released": 2,
+            "released_sids": [
+              "clinton_1998:0026",
+              "clinton_1998:0038"
+            ],
+            "net": -8
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 77,
+              "total": 92,
+              "rate": 0.837
+            },
+            "raw_after": {
+              "decided": 71,
+              "total": 92,
+              "rate": 0.7717
+            },
+            "raw_after_lower": {
+              "decided": 69,
+              "total": 92,
+              "rate": 0.75
+            },
+            "adjusted_before": {
+              "decided": 71,
+              "total": 85,
+              "rate": 0.8353
+            },
+            "adjusted_after": {
+              "decided": 69,
+              "total": 85,
+              "rate": 0.8118
+            },
+            "adjusted_after_lower": {
+              "decided": 67,
+              "total": 85,
+              "rate": 0.7882
+            },
+            "delta_raw": -0.0653,
+            "delta_adjusted": -0.0235
+          }
+        },
+        {
+          "speech": "obama_2014",
+          "speaker": "Barack Obama",
+          "claims_measured": 96,
+          "anecdotes": 23,
+          "rows_without_a_verdict": 3,
+          "d15": {
+            "newly_gated": 7,
+            "newly_gated_sids": [
+              "obama_2014:0045",
+              "obama_2014:0114",
+              "obama_2014:0123",
+              "obama_2014:0125",
+              "obama_2014:0126",
+              "obama_2014:0153",
+              "obama_2014:0255"
+            ],
+            "newly_gated_shipping_true": 3,
+            "newly_gated_true_sids": [
+              "obama_2014:0045",
+              "obama_2014:0123",
+              "obama_2014:0125"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 7,
+            "newly_gated_sids": [
+              "obama_2014:0045",
+              "obama_2014:0114",
+              "obama_2014:0123",
+              "obama_2014:0125",
+              "obama_2014:0126",
+              "obama_2014:0153",
+              "obama_2014:0255"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -7
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 78,
+              "total": 96,
+              "rate": 0.8125
+            },
+            "raw_after": {
+              "decided": 74,
+              "total": 96,
+              "rate": 0.7708
+            },
+            "raw_after_lower": {
+              "decided": 74,
+              "total": 96,
+              "rate": 0.7708
+            },
+            "adjusted_before": {
+              "decided": 57,
+              "total": 73,
+              "rate": 0.7808
+            },
+            "adjusted_after": {
+              "decided": 56,
+              "total": 73,
+              "rate": 0.7671
+            },
+            "adjusted_after_lower": {
+              "decided": 56,
+              "total": 73,
+              "rate": 0.7671
+            },
+            "delta_raw": -0.0417,
+            "delta_adjusted": -0.0137
+          }
+        },
+        {
+          "speech": "biden_2022",
+          "speaker": "Joe Biden",
+          "claims_measured": 111,
+          "anecdotes": 9,
+          "rows_without_a_verdict": 2,
+          "d15": {
+            "newly_gated": 8,
+            "newly_gated_sids": [
+              "biden_2022:0019",
+              "biden_2022:0137",
+              "biden_2022:0146",
+              "biden_2022:0154",
+              "biden_2022:0171",
+              "biden_2022:0284",
+              "biden_2022:0420",
+              "biden_2022:0431"
+            ],
+            "newly_gated_shipping_true": 6,
+            "newly_gated_true_sids": [
+              "biden_2022:0019",
+              "biden_2022:0137",
+              "biden_2022:0171",
+              "biden_2022:0284",
+              "biden_2022:0420",
+              "biden_2022:0431"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 8,
+            "newly_gated_sids": [
+              "biden_2022:0019",
+              "biden_2022:0137",
+              "biden_2022:0146",
+              "biden_2022:0154",
+              "biden_2022:0171",
+              "biden_2022:0284",
+              "biden_2022:0420",
+              "biden_2022:0431"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -8
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 92,
+              "total": 111,
+              "rate": 0.8288
+            },
+            "raw_after": {
+              "decided": 86,
+              "total": 111,
+              "rate": 0.7748
+            },
+            "raw_after_lower": {
+              "decided": 86,
+              "total": 111,
+              "rate": 0.7748
+            },
+            "adjusted_before": {
+              "decided": 83,
+              "total": 102,
+              "rate": 0.8137
+            },
+            "adjusted_after": {
+              "decided": 79,
+              "total": 102,
+              "rate": 0.7745
+            },
+            "adjusted_after_lower": {
+              "decided": 79,
+              "total": 102,
+              "rate": 0.7745
+            },
+            "delta_raw": -0.054,
+            "delta_adjusted": -0.0392
+          }
+        },
+        {
+          "speech": "trump_2026",
+          "speaker": "Donald Trump",
+          "claims_measured": 182,
+          "anecdotes": 52,
+          "rows_without_a_verdict": 4,
+          "d15": {
+            "newly_gated": 23,
+            "newly_gated_sids": [
+              "trump_2026:0098",
+              "trump_2026:0099",
+              "trump_2026:0102",
+              "trump_2026:0106",
+              "trump_2026:0111",
+              "trump_2026:0153",
+              "trump_2026:0255",
+              "trump_2026:0256",
+              "trump_2026:0279",
+              "trump_2026:0325",
+              "trump_2026:0329",
+              "trump_2026:0340",
+              "trump_2026:0343",
+              "trump_2026:0379",
+              "trump_2026:0402",
+              "trump_2026:0405",
+              "trump_2026:0482",
+              "trump_2026:0514",
+              "trump_2026:0638",
+              "trump_2026:0643",
+              "trump_2026:0659",
+              "trump_2026:0660",
+              "trump_2026:0664"
+            ],
+            "newly_gated_shipping_true": 14,
+            "newly_gated_true_sids": [
+              "trump_2026:0098",
+              "trump_2026:0099",
+              "trump_2026:0102",
+              "trump_2026:0106",
+              "trump_2026:0111",
+              "trump_2026:0255",
+              "trump_2026:0340",
+              "trump_2026:0343",
+              "trump_2026:0482",
+              "trump_2026:0638",
+              "trump_2026:0643",
+              "trump_2026:0659",
+              "trump_2026:0660",
+              "trump_2026:0664"
+            ],
+            "released": 0,
+            "released_sids": []
+          },
+          "d16": {
+            "released": 0,
+            "released_sids": [],
+            "newly_gated": 0,
+            "newly_gated_sids": []
+          },
+          "combined": {
+            "newly_gated": 23,
+            "newly_gated_sids": [
+              "trump_2026:0098",
+              "trump_2026:0099",
+              "trump_2026:0102",
+              "trump_2026:0106",
+              "trump_2026:0111",
+              "trump_2026:0153",
+              "trump_2026:0255",
+              "trump_2026:0256",
+              "trump_2026:0279",
+              "trump_2026:0325",
+              "trump_2026:0329",
+              "trump_2026:0340",
+              "trump_2026:0343",
+              "trump_2026:0379",
+              "trump_2026:0402",
+              "trump_2026:0405",
+              "trump_2026:0482",
+              "trump_2026:0514",
+              "trump_2026:0638",
+              "trump_2026:0643",
+              "trump_2026:0659",
+              "trump_2026:0660",
+              "trump_2026:0664"
+            ],
+            "released": 0,
+            "released_sids": [],
+            "net": -23
+          },
+          "decided_rate": {
+            "raw_before": {
+              "decided": 133,
+              "total": 182,
+              "rate": 0.7308
+            },
+            "raw_after": {
+              "decided": 119,
+              "total": 182,
+              "rate": 0.6538
+            },
+            "raw_after_lower": {
+              "decided": 119,
+              "total": 182,
+              "rate": 0.6538
+            },
+            "adjusted_before": {
+              "decided": 103,
+              "total": 130,
+              "rate": 0.7923
+            },
+            "adjusted_after": {
+              "decided": 102,
+              "total": 130,
+              "rate": 0.7846
+            },
+            "adjusted_after_lower": {
+              "decided": 102,
+              "total": 130,
+              "rate": 0.7846
+            },
+            "delta_raw": -0.077,
+            "delta_adjusted": -0.0077
+          }
+        }
+      ],
+      "spreads": {
+        "raw_before": {
+          "min": 0.7308,
+          "max": 0.837,
+          "spread": 0.1062,
+          "min_speech": "trump_2026",
+          "max_speech": "clinton_1998"
+        },
+        "raw_after": {
+          "min": 0.6538,
+          "max": 0.7917,
+          "spread": 0.1379,
+          "min_speech": "trump_2026",
+          "max_speech": "gwbush_2006"
+        },
+        "adjusted_before": {
+          "min": 0.7808,
+          "max": 0.8353,
+          "spread": 0.0545,
+          "min_speech": "obama_2014",
+          "max_speech": "clinton_1998"
+        },
+        "adjusted_after": {
+          "min": 0.7671,
+          "max": 0.8118,
+          "spread": 0.0447,
+          "min_speech": "obama_2014",
+          "max_speech": "clinton_1998"
+        }
+      },
+      "corpus": {
+        "claims_measured": 529,
+        "d15_newly_gated": 50,
+        "d15_newly_gated_shipping_true": 33,
+        "d16_released": 2,
+        "combined_newly_gated": 50,
+        "combined_released": 2,
+        "combined_net": -48
+      },
+      "concentration": {
+        "rows": [
+          {
+            "speech": "gwbush_2006",
+            "speaker": "George W. Bush",
+            "claims": 48,
+            "claim_share": 0.0907,
+            "newly_gated": 2,
+            "gated_share": 0.04,
+            "gated_rate_within_speech": 0.0417,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -2,
+            "net_rate_within_speech": -0.0417
+          },
+          {
+            "speech": "clinton_1998",
+            "speaker": "Bill Clinton",
+            "claims": 92,
+            "claim_share": 0.1739,
+            "newly_gated": 10,
+            "gated_share": 0.2,
+            "gated_rate_within_speech": 0.1087,
+            "released": 2,
+            "released_share": 1.0,
+            "net": -8,
+            "net_rate_within_speech": -0.087
+          },
+          {
+            "speech": "obama_2014",
+            "speaker": "Barack Obama",
+            "claims": 96,
+            "claim_share": 0.1815,
+            "newly_gated": 7,
+            "gated_share": 0.14,
+            "gated_rate_within_speech": 0.0729,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -7,
+            "net_rate_within_speech": -0.0729
+          },
+          {
+            "speech": "biden_2022",
+            "speaker": "Joe Biden",
+            "claims": 111,
+            "claim_share": 0.2098,
+            "newly_gated": 8,
+            "gated_share": 0.16,
+            "gated_rate_within_speech": 0.0721,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -8,
+            "net_rate_within_speech": -0.0721
+          },
+          {
+            "speech": "trump_2026",
+            "speaker": "Donald Trump",
+            "claims": 182,
+            "claim_share": 0.344,
+            "newly_gated": 23,
+            "gated_share": 0.46,
+            "gated_rate_within_speech": 0.1264,
+            "released": 0,
+            "released_share": 0.0,
+            "net": -23,
+            "net_rate_within_speech": -0.1264
+          }
+        ],
+        "withholding_top": {
+          "speech": "trump_2026",
+          "speaker": "Donald Trump",
+          "count": 23,
+          "share": 0.46,
+          "claim_share": 0.344,
+          "concentrated": false
+        },
+        "release_top": {
+          "speech": "clinton_1998",
+          "speaker": "Bill Clinton",
+          "count": 2,
+          "share": 1.0,
+          "claim_share": 0.1739,
+          "concentrated": true
+        },
+        "withholding_rate_spread": {
+          "min": 0.0417,
+          "max": 0.1264,
+          "spread": 0.0847,
+          "min_speech": "gwbush_2006",
+          "max_speech": "trump_2026"
+        },
+        "withholding_rate_ratio": 3.03,
+        "rate_concentration_threshold": 2.0,
+        "rate_concentrated": true,
+        "verdict": "YES \u2014 the withholding effect concentrates by ERA. The rule fires on 12.6% of trump_2026's claims and 4.2% of gwbush_2006's, a ratio of 3.0x (spread 8.5%). This is the size-adjusted number and it is the one to read. By raw SHARE it is milder \u2014 the largest single share is Donald Trump at 46% of newly-gated claims on 34% of the corpus, an over-representation rather than a majority. Release lands entirely on Bill Clinton (100%), but on a base of only 2 claim(s) \u2014 too few to read as a pattern."
+      }
+    }
+  }
+}
