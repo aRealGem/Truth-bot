@@ -67,6 +67,36 @@ def _serial_runner(pool: Sequence[Retriever],
     return [call(r) for r in pool]
 
 
+def pack_item_from_citation(i: int, cit) -> PackItem:
+    """One consolidator citation → the ``PackItem`` the panel actually sees.
+
+    Module-level rather than nested inside :func:`build_evidence_pack_v2`
+    because it is the ONE definition of how a consolidated citation becomes a
+    pack item — role, era note, stance, relevance and the I5 provenance check
+    included. The stored-pack adjudication wave
+    (``scripts/wave_adjudicate.py``) re-gates packs that are already on disk
+    and has to produce items that are byte-identical to a live build; it
+    imports this instead of restating it, so the two paths cannot drift."""
+    ev = cit.evidence
+    item = PackItem(
+        pack_id=f"E{i}",
+        source_name=ev.source_name or "Unknown",
+        source_url=ev.source_url,
+        tier=ev.source_tier,
+        snippet=ev.snippet or "",
+        retrieved_at=_retrieved_iso(ev),
+        sha256=_sha256(ev.source_url, ev.snippet or ""),
+        supports_claim=ev.supports_claim,
+        relevance_score=ev.relevance_score,
+        published_at=(ev.published_at.date().isoformat()
+                      if ev.published_at else None),
+        role=getattr(cit, "role", "") or "",
+        era_note=era_note_for(cit),
+    )
+    check_i5_provenance(item.provenance())   # I5: fail closed at entry
+    return item
+
+
 def build_evidence_pack_v2(
     sid: str,
     claim_text: str,
@@ -203,34 +233,15 @@ def build_evidence_pack_v2(
                         "(%s) — verdict will be forced Unverifiable",
                         sid, res.gate_code)
 
-    def _pack_item(i: int, cit) -> PackItem:
-        ev = cit.evidence
-        item = PackItem(
-            pack_id=f"E{i}",
-            source_name=ev.source_name or "Unknown",
-            source_url=ev.source_url,
-            tier=ev.source_tier,
-            snippet=ev.snippet or "",
-            retrieved_at=_retrieved_iso(ev),
-            sha256=_sha256(ev.source_url, ev.snippet or ""),
-            supports_claim=ev.supports_claim,
-            relevance_score=ev.relevance_score,
-            published_at=(ev.published_at.date().isoformat()
-                          if ev.published_at else None),
-            role=getattr(cit, "role", "") or "",
-            era_note=era_note_for(cit),
-        )
-        check_i5_provenance(item.provenance())   # I5: fail closed at entry
-        return item
-
-    items = [_pack_item(i, cit) for i, cit in enumerate(res.items, start=1)]
+    items = [pack_item_from_citation(i, cit)
+             for i, cit in enumerate(res.items, start=1)]
     # Pre-cap pool (PR-A2.2): persisted alongside the pack when the cap
     # actually discarded candidates, so cap/quota changes can be measured
     # offline without re-retrieval. Same E<n> numbering — the pool's first
     # len(items) entries ARE the pack.
     pool: list[PackItem] = []
     if len(res.pre_cap_items) > len(res.items):
-        pool = [_pack_item(i, cit)
+        pool = [pack_item_from_citation(i, cit)
                 for i, cit in enumerate(res.pre_cap_items, start=1)]
     # Scoring coverage (Phase A, A1) — computed over the CAPPED pack, the set
     # the panel and the quota actually see. It reads the SAME mutated Evidence

@@ -49,6 +49,7 @@ Mapping summary (plan PR-B):
 """
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
@@ -65,6 +66,8 @@ from truthbot.models import (
 )
 from truthbot.verdict.evidence_pack import EvidencePack
 from truthbot.verify.engine import LENIENT_PROJECTION, STRICT_PROJECTION
+
+logger = logging.getLogger(__name__)
 
 # PCA closed-book/open-book 4-label contract → the 6-bucket VerdictLabel enum.
 # MOSTLY_TRUE and EXAGGERATED are never produced by the PCA panel, so they have
@@ -240,7 +243,7 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
             lbl = _LABEL_MAP.get(str(raw).strip().upper())
             norm.append(lbl.value if lbl is not None else str(raw))
         by_role[str(role)] = norm
-    return VerdictProvenance(
+    prov = VerdictProvenance(
         layer_a_label=str(la.get("label") or ""),
         layer_a_source=str(la.get("source") or ""),
         layer_a_claim_type=str(la.get("claim_type") or ""),
@@ -264,6 +267,25 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         audit_flags=[str(f) for f in (row.get("audit_flags") or [])],
         audit_queue=bool(row.get("audit_queue") or False),
     )
+    # Computed exhibit (A8 / R-2): the adjudication row is where it is stamped
+    # (scripts/wave_adjudicate.py attaches the ratified exhibit to the claims
+    # it was built for), and this is the ONE place it crosses into a published
+    # bundle. It goes through ``computed_exhibit.attach`` rather than a plain
+    # assignment so the admissibility rule — never on a C-EVAL judgment — is
+    # enforced on the way in as well as at render time. An inadmissible or
+    # malformed exhibit is DROPPED with a warning, never raised: the renderer
+    # already refuses to draw one, so failing the whole publish here would
+    # trade an identical page for an outage.
+    exhibit = row.get("computed_exhibit") or {}
+    if exhibit:
+        from truthbot.publish import computed_exhibit as _ce
+        try:
+            _ce.attach(prov, dict(exhibit),
+                       claim_shape=prov.layer_a_claim_shape)
+        except _ce.InadmissibleExhibit as exc:
+            logger.warning("computed exhibit dropped for %s: %s",
+                           row.get("sid"), exc)
+    return prov
 
 
 def _consensus_and_panel(
