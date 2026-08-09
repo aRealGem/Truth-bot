@@ -209,13 +209,18 @@ def _quota_credit(item, *, era_mode: str, utterance: Optional[date],
                   window) -> bool:
     """Mirror of ``consolidate``'s nested ``_quota_credit`` closure (private and
     un-importable for the same reason as ``_contemporaneous``). The predicates
-    it is BUILT from — ``_bearing``, ``_T13``, ``SourceTier`` — are imported
-    from the consolidator rather than restated."""
+    it is BUILT from — ``_bearing``, ``_T13``, ``_post_speech_blocked``,
+    ``SourceTier`` — are imported from the consolidator rather than restated,
+    so a rule change there (D15's exclusion, D16's release) reaches this
+    reconstruction automatically instead of silently making ``agrees`` false."""
     from truthbot.models import SourceTier
     from truthbot.verdict import era_lint
-    from truthbot.verdict.consolidator import _bearing, _T13
+    from truthbot.verdict.consolidator import (_bearing, _post_speech_blocked,
+                                               _T13)
 
-    if item.post_speech:
+    if item.utterance_rule:
+        return False
+    if _post_speech_blocked(item):
         return False
     if item.evidence.source_tier in _T13 and _bearing(item.evidence):
         return True
@@ -234,7 +239,8 @@ def breakdown_for(result, *, role_aware: bool, era_mode: str,
     ``agrees`` records whether this reconstruction reaches the same verdict as
     ``consolidate`` did. It must always be True; it is surfaced rather than
     asserted so a divergence shows up as telemetry instead of a traceback."""
-    from truthbot.verdict.consolidator import MIN_BEARING_T13, _bearing
+    from truthbot.verdict.consolidator import (MIN_BEARING_T13, _bearing,
+                                               _post_speech_blocked)
 
     def credit(it):
         return _quota_credit(it, era_mode=era_mode, utterance=utterance,
@@ -249,9 +255,11 @@ def breakdown_for(result, *, role_aware: bool, era_mode: str,
     else:
         independent = sum(1 for it in items if it.role == "normal" and credit(it))
         corroborant = sum(1 for it in items if it.role == "corroborant"
-                          and _bearing(it.evidence) and not it.post_speech)
+                          and _bearing(it.evidence)
+                          and not _post_speech_blocked(it))
         primary = sum(1 for it in items if it.role == "primary-record"
-                      and _bearing(it.evidence) and not it.post_speech)
+                      and _bearing(it.evidence)
+                      and not _post_speech_blocked(it))
         credits = independent + corroborant + min(1, primary)
         quota = credits >= MIN_BEARING_T13 and (independent >= 1 or corroborant >= 1)
     return {"pack_items": len(items), "independent": independent,
@@ -263,15 +271,18 @@ def breakdown_for(result, *, role_aware: bool, era_mode: str,
 
 def gate_once(sid: str, evidence: list, *, utterance: Optional[date],
               claim_shape: str, relation_of, claim_text: str,
-              utterance_record: Optional[bool] = None) -> tuple:
+              utterance_record: Optional[bool] = None,
+              statistical_release: Optional[bool] = None) -> tuple:
     """Run the real gate over one stored pack. Returns (result, breakdown).
 
-    ``utterance_record`` is the D15 switch, handed straight to ``consolidate``.
-    ``None`` — the default, and what THIS script always passes — means "obey the
-    environment flag", which in production is OFF. The $0 D15 blast-radius
-    measurement (``scripts/measure_d15.py``) drives this same entry point with
-    an explicit True/False, so it can price the proposal without anything
-    depending on ambient environment."""
+    ``utterance_record`` (D15) and ``statistical_release`` (D16α) are the two
+    proposal switches, handed straight to ``consolidate``. ``None`` — the
+    default, and what THIS script always passes — means "obey the environment
+    flag", which in production is OFF for both. The $0 blast-radius
+    measurements (``scripts/measure_d15.py``, ``scripts/measure_d16.py`` and
+    ``scripts/d15_d16_era_breakdown.py``) drive this same entry point with
+    explicit True/False, so they can price the proposals — separately and
+    together — without anything depending on ambient environment."""
     from truthbot.verdict import consolidator, era_lint
     from truthbot.verdict.consolidator import consolidate
     from truthbot.verdict.evidence_pack import window_for
@@ -283,7 +294,8 @@ def gate_once(sid: str, evidence: list, *, utterance: Optional[date],
                          window=window, max_items=consolidator.PACK_CAP_V2,
                          era_mode=era_mode, claim_shape=claim_shape,
                          relation_of=relation_of,
-                         utterance_record=utterance_record)
+                         utterance_record=utterance_record,
+                         statistical_release=statistical_release)
     return result, breakdown_for(result, role_aware=role_aware,
                                  era_mode=era_mode, utterance=utterance,
                                  window=window)

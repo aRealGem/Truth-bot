@@ -30,8 +30,7 @@ if TYPE_CHECKING:      # import-light: the hint only, never the brave/httpx tail
     from truthbot.verify.relevance import PackScorer
 
 from . import era_lint, speech_context
-from .consolidator import (PACK_CAP_V2, POST_SPEECH_NOTE, consolidate,
-                           scoring_telemetry)
+from .consolidator import PACK_CAP_V2, consolidate, era_note_for, scoring_telemetry
 from .evidence_pack import EvidencePack, PackItem, _retrieved_iso, _sha256, window_for
 
 logger = logging.getLogger(__name__)
@@ -219,8 +218,7 @@ def build_evidence_pack_v2(
             published_at=(ev.published_at.date().isoformat()
                           if ev.published_at else None),
             role=getattr(cit, "role", "") or "",
-            era_note=(POST_SPEECH_NOTE if getattr(cit, "post_speech", False)
-                      else ""),
+            era_note=era_note_for(cit),
         )
         check_i5_provenance(item.provenance())   # I5: fail closed at entry
         return item

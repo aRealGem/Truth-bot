@@ -1,0 +1,386 @@
+{
+  "schema": "truthbot-d16-blast-radius v1",
+  "generated": "2026-08-09T15:10:29.734448+00:00",
+  "flag": "TRUTHBOT_D16_STATISTICAL_RELEASE (default OFF \u2014 NOT enabled)",
+  "registry_version": "2026-08-09",
+  "registry_hosts": [
+    "alfred.stlouisfed.org",
+    "archive.cdc.gov",
+    "bea.gov",
+    "bls.gov",
+    "cbo.gov",
+    "cdc.gov",
+    "census.gov",
+    "crsreports.congress.gov",
+    "data.cdc.gov",
+    "eia.gov",
+    "fred.stlouisfed.org",
+    "gao.gov",
+    "nass.usda.gov",
+    "nces.ed.gov",
+    "stacks.cdc.gov",
+    "wonder.cdc.gov"
+  ],
+  "speeches": [
+    "gwbush_2006",
+    "clinton_1998",
+    "obama_2014",
+    "biden_2022",
+    "trump_2026"
+  ],
+  "speeches_missing_sidecar": [],
+  "corpus": {
+    "stored": {
+      "claims": 529,
+      "released_items": 24,
+      "released_bearing": 16,
+      "released_bearing_t13": 16,
+      "gate_changed": 2,
+      "claims_touched": 19,
+      "by_rule": {
+        "stat-period-month": 19,
+        "stat-period-quarter": 2,
+        "stat-period-fiscal-year": 1,
+        "stat-period-year-data": 2
+      },
+      "by_agency": {
+        "BLS": 10,
+        "BEA": 5,
+        "CBO": 7,
+        "EIA": 2
+      },
+      "by_tier": {
+        "Government": 24
+      }
+    },
+    "rescored": {
+      "claims": 529,
+      "released_items": 24,
+      "released_bearing": 18,
+      "released_bearing_t13": 18,
+      "gate_changed": 2,
+      "claims_touched": 19,
+      "by_rule": {
+        "stat-period-month": 19,
+        "stat-period-quarter": 2,
+        "stat-period-fiscal-year": 1,
+        "stat-period-year-data": 2
+      },
+      "by_agency": {
+        "BLS": 10,
+        "BEA": 5,
+        "CBO": 7,
+        "EIA": 2
+      },
+      "by_tier": {
+        "Government": 24
+      }
+    }
+  },
+  "per_speech": [
+    {
+      "speech": "gwbush_2006",
+      "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+      "vintages": {
+        "stored": {
+          "claims": 48,
+          "released_items": 4,
+          "released_bearing": 3,
+          "released_bearing_t13": 3,
+          "by_rule": {
+            "stat-period-month": 4
+          },
+          "by_agency": {
+            "BLS": 4
+          },
+          "by_tier": {
+            "Government": 4
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 3
+        },
+        "rescored": {
+          "claims": 48,
+          "released_items": 4,
+          "released_bearing": 1,
+          "released_bearing_t13": 1,
+          "by_rule": {
+            "stat-period-month": 4
+          },
+          "by_agency": {
+            "BLS": 4
+          },
+          "by_tier": {
+            "Government": 4
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 3
+        }
+      }
+    },
+    {
+      "speech": "clinton_1998",
+      "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+      "vintages": {
+        "stored": {
+          "claims": 92,
+          "released_items": 6,
+          "released_bearing": 6,
+          "released_bearing_t13": 6,
+          "by_rule": {
+            "stat-period-month": 4,
+            "stat-period-quarter": 2
+          },
+          "by_agency": {
+            "BEA": 3,
+            "CBO": 3
+          },
+          "by_tier": {
+            "Government": 6
+          },
+          "gate_changed": 2,
+          "released_sids": [
+            {
+              "sid": "clinton_1998:0026",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "This year, our deficit is projected to be $10 billion and heading lower.",
+              "rules": [
+                "stat-period-month"
+              ],
+              "agencies": [
+                "CBO"
+              ],
+              "urls": [
+                "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+                "https://www.cbo.gov/showdoc.cfm?index=316&sequence=0&from=7"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0038",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that im",
+              "rules": [
+                "stat-period-month"
+              ],
+              "agencies": [
+                "CBO"
+              ],
+              "urls": [
+                "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf"
+              ]
+            }
+          ],
+          "newly_gated_sids": [],
+          "claims_touched": 5
+        },
+        "rescored": {
+          "claims": 92,
+          "released_items": 6,
+          "released_bearing": 6,
+          "released_bearing_t13": 6,
+          "by_rule": {
+            "stat-period-month": 4,
+            "stat-period-quarter": 2
+          },
+          "by_agency": {
+            "BEA": 3,
+            "CBO": 3
+          },
+          "by_tier": {
+            "Government": 6
+          },
+          "gate_changed": 2,
+          "released_sids": [
+            {
+              "sid": "clinton_1998:0026",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "This year, our deficit is projected to be $10 billion and heading lower.",
+              "rules": [
+                "stat-period-month"
+              ],
+              "agencies": [
+                "CBO"
+              ],
+              "urls": [
+                "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf",
+                "https://www.cbo.gov/showdoc.cfm?index=316&sequence=0&from=7"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0038",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that im",
+              "rules": [
+                "stat-period-month"
+              ],
+              "agencies": [
+                "CBO"
+              ],
+              "urls": [
+                "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/eb01-98.pdf"
+              ]
+            }
+          ],
+          "newly_gated_sids": [],
+          "claims_touched": 5
+        }
+      }
+    },
+    {
+      "speech": "obama_2014",
+      "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+      "vintages": {
+        "stored": {
+          "claims": 96,
+          "released_items": 3,
+          "released_bearing": 3,
+          "released_bearing_t13": 3,
+          "by_rule": {
+            "stat-period-fiscal-year": 1,
+            "stat-period-year-data": 1,
+            "stat-period-month": 1
+          },
+          "by_agency": {
+            "CBO": 1,
+            "BEA": 1,
+            "BLS": 1
+          },
+          "by_tier": {
+            "Government": 3
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 3
+        },
+        "rescored": {
+          "claims": 96,
+          "released_items": 3,
+          "released_bearing": 3,
+          "released_bearing_t13": 3,
+          "by_rule": {
+            "stat-period-fiscal-year": 1,
+            "stat-period-year-data": 1,
+            "stat-period-month": 1
+          },
+          "by_agency": {
+            "CBO": 1,
+            "BEA": 1,
+            "BLS": 1
+          },
+          "by_tier": {
+            "Government": 3
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 3
+        }
+      }
+    },
+    {
+      "speech": "biden_2022",
+      "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+      "vintages": {
+        "stored": {
+          "claims": 111,
+          "released_items": 7,
+          "released_bearing": 3,
+          "released_bearing_t13": 3,
+          "by_rule": {
+            "stat-period-month": 7
+          },
+          "by_agency": {
+            "BLS": 4,
+            "CBO": 3
+          },
+          "by_tier": {
+            "Government": 7
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 4
+        },
+        "rescored": {
+          "claims": 111,
+          "released_items": 7,
+          "released_bearing": 5,
+          "released_bearing_t13": 5,
+          "by_rule": {
+            "stat-period-month": 7
+          },
+          "by_agency": {
+            "BLS": 4,
+            "CBO": 3
+          },
+          "by_tier": {
+            "Government": 7
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 4
+        }
+      }
+    },
+    {
+      "speech": "trump_2026",
+      "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+      "vintages": {
+        "stored": {
+          "claims": 182,
+          "released_items": 4,
+          "released_bearing": 1,
+          "released_bearing_t13": 1,
+          "by_rule": {
+            "stat-period-month": 3,
+            "stat-period-year-data": 1
+          },
+          "by_agency": {
+            "BEA": 1,
+            "EIA": 2,
+            "BLS": 1
+          },
+          "by_tier": {
+            "Government": 4
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 4
+        },
+        "rescored": {
+          "claims": 182,
+          "released_items": 4,
+          "released_bearing": 3,
+          "released_bearing_t13": 3,
+          "by_rule": {
+            "stat-period-month": 3,
+            "stat-period-year-data": 1
+          },
+          "by_agency": {
+            "BEA": 1,
+            "EIA": 2,
+            "BLS": 1
+          },
+          "by_tier": {
+            "Government": 4
+          },
+          "gate_changed": 0,
+          "released_sids": [],
+          "newly_gated_sids": [],
+          "claims_touched": 4
+        }
+      }
+    }
+  ]
+}

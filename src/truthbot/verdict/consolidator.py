@@ -181,6 +181,13 @@ class ConsolidatedItem:
     # item credits nothing. Kept ALONGSIDE ``role`` so the journal records WHICH
     # rule fired, not merely that one did.
     utterance_rule: str = ""
+    # D16(α) (flag-gated, default OFF): which ``verdict.statistical_release``
+    # period rule found this POST-SPEECH item to be a statistical-agency record
+    # of a PRE-UTTERANCE data period ('' = no rule, or the flag is off). It is
+    # the inverse of the two fields above — the only thing in this dataclass
+    # that GIVES an item back its quota credit, and it can only ever apply to
+    # an item ``post_speech`` had already taken it from.
+    stat_release_rule: str = ""
 
     def to_payload_v2(self) -> dict:
         ev = self.evidence
@@ -205,8 +212,9 @@ class ConsolidatedItem:
             payload["arithmetic_hinge"] = True
         if self.role and self.role != "normal":
             payload["role"] = self.role
-        if self.post_speech:
-            payload["era_note"] = POST_SPEECH_NOTE
+        note = era_note_for(self)
+        if note:
+            payload["era_note"] = note
         return payload
 
 
@@ -245,6 +253,13 @@ class ConsolidationResult:
     # this is populated on role-aware AND legacy consolidations, because the
     # exclusion does not depend on the claim shape.
     utterance_records: list[dict] = field(default_factory=list)
+    # D16(α) statistical-release telemetry (flag-gated, default OFF): one
+    # {"url", "rule", "agency", "reason", "period", "period_start"} per kept
+    # item the allowlist released back into the quota. ALWAYS empty with the
+    # flag off. Carries the AGENCY and the registry REASON, not just the rule,
+    # because the ratification question is per-host: a reviewer must be able to
+    # see which allowlist entries actually did work before agreeing to them.
+    statistical_releases: list[dict] = field(default_factory=list)
 
     @property
     def schema_version(self) -> str:
@@ -260,6 +275,35 @@ def _bearing(ev: Evidence) -> bool:
     return ev.supports_claim is True or ev.supports_claim is False
 
 
+def era_note_for(cit) -> str:
+    """The era note a post-speech item should display — ``""`` for everything
+    else.
+
+    ONE implementation, because the note is written in two places (the v2
+    payload here and the ``PackItem`` built in ``evidence_pack_v2``) and a
+    reader who sees ``post-speech · context-only`` under an item the gate
+    actually spent would be reading a false statement. With D16 off — which is
+    production — this returns exactly ``POST_SPEECH_NOTE``, unchanged."""
+    if not getattr(cit, "post_speech", False):
+        return ""
+    if getattr(cit, "stat_release_rule", ""):
+        from truthbot.verdict.statistical_release import RELEASE_NOTE
+
+        return RELEASE_NOTE
+    return POST_SPEECH_NOTE
+
+
+def _post_speech_blocked(it: "ConsolidatedItem") -> bool:
+    """Does the post-speech band withhold this item's quota credit?
+
+    The band is context-only (remediation v2, 1.3) UNLESS D16(α) released it as
+    a statistical-agency record of a pre-utterance data period. Written once
+    and used on every quota branch, so the release cannot reach one branch and
+    miss another — the D11.2 role branches count corroborants and primary
+    records with their own ``post_speech`` tests."""
+    return it.post_speech and not it.stat_release_rule
+
+
 def _d15_on(explicit: Optional[bool]) -> bool:
     """Is the D15 utterance-record exclusion active for this consolidation?
 
@@ -270,6 +314,16 @@ def _d15_on(explicit: Optional[bool]) -> bool:
     from truthbot.verdict import utterance_record
 
     return utterance_record.flag_enabled() if explicit is None else bool(explicit)
+
+
+def _d16_on(explicit: Optional[bool]) -> bool:
+    """Is the D16(α) statistical-release RELEASE active for this consolidation?
+
+    The exact analogue of :func:`_d15_on`: ``None`` (the default) defers to
+    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, which is OFF unless set."""
+    from truthbot.verdict import statistical_release
+
+    return statistical_release.flag_enabled() if explicit is None else bool(explicit)
 
 
 def _round_robin(shortlists: Sequence[tuple[str, Sequence[Evidence]]]):
@@ -297,6 +351,7 @@ def consolidate(
     claim_shape: str = "",
     relation_of=None,
     utterance_record: Optional[bool] = None,
+    statistical_release: Optional[bool] = None,
 ) -> ConsolidationResult:
     """Assemble a shared_pack_v2 pack from retriever shortlists.
 
@@ -333,7 +388,20 @@ def consolidate(
     Weekly Compilation issue, the archive copy of the address, same-speech
     recap coverage — take role ``utterance-record`` and credit the quota ZERO
     on BOTH quota branches. They stay in the pack and stay displayed:
-    provenance, never proof. A claim may not witness itself."""
+    provenance, never proof. A claim may not witness itself.
+
+    D16(α) statistical-release RELEASE (PROPOSED, FLAG-GATED, DEFAULT OFF —
+    see ``docs/decisions/D16-statistical-release.md``): the mirror image of
+    D15, and the only rule here that GIVES credit back.
+    ``statistical_release=None`` (the default) defers to
+    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, unset in production. Switched on, a
+    POST-SPEECH item — one the 1.3 era rule had marked context-only — may
+    credit the quota again IFF its host is on the fail-closed
+    ``verify.statistical_agency`` allowlist AND its snippet or URL names a
+    parseable data period at or before the utterance. The fair-game cap (S-2)
+    is untouched: this releases items already inside the band, it never widens
+    the band. Where D15 and D16 both apply D15 wins — a record of the
+    utterance credits nothing."""
     result = ConsolidationResult(sid=sid)
     seen: set[str] = set()
     kept: list[ConsolidatedItem] = []
@@ -345,9 +413,13 @@ def consolidate(
     # path does not even take the import.
     d15_speech_date = None
     if d15_on:
-        from truthbot.verdict import speech_context, utterance_record as _ur
+        from truthbot.verdict import speech_context
+        from truthbot.verdict import utterance_record as _ur
 
         d15_speech_date = speech_context.speech_date_for(sid)
+    d16_on = _d16_on(statistical_release)
+    if d16_on:
+        from truthbot.verdict import statistical_release as _sr
 
     def _drop(reason: str) -> None:
         result.dropped[reason] = result.dropped.get(reason, 0) + 1
@@ -407,9 +479,18 @@ def consolidate(
         if d15_on:
             u_rule = _ur.utterance_record_rule(
                 url, ev.snippet or "", speech_date=d15_speech_date, item_date=d)
+        # D16(α): decided from the same three inputs, and ONLY for items the
+        # post-speech band would otherwise silence. A D15 utterance record is
+        # never released — the stronger exclusion wins, and asking here rather
+        # than at the quota keeps that visible on the item itself.
+        s_rule = ""
+        if d16_on and post and not u_rule:
+            s_rule = _sr.statistical_release_rule(
+                url, ev.snippet or "", utterance=utterance, item_date=d)
         item = ConsolidatedItem(evidence=ev, draw_round=draw_round,
                                 retriever=label, post_speech=post,
                                 utterance_rule=u_rule,
+                                stat_release_rule=s_rule,
                                 role=_ur.ROLE if u_rule else "")
         era_class[id(item)] = 0 if contemp else (1 if contemp is None else 2)
         # Quarantine telemetry (1.2): computed once per kept item; cheap and
@@ -474,6 +555,15 @@ def consolidate(
     result.utterance_records = [{"url": it.evidence.source_url,
                                  "rule": it.utterance_rule}
                                 for it in kept if it.utterance_rule]
+    if d16_on:
+        result.statistical_releases = [
+            _sr.statistical_release_detail(
+                it.evidence.source_url, it.evidence.snippet or "",
+                utterance=utterance,
+                item_date=era_lint.item_date(it.evidence.published_at,
+                                             it.evidence.snippet or ""))
+            or {"url": it.evidence.source_url, "rule": it.stat_release_rule}
+            for it in kept if it.stat_release_rule]
 
     result.pre_cap_items = list(kept)
     result.items = kept[:max_items]
@@ -487,9 +577,10 @@ def consolidate(
             # transcript is a GOVERNMENT document and would otherwise sail
             # through both the T1-3 branch and the lenient-GOVERNMENT branch.
             return False
-        if it.post_speech:
+        if _post_speech_blocked(it):
             # Post-speech band is context-only — it can inform, never decide
-            # (remediation v2, 1.3).
+            # (remediation v2, 1.3) — unless D16(α) released it as a
+            # statistical-agency record of a pre-utterance data period.
             return False
         if it.evidence.source_tier in _T13 and _bearing(it.evidence):
             return True
@@ -515,10 +606,10 @@ def consolidate(
                           if it.role == "normal" and _quota_credit(it))
         corroborants = sum(1 for it in result.items
                            if it.role == "corroborant" and _bearing(it.evidence)
-                           and not it.post_speech)
+                           and not _post_speech_blocked(it))
         primary = sum(1 for it in result.items
                       if it.role == "primary-record" and _bearing(it.evidence)
-                      and not it.post_speech)
+                      and not _post_speech_blocked(it))
         credits = independent + corroborants + min(1, primary)
         result.quota_met = (credits >= MIN_BEARING_T13
                             and (independent >= 1 or corroborants >= 1))
