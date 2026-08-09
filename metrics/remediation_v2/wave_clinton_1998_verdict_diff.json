@@ -1,0 +1,107 @@
+{
+  "speech_id": "clinton_1998",
+  "rebuild_of": "d0010426-2e8f-4449-b839-60f85d923d56",
+  "new_run_id": "fcbc8db2-e025-4cb7-9199-36db723fcfde",
+  "wave": true,
+  "wave_sids": [
+    "clinton_1998:0021",
+    "clinton_1998:0026",
+    "clinton_1998:0028",
+    "clinton_1998:0038",
+    "clinton_1998:0194",
+    "clinton_1998:0313",
+    "clinton_1998:0364"
+  ],
+  "reasons": {
+    "biden_2022:0155": "released",
+    "biden_2022:0244": "released",
+    "biden_2022:0311": "released",
+    "clinton_1998:0021": "released",
+    "clinton_1998:0026": "released",
+    "clinton_1998:0028": "released",
+    "clinton_1998:0038": "released",
+    "clinton_1998:0194": "released",
+    "clinton_1998:0364": "released",
+    "gwbush_2006:0133": "released",
+    "obama_2014:0056": "released",
+    "obama_2014:0177": "released",
+    "obama_2014:0280": "released",
+    "trump_2026:0191": "released",
+    "trump_2026:0294": "released",
+    "trump_2026:0310": "released",
+    "trump_2026:0428": "released",
+    "trump_2026:0553": "released",
+    "trump_2026:0554": "released",
+    "trump_2026:0559": "released",
+    "trump_2026:0564": "released",
+    "trump_2026:0616": "released",
+    "trump_2026:0639": "released",
+    "trump_2026:0030": "named-extra",
+    "trump_2026:0031": "named-extra",
+    "trump_2026:0023": "named-extra",
+    "trump_2026:0024": "named-extra",
+    "clinton_1998:0313": "named-extra",
+    "trump_2026:0462": "models-split extra"
+  },
+  "n_compared": 7,
+  "counts": {
+    "unchanged": 1,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 6,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 0,
+  "per_sid": [
+    {
+      "sid": "clinton_1998:0021",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "We have the smallest government in 35 years, but a more progressive one."
+    },
+    {
+      "sid": "clinton_1998:0026",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "This year, our deficit is projected to be $10 billion and heading lower."
+    },
+    {
+      "sid": "clinton_1998:0028",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Tonight I come before you to announce that the federal deficit, once so incomprehensibly large that it had 11 zeros, wil"
+    },
+    {
+      "sid": "clinton_1998:0038",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that im"
+    },
+    {
+      "sid": "clinton_1998:0194",
+      "old": "gated-UNVERIFIABLE",
+      "new": "MISLEADING",
+      "category": "newly_decided",
+      "text": "Drug use is on the decline."
+    },
+    {
+      "sid": "clinton_1998:0313",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I've launched this national initiative on race to help us recognize our common interests and to bridge the opportunity g"
+    },
+    {
+      "sid": "clinton_1998:0364",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Nearly 200 years ago, a tattered flag, its broad stripes and bright stars still gleaming through the smoke of a fierce b"
+    }
+  ]
+}

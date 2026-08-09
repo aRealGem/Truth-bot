@@ -1,0 +1,171 @@
+{
+  "speech_id": "trump_2026",
+  "rebuild_of": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+  "new_run_id": "9c4262a7-67bd-476e-b433-90424dd0b3e6",
+  "wave": true,
+  "wave_sids": [
+    "trump_2026:0023",
+    "trump_2026:0024",
+    "trump_2026:0030",
+    "trump_2026:0031",
+    "trump_2026:0191",
+    "trump_2026:0294",
+    "trump_2026:0310",
+    "trump_2026:0428",
+    "trump_2026:0462",
+    "trump_2026:0553",
+    "trump_2026:0554",
+    "trump_2026:0559",
+    "trump_2026:0564",
+    "trump_2026:0616",
+    "trump_2026:0639"
+  ],
+  "reasons": {
+    "biden_2022:0155": "released",
+    "biden_2022:0244": "released",
+    "biden_2022:0311": "released",
+    "clinton_1998:0021": "released",
+    "clinton_1998:0026": "released",
+    "clinton_1998:0028": "released",
+    "clinton_1998:0038": "released",
+    "clinton_1998:0194": "released",
+    "clinton_1998:0364": "released",
+    "gwbush_2006:0133": "released",
+    "obama_2014:0056": "released",
+    "obama_2014:0177": "released",
+    "obama_2014:0280": "released",
+    "trump_2026:0191": "released",
+    "trump_2026:0294": "released",
+    "trump_2026:0310": "released",
+    "trump_2026:0428": "released",
+    "trump_2026:0553": "released",
+    "trump_2026:0554": "released",
+    "trump_2026:0559": "released",
+    "trump_2026:0564": "released",
+    "trump_2026:0616": "released",
+    "trump_2026:0639": "released",
+    "trump_2026:0030": "named-extra",
+    "trump_2026:0031": "named-extra",
+    "trump_2026:0023": "named-extra",
+    "trump_2026:0024": "named-extra",
+    "clinton_1998:0313": "named-extra",
+    "trump_2026:0462": "models-split extra"
+  },
+  "n_compared": 15,
+  "counts": {
+    "unchanged": 5,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 8,
+    "split_changes": 2,
+    "other": 0
+  },
+  "gate_forced_new": 0,
+  "per_sid": [
+    {
+      "sid": "trump_2026:0023",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "And last year the murder rate saw its single largest decline in recorded history."
+    },
+    {
+      "sid": "trump_2026:0024",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years."
+    },
+    {
+      "sid": "trump_2026:0030",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And in the last three months of 2025, it was down to 1.7 percent."
+    },
+    {
+      "sid": "trump_2026:0191",
+      "old": "gated-UNVERIFIABLE",
+      "new": "FALSE",
+      "category": "newly_decided",
+      "text": "Many of the wars I settled was because of the threat of tariffs."
+    },
+    {
+      "sid": "trump_2026:0294",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Your 401(k)s are way up."
+    },
+    {
+      "sid": "trump_2026:0310",
+      "old": "gated-UNVERIFIABLE",
+      "new": "FALSE",
+      "category": "newly_decided",
+      "text": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $"
+    },
+    {
+      "sid": "trump_2026:0428",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping"
+    },
+    {
+      "sid": "trump_2026:0462",
+      "old": "Models split",
+      "new": "Models split",
+      "category": "unchanged",
+      "text": "After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted."
+    },
+    {
+      "sid": "trump_2026:0553",
+      "old": "gated-UNVERIFIABLE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 sol"
+    },
+    {
+      "sid": "trump_2026:0554",
+      "old": "gated-UNVERIFIABLE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "Think of that, 25,000 soldiers are dying a month, a war which would have never happened if I were president, would have "
+    },
+    {
+      "sid": "trump_2026:0559",
+      "old": "gated-UNVERIFIABLE",
+      "new": "MISLEADING",
+      "category": "newly_decided",
+      "text": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people wi"
+    },
+    {
+      "sid": "trump_2026:0564",
+      "old": "gated-UNVERIFIABLE",
+      "new": "MISLEADING",
+      "category": "newly_decided",
+      "text": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,00"
+    },
+    {
+      "sid": "trump_2026:0616",
+      "old": "gated-UNVERIFIABLE",
+      "new": "FALSE",
+      "category": "newly_decided",
+      "text": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stoppe"
+    },
+    {
+      "sid": "trump_2026:0639",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the reg"
+    }
+  ]
+}

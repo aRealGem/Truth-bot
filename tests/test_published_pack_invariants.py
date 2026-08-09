@@ -188,16 +188,42 @@ def test_is_fit_to_gate_fails_closed_on_a_run_with_no_evidence():
 @pytest.mark.skipif(not (REPO / "metrics" / "pca_runs").is_dir(),
                     reason="metrics/pca_runs not present")
 def test_every_stored_run_artifact_is_currently_unfit_to_gate():
-    """THE RETROACTIVE RECORD. Not one stored run — published or rebuilt — has
-    a single relevance-scored evidence item, because score_evidence is
-    unreachable from build_evidence_pack_v2. Every gate-forced Unverifiable on
-    the published site was decided by a quota the scoring layer never fed.
+    """THE RETROACTIVE RECORD. Every gate-forced Unverifiable on the published
+    site was decided by a quota the scoring layer never fed: score_evidence was
+    unreachable from build_evidence_pack_v2, so no stored run carried a single
+    relevance-scored evidence item.
 
-    If this test ever fails it means a run got genuinely scored: update it,
-    do not delete it."""
+    UPDATED by the adjudication wave (2026-08-09), following this test's own
+    standing instruction to update rather than delete once a run gets genuinely
+    scored. The five wave artifacts DO carry scored items now — but only for
+    the 29 claims the wave re-adjudicated, because the wave replaced those
+    packs and left every other pack at its stored vintage. The record therefore
+    splits in two, and both halves are held here:
+
+      * scoring is CONFINED to the wave artifacts. A scored item anywhere else
+        means something re-scored a run outside the wave, which nothing is
+        supposed to do;
+      * every run, wave artifacts included, is still UNFIT TO GATE. 29 repaired
+        packs cannot pull a corpus-wide stance-null rate under the 15% ceiling,
+        and a partial repair that flipped the publish gate open would be a
+        serious defect rather than progress.
+    """
     rows = run_fitness_report(REPO)
     assert rows, "no artifacts present to report on"
-    assert all(r["relevance_scored"] == 0 for r in rows)
+
+    runs_dir = REPO / "metrics" / "pca_runs"
+
+    def _is_wave(run_id: str) -> bool:
+        path = runs_dir / f"{run_id}.json"
+        if not path.exists():
+            return False
+        return bool((json.loads(path.read_text("utf-8")).get("meta")
+                     or {}).get("wave"))
+
+    scored = [r for r in rows if r["relevance_scored"]]
+    assert scored, "no scored run at all — the wave artifacts are missing"
+    stray = [r["run_id"] for r in scored if not _is_wave(r["run_id"])]
+    assert not stray, f"scored evidence outside the wave: {stray}"
     assert all(r["fit_to_gate"] is False for r in rows)
 
 

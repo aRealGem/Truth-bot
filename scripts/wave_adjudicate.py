@@ -465,7 +465,7 @@ def run_wave(args) -> int:
     roster_note = {"name": "prod", "seats": dict(get_roster("prod").seats)}
     start_spend = proxy_lane.proxy_key_spend()
     print(f"proxy key spend at start: ${start_spend:.4f} "
-          f"(HARD cap ${args.budget:.2f})")
+          f"(HARD cap ${args.budget:.2f})", flush=True)
 
     newly_gated = sorted(flipset.get("newly_gated_sids") or ())
     report = {"schema": "truthbot-wave-report v1",
@@ -545,7 +545,7 @@ def run_wave(args) -> int:
             running = (proxy_lane.proxy_key_spend() - start_spend) + banked_total
             print(f"{speech} chunk {idx}/{len(chunks)} ({len(chunk)} claims): "
                   f"${s1 - s0:.4f} · wave running ${running:.4f} / "
-                  f"${args.budget:.2f} · {t1 - t0:.0f}s")
+                  f"${args.budget:.2f} · {t1 - t0:.0f}s", flush=True)
 
         complete = {c["sid"] for c in claims} <= {r.get("sid") for r in all_rows}
         wave_rows = [r for r in all_rows if r.get("sid") in set(sids)]

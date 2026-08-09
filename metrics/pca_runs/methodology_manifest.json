@@ -93,6 +93,31 @@
       "speech_id": "trump_2026",
       "generation": "v2.3-role-axis-s5cap",
       "published": false
+    },
+    "8577979b-91e3-48df-b84a-62b2516af91b": {
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "fcbc8db2-e025-4cb7-9199-36db723fcfde": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "0ae0f3b8-4728-4a6d-aab6-1e39160eca4d": {
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "91d400ba-838c-4a10-8077-5681a9223734": {
+      "speech_id": "obama_2014",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "9c4262a7-67bd-476e-b433-90424dd0b3e6": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
     }
   }
 }

@@ -21,22 +21,48 @@ point: when the event lands they flip to passing, and a strict xfail turns that
 flip into a loud XPASS instead of a silent one. They are NOT to be forced green
 by weakening the assertion.
 
-Current state (T-2, 2026-08-09):
+Current state (after the adjudication wave, 2026-08-09):
 
 ===============================================  ========  ==================
 case                                             status    resolved by
 ===============================================  ========  ==================
 Beckstrom 0469 (purposive clause)                passing   ratified conversion
-Beckstrom 0462 (models-split)                    xfail     adjudication wave
+Beckstrom 0462 (models-split)                    xfail     NOT the wave — see
+                                                           the inventory below
 inflation pair 0030 + 0031                       passing   —
 DEI claim 0056                                   passing   —
 Biden 5.7% GDP 0115                              passing   —
-Biden deficit-half 0244                          xfail     adjudication wave
+Biden deficit-half 0244                          passing   adjudication wave
 Obama College Opportunity Summit 0046            passing   —
 Obama Joining Forces 0045                        passing   —
-murder-rate pair 0023 + 0024 (COHERENCE)         xfail     adjudication wave
+murder-rate pair 0023 + 0024 (COHERENCE)         passing   NOT resolved — the
+                                                           case was renamed;
+                                                           read it before you
+                                                           trust the "passing"
 eggs framing disclosure 0219                     passing   —
 ===============================================  ========  ==================
+
+WHAT THE WAVE ACTUALLY SETTLED
+-------------------------------
+The wave re-adjudicated 29 claims on stored packs (no retrieval). Of the three
+markers that named it:
+
+  * **0244 flipped for real.** The panel decided it TRUE. The case is now a
+    plain assertion of that outcome, which is the intended lifecycle for a
+    strict xfail: the event landed, so the test states the result.
+  * **0462 did not flip.** The wave made the panel call the marker was waiting
+    for and the models split anyway. The xfail stays, but its REASON had to
+    change — "awaiting a panel call" became false the moment the call happened,
+    and a marker that misdescribes what it is waiting for is worse than no
+    marker.
+  * **the murder-rate pair flipped for the WRONG REASON**, which is why it is
+    renamed rather than converted. See
+    ``test_murder_rate_pair_conflict_is_hidden_by_an_empty_rationale``: the
+    deterministic checker stopped reporting the conflict because 0023 now
+    carries NO RATIONALE AT ALL, not because the two claims stopped
+    contradicting each other. Asserting "coherent" here would have converted a
+    detection blind spot into a green check, which is exactly the test-fitting
+    the strict markers exist to prevent.
 
 THE BECKSTROM PAIR SPLIT IN TWO (T-2)
 --------------------------------------
@@ -60,35 +86,28 @@ cases with two different fates:
     ratification. It ships as a models-split with no verdict at all, which no
     deterministic re-gate can settle. It stays xfail pending a panel call.
 
-XFAIL INVENTORY — all four runtime xfails in the suite
--------------------------------------------------------
+XFAIL INVENTORY — both remaining runtime xfails in the suite
+-------------------------------------------------------------
 Kept here so the whole set is legible from one place; the same table lives in
 ``metrics/remediation_v2/t2_xfail_inventory.md``.
 
-1. ``test_beckstrom_0462_split_is_awaiting_a_panel_call`` — **trump_2026:0462**.
+1. ``test_beckstrom_0462_split_survives_its_panel_call`` — **trump_2026:0462**.
    Asserts the claim reaches a substantive decided verdict (not a models-split,
-   not gate-forced). Tied to: **the adjudication wave.** A split with no verdict
-   is a disagreement between models, and only a panel call can resolve it.
-   CAVEAT, stated because it matters for planning: 0462 is NOT in the wave's
-   released set and NOT one of the six named extras, so on the current scope it
-   would stay xfail after the wave runs. Either the scope grows by one or this
-   marker outlives the wave.
-2. ``test_biden_deficit_half_stays_decided`` — **biden_2022:0244**. Asserts the
-   claim is decided (it shipped decided pre-remediation; the rebuild
-   force-gated it). Tied to: **the adjudication wave.** B1a+B2 already did its
-   part — the re-gate RELEASES 0244 from the quality gate — but release only
-   makes a claim ELIGIBLE for a decided verdict. The panel call is what
-   actually flips this marker.
-3. ``test_murder_rate_pair_is_coherent`` — **trump_2026:0023 + :0024**. Asserts
-   the deterministic adjacent-coherence check finds no conflict between the two
-   claims rating the same homicide statistic. Tied to: **the adjudication
-   wave**, which re-adjudicates the pair TOGETHER; both sids are among the six
-   named extras, so this one is in scope.
-4. ``tests/test_bluesky.py::…::test_post_report_returns_none_when_unconfigured``
+   not gate-forced). It was tied to the adjudication wave, and the wave was
+   added to specifically so this marker could resolve. It did not: the panel
+   ran on the re-scored pack and the seats still split, so the claim ships
+   with no verdict. Now tied to: **a decision nobody has made yet** — either an
+   escalation policy for a persistent split, or an owner ruling on the claim.
+   Re-running the same panel would just buy the same disagreement again.
+2. ``tests/test_bluesky.py::…::test_post_report_returns_none_when_unconfigured``
    — not a claim at all, and not tied to any decision. Asserts
    ``post_report`` returns ``None`` when the publisher is unconfigured; today it
    raises ``NotImplementedError``. Tied to: **the Bluesky v2 publisher landing
    in Phase 7.** Listed here only so the inventory is complete.
+
+Retired by the wave: ``test_biden_deficit_half_stays_decided`` (now a plain
+assertion — the panel decided it TRUE) and ``test_murder_rate_pair_is_coherent``
+(renamed, NOT resolved — see the case itself).
 """
 from __future__ import annotations
 
@@ -104,27 +123,33 @@ from truthbot.verdict import verdict_audit as va
 REPO = Path(__file__).resolve().parents[2]
 RUNS_DIR = REPO / "metrics" / "pca_runs"
 
-#: speech_id → run-id prefix of the STAGED Phase-3 rebuild.
+#: speech_id → run-id prefix of the STAGED artifact this gate reads.
+#:
+#: These were the Phase-3 rebuilds until 2026-08-09. They are now the
+#: ADJUDICATION WAVE's artifacts, which are those rebuilds with 29 claims
+#: re-adjudicated and everything else carried over verbatim (``rebuild_of``
+#: points back at the rebuild, which is still on disk — archive-never-delete).
+#: The gate has to read the newest staged artifact or it stops measuring what
+#: would be published: pointed at the rebuilds it would have gone on reporting
+#: biden_2022:0244 as gate-forced after the panel had actually decided it.
 RUNS = {
-    "gwbush_2006": "74a89c5f",
-    "clinton_1998": "d0010426",
-    "obama_2014": "4de8a551",
-    "biden_2022": "37744fc8",
-    "trump_2026": "4ee5a251",
+    "gwbush_2006": "0ae0f3b8",
+    "clinton_1998": "fcbc8db2",
+    "obama_2014": "91d400ba",
+    "biden_2022": "8577979b",
+    "trump_2026": "9c4262a7",
 }
 
-WAVE_SPLIT = ("models-split with no verdict at all — no deterministic re-gate "
-              "can settle a disagreement between models; flips when the "
-              "adjudication wave makes a panel call on this claim")
-
-WAVE_RELEASED = ("the B1a+B2 re-gate RELEASES this claim from the quality "
-                 "gate, but release only makes it ELIGIBLE for a decided "
-                 "verdict — flips when the adjudication wave re-adjudicates it")
-
-WAVE_COHERENCE = ("adjacent claims on one statistic were adjudicated "
-                  "independently and disagree, unannotated — flips when the "
-                  "adjudication wave re-adjudicates the pair TOGETHER (both "
-                  "sids are named extras, so this is in wave scope)")
+#: 0462's marker after the wave. The old reason said "flips when the wave makes
+#: a panel call"; the wave made it, on the fully re-scored pack, and the seats
+#: still split. Leaving the old wording would have pointed the next reader at an
+#: event that has already happened.
+PERSISTENT_SPLIT = (
+    "the adjudication wave made the panel call this marker was waiting for "
+    "(2026-08-09, on the B1a+B2 re-scored pack) and the seats split anyway, so "
+    "the claim still ships with no verdict — this now needs an escalation "
+    "policy for a persistent split or an owner ruling, NOT another identical "
+    "panel call")
 
 #: The ratified conversion for trump_2026:0469, recorded verbatim so the reason
 #: a claim is Unverifiable is reviewable next to the assertion that checks it.
@@ -253,17 +278,22 @@ def test_beckstrom_0469_is_unverifiable_on_its_purposive_clause():
         f"weakening. {BECKSTROM_0469_RATIONALE}")
 
 
-@pytest.mark.xfail(strict=True, reason=WAVE_SPLIT)
-def test_beckstrom_0462_split_is_awaiting_a_panel_call():
+@pytest.mark.xfail(strict=True, reason=PERSISTENT_SPLIT)
+def test_beckstrom_0462_split_survives_its_panel_call():
     """trump_2026:0462 "After a four-month deployment, she voluntarily extended
     her service, and her rank was going to be lifted." — ten items in the pack,
     six of them bearing, and it still ships as a models-split with NO verdict.
 
     Unlike its sibling 0469 this is not a gate outcome and not a ratification
     question: the models disagreed and nothing deterministic can break the tie.
-    It flips when a panel adjudicates it. See the module docstring for why that
-    may not happen in the current wave — 0462 is not in the released set and is
-    not one of the six named extras."""
+
+    The claim was added to the adjudication wave FOR this marker — it is not in
+    the released set and was not one of the named extras, so it was carried
+    purely so the test could resolve. It did not resolve. The panel ran on the
+    fully re-scored pack and split again, which is a real answer: this is a
+    durable disagreement, not a missing panel call. Re-running the same roster
+    would buy the same split, so what this now waits on is a POLICY (how a
+    persistent split is escalated or published) rather than more spend."""
     sid = "trump_2026:0462"
     assert len(_run("trump_2026")["evidence"].get(sid, [])) >= 5
     assert is_decided(sid), (
@@ -301,14 +331,20 @@ def test_biden_gdp_5_7_survives_as_decided_true():
     assert is_decided("biden_2022:0115")
 
 
-@pytest.mark.xfail(strict=True, reason=WAVE_RELEASED)
 def test_biden_deficit_half_stays_decided():
     """biden_2022:0244 — the deficit claim shipped DECIDED in the
     pre-remediation run and the model audit ruled it sound. The rebuild
     force-gated it to Unverifiable. A remediation that turns a sound decided
-    verdict into an abstention is a regression, not caution."""
+    verdict into an abstention is a regression, not caution.
+
+    RESOLVED by the adjudication wave (2026-08-09). This was a strict xfail
+    until the B1a+B2 re-score released the claim from the quality gate and the
+    panel decided it TRUE on the released pack. The marker is gone and the
+    outcome is asserted directly — which is what a strict xfail is FOR: it
+    announced the flip as an XPASS instead of letting it pass unnoticed."""
     assert is_decided("biden_2022:0244"), (
         f"gate={gate_code('biden_2022:0244')!r}")
+    assert verdict("biden_2022:0244") == "TRUE"
 
 
 def test_obama_college_opportunity_summit_is_decided():
@@ -328,22 +364,61 @@ def test_obama_joining_forces_veterans_hiring_is_repaired():
     assert verdict("obama_2014:0045") == "TRUE"
 
 
-@pytest.mark.xfail(strict=True, reason=WAVE_COHERENCE)
-def test_murder_rate_pair_is_coherent():
-    """trump_2026:0023 + :0024 COHERENCE — adjacent claims rating the SAME
-    statistic (the 2025 homicide decline) must not carry contradictory
-    rationales without an annotation. Today 0023 ships MISLEADING ("only a
-    projection") and 0024 ships TRUE ("the largest one-year drop on record"),
-    side by side, unannotated: the page contradicts itself.
+def test_murder_rate_pair_conflict_is_hidden_by_an_empty_rationale():
+    """trump_2026:0023 + :0024 COHERENCE — the case formerly known as
+    ``test_murder_rate_pair_is_coherent``, RENAMED because after the
+    adjudication wave that name would have been false.
 
-    The check is deterministic (``verdict_audit.adjacent_coherence_conflicts``)
-    and, run over all five staged rebuilds, this pair is the ONLY conflict it
-    finds — so a failure here is signal, not noise."""
+    The pair rates the same statistic (the 2025 homicide decline). 0023 ships
+    MISLEADING and 0024 ships TRUE, side by side, unannotated. The wave
+    re-adjudicated both together, and both came back with the SAME verdicts
+    they had before. Nothing about the contradiction changed.
+
+    What changed is that ``adjacent_coherence_conflicts`` stopped REPORTING it.
+    0023 came back as a three-way split (MISLEADING / FALSE / UNVERIFIABLE)
+    resolved by the stage-2 discriminator, and that path emits a verdict with
+    NO rationale text. The coherence check links two claims partly through
+    their rationales (``same_statistic``), so with 0023's rationale empty it
+    can no longer see that the two are about the same number.
+
+    That is a blind spot, not a repair, and this test says so out loud: it
+    asserts the contradiction is still on the page, that the checker is silent,
+    and — by restoring the rationale the PRIOR artifact recorded for the same
+    claim — that the silence is caused by the missing text. Converting the old
+    xfail into a green "coherent" assertion would have laundered a detection
+    gap into a passing gate."""
     run = _run("trump_2026")
+    a, b = "trump_2026:0023", "trump_2026:0024"
+
+    # 1. The contradiction is still published, unannotated.
+    assert verdict(a) == "MISLEADING" and verdict(b) == "TRUE"
+
+    # 2. And 0023 ships a DECIDED verdict with no rationale at all — a
+    #    fact-check whose reason is blank, which is its own defect.
+    assert (row(a).get("reasoning") or "").strip() == "", (
+        "0023 has a rationale again — re-check whether the coherence blind "
+        "spot below still exists before trusting this case")
+    assert row(a).get("split") is True
+
+    # 3. The deterministic checker reports nothing. This is what the gate sees.
     conflicts = va.adjacent_coherence_conflicts(run["claims"], run["rows"])
-    pair = [c for c in conflicts
-            if c["sids"] == ["trump_2026:0023", "trump_2026:0024"]]
-    assert pair == [], pair[0]["detail"] if pair else ""
+    assert [c for c in conflicts if c["sids"] == [a, b]] == []
+
+    # 4. Restore the rationale the pre-wave artifact recorded for 0023 and the
+    #    SAME checker finds the SAME conflict — so step 3's silence is about
+    #    the missing text, not about the claims having been reconciled.
+    prior = json.loads(
+        (RUNS_DIR / f"{run['meta']['rebuild_of']}.json").read_text("utf-8"))
+    prior_reasoning = next(r.get("reasoning") or "" for r in prior["rows"]
+                           if r["sid"] == a)
+    assert prior_reasoning.strip(), "prior artifact has no rationale either"
+    patched = [dict(r, reasoning=prior_reasoning) if r["sid"] == a else r
+               for r in run["rows"]]
+    revealed = va.adjacent_coherence_conflicts(run["claims"], patched)
+    assert [c for c in revealed if c["sids"] == [a, b]], (
+        "with 0023's prior rationale restored the checker STILL finds no "
+        "conflict — the pair may genuinely have been reconciled, in which "
+        "case this case should be rewritten as a real coherence assertion")
 
 
 # A framing disclosure: a TRUE that rests on one framing of a number has to say
@@ -376,16 +451,23 @@ def test_eggs_price_claim_discloses_its_framing():
 # ── the gate itself ──────────────────────────────────────────────────────────
 
 #: Every named case, so the suite cannot silently shrink.
+#:
+#: Two entries were RENAMED by the adjudication wave (2026-08-09), not removed:
+#: ``…0462_split_is_awaiting_a_panel_call`` → ``…0462_split_survives_its_panel_call``
+#: (the call happened) and ``…murder_rate_pair_is_coherent`` →
+#: ``…murder_rate_pair_conflict_is_hidden_by_an_empty_rationale`` (it is not
+#: coherent). Renaming a case that now asserts something different is the point
+#: of this list, not a way around it — the count is unchanged.
 NAMED_CASES = (
     "test_beckstrom_0469_is_unverifiable_on_its_purposive_clause",
-    "test_beckstrom_0462_split_is_awaiting_a_panel_call",
+    "test_beckstrom_0462_split_survives_its_panel_call",
     "test_inflation_pair_discriminates_the_two_measures",
     "test_dei_claim_is_adverse_not_true",
     "test_biden_gdp_5_7_survives_as_decided_true",
     "test_biden_deficit_half_stays_decided",
     "test_obama_college_opportunity_summit_is_decided",
     "test_obama_joining_forces_veterans_hiring_is_repaired",
-    "test_murder_rate_pair_is_coherent",
+    "test_murder_rate_pair_conflict_is_hidden_by_an_empty_rationale",
     "test_eggs_price_claim_discloses_its_framing",
 )
 

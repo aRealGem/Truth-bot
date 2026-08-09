@@ -115,6 +115,52 @@ REBUILD_DATE = "2026-08-06"
 GENERATION = "v2.3-role-axis-s5cap"
 CORRECTION_SOURCE = f"phase3-rebuild-{REBUILD_DATE} ({GENERATION})"
 
+#: Which generation of per-speech verdict diffs a run reads. The Phase-3
+#: rebuild's and the adjudication wave's live side by side under the same
+#: directory: the wave re-adjudicated 29 of the rebuild's claims, so its diffs
+#: describe the same speeches and must not overwrite the rebuild's record.
+PHASE3_DIFF_GLOB = "phase3_*_verdict_diff.json"
+WAVE_DIFF_GLOB = "wave_*_verdict_diff.json"
+
+WAVE_DATE = "2026-08-09"
+WAVE_SOURCE = f"adjudication-wave-{WAVE_DATE} ({GENERATION})"
+WAVE_FLIPSET = DIFF_DIR / "regate_flipset.json"
+
+#: Mechanical release clauses for the wave, by why the claim was in it. These
+#: are FACTS about the mechanism (S-8): which rule released the claim, and that
+#: it was re-adjudicated on the unified pipeline. They deliberately contain no
+#: lineage narrative and no editorial characterisation of any verdict — the
+#: owner writes that paragraph, and a generator that drafted it would be
+#: putting words in the publication's mouth.
+WAVE_RELEASE_CLAUSE = (
+    "released from the evidence gate by the D16(alpha) statistical-release "
+    "and D15 utterance-record rules ratified 2026-08-09, applied to the "
+    "B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on "
+    "the unified pipeline with no new retrieval")
+WAVE_EXTRA_CLAUSE = (
+    "re-adjudicated on the unified pipeline at the owner's designation, on "
+    "the B1a+B2 stance re-score of the stored evidence pack, with no new "
+    "retrieval")
+WAVE_SPLIT_CLAUSE = (
+    "shipped as a models-split with no verdict, which no deterministic "
+    "re-gate can settle; re-adjudicated on the unified pipeline with no new "
+    "retrieval")
+WAVE_CLAUSE_BY_REASON = {
+    "released": WAVE_RELEASE_CLAUSE,
+    "named-extra": WAVE_EXTRA_CLAUSE,
+    "models-split extra": WAVE_SPLIT_CLAUSE,
+}
+
+#: The ratified rationale for trump_2026:0469 (2026-08-09). The claim is NOT in
+#: the wave — it stays Unverifiable by ratification, not by defect — but if it
+#: ever reaches the ledger for any reason, this is the reason it carries, and
+#: it must not be re-derived by whatever produced the entry.
+BECKSTROM_SID = "trump_2026:0469"
+BECKSTROM_RATIONALE = (
+    "purposive clause uncheckable; factual core confirmed; the sole purposive "
+    "support is Political-tier, which under Claim Eval v3 is attribution, "
+    "never proof")
+
 # ── Spend ledger ──────────────────────────────────────────────────────────
 # proxy_usd  = LiteLLM proxy key spend — LEDGER-TRUE (the proxy billed it).
 # offproxy_usd = models called OUTSIDE the proxy, costed at published list
@@ -208,10 +254,17 @@ def _read_json(path: Path) -> Any:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def load_diffs(diff_dir: Path = DIFF_DIR) -> list[dict]:
-    """The five per-speech verdict diffs, in SPEECH_ORDER."""
+def load_diffs(diff_dir: Path = DIFF_DIR,
+               pattern: str = PHASE3_DIFF_GLOB) -> list[dict]:
+    """The per-speech verdict diffs, in SPEECH_ORDER.
+
+    ``pattern`` picks WHICH generation of diffs. It defaults to the Phase-3
+    rebuild's; :data:`WAVE_DIFF_GLOB` picks the adjudication wave's. Two globs
+    in one directory rather than two directories, because the wave's diffs
+    describe the same speeches and must sit BESIDE the rebuild's record
+    instead of replacing it."""
     found = {}
-    for path in sorted(Path(diff_dir).glob("phase3_*_verdict_diff.json")):
+    for path in sorted(Path(diff_dir).glob(pattern)):
         doc = _read_json(path)
         found[doc["speech_id"]] = doc
     order = [s for s in SPEECH_ORDER if s in found]
@@ -674,8 +727,17 @@ def _dc5_clause(removed: dict[str, int]) -> str:
             + ", ".join(parts) + ")")
 
 
-def build_reason(change: dict, dispositions: dict[str, dict]) -> str:
-    """Factual, specific where derivable; the approved generic line otherwise."""
+def build_reason(change: dict, dispositions: dict[str, dict],
+                 extra_clauses: Optional[dict[str, str]] = None,
+                 head_date: str = REBUILD_DATE,
+                 head_generation: str = GENERATION) -> str:
+    """Factual, specific where derivable; the approved generic line otherwise.
+
+    ``extra_clauses`` (sid → clause) is how the adjudication wave states the
+    MECHANISM that put a claim in front of the panel — which ratified rule
+    released it, or that the owner named it. It is appended as another factual
+    clause, never as narrative: the S-8 constraint on this generator is that it
+    assembles facts and leaves the lineage paragraph to the owner."""
     clauses = []
     cause = _CLASS_CAUSE.get(change["change_class"], "")
     # "decided" in the diff's vocabulary includes panel UNVERIFIABLE (the panel
@@ -693,15 +755,23 @@ def build_reason(change: dict, dispositions: dict[str, dict]) -> str:
             cause = ("the panel reached a substantive verdict on the rebuilt "
                      "evidence pack where it previously ruled the claim "
                      "unverifiable")
+    extra = (extra_clauses or {}).get(change["sid"])
+    if extra:
+        clauses.append(extra)
     if cause:
         clauses.append(cause)
     removed = dispositions.get(change["sid"])
     if removed:
         clauses.append(_dc5_clause(removed))
+    # The one claim whose reason is RATIFIED rather than derived. It is not in
+    # the wave, but if it ever reaches an entry the ratified rationale travels
+    # with it instead of being re-invented from the change class.
+    if change["sid"] == BECKSTROM_SID:
+        clauses.append(BECKSTROM_RATIONALE)
     if not clauses:
         return GENERIC_CAUSE[0].upper() + GENERIC_CAUSE[1:] + "."
-    head = (f"Re-adjudicated on the unified {GENERATION} pipeline "
-            f"({REBUILD_DATE}): ")
+    head = (f"Re-adjudicated on the unified {head_generation} pipeline "
+            f"({head_date}): ")
     return head + "; ".join(clauses) + "."
 
 
@@ -856,7 +926,10 @@ def canonical_counts(diffs: Iterable[dict], runs_dir: Path = RUNS_DIR,
 def correction_entries(changes: Iterable[dict],
                        dispositions: Optional[dict[str, dict]] = None,
                        date: str = REBUILD_DATE,
-                       dropped: Optional[list[dict]] = None) -> dict:
+                       dropped: Optional[list[dict]] = None,
+                       extra_clauses: Optional[dict[str, str]] = None,
+                       source: str = CORRECTION_SOURCE,
+                       generation: str = GENERATION) -> dict:
     """One record per changed verdict, split into ledger-eligible entries and
     changes the ledger schema cannot express — plus ``dropped_rows``, the
     rows that left the corpus entirely (A9). A drop has no old→new verdict
@@ -867,11 +940,14 @@ def correction_entries(changes: Iterable[dict],
     non_ledger: list[dict] = []
     for change in changes:
         old, new, blocked = ledger_verdicts(change)
-        reason = build_reason(change, dispositions)
+        reason = build_reason(change, dispositions, extra_clauses,
+                              head_date=date, head_generation=generation)
         if blocked:
             non_ledger.append({
                 "sid": change["sid"],
                 "speech_id": change["speech_id"],
+                "claim_text": change.get("claim_text_full")
+                or change.get("claim_text", ""),
                 "old_label": change["old_label"],
                 "new_label": change["new_label"],
                 "old_verdict": change["old_verdict"],
@@ -884,18 +960,24 @@ def correction_entries(changes: Iterable[dict],
         entries.append({
             "sid": change["sid"],
             "speech_id": change["speech_id"],
+            # The claim's own words, carried on the entry (S-8): an entry that
+            # states only "TRUE → MISLEADING" makes the reader look the claim
+            # up somewhere else to know what moved. It is a FACT off the
+            # artifact, not a characterisation.
+            "claim_text": change.get("claim_text_full")
+            or change.get("claim_text", ""),
             "old_verdict": old,
             "new_verdict": new,
             "reason": reason,
             "date": date,
-            "source": CORRECTION_SOURCE,
+            "source": source,
         })
     entries.sort(key=lambda e: e["sid"])
     non_ledger.sort(key=lambda e: e["sid"])
     return {
         "schema": "truthbot-dc6-corrections-entries v1",
         "generated": date,
-        "generation": GENERATION,
+        "generation": generation,
         "usage": ("PUBLICATION RECORD, not an input to apply_to_artifact. The "
                   "rebuilt artifacts already carry the new verdicts, so "
                   "applying these entries would fail closed on the old_verdict "
@@ -908,6 +990,55 @@ def correction_entries(changes: Iterable[dict],
         "non_ledger_changes": non_ledger,
         "dropped_rows": list(dropped or []),
     }
+
+
+# ── the adjudication wave's corrections ───────────────────────────────────
+def wave_extra_clauses(diffs: Iterable[dict]) -> dict[str, str]:
+    """sid → the mechanical clause naming why the wave adjudicated that claim.
+
+    Read off the wave diffs' own ``reasons`` map rather than recomputed, so the
+    clause an entry carries and the reason the runner recorded when it spent
+    the money are the same statement."""
+    out: dict[str, str] = {}
+    for d in diffs:
+        for sid, reason in (d.get("reasons") or {}).items():
+            clause = WAVE_CLAUSE_BY_REASON.get(reason)
+            if clause:
+                out[sid] = clause
+    return out
+
+
+def build_wave_corrections(diff_dir: Path = DIFF_DIR,
+                           runs_dir: Path = RUNS_DIR) -> tuple[dict, list[dict]]:
+    """Corrections entries for the adjudication wave — (entries_doc, changes).
+
+    Deliberately NOT the full DC-6 review: era parity, anecdote parity and the
+    badge diff are corpus-wide measurements, and running them over a 29-claim
+    diff would produce numbers that look corpus-wide and are not.
+
+    The DC-5 dispositions are also deliberately absent. They project what the
+    Phase-2 dry run expected the OLD packs to lose under the corrected rules —
+    a statement about retrieval, and this wave did no retrieval. Quoting them
+    here would attach a projection to a change it did not cause."""
+    diffs = load_diffs(diff_dir, WAVE_DIFF_GLOB)
+    changes = changed_claims(diffs, runs_dir)
+    entries_doc = correction_entries(
+        changes, dispositions={}, date=WAVE_DATE,
+        extra_clauses=wave_extra_clauses(diffs),
+        source=WAVE_SOURCE, generation=GENERATION)
+    entries_doc["usage"] = (
+        "PUBLICATION RECORD for the adjudication wave, not an input to "
+        "apply_to_artifact — the wave artifacts already carry these verdicts. "
+        "FACTS ONLY (S-8): sid, claim text, old verdict, new verdict and the "
+        "mechanical reason. The lineage paragraph is the owner's to write and "
+        "is deliberately absent.")
+    entries_doc["wave"] = {
+        "date": WAVE_DATE,
+        "speeches": [d["speech_id"] for d in diffs],
+        "claims_adjudicated": sum(len(d.get("wave_sids") or []) for d in diffs),
+        "claims_changed": len(changes),
+    }
+    return entries_doc, changes
 
 
 # ── ledger clean-slate reset ──────────────────────────────────────────────
@@ -1659,10 +1790,35 @@ def main() -> None:
     ap.add_argument("--out-dir", default=str(DIFF_DIR))
     ap.add_argument("--write-archive", action="store_true",
                     help=f"also write data/corrections-archive-{REBUILD_DATE}.json")
+    ap.add_argument("--wave", action="store_true",
+                    help=("read the adjudication wave's verdict diffs "
+                          f"({WAVE_DIFF_GLOB}) and write ONLY "
+                          "wave_corrections_entries.json — facts per changed "
+                          "verdict. The corpus-wide review sections are "
+                          "skipped: they would report a 29-claim slice as if "
+                          "it were the corpus."))
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.wave:
+        entries_doc, changes = build_wave_corrections()
+        (out_dir / "wave_corrections_entries.json").write_text(
+            json.dumps(entries_doc, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8")
+        print(f"wave corrections → {out_dir}/wave_corrections_entries.json")
+        w = entries_doc["wave"]
+        print(f"  {w['claims_adjudicated']} claims adjudicated across "
+              f"{len(w['speeches'])} speech(es); {w['claims_changed']} changed")
+        print(f"  {entries_doc['ledger_eligible']} ledger-eligible, "
+              f"{entries_doc['not_ledger_representable']} not representable")
+        for e in entries_doc["entries"]:
+            print(f"    {e['sid']:<22} {e['old_verdict']} → {e['new_verdict']}")
+        for e in entries_doc["non_ledger_changes"]:
+            print(f"    {e['sid']:<22} {e['old_label']} → {e['new_label']}  "
+                  f"({e['excluded_because']})")
+        return
     new_site = Path(args.new_site) if args.new_site else None
     old_site = Path(args.old_site) if (args.old_site and new_site) else None
 

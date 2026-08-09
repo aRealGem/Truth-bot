@@ -1,0 +1,75 @@
+{
+  "speech_id": "biden_2022",
+  "rebuild_of": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+  "new_run_id": "8577979b-91e3-48df-b84a-62b2516af91b",
+  "wave": true,
+  "wave_sids": [
+    "biden_2022:0155",
+    "biden_2022:0244",
+    "biden_2022:0311"
+  ],
+  "reasons": {
+    "biden_2022:0155": "released",
+    "biden_2022:0244": "released",
+    "biden_2022:0311": "released",
+    "clinton_1998:0021": "released",
+    "clinton_1998:0026": "released",
+    "clinton_1998:0028": "released",
+    "clinton_1998:0038": "released",
+    "clinton_1998:0194": "released",
+    "clinton_1998:0364": "released",
+    "gwbush_2006:0133": "released",
+    "obama_2014:0056": "released",
+    "obama_2014:0177": "released",
+    "obama_2014:0280": "released",
+    "trump_2026:0191": "released",
+    "trump_2026:0294": "released",
+    "trump_2026:0310": "released",
+    "trump_2026:0428": "released",
+    "trump_2026:0553": "released",
+    "trump_2026:0554": "released",
+    "trump_2026:0559": "released",
+    "trump_2026:0564": "released",
+    "trump_2026:0616": "released",
+    "trump_2026:0639": "released",
+    "trump_2026:0030": "named-extra",
+    "trump_2026:0031": "named-extra",
+    "trump_2026:0023": "named-extra",
+    "trump_2026:0024": "named-extra",
+    "clinton_1998:0313": "named-extra",
+    "trump_2026:0462": "models-split extra"
+  },
+  "n_compared": 3,
+  "counts": {
+    "unchanged": 0,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 3,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 0,
+  "per_sid": [
+    {
+      "sid": "biden_2022:0155",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "That would be one of the biggest investments in manufacturing in American history."
+    },
+    {
+      "sid": "biden_2022:0244",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "By the end of this year, the deficit will be down to less than half what it was before I took office."
+    },
+    {
+      "sid": "biden_2022:0311",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation."
+    }
+  ]
+}

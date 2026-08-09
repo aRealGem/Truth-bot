@@ -472,8 +472,13 @@ def test_generated_entries_load_through_the_real_corrections_loader(
     loaded = load_corrections(ledger)
     assert loaded == doc["entries"]
     for entry in loaded:
-        assert set(entry) == {"sid", "speech_id", "old_verdict", "new_verdict",
-                              "reason", "date", "source"}
+        # ``claim_text`` joined the entry with the adjudication wave (S-8): an
+        # entry that says only "TRUE → MISLEADING" sends the reader somewhere
+        # else to find out WHAT moved. The loader passes unrecognised keys
+        # through untouched, so the ledger contract is unchanged — which is
+        # exactly what the round-trip above is holding.
+        assert set(entry) == {"sid", "speech_id", "claim_text", "old_verdict",
+                              "new_verdict", "reason", "date", "source"}
         assert entry["date"] == dc6.REBUILD_DATE
         assert len(entry["date"].split("-")) == 3      # YYYY-MM-DD like the old ones
 
