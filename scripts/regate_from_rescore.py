@@ -49,9 +49,29 @@ Two subtleties the reproduction depends on, both learned from the artifacts:
     utterance date, so each speech is registered from its artifact meta before
     any pack is gated.
 
+WHICH RULES EACH LEG RUNS (since the 2026-08-09 ratification)
+--------------------------------------------------------------
+D15 (utterance-record) and D16(α) (statistical release) are ratified and now
+default ON. That creates a trap this script has to sidestep: the five artifacts
+were PRODUCED before the ratification, so a BEFORE leg that obeyed the new
+default would stop reproducing them, ``gate_reproduction`` would collapse, and
+the AFTER delta would no longer be attributable to anything in particular.
+
+So the two legs are pinned separately and neither reads the ambient default:
+
+  * BEFORE — always ``PRE_RATIFICATION_RULES`` (both off). Not configurable.
+    It exists to reproduce the artifact, and the artifact was made that way.
+  * AFTER — the ratified rules (both on) by default; ``--no-d15`` / ``--no-d16``
+    turn either off, which is how the ratification's own contribution is
+    separated from B1a+B2's.
+
+The configuration used is recorded in the report under ``rules``, so a flip set
+can never be read without knowing which gate produced it.
+
 Usage (repo root, always $0):
   PYTHONPATH=.:src .venv/bin/python scripts/regate_from_rescore.py
   PYTHONPATH=.:src .venv/bin/python scripts/regate_from_rescore.py --speech trump_2026
+  PYTHONPATH=.:src .venv/bin/python scripts/regate_from_rescore.py --no-d15 --no-d16
 
 Speeches whose sidecar has not been written yet are SKIPPED and named in the
 output — a partial B1a is a normal state to report from, never a silent gap.
@@ -79,6 +99,8 @@ from rescore_stored_packs import (REBUILT_RUNS, SIDECAR_SCHEMA,  # noqa: E402
                                   artifact_path, b2_sidecar_path,
                                   load_artifact, sidecar_path)
 
+from truthbot import costs  # noqa: E402
+
 OUT_DIR = REPO / "metrics" / "remediation_v2"
 OUT_STEM = "regate_flipset"
 
@@ -89,8 +111,15 @@ NAMED_EXTRAS: tuple[str, ...] = (
     "trump_2026:0024", "trump_2026:0343", "clinton_1998:0313",
 )
 
-#: Per-claim PCA re-adjudication cost band, USD (the DC-B1 packet's figure).
-PER_CLAIM_USD = (0.0642, 0.0748)
+#: Per-claim PCA re-adjudication cost band, USD. Imported, NOT redeclared: the
+#: same constant lived in two files once and drifted, which is what the
+#: estimator recalibration was cleaning up. ``PER_CLAIM_USD_MEASURED`` is
+#: LEDGER-DERIVED — money actually spent divided by claims actually adjudicated
+#: — so the recalibration of the chars/token estimator does not touch it and it
+#: must not be refitted here.
+PER_CLAIM_USD = costs.PER_CLAIM_USD_MEASURED
+#: The band a BUDGET should be set from: the measurement rounded outward.
+PER_CLAIM_USD_PLANNING = costs.PER_CLAIM_USD_PLANNING
 #: Authorized ceiling for the whole remediation-v2 B leg, and the slice of it
 #: PLANNED for B1a's re-scoring. The planned figure is only a fallback: when the
 #: sidecars are on hand their own ``spend_usd`` is ledger truth and headroom is
@@ -98,6 +127,10 @@ PER_CLAIM_USD = (0.0642, 0.0748)
 #: though the money were still available.
 BUDGET_CEILING_USD = 10.00
 B1A_PLANNED_USD = 0.44
+#: The planning ceiling agreed for THIS wave specifically — a sub-cap inside
+#: the $10.00 programme ceiling, so a wave cannot quietly consume the headroom
+#: reserved for everything after it.
+WAVE_PLANNING_CEILING_USD = 3.28
 
 CLAIM_TEXT_TRUNC = 120
 
@@ -276,13 +309,17 @@ def gate_once(sid: str, evidence: list, *, utterance: Optional[date],
     """Run the real gate over one stored pack. Returns (result, breakdown).
 
     ``utterance_record`` (D15) and ``statistical_release`` (D16α) are the two
-    proposal switches, handed straight to ``consolidate``. ``None`` — the
-    default, and what THIS script always passes — means "obey the environment
-    flag", which in production is OFF for both. The $0 blast-radius
-    measurements (``scripts/measure_d15.py``, ``scripts/measure_d16.py`` and
-    ``scripts/d15_d16_era_breakdown.py``) drive this same entry point with
-    explicit True/False, so they can price the proposals — separately and
-    together — without anything depending on ambient environment."""
+    ratified rule switches, handed straight to ``consolidate``. ``None`` means
+    "obey the environment flag", which since the 2026-08-09 ratification is ON
+    for both.
+
+    THIS script never passes ``None``. It pins both legs explicitly — see
+    :func:`regate_speech` — because the BEFORE leg has to reproduce artifacts
+    that were produced BEFORE the ratification, and a leg that read the ambient
+    default would stop reproducing them the moment the default moved. The $0
+    blast-radius measurements (``scripts/measure_d15.py``,
+    ``scripts/measure_d16.py`` and ``scripts/d15_d16_era_breakdown.py``) drive
+    this same entry point the same explicit way."""
     from truthbot.verdict import consolidator, era_lint
     from truthbot.verdict.consolidator import consolidate
     from truthbot.verdict.evidence_pack import window_for
@@ -416,8 +453,27 @@ def hinge_items(artifact: dict, scored: dict) -> list[dict]:
     return sorted(out, key=lambda r: (r["sid"], r["source_url"] or ""))
 
 
-def regate_speech(speech: str, artifact: dict, sidecar: dict) -> dict:
-    """Re-gate one speech. Pure: no I/O, no spend, no mutation of ``artifact``."""
+#: The rule configuration the five rebuilt artifacts were PRODUCED under: D15
+#: and D16(α) both off, because both were still flag-gated proposals when the
+#: runs were made. The BEFORE leg is pinned here forever. It is what makes
+#: ``gate_reproduction`` meaningful — reproduce the artifact exactly, and the
+#: AFTER delta is attributable to the change under test rather than to drift.
+PRE_RATIFICATION_RULES = {"utterance_record": False, "statistical_release": False}
+
+
+def regate_speech(speech: str, artifact: dict, sidecar: dict,
+                  *, utterance_record: bool = True,
+                  statistical_release: bool = True) -> dict:
+    """Re-gate one speech. Pure: no I/O, no spend, no mutation of ``artifact``.
+
+    The two keyword switches configure the AFTER leg only, and both default to
+    the RATIFIED state (2026-08-09: on). Passing False for both reproduces the
+    pre-ratification flip set, which is how the ratification's own contribution
+    is separated from B1a+B2's.
+
+    The BEFORE leg is NOT configurable: it is pinned to
+    :data:`PRE_RATIFICATION_RULES`, because it exists to reproduce artifacts
+    that were made under those rules."""
     from truthbot.verdict import speech_context
     from truthbot.verdict.consolidator import GATE_INSUFFICIENT
     from truthbot.verdict.publish_pipeline import evidence_from_artifact_dict
@@ -460,7 +516,8 @@ def regate_speech(speech: str, artifact: dict, sidecar: dict) -> dict:
         before_ev = evidence_from_artifact_dict({sid: dumps})[sid]
         before, before_bd = gate_once(sid, before_ev, utterance=utterance,
                                       claim_shape=shape, relation_of=relation_of,
-                                      claim_text=text)
+                                      claim_text=text,
+                                      **PRE_RATIFICATION_RULES)
         if (not before.quota_met) == was_gated:
             reproduced += 1
         else:
@@ -488,7 +545,9 @@ def regate_speech(speech: str, artifact: dict, sidecar: dict) -> dict:
             {"sid": sid, "source_url": u} for u in j["artifact_unscored"])
         after, after_bd = gate_once(sid, after_ev, utterance=utterance,
                                     claim_shape=shape, relation_of=relation_of,
-                                    claim_text=text)
+                                    claim_text=text,
+                                    utterance_record=utterance_record,
+                                    statistical_release=statistical_release)
         if not (before_bd["agrees"] and after_bd["agrees"]):
             breakdown_divergence.append(sid)
 
@@ -538,48 +597,79 @@ def regate_speech(speech: str, artifact: dict, sidecar: dict) -> dict:
 
 def costed_summary(released: list[str],
                    extras: tuple[str, ...] = NAMED_EXTRAS,
-                   *, b1a_observed_usd: Optional[float] = None) -> dict:
+                   *, b1a_observed_usd: Optional[float] = None,
+                   gated: Optional[list[str]] = None) -> dict:
     """Size the B1b re-adjudication bill.
 
-    Only RELEASED claims (plus the named extras) need a panel call; a
-    ``newly_gated`` claim costs $0, because withholding a verdict needs no
+    Only RELEASED claims (plus the named extras) need a panel call; a claim the
+    gate WITHHOLDS costs $0, because withholding a verdict needs no
     adjudication. Extras already in the released set are counted ONCE.
 
-    ``b1a_observed_usd`` is what the sidecars say B1a actually cost. Headroom is
-    charged against ``max(planned, observed)`` so an overrun shows up as less
-    money available, never as unspent budget."""
+    ``gated`` is the T-1 correction, and it is the reason this function grew a
+    fourth argument. A named extra that the ratified rules now GATE is answered
+    already — deterministically, for free — so paying a panel to look at it buys
+    nothing. Pass the newly-gated set and those extras drop out of the bill.
+    Omit it and the old, larger arithmetic is reproduced exactly.
+
+    ``b1a_observed_usd`` is what the sidecars say the re-scoring actually cost
+    (B1a + B2 merged). Headroom is charged against ``max(planned, observed)`` so
+    an overrun shows up as less money available, never as unspent budget, and it
+    is NOT rounded before the subtraction — $8.3962 of headroom is a different
+    statement from $8.40, and the wave is close enough to its sub-cap that the
+    difference is worth carrying.
+
+    Priced from :data:`PER_CLAIM_USD` (``costs.PER_CLAIM_USD_MEASURED``), which
+    is ledger-derived and deliberately NOT refitted by the estimator
+    recalibration, alongside the outward-rounded planning band."""
     rel = sorted(set(released))
-    extra_new = sorted(set(extras) - set(rel))
+    gated_set = set(gated or ())
+    extras_gated = sorted(set(extras) & gated_set)
+    extra_new = sorted(set(extras) - set(rel) - gated_set)
     total = len(rel) + len(extra_new)
     lo, hi = PER_CLAIM_USD
+    plo, phi = PER_CLAIM_USD_PLANNING
     committed = B1A_PLANNED_USD
     if b1a_observed_usd is not None:
         committed = max(committed, float(b1a_observed_usd))
     remaining = BUDGET_CEILING_USD - committed
+    hi_cost = round(total * hi, 2)
+    plan_hi_cost = round(total * phi, 2)
     return {
         "released": len(rel),
         "extras_named": len(extras),
         "extras_not_already_released": len(extra_new),
         "extras_overlapping_released": sorted(set(extras) & set(rel)),
+        # T-1: extras the ratified rules answer for free.
+        "extras_dropped_as_newly_gated": extras_gated,
         "claims_to_adjudicate": total,
         "per_claim_usd": [lo, hi],
+        "per_claim_usd_source": "costs.PER_CLAIM_USD_MEASURED (ledger-derived)",
+        "per_claim_usd_planning": [plo, phi],
         "cost_low_usd": round(total * lo, 2),
-        "cost_high_usd": round(total * hi, 2),
+        "cost_high_usd": hi_cost,
+        "cost_low_planning_usd": round(total * plo, 2),
+        "cost_high_planning_usd": plan_hi_cost,
         "ceiling_usd": BUDGET_CEILING_USD,
+        "wave_planning_ceiling_usd": WAVE_PLANNING_CEILING_USD,
         "b1a_planned_usd": B1A_PLANNED_USD,
         "b1a_observed_usd": (None if b1a_observed_usd is None
                              else round(float(b1a_observed_usd), 4)),
         "b1a_overran_plan": (b1a_observed_usd is not None
                              and float(b1a_observed_usd) > B1A_PLANNED_USD),
-        "committed_b1a_usd": round(committed, 2),
-        "remaining_usd": round(remaining, 2),
-        "fits_ceiling": round(total * hi, 2) <= round(remaining, 2),
+        "committed_b1a_usd": round(committed, 4),
+        "remaining_usd": round(remaining, 4),
+        "fits_ceiling": hi_cost <= round(remaining, 4),
+        # The binding constraint is the WAVE sub-cap, not the programme
+        # ceiling — reported on the planning band, which is what a cap is set
+        # from, so "fits" cannot be true only on the optimistic number.
+        "fits_wave_planning_ceiling": plan_hi_cost <= WAVE_PLANNING_CEILING_USD,
     }
 
 
 # ── report ───────────────────────────────────────────────────────────────────
 
-def build_report(per_speech: list[dict], missing: list[str]) -> dict:
+def build_report(per_speech: list[dict], missing: list[str],
+                 *, rules: Optional[dict] = None) -> dict:
     corpus = {k: 0 for k in (*CLASSES, NOT_RESCORED)}
     for s in per_speech:
         for k in corpus:
@@ -592,6 +682,15 @@ def build_report(per_speech: list[dict], missing: list[str]) -> dict:
     return {
         "schema": "truthbot-regate-flipset v1",
         "generated": datetime.now(timezone.utc).isoformat(),
+        # WHICH gate produced this flip set. The BEFORE leg is always the
+        # pre-ratification configuration (it has to reproduce the artifacts);
+        # the AFTER leg is what is being reported on.
+        "rules": {
+            "before": dict(PRE_RATIFICATION_RULES),
+            "after": dict(rules or {"utterance_record": True,
+                                    "statistical_release": True}),
+            "ratified": "2026-08-09",
+        },
         "speeches": [s["speech"] for s in per_speech],
         "speeches_missing_sidecar": missing,
         "speeches_partial_sidecar": partial,
@@ -617,7 +716,8 @@ def build_report(per_speech: list[dict], missing: list[str]) -> dict:
                                          for h in s["arithmetic_hinges"]}),
         "costed_b1b": costed_summary(
             released,
-            b1a_observed_usd=sum(s["rescore_spend_usd"] for s in per_speech)),
+            b1a_observed_usd=sum(s["rescore_spend_usd"] for s in per_speech),
+            gated=[f["sid"] for f in newly]),
     }
 
 
@@ -634,6 +734,16 @@ def render_markdown(report: dict) -> str:
     A(f"Generated {report['generated']} · $0 (no model calls; deterministic "
       "arithmetic over stored artifacts + B1a sidecars).")
     A("")
+    r = report.get("rules")
+    if r:
+        def _f(d):
+            return (f"D15 {'on' if d['utterance_record'] else 'off'}, "
+                    f"D16(α) {'on' if d['statistical_release'] else 'off'}")
+        A(f"**Rules.** BEFORE leg: {_f(r['before'])} — pinned to the "
+          f"configuration the artifacts were produced under, which is what "
+          f"makes the gate reproduction meaningful. AFTER leg: "
+          f"{_f(r['after'])} (ratified {r['ratified']}).")
+        A("")
     if report["speeches_missing_sidecar"]:
         A("> **Partial run.** No B1a sidecar yet for: "
           + ", ".join(f"`{s}`" for s in report["speeches_missing_sidecar"])
@@ -719,15 +829,28 @@ def render_markdown(report: dict) -> str:
     A(f"- released (need re-adjudication): **{k['released']}**")
     A(f"- named extras: **{k['extras_named']}** "
       f"({k['extras_not_already_released']} not already released)")
+    if k.get("extras_dropped_as_newly_gated"):
+        A(f"- named extras the ratified rules now GATE — dropped, they need no "
+          f"panel call: "
+          + ", ".join(f"`{x}`" for x in k["extras_dropped_as_newly_gated"]))
     A(f"- **total claims to adjudicate: {k['claims_to_adjudicate']}**")
     A(f"- newly gated: {report['corpus_counts']['newly_gated']} — **$0** "
       "(withholding needs no panel call)")
     A(f"- implied cost at ${k['per_claim_usd'][0]:.4f}–"
-      f"${k['per_claim_usd'][1]:.4f}/claim: "
+      f"${k['per_claim_usd'][1]:.4f}/claim (measured, ledger-derived): "
       f"**${k['cost_low_usd']:.2f}–${k['cost_high_usd']:.2f}**")
-    A(f"- ceiling ${k['ceiling_usd']:.2f}, of which ${k['committed_b1a_usd']:.2f} "
-      f"is committed to B1a → ${k['remaining_usd']:.2f} remaining; "
+    A(f"- on the PLANNING band ${k['per_claim_usd_planning'][0]:.4f}–"
+      f"${k['per_claim_usd_planning'][1]:.4f}/claim: "
+      f"**${k['cost_low_planning_usd']:.2f}–"
+      f"${k['cost_high_planning_usd']:.2f}**")
+    A(f"- programme ceiling ${k['ceiling_usd']:.2f}, of which "
+      f"${k['committed_b1a_usd']:.4f} is committed → "
+      f"**${k['remaining_usd']:.4f} remaining**; "
       f"{'FITS' if k['fits_ceiling'] else 'DOES NOT FIT'}")
+    A(f"- wave planning sub-cap ${k['wave_planning_ceiling_usd']:.2f} vs "
+      f"${k['cost_high_planning_usd']:.2f} planning-high: "
+      f"**{'FITS' if k['fits_wave_planning_ceiling'] else 'DOES NOT FIT'}** "
+      f"— this is the binding constraint, not the programme ceiling")
     if k["b1a_overran_plan"]:
         A(f"- ⚠︎ B1a was planned at ${k['b1a_planned_usd']:.2f} but the sidecars "
           f"record **${k['b1a_observed_usd']:.4f}** actually spent; headroom "
@@ -746,7 +869,18 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--no-b2", action="store_true",
                     help="ignore the B2 sidecars — reproduces the B1a-only "
                          "flip set, which is how the two passes are compared")
+    ap.add_argument("--no-d15", action="store_true",
+                    help="run the AFTER leg with D15 (utterance-record) OFF — "
+                         "reproduces the pre-ratification flip set")
+    ap.add_argument("--no-d16", action="store_true",
+                    help="run the AFTER leg with D16(alpha) OFF")
     args = ap.parse_args(argv)
+
+    rules = {"utterance_record": not args.no_d15,
+             "statistical_release": not args.no_d16}
+    print(f"AFTER-leg rules: D15={rules['utterance_record']} "
+          f"D16={rules['statistical_release']} "
+          f"(BEFORE leg pinned pre-ratification, always)")
 
     speeches = args.speech or list(REBUILT_RUNS)
     per_speech, missing = [], []
@@ -769,7 +903,7 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(f"  merging B2 sidecar: {len(b2.get('sids') or {})} sids, "
                   f"${float(b2.get('spend_usd') or 0.0):.4f}")
         sidecar = merge_sidecars(b1a, b2)
-        res = regate_speech(speech, artifact, sidecar)
+        res = regate_speech(speech, artifact, sidecar, **rules)
         per_speech.append(res)
         c = res["counts"]
         note = ("" if res["sidecar_complete"]
@@ -779,7 +913,7 @@ def main(argv: Optional[list[str]] = None) -> int:
               f"(gate reproduction {res['gate_reproduction']['matched']}/"
               f"{res['claims']}){note}")
 
-    report = build_report(per_speech, missing)
+    report = build_report(per_speech, missing, rules=rules)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     (out / f"{OUT_STEM}.json").write_text(
@@ -802,12 +936,23 @@ def main(argv: Optional[list[str]] = None) -> int:
           f"({k['extras_not_already_released']} not already released)")
     print(f"TOTAL claims to adjudicate ........ {k['claims_to_adjudicate']}")
     print(f"newly gated (cost $0) ............. {cc['newly_gated']}")
+    if k.get("extras_dropped_as_newly_gated"):
+        print("extras dropped (now gated, $0) ... "
+              + ", ".join(k["extras_dropped_as_newly_gated"]))
     print(f"implied cost @ ${k['per_claim_usd'][0]:.4f}-"
           f"${k['per_claim_usd'][1]:.4f}/claim  ${k['cost_low_usd']:.2f}-"
-          f"${k['cost_high_usd']:.2f}")
-    print(f"ceiling ${k['ceiling_usd']:.2f} - ${k['committed_b1a_usd']:.2f} "
-          f"committed (B1a) = ${k['remaining_usd']:.2f} remaining  → "
+          f"${k['cost_high_usd']:.2f}   (measured, ledger-derived)")
+    print(f"       planning @ ${k['per_claim_usd_planning'][0]:.4f}-"
+          f"${k['per_claim_usd_planning'][1]:.4f}/claim  "
+          f"${k['cost_low_planning_usd']:.2f}-"
+          f"${k['cost_high_planning_usd']:.2f}")
+    print(f"ceiling ${k['ceiling_usd']:.2f} - ${k['committed_b1a_usd']:.4f} "
+          f"committed = ${k['remaining_usd']:.4f} remaining  → "
           f"{'FITS' if k['fits_ceiling'] else 'DOES NOT FIT'}")
+    print(f"wave sub-cap ${k['wave_planning_ceiling_usd']:.2f} vs "
+          f"${k['cost_high_planning_usd']:.2f} planning-high  → "
+          f"{'FITS' if k['fits_wave_planning_ceiling'] else 'DOES NOT FIT'}"
+          "   (binding constraint)")
     if k["b1a_overran_plan"]:
         print(f"NOTE: B1a planned ${k['b1a_planned_usd']:.2f}, sidecars record "
               f"${k['b1a_observed_usd']:.4f} spent — headroom is charged "

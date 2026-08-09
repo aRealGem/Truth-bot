@@ -422,7 +422,100 @@ def test_newly_gated_claims_add_nothing_to_the_bill():
     assert report["costed_b1b"]["claims_to_adjudicate"] == len(rg.NAMED_EXTRAS)
 
 
+def test_a_named_extra_the_ratified_rules_gate_drops_off_the_bill():
+    """T-1: a claim the gate now WITHHOLDS is answered already, for $0. Paying
+    a panel to look at it again buys nothing, so it leaves the wave."""
+    extra = rg.NAMED_EXTRAS[0]
+    k = rg.costed_summary(["x:0001"], gated=[extra])
+
+    assert k["extras_dropped_as_newly_gated"] == [extra]
+    assert k["extras_not_already_released"] == len(rg.NAMED_EXTRAS) - 1
+    assert k["claims_to_adjudicate"] == len(rg.NAMED_EXTRAS)   # 1 released + 5
+
+
+def test_omitting_the_gated_set_reproduces_the_old_larger_bill():
+    """The dedup is additive. Without it the arithmetic is what it always was,
+    so an old artifact stays comparable to a new one."""
+    assert (rg.costed_summary(["x:0001"])["claims_to_adjudicate"]
+            == rg.costed_summary(["x:0001"], gated=[])["claims_to_adjudicate"]
+            == 1 + len(rg.NAMED_EXTRAS))
+
+
+def test_the_per_claim_band_is_imported_not_redeclared():
+    """The same constant lived in two files once and drifted. It is ledger-
+    derived — money spent over claims adjudicated — so the estimator
+    recalibration must not touch it, and neither may this script."""
+    from truthbot import costs
+
+    assert rg.PER_CLAIM_USD is costs.PER_CLAIM_USD_MEASURED
+    assert rg.PER_CLAIM_USD_PLANNING is costs.PER_CLAIM_USD_PLANNING
+    # The planning band is never CHEAPER than the measurement at either end —
+    # it is the measurement rounded up for headroom, so a budget set from it
+    # cannot come in under what was actually observed per claim.
+    assert rg.PER_CLAIM_USD_PLANNING[0] >= rg.PER_CLAIM_USD[0]
+    assert rg.PER_CLAIM_USD_PLANNING[1] >= rg.PER_CLAIM_USD[1]
+
+
+def test_headroom_is_not_rounded_before_the_subtraction():
+    """$8.3962 and $8.40 are different statements, and the wave is close enough
+    to its sub-cap that the difference is worth carrying."""
+    k = rg.costed_summary(["x:0001"], b1a_observed_usd=1.6038)
+    assert k["committed_b1a_usd"] == 1.6038
+    assert k["remaining_usd"] == 8.3962
+
+
+def test_the_wave_subcap_is_judged_on_the_planning_band():
+    """"Fits" must not be true only on the optimistic number. The sub-cap is
+    checked against the outward-rounded planning band, which is what a budget
+    would actually be set from."""
+    plo, phi = rg.PER_CLAIM_USD_PLANNING
+    n = int(rg.WAVE_PLANNING_CEILING_USD / phi) + 5        # comfortably over
+    k = rg.costed_summary([f"x:{i:04d}" for i in range(n)])
+    assert k["cost_high_planning_usd"] > rg.WAVE_PLANNING_CEILING_USD
+    assert k["fits_wave_planning_ceiling"] is False
+    # ...and the measured band, being narrower, is not what decided it.
+    assert k["cost_high_usd"] < k["cost_high_planning_usd"]
+
+
 # ── 6. report assembly ───────────────────────────────────────────────────────
+
+def test_the_report_records_which_rules_each_leg_ran():
+    """A flip set is unreadable without knowing which gate produced it, and
+    since the ratification the two legs no longer agree."""
+    art = _artifact({"a:1": [_ev("https://apnews.com/b", tier="Wire")]},
+                    {"a:1": "UNVERIFIABLE"})
+    res = rg.regate_speech(SPEECH, art, _sidecar({}))
+
+    default = rg.build_report([res], missing=[])
+    assert default["rules"]["before"] == rg.PRE_RATIFICATION_RULES
+    assert default["rules"]["after"] == {"utterance_record": True,
+                                         "statistical_release": True}
+    assert default["rules"]["ratified"] == "2026-08-09"
+    assert "Rules." in rg.render_markdown(default)
+
+    off = rg.build_report([res], missing=[],
+                          rules={"utterance_record": False,
+                                 "statistical_release": False})
+    # The BEFORE leg is NOT configurable — it reproduces the artifacts.
+    assert off["rules"]["before"] == rg.PRE_RATIFICATION_RULES
+
+
+def test_the_before_leg_ignores_the_after_switches_entirely(monkeypatch):
+    """The BEFORE leg must reproduce a PRE-ratification artifact. If it read the
+    ambient default, gate reproduction would collapse the day the default moved
+    — which is exactly what the ratification did."""
+    monkeypatch.setenv("TRUTHBOT_D15_UTTERANCE_RECORD", "1")
+    monkeypatch.setenv("TRUTHBOT_D16_STATISTICAL_RELEASE", "1")
+    art = _artifact({"a:1": [_ev("https://apnews.com/b", tier="Wire")]},
+                    {"a:1": "UNVERIFIABLE"})
+
+    a_res = rg.regate_speech(SPEECH, art, _sidecar({}),
+                             utterance_record=True, statistical_release=True)
+    b_res = rg.regate_speech(SPEECH, art, _sidecar({}),
+                             utterance_record=False, statistical_release=False)
+    assert (a_res["gate_reproduction"]["mismatched"]
+            == b_res["gate_reproduction"]["mismatched"] == 0)
+
 
 def test_report_flags_a_missing_and_a_partial_sidecar():
     art = _artifact({"a:1": [_ev("https://apnews.com/b", tier="Wire")]},

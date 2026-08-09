@@ -209,10 +209,22 @@ def test_role_string_and_window_constants_cannot_drift() -> None:
 
 # ── the flag ────────────────────────────────────────────────────────────────
 
-def test_flag_is_off_by_default_and_reads_the_env_at_call_time(monkeypatch) -> None:
+def test_flag_is_on_by_default_and_reads_the_env_at_call_time(monkeypatch) -> None:
+    """RATIFIED 2026-08-09: unset means ON. Before that date this asserted the
+    opposite, and the inversion is the whole content of the ratification — so
+    it is asserted here rather than left implicit in the module constant."""
+    assert ur.DEFAULT_ENABLED is True
+    assert ur.RATIFIED == "2026-08-09"
+
     monkeypatch.delenv(ur.FLAG_ENV, raising=False)
-    assert ur.flag_enabled() is False
-    for off in ("", "0", "false", "no", "off", "maybe"):
+    assert ur.flag_enabled() is True
+    # Empty is not an override — it is "say nothing", which means the default.
+    monkeypatch.setenv(ur.FLAG_ENV, "")
+    assert ur.flag_enabled() is True
+    # An explicit value overrides in BOTH directions. Anything unrecognised
+    # reads as OFF, so a typo fails toward the pre-ratification gate rather
+    # than toward silently keeping the new one.
+    for off in ("0", "false", "no", "off", "maybe"):
         monkeypatch.setenv(ur.FLAG_ENV, off)
         assert ur.flag_enabled() is False
     for on in ("1", "true", "TRUE", "yes", "on"):
@@ -251,7 +263,9 @@ def _consolidate(pack, **kw):
 
 def test_flag_off_leaves_the_gate_exactly_where_it_is(trump_0469_pack,
                                                       monkeypatch) -> None:
-    monkeypatch.delenv(ur.FLAG_ENV, raising=False)
+    """The override still reproduces the pre-ratification gate bit-for-bit —
+    which is what makes a regression bisectable without reverting code."""
+    monkeypatch.setenv(ur.FLAG_ENV, "0")
     res = _consolidate(trump_0469_pack)
     assert res.quota_met is True and res.gate_code == ""
     assert res.utterance_records == []
@@ -286,7 +300,7 @@ def test_the_explicit_argument_is_the_same_switch(trump_0469_pack,
                                                   monkeypatch) -> None:
     """``utterance_record=`` overrides the env in BOTH directions, so the $0
     measurement and the tests never depend on ambient environment."""
-    monkeypatch.delenv(ur.FLAG_ENV, raising=False)
+    monkeypatch.setenv(ur.FLAG_ENV, "0")
     assert _consolidate(trump_0469_pack, utterance_record=True).quota_met is False
     monkeypatch.setenv(ur.FLAG_ENV, "1")
     assert _consolidate(trump_0469_pack, utterance_record=False).quota_met is True

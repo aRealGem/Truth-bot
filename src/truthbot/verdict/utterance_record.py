@@ -52,8 +52,8 @@ Conservative by construction: every rule needs a date it can check, and an item
 with no usable date matches nothing. A miss is the intended failure mode — a
 false positive silently destroys real evidence.
 
-THE EFFECT (when ratified)
---------------------------
+THE EFFECT (RATIFIED 2026-08-09 — this is live)
+------------------------------------------------
 Quota credit 0: an ``utterance-record`` item can never be one of the
 ``MIN_BEARING_T13`` items that let a claim reach a decided verdict. It is still
 KEPT and still DISPLAYED, carrying ``role: utterance-record`` in the pack
@@ -61,11 +61,17 @@ payload — provenance the reader can see, not evidence the gate can spend.
 
 THE FLAG
 --------
-``TRUTHBOT_D15_UTTERANCE_RECORD=1`` is the one switch. Default OFF: with the
-flag unset nothing is classified, no role is assigned, and every gate outcome
-is bit-for-bit what it is today. ``consolidate(..., utterance_record=True)``
-is the same switch as an explicit argument, for tests and the $0 blast-radius
-measurement. Ratification proposal: ``docs/decisions/D15-utterance-derivative.md``.
+``TRUTHBOT_D15_UTTERANCE_RECORD`` is the one switch, and since the 2026-08-09
+ratification its default is **ON**. Unset means enabled.
+
+The env var survives as an OVERRIDE in both directions, which is the point:
+``TRUTHBOT_D15_UTTERANCE_RECORD=0`` reproduces the pre-ratification gate
+exactly, so a regression can be bisected against the old behaviour without
+reverting code. ``consolidate(..., utterance_record=False)`` is the same
+override as an explicit argument, and is what the $0 blast-radius measurements
+use so they can never leave a flag set behind them.
+
+Ratified decision: ``docs/decisions/D15-utterance-derivative.md``.
 
 Stdlib only, on purpose: this module is a leaf so ``evidential_role`` and the
 consolidator can both name the role without an import cycle.
@@ -82,8 +88,19 @@ from urllib.parse import urlsplit
 #: here so the two can never drift.
 ROLE = "utterance-record"
 
-#: The one switch. Unset/empty = OFF.
+#: The one switch. Unset/empty = the ratified DEFAULT, which is ON.
 FLAG_ENV = "TRUTHBOT_D15_UTTERANCE_RECORD"
+
+#: RATIFIED 2026-08-09 by the owner. Before that date this module shipped
+#: default OFF pending ratification; the env var is now an OVERRIDE, kept so a
+#: test or a $0 measurement can ask for the pre-ratification behaviour
+#: explicitly (``TRUTHBOT_D15_UTTERANCE_RECORD=0``) rather than by unsetting
+#: something and hoping.
+DEFAULT_ENABLED = True
+
+#: The date the owner ratified D15. Reported alongside outputs, so a run can be
+#: tied to the decision that produced it.
+RATIFIED = "2026-08-09"
 
 _TRUTHY = ("1", "true", "yes", "on")
 
@@ -147,9 +164,16 @@ _RECAP_TOKENS = (
 
 
 def flag_enabled(env: Optional[dict] = None) -> bool:
-    """Is D15 switched on? Read at call time, so a test can flip it."""
+    """Is D15 switched on? Read at call time, so a test can flip it.
+
+    Unset or empty means :data:`DEFAULT_ENABLED` — ON, ratified 2026-08-09.
+    Anything else is an explicit override in either direction, so
+    ``TRUTHBOT_D15_UTTERANCE_RECORD=0`` reproduces the pre-ratification gate."""
     src = os.environ if env is None else env
-    return str(src.get(FLAG_ENV, "") or "").strip().lower() in _TRUTHY
+    raw = str(src.get(FLAG_ENV, "") or "").strip().lower()
+    if not raw:
+        return DEFAULT_ENABLED
+    return raw in _TRUTHY
 
 
 def _norm(text: str) -> str:

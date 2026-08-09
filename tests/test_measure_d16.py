@@ -152,8 +152,12 @@ def test_the_rescored_vintage_sees_what_b1a_bought_and_stored_does_not():
 
 def test_measuring_never_switches_the_flag_on_for_anyone_else(monkeypatch):
     """The switch is passed as an argument. If the measurement set the env
-    instead, every later consolidation in the process would inherit it."""
-    monkeypatch.delenv(sr.FLAG_ENV, raising=False)
+    instead, every later consolidation in the process would inherit it.
+
+    Since the 2026-08-09 ratification the ambient default is ON, so the check
+    pins the env OFF, measures, and confirms the measurement did not switch it
+    back on behind everyone's back."""
+    monkeypatch.setenv(sr.FLAG_ENV, "0")
     art = _artifact({SID: [_ev(BLS_A), _ev(BLS_B)]}, {SID: "UNVERIFIABLE"})
     md.measure_speech(SPEECH, art, None)
     assert sr.flag_enabled() is False

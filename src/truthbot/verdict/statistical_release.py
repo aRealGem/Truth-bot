@@ -65,8 +65,8 @@ THE RULE — three conditions, ALL required, each independently testable
      here, and an item dated BEFORE the utterance matches nothing either —
      it already credits, so it has no need of this rule.
 
-THE EFFECT (when ratified)
---------------------------
+THE EFFECT (RATIFIED 2026-08-09 — this is live)
+------------------------------------------------
 A matching item may credit the quota exactly as a pre-utterance item of the
 same tier and stance would; nothing else about it changes. Its pack payload
 carries ``era_note: "post-speech · statistical release …"`` in place of
@@ -76,17 +76,21 @@ credits nothing on any branch.
 
 THE FLAG
 --------
-``TRUTHBOT_D16_STATISTICAL_RELEASE=1`` is the one switch. Default OFF: with the
-flag unset nothing is classified, no item is released, and every gate outcome
-is bit-for-bit what it is today. ``consolidate(..., statistical_release=True)``
-is the same switch as an explicit argument, for tests and the $0 blast-radius
-measurement (``scripts/measure_d16.py``). Ratification proposal:
-``docs/decisions/D16-statistical-release.md``.
+``TRUTHBOT_D16_STATISTICAL_RELEASE`` is the one switch, and since the 2026-08-09
+ratification its default is **ON**. Unset means enabled.
+
+The env var survives as an OVERRIDE in both directions:
+``TRUTHBOT_D16_STATISTICAL_RELEASE=0`` reproduces the pre-ratification gate
+exactly. ``consolidate(..., statistical_release=False)`` is the same override as
+an explicit argument, and is what the $0 blast-radius measurement
+(``scripts/measure_d16.py``) uses so it can never leave a flag set behind it.
+
+Ratified decision: ``docs/decisions/D16-statistical-release.md``.
 
 Structured exactly like D15 (:mod:`truthbot.verdict.utterance_record`) on
-purpose — same flag shape, same rule-name vocabulary, same "returns the rule
-that fired, or ''" contract — so the two proposals can be read, tested,
-measured and ratified with one mental model.
+purpose — same flag shape, same default, same ratification date, same rule-name
+vocabulary, same "returns the rule that fired, or ''" contract — so the two can
+be read, tested, measured and operated with one mental model.
 """
 from __future__ import annotations
 
@@ -96,9 +100,18 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import Optional
 
-#: The one switch. Unset/empty = OFF. (The D16 analogue of D15's
-#: ``TRUTHBOT_D15_UTTERANCE_RECORD``.)
+#: The one switch. Unset/empty = the ratified DEFAULT, which is ON. (The D16
+#: analogue of D15's ``TRUTHBOT_D15_UTTERANCE_RECORD``.)
 FLAG_ENV = "TRUTHBOT_D16_STATISTICAL_RELEASE"
+
+#: RATIFIED 2026-08-09 by the owner, on the same day as D15. Before that date
+#: this module shipped default OFF pending ratification; the env var is now an
+#: OVERRIDE, kept so the pre-ratification behaviour can be asked for explicitly
+#: (``TRUTHBOT_D16_STATISTICAL_RELEASE=0``) rather than by unsetting something.
+DEFAULT_ENABLED = True
+
+#: The date the owner ratified D16(α).
+RATIFIED = "2026-08-09"
 
 _TRUTHY = ("1", "true", "yes", "on")
 
@@ -194,9 +207,17 @@ class DataPeriod:
 
 
 def flag_enabled(env: Optional[dict] = None) -> bool:
-    """Is D16 switched on? Read at call time, so a test can flip it."""
+    """Is D16 switched on? Read at call time, so a test can flip it.
+
+    Unset or empty means :data:`DEFAULT_ENABLED` — ON, ratified 2026-08-09.
+    Anything else is an explicit override in either direction, so
+    ``TRUTHBOT_D16_STATISTICAL_RELEASE=0`` reproduces the pre-ratification
+    gate."""
     src = os.environ if env is None else env
-    return str(src.get(FLAG_ENV, "") or "").strip().lower() in _TRUTHY
+    raw = str(src.get(FLAG_ENV, "") or "").strip().lower()
+    if not raw:
+        return DEFAULT_ENABLED
+    return raw in _TRUTHY
 
 
 def _year_ok(y: int) -> bool:

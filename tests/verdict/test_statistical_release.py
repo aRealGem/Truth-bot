@@ -256,10 +256,16 @@ def test_clinton_1998_0101_stays_excluded_by_ALLOWLIST_MISS() -> None:
 
 # ── the flag ────────────────────────────────────────────────────────────────
 
-def test_flag_is_off_by_default_and_reads_the_env_at_call_time(monkeypatch) -> None:
+def test_flag_is_on_by_default_and_reads_the_env_at_call_time(monkeypatch) -> None:
+    """RATIFIED 2026-08-09, the same day as D15 and by the same owner."""
+    assert sr.DEFAULT_ENABLED is True
+    assert sr.RATIFIED == "2026-08-09"
+
     monkeypatch.delenv(sr.FLAG_ENV, raising=False)
-    assert sr.flag_enabled() is False
-    for off in ("", "0", "false", "no", "off", "maybe"):
+    assert sr.flag_enabled() is True
+    monkeypatch.setenv(sr.FLAG_ENV, "")
+    assert sr.flag_enabled() is True
+    for off in ("0", "false", "no", "off", "maybe"):
         monkeypatch.setenv(sr.FLAG_ENV, off)
         assert sr.flag_enabled() is False
     for on in ("1", "true", "TRUE", "yes", "on"):
@@ -270,6 +276,15 @@ def test_flag_is_off_by_default_and_reads_the_env_at_call_time(monkeypatch) -> N
 def test_the_flag_name_is_the_d16_analogue_of_d15s() -> None:
     assert sr.FLAG_ENV == "TRUTHBOT_D16_STATISTICAL_RELEASE"
     assert ur.FLAG_ENV == "TRUTHBOT_D15_UTTERANCE_RECORD"
+
+
+def test_both_rules_were_ratified_together_and_default_the_same_way() -> None:
+    """The two are meant to be operated with one mental model, and a pair that
+    silently disagreed about its default would break that — one rule live and
+    its counterweight dormant is exactly the lopsided state the M-6
+    evenhandedness check exists to prevent."""
+    assert sr.DEFAULT_ENABLED is ur.DEFAULT_ENABLED is True
+    assert sr.RATIFIED == ur.RATIFIED == "2026-08-09"
 
 
 # ── consolidator effect ─────────────────────────────────────────────────────
@@ -308,7 +323,8 @@ def _consolidate(pack, **kw):
 
 def test_flag_off_leaves_the_gate_exactly_where_it_is(bush_stat_pack,
                                                       monkeypatch) -> None:
-    monkeypatch.delenv(sr.FLAG_ENV, raising=False)
+    """The override still reproduces the pre-ratification gate bit-for-bit."""
+    monkeypatch.setenv(sr.FLAG_ENV, "0")
     res = _consolidate(bush_stat_pack)
     assert res.quota_met is False and res.gate_code == GATE_INSUFFICIENT
     assert res.statistical_releases == []
@@ -341,7 +357,7 @@ def test_the_explicit_argument_is_the_same_switch(bush_stat_pack,
                                                   monkeypatch) -> None:
     """``statistical_release=`` overrides the env in BOTH directions, so the $0
     measurement and the tests never depend on ambient environment."""
-    monkeypatch.delenv(sr.FLAG_ENV, raising=False)
+    monkeypatch.setenv(sr.FLAG_ENV, "0")
     assert _consolidate(bush_stat_pack, statistical_release=True).quota_met is True
     monkeypatch.setenv(sr.FLAG_ENV, "1")
     assert _consolidate(bush_stat_pack, statistical_release=False).quota_met is False

@@ -1,7 +1,8 @@
 # D15 — Utterance-derivative evidence (`utterance-record`)
 
-**Status:** PROPOSED. Implemented, tested, and **NOT ENABLED**.
-**Flag:** `TRUTHBOT_D15_UTTERANCE_RECORD` — unset (OFF) in production.
+**Status:** **RATIFIED 2026-08-09** by the owner. Implemented, tested, and **ENABLED BY DEFAULT**.
+**Flag:** `TRUTHBOT_D15_UTTERANCE_RECORD` — unset means ON. Retained as an OVERRIDE: `=0` reproduces the pre-ratification gate exactly, which is what makes a regression bisectable without reverting code.
+**Flip set under the ratified rules:** `scripts/regate_from_rescore.py` → `metrics/remediation_v2/regate_flipset.{json,md}`.
 **Blast radius measured:** `scripts/measure_d15.py` → `metrics/remediation_v2/d15_blast_radius.json` ($0, no model calls).
 **Combined with D16(α):** `scripts/d15_d16_era_breakdown.py` → `metrics/remediation_v2/d15_d16_era_breakdown.{json,md}` — the M-6 evenhandedness check. D15 only removes credit and D16(α) only adds it, so neither number means anything on its own; the NET per speech, the decided-rate on both bases, and the era-concentration finding live there.
 **Code:** `src/truthbot/verdict/utterance_record.py`, wired in `verdict/consolidator.py` and `verdict/evidential_role.py`.
@@ -156,9 +157,9 @@ panel call is needed to not decide something.
    push in opposite directions on the same items, and the gate numbers in the
    B1a flip set should be read with that in mind.
 
-## 4. What ratification would enable
+## 4. What ratification enabled
 
-Setting `TRUTHBOT_D15_UTTERANCE_RECORD=1` — one switch, one place — would:
+Ratified 2026-08-09. The default is now ON, and it:
 
 - annotate 387 items across 241 claims with `role: utterance-record` in the
   pack payload, visible on the published cards as provenance;
@@ -168,10 +169,18 @@ Setting `TRUTHBOT_D15_UTTERANCE_RECORD=1` — one switch, one place — would:
   future re-score that would otherwise re-open it;
 - extend the superlative self-sourcing audit to transcripts.
 
-Nothing here is enabled by this change set. Gate defaults are untouched; the
-suite is green with the flag both off and on; and `consolidate()` accepts the
-same switch as an explicit argument so the measurement never has to set an
-environment variable.
+The suite is green with the flag both off and on, and `consolidate()` accepts
+the same switch as an explicit argument, so a measurement never has to set an
+environment variable other consolidations in the process would inherit.
+
+**Measured against the ratified re-gate.** With both D15 and D16(α) active over
+the B1a+B2 stance vintage the corpus flip set is 23 released / 64 still gated /
+65 newly gated / 377 unchanged, from a pre-ratification 33 / 54 / 27 / 415. The
+"50 claims moved from decided to gated" above was measured on the B1a-only
+vintage with D15 alone; the combined figure supersedes it. See
+`metrics/remediation_v2/regate_flipset.json` (`rules` records which
+configuration each leg ran) and `metrics/remediation_v2/t1_intersections.md`
+for the twelve released claims D15 re-gates for free.
 
 ### Open questions for the owner
 

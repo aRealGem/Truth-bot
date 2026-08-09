@@ -175,13 +175,13 @@ class ConsolidatedItem:
     # (cannot credit the quota) — same-speech fact-checks and reaction
     # coverage live in exactly this band.
     post_speech: bool = False
-    # D15 (flag-gated, default OFF): which ``verdict.utterance_record`` rule
+    # D15 (RATIFIED 2026-08-09, default ON): which ``verdict.utterance_record`` rule
     # found this item to be a record of the SPEECH ITSELF ('' = no rule, or the
     # flag is off). When set, ``role`` is forced to ``utterance-record`` and the
     # item credits nothing. Kept ALONGSIDE ``role`` so the journal records WHICH
     # rule fired, not merely that one did.
     utterance_rule: str = ""
-    # D16(α) (flag-gated, default OFF): which ``verdict.statistical_release``
+    # D16(α) (RATIFIED 2026-08-09, default ON): which ``verdict.statistical_release``
     # period rule found this POST-SPEECH item to be a statistical-agency record
     # of a PRE-UTTERANCE data period ('' = no rule, or the flag is off). It is
     # the inverse of the two fields above — the only thing in this dataclass
@@ -308,9 +308,11 @@ def _d15_on(explicit: Optional[bool]) -> bool:
     """Is the D15 utterance-record exclusion active for this consolidation?
 
     ``None`` (the default) defers to the ``TRUTHBOT_D15_UTTERANCE_RECORD``
-    environment flag, which is OFF unless set — so production behaviour is
-    unchanged until the switch is thrown. An explicit True/False is the same
-    switch as an argument, for tests and the $0 blast-radius measurement."""
+    environment flag, which since the 2026-08-09 ratification is ON unless the
+    variable explicitly says otherwise. An explicit True/False is the same
+    override as an argument, for tests and the $0 blast-radius measurement —
+    which is how a measurement can ask for the pre-ratification gate without
+    touching the environment every other consolidation in the process reads."""
     from truthbot.verdict import utterance_record
 
     return utterance_record.flag_enabled() if explicit is None else bool(explicit)
@@ -320,7 +322,8 @@ def _d16_on(explicit: Optional[bool]) -> bool:
     """Is the D16(α) statistical-release RELEASE active for this consolidation?
 
     The exact analogue of :func:`_d15_on`: ``None`` (the default) defers to
-    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, which is OFF unless set."""
+    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, ON since the same 2026-08-09
+    ratification unless the variable explicitly says otherwise."""
     from truthbot.verdict import statistical_release
 
     return statistical_release.flag_enabled() if explicit is None else bool(explicit)
@@ -379,22 +382,22 @@ def consolidate(
     non-self credit. With either absent, quota behavior is bit-for-bit
     today's.
 
-    D15 utterance-record exclusion (PROPOSED, FLAG-GATED, DEFAULT OFF — see
+    D15 utterance-record exclusion (RATIFIED 2026-08-09, DEFAULT ON — see
     ``docs/decisions/D15-utterance-derivative.md``): ``utterance_record=None``
-    (the default) defers to ``TRUTHBOT_D15_UTTERANCE_RECORD``, which is unset
-    in production, so NOTHING about the gate changes until the owner ratifies.
-    Switched on, items ``verdict.utterance_record`` identifies as records of
+    (the default) defers to ``TRUTHBOT_D15_UTTERANCE_RECORD``, which is ON
+    unless the variable explicitly says otherwise, so this is what the gate
+    now does. Items ``verdict.utterance_record`` identifies as records of
     THIS speech — the DCPD transcript, the day's Congressional Record, the
     Weekly Compilation issue, the archive copy of the address, same-speech
     recap coverage — take role ``utterance-record`` and credit the quota ZERO
     on BOTH quota branches. They stay in the pack and stay displayed:
     provenance, never proof. A claim may not witness itself.
 
-    D16(α) statistical-release RELEASE (PROPOSED, FLAG-GATED, DEFAULT OFF —
+    D16(α) statistical-release RELEASE (RATIFIED 2026-08-09, DEFAULT ON —
     see ``docs/decisions/D16-statistical-release.md``): the mirror image of
     D15, and the only rule here that GIVES credit back.
     ``statistical_release=None`` (the default) defers to
-    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, unset in production. Switched on, a
+    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, ON since the same ratification. A
     POST-SPEECH item — one the 1.3 era rule had marked context-only — may
     credit the quota again IFF its host is on the fail-closed
     ``verify.statistical_agency`` allowlist AND its snippet or URL names a

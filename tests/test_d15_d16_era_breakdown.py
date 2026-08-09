@@ -203,9 +203,13 @@ def test_the_spread_reading_names_a_disagreement_between_the_two_bases():
 
 def test_measuring_never_switches_either_flag_on_for_anyone_else(monkeypatch):
     """Both switches are passed as arguments. If the measurement set the env
-    instead, every later consolidation in the process would inherit them."""
-    monkeypatch.delenv(ur.FLAG_ENV, raising=False)
-    monkeypatch.delenv(sr.FLAG_ENV, raising=False)
+    instead, every later consolidation in the process would inherit them.
+
+    Since the 2026-08-09 ratification the ambient default is ON for both, so
+    the check pins them OFF, measures all four configurations, and confirms the
+    measurement did not switch either back on behind everyone's back."""
+    monkeypatch.setenv(ur.FLAG_ENV, "0")
+    monkeypatch.setenv(sr.FLAG_ENV, "0")
     sid = f"{SPEECH}:0001"
     art = _artifact({sid: [_ev(CREC, published="2006-01-31T00:00:00"),
                            _ev(BLS_A, snippet=BLS_SNIPPET)]},

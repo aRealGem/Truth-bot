@@ -1,7 +1,9 @@
 # D16(α) — Statistical-agency release in the post-speech band
 
-**Status:** PROPOSED. Implemented, tested, and **NOT ENABLED**.
-**Flag:** `TRUTHBOT_D16_STATISTICAL_RELEASE` — unset (OFF) in production.
+**Status:** **RATIFIED 2026-08-09** by the owner, the same day as D15. Implemented, tested, and **ENABLED BY DEFAULT**.
+**Flag:** `TRUTHBOT_D16_STATISTICAL_RELEASE` — unset means ON. Retained as an OVERRIDE: `=0` reproduces the pre-ratification gate exactly.
+**Flip set under the ratified rules:** `scripts/regate_from_rescore.py` → `metrics/remediation_v2/regate_flipset.{json,md}`.
+**Deferred alongside it:** `docs/decisions/D17-candidates.md` (FRASER path-level allowance; document-class detection).
 **Blast radius measured:** `scripts/measure_d16.py` → `metrics/remediation_v2/d16_blast_radius.json` ($0, no model calls).
 **Combined with D15:** `scripts/d15_d16_era_breakdown.py` → `metrics/remediation_v2/d15_d16_era_breakdown.{json,md}` (the M-6 evenhandedness check).
 **Code:** `src/truthbot/verdict/statistical_release.py` + `src/truthbot/verify/statistical_agency.py` + `statistical_agency_registry.yaml`, wired in `verdict/consolidator.py`.
@@ -204,9 +206,9 @@ and the structured period parser removes the items that qualified only on their
 own publication year. Fewer claims move, and the ones that do move can be named
 and defended one at a time.
 
-## 5. What ratification would enable
+## 5. What ratification enabled
 
-Setting `TRUTHBOT_D16_STATISTICAL_RELEASE=1` — one switch, one place — would:
+Ratified 2026-08-09. The default is now ON, and it:
 
 - restore quota eligibility to 24 statistical-agency items across 19 claims,
   relabelling them in the pack payload so a reader can see why;
@@ -215,10 +217,15 @@ Setting `TRUTHBOT_D16_STATISTICAL_RELEASE=1` — one switch, one place — would
 - leave the S-2 fair-game window, the tier ladder and every other gate rule
   exactly as they are.
 
-Nothing here is enabled by this change set. Gate defaults are untouched; the
-suite is green with the flag both off and on; and `consolidate()` accepts the
-same switch as an explicit argument so the measurement never has to set an
-environment variable.
+The suite is green with the flag both off and on, and `consolidate()` accepts
+the same switch as an explicit argument, so a measurement never has to set an
+environment variable that other consolidations in the process would inherit.
+
+**Confirmed by the ratified re-gate.** Both claims land where this section said
+they would: `clinton_1998:0026` and `clinton_1998:0038` are in the released set
+under the combined rules, and neither collides with anything D15 takes back
+(`metrics/remediation_v2/t1_intersections.md`). Corpus flip set with both rules
+active: 23 released / 64 still gated / 65 newly gated / 377 unchanged.
 
 ### Open questions for the owner
 
