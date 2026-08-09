@@ -15,29 +15,80 @@ It is also part of the default suite, so a regression cannot reach main by
 someone forgetting the flag. If the artifacts are absent the whole module
 skips — a checkout without ``metrics/pca_runs/`` is not a failing gate.
 
-**Several cases are EXPECTED TO FAIL right now.** The gate defect the DC-6
-review found — the relevance layer never ran, so the pack-quality gate saw no
-qualifying sources and force-gated claims with perfectly good packs — is not
-repaired yet. Those cases carry ``xfail(strict=True)`` naming the B1a re-score
-as the repair. Strict is the point: when B1a lands they flip to passing, and a
-strict xfail turns that flip into a loud XPASS instead of a silent one. They
-are NOT to be forced green by weakening the assertion.
+**Some cases are EXPECTED TO FAIL right now**, and each one names the pending
+event that will flip it. They carry ``xfail(strict=True)``. Strict is the
+point: when the event lands they flip to passing, and a strict xfail turns that
+flip into a loud XPASS instead of a silent one. They are NOT to be forced green
+by weakening the assertion.
 
-Current state (A7):
+Current state (T-2, 2026-08-09):
 
 ===============================================  ========  ==================
-case                                             status    repaired by
+case                                             status    resolved by
 ===============================================  ========  ==================
-Beckstrom pair 0462 + 0469                       xfail     B1a re-score
+Beckstrom 0469 (purposive clause)                passing   ratified conversion
+Beckstrom 0462 (models-split)                    xfail     adjudication wave
 inflation pair 0030 + 0031                       passing   —
 DEI claim 0056                                   passing   —
 Biden 5.7% GDP 0115                              passing   —
-Biden deficit-half 0244                          xfail     B1a re-score
+Biden deficit-half 0244                          xfail     adjudication wave
 Obama College Opportunity Summit 0046            passing   —
 Obama Joining Forces 0045                        passing   —
-murder-rate pair 0023 + 0024 (COHERENCE)         xfail     B1a re-score
+murder-rate pair 0023 + 0024 (COHERENCE)         xfail     adjudication wave
 eggs framing disclosure 0219                     passing   —
 ===============================================  ========  ==================
+
+THE BECKSTROM PAIR SPLIT IN TWO (T-2)
+--------------------------------------
+Until 2026-08-09 this module carried ONE case asserting that both 0462 and 0469
+should end up decided, xfailed as "gate defect, repaired by the B1a re-score".
+The owner then ratified the opposite reading for 0469, and a header that still
+called it a defect was contradicting a ratified decision. The pair is now two
+cases with two different fates:
+
+  * **0469 — "Sarah Beckstrom died in order to defend our capital."** The
+    ratified conversion: the FACTUAL CORE (she died, shot on Guard duty near
+    the White House) is confirmed by several independent non-Political sources,
+    but the PURPOSIVE clause — *in order to defend* — is a statement about
+    purpose, and the only item in the pack that speaks to purpose at all is a
+    House member's tribute page, which is Political-tier and under the Claim
+    Eval v3 ruling is attribution, never proof. Unverifiable is therefore the
+    CORRECT verdict, not a gate failure. The case now PASSES, and it verifies
+    all three limbs of that rationale against the artifact rather than merely
+    quoting it.
+  * **0462 — "she voluntarily extended her service…"** unaffected by the
+    ratification. It ships as a models-split with no verdict at all, which no
+    deterministic re-gate can settle. It stays xfail pending a panel call.
+
+XFAIL INVENTORY — all four runtime xfails in the suite
+-------------------------------------------------------
+Kept here so the whole set is legible from one place; the same table lives in
+``metrics/remediation_v2/t2_xfail_inventory.md``.
+
+1. ``test_beckstrom_0462_split_is_awaiting_a_panel_call`` — **trump_2026:0462**.
+   Asserts the claim reaches a substantive decided verdict (not a models-split,
+   not gate-forced). Tied to: **the adjudication wave.** A split with no verdict
+   is a disagreement between models, and only a panel call can resolve it.
+   CAVEAT, stated because it matters for planning: 0462 is NOT in the wave's
+   released set and NOT one of the six named extras, so on the current scope it
+   would stay xfail after the wave runs. Either the scope grows by one or this
+   marker outlives the wave.
+2. ``test_biden_deficit_half_stays_decided`` — **biden_2022:0244**. Asserts the
+   claim is decided (it shipped decided pre-remediation; the rebuild
+   force-gated it). Tied to: **the adjudication wave.** B1a+B2 already did its
+   part — the re-gate RELEASES 0244 from the quality gate — but release only
+   makes a claim ELIGIBLE for a decided verdict. The panel call is what
+   actually flips this marker.
+3. ``test_murder_rate_pair_is_coherent`` — **trump_2026:0023 + :0024**. Asserts
+   the deterministic adjacent-coherence check finds no conflict between the two
+   claims rating the same homicide statistic. Tied to: **the adjudication
+   wave**, which re-adjudicates the pair TOGETHER; both sids are among the six
+   named extras, so this one is in scope.
+4. ``tests/test_bluesky.py::…::test_post_report_returns_none_when_unconfigured``
+   — not a claim at all, and not tied to any decision. Asserts
+   ``post_report`` returns ``None`` when the publisher is unconfigured; today it
+   raises ``NotImplementedError``. Tied to: **the Bluesky v2 publisher landing
+   in Phase 7.** Listed here only so the inventory is complete.
 """
 from __future__ import annotations
 
@@ -62,13 +113,44 @@ RUNS = {
     "trump_2026": "4ee5a251",
 }
 
-B1A_GATE = ("gate defect not yet repaired: the relevance layer never ran, so "
-            "the pack-quality gate counted no qualifying sources and "
-            "force-gated a well-sourced claim — repaired by the B1a re-score")
+WAVE_SPLIT = ("models-split with no verdict at all — no deterministic re-gate "
+              "can settle a disagreement between models; flips when the "
+              "adjudication wave makes a panel call on this claim")
 
-B1A_COHERENCE = ("adjacent claims on one statistic were adjudicated "
-                 "independently and disagree, unannotated — repaired by the "
-                 "B1a re-score, which scores the pair together")
+WAVE_RELEASED = ("the B1a+B2 re-gate RELEASES this claim from the quality "
+                 "gate, but release only makes it ELIGIBLE for a decided "
+                 "verdict — flips when the adjudication wave re-adjudicates it")
+
+WAVE_COHERENCE = ("adjacent claims on one statistic were adjudicated "
+                  "independently and disagree, unannotated — flips when the "
+                  "adjudication wave re-adjudicates the pair TOGETHER (both "
+                  "sids are named extras, so this is in wave scope)")
+
+#: The ratified conversion for trump_2026:0469, recorded verbatim so the reason
+#: a claim is Unverifiable is reviewable next to the assertion that checks it.
+#: Each clause is verified against the artifact by the test below — the string
+#: is documentation, the assertions are the gate.
+BECKSTROM_0469_RATIONALE = (
+    "Unverifiable is CORRECT, not a gate failure: the purposive clause "
+    "(\"in order to defend our capital\") is uncheckable; the factual core "
+    "(Sarah Beckstrom died, shot on National Guard duty near the White House) "
+    "is confirmed by independent non-Political sources; and the sole item in "
+    "the pack that supports the PURPOSE is Political-tier, which under Claim "
+    "Eval v3 is attribution, never proof."
+)
+
+#: Language that speaks to PURPOSE rather than to the fact of the death.
+#: Deliberately narrow: "died of her wounds", "died following the shooting" and
+#: "while serving with the National Guard" are reports of the FACT and must not
+#: match, or the "sole purposive support" limb becomes untestable.
+_PURPOSIVE_RX = re.compile(
+    r"\bin order to\b|\bto (?:protect|defend)\b|\bdefend(?:ing|ed)\b"
+    r"|\bsacrific\w*|\bgave (?:her|his) life\b|\bdied for\b",
+    re.IGNORECASE)
+
+#: Tiers that can carry PROOF. "Political" is excluded on purpose — that
+#: exclusion is the whole content of the ratified 0469 reading.
+_NON_POLITICAL_TIERS = ("Established", "Wire", "Other", "Government")
 
 
 def _artifact_path(speech_id: str) -> Path | None:
@@ -123,19 +205,70 @@ def is_decided(sid: str) -> bool:
 
 # ── the cases ────────────────────────────────────────────────────────────────
 
-@pytest.mark.xfail(strict=True, reason=B1A_GATE)
-def test_beckstrom_pair_is_decided_on_its_abundant_pack():
-    """trump_2026:0462 + :0469 — a soldier's deployment and death, covered by
-    the Army, the National Guard, the DoJ, AP, NPR and NBC. Both packs hold
-    ten items each. 0469 nonetheless ships gate-forced Unverifiable and 0462
-    ships as a models-split with no verdict at all. If a claim this well
-    sourced cannot be decided, the gate is broken, not the claim."""
-    for sid in ("trump_2026:0462", "trump_2026:0469"):
-        assert len(_run("trump_2026")["evidence"].get(sid, [])) >= 5
-        assert is_decided(sid), (
-            f"{sid}: verdict={verdict(sid)!r} split={row(sid).get('split')} "
-            f"gate={gate_code(sid)!r}")
-    assert verdict("trump_2026:0469") == "TRUE"
+def test_beckstrom_0469_is_unverifiable_on_its_purposive_clause():
+    """trump_2026:0469 "Sarah Beckstrom died in order to defend our capital."
+    — the RATIFIED conversion (2026-08-09).
+
+    This case used to be half of an xfail asserting the claim should ship TRUE.
+    The owner ratified the opposite: Unverifiable is the right answer here, and
+    for a reason that has nothing to do with the pack being thin. The pack is
+    not thin — ten items, AP, NPR, NBC, Axios, DoJ, two Guard releases.
+
+    The claim has two parts and they are not equally checkable. The FACTUAL
+    CORE is confirmed several times over by sources that are not anybody's
+    press shop. The PURPOSIVE clause — *in order to defend* — asserts why she
+    was there, and the only item in the pack that speaks to purpose at all is a
+    House member's tribute page. Political-tier, and under the Claim Eval v3
+    ruling a partisan release is attribution, never proof.
+
+    All three limbs are checked against the artifact rather than asserted from
+    the prose, because a rationale nobody verifies is just a comment."""
+    sid = "trump_2026:0469"
+    pack = _run("trump_2026")["evidence"].get(sid, [])
+    assert len(pack) >= 5, f"{sid}: pack is thin ({len(pack)}) — different bug"
+
+    # Limb 1: the verdict really is Unverifiable, and really is undecided.
+    assert verdict(sid) == "UNVERIFIABLE", BECKSTROM_0469_RATIONALE
+    assert not is_decided(sid)
+
+    # Limb 2: the factual core is confirmed — more than one bearing supporter
+    # from a tier that can carry proof.
+    core = [e for e in pack
+            if e.get("supports_claim") is True
+            and str(e.get("source_tier")) in _NON_POLITICAL_TIERS]
+    assert len(core) >= 2, (
+        f"{sid}: factual core is NOT confirmed ({len(core)} non-Political "
+        f"supporters) — that would be a different finding than the ratified "
+        f"one")
+
+    # Limb 3: the SOLE purposive support is Political-tier.
+    purposive = [e for e in pack
+                 if e.get("supports_claim") is True
+                 and _PURPOSIVE_RX.search(e.get("snippet") or "")]
+    assert purposive, f"{sid}: no purposive support at all — rationale is stale"
+    tiers = sorted({str(e.get("source_tier")) for e in purposive})
+    assert tiers == ["Political"], (
+        f"{sid}: purposive support is no longer Political-only ({tiers}) — "
+        f"the ratified rationale needs revisiting, not this assertion "
+        f"weakening. {BECKSTROM_0469_RATIONALE}")
+
+
+@pytest.mark.xfail(strict=True, reason=WAVE_SPLIT)
+def test_beckstrom_0462_split_is_awaiting_a_panel_call():
+    """trump_2026:0462 "After a four-month deployment, she voluntarily extended
+    her service, and her rank was going to be lifted." — ten items in the pack,
+    six of them bearing, and it still ships as a models-split with NO verdict.
+
+    Unlike its sibling 0469 this is not a gate outcome and not a ratification
+    question: the models disagreed and nothing deterministic can break the tie.
+    It flips when a panel adjudicates it. See the module docstring for why that
+    may not happen in the current wave — 0462 is not in the released set and is
+    not one of the six named extras."""
+    sid = "trump_2026:0462"
+    assert len(_run("trump_2026")["evidence"].get(sid, [])) >= 5
+    assert is_decided(sid), (
+        f"{sid}: verdict={verdict(sid)!r} split={row(sid).get('split')} "
+        f"gate={gate_code(sid)!r}")
 
 
 def test_inflation_pair_discriminates_the_two_measures():
@@ -168,7 +301,7 @@ def test_biden_gdp_5_7_survives_as_decided_true():
     assert is_decided("biden_2022:0115")
 
 
-@pytest.mark.xfail(strict=True, reason=B1A_GATE)
+@pytest.mark.xfail(strict=True, reason=WAVE_RELEASED)
 def test_biden_deficit_half_stays_decided():
     """biden_2022:0244 — the deficit claim shipped DECIDED in the
     pre-remediation run and the model audit ruled it sound. The rebuild
@@ -195,7 +328,7 @@ def test_obama_joining_forces_veterans_hiring_is_repaired():
     assert verdict("obama_2014:0045") == "TRUE"
 
 
-@pytest.mark.xfail(strict=True, reason=B1A_COHERENCE)
+@pytest.mark.xfail(strict=True, reason=WAVE_COHERENCE)
 def test_murder_rate_pair_is_coherent():
     """trump_2026:0023 + :0024 COHERENCE — adjacent claims rating the SAME
     statistic (the 2025 homicide decline) must not carry contradictory
@@ -244,7 +377,8 @@ def test_eggs_price_claim_discloses_its_framing():
 
 #: Every named case, so the suite cannot silently shrink.
 NAMED_CASES = (
-    "test_beckstrom_pair_is_decided_on_its_abundant_pack",
+    "test_beckstrom_0469_is_unverifiable_on_its_purposive_clause",
+    "test_beckstrom_0462_split_is_awaiting_a_panel_call",
     "test_inflation_pair_discriminates_the_two_measures",
     "test_dei_claim_is_adverse_not_true",
     "test_biden_gdp_5_7_survives_as_decided_true",
