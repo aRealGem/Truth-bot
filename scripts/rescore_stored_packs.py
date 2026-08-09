@@ -91,15 +91,14 @@ BATCH_SIZE = 10
 #: stops a dead proxy from grinding through every remaining sid.
 SOFT_FAIL_HALT = 3
 
-#: Characters per token for the $0 estimator. The repo-wide convention (see
-#: scripts/backfill_claim_shapes.py); English prose + JSON scaffolding sits
-#: close to 4, and the estimate reports its own sensitivity to this.
-CHARS_PER_TOKEN = 4.0
-
-#: Reply shape is fixed and tiny — {"i": N, "relevance": 0.0, "supports": null}
-#: plus separators, then the {"scores": [...]} wrapper.
-REPLY_CHARS_PER_ITEM = 46
-REPLY_CHARS_OVERHEAD = 16
+#: Cost constants are NOT defined here any more. This script's own $0 estimate
+#: came in 2.42x low on B1a (est $0.4391, actual $1.0632) because it carried a
+#: private chars/4 constant and a private guess at the reply shape;
+#: b2_primary_series imported those guesses and shipped the same miss again at
+#: 2.35x. They now live ONCE, in ``truthbot.costs``, fitted to both runs'
+#: ledger actuals — so a recalibration moves every estimator at the same time.
+#: (Imported lazily inside estimate_speech, like the rest of the $0 path, so
+#: this module still imports clean with nothing configured.)
 
 
 # ── $0 helpers (no proxy import at module level — this file must import clean
@@ -231,19 +230,30 @@ def go_refusal(budget: Optional[float]) -> Optional[str]:
 
 # ── $0 estimator ─────────────────────────────────────────────────────────────
 
-def estimate_speech(artifact: dict, *, model: str = DEFAULT_MODEL) -> dict:
+def estimate_speech(artifact: dict, *, model: str = DEFAULT_MODEL,
+                    freetext: bool = True) -> dict:
     """Price one speech's re-score from its ACTUAL stored payloads.
 
     Builds the exact prompt ``score_evidence`` would send for every sid
     (``relevance.score_payload`` — the same function the funded path calls), so
-    the volume is measured, not guessed. Sends nothing."""
-    from hydramind.models import RATE_TABLE_USD_PER_MTOK
+    the INPUT volume is measured, not guessed. Sends nothing.
+
+    The OUTPUT volume is where this estimator was wrong twice, and it cannot be
+    measured the same way: the reply does not exist yet, and the model's own
+    formatting (which is billed) is not ours to predict. It is therefore priced
+    from ``truthbot.costs``, whose per-item and per-free-text-character loads
+    are back-solved from what B1a and B2 actually cost.
+
+    ``freetext=True`` (the default) prices the CURRENT scorer contract, which
+    asks for ``one_line_why`` and so pays for prose on every item. Pass False
+    only to price the pre-B2 three-key reply."""
+    from truthbot import costs
     from truthbot.verdict.publish_pipeline import evidence_from_artifact_dict
     from truthbot.verify.relevance import _SCORE_SYSTEM, score_payload
 
     texts = claim_texts(artifact)
     by_sid = evidence_from_artifact_dict(artifact.get("evidence") or {})
-    in_chars = out_chars = 0
+    in_chars = 0
     n_calls = n_items = 0
     skipped: list[str] = []
     for sid, evs in by_sid.items():
@@ -254,25 +264,23 @@ def estimate_speech(artifact: dict, *, model: str = DEFAULT_MODEL) -> dict:
             skipped.append(sid)
             continue
         in_chars += len(_SCORE_SYSTEM) + len(score_payload(text, evs))
-        out_chars += REPLY_CHARS_OVERHEAD + REPLY_CHARS_PER_ITEM * len(evs)
         n_calls += 1
         n_items += len(evs)
 
-    tok_in = in_chars / CHARS_PER_TOKEN
-    tok_out = out_chars / CHARS_PER_TOKEN
-    r_in, r_out = RATE_TABLE_USD_PER_MTOK.get(model, (0.0, 0.0))
-    cost = (tok_in * r_in + tok_out * r_out) / 1_000_000.0
-    return {"calls": n_calls, "items": n_items,
-            "prompt_chars": in_chars, "reply_chars_est": out_chars,
-            "tokens_in_est": round(tok_in), "tokens_out_est": round(tok_out),
-            "rate_in_usd_per_mtok": r_in, "rate_out_usd_per_mtok": r_out,
-            "cost_usd_est": round(cost, 4),
-            "skipped_no_claim_text": skipped}
+    est = costs.estimate_scoring_cost(
+        prompt_chars=in_chars, items=n_items, model=model,
+        freetext_chars=None if freetext else 0)
+    est.update(calls=n_calls, skipped_no_claim_text=skipped)
+    return est
 
 
-def estimate_report(speeches: list[str], *, model: str = DEFAULT_MODEL) -> tuple[str, dict]:
+def estimate_report(speeches: list[str], *, model: str = DEFAULT_MODEL,
+                    freetext: bool = True) -> tuple[str, dict]:
     """Per-speech + total projection. Returns (printable, machine-readable)."""
-    rows = {sp: estimate_speech(load_artifact(artifact_path(sp)), model=model)
+    from truthbot import costs
+
+    rows = {sp: estimate_speech(load_artifact(artifact_path(sp)), model=model,
+                                freetext=freetext)
             for sp in speeches}
     tot_calls = sum(r["calls"] for r in rows.values())
     tot_items = sum(r["items"] for r in rows.values())
@@ -285,9 +293,14 @@ def estimate_report(speeches: list[str], *, model: str = DEFAULT_MODEL) -> tuple
         f"B1a re-score cost estimate — model {model}, LiteLLM proxy (Haiku lane)",
         "$0: measured from the STORED payloads, nothing sent.",
         "  method: the exact score_evidence prompt per sid "
-        f"(relevance.score_payload) @ {CHARS_PER_TOKEN} chars/token, priced at "
+        f"(relevance.score_payload), converted at {costs.CHARS_PER_TOKEN} "
+        f"chars/token; the reply at {costs.REPLY_TOKENS_PER_ITEM} output "
+        f"tokens/item" + (f" plus {costs.FREETEXT_CHARS_PER_ITEM} chars/item of "
+                          "one_line_why free text" if freetext else
+                          " (pre-B2 reply, no free text)") + "; priced at "
         f"{any_row['rate_in_usd_per_mtok']}/{any_row['rate_out_usd_per_mtok']} "
-        "USD per Mtok in/out (hydramind.models.RATE_TABLE_USD_PER_MTOK)",
+        f"USD per Mtok in/out. Calibration {costs.CALIBRATION_ID} "
+        "(truthbot.costs)",
         "",
         f"  {'speech':<14}{'calls':>6}{'items':>7}{'tok_in':>10}{'tok_out':>9}{'est USD':>10}",
     ]
@@ -302,15 +315,12 @@ def estimate_report(speeches: list[str], *, model: str = DEFAULT_MODEL) -> tuple
                if r["skipped_no_claim_text"]}
     if skipped:
         lines.append(f"  (skipped, no claim text: {skipped})")
-    lines += [
-        "",
-        "  Uncertainty: token counts are a chars/4 approximation, not a "
-        "tokenizer run; the reply is a fixed tiny JSON shape so output volume "
-        "is the confident half. Haiku is ON-PROXY, so the funded run's real "
-        "cost is LEDGER-TRUE (proxy_key_spend), and this estimate only has to "
-        "be good enough to set the cap.",
-    ]
-    summary = {"model": model, "chars_per_token": CHARS_PER_TOKEN,
+    lines += ["", "  " + costs.uncertainty_note(model=model)]
+    summary = {"model": model,
+               "calibration_id": costs.CALIBRATION_ID,
+               "chars_per_token": costs.CHARS_PER_TOKEN,
+               "reply_tokens_per_item": costs.REPLY_TOKENS_PER_ITEM,
+               "freetext_priced": bool(freetext),
                "per_speech": rows, "total_calls": tot_calls,
                "total_items": tot_items, "total_cost_usd_est": round(tot_cost, 4)}
     return "\n".join(lines), summary

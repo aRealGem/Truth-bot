@@ -43,6 +43,8 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO))
 
+from truthbot import costs as _costs  # noqa: E402  (needs the path inserts above)
+
 # ── speech registry ──────────────────────────────────────────────────────────
 # Speaker strings + dates verified against site-pca/data/reports.json; run ids
 # are the published artifact per speech (methodology_manifest.json).
@@ -59,24 +61,26 @@ SPEECHES: dict[str, dict] = {
                     "run_id": "92f39851-8870-4609-97f6-458798d5dbb8"},
 }
 
-# List prices, USD per Mtok, PER MODEL (litellm price map 2026-07-23) — the
-# off-proxy estimator for R2 (OpenAI browsing) / R3 (grok) usage, identical to
-# the rescue script. Unknown model → priced pessimistically.
-MODEL_RATES = {
-    "gpt-5-mini": (0.25, 2.00),
-    "gpt-5.5": (5.00, 30.00),
-    "grok-4.3": (1.25, 2.50),
-}
-_DEFAULT_RATE = (5.00, 30.00)
+# List prices, USD per Mtok, PER MODEL — the off-proxy estimator for R2 (OpenAI
+# browsing) / R3 (grok) usage, identical to the rescue script. Unknown model →
+# priced pessimistically. The rates are NOT defined here any more: they are read
+# from the repo's one rate table via truthbot.costs, so correcting a price (as
+# claude-haiku's had to be on 2026-08-09, when it turned out to be 1.25x low
+# against the proxy config) moves every consumer at once instead of one.
+MODEL_RATES = {m: _costs.rates(m)
+               for m in ("gpt-5-mini", "gpt-5.5", "grok-4.3")}
+_DEFAULT_RATE = _costs.rates("gpt-5.5")
 CHUNK_SIZE = 5
 
-# Per-claim cost projection for --estimate, derived from the 2026-08-01
-# clinton_1998/gwbush_2006 full-stack actuals at the gpt-5-mini economy
-# config: proxy chunk-journal actuals (R1 retrieval + panel) ran
-# $0.366/48 claims (gwbush) and $0.936/92 (clinton) ≈ $0.008-0.010/claim,
-# with the R2 off-proxy browsing estimate + grok rescue rounds carrying the
-# rest → retrieval R1 proxy + R2 off-proxy + panel ≈ $0.065-0.08/claim.
-PER_CLAIM_EST = (0.065, 0.08)
+# Per-claim cost projection for --estimate. LEDGER-DERIVED, and so NOT affected
+# by the 2026-08-09 chars/token recalibration: it is money actually spent
+# divided by claims actually adjudicated (the 2026-08-01 full-stack runs at the
+# gpt-5-mini economy config — gwbush $0.366/48 claims and clinton $0.936/92 on
+# the proxy journal, with R2 off-proxy browsing and the grok rescue rounds
+# carrying the rest), never a token estimate. Measured $0.0642-$0.0748/claim;
+# the planning band is that rounded OUTWARD for cap headroom. One source:
+# truthbot.costs.
+PER_CLAIM_EST = _costs.PER_CLAIM_USD_PLANNING
 
 # Mirrors truthbot.verdict.consolidator.GATE_INSUFFICIENT (asserted equal in
 # tests); kept literal here so the diff helpers stay import-light.

@@ -108,13 +108,19 @@ def returned_ok(requested_alias: str, returned_model: str) -> bool:
 # roster.dev seats (P=mistral, C=dsv4-flash, A=claude-haiku). The two DeepInfra
 # rates are the published list prices (deepinfra.com, verified 2026-07-09) — the
 # live dev-lot found the proxy prices claude-haiku + mistral but NOT dsv4-flash,
-# so dsv4-flash actually rides this table; its rate must be right. claude-haiku
-# (Anthropic) is proxy-priced in practice, so its entry is a rough fallback only.
+# so dsv4-flash actually rides this table; its rate must be right.
 # NOTE: DeepInfra also bills *cached* input cheaper (dsv4-flash $0.018/Mtok); this
 # flat (in,out) table ignores caching — fine for closed-book (≈0 cache), revisit
 # if a shared-context prod roster leans on prompt caching.
+#
+# claude-haiku CORRECTED 2026-08-09: it was (0.80, 4.00), a "rough fallback"
+# guess, and every $0 estimator read it as if it were the price. The LiteLLM
+# proxy that actually bills this lane is configured input_cost_per_token
+# 0.000001 / output_cost_per_token 0.000005 = (1.00, 5.00), so the old entry was
+# a flat 1.25x low on both sides — one of the three errors behind the B1a/B2
+# cost misses. See truthbot.costs, which reads this table rather than copying it.
 RATE_TABLE_USD_PER_MTOK: dict[str, tuple[float, float]] = {
-    "claude-haiku": (0.80, 4.00),    # Anthropic; proxy-priced in practice (fallback est.)
+    "claude-haiku": (1.00, 5.00),    # Anthropic claude-haiku-4-5; matches the proxy config
     "mistral":      (0.075, 0.20),   # DeepInfra Mistral-Small-3.2-24B (list, 2026-07-09)
     "dsv4-flash":   (0.09, 0.18),    # DeepInfra DeepSeek-V4-Flash (list, 2026-07-09)
     # roster.prod seats (P67.9): rates pinned in the proxy config, so these are
@@ -122,6 +128,10 @@ RATE_TABLE_USD_PER_MTOK: dict[str, tuple[float, float]] = {
     # auth, cost_source="subscription", never table-priced.
     "grok-4.3":     (1.25, 2.50),    # xAI grok-4.3 (litellm price map, 2026-07-23)
     "gpt-5.5":      (5.00, 30.00),   # OpenAI gpt-5.5 (litellm price map, 2026-07-23)
+    # OFF-PROXY seat: the phase-3 economy config's R2 browsing retriever bills
+    # OpenAI directly, so nothing here is ledger-checkable. Moved in from
+    # scripts/phase3_rebuild.MODEL_RATES so the repo prices a model in one place.
+    "gpt-5-mini":   (0.25, 2.00),    # OpenAI gpt-5-mini (litellm price map, 2026-07-23)
 }
 
 

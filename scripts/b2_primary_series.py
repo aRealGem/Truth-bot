@@ -242,14 +242,22 @@ def build_report(speeches: list[str]) -> dict:
 
 def estimate(report: dict, model: str = "claude-haiku") -> dict:
     """Price the subset from the ACTUAL stored payloads — the same
-    ``relevance.score_payload`` bytes the funded run will send."""
-    from hydramind.models import RATE_TABLE_USD_PER_MTOK
-    from rescore_stored_packs import (CHARS_PER_TOKEN, REPLY_CHARS_OVERHEAD,
-                                      REPLY_CHARS_PER_ITEM, claim_texts)
+    ``relevance.score_payload`` bytes the funded run will send.
+
+    The reply is priced by ``truthbot.costs``, the shared calibration. The
+    "assume one_line_why roughly triples the per-item reply" multiplier that
+    used to live here is gone, and the record should say why, because it was
+    blamed for the wrong thing afterwards: the 3x was not too small for the
+    free text, it was already being spent covering the BASE reply, which this
+    file (and B1a before it) under-priced by ~2.8x. Priced properly the two
+    parts are separate — a fixed per-item load, plus prose charged by the
+    character — so neither can hide inside the other again."""
+    from truthbot import costs
+    from rescore_stored_packs import claim_texts
     from truthbot.verdict.publish_pipeline import evidence_from_artifact_dict
     from truthbot.verify.relevance import _SCORE_SYSTEM, score_payload
 
-    in_chars = out_chars = calls = items = 0
+    in_chars = calls = items = 0
     for row in report["per_speech"]:
         art = load_artifact(artifact_path(row["speech"]))
         texts = claim_texts(art)
@@ -259,18 +267,12 @@ def estimate(report: dict, model: str = "claude-haiku") -> dict:
             if not evs or not texts.get(sid):
                 continue
             in_chars += len(_SCORE_SYSTEM) + len(score_payload(texts[sid], evs))
-            out_chars += REPLY_CHARS_OVERHEAD + REPLY_CHARS_PER_ITEM * len(evs)
             calls += 1
             items += len(evs)
-    tin, tout = in_chars / CHARS_PER_TOKEN, out_chars / CHARS_PER_TOKEN
-    r_in, r_out = RATE_TABLE_USD_PER_MTOK.get(model, (0.0, 0.0))
-    # The B2 reply carries one_line_why per item, which the B1a reply did not.
-    # Assume it roughly triples the per-item reply — deliberately pessimistic,
-    # because the number's job is to set a cap, not to be pretty.
-    cost = (tin * r_in + tout * 3 * r_out) / 1_000_000.0
-    return {"model": model, "calls": calls, "items": items,
-            "tokens_in_est": round(tin), "tokens_out_est": round(tout * 3),
-            "cost_usd_est": round(cost, 4)}
+    est = costs.estimate_scoring_cost(prompt_chars=in_chars, items=items,
+                                      model=model)
+    est["calls"] = calls
+    return est
 
 
 def render_text(report: dict, est: dict) -> str:
