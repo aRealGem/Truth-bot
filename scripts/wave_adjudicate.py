@@ -204,7 +204,9 @@ def rules_default_state() -> dict:
 def build_wave_packs(speech: str, artifact: dict, sidecar: dict,
                      sids: list[str], *,
                      utterance_record: bool = True,
-                     statistical_release: bool = True) -> tuple[dict, list[dict]]:
+                     statistical_release: bool = True,
+                     shapes_override: Optional[dict] = None
+                     ) -> tuple[dict, list[dict]]:
     """Re-gate the STORED packs for ``sids`` and return (packs, telemetry).
 
     Pure and free: no retrieval, no model call, no mutation of ``artifact``.
@@ -218,7 +220,16 @@ def build_wave_packs(speech: str, artifact: dict, sidecar: dict,
     The gate is RE-RUN rather than assumed: a pack that fails it comes back
     carrying ``gate_code``, and ``adjudicate`` will force Unverifiable without
     spending a panel call. That is the correct outcome, and it must not be
-    bypassed just because the flip set expected a release."""
+    bypassed just because the flip set expected a release.
+
+    ``shapes_override`` (sid → claim_shape) replaces the shape the registry
+    derived, for the one case where a shape is CORRECTED rather than read: the
+    Layer-A backfill assigned a shape, a ruling found it wrong, and the gate
+    has to run on the corrected one. It is a parameter and not an edit to the
+    shape sidecar on purpose — the sidecar is the record of what the classifier
+    produced, and overwriting it would erase the evidence that a correction
+    happened. Whatever it changes shows up in the telemetry's ``claim_shape``,
+    so a re-shaped claim can never be gated on a shape nobody can see."""
     from truthbot.verdict import speech_context
     from truthbot.verdict.consolidator import scoring_telemetry
     from truthbot.verdict.evidence_pack import EvidencePack, window_for
@@ -239,6 +250,7 @@ def build_wave_packs(speech: str, artifact: dict, sidecar: dict,
 
     claims = {c.get("sid"): c for c in (artifact.get("claims") or [])}
     shapes, _ = claim_shape_map(artifact, speech)
+    shapes.update({k: v for k, v in (shapes_override or {}).items() if v})
     scored = sidecar.get("sids") or {}
     stored = artifact.get("evidence") or {}
 
@@ -308,20 +320,37 @@ def exhibit_context(exhibit: dict) -> str:
     series and not a verdict. Appended to the claim context, which
     ``adjudicator.build_items`` puts into the payload after the temporal
     preamble."""
-    inputs = "; ".join(f"{day} = {exhibit['inputs'][day]}"
-                       for day in sorted(exhibit["inputs"]))
+    def _rows(block: dict) -> str:
+        return "; ".join(f"{day} = {block['inputs'][day]}"
+                         for day in sorted(block["inputs"]))
+
+    comp = exhibit.get("comparison") or {}
+    comp_text = ""
+    if comp.get("formula") and comp.get("result") is not None:
+        # The directional row (R-1). Same series, same vintage, same formula,
+        # adjacent window — so "down to" is checked against arithmetic on a
+        # published series instead of riding on the panel's own recall.
+        comp_text = (
+            f"  ALSO, {comp.get('label') or 'the preceding window'}:\n"
+            f"    inputs: {_rows(comp)}\n"
+            f"    formula: {comp['formula']} = "
+            f"{float(comp['result']) * 100:.3f}%\n"
+            + (f"    change: {float(comp['delta_pp']):+.2f} percentage points\n"
+               if comp.get("delta_pp") is not None else ""))
     return (
         "\n\nCOMPUTED EXHIBIT (arithmetic on a published data series, pinned "
         "to a data vintage — it is evidence about the NUMBER, not a verdict "
         "on the claim):\n"
         f"  series: {exhibit['source']} {exhibit['series']}\n"
         f"  data vintage: {exhibit['vintage_date']}\n"
-        f"  inputs: {inputs}\n"
+        f"  inputs: {_rows(exhibit)}\n"
         f"  formula: {exhibit['formula']} = {float(exhibit['result']) * 100:.3f}%\n"
+        + comp_text
         + (f"  note: {exhibit['note']}\n" if exhibit.get("note") else "")
-        + "  Use it to identify WHICH measure the claim is stating. It "
-          "settles arithmetic only; it does not settle whether the claim's "
-          "characterisation is fair.\n"
+        + "  Use it to identify WHICH measure the claim is stating, and — "
+          "where a second row is given — the DIRECTION of the change between "
+          "the two windows. It settles arithmetic only; it does not settle "
+          "whether the claim's characterisation is fair.\n"
     )
 
 

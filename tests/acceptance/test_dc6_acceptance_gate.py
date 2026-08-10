@@ -148,14 +148,16 @@ RUNS_DIR = REPO / "metrics" / "pca_runs"
 #: As of 2026-08-10 they are the WAVE RULINGS artifacts: the wave's runs with
 #: the 65 deferred newly-gated claims applied, trump_2026:0023's rationale
 #: re-emitted from stored panel output, and the 0023/:0024 coherence conflict
-#: annotated. Same rule as before — the gate reads the newest staged artifact,
-#: or it stops measuring what would actually be published.
+#: annotated. trump_2026 carries one further generation on top — the R-1 shape
+#: correction and single-claim re-run of :0031. Same rule as before: the gate
+#: reads the newest staged artifact, or it stops measuring what would actually
+#: be published.
 RUNS = {
     "gwbush_2006": "04738dd5",
     "clinton_1998": "393f7d06",
     "obama_2014": "c8008f2a",
     "biden_2022": "c733c283",
-    "trump_2026": "83117c1a",
+    "trump_2026": "46dfcce8",
 }
 
 #: 0462's marker after the wave. The old reason said "flips when the wave makes
@@ -359,6 +361,59 @@ def test_inflation_pair_discriminates_the_two_measures():
     assert is_decided("trump_2026:0031")
     r31 = (row("trump_2026:0031").get("reasoning") or "").lower()
     assert "annualized" in r31 and "three-month" in r31
+
+
+def test_0031_is_c_count_and_carries_the_computed_exhibit():
+    """trump_2026:0031 — the R-1 SHAPE CORRECTION (2026-08-10), asserted as a
+    shape correction and not as an outcome.
+
+    The Layer-A backfill shaped this claim c-eval. Read on its own text — the
+    basis the classifier is instructed to use — it has no superlative, no
+    causal attribution and no comparison; those all belong to :0030 next door.
+    It states a bare quantity against a published series, which is c-count.
+
+    The correction MOVES THINGS, and the point of asserting it here is that the
+    movement is visible rather than silent:
+
+      * the quota branch — c-count is ministerial, so a SELF source becomes a
+        PRIMARY_RECORD instead of ATTRIBUTION_ONLY at weight 0;
+      * admissibility — c-eval is the one shape a computed exhibit may never
+        attach to, so under the old shape the ratified exhibit was refused.
+
+    The verdict did NOT move: TRUE before, TRUE after. That is the check that
+    this was a shape correction rather than outcome-shopping — the shape was
+    wrong on the text, and fixing it changed what the page can SHOW, not what
+    it concludes. :0030 stays c-eval and gets no exhibit."""
+    from truthbot.publish import computed_exhibit as ce
+
+    claim31 = claim("trump_2026:0031")
+    layer_a = claim31.get("layer_a") or {}
+    assert layer_a.get("claim_shape") == "c-count"
+    assert layer_a.get("claim_shape_corrected_from") == "c-eval"
+
+    exhibit = row("trump_2026:0031").get("computed_exhibit") or {}
+    assert ce.is_admissible(exhibit, claim_shape="c-count")
+    assert not ce.is_admissible(exhibit, claim_shape="c-eval"), (
+        "the exhibit must remain INADMISSIBLE on c-eval — that refusal is the "
+        "reason the shape had to be correct before it could be attached")
+    assert exhibit["series"] == "CPILFESL"
+    assert exhibit["vintage_date"] == "2026-02-24"
+    assert round(float(exhibit["result"]) * 100, 3) == 1.701
+
+    # The DIRECTIONAL row: "down to" is a claim about direction, and one
+    # window's rate cannot establish direction. Same series, same vintage,
+    # same formula, prior window — so "down" rests on arithmetic over a
+    # published series rather than on the panel's own recall.
+    comp = exhibit.get("comparison") or {}
+    assert comp, "the directional element has no second computed row"
+    assert round(float(comp["result"]) * 100, 3) == 3.412
+    assert float(comp["delta_pp"]) < 0
+    assert set(comp["inputs"]) == {"2025-06-01", "2025-09-01"}
+
+    # :0030 is correctly shaped and deliberately untouched.
+    assert (claim("trump_2026:0030").get("layer_a") or {}).get(
+        "claim_shape") in ("c-eval", None)
+    assert not (row("trump_2026:0030").get("computed_exhibit") or {})
 
 
 def test_dei_claim_is_adverse_not_true():
@@ -643,6 +698,8 @@ NAMED_CASES = (
     # R-3, added 2026-08-10 — publish-blocking by ruling.
     "test_the_only_blank_rationale_is_the_known_blocker",
     "test_no_published_verdict_ships_without_a_rationale",
+    # R-1, added 2026-08-10 — the shape correction, asserted as one.
+    "test_0031_is_c_count_and_carries_the_computed_exhibit",
 )
 
 

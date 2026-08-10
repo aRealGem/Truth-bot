@@ -12,5 +12,16 @@
   "claim_ref": "trump_2026:0031",
   "source_url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=CPILFESL&vintage_date=2026-02-24",
   "span_months": 3,
-  "note": "Vintage-pinned: the same formula on the 2026-02-09 pre-revision vintage returns 1.605%, ~10bp lower. The vintage is part of the result."
+  "note": "Vintage-pinned: the same formula on the 2026-02-09 pre-revision vintage returns 1.605%, ~10bp lower. The vintage is part of the result.",
+  "comparison": {
+    "label": "prior three months (Jun 2025 \u2192 Sep 2025)",
+    "inputs": {
+      "2025-06-01": 327.658,
+      "2025-09-01": 330.418
+    },
+    "formula": "(Sep/Jun)^4 - 1",
+    "result": 0.03412,
+    "delta_pp": -1.711,
+    "why": "The claim's \"down to\" is a DIRECTIONAL element, and direction is not settled by a single window's rate. This is the SAME series, the SAME pinned vintage and the SAME annualization formula applied to the immediately preceding three months, so the comparison is arithmetic on a published series rather than model recall: 3.412% (Jul-Sep) to 1.701% (Oct-Dec)."
+  }
 }

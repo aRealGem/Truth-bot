@@ -174,7 +174,7 @@ this one claim's data predates it.
 
 ## R-1 — trump_2026:0031 is c-count, and that is a SHAPE CORRECTION
 
-**Ruled:** 2026-08-10. See the entry appended by the re-run for the outcome.
+**Ruled:** 2026-08-10. **Applied and re-adjudicated the same day.**
 
 `trump_2026:0031` — *"And in the last three months of 2025, it was down to 1.7
 percent."* — carried `claim_shape=c-eval`, assigned by the Layer-A backfill.
@@ -193,4 +193,49 @@ also makes the claim admissible for a computed exhibit, which c-eval is not.
 Both effects are stated in the corrections-ledger entry explicitly.
 
 **trump_2026:0030 stays c-eval** — superlative plus causal attribution,
-correctly shaped, no exhibit.
+correctly shaped, no exhibit, publishes as already adjudicated.
+
+### What the re-run produced
+
+One claim, one panel call, on the stored pack with the ratified exhibit
+attached. **Verdict TRUE — unchanged.** That is the check that this was a shape
+correction and not outcome-shopping: the shape was wrong on the text, and
+fixing it changed what the page can SHOW, not what it concludes.
+
+| | before | after |
+|---|---|---|
+| shape | c-eval | **c-count** |
+| quota credit | 4 independent, 0 primary (SELF = attribution-only, weight 0) | 4 independent, **1 primary-record** |
+| exhibit | REFUSED (inadmissible on c-eval) | **attached** |
+| verdict | TRUE | TRUE |
+| rationale | "…confirm the three-month annualized core inflation rate fell to ~1.7%…" | "The Sep→Dec 2025 three-month annualized core CPI **computes to 1.701%**, matching the claimed 1.7 percent." |
+
+**The directional element.** "Down TO 1.7 percent" asserts a level *and* a
+direction, and one window's rate cannot establish a direction. Rather than let
+"down" ride on the panel's own arithmetic, the exhibit carries a **second
+computed row** — same series, same pinned vintage, same annualization formula,
+over the immediately preceding three months:
+
+    (Sep/Jun)^4 - 1 = 3.412%   (Jul→Sep 2025)
+    (Dec/Sep)^4 - 1 = 1.701%   (Oct→Dec 2025)      -1.71 pp
+
+Same evidence class as the first row, so it belongs in the exhibit rather than
+in the rationale. Renderer support: `computed_exhibit._comparison_html`, absent
+and rendering "" on every exhibit without a directional element.
+
+**Cost:** $0.0036 against a $0.25 cap and a ~$0.02 estimate. The runner's
+in-run reading said $0.0000 — the proxy key's spend counter is written
+asynchronously and had not caught up. Measured from the ledger
+(17.964600 → 17.968165) and recorded in
+`metrics/remediation_v2/r1_reshape_rerun_report.json`; the runner now settles
+before re-reading.
+
+**Recorded in:** `metrics/remediation_v2/shape_correction_trump_2026_0031.json`
+(the correction and its justification) and `r1_corrections_entries.json` (the
+ledger entry, which is emitted **even though the verdict did not move** —
+because the shape did, and the shape moves the gate).
+
+**Checked by:** `test_0031_is_c_count_and_carries_the_computed_exhibit`.
+
+**Deferred:** exhibits as non-dispositive context on c-eval claims — logged as
+**D17-e**, R-2 amendment territory, not this publish.

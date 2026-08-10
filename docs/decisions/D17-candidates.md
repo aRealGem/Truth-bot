@@ -227,6 +227,58 @@ in the ledger and the review, not in the code.
 
 ---
 
+## D17-e — Computed exhibits as NON-dispositive context on c-eval claims
+
+**Deferred from:** R-1 (the trump_2026:0031 shape correction), 2026-08-10.
+**Code:** `src/truthbot/publish/computed_exhibit.py` (`INADMISSIBLE_SHAPES`).
+**This is R-2 amendment territory, and explicitly NOT part of this publish.**
+
+### What was observed
+
+R-1 turned on the sharpest case for the current rule and the sharpest case
+against it, in the same pair of sentences.
+
+`trump_2026:0031` — *"in the last three months of 2025, it was down to 1.7
+percent"* — is now `c-count`, and the exhibit attaches: CPILFESL, ALFRED
+vintage 2026-02-24, `(Dec/Sep)^4 - 1 = 1.701%`. The claim states a number, the
+exhibit computes that number, and the arithmetic settles it.
+
+Its neighbour `trump_2026:0030` — *"my administration has driven core inflation
+down to the lowest level in more than five years"* — is `c-eval` and correctly
+so: superlative plus causal attribution. Under R-2 it may carry **no exhibit at
+all**, and that is the right call about what can DECIDE it. Arithmetic cannot
+establish "lowest in five years" as a characterisation, and it certainly cannot
+establish "my administration drove it".
+
+But the same two levels are what the claim is *about*. A reader looking at
+0030's FALSE has no way to see the series the verdict rests on, while a reader
+looking at 0031's TRUE gets the full derivation — and the two sentences are
+about the same statistic.
+
+### The shape of the change (not taken)
+
+Admit an exhibit on a c-eval claim as a **non-dispositive context item**:
+rendered, clearly marked as context rather than proof, and structurally barred
+from contributing to the verdict or to any gate quota.
+
+That is a genuine amendment to R-2, whose whole content is "never on a C-EVAL
+judgment", and it should be argued as one rather than slipped in as a rendering
+tweak. The current all-or-nothing rule has the great virtue of being
+unambiguous; a "context only" tier is exactly the kind of distinction that
+erodes.
+
+### Open questions for whoever picks this up
+
+- Is "non-dispositive" enforceable, or only stated? It needs to be structural —
+  a separate field the gate cannot read — or it is a comment.
+- How many c-eval claims in the five runs sit adjacent to a c-count claim with
+  an exhibit? (The 0030/0031 pattern may be rare enough not to be worth a rule.
+  $0 to count.)
+- Does a reader distinguish "context" from "proof" on a page that renders both
+  in the same visual block? If not, the honest answer may be to keep the ban.
+
+---
+
 ## Not in this file
 
 Deliberately excluded, so the absences are legible:

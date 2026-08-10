@@ -190,6 +190,29 @@ RULINGS_MECHANISM_CLAUSE = {
         "evidence to fail the bearing quota"),
 }
 
+R1_DIFF_GLOB = "r1_*_verdict_diff.json"
+R1_DATE = "2026-08-10"
+R1_SOURCE = f"R1-shape-correction-{R1_DATE} ({GENERATION})"
+R1_CORRECTION_PATH = DIFF_DIR / "shape_correction_trump_2026_0031.json"
+
+#: The R-1 clause. It states the SHAPE CORRECTION and — the part the ruling
+#: insists on — that it moves the gate's quota branch, explicitly rather than
+#: silently. "shape correction, not outcome-shopping" is checkable from this
+#: sentence plus the verdict pair beside it.
+R1_SHAPE_CLAUSE = (
+    "SHAPE CORRECTION: the claim's Layer-A shape was corrected from c-eval to "
+    "c-count on the claim text alone (the sentence carries no superlative, no "
+    "causal attribution and no comparison — those belong to the preceding "
+    "sentence, which is unchanged). The correction MOVES THE GATE'S QUOTA "
+    "BRANCH: c-count is a ministerial shape, so a source published by the "
+    "speaker's own organisation counts as a primary record rather than "
+    "attribution-only at zero weight. It also makes the claim admissible for a "
+    "computed exhibit, which the c-eval shape forbids. The re-adjudication was "
+    "run with that exhibit attached — CPILFESL core CPI, ALFRED vintage "
+    "2026-02-24, (Dec/Sep)^4-1 = 1.701%, with a second row over the preceding "
+    "three months, (Sep/Jun)^4-1 = 3.412%, supplying the direction the phrase "
+    "\"down to\" asserts")
+
 #: The two NON-gating changes this pass makes, both provenance-level.
 RULINGS_RATIONALE_CLAUSE = (
     "the published rationale was re-emitted from stored panel output: the "
@@ -1217,6 +1240,81 @@ def build_rulings_corrections(diff_dir: Path = DIFF_DIR,
     return entries_doc, changes
 
 
+def build_r1_corrections(diff_dir: Path = DIFF_DIR,
+                         runs_dir: Path = RUNS_DIR) -> tuple[dict, list[dict]]:
+    """The R-1 shape-correction entry — (entries_doc, changes).
+
+    R-1 is the awkward case for a corrections ledger and the reason it gets its
+    own builder: **the verdict did not change.** trump_2026:0031 was TRUE and
+    is TRUE. `changed_claims` walks the verdict diff, so it sees nothing, and
+    a ledger driven only by verdict movement would record this as a non-event.
+
+    It is not a non-event. The claim's SHAPE changed, that change moved the
+    gate's quota branch, and the published page gained a computed exhibit it
+    was previously forbidden to show. The ruling requires the ledger to say so
+    explicitly — "shape correction, not outcome-shopping" — so the entry is
+    emitted from the shape-correction record whether or not the badge moved."""
+    diffs = load_diffs(diff_dir, R1_DIFF_GLOB)
+    changes = changed_claims(diffs, runs_dir)
+    entries_doc = correction_entries(
+        changes, dispositions={}, date=R1_DATE,
+        extra_clauses={sid: R1_SHAPE_CLAUSE
+                       for d in diffs for sid in (d.get("ruling_sids") or [])},
+        source=R1_SOURCE, generation=GENERATION)
+
+    correction_path = diff_dir / R1_CORRECTION_PATH.name
+    correction = _read_json(correction_path) if correction_path.exists() else {}
+    shape_changes = []
+    for d in diffs:
+        new_run = load_run(d.get("new_run_id", ""), runs_dir) or {}
+        rows = {r.get("sid"): r for r in (new_run.get("rows") or [])}
+        texts = {c.get("sid"): (c.get("text") or "")
+                 for c in (new_run.get("claims") or [])}
+        moved = {e["sid"] for e in d.get("per_sid") or []
+                 if e.get("category") != "unchanged"}
+        for sid in d.get("ruling_sids") or []:
+            row = rows.get(sid) or {}
+            shape_changes.append({
+                "sid": sid,
+                "speech_id": d["speech_id"],
+                "claim": texts.get(sid, "")[:140],
+                "old_shape": (d.get("shape") or {}).get("from", ""),
+                "new_shape": (d.get("shape") or {}).get("to", ""),
+                "verdict_before": next(
+                    (e["old"] for e in d.get("per_sid") or []
+                     if e["sid"] == sid), ""),
+                "verdict_after": row.get("verdict"),
+                "verdict_moved": sid in moved,
+                "exhibit_attached": bool(row.get("computed_exhibit")),
+                "reason": R1_SHAPE_CLAUSE,
+                "justification": correction.get("justification", ""),
+                "moves": correction.get("moves", []),
+                "excluded_because": (
+                    "" if sid in moved else
+                    "published verdict unchanged — a SHAPE correction, which "
+                    "data/corrections.json's schema (old verdict → new "
+                    "verdict) cannot express. It is recorded here because it "
+                    "changes the gate's quota branch and adds a computed "
+                    "exhibit to the published page."),
+            })
+    entries_doc["usage"] = (
+        "PUBLICATION RECORD for the R-1 shape correction. FACTS ONLY (S-8): "
+        "sid, claim text, old and new shape, old and new verdict, and the "
+        "mechanical reason — including, explicitly, that the correction moves "
+        "the gate's quota branch. The lineage paragraph is the owner's to "
+        "write and is deliberately absent.")
+    entries_doc["shape_changes"] = shape_changes
+    entries_doc["r1"] = {
+        "date": R1_DATE,
+        "speeches": [d["speech_id"] for d in diffs],
+        "claims_reshaped": len(shape_changes),
+        "verdicts_moved": sum(1 for s in shape_changes if s["verdict_moved"]),
+        "exhibits_attached": sum(1 for s in shape_changes
+                                 if s["exhibit_attached"]),
+    }
+    return entries_doc, changes
+
+
 # ── ledger clean-slate reset ──────────────────────────────────────────────
 def proposed_ledger(current: dict, entries: list[dict],
                     archive_name: str, date: str = REBUILD_DATE,
@@ -1979,11 +2077,33 @@ def main() -> None:
                           "rulings_corrections_entries.json — facts per "
                           "changed verdict, with the withholding MECHANISM "
                           "attributed per claim."))
+    ap.add_argument("--r1", action="store_true",
+                    help=("read the R-1 shape-correction diffs "
+                          f"({R1_DIFF_GLOB}) and write ONLY "
+                          "r1_corrections_entries.json. Emits the entry even "
+                          "when the verdict did not move: the SHAPE moved, and "
+                          "that moves the gate's quota branch."))
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.r1:
+        entries_doc, _changes = build_r1_corrections()
+        (out_dir / "r1_corrections_entries.json").write_text(
+            json.dumps(entries_doc, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8")
+        print(f"R-1 corrections → {out_dir}/r1_corrections_entries.json")
+        r = entries_doc["r1"]
+        print(f"  {r['claims_reshaped']} claim(s) reshaped, "
+              f"{r['verdicts_moved']} verdict(s) moved, "
+              f"{r['exhibits_attached']} exhibit(s) attached")
+        for s in entries_doc["shape_changes"]:
+            print(f"    {s['sid']:<22} shape {s['old_shape']} → "
+                  f"{s['new_shape']}; verdict {s['verdict_before']} → "
+                  f"{s['verdict_after']}"
+                  + ("" if s["verdict_moved"] else "  (unchanged)"))
+        return
     if args.rulings:
         entries_doc, _changes = build_rulings_corrections()
         (out_dir / "rulings_corrections_entries.json").write_text(

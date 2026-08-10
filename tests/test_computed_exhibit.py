@@ -239,3 +239,60 @@ def test_alfred_still_serves_the_pinned_vintage_levels(exhibit):
     assert fetched["inputs"] == exhibit["inputs"]
     assert fetched["result"] == exhibit["result"]
     assert fetched["vintage_date"] == exhibit["vintage_date"]
+
+
+# ── R-1 (2026-08-10): the DIRECTIONAL second computed row ────────────────────
+# "down TO 1.7 percent" asserts a level AND a direction. One window's rate
+# cannot establish a direction, and letting the panel supply it means the
+# direction rides on model arithmetic. A second row keeps it on the series.
+
+def test_committed_exhibit_carries_the_directional_comparison(exhibit):
+    comp = exhibit["comparison"]
+    assert comp["formula"] == "(Sep/Jun)^4 - 1"
+    assert comp["inputs"] == {"2025-06-01": 327.658, "2025-09-01": 330.418}
+    assert comp["result"] == 0.03412
+    # It must be the SAME class of evidence: same series, same pinned vintage,
+    # same annualization. A comparison drawn from somewhere else would be a
+    # new claim smuggled in as an exhibit row.
+    assert set(comp["inputs"]) & set(exhibit["inputs"]) == {"2025-09-01"}
+
+
+def test_the_comparison_arithmetic_recomputes_from_its_own_inputs(exhibit):
+    comp = exhibit["comparison"]
+    recomputed = bce.annualized(comp["inputs"]["2025-06-01"],
+                                comp["inputs"]["2025-09-01"])
+    assert round(recomputed, 5) == comp["result"]
+    assert f"{recomputed * 100:.3f}%" == "3.412%"
+
+
+def test_the_delta_is_negative_and_matches_the_two_rows(exhibit):
+    """The direction the claim asserts, checked rather than asserted: 3.412%
+    down to 1.701% is a fall, and the stored delta says so."""
+    comp = exhibit["comparison"]
+    delta = (float(exhibit["result"]) - float(comp["result"])) * 100
+    assert round(delta, 3) == comp["delta_pp"]
+    assert comp["delta_pp"] < 0
+
+
+def test_the_comparison_renders_with_both_levels(exhibit):
+    html = ce.exhibit_html(exhibit, claim_shape="c-count")
+    assert "ce-comparison" in html
+    assert "(Sep/Jun)^4 - 1" in html and "3.412%" in html
+    assert "327.658" in html and "330.418" in html
+    assert "-1.71 pp" in html
+
+
+def test_an_exhibit_without_a_comparison_renders_exactly_as_before(exhibit):
+    """Every other exhibit has no directional element, so this must be a
+    no-op for them — an added block that changed unrelated pages would be a
+    render regression, not a feature."""
+    plain = {k: v for k, v in exhibit.items() if k != "comparison"}
+    html = ce.exhibit_html(plain, claim_shape="c-count")
+    assert "ce-comparison" not in html
+    assert "1.701%" in html          # the primary row is untouched
+
+
+def test_the_comparison_cannot_smuggle_an_exhibit_onto_a_c_eval_claim(exhibit):
+    """Admissibility is decided by the SHAPE, and a comparison row does not
+    change that. c-eval renders nothing, comparison or not."""
+    assert ce.exhibit_html(exhibit, claim_shape="c-eval") == ""

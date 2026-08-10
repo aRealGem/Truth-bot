@@ -91,6 +91,46 @@ def _fmt_result(result: Any) -> str:
         return str(result)
 
 
+def _comparison_html(exhibit: dict, esc) -> str:
+    """The optional SECOND computed row: the same series, vintage and formula
+    over the adjacent window (R-1, 2026-08-10).
+
+    A claim like "it was down to 1.7 percent" has a DIRECTIONAL element, and a
+    single window's rate cannot settle direction — only compare it to something.
+    Left to the panel, "down" rides on model arithmetic. A second row keeps it
+    on the same published series: it is the same class of evidence as the first,
+    not a new kind of claim, so it earns its place in the exhibit rather than in
+    the rationale.
+
+    Absent on every exhibit that has no directional element, and renders "" —
+    so this changes no existing page."""
+    comp = exhibit.get("comparison") or {}
+    if not comp.get("formula") or comp.get("result") is None:
+        return ""
+    inputs = comp.get("inputs") or {}
+    rows = "".join(
+        f'<li><span class="ce-date">{esc(str(day))}</span>'
+        f'<span class="ce-level">{esc(str(inputs[day]))}</span></li>'
+        for day in sorted(inputs))
+    delta = comp.get("delta_pp")
+    delta_html = ""
+    if delta is not None:
+        try:
+            delta_html = (f'<span class="ce-delta">'
+                          f'{float(delta):+.2f} pp</span>')
+        except (TypeError, ValueError):  # pragma: no cover — defensive
+            delta_html = ""
+    return (
+        '<div class="ce-comparison">'
+        f'  <p class="ce-comparison-label">{esc(str(comp.get("label") or ""))}'
+        f'</p>'
+        f'  <p class="ce-formula">{esc(str(comp["formula"]))} '
+        f'= <strong>{esc(_fmt_result(comp.get("result")))}</strong>'
+        f'{delta_html}</p>'
+        f'  <ul class="ce-inputs">{rows}</ul>'
+        '</div>')
+
+
 def exhibit_html(exhibit: Optional[dict], *, claim_shape: str = "",
                  esc=None) -> str:
     """The exhibit block: a badge plus the derivation.
@@ -130,6 +170,7 @@ def exhibit_html(exhibit: Optional[dict], *, claim_shape: str = "",
         f'  <p class="ce-formula">{esc(str(exhibit["formula"]))} '
         f'= <strong>{esc(_fmt_result(exhibit.get("result")))}</strong></p>'
         f'  <ul class="ce-inputs">{rows}</ul>'
+        f'{_comparison_html(exhibit, esc)}'
         f'  <p class="ce-vintage">Data vintage: {vintage_html}</p>'
         f'{note_html}'
         '</section>'
