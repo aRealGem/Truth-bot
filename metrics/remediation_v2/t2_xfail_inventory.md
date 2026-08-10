@@ -89,3 +89,58 @@ Two honest options, and this document does not pick one:
    no verdict, which is arguably the most defensible thing a wave can spend on);
 2. leave it, and accept that this marker outlives the wave — in which case its
    reason string should eventually name a later event instead.
+
+---
+
+# Update — after the 2026-08-10 wave rulings
+
+_2026-08-10 · $0 for this section (test-suite bookkeeping)._
+
+Suite state: **1986 passed, 2 xfailed, 19 deselected.**
+
+## The two
+
+| # | Test | sid(s) | What it asserts | Tied to |
+| --- | --- | --- | --- | --- |
+| 1 | `tests/acceptance/test_dc6_acceptance_gate.py::test_no_published_verdict_ships_without_a_rationale` | `biden_2022:0432` | No published verdict, via any resolver path, ships with an empty rationale — publish-blocking by the R-3 ruling | **A panel call that captures seat rationales, or an owner ruling.** There is nothing to adopt: 0432 was tie-routed to MISLEADING in the phase-3 rebuild and again in the wave, and no run in its lineage ever stored a rationale for it (the pre-remediation run has it as a split with no verdict at all). Synthesizing one is precisely what R-3 forbids |
+| 2 | `tests/test_bluesky.py::TestBlueskyPublisher::test_post_report_returns_none_when_unconfigured` | — (not a claim) | `post_report` returns `None` when the publisher is unconfigured; today it raises `NotImplementedError` | **An event, not a decision:** the Bluesky v2 publisher landing in Phase 7 |
+
+Both are `strict=True`, for the same reason as before.
+
+## What retired, and how
+
+Three of the four above are gone, and it is worth separating the ways — a
+marker that "went away" can mean four different things and only one of them is
+the intended lifecycle.
+
+* **#2 `test_biden_deficit_half_stays_decided` — RESOLVED (2026-08-09).** The
+  wave's panel decided the claim TRUE, the strict marker announced it as an
+  XPASS, and the case became a plain assertion of the outcome. This is the
+  lifecycle working exactly as designed.
+* **#3 `test_murder_rate_pair_is_coherent` — RENAMED, then REPAIRED.** The wave
+  made it pass for the *wrong reason*: the checker went quiet because
+  `trump_2026:0023` lost its rationale, not because the claims stopped
+  contradicting each other. Renaming it rather than converting it is what kept
+  a detection blind spot from being laundered into a green gate — and the
+  renamed case is what R-3 was written from. The rationale is now re-emitted
+  from stored panel output, the pair ships annotated under the D14 disposition,
+  and the case keeps its name because what it proves is unchanged.
+* **#1 `test_beckstrom_0462_split_…` — RESOLVED BY POLICY (2026-08-10).** Not by
+  a panel call. The wave made the call the marker was waiting for and the seats
+  split again, so the escalation question was ruled instead:
+  persistent-split-after-2 publishes as Models-Split. The assertion INVERTS —
+  the claim is now expected to ship as a split, and the case guards that as the
+  stable outcome.
+
+The caveat at the end of the T-2 section was resolved by taking option (1):
+`trump_2026:0462` was added to the wave. It did not flip, which is what made
+the policy necessary.
+
+## The one that arrived
+
+`biden_2022:0432` was not on anyone's list. It surfaced only because R-3 turned
+the no-blank-rationale check into a corpus-wide lint — the same defect as
+`trump_2026:0023`, in a second claim, sitting unnoticed through the phase-3
+rebuild and the wave. That is the argument for the lint being publish-blocking
+rather than advisory: the first instance was found by reading an artifact
+closely, and the second was found by a machine in one pass.
