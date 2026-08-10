@@ -827,6 +827,60 @@ def adjacent_coherence_conflicts(claims: list[dict], rows: list[dict],
     return out
 
 
+#: Row fields that can carry the published reason for a verdict. ``reasoning``
+#: is the panel/adopted text; the gate writes its own sentence into the same
+#: field, so one name covers every resolver.
+_RATIONALE_FIELD = "reasoning"
+
+
+def blank_rationale_violations(rows: list[dict]) -> list[dict]:
+    """PUBLISH-BLOCKING lint (R-3 ruling, 2026-08-10): every published verdict,
+    by EVERY resolver path, must carry non-empty rationale text.
+
+    A verdict with no rationale is a fact-check that cannot say why, and — as
+    trump_2026:0023 proved — it silently disables the coherence checker, which
+    links claims partly through their rationale text. So this is not a style
+    rule: an empty rationale removes a published claim from a detector that is
+    supposed to be watching it.
+
+    Scope is the PUBLISHED population: rows carrying a verdict readers see.
+    * decided rows (TRUE / FALSE / MISLEADING) — every path: the panel plurality,
+      the stage-2 discriminator's severity override, the tie-routing path, and
+      the evidence gate (which writes its own sentence);
+    * panel UNVERIFIABLE — still a published ruling with a reason;
+    A models-split / no-label row publishes NO verdict and is out of scope; it
+    is covered instead by the split renderer, which must show the seats' own
+    rationales.
+
+    Returns one record per offending row, sid-ordered. Empty list = clean."""
+    out: list[dict] = []
+    for row in sorted(rows or [], key=lambda r: str(r.get("sid") or "")):
+        if row.get("status") != "resolved":
+            continue
+        verdict = str(row.get("verdict") or "").strip().upper()
+        if not verdict:
+            continue
+        if str(row.get(_RATIONALE_FIELD) or "").strip():
+            continue
+        crm = row.get("crm114") or {}
+        if str(crm.get("stage1") or "") == "DISAGREEMENT":
+            resolver = "crm114-tie-routing"
+        elif crm:
+            resolver = "crm114-discrimination"
+        elif row.get("evidence_gate") or row.get("provenance_code"):
+            resolver = "evidence-gate"
+        else:
+            resolver = "pca-panel"
+        out.append({
+            "sid": str(row.get("sid") or ""),
+            "verdict": verdict,
+            "resolver": resolver,
+            "detail": (f"{row.get('sid')} publishes {verdict} with no rationale "
+                       f"text (resolver: {resolver})"),
+        })
+    return out
+
+
 def agreed_decided_rows(rows: list[dict]) -> list[dict]:
     """The one-off harness's selection, shared: non-escalated decided rows
     (the F8 agreed-verdict population)."""

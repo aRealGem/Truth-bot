@@ -58,3 +58,52 @@ def test_reduce_captures_by_role_on_unanimous_and_tie():
     assert tie.kind is StrategyResultKind.DISAGREEMENT_FLAGGED
     assert tie.agreement["by_role"] == {
         "proposer": ["MISLEADING"], "critic": ["FALSE"], "arbiter": ["UNVERIFIABLE"]}
+
+
+# ── R-3 (2026-08-10): reduce also captures each seat's RATIONALE TEXT ─────────
+# by_role says what each seat concluded; seat_rationales says why, verbatim.
+# Without it a TIE carries no rationale anywhere on disk, which is how the
+# stage-2 discriminator came to publish verdicts with an empty reasoning field.
+
+def test_reduce_captures_seat_rationales_on_a_tie():
+    outs = {
+        "proposer:c2": {"verdict": "MISLEADING", "confidence": 0.8, "citations": ["E1"],
+                        "reasoning": "real decline, overstated framing"},
+        "critic:c2":   {"verdict": "FALSE", "confidence": 0.8, "citations": [],
+                        "reasoning": "the series contradicts the figure"},
+        "arbiter:c2":  {"verdict": "UNVERIFIABLE", "confidence": 0.5, "citations": [],
+                        "reasoning": "nothing dated before the utterance settles it"},
+    }
+    result, _ = _hm(outs).run("verdict", _items("c2"), "pca", roster="dev")
+    tie = result.items[0]
+    assert tie.kind is StrategyResultKind.DISAGREEMENT_FLAGGED
+    seats = {s["role"]: s for s in tie.agreement["seat_rationales"]}
+    assert set(seats) == {"proposer", "critic", "arbiter"}
+    assert seats["proposer"]["reasoning"] == "real decline, overstated framing"
+    assert seats["proposer"]["verdict"] == "MISLEADING"
+    assert seats["proposer"]["citations"] == ["E1"]
+    assert seats["arbiter"]["reasoning"] == "nothing dated before the utterance settles it"
+
+
+def test_reduce_captures_seat_rationales_on_a_resolved_row():
+    outs = {
+        "proposer:c1": {"verdict": "TRUE", "confidence": 0.9, "citations": [],
+                        "reasoning": "BEA confirms the figure"},
+        "critic:c1":   {"verdict": "TRUE", "confidence": 0.9, "citations": [],
+                        "reasoning": "no contrary series in the pack"},
+    }
+    result, _ = _hm(outs).run("verdict", _items("c1"), "pca", roster="dev")
+    seats = result.items[0].agreement["seat_rationales"]
+    assert [s["reasoning"] for s in seats] == ["BEA confirms the figure",
+                                               "no contrary series in the pack"]
+
+
+def test_no_labels_item_carries_an_empty_seat_rationale_list():
+    """A shape guarantee: every agreement dict has the key, so downstream code
+    never has to distinguish 'no seats' from 'field not captured'."""
+    outs = {
+        "proposer:c3": {"confidence": 0.9, "citations": []},
+        "critic:c3":   {"confidence": 0.9, "citations": []},
+    }
+    result, _ = _hm(outs).run("verdict", _items("c3"), "pca", roster="dev")
+    assert result.items[0].agreement["seat_rationales"] == []

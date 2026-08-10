@@ -755,3 +755,54 @@ def test_olympics_fixture_legitimately_fires_invented_referent():
     findings = _lint_fixture(_load_fixture("olympics_torch"))
     assert [f.lint for f in findings] == ["invented_referent"]
     assert findings[0].action == "flag"
+
+
+# ── R-3 publish-blocking lint: no published verdict may be blank-rationaled ───
+
+def _pub(sid, verdict="MISLEADING", reasoning="because the series says so", **kw):
+    row = {"sid": sid, "status": "resolved", "verdict": verdict,
+           "reasoning": reasoning}
+    row.update(kw)
+    return row
+
+
+def test_blank_rationale_lint_is_clean_when_every_verdict_says_why():
+    rows = [_pub("s:1"), _pub("s:2", verdict="TRUE"),
+            _pub("s:3", verdict="UNVERIFIABLE")]
+    assert va.blank_rationale_violations(rows) == []
+
+
+def test_blank_rationale_lint_names_the_resolver_that_published_blank():
+    """The four resolver paths the ruling covers, each identified by name so a
+    violation report says WHICH path published a fact-check that cannot say
+    why — the trump_2026:0023 defect was invisible partly because nothing
+    attributed it."""
+    rows = [
+        _pub("s:1", reasoning="", crm114={"stage1": "DISAGREEMENT", "final": "MISLEADING"}),
+        _pub("s:2", reasoning="", crm114={"stage1": "FALSE", "final": "MISLEADING"}),
+        _pub("s:3", reasoning="", verdict="UNVERIFIABLE",
+             provenance_code="insufficient-qualifying-evidence"),
+        _pub("s:4", reasoning="   ", verdict="TRUE"),
+    ]
+    found = {v["sid"]: v["resolver"] for v in va.blank_rationale_violations(rows)}
+    assert found == {"s:1": "crm114-tie-routing", "s:2": "crm114-discrimination",
+                     "s:3": "evidence-gate", "s:4": "pca-panel"}
+
+
+def test_blank_rationale_lint_ignores_rows_that_publish_no_verdict():
+    """A models-split publishes no verdict, so it is out of this lint's scope —
+    it is covered by the split renderer having to show the seats' own reasons."""
+    rows = [{"sid": "s:1", "status": "disagreement", "verdict": None, "reasoning": ""},
+            {"sid": "s:2", "status": "no_label", "verdict": None, "reasoning": ""}]
+    assert va.blank_rationale_violations(rows) == []
+
+
+def test_blank_rationale_lint_catches_the_real_0023_shape():
+    """The exact row shape that shipped: tie-routed to MISLEADING, blank."""
+    row = {"sid": "trump_2026:0023", "status": "resolved", "verdict": "MISLEADING",
+           "reasoning": "", "split": True, "escalated": True,
+           "votes": {"MISLEADING": 1, "FALSE": 1, "UNVERIFIABLE": 1},
+           "crm114": {"stage1": "DISAGREEMENT", "final": "MISLEADING"}}
+    (v,) = va.blank_rationale_violations([row])
+    assert v["sid"] == "trump_2026:0023" and v["resolver"] == "crm114-tie-routing"
+    assert "no rationale" in v["detail"]

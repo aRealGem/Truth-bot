@@ -226,6 +226,48 @@ def _normalize_votes(votes: Optional[dict]) -> dict[str, int]:
     return out
 
 
+def _seat_rationales(row: dict) -> list[dict]:
+    """The row's per-seat rationales, label-normalized for display (R-3).
+
+    Pass-through of stored text: the reasoning strings are copied VERBATIM and
+    only the verdict label is mapped into the published vocabulary. Seats that
+    returned no text are kept — a seat that voted and said nothing is itself
+    a fact about the panel, and dropping it would overstate agreement."""
+    out: list[dict] = []
+    for seat in row.get("seat_rationales") or []:
+        if not isinstance(seat, dict):
+            continue
+        lbl = _LABEL_MAP.get(str(seat.get("verdict") or "").strip().upper())
+        out.append({
+            "role": str(seat.get("role") or ""),
+            "verdict": lbl.value if lbl is not None else str(seat.get("verdict") or ""),
+            "confidence": seat.get("confidence"),
+            "reasoning": str(seat.get("reasoning") or ""),
+            "citations": [str(c) for c in (seat.get("citations") or [])],
+        })
+    return out
+
+
+def split_rationales(row: dict) -> list[dict]:
+    """The seat rationales a PUBLISHED SPLIT must show — one per distinct
+    verdict the seats reached, with text (0462 ruling, 2026-08-10).
+
+    A persistent models-split is a legitimate published outcome, not a failure,
+    and publishing it as the bare line "Panel split — no consensus verdict"
+    tells a reader that the panel disagreed without telling them what about.
+    This selects the seats whose reasons a split page has to carry: the first
+    seat with text for each distinct label, in seat order."""
+    seen: set[str] = set()
+    out: list[dict] = []
+    for seat in _seat_rationales(row):
+        label = seat["verdict"]
+        if label in seen or not seat["reasoning"].strip():
+            continue
+        seen.add(label)
+        out.append(seat)
+    return out
+
+
 def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance:
     """Capture the pipeline provenance the reconciled-judge collapse would discard.
 
@@ -266,6 +308,11 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         # the row by publish_pipeline's audit stage just before bridging.
         audit_flags=[str(f) for f in (row.get("audit_flags") or [])],
         audit_queue=bool(row.get("audit_queue") or False),
+        # R-3 (2026-08-10): the seats' own rationale text, and — when the
+        # published rationale was ADOPTED rather than authored — the attribution
+        # that says so. Both are pass-through; the bridge adds no words.
+        panel_seat_rationales=_seat_rationales(row),
+        rationale_provenance=dict(row.get("rationale_provenance") or {}),
     )
     # Computed exhibit (A8 / R-2): the adjudication row is where it is stamped
     # (scripts/wave_adjudicate.py attaches the ratified exhibit to the claims
@@ -362,7 +409,18 @@ def _consensus_and_panel(
     # Kept in the report as an explicit UNVERIFIABLE, never silently dropped.
     if status == "disagreement":
         verdict_text = "Models split"
-        expl = reasoning or "Panel split — no consensus verdict."
+        # 0462 ruling (2026-08-10): a persistent split PUBLISHES, with both
+        # sides' reasons shown. The seats' own text is joined verbatim and
+        # attributed by role; nothing is written on the panel's behalf. Runs
+        # that predate seat-rationale capture have no text and fall back to the
+        # original line, so an old bundle renders exactly as it did.
+        sides = split_rationales(row)
+        if sides:
+            expl = "Panel split — no consensus verdict. " + " ".join(
+                f"{s['role'].capitalize()} ({s['verdict']}): {s['reasoning']}"
+                for s in sides)
+        else:
+            expl = reasoning or "Panel split — no consensus verdict."
     else:  # no_label / needs_verdict / anything unexpected
         verdict_text = "No verdict"
         expl = reasoning or "No verdict produced for this claim."

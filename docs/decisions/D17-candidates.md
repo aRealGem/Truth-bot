@@ -185,6 +185,48 @@ single lever left on the pipeline's accuracy for that class.
 
 ---
 
+## D17-d — Re-attributing a rationale after a severity flip
+
+**Deferred from:** R-3 (no-blank-rationales), 2026-08-10.
+**Code:** `src/truthbot/verdict/discriminator.py` (`apply_discrimination`, `adopt_seat_rationale`).
+
+### What was observed
+
+R-3 fixed the case where a resolver publishes a verdict with **no** rationale.
+It did not touch the adjacent case, which is about a rationale that is present
+and arguing for a **different label** than the one that shipped.
+
+`apply_discrimination` overrides a resolved FALSE↔MISLEADING label with the
+stage-2 discriminator's call. The row keeps the rationale the stage-1 winning
+seat wrote — for the label the discriminator just overturned. So a claim can
+publish MISLEADING under a sentence explaining why it is FALSE.
+
+This is narrower than it sounds: the discriminator only moves *within* the
+adverse pair, so both labels share a factual core and the stored sentence is
+rarely nonsense. But it is still a rationale that does not match its verdict.
+
+### Why the fix was not taken
+
+Adopting a different seat's rationale on every severity flip would **change the
+published text of already-adjudicated claims** across the corpus, which is a
+corrections-ledger event, not a lint fix. R-3 was ruled as a structural repair
+for blank rationales; silently rewriting non-blank ones would have exceeded it.
+
+The R-3 machinery is nonetheless already in place: `adopt_seat_rationale` takes
+the final label and finds the seat that voted it. Widening the trigger from
+"blank" to "blank or label-mismatched" is a one-condition change — the work is
+in the ledger and the review, not in the code.
+
+### Open questions for whoever picks this up
+
+- How many rows in the five runs carry a `crm114` override where a *different*
+  seat voted the final label with text? ($0 to count — do that first.)
+- Is a mismatched-but-adjacent rationale a **correction** (verdict text changed)
+  or a **provenance change** (same badge, better attribution)? The ledger's
+  vocabulary treats those differently.
+
+---
+
 ## Not in this file
 
 Deliberately excluded, so the absences are legible:

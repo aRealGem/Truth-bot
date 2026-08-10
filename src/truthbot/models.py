@@ -477,6 +477,29 @@ class VerdictProvenance(BaseModel):
             "for HUMAN review. Never triggers a model call by itself."
         ),
     )
+    panel_seat_rationales: list[dict] = Field(
+        default_factory=list,
+        description=(
+            "Each seat's OWN rationale text (R-3, 2026-08-10): "
+            "[{role, verdict, confidence, reasoning, citations}]. Recorded so "
+            "(a) the stage-2 discriminator can ADOPT a stored rationale "
+            "verbatim instead of publishing a blank one, and (b) a published "
+            "models-split can show BOTH reasons instead of the bare line "
+            "'Panel split — no consensus verdict.' Empty on pre-R-3 runs, "
+            "which renders exactly today's page."
+        ),
+    )
+    rationale_provenance: dict = Field(
+        default_factory=dict,
+        description=(
+            "Non-empty when the published rationale was ADOPTED from a seat "
+            "rather than authored by the resolver that set the verdict (R-3): "
+            "{mode, adopted_from, adopted_verdict, resolver, attribution, "
+            "synthesized}. ``synthesized`` is always False — the discriminator "
+            "never writes prose. Rendered as attribution on the provenance "
+            "strip so adopted text is not mistaken for the resolver's words."
+        ),
+    )
     computed_exhibit: dict = Field(
         default_factory=dict,
         description=(

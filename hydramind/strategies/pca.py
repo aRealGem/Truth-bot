@@ -130,16 +130,34 @@ class PcaStrategy:
             # panel, hence lists). Kills the 2-1 tally ambiguity — the arbiter's own
             # label is readable from the artifact instead of provable-by-theorem.
             by_role: dict[str, list[str]] = {}
-            for label, _c, cr in votes:
+            # Per-seat RATIONALE TEXT, recorded beside the per-seat labels (R-3,
+            # 2026-08-10). ``by_role`` says WHAT each seat concluded; this says
+            # WHY, verbatim as that seat wrote it. Without it a TIE carries no
+            # rationale anywhere on disk — which is how the stage-2 CRM-114
+            # discriminator came to publish verdicts with an empty ``reasoning``,
+            # and why a models-split could only ever render as "Panel split".
+            # Nothing is synthesized here: it is the seat's own text or "".
+            seat_rationales: list[dict] = []
+            for label, conf, cr in votes:
                 by_role.setdefault(cr.call.role, []).append(label)
+                seat_rationales.append({
+                    "role": str(cr.call.role),
+                    "verdict": label,
+                    "confidence": conf,
+                    "reasoning": str(cr.output.get("reasoning") or "").strip(),
+                    "citations": list(cr.output.get("citations") or []),
+                })
             if not counts:
                 out_items.append(ItemResult(item_id, StrategyResultKind.DISAGREEMENT_FLAGGED,
-                                            {"reason": "no_labels"}, {"votes": {}, "by_role": {}}))
+                                            {"reason": "no_labels"},
+                                            {"votes": {}, "by_role": {},
+                                             "seat_rationales": []}))
                 continue
             top = counts.most_common()
             winner, wcount = top[0]
             tie = len(top) > 1 and top[1][1] == wcount
             agreement = {"votes": dict(counts), "n": len(votes), "by_role": by_role,
+                         "seat_rationales": seat_rationales,
                          "split": item_id in st.scratch.get("split_items", []),
                          "escalated": item_id in st.scratch.get("gated", [])}
             if tie:

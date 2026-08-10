@@ -111,3 +111,75 @@ def test_discriminate_empty_is_noop():
     hm = _FakeHM({})
     assert discriminate(hm, []) == {}
     assert hm.called_with is None
+
+
+# ── R-3: the tie-routing path must never publish a blank rationale ────────────
+# Ruling (2026-08-10): the discriminator ADOPTS the chosen seat's stored
+# rationale VERBATIM, attributed. It must never synthesize new text.
+
+def _tied_row(sid="t", **kw):
+    row = {"sid": sid, "status": "disagreement", "verdict": None, "citations": [],
+           "reasoning": "",
+           "votes": {"MISLEADING": 1, "FALSE": 1, "UNVERIFIABLE": 1},
+           "seat_rationales": [
+               {"role": "proposer", "verdict": "MISLEADING", "confidence": 0.6,
+                "reasoning": "the underlying decline is real but the record-setting "
+                             "framing outruns the data", "citations": ["E2"]},
+               {"role": "critic", "verdict": "FALSE", "confidence": 0.7,
+                "reasoning": "the cited series contradicts the stated figure",
+                "citations": ["E4"]},
+               {"role": "arbiter", "verdict": "UNVERIFIABLE", "confidence": 0.4,
+                "reasoning": "no source dated before the utterance settles it",
+                "citations": []},
+           ]}
+    row.update(kw)
+    return row
+
+
+def test_tie_routing_adopts_the_chosen_seats_rationale_verbatim():
+    row = _tied_row()
+    apply_tie_routing([row], {"t": "MISLEADING"})
+    assert row["verdict"] == "MISLEADING" and row["status"] == "resolved"
+    # VERBATIM — the seat's exact string, not a paraphrase and not a prefix.
+    assert row["reasoning"] == ("the underlying decline is real but the "
+                                "record-setting framing outruns the data")
+    prov = row["rationale_provenance"]
+    assert prov["adopted_from"] == "proposer"      # the seat that voted MISLEADING
+    assert prov["adopted_verdict"] == "MISLEADING"
+    assert prov["resolver"] == "crm114-discriminator"
+    assert prov["synthesized"] is False
+    assert prov["attribution"].startswith(discriminator.ADOPTED_PREFIX)
+
+
+def test_adoption_prefers_the_arbiter_seat_when_two_seats_share_the_label():
+    row = _tied_row()
+    row["seat_rationales"][2]["verdict"] = "MISLEADING"
+    apply_tie_routing([row], {"t": "MISLEADING"})
+    assert row["rationale_provenance"]["adopted_from"] == "arbiter"
+    assert row["reasoning"] == "no source dated before the utterance settles it"
+
+
+def test_adoption_never_invents_text_when_no_seat_can_supply_it():
+    """The failure mode the ruling forbids: rather than synthesize, leave the
+    row blank so the publish-blocking lint catches it."""
+    row = _tied_row()
+    for seat in row["seat_rationales"]:
+        seat["reasoning"] = ""
+    apply_tie_routing([row], {"t": "MISLEADING"})
+    assert row["verdict"] == "MISLEADING"
+    assert row["reasoning"] == "" and "rationale_provenance" not in row
+
+
+def test_adoption_never_overwrites_an_existing_rationale():
+    row = _tied_row(reasoning="already said why")
+    apply_tie_routing([row], {"t": "MISLEADING"})
+    assert row["reasoning"] == "already said why"
+    assert "rationale_provenance" not in row
+
+
+def test_severity_flip_with_a_blank_rationale_also_adopts():
+    row = _tied_row(status="resolved", verdict="FALSE", reasoning="")
+    apply_discrimination([row], {"t": "MISLEADING"})
+    assert row["verdict"] == "MISLEADING"
+    assert row["reasoning"] == ("the underlying decline is real but the "
+                                "record-setting framing outruns the data")
