@@ -6,7 +6,7 @@
     "unfit_stance_null_rate": 0.15,
     "note": "A run is unfit-to-gate when (a) NO item carries a real relevance score (all still on the 0.5 pydantic default) or (b) the stance-null rate exceeds the ceiling. Condition (a) alone condemns every run below."
   },
-  "finding": "The v2 evidence path never scores relevance or stance: verify/relevance.py::score_evidence is reachable only from the legacy v1 provider (pipeline._build_open_book_provider) and the R4 archive retriever, while build_evidence_pack_v2 wires R1/R2/R3 straight into consolidate(). Result: relevance_score == 0.5 on 100% of items in ALL stored runs, and supports_claim null on 20.5-34.2% (retrievers.py maps stance 'context' -> None). consolidator._bearing() requires True/False, so null items cannot credit MIN_BEARING_T13=2 and the T2.4 gate forces Unverifiable. Every stored run is therefore unfit to gate — and \"every\" means 22 stored run artifacts = 5 published (live on the site) + 10 rebuilt (staged, unpublished) + 7 superseded (retained per archive-never-delete), not five: the finding covers the whole stored record, of which the published site is one cohort.",
+  "finding": "The v2 evidence path never scores relevance or stance: verify/relevance.py::score_evidence is reachable only from the legacy v1 provider (pipeline._build_open_book_provider) and the R4 archive retriever, while build_evidence_pack_v2 wires R1/R2/R3 straight into consolidate(). Result: relevance_score == 0.5 on 100% of items in ALL stored runs, and supports_claim null on 20.5-34.2% (retrievers.py maps stance 'context' -> None). consolidator._bearing() requires True/False, so null items cannot credit MIN_BEARING_T13=2 and the T2.4 gate forces Unverifiable. Every stored run is therefore unfit to gate — and \"every\" means 27 stored run artifacts = 5 published (live on the site) + 15 rebuilt (staged, unpublished) + 7 superseded (retained per archive-never-delete), not five: the finding covers the whole stored record, of which the published site is one cohort.",
   "cohorts": {
     "published": {
       "runs": 5,
@@ -16,10 +16,10 @@
       "fit_to_gate": 0
     },
     "rebuilt": {
-      "runs": 10,
-      "items": 8688,
-      "relevance_scored": 231,
-      "stance_null": 2196,
+      "runs": 15,
+      "items": 13032,
+      "relevance_scored": 462,
+      "stance_null": 3256,
       "fit_to_gate": 0
     },
     "superseded": {
@@ -158,6 +158,42 @@
       "reason": "stance-null rate 18.8% exceeds the 15% ceiling (166 of 885 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
     },
     {
+      "run_id": "c733c283-f10f-4410-93d3-d66b18d2697b",
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false,
+      "cohort": "rebuilt",
+      "packs": 111,
+      "items": 885,
+      "relevance_scored": 23,
+      "relevance_default": 862,
+      "scored_rate": 0.025989,
+      "stance_supports": 692,
+      "stance_refutes": 27,
+      "stance_null": 166,
+      "stance_null_rate": 0.187571,
+      "fit_to_gate": false,
+      "reason": "stance-null rate 18.8% exceeds the 15% ceiling (166 of 885 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+    },
+    {
+      "run_id": "393f7d06-3299-495e-863c-4136a9ced603",
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false,
+      "cohort": "rebuilt",
+      "packs": 92,
+      "items": 792,
+      "relevance_scored": 67,
+      "relevance_default": 725,
+      "scored_rate": 0.084596,
+      "stance_supports": 560,
+      "stance_refutes": 33,
+      "stance_null": 199,
+      "stance_null_rate": 0.251263,
+      "fit_to_gate": false,
+      "reason": "stance-null rate 25.1% exceeds the 15% ceiling (199 of 792 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+    },
+    {
       "run_id": "d0010426-2e8f-4449-b839-60f85d923d56",
       "speech_id": "clinton_1998",
       "generation": "v2.3-role-axis-s5cap",
@@ -192,6 +228,24 @@
       "stance_null_rate": 0.251263,
       "fit_to_gate": false,
       "reason": "stance-null rate 25.1% exceeds the 15% ceiling (199 of 792 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+    },
+    {
+      "run_id": "04738dd5-831f-4d90-bbef-6a18508c887f",
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false,
+      "cohort": "rebuilt",
+      "packs": 48,
+      "items": 396,
+      "relevance_scored": 9,
+      "relevance_default": 387,
+      "scored_rate": 0.022727,
+      "stance_supports": 284,
+      "stance_refutes": 13,
+      "stance_null": 99,
+      "stance_null_rate": 0.25,
+      "fit_to_gate": false,
+      "reason": "stance-null rate 25.0% exceeds the 15% ceiling (99 of 396 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
     },
     {
       "run_id": "0ae0f3b8-4728-4a6d-aab6-1e39160eca4d",
@@ -266,6 +320,24 @@
       "reason": "stance-null rate 22.3% exceeds the 15% ceiling (178 of 799 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
     },
     {
+      "run_id": "c8008f2a-e844-4944-b39c-4be61d5e575f",
+      "speech_id": "obama_2014",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false,
+      "cohort": "rebuilt",
+      "packs": 96,
+      "items": 799,
+      "relevance_scored": 23,
+      "relevance_default": 776,
+      "scored_rate": 0.028786,
+      "stance_supports": 599,
+      "stance_refutes": 22,
+      "stance_null": 178,
+      "stance_null_rate": 0.222778,
+      "fit_to_gate": false,
+      "reason": "stance-null rate 22.3% exceeds the 15% ceiling (178 of 799 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+    },
+    {
       "run_id": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
       "speech_id": "trump_2026",
       "generation": "v2.3-role-axis-s5cap",
@@ -282,6 +354,24 @@
       "stance_null_rate": 0.30163,
       "fit_to_gate": false,
       "reason": "relevance is entirely default: 0 of 1472 items scored (all carry the 0.5 pydantic default) — the relevance layer never ran on this run"
+    },
+    {
+      "run_id": "83117c1a-a27f-4df1-9183-302472a52e68",
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false,
+      "cohort": "rebuilt",
+      "packs": 182,
+      "items": 1472,
+      "relevance_scored": 109,
+      "relevance_default": 1363,
+      "scored_rate": 0.074049,
+      "stance_supports": 812,
+      "stance_refutes": 242,
+      "stance_null": 418,
+      "stance_null_rate": 0.283967,
+      "fit_to_gate": false,
+      "reason": "stance-null rate 28.4% exceeds the 15% ceiling (418 of 1472 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
     },
     {
       "run_id": "9c4262a7-67bd-476e-b433-90424dd0b3e6",

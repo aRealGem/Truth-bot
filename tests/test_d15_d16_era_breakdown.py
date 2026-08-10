@@ -225,4 +225,10 @@ def test_all_four_configurations_are_run_for_every_claim():
                                published="2006-01-10T00:00:00")]},
                     {sid: "TRUE"})
     quota = eb.gate_all_ways(SPEECH, art, None)["quota"]["stored"]
-    assert set(quota[sid]) == set(eb.CONFIGS) == {"base", "d15", "d16", "both"}
+    assert set(eb.CONFIGS) == {"base", "d15", "d16", "both"}
+    # Four COMPUTED configurations, plus a fifth answer that is READ rather
+    # than computed: ``shipped``, the gate outcome the artifact recorded. It is
+    # the alternative baseline (--baseline shipped) and must never be mistaken
+    # for a configuration of the gate — nothing is re-gated to produce it.
+    assert set(quota[sid]) == set(eb.CONFIGS) | {"shipped"}
+    assert quota[sid]["shipped"] is True     # no gate code on the row

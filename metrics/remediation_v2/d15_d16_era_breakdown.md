@@ -1,22 +1,25 @@
 # D15 + D16(α) — era breakdown (the M-6 evenhandedness check)
 
-*Generated 2026-08-09T15:16:31.984117+00:00 · $0, no model calls. Stance vintage: **rescored** (the B1a re-score overlaid — the live state of the corpus, and the vintage the "measured 50" came from).*
+*Generated 2026-08-10T18:25:00.991535+00:00 · $0, no model calls. Stance vintage: **rescored** (the B1a re-score overlaid — the live state of the corpus, and the vintage the "measured 50" came from).*
 
 - **D15** `TRUTHBOT_D15_UTTERANCE_RECORD (default OFF — NOT enabled)`
 - **D16(α)** `TRUTHBOT_D16_STATISTICAL_RELEASE (default OFF — NOT enabled)`
 
-Both flags are OFF in the committed tree. Every number below is what ratification *would* do, computed by running the real gate over the stored packs four ways — both off, D15 only, D16 only, both.
+- **source artifacts** `rebuild` `biden_2022`=37744fc8, `clinton_1998`=d0010426, `gwbush_2006`=74a89c5f, `obama_2014`=4de8a551, `trump_2026`=4ee5a251
+- **baseline** `recomputed` — movement measured against the same packs re-gated with both rules OFF — the re-score cancels, so the numbers are the RULES' own contribution
+
+Every number below is what ratification *would* do, computed by running the real gate over the stored packs four ways — both off, D15 only, D16 only, both.
 
 ## 1. The three views, per speech
 
 | speech | speaker | claims | D15 newly gated | …of which ship TRUE | D16(α) released | combined gated | combined released | **net** |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
-| `gwbush_2006` | George W. Bush | 48 | 2 | 2 | 0 | 2 | 0 | **-2** |
-| `clinton_1998` | Bill Clinton | 92 | 10 | 8 | 2 | 10 | 2 | **-8** |
+| `gwbush_2006` | George W. Bush | 48 | 3 | 3 | 0 | 3 | 0 | **-3** |
+| `clinton_1998` | Bill Clinton | 92 | 10 | 8 | 3 | 10 | 3 | **-7** |
 | `obama_2014` | Barack Obama | 96 | 7 | 3 | 0 | 7 | 0 | **-7** |
 | `biden_2022` | Joe Biden | 111 | 8 | 6 | 0 | 8 | 0 | **-8** |
 | `trump_2026` | Donald Trump | 182 | 23 | 14 | 0 | 23 | 0 | **-23** |
-| **corpus** | | **529** | **50** | **33** | **2** | **50** | **2** | **-48** |
+| **corpus** | | **529** | **51** | **34** | **3** | **51** | **3** | **-48** |
 
 "Net" is released minus newly gated: the number of claims the two rules together move *toward* a decided verdict. It is negative everywhere, because D15 removes far more credit than D16 gives back — which is the honest headline, and the reason these two must be reported on one page rather than two.
 
@@ -28,7 +31,7 @@ Anecdote-adjusted excludes claims typed `personal-anecdote` (the A10 convention)
 
 | speech | anecdotes | raw before → after | Δ raw | adjusted before → after | Δ adjusted |
 |---|---:|---|---:|---|---:|
-| `gwbush_2006` | 1 | 83.3% → 79.2% | -4.2 pp | 83.0% → 78.7% | -4.3 pp |
+| `gwbush_2006` | 1 | 83.3% → 77.1% | -6.2 pp | 83.0% → 76.6% | -6.4 pp |
 | `clinton_1998` | 7 | 83.7% → 77.2% | -6.5 pp | 83.5% → 81.2% | -2.4 pp |
 | `obama_2014` | 23 | 81.2% → 77.1% | -4.2 pp | 78.1% → 76.7% | -1.4 pp |
 | `biden_2022` | 9 | 82.9% → 77.5% | -5.4 pp | 81.4% → 77.5% | -3.9 pp |
@@ -38,22 +41,22 @@ Anecdote-adjusted excludes claims typed `personal-anecdote` (the A10 convention)
 
 | basis | before | after | change |
 |---|---|---|---|
-| raw | 10.6% (trump_2026 … clinton_1998) | 13.8% (trump_2026 … gwbush_2006) | +3.2 pp |
-| anecdote-adjusted | 5.5% (obama_2014 … clinton_1998) | 4.5% (obama_2014 … clinton_1998) | -1.0 pp |
+| raw | 10.6% (trump_2026 … clinton_1998) | 12.1% (trump_2026 … biden_2022) | +1.5 pp |
+| anecdote-adjusted | 5.5% (obama_2014 … clinton_1998) | 4.6% (gwbush_2006 … clinton_1998) | -0.9 pp |
 
-**The two bases disagree, and the disagreement is the finding.** On the raw basis the spread widens by 3.2 pp; on the anecdote-adjusted basis it narrows by 1.0 pp. The raw movement is driven by how many personal anecdotes a speech contains — `trump_2026` carries 52 of them and `gwbush_2006` carries 1 — not by how the two rules treat evidence. On the basis that controls for that, ratifying D15 + D16(α) leaves era parity essentially where it found it.
+**The two bases disagree, and the disagreement is the finding.** On the raw basis the spread widens by 1.5 pp; on the anecdote-adjusted basis it narrows by 0.9 pp. The raw movement is driven by how many personal anecdotes a speech contains — `trump_2026` carries 52 of them and `gwbush_2006` carries 1 — not by how the two rules treat evidence. On the basis that controls for that, ratifying D15 + D16(α) leaves era parity essentially where it found it.
 
 ## 3. Does the effect concentrate in one speaker or era?
 
-**YES — the withholding effect concentrates by ERA. The rule fires on 12.6% of trump_2026's claims and 4.2% of gwbush_2006's, a ratio of 3.0x (spread 8.5%). This is the size-adjusted number and it is the one to read. By raw SHARE it is milder — the largest single share is Donald Trump at 46% of newly-gated claims on 34% of the corpus, an over-representation rather than a majority. Release lands entirely on Bill Clinton (100%), but on a base of only 2 claim(s) — too few to read as a pattern.**
+**YES — the withholding effect concentrates by ERA. The rule fires on 12.6% of trump_2026's claims and 6.2% of gwbush_2006's, a ratio of 2.0x (spread 6.4%). This is the size-adjusted number and it is the one to read. By raw SHARE it is milder — the largest single share is Donald Trump at 45% of newly-gated claims on 34% of the corpus, an over-representation rather than a majority. Release lands entirely on Bill Clinton (100%), but on a base of only 3 claim(s) — too few to read as a pattern.**
 
 | speech | claims (share of corpus) | newly gated (share of all withholding) | withholding rate within the speech | released | net |
 |---|---|---|---:|---:|---:|
-| `gwbush_2006` | 48 (9.1%) | 2 (4.0%) | 4.2% | 0 | -2 |
-| `clinton_1998` | 92 (17.4%) | 10 (20.0%) | 10.9% | 2 | -8 |
-| `obama_2014` | 96 (18.1%) | 7 (14.0%) | 7.3% | 0 | -7 |
-| `biden_2022` | 111 (21.0%) | 8 (16.0%) | 7.2% | 0 | -8 |
-| `trump_2026` | 182 (34.4%) | 23 (46.0%) | 12.6% | 0 | -23 |
+| `gwbush_2006` | 48 (9.1%) | 3 (5.9%) | 6.2% | 0 | -3 |
+| `clinton_1998` | 92 (17.4%) | 10 (19.6%) | 10.9% | 3 | -7 |
+| `obama_2014` | 96 (18.1%) | 7 (13.7%) | 7.3% | 0 | -7 |
+| `biden_2022` | 111 (21.0%) | 8 (15.7%) | 7.2% | 0 | -8 |
+| `trump_2026` | 182 (34.4%) | 23 (45.1%) | 12.6% | 0 | -23 |
 
 The **withholding rate within the speech** is the column to read: the five speeches differ by nearly a factor of four in claim count, so a raw count table alone would let "this speech has the most claims" masquerade as "the repair targets this speaker".
 
@@ -61,7 +64,7 @@ The **withholding rate within the speech** is the column to read: the five speec
 
 ### `gwbush_2006` — George W. Bush
 
-D15 would withhold 2 claim(s) that currently ship TRUE: `gwbush_2006:0033`, `gwbush_2006:0189`
+D15 would withhold 3 claim(s) that currently ship TRUE: `gwbush_2006:0033`, `gwbush_2006:0134`, `gwbush_2006:0189`
 
 ### `clinton_1998` — Bill Clinton
 
@@ -69,7 +72,7 @@ D15 would withhold 8 claim(s) that currently ship TRUE: `clinton_1998:0027`, `cl
 
 D15 would also gate 2 claim(s) not currently shipping TRUE: `clinton_1998:0090`, `clinton_1998:0350`
 
-D16(α) would release: `clinton_1998:0026`, `clinton_1998:0038`
+D16(α) would release: `clinton_1998:0006`, `clinton_1998:0026`, `clinton_1998:0038`
 
 ### `obama_2014` — Barack Obama
 

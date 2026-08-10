@@ -1,0 +1,58 @@
+{
+  "speech_id": "gwbush_2006",
+  "rebuild_of": "0ae0f3b8-4728-4a6d-aab6-1e39160eca4d",
+  "new_run_id": "04738dd5-831f-4d90-bbef-6a18508c887f",
+  "rulings": true,
+  "ruling_sids": [
+    "gwbush_2006:0033",
+    "gwbush_2006:0134",
+    "gwbush_2006:0189",
+    "gwbush_2006:0217"
+  ],
+  "mechanism": {
+    "gwbush_2006:0033": "D15",
+    "gwbush_2006:0134": "D15",
+    "gwbush_2006:0189": "D15",
+    "gwbush_2006:0217": "re-score"
+  },
+  "n_compared": 4,
+  "counts": {
+    "unchanged": 0,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 4,
+    "newly_decided": 0,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 4,
+  "per_sid": [
+    {
+      "sid": "gwbush_2006:0033",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Their aim is to seize power in Iraq and use it as a safe haven to launch attacks against America and the world."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin"
+    },
+    {
+      "sid": "gwbush_2006:0189",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "So tonight I announce the Advanced Energy Initiative—a 22-percent increase in clean-energy research—at the Department of"
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Drug use among youth is down 19 percent since 2001."
+    }
+  ]
+}

@@ -70,9 +70,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from dc6_package import ABSTAIN, ANECDOTE_CLAIM_TYPE, SPEAKERS, display  # noqa: E402
 from regate_from_rescore import (claim_shape_map, gate_once,  # noqa: E402
-                                 load_rescore_sidecar, overlay_rescores)
+                                 load_rescore_sidecar, merge_sidecars,
+                                 overlay_rescores, row_gate_code)
 from rescore_stored_packs import (REBUILT_RUNS, artifact_path,  # noqa: E402
-                                  load_artifact, sidecar_path)
+                                  b2_sidecar_path, load_artifact, sidecar_path)
 
 OUT_DIR = REPO / "metrics" / "remediation_v2"
 OUT_STEM = "d15_d16_era_breakdown"
@@ -92,6 +93,65 @@ CONFIGS = {
     "both": (True, True),
 }
 
+#: Which state a claim is said to have MOVED FROM.
+#:
+#: ``recomputed`` (the original, still the default) compares against the same
+#: packs re-gated with both rules OFF. That ISOLATES THE RULES: the B1a+B2
+#: re-score is present on both sides of the comparison, so it cancels, and the
+#: numbers answer "what would ratifying D15 and D16(alpha) do?".
+#:
+#: ``shipped`` compares against the gate outcome the source artifact actually
+#: RECORDED. Nothing cancels, so it answers a different question — "what did the
+#: corpus lose relative to what was on the page?", the re-score's own
+#: withholdings included. Pointed at the PRE-application artifacts, that is
+#: exactly the change the 2026-08-10 application shipped, which is why the
+#: post-application packet quotes this basis and not the other one.
+BASELINES = ("recomputed", "shipped")
+DEFAULT_BASELINE = "recomputed"
+
+#: Which generation of artifacts supplies the packs and the shipped rows.
+#: ``rebuild`` is the Phase-3 rebuild — what the ratification was measured
+#: against. ``wave`` is the adjudication wave's, the state the 2026-08-10
+#: application started FROM. ``rulings`` is that application's own output, the
+#: state the corpus is in now.
+SOURCES = ("rebuild", "wave", "rulings")
+DEFAULT_SOURCE = "rebuild"
+
+
+def source_artifact_path(speech: str, source: str = DEFAULT_SOURCE) -> Path:
+    """The artifact a run reads for ``speech``.
+
+    Resolved by SEARCHING the run directory for the generation's own marker,
+    never by a pinned id: run ids for these generations are not constants
+    anywhere, and a stale pin would silently measure the wrong corpus — the
+    exact failure that makes a packet's numbers describe something nobody is
+    publishing.
+
+    The two markers are not interchangeable and the ``wave`` case has to say so:
+    a rulings artifact inherits its parent's ``meta.wave`` block wholesale
+    (that block is the record of which claims the wave adjudicated, and it stays
+    true), so "has a wave block" matches BOTH generations. A wave artifact is
+    the one with a wave block and NO rulings block."""
+    if source == "rebuild":
+        return artifact_path(speech)
+    runs_dir = REPO / "metrics" / "pca_runs"
+    hits = []
+    for path in sorted(runs_dir.glob("*.json")):
+        try:
+            meta = (json.loads(path.read_text(encoding="utf-8"))
+                    .get("meta") or {})
+        except (ValueError, OSError):
+            continue
+        if meta.get("speech_id") != speech:
+            continue
+        if source == "rulings" and meta.get("rulings"):
+            hits.append(path)
+        elif source == "wave" and meta.get("wave") and not meta.get("rulings"):
+            hits.append(path)
+    if not hits:
+        raise SystemExit(f"no {source} artifact found for {speech}")
+    return hits[-1]
+
 
 def _speech_id(sid: str) -> str:
     return sid.split(":", 1)[0]
@@ -102,6 +162,7 @@ def gate_all_ways(speech: str, artifact: dict,
     """``{vintage: {sid: {config: quota_met}}}`` plus the per-sid metadata the
     report needs (shipped verdict, claim type, claim text)."""
     from truthbot.verdict import speech_context
+    from truthbot.verdict.consolidator import GATE_INSUFFICIENT
     from truthbot.verdict.publish_pipeline import evidence_from_artifact_dict
     from truthbot.verify.principals import principal_relation
 
@@ -152,6 +213,11 @@ def gate_all_ways(speech: str, artifact: dict,
                                    claim_text=text, utterance_record=d15,
                                    statistical_release=d16)
                 answers[name] = bool(res.quota_met)
+            # The fifth answer is not computed — it is READ. What the artifact
+            # recorded is the only baseline that describes the published page,
+            # and recomputing it would fold the re-score back out of the
+            # comparison, which is the whole point of offering it.
+            answers["shipped"] = row_gate_code(rows.get(sid, {})) != GATE_INSUFFICIENT
             quota[vintage][sid] = answers
     return {"info": info, "quota": quota}
 
@@ -204,18 +270,20 @@ def _spread(rates: dict[str, float]) -> dict:
             "min_speech": lo, "max_speech": hi}
 
 
-def per_speech_block(speech: str, gated_all: dict, vintage: str) -> dict:
+def per_speech_block(speech: str, gated_all: dict, vintage: str,
+                     baseline: str = DEFAULT_BASELINE) -> dict:
     info = gated_all["info"]
     quota = gated_all["quota"][vintage]
     sids = sorted(quota)
+    base_key = "base" if baseline == "recomputed" else "shipped"
 
     def moved(cfg: str, direction: str) -> list[str]:
-        """sids whose gate outcome differs from base under ``cfg``.
-        direction "gated": base decided-eligible -> now gated;
-        "released": base gated -> now eligible."""
+        """sids whose gate outcome differs from the baseline under ``cfg``.
+        direction "gated": baseline decided-eligible -> now gated;
+        "released": baseline gated -> now eligible."""
         out = []
         for sid in sids:
-            base, now = quota[sid]["base"], quota[sid][cfg]
+            base, now = quota[sid][base_key], quota[sid][cfg]
             if base and not now and direction == "gated":
                 out.append(sid)
             if (not base) and now and direction == "released":
@@ -238,6 +306,7 @@ def per_speech_block(speech: str, gated_all: dict, vintage: str) -> dict:
     block = {
         "speech": speech,
         "speaker": SPEAKERS.get(speech, ""),
+        "baseline": baseline,
         "claims_measured": len(sids),
         "anecdotes": len(anecdotes),
         # Rows the rebuild left without a verdict. Surfaced rather than folded
@@ -420,22 +489,40 @@ def _concentration_sentence(gated_top: dict, released_top: dict,
 
 # ── report ──────────────────────────────────────────────────────────────────
 
-def build_report(speeches: list[str]) -> dict:
+def build_report(speeches: list[str], *, baseline: str = DEFAULT_BASELINE,
+                 source: str = DEFAULT_SOURCE) -> dict:
     per_vintage: dict[str, dict] = {}
     gated_all: dict[str, dict] = {}
     missing: list[str] = []
+    sources: dict[str, str] = {}
     for sp in speeches:
-        art = load_artifact(artifact_path(sp))
-        side = None
-        p = sidecar_path(sp)
-        if p.exists():
-            side = load_rescore_sidecar(p, sp, art.get("run_id", ""))
-        else:
+        path = source_artifact_path(sp, source)
+        art = load_artifact(path)
+        sources[sp] = str(art.get("run_id") or path.stem)
+        # STANCE VINTAGE: B1a and B2 MERGED, latest wins — the same stance the
+        # flip set and the application gate on. Reading B1a alone (which this
+        # script did until 2026-08-10) silently disagrees with them: B2
+        # re-scored a targeted subset into its own sidecar, and on the wave
+        # artifacts that difference is worth three claims. A breakdown that
+        # counts 62 withholdings while 65 ship is not describing the corpus.
+        #
+        # The sidecars name the REBUILD's run id — the run whose packs they
+        # scored. A later generation copies those packs VERBATIM (the wave
+        # replaced rows, never evidence, for anything it did not
+        # re-adjudicate), so the scores still join correctly while the revision
+        # check would reject them on the id alone. It is passed empty here,
+        # which skips the id check and keeps the speech check.
+        parts = [p for p in (sidecar_path(sp), b2_sidecar_path(sp))
+                 if p.exists()]
+        side = merge_sidecars(*(load_rescore_sidecar(p, sp, "") for p in parts))
+        if not parts:
+            side = None
             missing.append(sp)
         gated_all[sp] = gate_all_ways(sp, art, side)
 
     for vintage in VINTAGES:
-        blocks = [per_speech_block(sp, gated_all[sp], vintage) for sp in speeches]
+        blocks = [per_speech_block(sp, gated_all[sp], vintage, baseline)
+                  for sp in speeches]
         spreads = {}
         for basis in ("raw_before", "raw_after", "adjusted_before",
                       "adjusted_after"):
@@ -468,6 +555,18 @@ def build_report(speeches: list[str]) -> dict:
         },
         "headline_vintage": HEADLINE_VINTAGE,
         "anecdote_claim_type": ANECDOTE_CLAIM_TYPE,
+        "baseline": baseline,
+        "baseline_meaning": (
+            "movement measured against the same packs re-gated with both rules "
+            "OFF — the re-score cancels, so the numbers are the RULES' own "
+            "contribution"
+            if baseline == "recomputed" else
+            "movement measured against the gate outcome the source artifact "
+            "RECORDED — nothing cancels, so the numbers are what the corpus "
+            "loses relative to what was on the page, the re-score's own "
+            "withholdings included"),
+        "source_generation": source,
+        "source_runs": sources,
         "decided_rate_convention": (
             "before = what the artifacts ship; after = newly-gated claims "
             "forced Unverifiable, released claims counted as decided (UPPER "
@@ -528,9 +627,24 @@ def render_markdown(report: dict) -> str:
     A(f"- **D15** `{report['flags']['d15']}`")
     A(f"- **D16(α)** `{report['flags']['d16']}`")
     A("")
-    A("Both flags are OFF in the committed tree. Every number below is what "
-      "ratification *would* do, computed by running the real gate over the "
-      "stored packs four ways — both off, D15 only, D16 only, both.")
+    A(f"- **source artifacts** `{report.get('source_generation', 'rebuild')}` "
+      + ", ".join(f"`{sp}`={rid[:8]}"
+                  for sp, rid in sorted((report.get('source_runs') or {}).items())))
+    A(f"- **baseline** `{report.get('baseline', DEFAULT_BASELINE)}` — "
+      f"{report.get('baseline_meaning', '')}")
+    A("")
+    if report.get("baseline", DEFAULT_BASELINE) == "recomputed":
+        A("Every number below is what ratification *would* do, computed by "
+          "running the real gate over the stored packs four ways — both off, "
+          "D15 only, D16 only, both.")
+    else:
+        A("Every number below is measured against **what the source artifact "
+          "actually recorded**, so it describes the change as a reader of the "
+          "published page would experience it. The columns still separate the "
+          "rules (D15 only, D16 only, both), but each is now compared to the "
+          "shipped gate rather than to a rules-off recomputation — so a claim "
+          "the B1a+B2 re-score withholds on its own is counted here and is "
+          "not counted on the `recomputed` basis.")
     A("")
 
     A("## 1. The three views, per speech")
@@ -664,20 +778,38 @@ def render_markdown(report: dict) -> str:
 def main(argv: Optional[list] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out-dir", default=None, metavar="DIR")
+    ap.add_argument("--baseline", choices=BASELINES, default=DEFAULT_BASELINE,
+                    help=("what a claim MOVED FROM. 'recomputed' (default) "
+                          "isolates the two rules; 'shipped' measures against "
+                          "what the artifact recorded, which is what the "
+                          "published page said."))
+    ap.add_argument("--source", choices=SOURCES, default=DEFAULT_SOURCE,
+                    help=("which artifact generation supplies the packs and "
+                          "the shipped rows: the Phase-3 rebuild (default) or "
+                          "the adjudication wave's."))
+    ap.add_argument("--stem", default=None, metavar="NAME",
+                    help=("output file stem; defaults to "
+                          f"'{OUT_STEM}'. A non-default basis MUST write to "
+                          "its own stem — two bases under one filename would "
+                          "make the packet's numbers depend on run order."))
     args = ap.parse_args(argv)
 
     speeches = list(REBUILT_RUNS)
-    report = build_report(speeches)
+    report = build_report(speeches, baseline=args.baseline, source=args.source)
     md = render_markdown(report)
     print(md)
 
+    stem = args.stem or (
+        OUT_STEM if (args.baseline == DEFAULT_BASELINE
+                     and args.source == DEFAULT_SOURCE)
+        else f"{OUT_STEM}_{args.source}_{args.baseline}")
     out_dir = Path(args.out_dir) if args.out_dir else OUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / f"{OUT_STEM}.json").write_text(
+    (out_dir / f"{stem}.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    (out_dir / f"{OUT_STEM}.md").write_text(md + "\n", encoding="utf-8")
-    print(f"\nwrote {out_dir / (OUT_STEM + '.json')}")
-    print(f"wrote {out_dir / (OUT_STEM + '.md')}")
+    (out_dir / f"{stem}.md").write_text(md + "\n", encoding="utf-8")
+    print(f"\nwrote {out_dir / (stem + '.json')}")
+    print(f"wrote {out_dir / (stem + '.md')}")
     return 0
 
 

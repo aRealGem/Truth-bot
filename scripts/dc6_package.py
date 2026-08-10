@@ -121,6 +121,11 @@ CORRECTION_SOURCE = f"phase3-rebuild-{REBUILD_DATE} ({GENERATION})"
 #: describe the same speeches and must not overwrite the rebuild's record.
 PHASE3_DIFF_GLOB = "phase3_*_verdict_diff.json"
 WAVE_DIFF_GLOB = "wave_*_verdict_diff.json"
+#: The 2026-08-10 rulings pass — the wave's DEFERRED newly-gated set applied,
+#: plus the R-3 rationale re-emit and the D14 coherence annotation. A third
+#: generation of diffs beside the other two, for the same reason: it describes
+#: the same speeches and must not overwrite either earlier record.
+RULINGS_DIFF_GLOB = "rulings_*_verdict_diff.json"
 
 WAVE_DATE = "2026-08-09"
 WAVE_SOURCE = f"adjudication-wave-{WAVE_DATE} ({GENERATION})"
@@ -150,6 +155,52 @@ WAVE_CLAUSE_BY_REASON = {
     "named-extra": WAVE_EXTRA_CLAUSE,
     "models-split extra": WAVE_SPLIT_CLAUSE,
 }
+
+RULINGS_DATE = "2026-08-10"
+RULINGS_SOURCE = f"wave-rulings-{RULINGS_DATE} ({GENERATION})"
+RULINGS_MECHANISM_PATH = DIFF_DIR / "deferred_gated_mechanism.json"
+
+#: Per-claim MECHANISM clauses for the applied withholdings. The wave RELEASED
+#: claims and had one clause for all of them; this pass WITHHOLDS them, and the
+#: reason differs per claim — so the clause is chosen from the measured
+#: attribution rather than shared. Facts only (S-8): which mechanism withdrew
+#: the qualifying evidence, and that no panel call was made or needed.
+RULINGS_MECHANISM_CLAUSE = {
+    "re-score": (
+        "withheld by the evidence gate after the B1a+B2 stance re-score of the "
+        "stored evidence pack: with real relevance and stance scores the pack "
+        "no longer meets the Tier-1..3 bearing quota. Neither ratified rule is "
+        "required to reach this outcome"),
+    "D15": (
+        "withheld by the evidence gate under the D15 utterance-record rule "
+        "(ratified 2026-08-09), applied to the B1a+B2 stance re-score of the "
+        "stored evidence pack: items that reproduce the utterance itself — the "
+        "transcript, the Congressional Record of the day, the official "
+        "compilation — carry no quota credit, and without them the pack no "
+        "longer meets the bearing quota"),
+    "D16alpha": (
+        "withheld by the evidence gate under the D16(alpha) statistical-release "
+        "rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of "
+        "the stored evidence pack"),
+    "D15+D16alpha (interaction)": (
+        "withheld by the evidence gate under the D15 utterance-record and "
+        "D16(alpha) statistical-release rules acting together (both ratified "
+        "2026-08-09), applied to the B1a+B2 stance re-score of the stored "
+        "evidence pack: neither rule alone withdraws enough qualifying "
+        "evidence to fail the bearing quota"),
+}
+
+#: The two NON-gating changes this pass makes, both provenance-level.
+RULINGS_RATIONALE_CLAUSE = (
+    "the published rationale was re-emitted from stored panel output: the "
+    "stage-2 discriminator resolved this claim out of a three-way tie and "
+    "recorded no rationale text, so the rationale of the seat that reached the "
+    "same verdict in the prior run was adopted verbatim and attributed. The "
+    "verdict is unchanged")
+RULINGS_COHERENCE_CLAUSE = (
+    "an adjacent-claim coherence annotation was added: this claim and its "
+    "neighbour rate the same statistic and carry different published verdicts, "
+    "which is now disclosed on both. Neither verdict was changed")
 
 #: The ratified rationale for trump_2026:0469 (2026-08-09). The claim is NOT in
 #: the wave — it stays Unverifiable by ratification, not by defect — but if it
@@ -1041,6 +1092,131 @@ def build_wave_corrections(diff_dir: Path = DIFF_DIR,
     return entries_doc, changes
 
 
+# ── the 2026-08-10 rulings pass ───────────────────────────────────────────
+def load_mechanism(path: Path = RULINGS_MECHANISM_PATH) -> dict[str, str]:
+    """sid → the MEASURED mechanism that withholds it.
+
+    Read from the artifact ``apply_wave_rulings.py`` writes, never recomputed
+    here: the attribution the ledger states and the attribution the applier
+    acted on have to be the same measurement, or an entry can describe a cause
+    that did not produce the change it is reporting."""
+    path = Path(path)
+    if not path.exists():
+        return {}
+    return dict((_read_json(path).get("mechanism") or {}))
+
+
+def rulings_extra_clauses(diffs: Iterable[dict],
+                          mechanism: dict[str, str]) -> dict[str, str]:
+    """sid → the mechanical clause for what this pass did to that claim.
+
+    Three kinds of change, and they are told apart by what the diff shows
+    rather than by a list: a claim whose mechanism is known was WITHHELD; a
+    claim whose outcome did not move was touched at the provenance level only
+    (rationale re-emit and/or coherence annotation), which the ledger must
+    still record because the published page changes."""
+    out: dict[str, str] = {}
+    for d in diffs:
+        moved = {e["sid"] for e in d.get("per_sid") or []
+                 if e.get("category") != "unchanged"}
+        for sid in d.get("ruling_sids") or []:
+            mech = mechanism.get(sid) or (d.get("mechanism") or {}).get(sid) or ""
+            if sid in moved and mech in RULINGS_MECHANISM_CLAUSE:
+                out[sid] = RULINGS_MECHANISM_CLAUSE[mech]
+            elif sid not in moved:
+                out[sid] = RULINGS_RATIONALE_CLAUSE
+    return out
+
+
+def rulings_provenance_changes(diffs: Iterable[dict],
+                               runs_dir: Path = RUNS_DIR) -> list[dict]:
+    """The rows this pass changed WITHOUT changing the published verdict.
+
+    ``changed_claims`` walks the verdict diff, so a claim whose badge did not
+    move is invisible to it — and both R-3 changes (an adopted rationale, a
+    coherence annotation) are exactly that shape. They are still publication
+    changes: the page a reader sees gains a reason, or a disclosure. The
+    ledger's schema cannot express them as corrections (no old→new verdict
+    pair), so they are reported here, in the same place, rather than dropped."""
+    out: list[dict] = []
+    for d in diffs:
+        new_run = load_run(d.get("new_run_id", ""), runs_dir) or {}
+        rows = {r.get("sid"): r for r in (new_run.get("rows") or [])}
+        texts = {c.get("sid"): (c.get("text") or "")
+                 for c in (new_run.get("claims") or [])}
+        moved = {e["sid"] for e in d.get("per_sid") or []
+                 if e.get("category") != "unchanged"}
+        for sid in d.get("ruling_sids") or []:
+            if sid in moved:
+                continue
+            row = rows.get(sid) or {}
+            kinds = []
+            if row.get("rationale_provenance"):
+                kinds.append("rationale re-emitted from stored panel output")
+            if str(row.get("coherence_note") or "").strip():
+                kinds.append("adjacent-claim coherence annotation added")
+            if not kinds:
+                continue
+            out.append({
+                "sid": sid,
+                "speech_id": d["speech_id"],
+                "claim": texts.get(sid, "")[:140],
+                "verdict": row.get("verdict"),
+                "kinds": kinds,
+                "rationale_provenance": row.get("rationale_provenance") or {},
+                "excluded_because": (
+                    "published verdict unchanged — a provenance change, which "
+                    "data/corrections.json's schema (old verdict → new verdict) "
+                    "cannot express"),
+            })
+    return out
+
+
+def build_rulings_corrections(diff_dir: Path = DIFF_DIR,
+                              runs_dir: Path = RUNS_DIR) -> tuple[dict, list[dict]]:
+    """Corrections entries for the 2026-08-10 rulings pass — (doc, changes).
+
+    Same shape and same S-8 constraint as the wave's: facts per claim — sid,
+    claim text, old verdict, new verdict, and the mechanical reason — with the
+    lineage paragraph deliberately absent for the owner to write.
+
+    What is new is that the mechanical reason is PER CLAIM. The wave released
+    claims for one reason and could share a clause; this pass withholds them
+    for three different ones (the re-score alone, D15, or the two ratified
+    rules composing), and a ledger that said "the ratified rules" for all 65
+    would be attributing 26 of them to rules that had nothing to do with it."""
+    diffs = load_diffs(diff_dir, RULINGS_DIFF_GLOB)
+    mechanism = load_mechanism(diff_dir / RULINGS_MECHANISM_PATH.name)
+    changes = changed_claims(diffs, runs_dir)
+    entries_doc = correction_entries(
+        changes, dispositions={}, date=RULINGS_DATE,
+        extra_clauses=rulings_extra_clauses(diffs, mechanism),
+        source=RULINGS_SOURCE, generation=GENERATION)
+    entries_doc["usage"] = (
+        "PUBLICATION RECORD for the 2026-08-10 wave rulings, not an input to "
+        "apply_to_artifact — the rulings artifacts already carry these "
+        "outcomes. FACTS ONLY (S-8): sid, claim text, old verdict, new verdict "
+        "and the mechanical reason, with the MECHANISM attributed per claim "
+        "from the measured attribution in deferred_gated_mechanism.json. The "
+        "lineage paragraph is the owner's to write and is deliberately absent.")
+    by_mech: dict[str, int] = {}
+    for change in changes:
+        m = mechanism.get(change["sid"], "")
+        if m:
+            by_mech[m] = by_mech.get(m, 0) + 1
+    provenance = rulings_provenance_changes(diffs, runs_dir)
+    entries_doc["provenance_changes"] = provenance
+    entries_doc["rulings"] = {
+        "date": RULINGS_DATE,
+        "speeches": [d["speech_id"] for d in diffs],
+        "claims_touched": sum(len(d.get("ruling_sids") or []) for d in diffs),
+        "claims_changed": len(changes),
+        "by_mechanism": by_mech,
+        "provenance_only_changes": len(provenance),
+    }
+    return entries_doc, changes
+
+
 # ── ledger clean-slate reset ──────────────────────────────────────────────
 def proposed_ledger(current: dict, entries: list[dict],
                     archive_name: str, date: str = REBUILD_DATE,
@@ -1797,11 +1973,37 @@ def main() -> None:
                           "verdict. The corpus-wide review sections are "
                           "skipped: they would report a 29-claim slice as if "
                           "it were the corpus."))
+    ap.add_argument("--rulings", action="store_true",
+                    help=("read the 2026-08-10 rulings diffs "
+                          f"({RULINGS_DIFF_GLOB}) and write ONLY "
+                          "rulings_corrections_entries.json — facts per "
+                          "changed verdict, with the withholding MECHANISM "
+                          "attributed per claim."))
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.rulings:
+        entries_doc, _changes = build_rulings_corrections()
+        (out_dir / "rulings_corrections_entries.json").write_text(
+            json.dumps(entries_doc, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8")
+        print(f"rulings corrections → {out_dir}/rulings_corrections_entries.json")
+        r = entries_doc["rulings"]
+        print(f"  {r['claims_touched']} claims touched across "
+              f"{len(r['speeches'])} speech(es); {r['claims_changed']} changed")
+        print(f"  mechanism: {json.dumps(r['by_mechanism'])}")
+        print(f"  {entries_doc['ledger_eligible']} ledger-eligible, "
+              f"{entries_doc['not_ledger_representable']} not representable, "
+              f"{r['provenance_only_changes']} provenance-only")
+        for e in entries_doc["entries"][:5]:
+            print(f"    {e['sid']:<22} {e['old_verdict']} → {e['new_verdict']}")
+        if len(entries_doc["entries"]) > 5:
+            print(f"    … {len(entries_doc['entries']) - 5} more")
+        for e in entries_doc["provenance_changes"]:
+            print(f"    {e['sid']:<22} verdict unchanged — {', '.join(e['kinds'])}")
+        return
     if args.wave:
         entries_doc, changes = build_wave_corrections()
         (out_dir / "wave_corrections_entries.json").write_text(

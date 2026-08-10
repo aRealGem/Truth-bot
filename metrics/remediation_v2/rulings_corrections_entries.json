@@ -1,0 +1,738 @@
+{
+  "schema": "truthbot-dc6-corrections-entries v1",
+  "generated": "2026-08-10",
+  "generation": "v2.3-role-axis-s5cap",
+  "usage": "PUBLICATION RECORD for the 2026-08-10 wave rulings, not an input to apply_to_artifact — the rulings artifacts already carry these outcomes. FACTS ONLY (S-8): sid, claim text, old verdict, new verdict and the mechanical reason, with the MECHANISM attributed per claim from the measured attribution in deferred_gated_mechanism.json. The lineage paragraph is the owner's to write and is deliberately absent.",
+  "changed_total": 65,
+  "ledger_eligible": 54,
+  "not_ledger_representable": 11,
+  "dropped_total": 0,
+  "entries": [
+    {
+      "sid": "biden_2022:0019",
+      "speech_id": "biden_2022",
+      "claim_text": "In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” The Ukrainian Ambassador to the United States is here tonight.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0100",
+      "speech_id": "biden_2022",
+      "claim_text": "I remember when my dad had to leave our home in Scranton, Pennsylvania to find work.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0137",
+      "speech_id": "biden_2022",
+      "claim_text": "And tonight, I’m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrepair.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0171",
+      "speech_id": "biden_2022",
+      "claim_text": "As Ohio Senator Sherrod Brown says, “It’s time to bury the label “Rust Belt.” It’s time.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0211",
+      "speech_id": "biden_2022",
+      "claim_text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their health care premiums.",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0284",
+      "speech_id": "biden_2022",
+      "claim_text": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0376",
+      "speech_id": "biden_2022",
+      "claim_text": "The constitutional right affirmed in Roe v.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0420",
+      "speech_id": "biden_2022",
+      "claim_text": "One of those soldiers was my son Major Beau Biden.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0427",
+      "speech_id": "biden_2022",
+      "claim_text": "Combat medic in Kosovo and Iraq.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0431",
+      "speech_id": "biden_2022",
+      "claim_text": "He loved building Legos with their daughter.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0027",
+      "speech_id": "clinton_1998",
+      "claim_text": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "speech_id": "clinton_1998",
+      "claim_text": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0107",
+      "speech_id": "clinton_1998",
+      "claim_text": "And remember the big picture here: While we've been entering into hundreds of new trade agreements, we've been creating millions of new jobs.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0134",
+      "speech_id": "clinton_1998",
+      "claim_text": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0135",
+      "speech_id": "clinton_1998",
+      "claim_text": "Today, she's a dispatcher with a van company.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0195",
+      "speech_id": "clinton_1998",
+      "claim_text": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in history.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0210",
+      "speech_id": "clinton_1998",
+      "claim_text": "For 50 years, NATO contained communism and kept America and Europe secure.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "speech_id": "clinton_1998",
+      "claim_text": "Now these three formerly Communist countries have said yes to democracy.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0225",
+      "speech_id": "clinton_1998",
+      "claim_text": "One of those— —thank you—one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbert.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0227",
+      "speech_id": "clinton_1998",
+      "claim_text": "After college in Colorado, he joined the Army.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0236",
+      "speech_id": "clinton_1998",
+      "claim_text": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff—Generals John Shalikashvili, Colin Powell, and David Jones and Admiral William Crowe—have endorsed this treaty.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0243",
+      "speech_id": "clinton_1998",
+      "claim_text": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy the will of the world,\" and when I say to him, \"You have used weapons of mass destruction before.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "speech_id": "clinton_1998",
+      "claim_text": "Beginning this year, 1998, men and women from 16 countries will build a foothold in the heavens, the international space station.",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "gwbush_2006:0033",
+      "speech_id": "gwbush_2006",
+      "claim_text": "Their aim is to seize power in Iraq and use it as a safe haven to launch attacks against America and the world.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "speech_id": "gwbush_2006",
+      "claim_text": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combined.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "gwbush_2006:0189",
+      "speech_id": "gwbush_2006",
+      "claim_text": "So tonight I announce the Advanced Energy Initiative—a 22-percent increase in clean-energy research—at the Department of Energy, to push for breakthroughs in two vital areas.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "speech_id": "gwbush_2006",
+      "claim_text": "Drug use among youth is down 19 percent since 2001.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0001",
+      "speech_id": "obama_2014",
+      "claim_text": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jobs our businesses have created over the past four years.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0045",
+      "speech_id": "obama_2014",
+      "claim_text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans and military spouses.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0123",
+      "speech_id": "obama_2014",
+      "claim_text": "Misty DeMars is a mother of two young boys.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0125",
+      "speech_id": "obama_2014",
+      "claim_text": "She put herself through college.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0126",
+      "speech_id": "obama_2014",
+      "claim_text": "She’d never collected unemployment benefits.",
+      "old_verdict": "FALSE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0189",
+      "speech_id": "obama_2014",
+      "claim_text": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0198",
+      "speech_id": "obama_2014",
+      "claim_text": "Right now, it helps about half of all parents at some point.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0054",
+      "speech_id": "trump_2026",
+      "claim_text": "More Americans are working today than at any time in the history of our country.",
+      "old_verdict": "FALSE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0098",
+      "speech_id": "trump_2026",
+      "claim_text": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas MacArthur.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0099",
+      "speech_id": "trump_2026",
+      "claim_text": "He fought bravely in the famous Battle of Manila, worked so hard.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0102",
+      "speech_id": "trump_2026",
+      "claim_text": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in the gallery looking forward to July 4th, 2026, his 100th birthday.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0106",
+      "speech_id": "trump_2026",
+      "claim_text": "I was there.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0111",
+      "speech_id": "trump_2026",
+      "claim_text": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0130",
+      "speech_id": "trump_2026",
+      "claim_text": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republican majorities delivered so beautifully.",
+      "old_verdict": "FALSE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0255",
+      "speech_id": "trump_2026",
+      "claim_text": "For five years, she and her husband have struggled with infertility and they turned to IVF.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0340",
+      "speech_id": "trump_2026",
+      "claim_text": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas parade, but she never arrived.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0341",
+      "speech_id": "trump_2026",
+      "claim_text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being stabbed 25 times.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0343",
+      "speech_id": "trump_2026",
+      "claim_text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our country at record numbers and we're getting them the hell out of here fast.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0450",
+      "speech_id": "trump_2026",
+      "claim_text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's face as she looked up at her attacker in the last seconds of her life.",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0482",
+      "speech_id": "trump_2026",
+      "claim_text": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0638",
+      "speech_id": "trump_2026",
+      "claim_text": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0643",
+      "speech_id": "trump_2026",
+      "claim_text": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0659",
+      "speech_id": "trump_2026",
+      "claim_text": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one bullet after another.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0660",
+      "speech_id": "trump_2026",
+      "claim_text": "He absorbed four agonizing shots, shredding his leg into numerous pieces.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0664",
+      "speech_id": "trump_2026",
+      "claim_text": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the threat—turned the helicopter around so the gunners could take care of business, saving the lives of his fellow warriors from what could have been a catastrophic crash deep in enemy territory.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0665",
+      "speech_id": "trump_2026",
+      "claim_text": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mission, we probably would have had maybe cancel the mission if that didn't happen, Eric told his copilot, also wounded but not as gravely, to take over, I'm about ready to pass out.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0667",
+      "speech_id": "trump_2026",
+      "claim_text": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle.",
+      "old_verdict": "TRUE",
+      "new_verdict": "UNVERIFIABLE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10",
+      "source": "wave-rulings-2026-08-10 (v2.3-role-axis-s5cap)"
+    }
+  ],
+  "non_ledger_changes": [
+    {
+      "sid": "biden_2022:0124",
+      "speech_id": "biden_2022",
+      "claim_text": "America used to have the best roads, bridges, and airports on Earth.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "obama_2014:0004",
+      "speech_id": "obama_2014",
+      "claim_text": "A rural doctor gave a young child the first prescription to treat asthma that his mother could afford.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "obama_2014:0070",
+      "speech_id": "obama_2014",
+      "claim_text": "Over the past five years, my administration has made more loans to small business owners than any other.",
+      "old_label": "Models split",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Models split",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "verdict outside the corrections vocabulary (Models split → Unverifiable)"
+    },
+    {
+      "sid": "obama_2014:0114",
+      "speech_id": "obama_2014",
+      "claim_text": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "trump_2026:0043",
+      "speech_id": "trump_2026",
+      "claim_text": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+      "old_label": "Models split",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Models split",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "verdict outside the corrections vocabulary (Models split → Unverifiable)"
+    },
+    {
+      "sid": "trump_2026:0057",
+      "speech_id": "trump_2026",
+      "claim_text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "trump_2026:0137",
+      "speech_id": "trump_2026",
+      "claim_text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no tax on overtime and our expanded child tax credit done again by Republicans, Megan and her husband will take home more than $5,000 extra just for the year cutting her tax bill in more than half.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "trump_2026:0153",
+      "speech_id": "trump_2026",
+      "claim_text": "You know, I asked Michael Dell, how do you make all that money?",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "trump_2026:0256",
+      "speech_id": "trump_2026",
+      "claim_text": "One drug has been costing Catherine $4,000 to purchase.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "trump_2026:0487",
+      "speech_id": "trump_2026",
+      "claim_text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    },
+    {
+      "sid": "trump_2026:0514",
+      "speech_id": "trump_2026",
+      "claim_text": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate under the D15 utterance-record rule (ratified 2026-08-09), applied to the B1a+B2 stance re-score of the stored evidence pack: items that reproduce the utterance itself — the transcript, the Congressional Record of the day, the official compilation — carry no quota credit, and without them the pack no longer meets the bearing quota; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "excluded_because": "published badge unchanged — provenance-only move (UNVERIFIABLE → gated-UNVERIFIABLE)"
+    }
+  ],
+  "dropped_rows": [],
+  "provenance_changes": [
+    {
+      "sid": "trump_2026:0023",
+      "speech_id": "trump_2026",
+      "claim": "And last year the murder rate saw its single largest decline in recorded history.",
+      "verdict": "MISLEADING",
+      "kinds": [
+        "rationale re-emitted from stored panel output",
+        "adjacent-claim coherence annotation added"
+      ],
+      "rationale_provenance": {
+        "mode": "adopted-verbatim",
+        "adopted_from": "arbiter",
+        "adopted_verdict": "MISLEADING",
+        "adopted_from_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+        "resolver": "crm114-discriminator",
+        "attribution": "adopted from the arbiter seat of run 4ee5a251",
+        "synthesized": false,
+        "note": "the wave run discarded its seats' rationale text at reduce time, so the nearest stored panel output for this sid and verdict is the source"
+      },
+      "excluded_because": "published verdict unchanged — a provenance change, which data/corrections.json's schema (old verdict → new verdict) cannot express"
+    },
+    {
+      "sid": "trump_2026:0024",
+      "speech_id": "trump_2026",
+      "claim": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years.",
+      "verdict": "TRUE",
+      "kinds": [
+        "adjacent-claim coherence annotation added"
+      ],
+      "rationale_provenance": {},
+      "excluded_because": "published verdict unchanged — a provenance change, which data/corrections.json's schema (old verdict → new verdict) cannot express"
+    }
+  ],
+  "rulings": {
+    "date": "2026-08-10",
+    "speeches": [
+      "clinton_1998",
+      "gwbush_2006",
+      "obama_2014",
+      "biden_2022",
+      "trump_2026"
+    ],
+    "claims_touched": 67,
+    "claims_changed": 65,
+    "by_mechanism": {
+      "D15": 39,
+      "re-score": 26
+    },
+    "provenance_only_changes": 2
+  }
+}
