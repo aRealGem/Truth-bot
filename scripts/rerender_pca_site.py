@@ -39,6 +39,37 @@ from truthbot.verdict import bridge as bridge_mod
 from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
 
 
+PCA_RUNS_DIR = REPO / "metrics" / "pca_runs"
+
+
+def publishing_heads(runs_dir: Path | None = None) -> dict[str, Path]:
+    """``speech_id -> the artifact a publish would render`` — THE head selection.
+
+    The newest evidence-bearing artifact per speech, mtime-ascending so the last
+    one wins. A superseded run of the same speech must not resurrect its stale
+    report alongside the current one (this bit as soon as a re-publish left two
+    evidence-bearing artifacts per speech, 2026-07-20).
+
+    Factored out of :func:`main` so anything that has to write a NEW head — the
+    score-propagation merge (``scripts/propagate_rescores.py``) — derives from
+    the same artifact the publish would render, by calling this rather than by
+    re-deriving "newest" and hoping the two agree.
+    """
+    runs_dir = Path(runs_dir) if runs_dir is not None else PCA_RUNS_DIR
+    candidates = sorted(runs_dir.glob("*.json"), key=lambda p: p.stat().st_mtime)
+    latest: dict[str, Path] = {}
+    for p in candidates:
+        try:
+            d = json.loads(p.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            continue
+        if "evidence" not in d:
+            continue
+        sid = (d.get("meta") or {}).get("speech_id") or p.stem
+        latest[sid] = p          # candidates are mtime-ascending; last wins
+    return latest
+
+
 def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
     """Rebuild an EvidencePack from the artifact's per-sid Evidence dumps.
 
@@ -150,20 +181,9 @@ def main() -> None:
 
     paths = [Path(p) for p in args.artifacts]
     if not paths:
-        candidates = sorted((REPO / "metrics" / "pca_runs").glob("*.json"),
-                            key=lambda p: p.stat().st_mtime)
-        # LATEST artifact per speech_id — a superseded run of the same speech
-        # must not resurrect its stale report alongside the current one (this
-        # bit as soon as a re-publish left two evidence-bearing artifacts per
-        # speech, 2026-07-20). Pass paths explicitly to render an older run.
-        latest: dict[str, Path] = {}
-        for p in candidates:
-            d = json.loads(p.read_text(encoding="utf-8"))
-            if "evidence" not in d:
-                continue
-            sid = (d.get("meta") or {}).get("speech_id") or p.stem
-            latest[sid] = p          # candidates are mtime-ascending; last wins
-        paths = list(latest.values())
+        # LATEST artifact per speech_id. Pass paths explicitly to render an
+        # older run.
+        paths = list(publishing_heads().values())
         if not paths:
             sys.exit("no artifacts with persisted evidence found under metrics/pca_runs/")
         print(f"rendering {len(paths)} artifact(s): {', '.join(p.stem[:8] for p in paths)}")

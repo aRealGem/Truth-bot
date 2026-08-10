@@ -187,44 +187,60 @@ def test_is_fit_to_gate_fails_closed_on_a_run_with_no_evidence():
 
 @pytest.mark.skipif(not (REPO / "metrics" / "pca_runs").is_dir(),
                     reason="metrics/pca_runs not present")
-def test_every_stored_run_artifact_is_currently_unfit_to_gate():
+def test_only_the_score_propagated_heads_are_fit_to_gate():
     """THE RETROACTIVE RECORD. Every gate-forced Unverifiable on the published
     site was decided by a quota the scoring layer never fed: score_evidence was
     unreachable from build_evidence_pack_v2, so no stored run carried a single
     relevance-scored evidence item.
 
-    UPDATED by the adjudication wave (2026-08-09), following this test's own
-    standing instruction to update rather than delete once a run gets genuinely
-    scored. The five wave artifacts DO carry scored items now — but only for
-    the 29 claims the wave re-adjudicated, because the wave replaced those
-    packs and left every other pack at its stored vintage. The record therefore
-    splits in two, and both halves are held here:
+    UPDATED TWICE, following this test's own standing instruction to update
+    rather than delete once a run gets genuinely scored:
 
-      * scoring is CONFINED to the wave artifacts. A scored item anywhere else
-        means something re-scored a run outside the wave, which nothing is
-        supposed to do;
-      * every run, wave artifacts included, is still UNFIT TO GATE. 29 repaired
-        packs cannot pull a corpus-wide stance-null rate under the 15% ceiling,
-        and a partial repair that flipped the publish gate open would be a
-        serious defect rather than progress.
+      * the adjudication wave (2026-08-09) scored the 29 packs it
+        re-adjudicated and nothing else — 29 repaired packs could not pull a
+        corpus-wide stance-null rate under the 15% ceiling, so every run stayed
+        unfit;
+      * the score propagation (2026-08-10, scripts/propagate_rescores.py)
+        merged the B1a+B2 sidecars — the scores the wave had only OVERLAID at
+        runtime — into a new publishing head per speech. Those heads are the
+        first artifacts whose STORED evidence is the evidence their verdicts
+        were actually reached on.
+
+    Both halves of the record are held here:
+
+      * scoring is CONFINED to the wave artifacts and the propagated heads. A
+        scored item anywhere else means something re-scored a run outside those
+        two passes, which nothing is supposed to do;
+      * fitness is confined to the propagated heads, and not even all of them.
+        trump_2026 comes back at 21.0% stance-null — the scorer itself read 309
+        of its 1,472 items as stance-free — so its head is UNFIT and stays
+        unfit. The ceiling does not move to accommodate a speech.
     """
     rows = run_fitness_report(REPO)
     assert rows, "no artifacts present to report on"
 
     runs_dir = REPO / "metrics" / "pca_runs"
 
-    def _is_wave(run_id: str) -> bool:
+    def _meta(run_id: str) -> dict:
         path = runs_dir / f"{run_id}.json"
         if not path.exists():
-            return False
-        return bool((json.loads(path.read_text("utf-8")).get("meta")
-                     or {}).get("wave"))
+            return {}
+        return json.loads(path.read_text("utf-8")).get("meta") or {}
 
     scored = [r for r in rows if r["relevance_scored"]]
-    assert scored, "no scored run at all — the wave artifacts are missing"
-    stray = [r["run_id"] for r in scored if not _is_wave(r["run_id"])]
-    assert not stray, f"scored evidence outside the wave: {stray}"
-    assert all(r["fit_to_gate"] is False for r in rows)
+    assert scored, "no scored run at all — the repaired artifacts are missing"
+    stray = [r["run_id"] for r in scored
+             if not (_meta(r["run_id"]).get("wave")
+                     or _meta(r["run_id"]).get("score_propagation"))]
+    assert not stray, f"scored evidence outside the wave/propagation: {stray}"
+
+    assert {r["speech_id"] for r in rows if r["fit_to_gate"]} == {
+        "gwbush_2006", "clinton_1998", "obama_2014", "biden_2022"}
+    for row in rows:
+        if row["fit_to_gate"]:
+            assert _meta(row["run_id"]).get("score_propagation"), (
+                f"{row['run_id']}: fit to gate without carrying the merged "
+                "scores — something moved the bar instead of the evidence")
 
 
 @pytest.mark.skipif(not (REPO / "metrics" / "pca_runs").is_dir(),
@@ -278,10 +294,19 @@ def test_fitness_report_rows_carry_their_cohort():
 
 def test_the_lint_states_the_tally_with_its_denominator_and_names_cohorts():
     """The bare 17 is the misreading risk, so the lint's own output carries the
-    composition on line one and a cohort on every run line."""
+    composition on line one and a cohort on every run line.
+
+    The numerator is no longer the whole corpus — the score-propagated heads
+    are fit — so it is READ OFF the report rather than assumed equal to the
+    denominator. A tally that could only be written as "N of N" would have to
+    be rewritten every time a run got repaired, which is precisely when a lint
+    must not need editing.
+    """
     lines = check_run_fitness(REPO)
     rows = run_fitness_report(REPO)
-    assert lines[0] == (f"{len(rows)} of {len(rows)} stored run artifacts "
+    unfit = [r for r in rows if not r["fit_to_gate"]]
+    assert unfit and len(unfit) < len(rows)
+    assert lines[0] == (f"{len(unfit)} of {len(rows)} stored run artifacts "
                         f"unfit to gate — {fitness_composition(rows)}")
     for line in lines[1:]:
         assert any(f", {c}" in line for c in RUN_COHORT_ORDER)
