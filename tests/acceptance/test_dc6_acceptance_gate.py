@@ -21,15 +21,15 @@ point: when the event lands they flip to passing, and a strict xfail turns that
 flip into a loud XPASS instead of a silent one. They are NOT to be forced green
 by weakening the assertion.
 
-Current state (after the wave rulings, 2026-08-10):
+Current state (after the R-3 escape run, 2026-08-10):
 
 ===============================================  ========  ==================
 case                                             status    resolved by
 ===============================================  ========  ==================
 Beckstrom 0469 (purposive clause)                passing   ratified conversion
-Beckstrom 0462 (models-split)                    passing   escalation POLICY —
-                                                           persistent split
-                                                           publishes as split
+Beckstrom 0462 (was models-split)                passing   R-3 escape run — a
+                                                           THIRD panel broke
+                                                           the split 2-1
 inflation pair 0030 + 0031                       passing   —
 DEI claim 0056                                   passing   —
 Biden 5.7% GDP 0115                              passing   —
@@ -39,9 +39,32 @@ Obama Joining Forces 0045                        passing   ratified conversion
                                                            — now asserts GATED
 murder-rate pair 0023 + 0024 (COHERENCE)         passing   R-3 + D14 ANNOTATE
 eggs framing disclosure 0219                     passing   —
-no blank rationales (corpus)                     xfail     one claim cannot be
-                                                           repaired for $0
+no blank rationales (corpus)                     passing   R-3 escape run —
+                                                           0432 got the panel
+                                                           call it needed
+biden 0432 says why                              passing   R-3 escape run
 ===============================================  ========  ==================
+
+THE R-3 ESCAPE RUN (2026-08-10, later than the rulings above)
+--------------------------------------------------------------
+Two claims published with no rationale stored in ANY generation of their
+lineage, so no deterministic re-gate could repair them and inventing text is
+the one thing R-3 forbids. Both got a fresh panel call on their stored packs
+through the audited ``wave_adjudicate.py --extra-sids`` escape (reason
+recorded in ``metrics/remediation_v2/r3_report.json``, own tag, wave set
+untouched), for $0.0602 against a $0.25 cap. Both MOVED:
+
+  * **biden_2022:0432 — MISLEADING → Models split.** The old label came from
+    the stage-2 discriminator tie-routing a three-way split, which stored a
+    label and no text. The new panel split three ways again (True / False /
+    Unverifiable) and this time every seat's reason is stored, so it publishes
+    as a split that shows all three readings.
+  * **trump_2026:0462 — Models split → UNVERIFIABLE.** This CONTRADICTS the
+    premise of the persistent-split ruling, which reasoned that a third
+    identical call would buy the same answer. It did not: the proposer moved
+    from True to Unverifiable, leaving a 2-1 plurality. The policy is not
+    overturned — its precondition stopped holding on this claim — but the
+    change is owner-revisitable and is flagged in the case itself.
 
 WHAT THE 2026-08-10 RULINGS SETTLED
 ------------------------------------
@@ -91,28 +114,20 @@ cases with two different fates:
     all three limbs of that rationale against the artifact rather than merely
     quoting it.
   * **0462 — "she voluntarily extended her service…"** unaffected by the
-    ratification. It ships as a models-split with no verdict at all, which no
-    deterministic re-gate can settle. It stays xfail pending a panel call.
+    ratification. It shipped as a models-split with no verdict at all, which no
+    deterministic re-gate could settle — until the R-3 escape run's third panel
+    call broke the split (see above).
 
-XFAIL INVENTORY — both remaining runtime xfails in the suite
--------------------------------------------------------------
+XFAIL INVENTORY — the one remaining runtime xfail in the suite
+---------------------------------------------------------------
 Kept here so the whole set is legible from one place; the same table lives in
 ``metrics/remediation_v2/t2_xfail_inventory.md``.
 
-1. ``test_no_published_verdict_ships_without_a_rationale`` — **biden_2022:0432**.
-   Asserts the corpus has NO published verdict with an empty rationale, which
-   the R-3 ruling makes publish-blocking. One claim fails it: 0432 was
-   tie-routed to MISLEADING by the stage-2 discriminator in the phase-3 rebuild
-   and again in the wave, and NO run in its lineage ever stored a rationale for
-   it (the pre-remediation run has it as a split with no verdict at all). So
-   unlike trump_2026:0023 there is nothing to adopt, and synthesizing text is
-   the one thing R-3 forbids. Tied to: **a panel call that captures seat
-   rationales, or an owner ruling.**
-2. ``tests/test_bluesky.py::…::test_post_report_returns_none_when_unconfigured``
+1. ``tests/test_bluesky.py::…::test_post_report_returns_none_when_unconfigured``
    — not a claim at all, and not tied to any decision. Asserts
    ``post_report`` returns ``None`` when the publisher is unconfigured; today it
    raises ``NotImplementedError``. Tied to: **the Bluesky v2 publisher landing
-   in Phase 7.** Listed here only so the inventory is complete.
+   in Phase 7.**
 
 Retired by the wave: ``test_biden_deficit_half_stays_decided`` (now a plain
 assertion — the panel decided it TRUE) and ``test_murder_rate_pair_is_coherent``
@@ -120,6 +135,12 @@ assertion — the panel decided it TRUE) and ``test_murder_rate_pair_is_coherent
 Retired by the 2026-08-10 rulings: ``…0462_split_survives_its_panel_call``
 (the escalation policy made the split the expected outcome, so the case asserts
 it directly).
+Retired by the R-3 escape run: ``test_no_published_verdict_ships_without_a_
+rationale`` — the last blank-rationale blocker got its panel call, so the
+corpus-clean assertion is now plain. The 0462 case was RENAMED again
+(``…publishes_as_a_stable_models_split`` → ``…third_panel_broke_the_split_and_
+said_why``), which is the same discipline as the earlier renames: a case that
+asserts something different gets a name that says so.
 """
 from __future__ import annotations
 
@@ -152,12 +173,20 @@ RUNS_DIR = REPO / "metrics" / "pca_runs"
 #: correction and single-claim re-run of :0031. Same rule as before: the gate
 #: reads the newest staged artifact, or it stops measuring what would actually
 #: be published.
+#: Later on 2026-08-10, biden_2022 and trump_2026 each gained one further
+#: generation: the R-3 ESCAPE RUN. Two claims — biden_2022:0432 and
+#: trump_2026:0462 — published with no stored rationale anywhere in their
+#: lineage, which the R-3 ruling makes publish-blocking and which no
+#: deterministic re-gate can repair, so they got a panel call through
+#: ``wave_adjudicate.py --extra-sids`` (audited: reason recorded, own tag, wave
+#: set untouched). Both artifacts are ``rebuild_of`` the runs above, which are
+#: still on disk.
 RUNS = {
     "gwbush_2006": "04738dd5",
     "clinton_1998": "393f7d06",
     "obama_2014": "c8008f2a",
-    "biden_2022": "c733c283",
-    "trump_2026": "46dfcce8",
+    "biden_2022": "f570d45c",
+    "trump_2026": "2d90a74b",
 }
 
 #: 0462's marker after the wave. The old reason said "flips when the wave makes
@@ -298,54 +327,70 @@ def test_beckstrom_0469_is_unverifiable_on_its_purposive_clause():
         f"weakening. {BECKSTROM_0469_RATIONALE}")
 
 
-def test_beckstrom_0462_publishes_as_a_stable_models_split():
+def test_beckstrom_0462_third_panel_broke_the_split_and_said_why():
     """trump_2026:0462 "After a four-month deployment, she voluntarily extended
     her service, and her rank was going to be lifted." — ten items in the pack,
-    six of them bearing, and it ships as a models-split with NO verdict.
+    six of them bearing.
 
-    RESOLVED BY POLICY, 2026-08-10. This was a strict xfail asserting the claim
-    should reach a substantive verdict, first pending the adjudication wave and
-    then — when the wave's panel call split anyway — pending an escalation
-    decision. The decision was made:
+    THE HISTORY, because this case has now been three different assertions:
 
-        **persistent-split-after-2 → PUBLISH the split.**
+      1. xfail — "should reach a substantive verdict", pending the wave;
+      2. the wave's panel call split three ways again, so the ruling became
+         **persistent-split-after-2 → PUBLISH the split**, and the case
+         asserted the split as stable;
+      3. the R-3 escape run (2026-08-10) made a THIRD call — not to re-litigate
+         the split, but because the published split carried no seat rationales
+         and rendered the bare line "Panel split — no consensus verdict",
+         which the R-3 ruling forbids. The seats came back **2-1
+         Unverifiable**, and the split was gone.
 
-    Two independent panels judged this claim on the same evidence and reached
-    the same three-way disagreement. That is not a pipeline failure waiting to
-    be cleared; it is information about the claim, and "Models split" is a
-    label in the published verdict vocabulary precisely so it can be reported.
-    A third identical panel call would buy the same answer at the same price.
+    **This contradicts the ruling's premise and is flagged as such.** The
+    escalation ruling reasoned that "a third identical panel call would buy the
+    same answer at the same price". It did not: the proposer moved from True to
+    Unverifiable, leaving a plurality. So the persistent-split POLICY is not
+    overturned — its precondition (a durable three-way deadlock) stopped
+    holding on this claim, which is exactly the kind of fact the ruling said
+    was owner-revisitable.
 
-    So the assertion INVERTS. The claim is expected to publish as a split, and
-    this case now guards that outcome as STABLE: if some future change quietly
-    forces 0462 into a decided verdict, that is a regression against a ruled
-    policy and it should fail here. The decision is owner-revisitable — the
-    ruling is about how a durable split ships, not that this claim can never
-    be revisited."""
+    What this case now guards is the thing the R-3 ruling actually cares
+    about: whichever way 0462 lands, the page must be able to say WHY. It
+    asserts the verdict came from the seats (a real plurality, not a forced
+    label), that it carries rationale text, and that the seats' own reasons are
+    stored so a future re-split could still be published with both sides
+    shown."""
     sid = "trump_2026:0462"
     r = row(sid)
     assert len(_run("trump_2026")["evidence"].get(sid, [])) >= 5
 
-    # It publishes as a split with NO verdict — not decided, and not a
-    # gate-forced withholding either (the pack is fine; the panel disagreed).
-    assert r.get("status") == "disagreement"
-    assert r.get("verdict") is None
-    assert r.get("split") is True
+    # Decided by the PANEL, not by the gate and not by a tie-router.
+    assert r.get("status") == "resolved"
+    assert r.get("verdict") == "UNVERIFIABLE"
     assert gate_code(sid) == ""
-    assert not is_decided(sid)
+    assert not (r.get("crm114") or {}), (
+        f"{sid}: a stage-2 discriminator label would mean the split was "
+        f"routed, not resolved — the plurality is what makes this publishable")
 
-    # The disagreement really is durable: three distinct seat labels, which is
-    # what "no plurality" means and what makes a third call pointless.
-    labels = {lbl for labels in (r.get("by_role") or {}).values()
-              for lbl in labels}
-    assert len(labels) >= 3, (
-        f"{sid}: seats no longer disagree three ways ({sorted(labels)}) — the "
-        f"persistent-split policy was ruled on a genuine deadlock, so this "
-        f"needs re-reading rather than the assertion relaxing")
+    # A genuine plurality: the seats moved, they were not overruled.
+    votes = r.get("votes") or {}
+    assert votes.get("UNVERIFIABLE", 0) >= 2 and len(votes) < 3, (
+        f"{sid}: votes {votes} are back to a three-way deadlock — the "
+        f"persistent-split ruling applies again and this case needs the "
+        f"owner, not a weaker assertion")
 
-    # And the publish path renders it as a split rather than dropping it.
+    # R-3: it can say why, in its own text and in the seats' text.
+    assert (r.get("reasoning") or "").strip()
+    seats = [s for s in (r.get("seat_rationales") or [])
+             if (s.get("reasoning") or "").strip()]
+    assert len(seats) >= 2, (
+        f"{sid}: {len(seats)} seat rationale(s) stored — the escape run "
+        f"existed to capture these, and without them a re-split would render "
+        f"the bare no-consensus line again")
+
     from truthbot.verdict import bridge
-    assert bridge.row_to_bundle(r).consensus.consensus_verdict == "Models split"
+    bundle = bridge.row_to_bundle(r)
+    assert bundle.consensus.consensus_verdict == "Unverifiable"
+    assert bundle.consensus.explanation.strip()
+    assert len(bridge.split_rationales(r)) >= 2
 
 
 def test_inflation_pair_discriminates_the_two_measures():
@@ -626,17 +671,11 @@ def test_eggs_price_claim_discloses_its_framing():
 
 # ── R-3: no published verdict may ship without a rationale ───────────────────
 
-#: The one claim in the corpus that still publishes a verdict with no reason,
-#: and cannot be repaired for $0. See the case below.
-BLANK_RATIONALE_BLOCKERS = ("biden_2022:0432",)
-
-BLANK_RATIONALE_PENDING = (
-    "biden_2022:0432 was tie-routed to MISLEADING in the phase-3 rebuild and "
-    "again in the wave, and no run in its lineage ever stored a rationale for "
-    "it — the pre-remediation run has it as a split with no verdict at all. "
-    "There is no stored panel output to adopt, and inventing one is exactly "
-    "what the R-3 ruling forbids. Flips when the claim gets a panel call that "
-    "captures seat rationales, or when the owner rules on it")
+#: Claims that still publish a verdict with no reason. EMPTY as of the R-3
+#: escape run (2026-08-10) — biden_2022:0432, the last one, was repaired by the
+#: only honest means available: a fresh panel call. Kept as a named (empty)
+#: list rather than deleted, so a regression has a place to show up.
+BLANK_RATIONALE_BLOCKERS: tuple[str, ...] = ()
 
 
 def _all_rows() -> list[dict]:
@@ -648,8 +687,10 @@ def test_the_only_blank_rationale_is_the_known_blocker():
 
     Any NEW blank-rationale verdict fails here immediately, which is the point:
     the trump_2026:0023 defect survived a full wave because nothing was
-    watching this. The one known blocker is named rather than tolerated
-    silently, and the case below asserts the corpus-clean end state."""
+    watching this. The known-blocker list is now EMPTY, so this and the case
+    below assert the same corpus-clean state from two directions — the list is
+    kept because a blocker that reappears should fail against a NAMED
+    inventory, not just against zero."""
     found = sorted(v["sid"] for v in va.blank_rationale_violations(_all_rows()))
     assert found == sorted(BLANK_RATIONALE_BLOCKERS), (
         f"blank-rationale set changed: {found}. A NEW entry means some "
@@ -657,7 +698,6 @@ def test_the_only_blank_rationale_is_the_known_blocker():
         f"entry means a blocker cleared and this list should shrink.")
 
 
-@pytest.mark.xfail(strict=True, reason=BLANK_RATIONALE_PENDING)
 def test_no_published_verdict_ships_without_a_rationale():
     """PUBLISH-BLOCKING by the R-3 ruling: every published verdict, via every
     resolver path (panel, discriminator, tie-routing, evidence gate), must
@@ -667,11 +707,56 @@ def test_no_published_verdict_ships_without_a_rationale():
     trump_2026:0023 proved — it silently removes the claim from the adjacent
     coherence checker, which links claims partly through their rationale text.
 
-    0023 is repaired. biden_2022:0432 is not, and cannot be for $0: nothing in
-    its lineage ever wrote a rationale for it. This stays a STRICT xfail so the
-    day it clears is announced as an XPASS instead of passing unnoticed."""
+    CLEARED 2026-08-10 (was a strict xfail). 0023 was repaired from stored
+    panel output; biden_2022:0432 had no stored output anywhere in its lineage
+    to adopt, and synthesizing text is the one thing R-3 forbids, so the only
+    honest repair was a new panel call — which the R-3 escape run made. The
+    corpus is clean, and this is now a plain assertion: the next blank
+    rationale fails the publish gate outright."""
     violations = va.blank_rationale_violations(_all_rows())
     assert violations == [], "\n".join(v["detail"] for v in violations)
+
+
+def test_0432_says_why_after_the_escape_run():
+    """biden_2022:0432 "But cancer from prolonged exposure to burn pits ravaged
+    Heath's lungs and body." — the claim that made no-blank-rationales a
+    publish blocker, and the reason the audited ``--extra-sids`` escape exists.
+
+    It shipped MISLEADING with an empty rationale: the phase-3 panel split
+    three ways (Misleading / False / Unverifiable) and the stage-2
+    discriminator tie-routed it to Misleading, which stored a LABEL and no
+    text. Nothing in its lineage ever held a reason, so there was nothing to
+    adopt.
+
+    The fresh panel split three ways again (True / False / Unverifiable) — but
+    this time every seat's rationale is stored, so the claim publishes as a
+    models-split that SHOWS the three readings instead of asserting Misleading
+    with nothing behind it. The verdict moved from a published label to no
+    label, which is a withdrawal and is recorded in the corrections facts."""
+    sid = "biden_2022:0432"
+    r = row(sid)
+
+    # No verdict is published, so the R-3 lint's scope does not include it —
+    # what makes it publishable is the seats' own text.
+    assert r.get("status") == "disagreement"
+    assert r.get("verdict") is None
+    assert r.get("split") is True
+    assert gate_code(sid) == ""
+
+    seats = [s for s in (r.get("seat_rationales") or [])
+             if (s.get("reasoning") or "").strip()]
+    assert len(seats) == 3, (
+        f"{sid}: {len(seats)} seat rationale(s) with text — the split page "
+        f"shows one reason per distinct verdict, and this claim's whole "
+        f"defect was having none")
+
+    from truthbot.verdict import bridge
+    bundle = bridge.row_to_bundle(r)
+    assert bundle.consensus.consensus_verdict == "Models split"
+    sides = bridge.split_rationales(r)
+    assert len(sides) == 3
+    for side in sides:
+        assert side["reasoning"].strip() in bundle.consensus.explanation
 
 
 # ── the gate itself ──────────────────────────────────────────────────────────
@@ -686,7 +771,7 @@ def test_no_published_verdict_ships_without_a_rationale():
 #: of this list, not a way around it — the count is unchanged.
 NAMED_CASES = (
     "test_beckstrom_0469_is_unverifiable_on_its_purposive_clause",
-    "test_beckstrom_0462_publishes_as_a_stable_models_split",
+    "test_beckstrom_0462_third_panel_broke_the_split_and_said_why",
     "test_inflation_pair_discriminates_the_two_measures",
     "test_dei_claim_is_adverse_not_true",
     "test_biden_gdp_5_7_survives_as_decided_true",
@@ -698,6 +783,7 @@ NAMED_CASES = (
     # R-3, added 2026-08-10 — publish-blocking by ruling.
     "test_the_only_blank_rationale_is_the_known_blocker",
     "test_no_published_verdict_ships_without_a_rationale",
+    "test_0432_says_why_after_the_escape_run",
     # R-1, added 2026-08-10 — the shape correction, asserted as one.
     "test_0031_is_c_count_and_carries_the_computed_exhibit",
 )

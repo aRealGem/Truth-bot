@@ -144,3 +144,65 @@ the no-blank-rationale check into a corpus-wide lint — the same defect as
 rebuild and the wave. That is the argument for the lint being publish-blocking
 rather than advisory: the first instance was found by reading an artifact
 closely, and the second was found by a machine in one pass.
+
+---
+
+# Update — after the R-3 escape run (2026-08-10, later)
+
+_2026-08-10 · $0.0602 of a $0.25 cap (two panel calls, no retrieval)._
+
+Suite state: **2000 passed, 1 xfailed, 19 deselected.**
+
+## The one
+
+| # | Test | sid(s) | What it asserts | Tied to |
+| --- | --- | --- | --- | --- |
+| 1 | `tests/test_bluesky.py::TestBlueskyPublisher::test_post_report_returns_none_when_unconfigured` | — (not a claim) | `post_report` returns `None` when the publisher is unconfigured; today it raises `NotImplementedError` | **An event, not a decision:** the Bluesky v2 publisher landing in Phase 7 |
+
+No claim-level xfail remains. Every marker that was tied to a *decision* has
+now been resolved one way or another; the survivor is tied to a feature that
+has not been built.
+
+## What retired, and how
+
+* **`test_no_published_verdict_ships_without_a_rationale` — RESOLVED (the
+  intended lifecycle).** `biden_2022:0432` got the panel call the marker named,
+  the strict marker announced the flip, and the case is now a plain assertion
+  that the corpus has no blank-rationale verdict at all. A second case,
+  `test_0432_says_why_after_the_escape_run`, pins the specific claim so the
+  repair cannot regress silently into the aggregate.
+
+## How the call was made without widening the wave
+
+Both claims sat OUTSIDE the flip set, and `--sids` refuses out-of-set sids by
+design. Rather than edit the set — which would have made "the wave" mean two
+different things in two reports — `scripts/wave_adjudicate.py` gained an
+audited escape: `--extra-sids`, which requires a `--reason`, requires its own
+`--tag` (so the run's report, diffs and journals cannot overwrite the wave's),
+sources the artifacts from the current publishing head, and records the reason
+and the sids in the run report and in the artifact meta. `wave_set()` returns
+exactly what it returned before, and a test asserts that.
+
+The same change made `--sids` enforce the contract it always documented: an
+out-of-set sid is now REFUSED instead of silently dropped.
+
+## Both claims moved — one of them against expectation
+
+* **`biden_2022:0432` — MISLEADING → Models split.** The old label came from
+  the stage-2 discriminator routing a three-way tie, which stored a label and
+  no text. The fresh panel split three ways again (True / False /
+  Unverifiable), but every seat's rationale is stored this time, so the claim
+  publishes as a split that shows all three readings instead of asserting
+  Misleading with nothing behind it. A published verdict was withdrawn;
+  `r3_corrections_entries.json` records it.
+
+* **`trump_2026:0462` — Models split → UNVERIFIABLE. FLAG FOR THE OWNER.** The
+  escalation ruling reasoned that "a third identical panel call would buy the
+  same answer at the same price". It did not. The proposer moved from True to
+  Unverifiable, leaving a 2-1 plurality with rationale text. The
+  persistent-split POLICY is untouched — what stopped holding is its
+  precondition on this claim — but the published outcome changed as a result
+  of a call made for a different purpose (capturing rationales), and that is an
+  owner-revisitable outcome rather than an agent-settled one. The prior
+  artifact (`46dfcce8`) is untouched on disk if the owner wants the split back;
+  reverting is a re-pin of `RUNS["trump_2026"]` in the acceptance gate.

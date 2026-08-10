@@ -153,6 +153,149 @@ def test_go_refusal_requires_a_budget():
     assert wa.go_refusal(3.28) is None
 
 
+# ── the audited escape (--extra-sids) ────────────────────────────────────────
+
+def test_plain_sids_refuses_a_sid_outside_the_claim_set():
+    """``--sids`` SLICES; it never extends. Silently intersecting — which is
+    what it used to do — turns a typo, or a claim the flip set never released,
+    into a quietly smaller run with no complaint."""
+    msg = wa.sids_refusal(["a:1", "a:2"], ["a:1", "b:9"])
+    assert msg and "b:9" in msg
+    assert "--extra-sids" in msg          # it names the audited way in
+    assert wa.sids_refusal(["a:1", "a:2"], ["a:1"]) is None
+
+
+def test_escape_requires_a_reason():
+    """An unexplained escape is indistinguishable from a widened wave."""
+    msg = wa.escape_refusal(["a:9"], "   ", "r3")
+    assert msg and "--reason" in msg
+    assert wa.escape_refusal(["a:9"], "publish-blocking blank rationale",
+                             "r3") is None
+
+
+def test_escape_refuses_to_run_under_the_waves_own_tag():
+    """The escape writes a report, a diff and a journal. Under the wave's tag
+    those overwrite the wave's — prior artifacts are never mutated."""
+    msg = wa.escape_refusal(["a:9"], "because", wa.DEFAULT_TAG)
+    assert msg and "--tag" in msg and "OVERWRITE" in msg
+
+
+def test_escape_refuses_a_malformed_sid_before_any_spend():
+    msg = wa.escape_refusal(["not-a-sid"], "because", "r3")
+    assert msg and "malformed" in msg
+
+
+def test_reason_without_extra_sids_is_refused():
+    assert wa.escape_refusal(None, "why", "wave") is not None
+    assert wa.escape_refusal(None, "", "wave") is None
+
+
+def test_escape_set_is_exactly_the_named_sids_and_does_not_widen_the_wave():
+    """The escape is its OWN run over its OWN claims. ``wave_set`` keeps
+    returning what it returned before — that is what "must not silently widen
+    the wave set" means in code, asserted rather than promised."""
+    flipset = {"released_sids": ["a:1", "a:2"], "newly_gated_sids": []}
+    before = wa.wave_set(flipset, named_extras=(), split_extras=())["sids"]
+    esc = wa.escape_set(["b:9", "b:9", "c:1"], "publish-blocking defect")
+    after = wa.wave_set(flipset, named_extras=(), split_extras=())["sids"]
+
+    assert esc["sids"] == ["b:9", "c:1"]              # de-duplicated
+    assert esc["by_speech"] == {"b": ["b:9"], "c": ["c:1"]}
+    assert all(r.startswith(wa.ESCAPE_REASON) and "publish-blocking defect" in r
+               for r in esc["reason"].values())
+    assert before == after == ["a:1", "a:2"]
+    assert not set(esc["sids"]) & set(after)
+
+
+def test_escape_provenance_records_the_reason_the_sids_and_the_untouched_wave():
+    prov = wa.escape_provenance(["b:9"], "  blank rationale  ", "r3",
+                                ["a:1", "a:2"])
+    assert prov["reason"] == "blank rationale"
+    assert prov["sids"] == ["b:9"]
+    assert prov["tag"] == "r3"
+    assert prov["wave_set_widened"] is False
+    assert prov["wave_set_size"] == 2
+
+
+def test_escape_output_paths_never_collide_with_the_waves():
+    """Same guarantee as the tag refusal, checked at the paths themselves."""
+    for speech in ("biden_2022", "trump_2026"):
+        assert wa.diff_path(speech, "r3") != wa.diff_path(speech)
+        assert wa.journal_path(speech, "r3") != wa.journal_path(speech)
+    assert wa.report_path("r3") != wa.report_path()
+    # and the default tag still resolves to the wave's own filenames
+    assert wa.report_path().name == "wave_report.json"
+    assert wa.diff_path("biden_2022").name == "wave_biden_2022_verdict_diff.json"
+    assert wa.journal_path("biden_2022").name == "biden_2022_wave.jsonl"
+
+
+def test_an_escaped_sid_is_admitted_by_the_sids_slice():
+    """The two guards compose: what --extra-sids admits, --sids may slice."""
+    esc = wa.escape_set(["b:9", "c:1"], "because")
+    assert wa.sids_refusal(esc["sids"], ["b:9"]) is None
+    assert wa.sids_refusal(esc["sids"], ["d:1"]) is not None
+
+
+def test_escape_artifact_carries_its_provenance_and_inherits_source_meta(tmp_path):
+    """An escape artifact has to say it was an escape, why, and keep the meta
+    of the head it was built on — a repair that erases the previous repair's
+    record is not an improvement."""
+    source = dict(SOURCE_ART,
+                  meta=dict(SOURCE_ART["meta"],
+                            rulings={"date": "2026-08-10"},
+                            wave={"date": "2026-08-09",
+                                  "sids_adjudicated": ["s:1"]}))
+    prov = wa.escape_provenance(["s:2"], "blank rationale", "r3", ["a:1"])
+    _path, payload = wa.write_wave_artifact(
+        source, wa.merge_wave_rows(source, []), {},
+        {"name": "prod", "seats": {}}, speech_id="trump_2026",
+        wave_sids=["s:2"], reasons={"s:2": "extra-sid escape: blank rationale"},
+        deferred_gated=[], rules={"utterance_record": True,
+                                  "statistical_release": True},
+        exhibits={}, out_dir=tmp_path, escape=prov, inherit_meta=True,
+        remediation="extra-sid escape (r3)")
+    meta = payload["meta"]
+    assert meta["escape_run"]["escape"]["reason"] == "blank rationale"
+    assert meta["escape_run"]["sids_adjudicated"] == ["s:2"]
+    assert meta["remediation"] == "extra-sid escape (r3)"
+    # The wave's own block survives verbatim: this run is not that wave.
+    assert meta["wave"] == {"date": "2026-08-09", "sids_adjudicated": ["s:1"]}
+    assert meta["rulings"] == {"date": "2026-08-10"}
+    assert meta["rebuild_of"] == "old-run"
+
+
+def test_a_plain_wave_artifact_is_unchanged_by_the_escape_wiring(tmp_path):
+    """Regression guard on the default path: no escape block, no inherited
+    meta, and the run still records itself under ``wave``."""
+    _path, payload = wa.write_wave_artifact(
+        SOURCE_ART, wa.merge_wave_rows(SOURCE_ART, []), {},
+        {"name": "prod", "seats": {}}, speech_id="trump_2026",
+        wave_sids=["s:2"], reasons={"s:2": "released"}, deferred_gated=["s:9"],
+        rules={"utterance_record": True, "statistical_release": True},
+        exhibits={}, out_dir=tmp_path)
+    meta = payload["meta"]
+    assert "escape_run" not in meta
+    assert meta["remediation"] == wa.WAVE_TAG
+    assert meta["wave"]["date"] == wa.WAVE_DATE
+    assert set(meta) == {"speaker", "date", "speech_id", "venue", "roster",
+                         "n_sentences", "n_check_worthy", "cost_usd",
+                         "rebuild_of", "pipeline_generation", "remediation",
+                         "wave"}
+
+
+def test_settled_delta_never_rounds_a_bill_down():
+    """The proxy's spend counter is written asynchronously, so the first read
+    can report $0 for a call that cost money. Two reads, keep the larger."""
+    class _Lane:
+        reads = iter([1.0, 1.0036])
+
+        @staticmethod
+        def proxy_key_spend():
+            return next(_Lane.reads)
+
+    assert wa.settled_delta(_Lane, 1.0, settle_s=0) == pytest.approx(0.0036)
+
+
 # ── the bridge boundary ──────────────────────────────────────────────────────
 
 def test_bridge_carries_a_row_exhibit_into_the_published_provenance():

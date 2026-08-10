@@ -1,0 +1,56 @@
+{
+  "schema": "truthbot-dc6-corrections-entries v1",
+  "generated": "2026-08-10",
+  "generation": "v2.3-role-axis-s5cap",
+  "usage": "PUBLICATION RECORD for the R-3 escape run, not an input to apply_to_artifact — the escape artifacts already carry these outcomes. FACTS ONLY (S-8): sid, claim text, old verdict, new verdict and the mechanical reason. The lineage paragraph is the owner's to write and is deliberately absent.",
+  "changed_total": 2,
+  "ledger_eligible": 0,
+  "not_ledger_representable": 2,
+  "dropped_total": 0,
+  "entries": [],
+  "non_ledger_changes": [
+    {
+      "sid": "biden_2022:0432",
+      "speech_id": "biden_2022",
+      "claim_text": "But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body.",
+      "old_label": "MISLEADING",
+      "new_label": "Models split",
+      "old_verdict": "Misleading",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): re-adjudicated by a fresh panel call on the stored evidence pack, with no new retrieval, because no generation of this claim's lineage stored any rationale text for its published outcome — which the R-3 no-blank-rationale rule makes publish-blocking, and which no deterministic re-gate can repair. The call captured each seat's own rationale verbatim; the prior published label was produced by the stage-2 discriminator routing a three-way panel tie (Misleading / False / Unverifiable), which stored a label and no text; the panel's model votes changed split status on the rebuilt pack.",
+      "excluded_because": "verdict outside the corrections vocabulary (Misleading → Models split)"
+    },
+    {
+      "sid": "trump_2026:0462",
+      "speech_id": "trump_2026",
+      "claim_text": "After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted.",
+      "old_label": "Models split",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "Models split",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_decided",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): re-adjudicated by a fresh panel call on the stored evidence pack, with no new retrieval, because no generation of this claim's lineage stored any rationale text for its published outcome — which the R-3 no-blank-rationale rule makes publish-blocking, and which no deterministic re-gate can repair. The call captured each seat's own rationale verbatim; this is the third panel call on this stored pack; the first two both returned a three-way split (True / False / Unverifiable) and stored no seat rationales; the prior run shipped this claim as a models-split with no verdict (the pack cleared the evidence gate; the seats disagreed), and the panel reached a plurality verdict on the re-adjudication.",
+      "excluded_because": "verdict outside the corrections vocabulary (Models split → Unverifiable)"
+    }
+  ],
+  "dropped_rows": [],
+  "r3": {
+    "date": "2026-08-10",
+    "speeches": [
+      "biden_2022",
+      "trump_2026"
+    ],
+    "claims_adjudicated": 2,
+    "claims_changed": 2,
+    "escape": {
+      "reason": "R-3 publish-blocking: neither claim has a stored rationale in any generation of its lineage, and no deterministic re-gate can write one",
+      "sids": [
+        "biden_2022:0432",
+        "trump_2026:0462"
+      ],
+      "tag": "r3",
+      "wave_set_widened": false
+    }
+  }
+}

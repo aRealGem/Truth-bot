@@ -213,6 +213,33 @@ R1_SHAPE_CLAUSE = (
     "three months, (Sep/Jun)^4-1 = 3.412%, supplying the direction the phrase "
     "\"down to\" asserts")
 
+R3_DIFF_GLOB = "r3_*_verdict_diff.json"
+R3_DATE = "2026-08-10"
+R3_SOURCE = f"R3-escape-run-{R3_DATE} ({GENERATION})"
+
+#: The R-3 escape run's clause: why these two claims were re-adjudicated at
+#: all. Facts only (S-8) — the defect (no stored rationale anywhere in the
+#: lineage), the rule that makes it publish-blocking, and the mechanism (one
+#: fresh panel call on the stored pack, no retrieval).
+R3_BASE_CLAUSE = (
+    "re-adjudicated by a fresh panel call on the stored evidence pack, with no "
+    "new retrieval, because no generation of this claim's lineage stored any "
+    "rationale text for its published outcome — which the R-3 no-blank-"
+    "rationale rule makes publish-blocking, and which no deterministic re-gate "
+    "can repair. The call captured each seat's own rationale verbatim")
+
+#: The one additional FACT per claim: what its prior outcome was produced by.
+R3_SID_CLAUSE = {
+    "biden_2022:0432": (
+        "the prior published label was produced by the stage-2 discriminator "
+        "routing a three-way panel tie (Misleading / False / Unverifiable), "
+        "which stored a label and no text"),
+    "trump_2026:0462": (
+        "this is the third panel call on this stored pack; the first two both "
+        "returned a three-way split (True / False / Unverifiable) and stored "
+        "no seat rationales"),
+}
+
 #: The two NON-gating changes this pass makes, both provenance-level.
 RULINGS_RATIONALE_CLAUSE = (
     "the published rationale was re-emitted from stored panel output: the "
@@ -829,6 +856,16 @@ def build_reason(change: dict, dispositions: dict[str, dict],
             cause = ("the panel reached a substantive verdict on the rebuilt "
                      "evidence pack where it previously ruled the claim "
                      "unverifiable")
+    # "newly decided" assumes the prior run was WITHHELD BY THE GATE. A claim
+    # that previously shipped as a models-split was not withheld by anything —
+    # the pack cleared the gate and the seats disagreed — so the default clause
+    # would state a mechanism that never operated.
+    if (change["change_class"] == "newly_decided"
+            and str(change["old_label"]).strip().lower() == "models split"):
+        cause = ("the prior run shipped this claim as a models-split with no "
+                 "verdict (the pack cleared the evidence gate; the seats "
+                 "disagreed), and the panel reached a plurality verdict on "
+                 "the re-adjudication")
     extra = (extra_clauses or {}).get(change["sid"])
     if extra:
         clauses.append(extra)
@@ -1236,6 +1273,61 @@ def build_rulings_corrections(diff_dir: Path = DIFF_DIR,
         "claims_changed": len(changes),
         "by_mechanism": by_mech,
         "provenance_only_changes": len(provenance),
+    }
+    return entries_doc, changes
+
+
+# ── the R-3 escape run ────────────────────────────────────────────────────
+def r3_extra_clauses(diffs: Iterable[dict]) -> dict[str, str]:
+    """sid → the mechanical clause for the R-3 escape run.
+
+    Keyed off the diffs' own adjudicated-sid list, so a claim can only pick up
+    a clause if the run that spent the money actually adjudicated it."""
+    out: dict[str, str] = {}
+    for d in diffs:
+        for sid in (d.get("wave_sids") or []):
+            extra = R3_SID_CLAUSE.get(sid, "")
+            out[sid] = R3_BASE_CLAUSE + ("; " + extra if extra else "")
+    return out
+
+
+def build_r3_corrections(diff_dir: Path = DIFF_DIR,
+                         runs_dir: Path = RUNS_DIR) -> tuple[dict, list[dict]]:
+    """Corrections facts for the R-3 escape run — (entries_doc, changes).
+
+    Both claims moved ACROSS the models-split boundary — one into it, one out
+    of it — and ``data/corrections.json`` has no split label, so neither is
+    ledger-representable and both land in ``non_ledger_changes``. That is the
+    ledger schema's limit, not a reason to leave the moves unrecorded: a
+    published Misleading that becomes no verdict at all is a withdrawal a
+    reader is entitled to see.
+
+    Same S-8 constraint as every other builder here: sid, claim text, old
+    verdict, new verdict, mechanical reason. The escape's own provenance (the
+    reason string, the sids, the tag) is copied from the run report rather than
+    restated, so the ledger and the runner cannot drift."""
+    diffs = load_diffs(diff_dir, R3_DIFF_GLOB)
+    changes = changed_claims(diffs, runs_dir)
+    entries_doc = correction_entries(
+        changes, dispositions={}, date=R3_DATE,
+        extra_clauses=r3_extra_clauses(diffs),
+        source=R3_SOURCE, generation=GENERATION)
+    entries_doc["usage"] = (
+        "PUBLICATION RECORD for the R-3 escape run, not an input to "
+        "apply_to_artifact — the escape artifacts already carry these "
+        "outcomes. FACTS ONLY (S-8): sid, claim text, old verdict, new verdict "
+        "and the mechanical reason. The lineage paragraph is the owner's to "
+        "write and is deliberately absent.")
+    escape = next((d.get("escape") for d in diffs if d.get("escape")), {}) or {}
+    entries_doc["r3"] = {
+        "date": R3_DATE,
+        "speeches": [d["speech_id"] for d in diffs],
+        "claims_adjudicated": sum(len(d.get("wave_sids") or []) for d in diffs),
+        "claims_changed": len(changes),
+        "escape": {"reason": escape.get("reason", ""),
+                   "sids": escape.get("sids", []),
+                   "tag": escape.get("tag", ""),
+                   "wave_set_widened": escape.get("wave_set_widened")},
     }
     return entries_doc, changes
 
@@ -2083,11 +2175,35 @@ def main() -> None:
                           "r1_corrections_entries.json. Emits the entry even "
                           "when the verdict did not move: the SHAPE moved, and "
                           "that moves the gate's quota branch."))
+    ap.add_argument("--r3", action="store_true",
+                    help=("read the R-3 escape run's diffs "
+                          f"({R3_DIFF_GLOB}) and write ONLY "
+                          "r3_corrections_entries.json — facts per changed "
+                          "verdict for the two claims that published with no "
+                          "rationale stored anywhere in their lineage."))
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.r3:
+        entries_doc, _changes = build_r3_corrections()
+        (out_dir / "r3_corrections_entries.json").write_text(
+            json.dumps(entries_doc, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8")
+        print(f"R-3 corrections → {out_dir}/r3_corrections_entries.json")
+        r = entries_doc["r3"]
+        print(f"  {r['claims_adjudicated']} claim(s) adjudicated across "
+              f"{len(r['speeches'])} speech(es); {r['claims_changed']} changed")
+        print(f"  escape: {r['escape']['reason']}")
+        print(f"  {entries_doc['ledger_eligible']} ledger-eligible, "
+              f"{entries_doc['not_ledger_representable']} not representable")
+        for e in entries_doc["entries"]:
+            print(f"    {e['sid']:<22} {e['old_verdict']} → {e['new_verdict']}")
+        for e in entries_doc["non_ledger_changes"]:
+            print(f"    {e['sid']:<22} {e['old_label']} → {e['new_label']}  "
+                  f"({e['excluded_because']})")
+        return
     if args.r1:
         entries_doc, _changes = build_r1_corrections()
         (out_dir / "r1_corrections_entries.json").write_text(

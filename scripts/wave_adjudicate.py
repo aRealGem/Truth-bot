@@ -45,10 +45,35 @@ GUARDRAILS (mirroring scripts/phase3_rebuild.py)
     re-run re-spends only on unbanked sids;
   * a halt prints resume instructions and exits CLEAN — no traceback.
 
+THE AUDITED ESCAPE (``--extra-sids``)
+-------------------------------------
+``--sids`` slices the wave set and REFUSES anything outside it, which is the
+right default: the wave set is derived from the flip set, and a claim that
+wanders in by hand is a claim nobody costed. But a publish-blocking defect can
+sit OUTSIDE the flip set — a verdict that ships with no rationale, which the R-3
+ruling makes unpublishable and which no deterministic re-gate can repair.
+
+``--extra-sids`` is the one way in, and it is audited rather than silent:
+
+  * it REQUIRES ``--reason``, and the reason is written into the run report's
+    provenance and printed as a banner, so the escape can never be reconstructed
+    only from a shell history;
+  * it REQUIRES its own ``--tag``, because an escape run writes a report, a
+    verdict diff and a chunk journal, and under the default tag those would
+    overwrite the wave's. Prior artifacts are never mutated;
+  * it does NOT widen the wave set. ``wave_set`` returns exactly what it
+    returned before; the escape run's claim set is the named sids and nothing
+    else, each recorded with the escape reason;
+  * it sources each speech's artifact from the current PUBLISHING HEAD rather
+    than the phase-3 rebuild, because an escape happens after the wave and must
+    not silently discard the rulings that landed in between.
+
 Usage (repo root):
   PYTHONPATH=.:src .venv/bin/python scripts/wave_adjudicate.py            # $0 plan
   set -a; . ~/.env; . ./.env; set +a
   PYTHONPATH=.:src .venv/bin/python scripts/wave_adjudicate.py --go --budget 3.28
+  PYTHONPATH=.:src .venv/bin/python scripts/wave_adjudicate.py --go --budget 0.25 \
+      --extra-sids biden_2022:0432 --tag r3 --reason "publish-blocking blank rationale"
 """
 from __future__ import annotations
 
@@ -167,6 +192,139 @@ def wave_set(flipset: dict,
             "by_speech": by_speech}
 
 
+#: The default output tag — the wave's own. An escape run may not use it (see
+#: :func:`escape_refusal`): the wave's report, diffs and journals are prior
+#: artifacts and this script never overwrites them.
+DEFAULT_TAG = "wave"
+
+#: How an escaped sid's membership is recorded in the report and the artifact.
+ESCAPE_REASON = "extra-sid escape"
+
+
+def report_path(tag: str = DEFAULT_TAG) -> Path:
+    return OUT_DIR / f"{tag}_report.json"
+
+
+def diff_path(speech: str, tag: str = DEFAULT_TAG) -> Path:
+    return OUT_DIR / f"{tag}_{speech}_verdict_diff.json"
+
+
+def journal_path(speech: str, tag: str = DEFAULT_TAG) -> Path:
+    return JOURNAL_DIR / f"{speech}_{tag}.jsonl"
+
+
+def sids_refusal(available: list[str], requested: list[str]) -> Optional[str]:
+    """The ``--sids`` contract, ENFORCED: every requested sid must already be in
+    the run's claim set.
+
+    It used to be documented ("must already be in the set") and then silently
+    intersected, so a typo — or a sid the flip set never released — produced a
+    smaller run and no complaint. A slice that quietly drops what it was asked
+    for is the same failure mode as a widened wave, just in the other
+    direction. To adjudicate something outside the set, name it with
+    ``--extra-sids`` and say why."""
+    unknown = [s for s in requested if s not in set(available)]
+    if not unknown:
+        return None
+    return ("REFUSING --sids: not in this run's claim set: "
+            + ", ".join(sorted(unknown))
+            + ". --sids SLICES the set, it does not extend it. A claim outside "
+              "the set (e.g. a publish-blocking defect the flip set never "
+              "released) needs --extra-sids with a --reason, which is recorded "
+              "in the run report. No spend attempted.")
+
+
+def escape_refusal(extra_sids: Optional[list[str]], reason: str,
+                   tag: str) -> Optional[str]:
+    """Everything the audited escape demands before it may cost a cent.
+
+    Three conditions, each of them the fix for a way this could go wrong
+    quietly: a reason (or the escape is unreconstructible after the fact), a
+    tag of its own (or it overwrites the wave's report/diffs/journals), and
+    well-formed sids (or a typo becomes a KeyError halfway through a metered
+    run)."""
+    if not extra_sids:
+        if (reason or "").strip():
+            return ("--reason is only meaningful with --extra-sids: there is "
+                    "nothing to justify. No spend attempted.")
+        return None
+    if not (reason or "").strip():
+        return ("REFUSING --extra-sids: --reason is REQUIRED. The escape "
+                "admits a claim the flip set never released, and the reason is "
+                "written into the run report's provenance — an unexplained "
+                "escape is indistinguishable from a widened wave. No spend "
+                "attempted.")
+    if tag == DEFAULT_TAG:
+        return (f"REFUSING --extra-sids under --tag {DEFAULT_TAG!r}: an escape "
+                f"run writes a report, a verdict diff and a chunk journal, and "
+                f"under the wave's own tag those would OVERWRITE the wave's. "
+                f"Give it its own --tag. No spend attempted.")
+    if not tag or not tag.replace("_", "").replace("-", "").isalnum():
+        return (f"REFUSING --tag {tag!r}: it names output files, so it must be "
+                "alphanumeric (dashes and underscores allowed). No spend "
+                "attempted.")
+    malformed = [s for s in extra_sids if len(s.split(":")) != 2 or not all(s.split(":"))]
+    if malformed:
+        return ("REFUSING --extra-sids: malformed sid(s) "
+                + ", ".join(sorted(malformed))
+                + " — expected speech_id:claim_id. No spend attempted.")
+    return None
+
+
+def escape_set(extra_sids: list[str], reason: str) -> dict:
+    """The claim set of an AUDITED ESCAPE run: EXACTLY the named sids.
+
+    Deliberately not ``wave_set(...) + extras``. The wave set is derived from
+    the flip set and was costed as a unit; bolting a hand-named claim onto it
+    would re-run 29 claims nobody asked for and would make "the wave" mean two
+    different things in two reports. So the escape is its own run over its own
+    claims, and ``wave_set`` keeps returning exactly what it returned before —
+    which is what "must not silently widen the wave set" means in code."""
+    sids = sorted(dict.fromkeys(extra_sids))
+    by_speech: dict[str, list[str]] = {}
+    for sid in sids:
+        by_speech.setdefault(sid.split(":", 1)[0], []).append(sid)
+    return {"sids": sids,
+            "reason": {sid: f"{ESCAPE_REASON}: {reason.strip()}" for sid in sids},
+            "dropped": {}, "by_speech": by_speech}
+
+
+def escape_provenance(extra_sids: list[str], reason: str, tag: str,
+                      wave_sids: list[str]) -> dict:
+    """The escape's record, carried in the run report AND in the artifact meta.
+
+    It states what was admitted, why, under what tag — and, explicitly, that
+    the wave set is unchanged, with its size, so a later reader can check that
+    claim instead of taking it on trust."""
+    return {
+        "kind": ESCAPE_REASON,
+        "reason": reason.strip(),
+        "sids": sorted(dict.fromkeys(extra_sids)),
+        "tag": tag,
+        "wave_set_widened": False,
+        "wave_set_size": len(wave_sids),
+        "source_artifact": "current publishing head (post-wave, post-rulings)",
+        "note": ("--extra-sids admits claims the flip set never released. It "
+                 "is for a publish-blocking defect outside the flip set; the "
+                 "wave's own claim set, report and diffs are untouched."),
+    }
+
+
+def print_escape(prov: dict) -> None:
+    """The banner. Loud on purpose: a metered run that admits hand-named claims
+    should be impossible to miss in a log."""
+    bar = "=" * 72
+    print(f"\n{bar}\nEXTRA-SIDS ESCAPE — {len(prov['sids'])} claim(s) admitted "
+          f"OUTSIDE the wave set\n{bar}")
+    for sid in prov["sids"]:
+        print(f"  {sid}")
+    print(f"  reason : {prov['reason']}")
+    print(f"  tag    : {prov['tag']} (own report/diffs/journals — the wave's "
+          "are not touched)")
+    print(f"  source : {prov['source_artifact']}")
+    print(f"  wave set UNCHANGED at {prov['wave_set_size']} claim(s)\n{bar}")
+
+
 def print_wave_set(wave: dict) -> None:
     print(f"\nWAVE CLAIM SET — {len(wave['sids'])} claim(s)")
     for speech in sorted(wave["by_speech"]):
@@ -191,6 +349,27 @@ def merged_sidecar(speech: str, *, use_b2: bool = True) -> dict:
         b2 = load_rescore_sidecar(b2_path, speech, REBUILT_RUNS[speech])
         b2["pass_label"] = "b2"
     return merge_sidecars(b1a, b2)
+
+
+def source_artifact(speech: str, *, head: bool = False) -> tuple[Path, dict]:
+    """The artifact a run re-adjudicates on top of.
+
+    The wave's source is the PHASE-3 REBUILD (``artifact_path``), pinned, so the
+    wave is reproducible against the vintage it was costed on.
+
+    An escape run's source is the current PUBLISHING HEAD, selected by lineage
+    (``reshape_rerun_0031.shipping_artifact``). An escape happens after the wave
+    and after the rulings pass; re-adjudicating on the rebuild would produce an
+    artifact that silently discarded the 65 applied withholdings and the R-1
+    shape correction — a repair that undoes two prior repairs is not a repair.
+
+    The import is deferred because ``reshape_rerun_0031`` imports this module;
+    by the time this runs, both are loaded."""
+    if not head:
+        path = artifact_path(speech)
+        return path, load_artifact(path)
+    from reshape_rerun_0031 import shipping_artifact
+    return shipping_artifact(speech)
 
 
 def rules_default_state() -> dict:
@@ -388,20 +567,31 @@ def write_wave_artifact(source_art: dict, wave_rows: list[dict], packs: dict,
                         rules: dict, exhibits: dict,
                         run_id: Optional[str] = None,
                         out_dir: Optional[Path] = None,
-                        cost_usd: float = 0.0) -> tuple[Path, dict]:
+                        cost_usd: float = 0.0,
+                        escape: Optional[dict] = None,
+                        remediation: str = WAVE_TAG,
+                        inherit_meta: bool = False) -> tuple[Path, dict]:
     """Write the wave's pca_runs artifact.
 
     Same shape ``rerender_pca_site.py`` consumes ({run_id, meta, claims, rows,
     characterization, roster, evidence}) — a sidecar would have needed a new
     consumer, and the renderer already reads artifacts. The SOURCE artifact is
     never touched: archive-never-delete means the rebuilt run stays exactly as
-    it was and this is a new file with a new id and ``rebuild_of`` lineage."""
+    it was and this is a new file with a new id and ``rebuild_of`` lineage.
+
+    ``inherit_meta`` keeps the SOURCE artifact's other meta keys (a rulings
+    block, a cost note, an earlier wave block) rather than writing a fresh meta
+    from a fixed field list. The wave built on the phase-3 rebuilds, whose meta
+    held nothing worth carrying; an escape run builds on the publishing head,
+    whose meta records the rulings that landed after the wave — dropping that
+    would leave the newest artifact the least documented one."""
     import uuid
 
     run_id = run_id or str(uuid.uuid4())
     out_dir = Path(out_dir) if out_dir is not None else REPO / "metrics" / "pca_runs"
     old_meta = source_art.get("meta") or {}
-    meta = {
+    meta = dict(old_meta) if inherit_meta else {}
+    meta.update({
         "speaker": old_meta.get("speaker", ""),
         "date": old_meta.get("date", ""),
         "speech_id": speech_id,
@@ -412,23 +602,32 @@ def write_wave_artifact(source_art: dict, wave_rows: list[dict], packs: dict,
         "cost_usd": round(cost_usd, 4),
         "rebuild_of": source_art.get("run_id", ""),
         "pipeline_generation": PIPELINE_GENERATION,
-        "remediation": WAVE_TAG,
-        "wave": {
-            "date": WAVE_DATE,
-            "rules": dict(rules),
-            "stance_vintage": "b1a+b2 merged re-score sidecars",
-            "retrieval": "none — stored packs re-gated, never re-retrieved",
-            "sids_adjudicated": list(wave_sids),
-            "reasons": {sid: reasons.get(sid, "") for sid in wave_sids},
-            "computed_exhibits": dict(exhibits),
-            # Honesty about what this artifact does NOT do: the ratified rules
-            # also newly GATE claims outside the wave. Applying that is a
-            # separate decision (it collides with a passing acceptance case),
-            # so the sids are RECORDED here and left un-applied rather than
-            # applied quietly or forgotten.
-            "deferred_newly_gated": sorted(deferred_gated),
-        },
+        "remediation": remediation,
+    })
+    run_block = {
+        "date": WAVE_DATE,
+        "rules": dict(rules),
+        "stance_vintage": "b1a+b2 merged re-score sidecars",
+        "retrieval": "none — stored packs re-gated, never re-retrieved",
+        "sids_adjudicated": list(wave_sids),
+        "reasons": {sid: reasons.get(sid, "") for sid in wave_sids},
+        "computed_exhibits": dict(exhibits),
+        # Honesty about what this artifact does NOT do: the ratified rules
+        # also newly GATE claims outside the wave. Applying that is a
+        # separate decision (it collides with a passing acceptance case),
+        # so the sids are RECORDED here and left un-applied rather than
+        # applied quietly or forgotten.
+        "deferred_newly_gated": sorted(deferred_gated),
     }
+    if escape:
+        # An escape run gets its OWN meta key. Writing it into ``wave`` would
+        # overwrite the inherited block and leave the artifact claiming that
+        # the 2026-08-09 wave adjudicated two claims.
+        run_block["escape"] = dict(escape)
+        run_block["date"] = date.today().isoformat()
+        meta["escape_run"] = run_block
+    else:
+        meta["wave"] = run_block
     payload = {
         "run_id": run_id,
         "meta": meta,
@@ -453,6 +652,24 @@ def write_wave_artifact(source_art: dict, wave_rows: list[dict], packs: dict,
 
 # ── the funded path ──────────────────────────────────────────────────────────
 
+#: Seconds to wait before re-reading the proxy key's spend counter. It is
+#: written ASYNCHRONOUSLY, so an immediate read can report $0 for a call that
+#: cost money — which is exactly what happened on the 2026-08-10 R-1 run
+#: (banked $0.0000, true cost $0.0036, patched afterwards by hand).
+SPEND_SETTLE_S = 20
+
+
+def settled_delta(proxy_lane, start_spend: float, *,
+                  settle_s: float = SPEND_SETTLE_S) -> float:
+    """Spend since ``start_spend``, read twice and rounded UP to the larger.
+
+    A cost report may never round DOWN: under-reporting a bill is the one
+    direction that looks like good news."""
+    first = proxy_lane.proxy_key_spend() - start_spend
+    time.sleep(settle_s)
+    return max(first, proxy_lane.proxy_key_spend() - start_spend)
+
+
 def go_refusal(budget: Optional[float]) -> Optional[str]:
     """The one --go refusal. There is no retrieval in this wave, so the
     TRUTHBOT_R2_MODEL economy guard phase-3 needs does not apply — no R2 call
@@ -474,10 +691,27 @@ def run_wave(args) -> int:
     if refusal:
         sys.exit(refusal)
 
+    extra_sids = list(getattr(args, "extra_sids", None) or [])
+    tag = getattr(args, "tag", DEFAULT_TAG) or DEFAULT_TAG
+    reason = getattr(args, "reason", "") or ""
+    refusal = escape_refusal(extra_sids, reason, tag)
+    if refusal:
+        sys.exit(refusal)
+
     flipset = json.loads(FLIPSET_PATH.read_text(encoding="utf-8"))
-    wave = wave_set(flipset)
-    print_wave_set(wave)
+    full_wave = wave_set(flipset)
+    print_wave_set(full_wave)
+    escape = None
+    if extra_sids:
+        escape = escape_provenance(extra_sids, reason, tag, full_wave["sids"])
+        wave = escape_set(extra_sids, reason)
+        print_escape(escape)
+    else:
+        wave = full_wave
     if args.sids:
+        refusal = sids_refusal(wave["sids"], args.sids)
+        if refusal:
+            sys.exit(refusal)
         keep = set(args.sids)
         wave["sids"] = [s for s in wave["sids"] if s in keep]
         wave["by_speech"] = {}
@@ -499,7 +733,8 @@ def run_wave(args) -> int:
     newly_gated = sorted(flipset.get("newly_gated_sids") or ())
     report = {"schema": "truthbot-wave-report v1",
               "generated": datetime.now(timezone.utc).isoformat(),
-              "wave_date": WAVE_DATE, "rules": rules,
+              "wave_date": WAVE_DATE, "rules": rules, "tag": tag,
+              "escape": escape,
               "claim_set": wave["sids"], "reasons": wave["reason"],
               "dropped": wave["dropped"], "per_speech": [],
               "exhibit_decisions": {}, "halted": ""}
@@ -508,13 +743,15 @@ def run_wave(args) -> int:
 
     for speech in sorted(wave["by_speech"]):
         sids = wave["by_speech"][speech]
-        art = load_artifact(artifact_path(speech))
+        src_path, art = source_artifact(speech, head=bool(escape))
+        print(f"\n{speech}: source artifact {str(art.get('run_id'))[:8]} "
+              f"({src_path.name})")
         sidecar = merged_sidecar(speech)
         packs, pack_tel = build_wave_packs(speech, art, sidecar, sids, **rules)
         claims_by_sid = {c.get("sid"): c for c in art["claims"]}
         shapes = {t["sid"]: t["claim_shape"] for t in pack_tel}
 
-        journal = JOURNAL_DIR / f"{speech}_wave.jsonl"
+        journal = journal_path(speech, tag)
         done_rows, _, banked_cost, _ = publish_pipeline.load_chunk_journal(journal)
         banked_total += banked_cost
 
@@ -596,9 +833,15 @@ def run_wave(args) -> int:
         out_path, payload = write_wave_artifact(
             art, merged_rows, packs, roster_note, speech_id=speech,
             wave_sids=sids, reasons=wave["reason"],
-            deferred_gated=[s for s in newly_gated if s.startswith(speech + ":")],
-            rules=rules, exhibits=exhibits,
-            cost_usd=(proxy_lane.proxy_key_spend() - start_spend))
+            # An escape run builds on the publishing head, where the deferred
+            # newly-gated sids have ALREADY been applied by the rulings pass.
+            # Re-listing them as deferred would re-open a closed item.
+            deferred_gated=([] if escape else
+                            [s for s in newly_gated if s.startswith(speech + ":")]),
+            rules=rules, exhibits=exhibits, escape=escape,
+            inherit_meta=bool(escape),
+            remediation=(f"{ESCAPE_REASON} ({tag})" if escape else WAVE_TAG),
+            cost_usd=settled_delta(proxy_lane, start_spend) + banked_total)
         update_manifest(payload["run_id"], speech)
 
         old_rows = {r.get("sid"): r for r in art["rows"]}
@@ -608,27 +851,29 @@ def run_wave(args) -> int:
               f"{art.get('run_id', '')[:8]})")
         print_diff(diff)
         diff_out = {"speech_id": speech, "rebuild_of": art.get("run_id", ""),
-                    "new_run_id": payload["run_id"], "wave": True,
+                    "new_run_id": payload["run_id"], "wave": not escape,
+                    "escape": escape, "tag": tag,
                     "wave_sids": sids, "reasons": wave["reason"], **diff}
-        diff_path = OUT_DIR / f"wave_{speech}_verdict_diff.json"
-        diff_path.write_text(json.dumps(diff_out, indent=2, ensure_ascii=False)
+        diff_file = diff_path(speech, tag)
+        diff_file.write_text(json.dumps(diff_out, indent=2, ensure_ascii=False)
                              + "\n", encoding="utf-8")
         speech_rec.update(new_run_id=payload["run_id"],
-                          artifact=str(out_path), diff=str(diff_path),
+                          artifact=str(out_path), diff=str(diff_file),
                           counts=diff["counts"])
         report["per_speech"].append(speech_rec)
         if halted:
             break
 
-    total = (proxy_lane.proxy_key_spend() - start_spend) + banked_total
+    total = settled_delta(proxy_lane, start_spend) + banked_total
     report["halted"] = halted
     report["spend_usd"] = round(total, 4)
     report["cap_usd"] = args.budget
-    (OUT_DIR / "wave_report.json").write_text(
+    out_report = report_path(tag)
+    out_report.write_text(
         json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"\nSPEND: ${total:.4f} of cap ${args.budget:.2f} "
           "(all on-proxy — no retrieval, so the ledger is the whole bill)")
-    print(f"wave report → {OUT_DIR / 'wave_report.json'}")
+    print(f"run report → {out_report}")
     if halted:
         print("\nRESUME (re-spends only on unbanked sids):")
         print("  PYTHONPATH=.:src .venv/bin/python scripts/wave_adjudicate.py "
@@ -644,8 +889,27 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--budget", type=float, default=None,
                     help="HARD halt cap in USD — REQUIRED with --go")
     ap.add_argument("--sids", nargs="*", default=None,
-                    help="restrict to these sids (must already be in the set)")
+                    help="restrict to these sids — SLICES the claim set and "
+                         "REFUSES any sid outside it")
+    ap.add_argument("--extra-sids", nargs="+", default=None,
+                    help="AUDITED ESCAPE: adjudicate these sids INSTEAD of the "
+                         "wave set (for a publish-blocking defect the flip set "
+                         "never released). Requires --reason and its own --tag; "
+                         "the wave set is not widened")
+    ap.add_argument("--reason", default="",
+                    help="why the --extra-sids are admitted — REQUIRED with "
+                         "--extra-sids, recorded in the run report and the "
+                         "artifact's provenance")
+    ap.add_argument("--tag", default=DEFAULT_TAG,
+                    help=f"names this run's report, diffs and journals "
+                         f"(default {DEFAULT_TAG!r}; an escape run must use "
+                         f"its own so it cannot overwrite the wave's)")
     args = ap.parse_args(argv)
+
+    refusal = escape_refusal(args.extra_sids, args.reason, args.tag)
+    if refusal:
+        print(refusal)
+        return 2
 
     flipset = json.loads(FLIPSET_PATH.read_text(encoding="utf-8"))
     wave = wave_set(flipset)
@@ -653,6 +917,9 @@ def main(argv: Optional[list[str]] = None) -> int:
           f"{flipset.get('generated', '?')[:19]}, rules "
           f"{flipset.get('rules', {}).get('after')}")
     print_wave_set(wave)
+    if args.extra_sids:
+        print_escape(escape_provenance(args.extra_sids, args.reason,
+                                       args.tag, wave["sids"]))
     if not args.go:
         print("\n($0 plan only — add --go --budget USD to spend)")
         return 0
