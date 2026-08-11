@@ -74,3 +74,4 @@ metrics/spend_ledger/*.jsonl
 
 # UI reference drops (design specs, not site artifacts)
 ui-upgrade-ideas/*.zip
+_quarantine/

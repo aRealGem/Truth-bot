@@ -179,11 +179,19 @@ def test_lens_lint_is_strict_gated_and_actually_fires(tmp_path) -> None:
 
 
 def test_committed_site_pca_still_carries_the_chip_hence_the_gate() -> None:
-    """Documents WHY the lint is strict-gated rather than unconditional: the
-    committed tree is pre-remediation output and still renders the chip. If
-    this ever goes green the gate can be dropped along with the flag."""
+    """RETIRED at the DC-6' publish (rev 5) — the Q-3 tripwire.
+
+    This documented WHY the lens lint was strict-gated: the committed site-pca was
+    pre-remediation output and still rendered the lens chip, so the lint stayed
+    gated at strict_buckets=False. The DC-6' publish replaced site-pca with the
+    post-remediation render, which carries NO lens UI — verified below — so the
+    premise no longer holds. The lint keeps its teeth (see
+    test_lens_lint_is_strict_gated_and_actually_fires); the strict GATE on
+    _check_no_lens_ui can now be dropped, which is the change that lands with the
+    merge to main. Kept as a skip (tombstone) so the retirement is on the record."""
     if not (_SITE / "about.html").exists():
         pytest.skip("site-pca tree not present")
-    assert _check_no_lens_ui(_SITE), (
-        "site-pca no longer carries lens UI — retire the strict gate on "
-        "_check_no_lens_ui and delete this test")
+    # The publish flipped this green: the committed tree no longer carries lens UI.
+    assert _check_no_lens_ui(_SITE) == []
+    pytest.skip("Q-3 tripwire retired: site-pca is now the DC-6' render (no lens "
+                "UI); drop the strict gate on _check_no_lens_ui at merge to main")

@@ -123,13 +123,21 @@ def test_the_old_artifacts_carry_exactly_one_named_orphan():
 
 @pytest.mark.skipif(not (SITE / "data" / "claims.json").exists(),
                     reason="site-pca tree not present")
-def test_the_published_530_is_529_plus_one_named_orphan():
+def test_the_published_site_is_529_and_the_orphan_is_ledgered_not_placeheld():
+    """After the DC-6' publish (rev 5) the committed site carries EXACTLY the 529
+    canonical claims. The pre-remediation orphan row (trump_2026:0311, which the
+    old run published as a "(claim text unavailable)" placeholder to reach 530) is
+    gone from the page — the rebuild emits rows only for real claims — and is
+    disclosed instead in the net ledger's dropped_rows. A count correction, not a
+    silent drop: no reader ever saw a claim there."""
     published = json.loads((SITE / "data" / "claims.json").read_text("utf-8"))
     placeholders = [c for c in published
                     if PLACEHOLDER_TEXT in (c.get("claim_text") or "")]
-    assert len(published) == PUBLISHED_RECORDS
-    assert len(placeholders) == 1
-    assert len(published) - len(placeholders) == CANONICAL_CLAIMS
+    assert len(published) == CANONICAL_CLAIMS
+    assert placeholders == []
+    net = json.loads((REPO / "metrics" / "remediation_v2"
+                      / "dc6_net_ledger.json").read_text("utf-8"))
+    assert [d["sid"] for d in net["dropped_rows"]] == [ORPHAN_SID]
 
 
 # ── the packager agrees, and says the same thing in words ────────────────────
@@ -141,8 +149,11 @@ def test_canonical_counts_reports_the_same_reconciliation():
                              "rows": CANONICAL_CLAIMS, "orphan_rows": []}
     assert counts["old"]["rows"] == CANONICAL_CLAIMS + 1
     assert counts["old"]["orphan_rows"] == [ORPHAN_SID]
-    assert counts["published"]["records"] == PUBLISHED_RECORDS
-    assert counts["published"]["placeholder_records"] == 1
+    # Rev 5: the published site is now the DC-6' render — 529 records, no
+    # placeholder; the orphan is still NAMED as an excluded row in the
+    # reconciliation, just no longer rendered as a page.
+    assert counts["published"]["records"] == CANONICAL_CLAIMS
+    assert counts["published"]["placeholder_records"] == 0
     assert [e["sid"] for e in counts["named_exclusions"]] == [ORPHAN_SID]
     assert str(CANONICAL_CLAIMS) in counts["statement"]
     assert ORPHAN_SID in counts["statement"]
