@@ -1,0 +1,261 @@
+{
+  "schema": "truthbot-dc6-corrections-entries v1",
+  "generated": "2026-08-09",
+  "generation": "v2.3-role-axis-s5cap",
+  "usage": "PUBLICATION RECORD for the adjudication wave, not an input to apply_to_artifact — the wave artifacts already carry these verdicts. FACTS ONLY (S-8): sid, claim text, old verdict, new verdict and the mechanical reason. The lineage paragraph is the owner's to write and is deliberately absent.",
+  "changed_total": 23,
+  "ledger_eligible": 21,
+  "not_ledger_representable": 2,
+  "dropped_total": 0,
+  "entries": [
+    {
+      "sid": "biden_2022:0155",
+      "speech_id": "biden_2022",
+      "claim_text": "That would be one of the biggest investments in manufacturing in American history.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0244",
+      "speech_id": "biden_2022",
+      "claim_text": "By the end of this year, the deficit will be down to less than half what it was before I took office.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "biden_2022:0311",
+      "speech_id": "biden_2022",
+      "claim_text": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0021",
+      "speech_id": "clinton_1998",
+      "claim_text": "We have the smallest government in 35 years, but a more progressive one.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0026",
+      "speech_id": "clinton_1998",
+      "claim_text": "This year, our deficit is projected to be $10 billion and heading lower.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0028",
+      "speech_id": "clinton_1998",
+      "claim_text": "Tonight I come before you to announce that the federal deficit, once so incomprehensibly large that it had 11 zeros, will be, simply, zero.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0038",
+      "speech_id": "clinton_1998",
+      "claim_text": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that immediately follow.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0194",
+      "speech_id": "clinton_1998",
+      "claim_text": "Drug use is on the decline.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "MISLEADING",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "clinton_1998:0364",
+      "speech_id": "clinton_1998",
+      "claim_text": "Nearly 200 years ago, a tattered flag, its broad stripes and bright stars still gleaming through the smoke of a fierce battle, moved Francis Scott Key to scribble a few words on the back of an envelope, the words that became our national anthem.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "gwbush_2006:0133",
+      "speech_id": "gwbush_2006",
+      "claim_text": "Our economy is healthy and vigorous and growing faster than other major industrialized nations.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0056",
+      "speech_id": "obama_2014",
+      "claim_text": "And over half of big manufacturers say they’re thinking of insourcing jobs from abroad.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0177",
+      "speech_id": "obama_2014",
+      "claim_text": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "obama_2014:0280",
+      "speech_id": "obama_2014",
+      "claim_text": "American diplomacy, backed by the threat of force, is why Syria’s chemical weapons are being eliminated, and we will continue to work with the international community to usher in the future the Syrian people deserve – a future free of dictatorship, terror and fear.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0191",
+      "speech_id": "trump_2026",
+      "claim_text": "Many of the wars I settled was because of the threat of tariffs.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "FALSE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0294",
+      "speech_id": "trump_2026",
+      "claim_text": "Your 401(k)s are way up.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0310",
+      "speech_id": "trump_2026",
+      "claim_text": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $19 billion from the American taxpayer.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "FALSE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0428",
+      "speech_id": "trump_2026",
+      "claim_text": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping America's next generation positioned to succeed and strongly succeed in the future.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0559",
+      "speech_id": "trump_2026",
+      "claim_text": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people with what's called roadside bombs.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "MISLEADING",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0564",
+      "speech_id": "trump_2026",
+      "claim_text": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,000 protesters in their own country.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "MISLEADING",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0616",
+      "speech_id": "trump_2026",
+      "claim_text": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stopped it completely coming in by water or sea.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "FALSE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    },
+    {
+      "sid": "trump_2026:0639",
+      "speech_id": "trump_2026",
+      "claim_text": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the regime's really infamous prison in Caracas.",
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-09",
+      "source": "adjudication-wave-2026-08-09 (v2.3-role-axis-s5cap)"
+    }
+  ],
+  "non_ledger_changes": [
+    {
+      "sid": "trump_2026:0553",
+      "speech_id": "trump_2026",
+      "claim_text": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 soldiers are dying each and every month.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "Models split",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the panel's model votes changed split status on the rebuilt pack.",
+      "excluded_because": "verdict outside the corrections vocabulary (Unverifiable → Models split)"
+    },
+    {
+      "sid": "trump_2026:0554",
+      "speech_id": "trump_2026",
+      "claim_text": "Think of that, 25,000 soldiers are dying a month, a war which would have never happened if I were president, would have never happened.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "Models split",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the panel's model votes changed split status on the rebuilt pack.",
+      "excluded_because": "verdict outside the corrections vocabulary (Unverifiable → Models split)"
+    }
+  ],
+  "dropped_rows": [],
+  "wave": {
+    "date": "2026-08-09",
+    "speeches": [
+      "clinton_1998",
+      "gwbush_2006",
+      "obama_2014",
+      "biden_2022",
+      "trump_2026"
+    ],
+    "claims_adjudicated": 29,
+    "claims_changed": 23
+  }
+}

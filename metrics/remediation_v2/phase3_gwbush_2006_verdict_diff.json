@@ -1,0 +1,364 @@
+{
+  "speech_id": "gwbush_2006",
+  "rebuild_of": "92f39851-8870-4609-97f6-458798d5dbb8",
+  "new_run_id": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+  "old_tally": {
+    "UNVERIFIABLE": 6,
+    "TRUE": 37,
+    "MISLEADING": 5
+  },
+  "new_tally": {
+    "UNVERIFIABLE": 8,
+    "TRUE": 35,
+    "MISLEADING": 4,
+    "FALSE": 1
+  },
+  "n_compared": 48,
+  "counts": {
+    "unchanged": 37,
+    "decided_to_decided_changed": 3,
+    "newly_gated": 5,
+    "newly_decided": 3,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 7,
+  "per_sid": [
+    {
+      "sid": "gwbush_2006:0024",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In 1945, there were about two dozen lonely democracies in the world."
+    },
+    {
+      "sid": "gwbush_2006:0025",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Today, there are 122."
+    },
+    {
+      "sid": "gwbush_2006:0027",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "At the start of 2006, more than half the people of our world live in democratic nations."
+    },
+    {
+      "sid": "gwbush_2006:0019",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "On September 11, 2001, we found that problems originating in a failed and oppressive state 7,000 miles away could bring "
+    },
+    {
+      "sid": "gwbush_2006:0026",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And we're writing a new chapter in the story of self-government—with women lining up to vote in Afghanistan, and million"
+    },
+    {
+      "sid": "gwbush_2006:0033",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Their aim is to seize power in Iraq and use it as a safe haven to launch attacks against America and the world."
+    },
+    {
+      "sid": "gwbush_2006:0044",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We are the nation that saved liberty in Europe and liberated death camps and helped raise up democracies and faced down "
+    },
+    {
+      "sid": "gwbush_2006:0047",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We have killed or captured many of their leaders—and for the others, their day will come."
+    },
+    {
+      "sid": "gwbush_2006:0052",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And third, we're striking terrorist targets while we train Iraqi forces that are increasingly capable of defeating the e"
+    },
+    {
+      "sid": "gwbush_2006:0056",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In less than three years, the nation has gone from dictatorship to liberation, to sovereignty, to a Constitution, to nat"
+    },
+    {
+      "sid": "gwbush_2006:0057",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "At the same time, our coalition has been relentless in shutting off terrorist infiltration, clearing out insurgent stron"
+    },
+    {
+      "sid": "gwbush_2006:0074",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Marine Staff Sergeant Dan Clay was killed last month fighting in Fallujah."
+    },
+    {
+      "sid": "gwbush_2006:0095",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "The same is true of Iran, a nation now held hostage by a small clerical elite that is isolating and repressing its peopl"
+    },
+    {
+      "sid": "gwbush_2006:0105",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We also show compassion abroad because regions overwhelmed by poverty, corruption, and despair are sources of terrorism "
+    },
+    {
+      "sid": "gwbush_2006:0106",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In recent years, you and I have taken unprecedented action to fight AIDS and malaria, expand the education of girls, and"
+    },
+    {
+      "sid": "gwbush_2006:0115",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It is said that prior to the attacks of September 11, our government failed to connect the dots of the conspiracy."
+    },
+    {
+      "sid": "gwbush_2006:0116",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We now know that two of the hijackers in the United States placed telephone calls to Al Qaeda operatives overseas."
+    },
+    {
+      "sid": "gwbush_2006:0118",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "So to prevent another attack—based on authority given to me by the Constitution and by statute—I have authorized a terro"
+    },
+    {
+      "sid": "gwbush_2006:0119",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Previous Presidents have used the same constitutional authority I have, and federal courts have approved the use of that"
+    },
+    {
+      "sid": "gwbush_2006:0120",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Appropriate members of Congress have been kept informed."
+    },
+    {
+      "sid": "gwbush_2006:0133",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Our economy is healthy and vigorous and growing faster than other major industrialized nations."
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In the last five years, the tax relief you passed has left $880 billion in the hands of American workers, investors, sma"
+    },
+    {
+      "sid": "gwbush_2006:0121",
+      "old": "UNVERIFIABLE",
+      "new": "UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "The terrorist surveillance program has helped prevent terrorist attacks."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin"
+    },
+    {
+      "sid": "gwbush_2006:0148",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And they have used it to help produce more than four years of uninterrupted economic growth."
+    },
+    {
+      "sid": "gwbush_2006:0155",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "This year my budget will cut it again, and reduce or eliminate more than 140 programs that are performing poorly or not "
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "By passing these reforms, we will save the American taxpayer another $14 billion next year and stay on track to cut the "
+    },
+    {
+      "sid": "gwbush_2006:0149",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Yet the tax relief is set to expire in the next few years."
+    },
+    {
+      "sid": "gwbush_2006:0154",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "Every year of my Presidency, we've reduced the growth of nonsecurity discretionary spending, and last year you passed bi"
+    },
+    {
+      "sid": "gwbush_2006:0160",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This year, the first of about 78 million baby boomers turn 60, including two of my dad's favorite people—me and Presiden"
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg"
+    },
+    {
+      "sid": "gwbush_2006:0165",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Congress did not act last year on my proposal to save Social Security, yet the rising cost of entitlements is a problem "
+    },
+    {
+      "sid": "gwbush_2006:0171",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "One out of every five factory jobs in America is related to global trade, and we want people everywhere to buy American."
+    },
+    {
+      "sid": "gwbush_2006:0183",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "And because lawsuits are driving many good doctors out of practice, leaving women in nearly 1,500 American counties with"
+    },
+    {
+      "sid": "gwbush_2006:0185",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And here we have a serious problem: America is addicted to oil, which is often imported from unstable parts of the world"
+    },
+    {
+      "sid": "gwbush_2006:0187",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources."
+    },
+    {
+      "sid": "gwbush_2006:0189",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "So tonight I announce the Advanced Energy Initiative—a 22-percent increase in clean-energy research—at the Department of"
+    },
+    {
+      "sid": "gwbush_2006:0206",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "We've made a good start in the early grades with the No Child Left Behind Act, which is raising standards and lifting te"
+    },
+    {
+      "sid": "gwbush_2006:0215",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Violent crime rates have fallen to their lowest levels since the 1970s."
+    },
+    {
+      "sid": "gwbush_2006:0216",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Welfare cases have dropped by more than half over the past decade."
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Drug use among youth is down 19 percent since 2001."
+    },
+    {
+      "sid": "gwbush_2006:0218",
+      "old": "MISLEADING",
+      "new": "FALSE",
+      "category": "decided_to_decided_changed",
+      "text": "There are fewer abortions in America than at any point in the last three decades, and the number of children born to tee"
+    },
+    {
+      "sid": "gwbush_2006:0230",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The Supreme Court now has two superb new members on its bench, Chief Justice John Roberts and Justice Sam Alito."
+    },
+    {
+      "sid": "gwbush_2006:0234",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For 24 years of faithful service to our nation, the United States is grateful to Justice Sandra Day O'Connor."
+    },
+    {
+      "sid": "gwbush_2006:0245",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "And this good work is being led by our First Lady, Laura Bush."
+    },
+    {
+      "sid": "gwbush_2006:0248",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "So far the federal government has committed $85 billion to the people of the gulf coast and New Orleans."
+    },
+    {
+      "sid": "gwbush_2006:0249",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "We're removing debris and repairing highways and rebuilding stronger levees."
+    },
+    {
+      "sid": "gwbush_2006:0256",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "More than a million Americans live with HIV, and half of all AIDS cases occur among African Americans."
+    }
+  ]
+}

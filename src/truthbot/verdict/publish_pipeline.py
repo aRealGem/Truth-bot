@@ -108,21 +108,33 @@ def append_chunk_journal(path, chunk_idx: int, rows: list[dict],
         fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
+def evidence_from_artifact_dict(evidence_by_sid: dict) -> dict:
+    """sid → serialized-Evidence list → sid → ``list[Evidence]``.
+
+    The exact inverse of how runs are persisted (``ev.model_dump(mode="json")``
+    over ``bridge._pack_to_evidence``), so it round-trips a stored artifact's
+    ``evidence`` dict, a chunk journal or a packs journal alike. Shared by
+    ``packs_from_evidence_dict`` and by scripts/rescore_stored_packs.py, which
+    needs the Evidence objects themselves — ``relevance.score_evidence`` mutates
+    them in place — rather than assembled packs."""
+    from truthbot.models import Evidence
+    return {sid: [Evidence.model_validate(d) for d in (evs or [])]
+            for sid, evs in (evidence_by_sid or {}).items()}
+
+
 def packs_from_evidence_dict(evidence_by_sid: dict,
                              gate_codes: Optional[dict] = None) -> dict:
     """sid → serialized-Evidence list → sid → EvidencePack. Shared decode for the
     chunk journal and the P120 Phase R packs journal. ``gate_codes`` (optional)
     restores each pack's T2.4 gate flag so a RESUMED gate-failed pack still forces
     Unverifiable instead of silently reopening as a thin pack."""
-    from truthbot.models import Evidence
     from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
 
     gate_codes = gate_codes or {}
     packs: dict[str, EvidencePack] = {}
-    for sid, evs in (evidence_by_sid or {}).items():
+    for sid, evs in evidence_from_artifact_dict(evidence_by_sid).items():
         items = []
-        for i, d in enumerate(evs, start=1):
-            ev = Evidence.model_validate(d)
+        for i, ev in enumerate(evs, start=1):
             items.append(PackItem(
                 pack_id=f"E{i}", source_name=ev.source_name,
                 source_url=ev.source_url, tier=ev.source_tier,
@@ -188,6 +200,24 @@ def append_packs_journal(path, sid: str, pack) -> None:
                             items=list(pool))
         rec["pool"] = [ev.model_dump(mode="json")
                        for ev in bridge_mod._pack_to_evidence(sid, shim)]
+    # Remediation v2 (1.1): fact-check exclusions are journaled per claim —
+    # never silently dropped.
+    excluded = getattr(pack, "excluded_fc", None) or []
+    if excluded:
+        rec["excluded_fc"] = list(excluded)
+    # Remediation v2 (1.2): kept items tiered by the fail-closed quarantine of
+    # an unmapped government-class host are journaled per claim, so a burst of
+    # unmapped hosts is visible instead of silently bottom-tiered.
+    quarantined = getattr(pack, "quarantined", None) or []
+    if quarantined:
+        rec["quarantined"] = list(quarantined)
+    # Phase A (A1): scoring-coverage telemetry per pack — how much of the pack
+    # carries the untouched default relevance, and the stance True/False/None
+    # split. Same additive pattern as excluded_fc / quarantined above; absent
+    # on v1 packs and on journals written before the field existed.
+    scoring = getattr(pack, "scoring", None) or {}
+    if scoring:
+        rec["scoring"] = dict(scoring)
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("a", encoding="utf-8") as fh:
@@ -215,6 +245,64 @@ def load_packs_journal(path) -> dict:
         evidence_by_sid[sid] = rec.get("evidence") or []
         gate_codes[sid] = rec.get("gate_code") or ""
     return packs_from_evidence_dict(evidence_by_sid, gate_codes)
+
+
+# ── Standing agreed-verdict audit (remediation v2, 1.12) ─────────────────────
+#
+# Deterministic lints over every decided non-split row, run at the post-verdict
+# point where rows are assembled for bridging (the same rows whose crm114
+# provenance the bridge captures). Queue-action findings land in a JSONL queue
+# for HUMAN approval — no audit outcome ever triggers a model call
+# (zero-unauthorized-spend is a hard project rule).
+
+def apply_verdict_audit(rows: list[dict], claims: list[dict],
+                        packs: Optional[dict] = None) -> int:
+    """Stamp ``audit_flags`` / ``audit_queue`` onto decided non-split rows
+    (in place; bridge/_build_provenance carries them into the bundle).
+    Utterance dates resolve per-sid through the speech-date registry.
+    Returns the number of queued rows. Pure/offline — $0."""
+    from truthbot.verdict import verdict_audit
+
+    audit = verdict_audit.audit_rows(claims, rows, packs)
+    queued = 0
+    for row in rows:
+        entry = audit.get(row.get("sid"))
+        if entry is None:
+            continue
+        row["audit_flags"] = list(entry["audit_flags"])
+        row["audit_queue"] = bool(entry["audit_queue"])
+        queued += 1 if row["audit_queue"] else 0
+    return queued
+
+
+def append_readjudication_queue(path, rows: list[dict],
+                                speech_id: str = "") -> int:
+    """Append queued rows to the re-adjudication queue JSONL
+    (``metrics/audits/readjudication_queue.jsonl`` in the live pipeline).
+
+    One record per queued row: {"sid", "speech_id", "lints", "ts"}. This is a
+    QUEUE for human approval — nothing here (or downstream of here) calls a
+    model; a queued row ships as-is until a human approves a re-adjudication.
+    Returns the number of records appended."""
+    import json
+    import time
+    from pathlib import Path
+
+    queued = [r for r in rows if r.get("audit_queue")]
+    if not queued:
+        return 0
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    ts = time.strftime("%Y-%m-%dT%H:%M:%S")
+    with p.open("a", encoding="utf-8") as fh:
+        for r in queued:
+            sid = str(r.get("sid") or "")
+            rec = {"sid": sid,
+                   "speech_id": speech_id or sid.rsplit(":", 1)[0],
+                   "lints": list(r.get("audit_flags") or []),
+                   "ts": ts}
+            fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    return len(queued)
 
 
 def verdict_bucket_tally(rows: list[dict]) -> dict[str, int]:
@@ -270,6 +358,7 @@ def run_pca_verify(
     budget_check: Optional[Callable[[], float]] = None,
     budget_safety: float = 1.5,
     prebuilt_layer_a: Optional[LayerAResult] = None,
+    audit_queue_path=None,
 ) -> PcaVerifyResult:
     """Segmented sentences → published-ready ``VerdictBundle``s via the PCA stack.
 
@@ -294,6 +383,10 @@ def run_pca_verify(
                     chunk cost × ``budget_safety`` (rolling mean of completed
                     chunks), the run halts EARLY with ``BudgetHalt`` — before
                     spend, with everything journaled.
+      audit_queue_path: remediation v2 (1.12) — when set, rows the standing
+                    agreed-verdict audit queues are appended here
+                    (``append_readjudication_queue``); the audit stage itself
+                    runs (and stamps row provenance) regardless.
 
     Returns a ``PcaVerifyResult``. Pure/offline given offline ``*_fn``s.
     On ANY mid-run exception the completed rows/claims ride on the exception
@@ -375,6 +468,14 @@ def run_pca_verify(
             roster=result.roster)
         exc.partial_result = partial
         raise
+
+    # Standing agreed-verdict audit (1.12): stamp audit provenance onto the
+    # final rows BEFORE bridging, so bundles (and claims.json at the next
+    # regen) carry audit_flags/audit_queue. Deterministic and $0; the queue
+    # file is a human-approval inbox, never an automatic re-run.
+    apply_verdict_audit(all_rows, claims, packs)
+    if audit_queue_path is not None:
+        append_readjudication_queue(audit_queue_path, all_rows)
 
     out = bridge_mod.bridge(all_rows, claims, packs)
     result.bundles = out.bundles

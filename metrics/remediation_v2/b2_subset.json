@@ -1,0 +1,1671 @@
+{
+  "schema": "truthbot-b2-subset v1",
+  "generated": "2026-08-08T13:20:40.632156-04:00",
+  "speeches": [
+    "gwbush_2006",
+    "clinton_1998",
+    "obama_2014",
+    "biden_2022",
+    "trump_2026"
+  ],
+  "per_speech": [
+    {
+      "speech": "gwbush_2006",
+      "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+      "sids": [
+        "gwbush_2006:0033",
+        "gwbush_2006:0120",
+        "gwbush_2006:0133",
+        "gwbush_2006:0134",
+        "gwbush_2006:0147",
+        "gwbush_2006:0156",
+        "gwbush_2006:0160",
+        "gwbush_2006:0163",
+        "gwbush_2006:0187",
+        "gwbush_2006:0189",
+        "gwbush_2006:0217"
+      ],
+      "claims": 11,
+      "trigger_items": 26,
+      "items_to_rescore": 103,
+      "excluded_utterance_records": 4,
+      "by_host": {
+        "www.bls.gov": 5,
+        "www.cbo.gov": 4,
+        "www.gao.gov": 3,
+        "www.energy.gov": 3,
+        "ofac.treasury.gov": 2,
+        "www.govinfo.gov": 2,
+        "fraser.stlouisfed.org": 2,
+        "fred.stlouisfed.org": 1,
+        "www.census.gov": 1,
+        "www.ssa.gov": 1,
+        "www.cms.gov": 1,
+        "www.nih.gov": 1
+      },
+      "triggers": [
+        {
+          "sid": "gwbush_2006:0033",
+          "source_url": "https://ofac.treasury.gov/recent-actions/20041201",
+          "tier": "Government",
+          "snippet": "[2004-12-01] U.S. Treasury (OFAC) notice amending SDN/FTO entries for Jama'at al\u2011Tawhid wa'al\u2011Jihad / al\u2011Qa'ida in Iraq (designation and ali"
+        },
+        {
+          "sid": "gwbush_2006:0033",
+          "source_url": "https://ofac.treasury.gov/recent-actions/20041015",
+          "tier": "Government",
+          "snippet": "[2004-10-15] OFAC press entry (10/15/2004) adding Jama'at al\u2011Tawhid wa'al\u2011Jihad to SDN/FTO list, documenting U.S. government designation of "
+        },
+        {
+          "sid": "gwbush_2006:0120",
+          "source_url": "https://www.govinfo.gov/content/pkg/CHRG-109shrg27443/pdf/CHRG-109shrg27443.pdf",
+          "tier": "Government",
+          "snippet": "[2006-02-06] Senate Judiciary hearing transcript: AG defended briefings while senators questioned whether Congress was adequately informed."
+        },
+        {
+          "sid": "gwbush_2006:0133",
+          "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_200601.pdf",
+          "tier": "Government",
+          "snippet": "[2006-02-03] Official BLS monthly Employment Situation (USDL 06-160) \u2014 authoritative payroll levels and unemployment for Jan 2006."
+        },
+        {
+          "sid": "gwbush_2006:0133",
+          "source_url": "https://www.bls.gov/opub/ted/2006/feb/wk1/art02.htm",
+          "tier": "Government",
+          "snippet": "[2006-02-07] BLS Economics Daily summary of January 2006 payrolls ( +193,000) and industry job gains, useful to compute multi-year job chang"
+        },
+        {
+          "sid": "gwbush_2006:0133",
+          "source_url": "https://fred.stlouisfed.org/series/PAYEMS",
+          "tier": "Government",
+          "snippet": "FRED series (PAYEMS) \u2014 monthly total nonfarm payrolls (BLS source) for calculating jobs added over specific periods."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+          "tier": "Government",
+          "snippet": "[2006-01-06] BLS Employment Situation (Dec 2005), the most current official payroll data at speech time; enables computing cumulative jobs s"
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02032006.pdf",
+          "tier": "Government",
+          "snippet": "[2006-02-03] Official BLS Employment Situation (Jan 2006) \u2014 monthly nonfarm payroll series and charts covering Feb 2003\u2013Jan 2006."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "source_url": "https://www.bls.gov/news.release/history/empsit_02032006.txt",
+          "tier": "Government",
+          "snippet": "[2006-02-03] BLS Employment Situation (Jan 2006), primary nonfarm payroll series to verify the ~4.6M cumulative U.S. job gain; within 7-day "
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_01062006.pdf",
+          "tier": "Government",
+          "snippet": "[2006-01-06] PDF of BLS December 2005 release with full payroll tables for computing job growth over the prior two-and-a-half years."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "source_url": "https://fraser.stlouisfed.org/title/press-releases-united-states-department-treasury-6111/volume-428-587270/fulltext",
+          "tier": "Government",
+          "snippet": "[2005-12-02] U.S. Treasury press releases (Dec 2005) citing jobs created since May 2003 (administration figures: ~4.4\u20134.5 million)."
+        },
+        {
+          "sid": "gwbush_2006:0147",
+          "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+          "tier": "Government",
+          "snippet": "[2006-01-26] CBO Jan 26, 2006 budget outlook gives official revenue/expiration estimates for 2001\u20132005 tax provisions for comparison."
+        },
+        {
+          "sid": "gwbush_2006:0147",
+          "source_url": "https://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+          "tier": "Government",
+          "snippet": "[2006-01-26] CBO January 2006 Budget & Economic Outlook \u2014 authoritative baseline for evaluating revenue effects of enacted tax changes."
+        },
+        {
+          "sid": "gwbush_2006:0156",
+          "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+          "tier": "Government",
+          "snippet": "[2006-01-26] CBO's Jan 2006 baseline projects FY2006 deficit ~$337B and declining thereafter \u2014 independent yardstick for the deficit-halving"
+        },
+        {
+          "sid": "gwbush_2006:0156",
+          "source_url": "http://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+          "tier": "Government",
+          "snippet": "[2006-01-26] CBO's Jan 2006 baseline projections for receipts, outlays, and deficits \u2014 independent benchmark for evaluating administration c"
+        },
+        {
+          "sid": "gwbush_2006:0156",
+          "source_url": "https://www.govinfo.gov/app/details/BUDGET-2007-APP",
+          "tier": "Government",
+          "snippet": "[2006-02-06] FY2007 Budget Appendix / Historical Tables \u2014 primary tables showing projected outlays, deficits and savings assumptions."
+        },
+        {
+          "sid": "gwbush_2006:0160",
+          "source_url": "https://www.census.gov/content/dam/Census/library/publications/2005/demo/p23-209.pdf",
+          "tier": "Government",
+          "snippet": "[2005-12-01] Census report (65+ in the United States: 2005) with demographic details and context for baby\u2011boomer aging trends."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "source_url": "https://www.gao.gov/assets/rms052605.pdf",
+          "tier": "Government",
+          "snippet": "[2005-05-26] GAO 'Nation's Growing Fiscal Imbalance' (May 2005): composition-of-spending charts giving each program's projected share of bud"
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "source_url": "https://www.gao.gov/assets/gao-04-793sp.pdf",
+          "tier": "Government",
+          "snippet": "[2004-05-01] GAO\u2019s May 2004 forum report documents unsustainable health spending growth driving Medicare/Medicaid\u2019s large future budget shar"
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "source_url": "https://www.gao.gov/products/gao-05-318t",
+          "tier": "Government",
+          "snippet": "[2005-02-09] GAO product landing page for the same Feb 2005 long-term Social Security/entitlement fiscal testimony with 2030 spending shares"
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "source_url": "https://www.ssa.gov/OACT/TR/TR05/tr05.pdf",
+          "tier": "Government",
+          "snippet": "[2005-03-23] 2005 Social Security Trustees report projects Social Security costs rising to about 6% of GDP by 2030 (part of combined project"
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "source_url": "https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/ReportsTrustFunds/downloads/tr2005.pdf",
+          "tier": "Government",
+          "snippet": "[2005-03-23] 2005 Medicare Trustees report (Mar 23, 2005) projects substantial Medicare spending growth through 2030, contributing to combin"
+        },
+        {
+          "sid": "gwbush_2006:0187",
+          "source_url": "https://www.energy.gov/documents/fy07highlightspdf",
+          "tier": "Government",
+          "snippet": "[2006-02-01] DOE FY2007 Budget Highlights (Feb 2006) with program-level R&D funding useful for checking cumulative investments since 2001."
+        },
+        {
+          "sid": "gwbush_2006:0187",
+          "source_url": "https://www.energy.gov/cfo/articles/fy-2007-budget-justification",
+          "tier": "Government",
+          "snippet": "[2006-02-01] DOE Office of the Chief Financial Officer page (Feb 1, 2006) hosting the FY2007 budget justification documents for detailed spe"
+        },
+        {
+          "sid": "gwbush_2006:0189",
+          "source_url": "https://www.energy.gov/cmei/articles/fiscal-year-2007-budget-brief",
+          "tier": "Government",
+          "snippet": "[2006-02-06] DOE EERE FY2007 Budget-in-Brief; primary budget document to check whether the DOE clean-energy research request actually rose ~"
+        },
+        {
+          "sid": "gwbush_2006:0217",
+          "source_url": "https://www.nih.gov/node/30116",
+          "tier": "Government",
+          "snippet": "NIDA/NIH news-release page for a Monitoring the Future survey reporting declining teen illicit drug use; date unverified, include only if it"
+        }
+      ]
+    },
+    {
+      "speech": "clinton_1998",
+      "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+      "sids": [
+        "clinton_1998:0006",
+        "clinton_1998:0027",
+        "clinton_1998:0032",
+        "clinton_1998:0035",
+        "clinton_1998:0038",
+        "clinton_1998:0057",
+        "clinton_1998:0058",
+        "clinton_1998:0077",
+        "clinton_1998:0091",
+        "clinton_1998:0101",
+        "clinton_1998:0107",
+        "clinton_1998:0130",
+        "clinton_1998:0132",
+        "clinton_1998:0148",
+        "clinton_1998:0156",
+        "clinton_1998:0167",
+        "clinton_1998:0194",
+        "clinton_1998:0210",
+        "clinton_1998:0216",
+        "clinton_1998:0263",
+        "clinton_1998:0339"
+      ],
+      "claims": 21,
+      "trigger_items": 42,
+      "items_to_rescore": 190,
+      "excluded_utterance_records": 1,
+      "by_host": {
+        "www.congress.gov": 7,
+        "www.cbo.gov": 5,
+        "www.govinfo.gov": 5,
+        "www.census.gov": 4,
+        "www.gao.gov": 3,
+        "www.jct.gov": 2,
+        "nces.ed.gov": 2,
+        "fraser.stlouisfed.org": 2,
+        "aspe.hhs.gov": 2,
+        "fred.stlouisfed.org": 1,
+        "www.irs.gov": 1,
+        "www.bea.gov": 1,
+        "bea.gov": 1,
+        "www.federalregister.gov": 1,
+        "data.bls.gov": 1,
+        "www2.census.gov": 1,
+        "www.bls.gov": 1,
+        "nida.nih.gov": 1,
+        "pubmed.ncbi.nlm.nih.gov": 1
+      },
+      "triggers": [
+        {
+          "sid": "clinton_1998:0006",
+          "source_url": "https://www.census.gov/housing/hvs/files/qtr497/q497tab7.txt",
+          "tier": "Government",
+          "snippet": "Census Housing Vacancies/Homeownership Q4 1997 table \u2014 official homeownership rate data underpinning the record-homeownership sub-claim."
+        },
+        {
+          "sid": "clinton_1998:0006",
+          "source_url": "https://www.census.gov/housing/hvs/files/qtr497/q497tab5.txt",
+          "tier": "Government",
+          "snippet": "Census HVS Q4 1997 homeownership time-series by quarter \u2014 lets judge compare 1997 rate against prior historical peaks."
+        },
+        {
+          "sid": "clinton_1998:0027",
+          "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+          "tier": "Government",
+          "snippet": "[1997-01-01] CBO Economic and Budget Outlook FY1998-2007: official deficit-trajectory data underlying the 'deficits for three decades' conte"
+        },
+        {
+          "sid": "clinton_1998:0027",
+          "source_url": "https://www.cbo.gov/publication/10607",
+          "tier": "Government",
+          "snippet": "[1998-01-08] CBO report (Jan 8, 1998) with budget/outlook data and historical context on deficits used to evaluate multi-decade deficit clai"
+        },
+        {
+          "sid": "clinton_1998:0027",
+          "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1998-TAB/pdf/BUDGET-1998-TAB.pdf",
+          "tier": "Government",
+          "snippet": "[1998-02-02] OMB Historical Tables (Budget of the U.S., FY1998) \u2014 official historical deficit/surplus data across decades for assessing long"
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1997-CITIZENSGUIDE/html/BUDGET-1997-CITIZENSGUIDE-5.htm",
+          "tier": "Government",
+          "snippet": "Official OMB guide explaining deficit-and-debt history used to assess the percentage-cut claim."
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+          "tier": "Government",
+          "snippet": "St. Louis Fed dataset of annual federal surplus/deficit; lets one compute the FY1992-to-FY1997 percentage reduction."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "source_url": "https://www.jct.gov/getattachment/def435ec-2c9e-46c6-9ca8-36945f02ca06/s-23-97.pdf",
+          "tier": "Government",
+          "snippet": "[1997-12-17] Joint Committee on Taxation Blue Book (JCS-23-97) explaining the Taxpayer Relief Act of 1997 and giving distributional/effectiv"
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "source_url": "https://www.cbo.gov/sites/default/files/revenue0.pdf",
+          "tier": "Government",
+          "snippet": "[1997-12-01] CBO 'Budgetary Implications of the Taxpayer Relief Act of 1997' documents the enacted cuts' size and provisions; primary/offici"
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/012898.pdf",
+          "tier": "Government",
+          "snippet": "[1998-01-28] CBO testimony (June O'Neill) with projections and discussion of 1997 receipts and the effect of the 1997 tax law on tax burdens"
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "source_url": "https://www.jct.gov/getattachment/8e76364f-e214-48c2-a8ee-67be06fd636a/x-39-97-2150.pdf",
+          "tier": "Government",
+          "snippet": "[1997-06-24] Joint Committee on Taxation document describing the 1997 tax legislation and its estimated distributional effects."
+        },
+        {
+          "sid": "clinton_1998:0038",
+          "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/Eb01-97.pdf",
+          "tier": "Government",
+          "snippet": "[1997-01-01] CBO's prior (Jan 1997) Outlook still projecting deficits \u2014 baseline against which the surplus turnaround is measured."
+        },
+        {
+          "sid": "clinton_1998:0038",
+          "source_url": "https://www.govinfo.gov/content/pkg/GAOREPORTS-T-AIMD-OCE-98-83/pdf/GAOREPORTS-T-AIMD-OCE-98-83.pdf",
+          "tier": "Government",
+          "snippet": "GAO 1998 testimony on the long-term fiscal outlook contextualizes near-term surplus projections against later structural pressures."
+        },
+        {
+          "sid": "clinton_1998:0038",
+          "source_url": "https://www.congress.gov/committee-report/105th-congress/senate-report/170/1",
+          "tier": "Government",
+          "snippet": "Senate committee report (105th Congress) highlights that CBO and other analyses disagreed with the administration\u2019s $9.5B FY1999 surplus cla"
+        },
+        {
+          "sid": "clinton_1998:0057",
+          "source_url": "https://www.congress.gov/105/plaws/publ78/PLAW-105publ78.htm",
+          "tier": "Government",
+          "snippet": "[1997-11-13] Public Law 105-78 (enacted Nov 13, 1997) raises the maximum Pell Grant to $3,000 (the funding basis for any recipient increases"
+        },
+        {
+          "sid": "clinton_1998:0057",
+          "source_url": "https://www.congress.gov/committee-report/105th-congress/senate-report/58",
+          "tier": "Government",
+          "snippet": "[1997-07-24] Senate Appropriations report (S.Rept.105-58) describes funding ($6.91B) enabling the Pell maximum increase to $3,000 (no 220,00"
+        },
+        {
+          "sid": "clinton_1998:0058",
+          "source_url": "https://www.irs.gov/pub/irs-tege/notice97_53.pdf",
+          "tier": "Government",
+          "snippet": "[1997-10-06] IRS Notice 97-53 (Oct 6, 1997) gives effective-date guidance on IRA/education withdrawal rules (relates to Education IRA change"
+        },
+        {
+          "sid": "clinton_1998:0077",
+          "source_url": "https://nces.ed.gov/pubs97/98015.pdf",
+          "tier": "Government",
+          "snippet": "[1997-08-01] NCES Digest of Education Statistics (1997) \u2014 national counts of teachers and related tables usable to compute classroom impacts"
+        },
+        {
+          "sid": "clinton_1998:0077",
+          "source_url": "https://nces.ed.gov/pubs97/97983.pdf",
+          "tier": "Government",
+          "snippet": "[1997-07-01] NCES report (July 1997) on public/private schools with statistics on school/class size and teacher counts for baseline comparis"
+        },
+        {
+          "sid": "clinton_1998:0091",
+          "source_url": "https://www.bea.gov/system/files/newsreleases/national/gdp/1997/gdp397a.txt",
+          "tier": "Government",
+          "snippet": "[1997-10-31] Primary BEA advance GDP release for Q3 1997 showing net exports' contribution to real GDP growth."
+        },
+        {
+          "sid": "clinton_1998:0091",
+          "source_url": "https://bea.gov/sites/default/files/2019-04/gdp397p.txt",
+          "tier": "Government",
+          "snippet": "[1997-11-26] Primary BEA preliminary Q3 1997 GDP release; export contribution to growth for direct computation."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "source_url": "https://www.govinfo.gov/content/pkg/PLAW-105publ78/pdf/PLAW-105publ78.pdf",
+          "tier": "Government",
+          "snippet": "[1997-11-13] PL 105-78, the FY1998 Labor-HHS appropriations act; primary source for the actual dislocated-worker (JTPA Title III) funding le"
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+          "tier": "Government",
+          "snippet": "[1997-02-06] DOL budget appendix (FY1998) shows Dislocated Worker Assistance rising to ~$1.12B (1996) and ~$1.25B (1997 est.)."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "source_url": "https://www.congress.gov/congressional-report/105th-congress/senate-report/58",
+          "tier": "Government",
+          "snippet": "Senate Appropriations report (FY1998) recommends $1,350,510,000 for dislocated worker programs (explicit appropriation figure)."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "source_url": "https://www.federalregister.gov/documents/1997/01/22/97-1528/job-training-partnership-act-employment-and-training-assistance-for-dislocated-workers-reallotment",
+          "tier": "Government",
+          "snippet": "[1997-01-22] Federal Register notice on Title III dislocated-worker fund reallotment; primary official record of program allotments in the y"
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "source_url": "https://www.congress.gov/committee-report/104th-congress/house-report/659",
+          "tier": "Government",
+          "snippet": "House Appropriations report (FY1997) shows dislocated worker Title III funding at about $1.1 billion for that year."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "source_url": "https://www.gao.gov/products/128415",
+          "tier": "Government",
+          "snippet": "GAO review of JTPA Title III dislocated-worker program spending patterns; independent baseline data for pre-1993 vs. later funding levels (d"
+        },
+        {
+          "sid": "clinton_1998:0107",
+          "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+          "tier": "Government",
+          "snippet": "BLS official series (All employees, total nonfarm) \u2014 primary monthly data to compute 'millions of jobs' created."
+        },
+        {
+          "sid": "clinton_1998:0107",
+          "source_url": "https://www.congress.gov/committee-print/105th-congress/ways-and-means-print/35610",
+          "tier": "Government",
+          "snippet": "[1997-01-01] House Ways & Means committee print (1997) documenting extensive U.S. trade activity and negotiation agenda in the 1990s."
+        },
+        {
+          "sid": "clinton_1998:0130",
+          "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1997-0",
+          "tier": "Established",
+          "snippet": "[1997-10-01] HHS/ASPE statutory annual report to Congress on welfare dependence indicators and caseload trends through 1997."
+        },
+        {
+          "sid": "clinton_1998:0132",
+          "source_url": "https://aspe.hhs.gov/reports/indicators-welfare-dependence-annual-report-congress-1998-1",
+          "tier": "Established",
+          "snippet": "HHS/ASPE annual report containing AFDC/TANF national tables and trend data through 1997 (official government statistics)."
+        },
+        {
+          "sid": "clinton_1998:0148",
+          "source_url": "https://www.gao.gov/products/hehs-97-160",
+          "tier": "Government",
+          "snippet": "[1997-08-18] GAO report (Aug 18, 1997) with authoritative managed-care data (Medicare/HMO enrollment) for 1997 context."
+        },
+        {
+          "sid": "clinton_1998:0156",
+          "source_url": "https://www2.census.gov/library/publications/1997/demo/p60-199.pdf",
+          "tier": "Government",
+          "snippet": "[1997-09-01] Census publication PDF (Health Insurance Coverage: 1996) with tables showing counts/percent uninsured by age, including 55\u201364."
+        },
+        {
+          "sid": "clinton_1998:0167",
+          "source_url": "https://www.bls.gov/opub/mlr/1997/04/art1full.pdf",
+          "tier": "Government",
+          "snippet": "[1997-04-01] BLS Monthly Labor Review article on long-run trends in hours of work provides baseline for 'work harder than ever' framing."
+        },
+        {
+          "sid": "clinton_1998:0167",
+          "source_url": "https://fraser.stlouisfed.org/title/economic-report-president-45/1998-8097/fulltext",
+          "tier": "Government",
+          "snippet": "[1998-02-01] Economic Report of the President (Feb 1998) on the new economy and working families; borderline date (may post-date +7d window)"
+        },
+        {
+          "sid": "clinton_1998:0167",
+          "source_url": "https://www.census.gov/library/publications/1997/demo/p70-59.html",
+          "tier": "Government",
+          "snippet": "[1997-09-01] Census report on fathers as caregivers shows employed mothers often rely on fathers for care during work hours."
+        },
+        {
+          "sid": "clinton_1998:0167",
+          "source_url": "https://www.census.gov/library/publications/1997/demo/p70-57.html",
+          "tier": "Government",
+          "snippet": "[1997-11-01] Census child-care update for employed mothers documents prevalence and complexity of care arrangements linked to parental work."
+        },
+        {
+          "sid": "clinton_1998:0194",
+          "source_url": "https://nida.nih.gov/research-topics/trends-statistics/monitoring-future",
+          "tier": "Government",
+          "snippet": "NIDA page on MTF surveys providing historical trend context for 1990s."
+        },
+        {
+          "sid": "clinton_1998:0210",
+          "source_url": "https://www.gao.gov/products/nsiad-97-209",
+          "tier": "Government",
+          "snippet": "[1997-08-18] GAO report on NATO enlargement (Aug 18, 1997) situates the July 1997 invitations and discusses NATO's security role and costs."
+        },
+        {
+          "sid": "clinton_1998:0216",
+          "source_url": "https://www.govinfo.gov/content/pkg/GAOREPORTS-NSIAD-98-138/pdf/GAOREPORTS-NSIAD-98-138.pdf",
+          "tier": "Government",
+          "snippet": "GAO report on Bosnia reconstruction status circa 1997-98, official baseline on how far post-siege recovery had actually progressed."
+        },
+        {
+          "sid": "clinton_1998:0263",
+          "source_url": "https://www.congress.gov/bill/105th-congress/senate-bill/25",
+          "tier": "Government",
+          "snippet": "Official legislative record for S.25 (Bipartisan Campaign Reform Act of 1997), the McCain-Feingold bill and its 105th Congress action histor"
+        },
+        {
+          "sid": "clinton_1998:0339",
+          "source_url": "https://pubmed.ncbi.nlm.nih.gov/9278044/",
+          "tier": "Government",
+          "snippet": "[1997-08-28] Spillantini et\u2009al. (Nature) showing alpha\u2011synuclein is a major component of Lewy bodies in sporadic Parkinson\u2019s, linking mutati"
+        }
+      ]
+    },
+    {
+      "speech": "obama_2014",
+      "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+      "sids": [
+        "obama_2014:0000",
+        "obama_2014:0001",
+        "obama_2014:0003",
+        "obama_2014:0004",
+        "obama_2014:0008",
+        "obama_2014:0010",
+        "obama_2014:0031",
+        "obama_2014:0070",
+        "obama_2014:0071",
+        "obama_2014:0087",
+        "obama_2014:0088",
+        "obama_2014:0093",
+        "obama_2014:0143",
+        "obama_2014:0165",
+        "obama_2014:0166",
+        "obama_2014:0177",
+        "obama_2014:0189",
+        "obama_2014:0198",
+        "obama_2014:0202",
+        "obama_2014:0256"
+      ],
+      "claims": 20,
+      "trigger_items": 41,
+      "items_to_rescore": 183,
+      "excluded_utterance_records": 3,
+      "by_host": {
+        "www.bls.gov": 10,
+        "nces.ed.gov": 5,
+        "www.dol.gov": 4,
+        "fraser.stlouisfed.org": 2,
+        "www.sba.gov": 2,
+        "home.treasury.gov": 2,
+        "www.census.gov": 2,
+        "www.eia.gov": 2,
+        "data.bls.gov": 1,
+        "ers.usda.gov": 1,
+        "www.ers.usda.gov": 1,
+        "aspe.hhs.gov": 1,
+        "www.cms.gov": 1,
+        "www.bea.gov": 1,
+        "www.federalreserve.gov": 1,
+        "advocacy.sba.gov": 1,
+        "www.jct.gov": 1,
+        "fred.stlouisfed.org": 1,
+        "www.irs.gov": 1,
+        "www.govinfo.gov": 1
+      },
+      "triggers": [
+        {
+          "sid": "obama_2014:0000",
+          "source_url": "https://nces.ed.gov/pubs2012/2012006.pdf",
+          "tier": "Government",
+          "snippet": "[2012-01-01] Official NCES trends compendium giving the multi-decade completion-rate series needed to judge 'highest in more than three deca"
+        },
+        {
+          "sid": "obama_2014:0000",
+          "source_url": "https://nces.ed.gov/pubs2013/2013309.pdf",
+          "tier": "Government",
+          "snippet": "[2013-01-22] NCES First Look (Public School Graduates and Dropouts, SY2009\u201310) documents rising averaged freshman graduation rates and metho"
+        },
+        {
+          "sid": "obama_2014:0000",
+          "source_url": "https://nces.ed.gov/programs/dropout/ind_05.asp",
+          "tier": "Government",
+          "snippet": "NCES averaged freshman graduation rate data series (AFGR) \u2014 the historical on-time-completion metric underlying the 'three decades' framing."
+        },
+        {
+          "sid": "obama_2014:0000",
+          "source_url": "https://nces.ed.gov/programs/coe/indicator/coi/high-school-graduation-rates?tid=4",
+          "tier": "Government",
+          "snippet": "[2013-05-01] NCES Condition of Education (May 2013) summarizes ACGR/AFGR trends and notes recent high on\u2011time graduation measures."
+        },
+        {
+          "sid": "obama_2014:0001",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+          "tier": "Government",
+          "snippet": "[2014-01-10] BLS Employment Situation Dec 2013: official private/total payroll data for judging cumulative jobs since 2010 recovery low."
+        },
+        {
+          "sid": "obama_2014:0001",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+          "tier": "Government",
+          "snippet": "[2014-01-10] BLS official December 2013 Employment Situation release with monthly private/nonfarm payroll data used to count job gains."
+        },
+        {
+          "sid": "obama_2014:0001",
+          "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_201312.pdf",
+          "tier": "Government",
+          "snippet": "[2014-01-10] FRASER-archived copy of the same official BLS December 2013 Employment Situation release; primary payroll figures."
+        },
+        {
+          "sid": "obama_2014:0001",
+          "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+          "tier": "Government",
+          "snippet": "BLS private-sector employment time series; lets one sum private job gains over the 2010\u20132014 window in the claim."
+        },
+        {
+          "sid": "obama_2014:0001",
+          "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+          "tier": "Government",
+          "snippet": "[2014-01-10] BLS CES highlights for December 2013 detail private payroll trends underlying the eight-million cumulative figure."
+        },
+        {
+          "sid": "obama_2014:0003",
+          "source_url": "https://ers.usda.gov/publications/outlook-reports/",
+          "tier": "Government",
+          "snippet": "[2013-12-02] ERS series (AES outlooks, e.g., AES\u201180/AES\u201178) providing the quarterly trade forecasts and annual export figures for 2009\u20132013."
+        },
+        {
+          "sid": "obama_2014:0003",
+          "source_url": "https://www.ers.usda.gov/publications/35775",
+          "tier": "Government",
+          "snippet": "[2013-02-21] ERS page for the AES series (Outlook for U.S. Agricultural Trade) \u2014 primary ERS outlooks underpinning export figures and trends"
+        },
+        {
+          "sid": "obama_2014:0004",
+          "source_url": "https://aspe.hhs.gov/reports/affordable-care-act-adolescents-0",
+          "tier": "Established",
+          "snippet": "HHS/ASPE report: ~10% of adolescents have asthma; ACA bars pre-existing-condition denials for children starting Jan 2014, aiding affordable "
+        },
+        {
+          "sid": "obama_2014:0004",
+          "source_url": "https://www.cms.gov/cciio/resources/fact-sheets-and-faqs/ehb-2-20-2013",
+          "tier": "Government",
+          "snippet": "[2013-02-20] CMS final rule makes prescription drugs a required essential health benefit plans must cover beginning 2014 \u2014 the affordability"
+        },
+        {
+          "sid": "obama_2014:0008",
+          "source_url": "https://www.bls.gov/spotlight/2012/the-recession-of-2007-2009/home.htm",
+          "tier": "Government",
+          "snippet": "[2012-02-01] BLS Spotlight (Feb 2012) provides historical monthly unemployment series showing rates in 2008 (e.g., Oct 2008 at ~6.5%)."
+        },
+        {
+          "sid": "obama_2014:0010",
+          "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+          "tier": "Government",
+          "snippet": "[2014-01-10] BLS Current Employment Statistics highlights for Dec 2013, detailing manufacturing sub-sector employment trends the claim draws"
+        },
+        {
+          "sid": "obama_2014:0010",
+          "source_url": "https://www.bls.gov/opub/ted/2013/ted_20131112.htm",
+          "tier": "Government",
+          "snippet": "[2013-11-12] BLS Economics Daily on October 2013 payrolls, primary data documenting 2013 manufacturing employment change."
+        },
+        {
+          "sid": "obama_2014:0031",
+          "source_url": "https://www.bea.gov/data/income-saving/corporate-profits",
+          "tier": "Government",
+          "snippet": "BEA corporate profits data series \u2014 official source to check whether profit levels were near record in 2013."
+        },
+        {
+          "sid": "obama_2014:0070",
+          "source_url": "https://www.sba.gov/sites/default/files/aboutsbaarticle/SBA%207a%20and%20504%20Gross%20Loan%20Approval%20Volume%20as%2009-30-13.pdf",
+          "tier": "Government",
+          "snippet": "[2013-09-30] Official SBA tables (7(a), 504) showing number and dollar volume of loans approved through 9/30/2013 (primary agency data)."
+        },
+        {
+          "sid": "obama_2014:0070",
+          "source_url": "https://home.treasury.gov/system/files/256/LGR-October-2013--cleared-for-transmittal-with-charts.pdf",
+          "tier": "Government",
+          "snippet": "[2013-11-01] Treasury SBLF report: participants increased small business lending ~$8.9B since 2009 \u2014 related capital-access program data."
+        },
+        {
+          "sid": "obama_2014:0070",
+          "source_url": "https://www.federalreserve.gov/publications/other-reports/files/sbfreport2012.pdf",
+          "tier": "Government",
+          "snippet": "[2012-09-01] Federal Reserve report (Sept 2012) on availability of credit to small businesses; provides market context for SBA lending trend"
+        },
+        {
+          "sid": "obama_2014:0070",
+          "source_url": "https://www.sba.gov/document/report-small-business-administration-loan-program-performance",
+          "tier": "Government",
+          "snippet": "SBA primary loan-program performance tables by fiscal year \u2014 direct source for 7(a)/504 loan counts and volumes."
+        },
+        {
+          "sid": "obama_2014:0070",
+          "source_url": "https://advocacy.sba.gov/wp-content/uploads/2019/07/rs427-2013-Small-Business-Lending-Study-Summary.pdf",
+          "tier": "Government",
+          "snippet": "SBA Advocacy study on overall US small business lending in 2013 \u2014 baseline context for lending trends."
+        },
+        {
+          "sid": "obama_2014:0071",
+          "source_url": "https://www.census.gov/foreign-trade/Press-Release/edb/2013prelimprofile.pdf",
+          "tier": "Government",
+          "snippet": "Primary Census/ITA Exporter Database profile giving exporter counts and SME share of exporting companies."
+        },
+        {
+          "sid": "obama_2014:0087",
+          "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=12991",
+          "tier": "Government",
+          "snippet": "[2013-09-17] EIA analysis of 2012-2013 residential solar growth trends."
+        },
+        {
+          "sid": "obama_2014:0088",
+          "source_url": "https://home.treasury.gov/system/files/131/Tax-Expenditures-FY2014.pdf",
+          "tier": "Government",
+          "snippet": "[2013-02-13] Treasury/OMB tax-expenditure tables itemize energy-related tax preferences that sum to billions annually for fossil-fuel provis"
+        },
+        {
+          "sid": "obama_2014:0088",
+          "source_url": "https://www.jct.gov/getattachment/8bf84027-b7fe-4c13-a00f-0c36a3425cad/s-1-13-4504.pdf",
+          "tier": "Government",
+          "snippet": "[2013-02-01] Joint Committee on Taxation's Feb 1, 2013 tax-expenditure estimates provide the official line-item bases for energy tax breaks."
+        },
+        {
+          "sid": "obama_2014:0093",
+          "source_url": "https://www.eia.gov/environment/emissions/carbon/",
+          "tier": "Government",
+          "snippet": "[2013-10-21] EIA emissions data hub showing US energy-related CO2 trend across the 2005\u20132013 window in question."
+        },
+        {
+          "sid": "obama_2014:0143",
+          "source_url": "https://nces.ed.gov/nationsreportcard/pubs/main2013/2014451.aspx",
+          "tier": "Government",
+          "snippet": "[2013-11-07] Federal NAEP 2013 First Look data \u2014 primary source for national/state performance trends the claim invokes."
+        },
+        {
+          "sid": "obama_2014:0165",
+          "source_url": "https://www.bls.gov/cps/demographics/women-labor-force.htm",
+          "tier": "Government",
+          "snippet": "BLS overview of women in the labor force; participation and share figures for the early-2010s period."
+        },
+        {
+          "sid": "obama_2014:0166",
+          "source_url": "https://www.bls.gov/opub/reports/womens-earnings/archive/womensearnings_2012.pdf",
+          "tier": "Government",
+          "snippet": "[2013-10-01] BLS weekly-earnings measure puts women at ~81% of men's pay in 2012, a competing methodology to the 77% annual figure."
+        },
+        {
+          "sid": "obama_2014:0166",
+          "source_url": "https://fraser.stlouisfed.org/files/docs/publications/bls/reports/womensearnings_2012.pdf",
+          "tier": "Government",
+          "snippet": "[2013-10-01] BLS report (Oct 2013) uses median usual weekly earnings \u2014 finds women earned about 81% of men in 2012 (different methodology)."
+        },
+        {
+          "sid": "obama_2014:0166",
+          "source_url": "https://www.bls.gov/opub/ted/2013/ted_20131104.htm",
+          "tier": "Government",
+          "snippet": "[2013-11-04] BLS note: 2012 women's median weekly earnings were 81% of men's, contrasting with the 77-cent annual statistic."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "source_url": "https://www.dol.gov/agencies/whd/mw-consolidated",
+          "tier": "Government",
+          "snippet": "DOL consolidated table of state minimum-wage rates/effective dates; primary data to verify which states' laws changed in 2013\u201314."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+          "tier": "Government",
+          "snippet": "DOL official state minimum-wage laws reference; corroborates which states raised statutory rates."
+        },
+        {
+          "sid": "obama_2014:0189",
+          "source_url": "https://fred.stlouisfed.org/data/cpiaucsl",
+          "tier": "Government",
+          "snippet": "Fed-hosted BLS CPI series includes January 1981 CPI-U value for direct inflation adjustment to January 2014."
+        },
+        {
+          "sid": "obama_2014:0189",
+          "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/history/chart",
+          "tier": "Government",
+          "snippet": "Primary DOL record of nominal federal minimum-wage history ($3.35 effective 1981; $7.25 in 2014) needed to anchor the real-value calculation"
+        },
+        {
+          "sid": "obama_2014:0198",
+          "source_url": "https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-returns-complete-report-publication-1304-basic-tables-part-2",
+          "tier": "Government",
+          "snippet": "IRS SOI Table 2.5 (TXY data) is the primary source listing returns claiming the EITC (\u224827\u201328 million returns in 2011)."
+        },
+        {
+          "sid": "obama_2014:0198",
+          "source_url": "https://www.bls.gov/opub/btn/volume-2/spending-patterns-of-families-receiving-means-tested-government-assistance.htm",
+          "tier": "Government",
+          "snippet": "[2013-12-16] BLS (Dec 16, 2013) reports there were about 27.1 million U.S. families with at least one child under 18 (2011 data)."
+        },
+        {
+          "sid": "obama_2014:0198",
+          "source_url": "https://www.census.gov/data/tables/2012/demo/families/cps-2012.html",
+          "tier": "Government",
+          "snippet": "Census (America\u2019s Families and Living Arrangements: 2012) tables for counts of parents/families with children used to compare against EITC r"
+        },
+        {
+          "sid": "obama_2014:0202",
+          "source_url": "http://www.dol.gov/ebsa/pdf/2011pensionplanbulletin.pdf",
+          "tier": "Government",
+          "snippet": "[2013-06-01] DOL/EBSA Private Pension Plan Bulletin (Abstract of 2011 Form 5500): aggregate counts (~130M participants) across pension plan "
+        },
+        {
+          "sid": "obama_2014:0256",
+          "source_url": "https://www.govinfo.gov/content/pkg/CPRT-112SPRT63954/html/CPRT-112SPRT63954.htm",
+          "tier": "Government",
+          "snippet": "[2012-01-01] Senate committee print on Iraq's shift from a military mission to a civilian-led effort after the 2011 withdrawal completed."
+        }
+      ]
+    },
+    {
+      "speech": "biden_2022",
+      "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+      "sids": [
+        "biden_2022:0100",
+        "biden_2022:0114",
+        "biden_2022:0115",
+        "biden_2022:0116",
+        "biden_2022:0139",
+        "biden_2022:0169",
+        "biden_2022:0200",
+        "biden_2022:0211",
+        "biden_2022:0216",
+        "biden_2022:0245",
+        "biden_2022:0266",
+        "biden_2022:0268",
+        "biden_2022:0305",
+        "biden_2022:0376",
+        "biden_2022:0427",
+        "biden_2022:0432",
+        "biden_2022:0437",
+        "biden_2022:0447"
+      ],
+      "claims": 18,
+      "trigger_items": 42,
+      "items_to_rescore": 157,
+      "excluded_utterance_records": 3,
+      "by_host": {
+        "www.bls.gov": 12,
+        "archive.cdc.gov": 4,
+        "www.cbo.gov": 3,
+        "fred.stlouisfed.org": 2,
+        "www.cms.gov": 2,
+        "stacks.cdc.gov": 2,
+        "www.supremecourt.gov": 2,
+        "www.publichealth.va.gov": 2,
+        "www.census.gov": 1,
+        "home.treasury.gov": 1,
+        "www.federalregister.gov": 1,
+        "data.bls.gov": 1,
+        "aspe.hhs.gov": 1,
+        "pmc.ncbi.nlm.nih.gov": 1,
+        "www.stlouisfed.org": 1,
+        "fiscaldata.treasury.gov": 1,
+        "fiscal.treasury.gov": 1,
+        "www.cdc.gov": 1,
+        "assessments.epa.gov": 1,
+        "www.congress.gov": 1,
+        "www.nih.gov": 1
+      },
+      "triggers": [
+        {
+          "sid": "biden_2022:0100",
+          "source_url": "https://www.bls.gov/news.release/archives/metro_06032020.htm",
+          "tier": "Government",
+          "snippet": "[2020-06-03] BLS metro release shows Scranton--Wilkes-Barre--Hazleton unemployment rose to ~17.8% in April 2020 (large local job losses)."
+        },
+        {
+          "sid": "biden_2022:0100",
+          "source_url": "https://www.bls.gov/news.release/archives/metro_06032020.pdf",
+          "tier": "Government",
+          "snippet": "[2020-06-03] BLS metro-area release shows Scranton\u2013Wilkes-Barre MSA unemployment surged in April 2020, evidencing local job loss that could "
+        },
+        {
+          "sid": "biden_2022:0100",
+          "source_url": "https://www.bls.gov/news.release/archives/metro_04292020.pdf",
+          "tier": "Government",
+          "snippet": "[2020-04-29] Earlier BLS monthly metro release reporting sharp pandemic-era job losses and elevated unemployment for the Scranton MSA (April"
+        },
+        {
+          "sid": "biden_2022:0100",
+          "source_url": "https://www.bls.gov/regions/mid-atlantic/news-release/2021/occupationalemploymentandwages_scranton_20210720.htm",
+          "tier": "Government",
+          "snippet": "[2021-07-20] BLS OEWS (May 2020 data) shows Scranton-area mean hourly wages ~18% below U.S. average, indicating lower local pay."
+        },
+        {
+          "sid": "biden_2022:0100",
+          "source_url": "https://www.census.gov/quickfacts/fact/table/scrantoncitypennsylvania/HSD310223",
+          "tier": "Government",
+          "snippet": "[2020-04-01] Census QuickFacts (2020 decennial) gives Scranton population and labor-force context for interpreting individual accounts of le"
+        },
+        {
+          "sid": "biden_2022:0100",
+          "source_url": "https://www.bls.gov/news.release/archives/metro_06022021.htm",
+          "tier": "Government",
+          "snippet": "[2021-06-02] BLS metropolitan release (May 2021) shows elevated regional unemployment (Scranton MSA ~6.9%), reflecting pandemic-era job disr"
+        },
+        {
+          "sid": "biden_2022:0114",
+          "source_url": "https://www.bls.gov/opub/ted/2022/nonfarm-payroll-employment-rose-by-199000-in-december-2021.htm",
+          "tier": "Government",
+          "snippet": "[2022-01-10] BLS official summary of December 2021 report showing strong 2021 payroll growth off the 2020 pandemic trough."
+        },
+        {
+          "sid": "biden_2022:0114",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.htm",
+          "tier": "Government",
+          "snippet": "[2022-03-04] BLS Employment Situation (Feb 2022 news release) includes establishment survey tables with month/year payroll levels underlying"
+        },
+        {
+          "sid": "biden_2022:0114",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_12032021.htm",
+          "tier": "Government",
+          "snippet": "[2021-12-03] BLS Nov 2021 report: provides monthly data leading into full-year total."
+        },
+        {
+          "sid": "biden_2022:0115",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+          "tier": "Government",
+          "snippet": "[2022-02-04] BLS monthly Employment Situation (Feb 4, 2022) \u2014 primary establishment/household data to evaluate the \"6.5 million jobs\" claim."
+        },
+        {
+          "sid": "biden_2022:0116",
+          "source_url": "https://www.cbo.gov/publication/57413",
+          "tier": "Government",
+          "snippet": "[2021-10-27] CBO (Oct 2021) finds about half of benefits from major income\u2011tax expenditures accrue to the highest income quintile."
+        },
+        {
+          "sid": "biden_2022:0116",
+          "source_url": "https://home.treasury.gov/system/files/131/Tax-Expenditures-2021.pdf",
+          "tier": "Government",
+          "snippet": "[2020-02-26] Treasury Office of Tax Analysis tax\u2011expenditures report (Feb 26, 2020) documents major tax breaks and their distributional effe"
+        },
+        {
+          "sid": "biden_2022:0139",
+          "source_url": "https://www.federalregister.gov/documents/2022/03/07/2022-04173/federal-acquisition-regulation-amendments-to-the-far-buy-american-act-requirements",
+          "tier": "Government",
+          "snippet": "[2022-03-07] Official FAR Buy American rule (published within window) governing the federal procurement spending the $600B figure describes."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.pdf",
+          "tier": "Government",
+          "snippet": "[2022-01-07] BLS Employment Situation (Dec 2021), the primary CES release covering full-year 2021 manufacturing employment change."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "source_url": "https://www.bls.gov/ces/publications/highlights/2021/current-employment-statistics-highlights-12-2021.pdf",
+          "tier": "Government",
+          "snippet": "[2022-01-07] BLS CES highlights for Dec 2021 detailing over-the-year manufacturing job gains, the official basis for the 2021 total."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "source_url": "https://data.bls.gov/timeseries/CES3000000001",
+          "tier": "Government",
+          "snippet": "BLS interactive manufacturing employment series (CES3000000001); lets one compute exact Dec-2020-to-Dec-2021 job change."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.htm",
+          "tier": "Government",
+          "snippet": "[2022-01-07] Official BLS December 2021 release gives pre-benchmark manufacturing level of 12.580 million, useful for comparing with later r"
+        },
+        {
+          "sid": "biden_2022:0169",
+          "source_url": "https://fred.stlouisfed.org/series/MANEMP",
+          "tier": "Government",
+          "snippet": "FRED All Employees Manufacturing series from BLS; primary data to verify the calendar-year 2021 gain figure."
+        },
+        {
+          "sid": "biden_2022:0200",
+          "source_url": "https://aspe.hhs.gov/sites/default/files/private/pdf/264056/Comparing-Insulin-Prices.pdf",
+          "tier": "Established",
+          "snippet": "[2020-10-06] Official HHS/ASPE report comparing per-vial insulin prices internationally; establishes low baseline cost per vial versus U.S. "
+        },
+        {
+          "sid": "biden_2022:0200",
+          "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8597930/",
+          "tier": "Government",
+          "snippet": "[2021-11-01] Reviews insulin prices and production costs historically."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "source_url": "https://www.cms.gov/files/document/health-insurance-exchanges-2022-open-enrollment-report-final.pdf",
+          "tier": "Government",
+          "snippet": "[2022-01-27] CMS 2022 final OEP report with concrete per-person ARP premium-savings figures; primary data source."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "source_url": "https://www.cms.gov/files/document/marketplace-enrollment-and-savings-infographic.pdf",
+          "tier": "Government",
+          "snippet": "[2021-08-01] CMS infographic on ARP-driven ACA enrollment and premium savings; primary official framing of the dollar figures."
+        },
+        {
+          "sid": "biden_2022:0216",
+          "source_url": "https://www.stlouisfed.org/publications/regional-economist/2022/jan/pandemic-rising-costs-challenge-child-care-industry",
+          "tier": "Government",
+          "snippet": "[2022-01-13] Federal Reserve Bank (St. Louis) Jan 2022 overview: child care costs vary widely; estimated infant cost and national averages d"
+        },
+        {
+          "sid": "biden_2022:0245",
+          "source_url": "https://fiscaldata.treasury.gov/americas-finance-guide/national-deficit/",
+          "tier": "Government",
+          "snippet": "Treasury official historical deficit series \u2014 needed to test the 'only president ever' superlative against every prior single-year change."
+        },
+        {
+          "sid": "biden_2022:0245",
+          "source_url": "https://www.cbo.gov/system/files/2022-03/57841-MBR.pdf",
+          "tier": "Government",
+          "snippet": "[2022-03-08] CBO Monthly Budget Review (Feb 2022), published at the cutoff \u2014 running FY2022 receipts/outlays underlying any projected trilli"
+        },
+        {
+          "sid": "biden_2022:0245",
+          "source_url": "https://fiscal.treasury.gov/accounting/us-financial-report/2021/where-we-are-now",
+          "tier": "Government",
+          "snippet": "Treasury Bureau of Fiscal Service FY2021 financial report \u2014 official baseline deficit figures Biden's projected cut is measured against."
+        },
+        {
+          "sid": "biden_2022:0245",
+          "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+          "tier": "Government",
+          "snippet": "FRED (source: OMB) series of federal surplus/deficit by fiscal year for computing year\u2011to\u2011year changes (includes 2021 and later observations"
+        },
+        {
+          "sid": "biden_2022:0245",
+          "source_url": "https://www.cbo.gov/publication/58268",
+          "tier": "Government",
+          "snippet": "CBO infographic on the FY2021 federal budget \u2014 official visualization of deficit level preceding the claimed FY2022 reduction."
+        },
+        {
+          "sid": "biden_2022:0266",
+          "source_url": "https://stacks.cdc.gov/view/cdc/107687",
+          "tier": "Government",
+          "snippet": "[2021-07-02] CDC weekly review from July 2021 \u2014 the baseline low point Biden's 'not seen since last July' claim compares against."
+        },
+        {
+          "sid": "biden_2022:0268",
+          "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/science/science-briefs/indicators-monitoring-community-levels.html",
+          "tier": "Government",
+          "snippet": "[2022-02-25] CDC science brief (Feb 25) describes the three-community-level indicators that underpin the new masking recommendations."
+        },
+        {
+          "sid": "biden_2022:0268",
+          "source_url": "https://stacks.cdc.gov/view/cdc/114901/cdc_114901_DS1.pdf",
+          "tier": "Government",
+          "snippet": "[2022-02-24] CDC county-level data (updated Feb 24) showing COVID-19 Community Levels by county (basis for mask recommendations)."
+        },
+        {
+          "sid": "biden_2022:0305",
+          "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02042022.html",
+          "tier": "Government",
+          "snippet": "[2022-02-04] CDC weekly review with vaccination coverage and declining hospital-admission trend data for late Jan/early Feb 2022."
+        },
+        {
+          "sid": "biden_2022:0305",
+          "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02112022.html",
+          "tier": "Government",
+          "snippet": "[2022-02-11] CDC weekly review showing continued sharp decline in hospital admissions from the January Omicron peak."
+        },
+        {
+          "sid": "biden_2022:0305",
+          "source_url": "https://www.cdc.gov/covidvaxview/weekly-dashboard/adult-vaccination-coverage.html",
+          "tier": "Government",
+          "snippet": "CDC dashboard for adults 18+ vaccination coverage; distinguishes at-least-one-dose vs fully-vaccinated rates."
+        },
+        {
+          "sid": "biden_2022:0305",
+          "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/vaccines/reporting-vaccinations.html",
+          "tier": "Government",
+          "snippet": "CDC documentation of how 'fully vaccinated' is defined and how vaccination percentages are calculated (important for interpreting the 75% fi"
+        },
+        {
+          "sid": "biden_2022:0376",
+          "source_url": "https://www.supremecourt.gov/grantednotedlist/21grantednotedlist",
+          "tier": "Government",
+          "snippet": "[2021-05-17] Official Supreme Court docket shows certiorari granted in Dobbs v. Jackson (May 17, 2021), a case squarely threatening Roe prec"
+        },
+        {
+          "sid": "biden_2022:0376",
+          "source_url": "https://www.supremecourt.gov/opinions/20pdf/21a24_8759.pdf",
+          "tier": "Government",
+          "snippet": "[2021-09-01] Primary SCOTUS order declining to block Texas SB8\u2014Roe-era viability protections left unenforced."
+        },
+        {
+          "sid": "biden_2022:0427",
+          "source_url": "https://www.publichealth.va.gov/docs/exposures/va-ahobp-registry-data-report-feb2022.pdf",
+          "tier": "Government",
+          "snippet": "[2022-02-01] VA Airborne Hazards/Burn Pit registry report (Feb 2022) documents large numbers reporting burn\u2011pit exposure during Iraq deploym"
+        },
+        {
+          "sid": "biden_2022:0432",
+          "source_url": "https://assessments.epa.gov/risk/document/%26deid%3D351404",
+          "tier": "Government",
+          "snippet": "[2021-04-16] EPA summary of simulated burn\u2011pit smoke testing (SOT 2021) reported PAHs and lung toxicity in animal models, indicating plausib"
+        },
+        {
+          "sid": "biden_2022:0432",
+          "source_url": "https://www.congress.gov/bill/117th-congress/senate-bill/437/text",
+          "tier": "Government",
+          "snippet": "[2021-02-24] Senate bill text (S.437, Feb 24, 2021) acknowledges veteran health concerns and calls for concession/recognition of burn\u2011pit ex"
+        },
+        {
+          "sid": "biden_2022:0437",
+          "source_url": "https://www.publichealth.va.gov/exposures/publications/agent-orange/agent-orange-2020/presumptive.asp",
+          "tier": "Government",
+          "snippet": "[2020-07-21] Official VA list of Agent Orange presumptive conditions, basis for linking exposures to diseases."
+        },
+        {
+          "sid": "biden_2022:0447",
+          "source_url": "https://www.nih.gov/sites/default/files/2025-02/5-25-2021-House-LHHS-FY-2022.pdf",
+          "tier": "Government",
+          "snippet": "[2021-05-25] NIH Director testimony: ARPA-H modeled after DARPA in DoD."
+        }
+      ]
+    },
+    {
+      "speech": "trump_2026",
+      "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+      "sids": [
+        "trump_2026:0010",
+        "trump_2026:0015",
+        "trump_2026:0017",
+        "trump_2026:0019",
+        "trump_2026:0022",
+        "trump_2026:0024",
+        "trump_2026:0029",
+        "trump_2026:0030",
+        "trump_2026:0031",
+        "trump_2026:0032",
+        "trump_2026:0043",
+        "trump_2026:0046",
+        "trump_2026:0049",
+        "trump_2026:0052",
+        "trump_2026:0053",
+        "trump_2026:0054",
+        "trump_2026:0055",
+        "trump_2026:0057",
+        "trump_2026:0099",
+        "trump_2026:0130",
+        "trump_2026:0132",
+        "trump_2026:0137",
+        "trump_2026:0161",
+        "trump_2026:0172",
+        "trump_2026:0181",
+        "trump_2026:0182",
+        "trump_2026:0186",
+        "trump_2026:0191",
+        "trump_2026:0208",
+        "trump_2026:0215",
+        "trump_2026:0219",
+        "trump_2026:0221",
+        "trump_2026:0222",
+        "trump_2026:0228",
+        "trump_2026:0229",
+        "trump_2026:0279",
+        "trump_2026:0293",
+        "trump_2026:0295",
+        "trump_2026:0334",
+        "trump_2026:0356",
+        "trump_2026:0374",
+        "trump_2026:0403",
+        "trump_2026:0404",
+        "trump_2026:0409",
+        "trump_2026:0583"
+      ],
+      "claims": 45,
+      "trigger_items": 76,
+      "items_to_rescore": 395,
+      "excluded_utterance_records": 39,
+      "by_host": {
+        "www.bls.gov": 16,
+        "www.cbo.gov": 7,
+        "www.bea.gov": 6,
+        "fred.stlouisfed.org": 6,
+        "www.congress.gov": 4,
+        "www.eia.gov": 3,
+        "apps.bea.gov": 3,
+        "www.govinfo.gov": 3,
+        "www.gao.gov": 3,
+        "files.gao.gov": 2,
+        "www.federalregister.gov": 2,
+        "www.jct.gov": 2,
+        "www.irs.gov": 2,
+        "www.supremecourt.gov": 2,
+        "www.ca4.uscourts.gov": 2,
+        "www.cdc.gov": 1,
+        "data.bls.gov": 1,
+        "www.va.gov": 1,
+        "fiscal.treasury.gov": 1,
+        "www.federalreserve.gov": 1,
+        "www.ers.usda.gov": 1,
+        "edit.cms.gov": 1,
+        "home.treasury.gov": 1,
+        "www.dol.gov": 1,
+        "www.census.gov": 1,
+        "api.census.gov": 1,
+        "data.census.gov": 1,
+        "pubmed.ncbi.nlm.nih.gov": 1
+      },
+      "triggers": [
+        {
+          "sid": "trump_2026:0010",
+          "source_url": "https://www.cbo.gov/publication/61735",
+          "tier": "Government",
+          "snippet": "Congressional Budget Office analysis (2025): documents migration and DHS processing changes, notes encounter declines after June 2024 policy"
+        },
+        {
+          "sid": "trump_2026:0015",
+          "source_url": "https://files.gao.gov/reports/GAO-25-107346/index.html",
+          "tier": "Government",
+          "snippet": "[2025-09-02] GAO (Sept 2025) documented DHS reliance on temporary holding facilities and planning gaps tied to prior surge-level apprehensio"
+        },
+        {
+          "sid": "trump_2026:0017",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "tier": "Government",
+          "snippet": "[2026-01-13] BLS CPI Dec 2025 primary release \u2014 inflation trend baseline for 'plummeting' claim."
+        },
+        {
+          "sid": "trump_2026:0019",
+          "source_url": "https://www.federalregister.gov/documents/2024/10/07/2024-22602/securing-the-border",
+          "tier": "Government",
+          "snippet": "[2024-10-07] Federal Register final rule ('Securing the Border') documents regulatory steps taken in 2024 to limit asylum/admissions at the "
+        },
+        {
+          "sid": "trump_2026:0022",
+          "source_url": "https://files.gao.gov/reports/GAO-26-107501/index.html",
+          "tier": "Government",
+          "snippet": "[2026-02-12] GAO report on CBP operations and seizures (northern border) with sector-level seizure and apprehension data through early 2025."
+        },
+        {
+          "sid": "trump_2026:0024",
+          "source_url": "https://www.cdc.gov/nchs/products/databriefs/db548.htm",
+          "tier": "Government",
+          "snippet": "[2026-01-01] NCHS Data Brief (Mortality in the U.S., 2024) documents homicide declines in 2024 and their contribution to increased life expe"
+        },
+        {
+          "sid": "trump_2026:0029",
+          "source_url": "https://www.cbo.gov/system/files/2024-02/59710-Outlook-2024.pdf",
+          "tier": "Government",
+          "snippet": "[2024-02-01] CBO (Feb 2024) documents size/effects of pandemic fiscal support and projects inflation dynamics and drivers."
+        },
+        {
+          "sid": "trump_2026:0030",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "tier": "Government",
+          "snippet": "[2026-01-13] Official BLS CPI release for December 2025 \u2014 shows all items less food and energy (core CPI) 12-month change = 2.6%."
+        },
+        {
+          "sid": "trump_2026:0030",
+          "source_url": "https://www.bea.gov/index.php/news/2026/personal-income-and-outlays-december-2025",
+          "tier": "Government",
+          "snippet": "[2026-02-20] BEA Personal Income & Outlays (Dec 2025) \u2014 shows core PCE (Fed\u2019s preferred measure) and monthly core PCE movements (different s"
+        },
+        {
+          "sid": "trump_2026:0030",
+          "source_url": "https://www.bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy",
+          "tier": "Government",
+          "snippet": "BEA official core PCE data landing page for verifying the full historical series against a 'five-year low' claim."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-october-and-november-2025",
+          "tier": "Government",
+          "snippet": "[2026-01-09] BEA core PCE for Oct/Nov 2025 showing 2.7\u20132.8% year-over-year \u2014 different measure/basis than the 1.7% three-month annualized co"
+        },
+        {
+          "sid": "trump_2026:0032",
+          "source_url": "https://www.eia.gov/petroleum/gasdiesel/",
+          "tier": "Government",
+          "snippet": "EIA weekly gasoline update, primary national/regional price tracking useful for judging peak vs. current comparison."
+        },
+        {
+          "sid": "trump_2026:0043",
+          "source_url": "https://www.bea.gov/data/intl-trade-investment/new-foreign-direct-investment-united-states/supplemental-data",
+          "tier": "Government",
+          "snippet": "BEA supplemental-data page with downloadable XLS tables (2014\u20132023 and 2024\u20132025) listing annual first\u2011year FDI expenditure series."
+        },
+        {
+          "sid": "trump_2026:0043",
+          "source_url": "https://apps.bea.gov/scb/issues/2024/08-august/pdf/0824-foreign-direct-investment.pdf",
+          "tier": "Government",
+          "snippet": "[2024-08-28] BEA Survey of Current Business visual essay (Aug 28, 2024) \u2014 charts and corrected figures (notes corrections for 2019\u20132021)."
+        },
+        {
+          "sid": "trump_2026:0043",
+          "source_url": "https://www.bea.gov/news/2024/direct-investment-country-and-industry-2023",
+          "tier": "Government",
+          "snippet": "[2024-07-23] BEA release on direct investment positions and revisions (provides broader FDI position context and data revisions)."
+        },
+        {
+          "sid": "trump_2026:0043",
+          "source_url": "https://apps.bea.gov/iTable/?isuri=1&reqid=2&step=3&step1prompt1=1&step1prompt2=3&step2prompt3=1",
+          "tier": "Government",
+          "snippet": "BEA interactive tables (iTable) \u2014 primary time\u2011series data for new foreign direct investment by year (downloadable)."
+        },
+        {
+          "sid": "trump_2026:0046",
+          "source_url": "https://apps.bea.gov/scb/issues/2025/11-november/1125-nea-annual-update.htm",
+          "tier": "Government",
+          "snippet": "[2025-11-01] BEA (Nov 2025 annual update) \u2014 macro data on gross private domestic investment showing investment flows are large (multi\u2011trilli"
+        },
+        {
+          "sid": "trump_2026:0049",
+          "source_url": "https://www.bls.gov/iag/tgs/iag23.htm",
+          "tier": "Government",
+          "snippet": "BLS construction sector employment levels and changes through mid-2026."
+        },
+        {
+          "sid": "trump_2026:0049",
+          "source_url": "https://www.bls.gov/ces/",
+          "tier": "Government",
+          "snippet": "BLS Current Employment Statistics landing for construction payroll series to check cumulative gains."
+        },
+        {
+          "sid": "trump_2026:0052",
+          "source_url": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCRFPUS2",
+          "tier": "Government",
+          "snippet": "Primary EIA weekly crude production series to test the '+600,000 bpd' production-increase claim."
+        },
+        {
+          "sid": "trump_2026:0053",
+          "source_url": "https://www.eia.gov/about/new/index.php?r=130",
+          "tier": "Government",
+          "snippet": "[2026-02-27] EIA 'What\u2019s New' lists Natural Gas Monthly release (Feb 27, 2026), the primary monthly dataset for 2025 production figures."
+        },
+        {
+          "sid": "trump_2026:0054",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.htm",
+          "tier": "Government",
+          "snippet": "[2026-02-11] Primary BLS Employment Situation for January 2026 (most recent report before claim); household-survey employment level and Tabl"
+        },
+        {
+          "sid": "trump_2026:0054",
+          "source_url": "https://data.bls.gov/timeseries/LNS12000000",
+          "tier": "Government",
+          "snippet": "[2026-02-20] BLS time\u2011series for \u201cEmployed persons, 16 years and over\u201d (monthly back to 1948) \u2014 shows the January 2026 peak used to evaluate"
+        },
+        {
+          "sid": "trump_2026:0054",
+          "source_url": "https://fred.stlouisfed.org/series/CE16OV",
+          "tier": "Government",
+          "snippet": "FRED series CE16OV (Employment Level, employed persons 16+) \u2014 monthly historical totals from the household survey."
+        },
+        {
+          "sid": "trump_2026:0054",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.pdf",
+          "tier": "Government",
+          "snippet": "[2026-02-11] Archived primary BLS release of the same Jan 2026 report; contains total nonfarm and household-survey employment counts to test"
+        },
+        {
+          "sid": "trump_2026:0054",
+          "source_url": "https://fred.stlouisfed.org/series/PAYEMS",
+          "tier": "Government",
+          "snippet": "FRED series PAYEMS (All employees, total nonfarm) \u2014 establishment-survey payroll jobs series for historical comparison."
+        },
+        {
+          "sid": "trump_2026:0054",
+          "source_url": "https://fred.stlouisfed.org/series/LNS12000000",
+          "tier": "Government",
+          "snippet": "FRED series (LNS12000000) \u2014 independently publishes the BLS monthly employed\u2011persons series for historical comparison."
+        },
+        {
+          "sid": "trump_2026:0055",
+          "source_url": "https://fred.stlouisfed.org/series/LNS12000000",
+          "tier": "Government",
+          "snippet": "[2026-02-11] FRED series for BLS CPS 'Employed persons, 16 years and over' (LNS12000000) \u2014 shows long-run series and the Jan\u20112026 peak on re"
+        },
+        {
+          "sid": "trump_2026:0057",
+          "source_url": "https://www.federalregister.gov/documents/2025/08/01/2025-14572/reconsideration-of-2009-endangerment-finding-and-greenhouse-gas-vehicle-standards",
+          "tier": "Government",
+          "snippet": "[2025-08-01] EPA Federal Register notice (proposed) to rescind the 2009 GHG Endangerment Finding \u2014 example of major deregulatory action by a"
+        },
+        {
+          "sid": "trump_2026:0057",
+          "source_url": "https://www.govinfo.gov/content/pkg/FR-2026-02-18/pdf/2026-03157.pdf",
+          "tier": "Government",
+          "snippet": "[2026-02-18] Federal Register (Feb 18, 2026) \u2014 EPA final action rescinding the Endangerment Finding (major, high-profile deregulatory rule)."
+        },
+        {
+          "sid": "trump_2026:0099",
+          "source_url": "https://www.va.gov/records/get-military-service-records/",
+          "tier": "Government",
+          "snippet": "[2026-01-13] Official VA guide describing how to request/obtain a veteran\u2019s service records (DD214, duty stations, awards)."
+        },
+        {
+          "sid": "trump_2026:0130",
+          "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/1/text",
+          "tier": "Government",
+          "snippet": "[2025-07-04] Enrolled text of H.R.1 (became Public Law No: 119-21 on July 4, 2025) containing the tax provisions referred to by the presiden"
+        },
+        {
+          "sid": "trump_2026:0130",
+          "source_url": "https://www.cbo.gov/publication/61570",
+          "tier": "Government",
+          "snippet": "[2025-07-21] CBO estimate for Public Law 119-21: reports a $4.5 trillion decrease in revenues (2025\u20132034), quantifying the law\u2019s tax effect."
+        },
+        {
+          "sid": "trump_2026:0130",
+          "source_url": "https://www.jct.gov/publications/2025/jcx-26-25r/",
+          "tier": "Government",
+          "snippet": "[2025-06-02] Joint Committee on Taxation revised revenue estimate (JCX-26-25R) for H.R.1\u2019s tax provisions (used to measure scale of cuts)."
+        },
+        {
+          "sid": "trump_2026:0130",
+          "source_url": "https://www.jct.gov/publications/2025/jcx-27-25/",
+          "tier": "Government",
+          "snippet": "[2025-06-09] JCT distributional analysis (JCX-27-25) showing the estimated revenue effects and who benefits from the tax changes."
+        },
+        {
+          "sid": "trump_2026:0130",
+          "source_url": "https://www.cbo.gov/publication/61461",
+          "tier": "Government",
+          "snippet": "[2025-06-04] CBO\u2019s June 4, 2025 cost estimate of H.R.1 (pre-enactment), providing conventional and dynamic budgetary effect estimates."
+        },
+        {
+          "sid": "trump_2026:0132",
+          "source_url": "https://www.govinfo.gov/content/pkg/PLAW-119publ21/html/PLAW-119publ21.htm",
+          "tier": "Government",
+          "snippet": "[2025-07-04] Text of Public Law 119\u201121 (One Big Beautiful Bill / Working Families Tax Cuts) \u2014 shows the law\u2019s tax provisions cited in the cl"
+        },
+        {
+          "sid": "trump_2026:0132",
+          "source_url": "https://www.cbo.gov/publication/61486",
+          "tier": "Government",
+          "snippet": "[2025-06-17] CBO dynamic estimate for H.R.1 quantifies large revenue reductions and deficit effects from the bill\u2019s tax provisions."
+        },
+        {
+          "sid": "trump_2026:0137",
+          "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/1/text",
+          "tier": "Government",
+          "snippet": "[2025-07-04] Full statutory text (P.L. 119-21) creating the tip and overtime deductions and raising the child tax credit provisions."
+        },
+        {
+          "sid": "trump_2026:0161",
+          "source_url": "https://www.irs.gov/trumpaccounts",
+          "tier": "Government",
+          "snippet": "Official IRS program page: $1,000 seed, $5,000/yr contribution cap, and eligibility\u2014the parameters needed to test the growth math."
+        },
+        {
+          "sid": "trump_2026:0172",
+          "source_url": "https://fiscal.treasury.gov/files/reports-statements/mts/mts0925.pdf",
+          "tier": "Government",
+          "snippet": "[2025-09-30] Official Monthly Treasury Statement (MTS) \u2014 primary government source listing 'customs duties' (tariff) receipts used to quanti"
+        },
+        {
+          "sid": "trump_2026:0181",
+          "source_url": "https://www.bls.gov/cpi/notices/2025/2025-federal-government-shutdown-impact-on-cpi.htm",
+          "tier": "Government",
+          "snippet": "[2025-12-17] BLS Q&A on 2025 shutdown: documents missing Oct\u2013Nov 2025 CPI/CE data and methods used to address gaps (important caveat)."
+        },
+        {
+          "sid": "trump_2026:0182",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+          "tier": "Government",
+          "snippet": "[2026-02-13] BLS CPI (Jan 2026) \u2014 12-month inflation \u22482.4%, contradicting \u201cthere was no inflation.\u201d"
+        },
+        {
+          "sid": "trump_2026:0182",
+          "source_url": "https://www.bea.gov/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+          "tier": "Government",
+          "snippet": "[2026-02-20] BEA advance estimate: Q4 2025 real GDP +1.4% (annualized); 2025 real GDP +2.2%; PCE price index rose (inflation present)."
+        },
+        {
+          "sid": "trump_2026:0182",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.htm",
+          "tier": "Government",
+          "snippet": "[2026-02-11] BLS Employment Situation (Jan 2026): nonfarm payrolls +130,000; unemployment 4.3% \u2014 context on labor-market strength/pace of gr"
+        },
+        {
+          "sid": "trump_2026:0186",
+          "source_url": "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf",
+          "tier": "Government",
+          "snippet": "[2026-02-20] Official Supreme Court opinion striking down IEEPA-based tariffs \u2014 the ruling that prompted the remark."
+        },
+        {
+          "sid": "trump_2026:0191",
+          "source_url": "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf",
+          "tier": "Government",
+          "snippet": "[2026-02-20] SCOTUS opinion on IEEPA tariff authority for emergencies/foreign policy threats (no war-settlement examples)."
+        },
+        {
+          "sid": "trump_2026:0208",
+          "source_url": "https://www.bls.gov/opub/ted/2026/consumer-price-index-2025-in-review.htm",
+          "tier": "Government",
+          "snippet": "[2026-01-01] Official BLS CPI review documents actual price changes; lets judge test whether inflation was 'record-setting' and size the cum"
+        },
+        {
+          "sid": "trump_2026:0215",
+          "source_url": "https://www.federalreserve.gov/econres/feds/files/2025070pap.pdf",
+          "tier": "Government",
+          "snippet": "[2025-01-01] Fed staff review of pandemic-era inflation weighs demand, supply, and fiscal drivers\u2014authoritative causal breakdown."
+        },
+        {
+          "sid": "trump_2026:0215",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.pdf",
+          "tier": "Government",
+          "snippet": "[2026-02-13] Official BLS Consumer Price Index release (Jan 2026) showing recent inflation levels used to assess \u2018high prices.\u2019"
+        },
+        {
+          "sid": "trump_2026:0219",
+          "source_url": "https://fred.stlouisfed.org/series/APU0000708111",
+          "tier": "Government",
+          "snippet": "BLS official retail price series for Grade A large eggs per dozen; lets judge compute exact YoY and peak-to-current declines"
+        },
+        {
+          "sid": "trump_2026:0219",
+          "source_url": "http://www.ers.usda.gov/data-products/charts-of-note/chart-detail?chartId=112677",
+          "tier": "Government",
+          "snippet": "USDA ERS chart showing retail egg prices falling as wholesale prices decline; official government data"
+        },
+        {
+          "sid": "trump_2026:0221",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_02122025.pdf",
+          "tier": "Government",
+          "snippet": "[2025-02-12] BLS January 2025 CPI release providing the baseline index levels around the likely 'when I took office' date (Jan 2025)."
+        },
+        {
+          "sid": "trump_2026:0221",
+          "source_url": "https://fred.stlouisfed.org/series/CUUR0000SAF112",
+          "tier": "Government",
+          "snippet": "FRED primary CPI series for meats, poultry, fish, eggs \u2014 lets you compare chicken index Jan 2025 vs early 2026."
+        },
+        {
+          "sid": "trump_2026:0222",
+          "source_url": "https://www.bls.gov/news.release/archives/ppi_02272026.htm",
+          "tier": "Government",
+          "snippet": "[2026-02-27] BLS Producer Price Index (Jan 2026 PPI release): shows producer/wholesale beef price dynamics relevant to retail price movement"
+        },
+        {
+          "sid": "trump_2026:0228",
+          "source_url": "https://www.bls.gov/cpi/factsheets/medical-care.htm",
+          "tier": "Government",
+          "snippet": "[2026-02-13] BLS CPI factsheet (updated Feb 13, 2026) shows medical-price indexing methods and that medical price inflation differs from ove"
+        },
+        {
+          "sid": "trump_2026:0229",
+          "source_url": "https://edit.cms.gov/files/document/highlights.pdf",
+          "tier": "Government",
+          "snippet": "CMS National Health Expenditures 2024 highlights: private health insurance spending ~$1.6 trillion in 2024 \u2014 large revenue base for insurers"
+        },
+        {
+          "sid": "trump_2026:0229",
+          "source_url": "https://www.gao.gov/products/gao-25-106798",
+          "tier": "Government",
+          "snippet": "[2024-11-27] GAO (Nov 27, 2024) report comparing employer and Marketplace plans notes private plan spending projected to exceed $1.5 trillio"
+        },
+        {
+          "sid": "trump_2026:0229",
+          "source_url": "https://home.treasury.gov/system/files/311/Final%20FIO%202025%20Annual%20Report.pdf",
+          "tier": "Government",
+          "snippet": "Treasury FIO report details 2024 health insurance group premiums and sector financials."
+        },
+        {
+          "sid": "trump_2026:0279",
+          "source_url": "https://www.gao.gov/assets/gao-24-106643.pdf",
+          "tier": "Government",
+          "snippet": "[2024-05-22] GAO (May 2024) review finds institutional investors account for a small share of single-family homes nationally and effects var"
+        },
+        {
+          "sid": "trump_2026:0293",
+          "source_url": "https://www.dol.gov/sites/dolgov/files/ebsa/researchers/statistics/retirement-bulletins/private-pension-plan-bulletins-abstract-2022.pdf",
+          "tier": "Government",
+          "snippet": "DOL/EBSA abstract (Private Pension Plan Bulletin, 2022 abstract) \u2014 primary Form 5500-based data on number of plans/participants and plan ass"
+        },
+        {
+          "sid": "trump_2026:0293",
+          "source_url": "https://www.irs.gov/pub/irs-drop/n-25-67.pdf",
+          "tier": "Government",
+          "snippet": "[2026-01-01] IRS official notice details 2026 retirement contribution limits amid market context."
+        },
+        {
+          "sid": "trump_2026:0295",
+          "source_url": "https://www.bls.gov/news.release/archives/ebs2_09252025.htm",
+          "tier": "Government",
+          "snippet": "[2025-09-25] BLS: 72% of private workers had access to retirement benefits (any plan) March 2025; measures access, not matching."
+        },
+        {
+          "sid": "trump_2026:0295",
+          "source_url": "https://www.bls.gov/ebs/publications/employee-benefits-in-the-united-states-march-2024.htm",
+          "tier": "Government",
+          "snippet": "[2024-09-01] BLS primary data: 72% of private workers have retirement-plan access (only ~50% participate) \u2014 tempers the 'half lack access' f"
+        },
+        {
+          "sid": "trump_2026:0334",
+          "source_url": "https://www.census.gov/library/visualizations/interactive/people-that-speak-english-less-than-very-well.html",
+          "tier": "Government",
+          "snippet": "[2024-11-06] U.S. Census (ACS) interactive showing counts/definitions of people who speak English less than \u201cvery well.\u201d"
+        },
+        {
+          "sid": "trump_2026:0334",
+          "source_url": "https://api.census.gov/data/2023/acs/acs1/subject/groups/S0501.html",
+          "tier": "Government",
+          "snippet": "U.S. Census ACS S0501 (language/English-ability subject group) \u2014 primary data source for immigrant English-proficiency measures."
+        },
+        {
+          "sid": "trump_2026:0334",
+          "source_url": "https://data.census.gov/table/ACSDT1Y2024.B16008",
+          "tier": "Government",
+          "snippet": "[2024-11-06] ACS 2024 detailed table (B16008) \u2014 English ability by citizenship/noncitizen status (does not directly identify unauthorized st"
+        },
+        {
+          "sid": "trump_2026:0334",
+          "source_url": "https://www.govinfo.gov/content/pkg/FR-2026-02-13/html/2026-02965.htm",
+          "tier": "Government",
+          "snippet": "[2026-02-13] Federal Register on CDL rules discusses undocumented immigrants failing English proficiency tests for road signs/signals."
+        },
+        {
+          "sid": "trump_2026:0356",
+          "source_url": "https://www.cbo.gov/publication/61822",
+          "tier": "Government",
+          "snippet": "[2025-10-17] CBO qualitative letter describing how a shutdown beginning Oct 1, 2025, would negatively affect federal employment and GDP."
+        },
+        {
+          "sid": "trump_2026:0374",
+          "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/7296",
+          "tier": "Government",
+          "snippet": "[2026-01-30] Bill text for SAVE America Act introduced to require proof of citizenship to prevent noncitizen voting."
+        },
+        {
+          "sid": "trump_2026:0374",
+          "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/22",
+          "tier": "Government",
+          "snippet": "[2025-01-03] SAVE Act bill text mandates documentary proof of citizenship for federal voter registration."
+        },
+        {
+          "sid": "trump_2026:0403",
+          "source_url": "https://www.ca4.uscourts.gov/opinions/241682.P.pdf",
+          "tier": "Government",
+          "snippet": "[2025-08-07] Primary Fourth Circuit opinion on the underlying Sage Blair case, documenting the facts behind the school-transition and custod"
+        },
+        {
+          "sid": "trump_2026:0404",
+          "source_url": "https://www.ca4.uscourts.gov/opinions/241682.P.pdf",
+          "tier": "Government",
+          "snippet": "[2025-08-07] Fourth Circuit opinion references underlying custody and facility placement allegations."
+        },
+        {
+          "sid": "trump_2026:0409",
+          "source_url": "https://pubmed.ncbi.nlm.nih.gov/38646698/",
+          "tier": "Government",
+          "snippet": "[2024-05-01] AAP technical report (May 1, 2024) discusses adolescent confidentiality, showing medical/professional support for confidential "
+        },
+        {
+          "sid": "trump_2026:0583",
+          "source_url": "https://www.cbo.gov/publication/62105",
+          "tier": "Government",
+          "snippet": "CBO\u2019s Feb 2026 10\u2011year outlook discusses defense outlays and baseline projections, providing fiscal context for record defense funding."
+        },
+        {
+          "sid": "trump_2026:0583",
+          "source_url": "https://www.gao.gov/products/gao-26-107065",
+          "tier": "Government",
+          "snippet": "[2026-01-21] GAO report (Jan 21, 2026) on continuing resolutions\u2019 effects \u2014 documents readiness, cost, and program impacts from budget uncer"
+        }
+      ]
+    }
+  ],
+  "total_claims": 115,
+  "total_items_to_rescore": 1028,
+  "total_trigger_items": 227,
+  "estimate": {
+    "model": "claude-haiku",
+    "calls": 115,
+    "items": 1028,
+    "tokens_in_est": 103133,
+    "tokens_out_est": 36846,
+    "cost_usd_est": 0.2299
+  }
+}

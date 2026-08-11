@@ -1,0 +1,86 @@
+{
+ "_frozen_from": "metrics/pca_runs/7208bbbb… (published artifact, run prefix 7208bbbb)",
+ "speech_id": "biden_2022",
+ "utterance": "2022-03-01",
+ "claim": {
+  "sid": "biden_2022:0115",
+  "text": "Our economy grew at a rate of 5.7 percent last year, the strongest growth in nearly 40 years, the first step in bringing fundamental change to an economy that hasn’t worked for the working people of this nation for too long.",
+  "context": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in the history of America. || Our economy grew at a rate of 5.7 percent last year, the strongest growth in nearly 40 years, the first step in bringing fundamental change to an economy that hasn’t worked for the working people of this nation for too long. || For the past 40 years, we were told that if we gave tax breaks to those at the very top, the benefits would trickle down to everyone else."
+ },
+ "row": {
+  "sid": "biden_2022:0115",
+  "status": "resolved",
+  "verdict": "TRUE",
+  "confidence": 0.965,
+  "citations": [
+   "E1",
+   "E2",
+   "E5",
+   "E6"
+  ],
+  "reasoning": "BEA confirms 5.7% 2021 real GDP growth, the largest since 1984 — matching 'strongest in nearly 40 years.'",
+  "votes": {
+   "TRUE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "TRUE"
+   ],
+   "critic": [
+    "TRUE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2022-01-27] Primary BEA release: real GDP rose 5.7% for full-year 2021 vs. -3.4% in 2020.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-advance-estimate",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-02-24] Official BEA historical comparison: 2021 real GDP grew 5.7%; last larger annual GDP growth was 1984 at 7.2%.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.bea.gov/sites/default/files/2022-02/hist4q21_2nd.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-02-24] Official BEA data: real GDP rose 5.7% in 2021 (annual).",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-second-estimate",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-02-24] Official BEA second estimate says real GDP increased 5.7% in 2021, unchanged from the prior estimate.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.bea.gov/index.php/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-second-estimate",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-01-27] Official BEA advance historical comparison shows 2021 GDP growth at 5.7%, with the last larger value in 1984.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.bea.gov/sites/default/files/2022-01/hist4q21_adv.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-01-27] PBS reports 5.7% 2021 growth, fastest since 1984 — matches 'strongest in nearly 40 years.'",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.pbs.org/newshour/show/news-wrap-u-s-economy-grew-5-7-percent-in-2021-fastest-since-1984",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2022-01-27] Cites BEA: 5.7% growth in 2021 is largest annual rate in 37 years.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.pgpf.org/article/the-us-economy-grew-at-its-fastest-rate-since-1984/",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2022-01-27] WaPo business (not fact-check): 5.7% 2021 growth, fastest since 1984, despite pandemic.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.washingtonpost.com/business/2022/01/27/gdp-2021-q4-economy/",
+   "source_tier": "Established"
+  }
+ ]
+}

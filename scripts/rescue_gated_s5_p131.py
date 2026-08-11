@@ -32,6 +32,15 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO))
 
+from datetime import date  # noqa: E402
+
+from truthbot.verdict import speech_context  # noqa: E402
+
+# Remediation v2 (1.3): the first rescue leg never registered the speech
+# date, so the era gate silently no-opped and live 2026 BLS pages entered
+# 2014 packs. The builders now fail closed without this registration.
+speech_context.register_speech_date("obama_2014", date(2014, 1, 28))
+
 ARTIFACT = REPO / "metrics/pca_runs/6fdfde0e-1393-4a7a-9144-abd0fc48b5a1.json"
 PACKS_JOURNAL = REPO / "metrics/journals/obama_2014_packs.jsonl"
 CHUNK_JOURNAL = REPO / "metrics/journals/obama_2014_s5rescue.jsonl"

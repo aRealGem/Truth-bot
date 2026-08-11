@@ -1,0 +1,104 @@
+{
+  "schema": "truthbot-r1-reshape-rerun v1",
+  "generated": "2026-08-10T18:34:14.078707+00:00",
+  "ruling": "R-1",
+  "ruling_date": "2026-08-10",
+  "sid": "trump_2026:0031",
+  "source_run": "83117c1a-a27f-4df1-9183-302472a52e68",
+  "correction": {
+    "schema": "truthbot-shape-correction v1",
+    "generated": "2026-08-10T18:34:13.982913+00:00",
+    "ruling": "R-1",
+    "ruling_date": "2026-08-10",
+    "sid": "trump_2026:0031",
+    "claim_text": "And in the last three months of 2025, it was down to 1.7 percent.",
+    "old_shape": "c-eval",
+    "new_shape": "c-count",
+    "kind": "shape correction",
+    "justification": "Justified on the claim text alone, which is the basis the Layer-A classifier is instructed to use: \"And in the last three months of 2025, it was down to 1.7 percent\" contains no superlative, no causal attribution and no comparison — the three c-eval triggers. All of them belong to the PRECEDING sentence (trump_2026:0030, \"my administration has driven core inflation down to the lowest level in more than five years\"), which is correctly c-eval and is not changed. What :0031 states is a bare quantity measured against a published data series, which is c-count. The original c-eval was a Layer-A backfill artifact of reading the sentence in its neighbour's context.",
+    "moves": [
+      {
+        "what": "gate quota branch",
+        "how": "c-count is a MINISTERIAL shape (verdict.evidential_role.MINISTERIAL_SHAPES), so a SELF source becomes PRIMARY_RECORD and a PARTICIPANT source becomes CORROBORANT. Under c-eval, a SELF source was ATTRIBUTION_ONLY and carried quota weight 0."
+      },
+      {
+        "what": "computed-exhibit admissibility",
+        "how": "c-eval is the one shape in publish.computed_exhibit.INADMISSIBLE_SHAPES, so the ratified exhibit was REFUSED for this claim. c-count is not, so it is now admissible and is attached."
+      }
+    ],
+    "not_changed": {
+      "sid": "trump_2026:0030",
+      "shape": "c-eval",
+      "why": "superlative plus causal attribution — correctly shaped, no exhibit, publishes as already adjudicated"
+    },
+    "sidecar_untouched": "metrics/remediation_v2/shapes_backfill_trump_2026.json still records c-eval. It is the record of what the classifier produced; overwriting it would erase the evidence that a correction happened."
+  },
+  "preflight": {
+    "exhibit_well_formed": true,
+    "admissible_under_old_shape": false,
+    "admissible_under_new_shape": true,
+    "inadmissible_shapes": [
+      "c-eval"
+    ],
+    "exhibit_result_pct": 1.701,
+    "comparison_present": true,
+    "comparison_result_pct": 3.412,
+    "comparison_delta_pp": -1.711
+  },
+  "pack_telemetry": [
+    {
+      "sid": "trump_2026:0031",
+      "speech": "trump_2026",
+      "claim_shape": "c-count",
+      "stored_items": 9,
+      "pack_items": 9,
+      "gate_code": "",
+      "quota_met": true,
+      "scores_joined": 9,
+      "items_unscored": 0,
+      "credit": {
+        "pack_items": 9,
+        "independent": 4,
+        "corroborant": 0,
+        "primary": 1,
+        "credits": 5,
+        "min_required": 2,
+        "role_aware": true,
+        "era_mode": "strict",
+        "quota_met": true,
+        "agrees": true
+      }
+    }
+  ],
+  "spend_usd": 0.0036,
+  "cap_usd": 0.25,
+  "new_run_id": "46dfcce8-7a4e-41c9-b714-ec3555229412",
+  "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/46dfcce8-7a4e-41c9-b714-ec3555229412.json",
+  "verdict": "TRUE",
+  "reasoning": "The Sep→Dec 2025 three-month annualized core CPI computes to 1.701%, matching the claimed 1.7 percent.",
+  "exhibit_attached": true,
+  "counts": {
+    "unchanged": 1,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 0,
+    "split_changes": 0,
+    "other": 0
+  },
+  "spend_measurement": {
+    "method": "LiteLLM proxy key spend ledger, read before the call and again after it settled: 17.964600 -> 17.968165 = $0.003565, rounded up to $0.0036.",
+    "in_run_reading": 0.0,
+    "why_the_in_run_reading_was_wrong": "The proxy key's counter is written asynchronously. Read the instant the call returned it still showed the pre-call figure, so the runner reported $0.0000 and the chunk journal banked cost_usd 0.0. The runner now settles before re-reading and keeps the larger of the two figures; the journal's 0.0 for this run is a known under-report, recorded here rather than left to be discovered.",
+    "cap_usd": 0.25,
+    "estimate_usd": 0.02,
+    "journal_reconciliation": {
+      "journal": "metrics/journals/r1_0031_reshape.jsonl",
+      "journal_logged_usd": 0.0,
+      "ledger_true_usd": 0.0036,
+      "delta_usd": 0.0036,
+      "cause": "async proxy-counter lag at reduce time (F8)",
+      "authoritative": "ledger",
+      "totals_effect": "none — the journal's 0.0 never entered any published total; the ledger figure is the one carried in costs.py PACK_REUSE_USD_MEASURED and the spend accounting."
+    }
+  }
+}

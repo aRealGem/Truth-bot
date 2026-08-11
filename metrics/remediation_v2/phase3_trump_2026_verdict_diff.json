@@ -1,0 +1,1305 @@
+{
+  "speech_id": "trump_2026",
+  "rebuild_of": "23939712-59ea-449d-93f7-a0a0b449efd8",
+  "new_run_id": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+  "old_tally": {
+    "FALSE": 43,
+    "MISLEADING": 31,
+    "TRUE": 94,
+    "Models split": 1,
+    "UNVERIFIABLE": 14
+  },
+  "new_tally": {
+    "FALSE": 38,
+    "Models split": 4,
+    "MISLEADING": 21,
+    "TRUE": 74,
+    "UNVERIFIABLE": 45
+  },
+  "n_compared": 182,
+  "counts": {
+    "unchanged": 116,
+    "decided_to_decided_changed": 28,
+    "newly_gated": 31,
+    "newly_decided": 3,
+    "split_changes": 4,
+    "other": 0
+  },
+  "gate_forced_new": 38,
+  "per_sid": [
+    {
+      "sid": "trump_2026:0010",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "When I last spoke in this chamber 12 months ago, I had just inherited a nation in crisis with a stagnant economy, inflat"
+    },
+    {
+      "sid": "trump_2026:0015",
+      "old": "MISLEADING",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "Today, our border is secure."
+    },
+    {
+      "sid": "trump_2026:0017",
+      "old": "MISLEADING",
+      "new": "FALSE",
+      "category": "decided_to_decided_changed",
+      "text": "Today our border is secure, our spirit is restored, inflation is plummeting, incomes are rising fast, the roaring econom"
+    },
+    {
+      "sid": "trump_2026:0019",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "After four years in which millions and millions of illegal aliens poured across our borders totally unvetted and uncheck"
+    },
+    {
+      "sid": "trump_2026:0020",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "In the past nine months, zero illegal aliens have been admitted to the United States."
+    },
+    {
+      "sid": "trump_2026:0022",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "The flow of deadly fentanyl across our border is down by a record 56 percent in one year."
+    },
+    {
+      "sid": "trump_2026:0023",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "And last year the murder rate saw its single largest decline in recorded history."
+    },
+    {
+      "sid": "trump_2026:0024",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years."
+    },
+    {
+      "sid": "trump_2026:0029",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "The Biden administration and its allies in Congress gave us the worst inflation in the history of our country."
+    },
+    {
+      "sid": "trump_2026:0030",
+      "old": "Models split",
+      "new": "FALSE",
+      "category": "newly_decided",
+      "text": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years."
+    },
+    {
+      "sid": "trump_2026:0035",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Mortgage rates are the lowest in four years and falling fast, and the annual cost of a typical new mortgage is down almo"
+    },
+    {
+      "sid": "trump_2026:0031",
+      "old": "FALSE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "And in the last three months of 2025, it was down to 1.7 percent."
+    },
+    {
+      "sid": "trump_2026:0032",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Gasoline, which reached a peak of over $6 a gallon in some states."
+    },
+    {
+      "sid": "trump_2026:0033",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "Under my predecessor, it was quite honestly a disaster; it is now below $2.30 a gallon in most states and in some places"
+    },
+    {
+      "sid": "trump_2026:0034",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "And when I visited the great state of Iowa just a few weeks ago, I even saw $1.85 a gallon for gasoline."
+    },
+    {
+      "sid": "trump_2026:0040",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The stock market has set 53 all-time record highs since the election."
+    },
+    {
+      "sid": "trump_2026:0043",
+      "old": "FALSE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "In four long years, the last administration got less than $1 trillion in new investment in the United States."
+    },
+    {
+      "sid": "trump_2026:0045",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "In 12 months, I secured commitments for more than $18 trillion pouring in from all over the globe."
+    },
+    {
+      "sid": "trump_2026:0046",
+      "old": "MISLEADING",
+      "new": "FALSE",
+      "category": "decided_to_decided_changed",
+      "text": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year."
+    },
+    {
+      "sid": "trump_2026:0049",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "As thousands of new businesses are forming and factories, plants and laboratories are being built, we have added 70,000 "
+    },
+    {
+      "sid": "trump_2026:0052",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "American oil production is up by more than 600,000 barrels a day and we just received from our new friend and partner, V"
+    },
+    {
+      "sid": "trump_2026:0053",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "American natural gas production is at an all-time high because I kept my promise to drill baby drill."
+    },
+    {
+      "sid": "trump_2026:0054",
+      "old": "TRUE",
+      "new": "FALSE",
+      "category": "decided_to_decided_changed",
+      "text": "More Americans are working today than at any time in the history of our country."
+    },
+    {
+      "sid": "trump_2026:0055",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Think about that, any time in the history of our country, more working today and 100 percent of all jobs created under m"
+    },
+    {
+      "sid": "trump_2026:0056",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "We ended DEI in America."
+    },
+    {
+      "sid": "trump_2026:0090",
+      "old": "FALSE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics an"
+    },
+    {
+      "sid": "trump_2026:0057",
+      "old": "MISLEADING",
+      "new": "UNVERIFIABLE",
+      "category": "decided_to_decided_changed",
+      "text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off "
+    },
+    {
+      "sid": "trump_2026:0082",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It's called the highest civilian honor in our country, the Presidential Medal of Freedom."
+    },
+    {
+      "sid": "trump_2026:0092",
+      "old": "FALSE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "And Los Angeles is going to be safe just like Washington D.C. is now one of the safest cities in the country."
+    },
+    {
+      "sid": "trump_2026:0095",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But strange things took place and now I've got them because I got the Olympics and I got the 2026 FIFA World Cup and I w"
+    },
+    {
+      "sid": "trump_2026:0100",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "He was badly wounded and almost killed by enemy machine guns in Luzon."
+    },
+    {
+      "sid": "trump_2026:0096",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I couldn't claim that one for myself, but we're getting the World Cup, so we have the World Cup and the Olympics coming "
+    },
+    {
+      "sid": "trump_2026:0098",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas M"
+    },
+    {
+      "sid": "trump_2026:0099",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "He fought bravely in the famous Battle of Manila, worked so hard."
+    },
+    {
+      "sid": "trump_2026:0101",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And 81 years ago this month, he liberated the largest internment camp in the Philippines, one of the largest anywhere in"
+    },
+    {
+      "sid": "trump_2026:0102",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in t"
+    },
+    {
+      "sid": "trump_2026:0105",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It was July 4th of last year when flood waters tore through a girls' summer camp in central Texas, one of the worst thin"
+    },
+    {
+      "sid": "trump_2026:0106",
+      "old": "FALSE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "I was there."
+    },
+    {
+      "sid": "trump_2026:0107",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Rising 26 feet in the matter of minutes, tragically claiming many, many lives."
+    },
+    {
+      "sid": "trump_2026:0109",
+      "old": "TRUE",
+      "new": "UNVERIFIABLE",
+      "category": "decided_to_decided_changed",
+      "text": "As the waters threatened to sweep her away, 11-year-old Millie Kate McClelland closed her eyes and prayed to God."
+    },
+    {
+      "sid": "trump_2026:0110",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "She thought she was going to die."
+    },
+    {
+      "sid": "trump_2026:0111",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above."
+    },
+    {
+      "sid": "trump_2026:0113",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It was Scott's first ever rescue mission, a young guy, but very brave, very, very top, always top in his class."
+    },
+    {
+      "sid": "trump_2026:0114",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And he lifted not just Millie Kate, but 164 others to safety."
+    },
+    {
+      "sid": "trump_2026:0130",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republ"
+    },
+    {
+      "sid": "trump_2026:0132",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "All Democrats, every single one of them, voted against these really important and very necessary massive tax cuts."
+    },
+    {
+      "sid": "trump_2026:0135",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And we also made interest on auto loans tax deductible—the first time—but only if the car is made in America."
+    },
+    {
+      "sid": "trump_2026:0137",
+      "old": "MISLEADING",
+      "new": "UNVERIFIABLE",
+      "category": "decided_to_decided_changed",
+      "text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t"
+    },
+    {
+      "sid": "trump_2026:0151",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Millions will be prefunded courtesy of the US Treasury and private individuals like Michael and Susan Dell, who have don"
+    },
+    {
+      "sid": "trump_2026:0153",
+      "old": "TRUE",
+      "new": "UNVERIFIABLE",
+      "category": "decided_to_decided_changed",
+      "text": "You know, I asked Michael Dell, how do you make all that money?"
+    },
+    {
+      "sid": "trump_2026:0161",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time "
+    },
+    {
+      "sid": "trump_2026:0172",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "One of the primary reasons for our country's stunning economic turnaround, the biggest in history where the Dow Jones br"
+    },
+    {
+      "sid": "trump_2026:0175",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Countries that were ripping us off for decades are now paying us hundreds of billions of dollars."
+    },
+    {
+      "sid": "trump_2026:0181",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "There was no inflation, tremendous growth."
+    },
+    {
+      "sid": "trump_2026:0182",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "And the big story was how Donald Trump called the economy correctly and 22 Nobel Prize winners in economics didn't, they"
+    },
+    {
+      "sid": "trump_2026:0191",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Many of the wars I settled was because of the threat of tariffs."
+    },
+    {
+      "sid": "trump_2026:0186",
+      "old": "FALSE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "But the good news is that almost all countries and corporations want to keep the deal that they already made."
+    },
+    {
+      "sid": "trump_2026:0205",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "They poured in by the millions and millions from prisons, from mental institutions."
+    },
+    {
+      "sid": "trump_2026:0206",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "They were murderers, 11,888 murderers."
+    },
+    {
+      "sid": "trump_2026:0208",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "And record-setting inflation that cost the typical family $34,000 in just a speck of time."
+    },
+    {
+      "sid": "trump_2026:0215",
+      "old": "MISLEADING",
+      "new": "FALSE",
+      "category": "decided_to_decided_changed",
+      "text": "Their policies created the high prices."
+    },
+    {
+      "sid": "trump_2026:0219",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "The price of eggs is down 60 percent."
+    },
+    {
+      "sid": "trump_2026:0221",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "The cost of chicken, butter, fruit, hotels, automobiles, rent, is lower today than when I took office, by a lot."
+    },
+    {
+      "sid": "trump_2026:0222",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "And even beef, which was very high, is starting to come down significantly."
+    },
+    {
+      "sid": "trump_2026:0228",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "I'm also confronting one of the biggest rip-offs of our times, the crushing cost of health care, caused by you, since th"
+    },
+    {
+      "sid": "trump_2026:0229",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Big insurance companies got rich."
+    },
+    {
+      "sid": "trump_2026:0231",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "With our government giving them hundreds and hundreds of billions of dollars a year as their stock prices soared 1,000, "
+    },
+    {
+      "sid": "trump_2026:0241",
+      "old": "FALSE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Other presidents tried to do it, but they never could."
+    },
+    {
+      "sid": "trump_2026:0248",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "Under my just enacted Most Favored Nation agreements, Americans who have for decades paid by far the highest prices of a"
+    },
+    {
+      "sid": "trump_2026:0250",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "I took prescription drugs, a very big part of health care from the highest price in the entire world to the lowest."
+    },
+    {
+      "sid": "trump_2026:0252",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "The result is price differences of 300, 400, 500, 600 percent and more, all available right now at a new website called "
+    },
+    {
+      "sid": "trump_2026:0255",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For five years, she and her husband have struggled with infertility and they turned to IVF."
+    },
+    {
+      "sid": "trump_2026:0256",
+      "old": "UNVERIFIABLE",
+      "new": "UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "One drug has been costing Catherine $4,000 to purchase."
+    },
+    {
+      "sid": "trump_2026:0257",
+      "old": "TRUE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "But a few weeks ago, she logged on to the website and got that same drug that cost costs $4,000, got it for under $500, "
+    },
+    {
+      "sid": "trump_2026:0270",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "This is a unique strategy never used in this country before."
+    },
+    {
+      "sid": "trump_2026:0279",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "She placed bids on 20 homes and lost all of those bids to gigantic investment firms that bypassed inspection, paid all c"
+    },
+    {
+      "sid": "trump_2026:0291",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Since I took office, the typical 401-K balance is up by at least $30,000."
+    },
+    {
+      "sid": "trump_2026:0294",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Your 401(k)s are way up."
+    },
+    {
+      "sid": "trump_2026:0281",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "Stories like this are why last month I signed executive order to ban large Wall Street investment firms from buying up i"
+    },
+    {
+      "sid": "trump_2026:0293",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We have millions and millions of people, because the stock market has done so well, setting all those records."
+    },
+    {
+      "sid": "trump_2026:0310",
+      "old": "FALSE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $"
+    },
+    {
+      "sid": "trump_2026:0325",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car travel"
+    },
+    {
+      "sid": "trump_2026:0326",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The driver was an illegal alien let in by Joe Biden and given a commercial driver's license by open borders politicians "
+    },
+    {
+      "sid": "trump_2026:0295",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Yet, half of all of working Americans still do not have access to a retirement plan with matching contributions from an "
+    },
+    {
+      "sid": "trump_2026:0319",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "The Somali pirates who ransacked Minnesota, remind us that there are large parts of the world where bribery, corruption,"
+    },
+    {
+      "sid": "trump_2026:0327",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Doctors said Delilah would never be able to walk or talk, have a good life."
+    },
+    {
+      "sid": "trump_2026:0328",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "She wouldn't even be able to eat again."
+    },
+    {
+      "sid": "trump_2026:0329",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "But against all odds, she is now in the first grade, learning to walk."
+    },
+    {
+      "sid": "trump_2026:0334",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Many, if not most, illegal aliens do not speak English and cannot read even the most basic road signs as to direction, s"
+    },
+    {
+      "sid": "trump_2026:0336",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And yesterday, as you probably saw at the White House, I hosted a ceremony with Americans who lost their treasured loved"
+    },
+    {
+      "sid": "trump_2026:0342",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Lizbeth's killer was a previously arrested illegal alien who had broken in and brutally, just brutally extinguished the "
+    },
+    {
+      "sid": "trump_2026:0340",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas para"
+    },
+    {
+      "sid": "trump_2026:0341",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being"
+    },
+    {
+      "sid": "trump_2026:0343",
+      "old": "FALSE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien c"
+    },
+    {
+      "sid": "trump_2026:0353",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "As we speak, Democrats in this chamber have cut off all funding for the Department of Homeland Security."
+    },
+    {
+      "sid": "trump_2026:0379",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "And this should be an easy one, and by the way, it's polling at 89 percent, including Democrats, 89 percent."
+    },
+    {
+      "sid": "trump_2026:0400",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In 2021, Sage was 14 when school officials in Virginia sought to socially transition her to a new gender, treating her a"
+    },
+    {
+      "sid": "trump_2026:0356",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "They have instituted another Democrat shutdown, the first one costing us 2 points on GDP."
+    },
+    {
+      "sid": "trump_2026:0358",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "Now they have closed the agency responsible for protecting Americans from terrorists and murderers."
+    },
+    {
+      "sid": "trump_2026:0374",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "That cheating is rampant in our elections."
+    },
+    {
+      "sid": "trump_2026:0402",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Before long, a confused Sage ran away from home."
+    },
+    {
+      "sid": "trump_2026:0403",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "After she was found in a horrific situation in Maryland, a left-wing judge refused to return sage to her parents because"
+    },
+    {
+      "sid": "trump_2026:0404",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Sage was thrown into an all-boys state home and suffered terribly for a long time."
+    },
+    {
+      "sid": "trump_2026:0405",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "But today, all of that is behind them because Sage is a proud and wonderful young woman with a full ride scholarship to "
+    },
+    {
+      "sid": "trump_2026:0409",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But now we have to say it because it's going on all over, numerous states, without even telling the parents."
+    },
+    {
+      "sid": "trump_2026:0428",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping"
+    },
+    {
+      "sid": "trump_2026:0422",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Over the past year, she has had an incredible impact championing AI legislation advancing a landmark executive order on "
+    },
+    {
+      "sid": "trump_2026:0436",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "So, last year Charlie was violently murdered by an assassin and martyred, really martyred for his beliefs."
+    },
+    {
+      "sid": "trump_2026:0447",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Iryna fled war torn Ukraine to live with relatives near Charlotte, North Carolina."
+    },
+    {
+      "sid": "trump_2026:0449",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last summer, 23-year-old Iryna was riding home on the train when a deranged monster, who had been arrested over a dozen "
+    },
+    {
+      "sid": "trump_2026:0450",
+      "old": "UNVERIFIABLE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's fac"
+    },
+    {
+      "sid": "trump_2026:0452",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "She had escaped a brutal war only to be slain by a hardened criminal set free to kill in America, came in through open b"
+    },
+    {
+      "sid": "trump_2026:0457",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Starting last summer, I deployed our National Guard and federal law enforcement to restore law and order to our most dan"
+    },
+    {
+      "sid": "trump_2026:0458",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "In fact, crime in Washington is now at the lowest level ever recorded, and murders in D.C. this January were down close "
+    },
+    {
+      "sid": "trump_2026:0461",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "One of the brave service members who helped achieve this stunning turnaround was 20-year-old West Virginia Army National"
+    },
+    {
+      "sid": "trump_2026:0469",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Sarah Beckstrom died in order to defend our capital."
+    },
+    {
+      "sid": "trump_2026:0462",
+      "old": "TRUE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted."
+    },
+    {
+      "sid": "trump_2026:0465",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But the very next day she was on patrol near the White House when she was ambushed and shot in the head by a terrorist m"
+    },
+    {
+      "sid": "trump_2026:0466",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And all because she wore the uniform of our nation, she was shot."
+    },
+    {
+      "sid": "trump_2026:0478",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Serving alongside Sarah that day was Staff Sergeant Andrew Wolfe."
+    },
+    {
+      "sid": "trump_2026:0479",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The terrorist shot Andrew in the head, and no one thought he could possibly make it."
+    },
+    {
+      "sid": "trump_2026:0480",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The two of them, Sarah and Andrew, both shot violently in the head, neither was expected to make it."
+    },
+    {
+      "sid": "trump_2026:0482",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine."
+    },
+    {
+      "sid": "trump_2026:0487",
+      "old": "TRUE",
+      "new": "UNVERIFIABLE",
+      "category": "decided_to_decided_changed",
+      "text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over."
+    },
+    {
+      "sid": "trump_2026:0497",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "With God's help, Andrew has battled back from the edge of death—and we're talking about the edge of death, on his way to"
+    },
+    {
+      "sid": "trump_2026:0509",
+      "old": "MISLEADING",
+      "new": "FALSE",
+      "category": "decided_to_decided_changed",
+      "text": "In my first 10 months I ended eight wars, including Cambodia."
+    },
+    {
+      "sid": "trump_2026:0514",
+      "old": "UNVERIFIABLE",
+      "new": "UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement."
+    },
+    {
+      "sid": "trump_2026:0515",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Kosovo and Serbia, Israel and Iran, Egypt and Ethiopia, Armenia and Azerbaijan, the Congo and Rwanda and, of course, the"
+    },
+    {
+      "sid": "trump_2026:0523",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "You know, Marco got 100 percent of the votes when he was in—I think our next one was about 54 percent."
+    },
+    {
+      "sid": "trump_2026:0528",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Under the ceasefire, I negotiated every single hostage, both living and dead has been returned home."
+    },
+    {
+      "sid": "trump_2026:0553",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 sol"
+    },
+    {
+      "sid": "trump_2026:0554",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Think of that, 25,000 soldiers are dying a month, a war which would have never happened if I were president, would have "
+    },
+    {
+      "sid": "trump_2026:0535",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And when we got all of the living hostages back and many, many before them but I always said those last 20 are going to "
+    },
+    {
+      "sid": "trump_2026:0538",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "But we only got back 14 or 15 of the dead, of the 28."
+    },
+    {
+      "sid": "trump_2026:0556",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "That's why in a breakthrough operation last June, the United States military obliterated Iran's nuclear weapons program "
+    },
+    {
+      "sid": "trump_2026:0559",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people wi"
+    },
+    {
+      "sid": "trump_2026:0557",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For decades, it had been the policy of the United States never to allow Iran to obtain a nuclear weapon, many decades."
+    },
+    {
+      "sid": "trump_2026:0558",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Since they seized control of that proud nation 47 years ago, the regime and its murderous proxies have spread nothing bu"
+    },
+    {
+      "sid": "trump_2026:0560",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "They were the kings of the roadside bomb."
+    },
+    {
+      "sid": "trump_2026:0561",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And we took out Soleimani."
+    },
+    {
+      "sid": "trump_2026:0564",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,00"
+    },
+    {
+      "sid": "trump_2026:0569",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "After Midnight Hammer, they were warned to make no future attempts to rebuild their weapons program in a particular, nuc"
+    },
+    {
+      "sid": "trump_2026:0563",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "He was the father of the roadside bomb."
+    },
+    {
+      "sid": "trump_2026:0565",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "They shot them and hung them."
+    },
+    {
+      "sid": "trump_2026:0566",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "We stopped them from hanging a lot of them with the threat of serious violence."
+    },
+    {
+      "sid": "trump_2026:0575",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But one thing is certain, I will never allow the world's number one sponsor of terror, which they are by far to have a n"
+    },
+    {
+      "sid": "trump_2026:0577",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "We have the most powerful military on earth I rebuilt the military in my first term."
+    },
+    {
+      "sid": "trump_2026:0579",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "Also, we just approved $1 trillion budget."
+    },
+    {
+      "sid": "trump_2026:0583",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States"
+    },
+    {
+      "sid": "trump_2026:0584",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Because as I said, we have more jobs, more people working today than ever before in the history of our country."
+    },
+    {
+      "sid": "trump_2026:0585",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "And NATO countries, our friends and allies, and they are, they're our friends and they're our allies, have just agreed a"
+    },
+    {
+      "sid": "trump_2026:0586",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "Now they're paying five as opposed to not paying for it."
+    },
+    {
+      "sid": "trump_2026:0592",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "And everything we send over to Ukraine is sent through NATO and they pay us in full."
+    },
+    {
+      "sid": "trump_2026:0593",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "They pay us totally in full."
+    },
+    {
+      "sid": "trump_2026:0594",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Every branch of our armed forces is setting records for recruitment."
+    },
+    {
+      "sid": "trump_2026:0616",
+      "old": "FALSE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stoppe"
+    },
+    {
+      "sid": "trump_2026:0596",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "And every service member recently received a warrior dividend of $1,776."
+    },
+    {
+      "sid": "trump_2026:0614",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For years, large swaths of territory in our region, including large parts of Mexico, really large parts of Mexico, have "
+    },
+    {
+      "sid": "trump_2026:0615",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That's why I designated these cartels as foreign terrorist organizations, and I declared illicit fentanyl as a weapon of"
+    },
+    {
+      "sid": "trump_2026:0620",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We've also taken down one of the most sinister cartel kingpins of all."
+    },
+    {
+      "sid": "trump_2026:0639",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the reg"
+    },
+    {
+      "sid": "trump_2026:0632",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And America's armed forces overwhelmed all defenses and utterly defeated an enemy—good fighters—to end the reign of outl"
+    },
+    {
+      "sid": "trump_2026:0635",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "We're working closely with the new president of Venezuela, Delcy Rodriguez, to unleash extraordinary economic gains for "
+    },
+    {
+      "sid": "trump_2026:0638",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique."
+    },
+    {
+      "sid": "trump_2026:0642",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "But since the raid, we have worked with the new leadership, and they have ordered the closure of that vile prison and re"
+    },
+    {
+      "sid": "trump_2026:0652",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "But the deeds of one warrior that night will live forever in the eternal chronicles of military valor, Chief Warrant Off"
+    },
+    {
+      "sid": "trump_2026:0643",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight."
+    },
+    {
+      "sid": "trump_2026:0649",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "There were many heroes on that January raid to capture Maduro, really great heroes."
+    },
+    {
+      "sid": "trump_2026:0659",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one b"
+    },
+    {
+      "sid": "trump_2026:0660",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "He absorbed four agonizing shots, shredding his leg into numerous pieces."
+    },
+    {
+      "sid": "trump_2026:0666",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The success of the entire mission and the lives of his fellow warriors hinge on Eric's ability to take the searing pain,"
+    },
+    {
+      "sid": "trump_2026:0664",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the thr"
+    },
+    {
+      "sid": "trump_2026:0665",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mi"
+    },
+    {
+      "sid": "trump_2026:0667",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle."
+    },
+    {
+      "sid": "trump_2026:0674",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "You notice the name Fort Bragg, we have it back, we brought it back."
+    },
+    {
+      "sid": "trump_2026:0683",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In the skies over Korea in 1952, Royce was in the dogfight of a lifetime, legendary dogfight."
+    },
+    {
+      "sid": "trump_2026:0685",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "It was his first aerial combat of the war and despite being massively outnumbered and outgunned, Royce led the takedown "
+    },
+    {
+      "sid": "trump_2026:0675",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We won the First World War with it, the Second World War with it and then they decide to change the name, but we changed"
+    },
+    {
+      "sid": "trump_2026:0682",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "He is one more heroic American aviator, navy fighter pilot Royce Williams served in World War II, Korea, Vietnam, flying"
+    },
+    {
+      "sid": "trump_2026:0684",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Flying through blizzard conditions, his squadron was ambushed by seven Soviet fighter planes."
+    },
+    {
+      "sid": "trump_2026:0686",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "His story was secret for over 50 years."
+    },
+    {
+      "sid": "trump_2026:0699",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Two of the gentlemen we met in the gallery this evening took their first breaths one century ago, 100 years before that "
+    }
+  ]
+}

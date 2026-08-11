@@ -279,4 +279,8 @@ def test_committed_site_passes_consistency_check() -> None:
     site = Path(__file__).resolve().parents[1] / "site-pca"
     if not (site / "data" / "reports.json").exists():
         pytest.skip("no committed site in this checkout")
-    assert check_site(site) == []
+    # committed tree predates the remediation-v2 regen (cards rendered
+    # without the political Sources bucket); Phase-2 regen flips this to
+    # strict_buckets=True — the fresh-render strict pass is pinned by
+    # tests/test_site_consistency.py::test_fresh_render_passes_strict_lints.
+    assert check_site(site, strict_buckets=False) == []

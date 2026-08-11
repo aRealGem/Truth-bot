@@ -1,0 +1,4476 @@
+{
+  "schema": "truthbot-regate-flipset v1",
+  "generated": "2026-08-09T23:15:05.216309+00:00",
+  "rules": {
+    "before": {
+      "utterance_record": false,
+      "statistical_release": false
+    },
+    "after": {
+      "utterance_record": true,
+      "statistical_release": true
+    },
+    "ratified": "2026-08-09"
+  },
+  "speeches": [
+    "gwbush_2006",
+    "clinton_1998",
+    "obama_2014",
+    "biden_2022",
+    "trump_2026"
+  ],
+  "speeches_missing_sidecar": [],
+  "speeches_partial_sidecar": [],
+  "complete": true,
+  "corpus_counts": {
+    "released": 23,
+    "still_gated": 64,
+    "newly_gated": 65,
+    "unchanged_decided": 377,
+    "not_rescored": 0
+  },
+  "corpus_claims": 529,
+  "per_speech": [
+    {
+      "speech": "gwbush_2006",
+      "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+      "claims": 48,
+      "sidecar_complete": true,
+      "counts": {
+        "released": 1,
+        "still_gated": 6,
+        "newly_gated": 4,
+        "unchanged_decided": 37,
+        "not_rescored": 0
+      },
+      "flips": [
+        {
+          "sid": "gwbush_2006:0033",
+          "speech": "gwbush_2006",
+          "class": "newly_gated",
+          "claim": "Their aim is to seize power in Iraq and use it as a safe haven to launch attacks against America and the world.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 5,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 5,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "gwbush_2006:0133",
+          "speech": "gwbush_2006",
+          "class": "released",
+          "claim": "Our economy is healthy and vigorous and growing faster than other major industrialized nations.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 4,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 4,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "speech": "gwbush_2006",
+          "class": "newly_gated",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "gwbush_2006:0189",
+          "speech": "gwbush_2006",
+          "class": "newly_gated",
+          "claim": "So tonight I announce the Advanced Energy Initiative—a 22-percent increase in clean-energy research—at the Department of",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-exist",
+          "before": {
+            "pack_items": 8,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 2,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 8,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 3,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "gwbush_2006:0217",
+          "speech": "gwbush_2006",
+          "class": "newly_gated",
+          "claim": "Drug use among youth is down 19 percent since 2001.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        }
+      ],
+      "join": {
+        "items": 396,
+        "matched": 396,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_without_scores": [],
+        "sidecar_sids_not_in_artifact": []
+      },
+      "shapes_filled_from_sidecar": 0,
+      "gate_reproduction": {
+        "matched": 48,
+        "mismatched": 0,
+        "mismatches": []
+      },
+      "breakdown_divergence": [],
+      "rescore_spend_usd": 0.130378,
+      "rescore_spend_by_pass": {
+        "b1a": 0.084045,
+        "b2": 0.046333
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 48,
+        "b2": 11
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 396,
+        "supports": 281,
+        "refutes": 13,
+        "null": 102,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.25757575757575757
+      },
+      "stance_after": {
+        "items": 396,
+        "supports": 316,
+        "refutes": 23,
+        "null": 57,
+        "arithmetic_hinge": 12,
+        "null_rate": 0.14393939393939395
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_01062006.pdf",
+          "supports_claim": null,
+          "one_line_why": "BLS December 2005 payroll tables enable computing job growth over two-and-a-half years, but snippet does not state the computed total or Japan/EU comparison."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02032006.pdf",
+          "supports_claim": null,
+          "one_line_why": "BLS January 2006 monthly nonfarm payroll series covers Feb 2003–Jan 2006, permitting cumulative calculation, but snippet does not provide the computed total or Japan/EU comparison."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+          "supports_claim": null,
+          "one_line_why": "BLS December 2005 payroll data enables computing cumulative jobs since mid-2003, but snippet does not state the actual figure or comparison."
+        },
+        {
+          "sid": "gwbush_2006:0134",
+          "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+          "source_url": "https://www.bls.gov/news.release/history/empsit_02032006.txt",
+          "supports_claim": null,
+          "one_line_why": "BLS January 2006 primary nonfarm payroll series explicitly cited to verify ~4.6M cumulative U.S. job gain, but snippet does not state the actual figure or Japan/EU comparison."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://tile.loc.gov/storage-services/master/gdc/gdcebookspublic/20/23/69/30/17/2023693017/2023693017.pdf",
+          "supports_claim": false,
+          "one_line_why": "CBO Dec 2005 projects ~15% of GDP by 2030; characterization as 'majority share of federal outlays' is speculative and does not establish 60% of budget."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://www.cbo.gov/publication/21546",
+          "supports_claim": false,
+          "one_line_why": "CBO projects SS+Medicare+Medicaid at ~16% of GDP by 2030, not 60% of federal budget; these are different metrics (share of GDP vs. share of budget)."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://www.gao.gov/assets/a111311.html",
+          "supports_claim": false,
+          "one_line_why": "GAO-05-318T projects SS+Medicare+Medicaid at 15.6% of GDP in 2030, not 60% of federal budget; GDP share and budget share are distinct measures."
+        },
+        {
+          "sid": "gwbush_2006:0163",
+          "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+          "source_url": "https://www.gao.gov/assets/a202553.html",
+          "supports_claim": false,
+          "one_line_why": "GAO simulation shows S+M+M at ~14.8% of GDP in 2030; implication of 'over half of federal spending' is inference, not direct measurement of budget share."
+        },
+        {
+          "sid": "gwbush_2006:0187",
+          "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+          "source_url": "https://www.energy.gov/cfo/articles/fy-2007-budget-justification",
+          "supports_claim": null,
+          "one_line_why": "DOE CFO budget justification page hosts detailed spending figures but snippet does not state whether they sum to nearly $10 billion since 2001."
+        },
+        {
+          "sid": "gwbush_2006:0187",
+          "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+          "source_url": "https://www.energy.gov/documents/fy07highlightspdf",
+          "supports_claim": null,
+          "one_line_why": "DOE FY2007 Budget Highlights provides program-level funding data useful for verification but snippet does not state the cumulative since-2001 total."
+        },
+        {
+          "sid": "gwbush_2006:0217",
+          "claim": "Drug use among youth is down 19 percent since 2001.",
+          "source_url": "https://record.umich.edu/articles/overall-illicit-drug-use-by-american-teens-continues-gradual-decline/",
+          "supports_claim": true,
+          "one_line_why": "MTF operator reports past-month illicit teen drug use fell from ~19% (2001) to ~16% (2005), which is the ~19% decline the claim asserts."
+        },
+        {
+          "sid": "gwbush_2006:0217",
+          "claim": "Drug use among youth is down 19 percent since 2001.",
+          "source_url": "https://www.justice.gov/archive/olp/pdf/ndcs06.pdf",
+          "supports_claim": true,
+          "one_line_why": "White House cites MTF data showing 19.4% to 15.7%, which equals a 19% drop matching the claim exactly."
+        }
+      ]
+    },
+    {
+      "speech": "clinton_1998",
+      "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+      "claims": 92,
+      "sidecar_complete": true,
+      "counts": {
+        "released": 6,
+        "still_gated": 8,
+        "newly_gated": 13,
+        "unchanged_decided": 65,
+        "not_rescored": 0
+      },
+      "flips": [
+        {
+          "sid": "clinton_1998:0021",
+          "speech": "clinton_1998",
+          "class": "released",
+          "claim": "We have the smallest government in 35 years, but a more progressive one.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0026",
+          "speech": "clinton_1998",
+          "class": "released",
+          "claim": "This year, our deficit is projected to be $10 billion and heading lower.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0027",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0028",
+          "speech": "clinton_1998",
+          "class": "released",
+          "claim": "Tonight I come before you to announce that the federal deficit, once so incomprehensibly large that it had 11 zeros, wil",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0038",
+          "speech": "clinton_1998",
+          "class": "released",
+          "claim": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that im",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0107",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "And remember the big picture here: While we've been entering into hundreds of new trade agreements, we've been creating ",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 5,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0134",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0135",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "Today, she's a dispatcher with a van company.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-exist",
+          "before": {
+            "pack_items": 7,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 2,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 1,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0194",
+          "speech": "clinton_1998",
+          "class": "released",
+          "claim": "Drug use is on the decline.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0195",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in histo",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 9,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0210",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "For 50 years, NATO contained communism and kept America and Europe secure.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0211",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "Now these three formerly Communist countries have said yes to democracy.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0225",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "One of those— —thank you—one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbe",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0227",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "After college in Colorado, he joined the Army.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0236",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff—Generals John Shalikashvili, Colin Powell",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 8,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 8,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0243",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy t",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 9,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0358",
+          "speech": "clinton_1998",
+          "class": "newly_gated",
+          "claim": "Beginning this year, 1998, men and women from 16 countries will build a foothold in the heavens, the international space",
+          "claim_truncated": true,
+          "old_verdict": "MISLEADING",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "clinton_1998:0364",
+          "speech": "clinton_1998",
+          "class": "released",
+          "claim": "Nearly 200 years ago, a tattered flag, its broad stripes and bright stars still gleaming through the smoke of a fierce b",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        }
+      ],
+      "join": {
+        "items": 792,
+        "matched": 792,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_without_scores": [],
+        "sidecar_sids_not_in_artifact": []
+      },
+      "shapes_filled_from_sidecar": 0,
+      "gate_reproduction": {
+        "matched": 92,
+        "mismatched": 0,
+        "mismatches": []
+      },
+      "breakdown_divergence": [],
+      "rescore_spend_usd": 0.302973,
+      "rescore_spend_by_pass": {
+        "b1a": 0.194938,
+        "b2": 0.108035
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 92,
+        "b2": 21
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 792,
+        "supports": 537,
+        "refutes": 33,
+        "null": 222,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.2803030303030303
+      },
+      "stance_after": {
+        "items": 792,
+        "supports": 643,
+        "refutes": 36,
+        "null": 113,
+        "arithmetic_hinge": 13,
+        "null_rate": 0.14267676767676768
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://en.wikipedia.org/wiki/1997_United_States_federal_budget",
+          "supports_claim": true,
+          "one_line_why": "FY1997 deficit of $22.6B (0.3% GDP) down from ~$290B in FY1992 yields ~92% reduction, directly confirming the '90 percent' cut claim."
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+          "supports_claim": true,
+          "one_line_why": "St. Louis Fed dataset of annual federal surplus/deficit allows computation of FY1992-to-FY1997 percentage reduction, which yields ~90% when calculated."
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://www.frbsf.org/research-and-insights/publications/economic-letter/1998/01/the-budget-deficit/",
+          "supports_claim": true,
+          "one_line_why": "Fed analysis documents sharp deficit decline from 4.7% of GDP (1992) to 0.3% (1997), consistent with ~90% reduction and supports the magnitude of improvement claimed."
+        },
+        {
+          "sid": "clinton_1998:0032",
+          "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+          "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-3-1.pdf",
+          "supports_claim": true,
+          "one_line_why": "OMB Historical Table 1.1 shows unified deficit fell from −$290,402M (1992) to −$21,943M (1997), a ~92% reduction, directly corroborating the claim's '90 percent' deficit cut."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/012898.pdf",
+          "supports_claim": null,
+          "one_line_why": "CBO testimony discusses 1997 receipts and tax law effects on tax burdens; relevance to the 20-year low rate claim depends on whether testimony contains historical rate comparisons, unclear from description."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.cbo.gov/sites/default/files/revenue0.pdf",
+          "supports_claim": null,
+          "one_line_why": "CBO document on budgetary implications and provisions is primary source material; relevance to the 20-year low rate claim depends on whether it contains effective tax rate comparisons across time, unclear from description."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.jct.gov/getattachment/8e76364f-e214-48c2-a8ee-67be06fd636a/x-39-97-2150.pdf",
+          "supports_claim": null,
+          "one_line_why": "JCT document describes 1997 legislation and distributional effects; relevance to the 20-year low rate claim depends on whether it contains historical effective rate data, unclear from description."
+        },
+        {
+          "sid": "clinton_1998:0035",
+          "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+          "source_url": "https://www.jct.gov/getattachment/def435ec-2c9e-46c6-9ca8-36945f02ca06/s-23-97.pdf",
+          "supports_claim": null,
+          "one_line_why": "JCT Blue Book provides distributional and effective-rate tables for the 1997 act; relevance depends on whether tables show middle-class rates at 20-year lows, which cannot be assessed from description alone."
+        },
+        {
+          "sid": "clinton_1998:0091",
+          "claim": "Today, record high exports account for fully one-third of our economic growth.",
+          "source_url": "https://bea.gov/sites/default/files/2019-04/gdp397p.txt",
+          "supports_claim": null,
+          "one_line_why": "Primary BEA preliminary Q3 1997 GDP release provides export contribution data but snippet does not state whether it equals one-third of total growth."
+        },
+        {
+          "sid": "clinton_1998:0091",
+          "claim": "Today, record high exports account for fully one-third of our economic growth.",
+          "source_url": "https://www.bea.gov/system/files/newsreleases/national/gdp/1997/gdp397a.txt",
+          "supports_claim": null,
+          "one_line_why": "Primary BEA GDP release for Q3 1997 provides net exports contribution data but snippet does not state the specific one-third figure or overall share."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+          "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+          "supports_claim": null,
+          "one_line_why": "DOL budget shows 1996–1997 funding levels (~$1.12B to ~$1.25B) but does not provide 1993 baseline or explicit doubling comparison."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+          "source_url": "https://www.congress.gov/committee-report/104th-congress/house-report/659",
+          "supports_claim": null,
+          "one_line_why": "House Appropriations report shows FY1997 Title III funding at ~$1.1B, a single year's figure without 1993 baseline to verify doubling."
+        },
+        {
+          "sid": "clinton_1998:0101",
+          "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+          "source_url": "https://www.everycrsreport.com/reports/98-203.html",
+          "supports_claim": null,
+          "one_line_why": "CRS analysis details FY1998–1999 funding levels (~$1.35B) but does not state 1993 baseline or explicit doubling comparison."
+        }
+      ]
+    },
+    {
+      "speech": "obama_2014",
+      "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+      "claims": 96,
+      "sidecar_complete": true,
+      "counts": {
+        "released": 3,
+        "still_gated": 9,
+        "newly_gated": 10,
+        "unchanged_decided": 74,
+        "not_rescored": 0
+      },
+      "flips": [
+        {
+          "sid": "obama_2014:0001",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0004",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "A rural doctor gave a young child the first prescription to treat asthma that his mother could afford.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0045",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train near",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 6,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0056",
+          "speech": "obama_2014",
+          "class": "released",
+          "claim": "And over half of big manufacturers say they’re thinking of insourcing jobs from abroad.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 5,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0070",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "Over the past five years, my administration has made more loans to small business owners than any other.",
+          "claim_truncated": false,
+          "old_verdict": null,
+          "old_gate_code": "",
+          "claim_shape": "c-count",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 1,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0114",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0123",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "Misty DeMars is a mother of two young boys.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-exist",
+          "before": {
+            "pack_items": 6,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 2,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 2,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0125",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "She put herself through college.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 9,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0126",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "She’d never collected unemployment benefits.",
+          "claim_truncated": false,
+          "old_verdict": "FALSE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 9,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0177",
+          "speech": "obama_2014",
+          "class": "released",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 8,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 8,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0189",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+          "claim_truncated": false,
+          "old_verdict": "MISLEADING",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 8,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 8,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0198",
+          "speech": "obama_2014",
+          "class": "newly_gated",
+          "claim": "Right now, it helps about half of all parents at some point.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "obama_2014:0280",
+          "speech": "obama_2014",
+          "class": "released",
+          "claim": "American diplomacy, backed by the threat of force, is why Syria’s chemical weapons are being eliminated, and we will con",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 4,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 4,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        }
+      ],
+      "join": {
+        "items": 799,
+        "matched": 799,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_without_scores": [],
+        "sidecar_sids_not_in_artifact": []
+      },
+      "shapes_filled_from_sidecar": 95,
+      "gate_reproduction": {
+        "matched": 96,
+        "mismatched": 0,
+        "mismatches": []
+      },
+      "breakdown_divergence": [],
+      "rescore_spend_usd": 0.294482,
+      "rescore_spend_by_pass": {
+        "b1a": 0.196485,
+        "b2": 0.097997
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 96,
+        "b2": 20
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 799,
+        "supports": 590,
+        "refutes": 22,
+        "null": 187,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.23404255319148937
+      },
+      "stance_after": {
+        "items": 799,
+        "supports": 676,
+        "refutes": 30,
+        "null": 93,
+        "arithmetic_hinge": 7,
+        "null_rate": 0.11639549436795996
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "obama_2014:0001",
+          "claim": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo",
+          "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+          "supports_claim": null,
+          "one_line_why": "BLS time series allows computation of the figure but snippet does not state the result; would require arithmetic to verify."
+        },
+        {
+          "sid": "obama_2014:0087",
+          "claim": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job c",
+          "source_url": "http://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+          "supports_claim": true,
+          "one_line_why": "GTM Research analysis of ~132,000 PV installations in 2013 yields approximately one system every four minutes, corroborating the claim's rate."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+          "supports_claim": true,
+          "one_line_why": "DOL official reference corroborates which states raised statutory minimum-wage rates in the relevant year."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "source_url": "https://www.dol.gov/agencies/whd/mw-consolidated",
+          "supports_claim": true,
+          "one_line_why": "DOL primary data table is the authoritative source for verifying which states changed minimum-wage laws in the relevant period; corroborates the five-state count."
+        },
+        {
+          "sid": "obama_2014:0177",
+          "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+          "source_url": "https://www.dol.gov/agencies/whd/state/minimum-wage/tipped/2014",
+          "supports_claim": true,
+          "one_line_why": "Federal Labor table confirms NJ, NY, CT, and RI increases by early 2014; combined with CA from item 4, accounts for five states."
+        },
+        {
+          "sid": "obama_2014:0189",
+          "claim": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+          "source_url": "https://www.everycrsreport.com/files/20130226_R42973_44c181d93ef92acbbebebd1a13eb57774c7678a8.pdf",
+          "supports_claim": false,
+          "one_line_why": "CRS table shows 1981 minimum $3.35 = $8.61 in real (2013) dollars; $7.25 in 2014 is ~16% lower, not ~20%."
+        },
+        {
+          "sid": "obama_2014:0202",
+          "claim": "Today, most workers don’t have a pension.",
+          "source_url": "http://www.dol.gov/ebsa/pdf/2011pensionplanbulletin.pdf",
+          "supports_claim": null,
+          "one_line_why": "Source provides aggregate participant counts (~130M) across all pension plan types in 2011 but does not state what share of the total workforce this represents, making it impossible to assess the claim directly."
+        }
+      ]
+    },
+    {
+      "speech": "biden_2022",
+      "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+      "claims": 111,
+      "sidecar_complete": true,
+      "counts": {
+        "released": 3,
+        "still_gated": 13,
+        "newly_gated": 11,
+        "unchanged_decided": 84,
+        "not_rescored": 0
+      },
+      "flips": [
+        {
+          "sid": "biden_2022:0019",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” Th",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 5,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0100",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "I remember when my dad had to leave our home in Scranton, Pennsylvania to find work.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 9,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0124",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "America used to have the best roads, bridges, and airports on Earth.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 5,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0137",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "And tonight, I’m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrep",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-exist",
+          "before": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0155",
+          "speech": "biden_2022",
+          "class": "released",
+          "claim": "That would be one of the biggest investments in manufacturing in American history.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 6,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0171",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "As Ohio Senator Sherrod Brown says, “It’s time to bury the label “Rust Belt.” It’s time.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "",
+          "before": {
+            "pack_items": 9,
+            "independent": 4,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 4,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0211",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "claim_truncated": true,
+          "old_verdict": "MISLEADING",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0244",
+          "speech": "biden_2022",
+          "class": "released",
+          "claim": "By the end of this year, the deficit will be down to less than half what it was before I took office.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 5,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 5,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0284",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 8,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 8,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0311",
+          "speech": "biden_2022",
+          "class": "released",
+          "claim": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 9,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0376",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "The constitutional right affirmed in Roe v.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 7,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0420",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "One of those soldiers was my son Major Beau Biden.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0427",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "Combat medic in Kosovo and Iraq.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "biden_2022:0431",
+          "speech": "biden_2022",
+          "class": "newly_gated",
+          "claim": "He loved building Legos with their daughter.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "",
+          "before": {
+            "pack_items": 5,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        }
+      ],
+      "join": {
+        "items": 885,
+        "matched": 885,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_without_scores": [],
+        "sidecar_sids_not_in_artifact": []
+      },
+      "shapes_filled_from_sidecar": 106,
+      "gate_reproduction": {
+        "matched": 111,
+        "mismatched": 0,
+        "mismatches": []
+      },
+      "breakdown_divergence": [],
+      "rescore_spend_usd": 0.296257,
+      "rescore_spend_by_pass": {
+        "b1a": 0.215807,
+        "b2": 0.08045
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 111,
+        "b2": 18
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 885,
+        "supports": 678,
+        "refutes": 26,
+        "null": 181,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.20451977401129945
+      },
+      "stance_after": {
+        "items": 885,
+        "supports": 736,
+        "refutes": 42,
+        "null": 107,
+        "arithmetic_hinge": 10,
+        "null_rate": 0.12090395480225989
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "biden_2022:0114",
+          "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.htm",
+          "supports_claim": null,
+          "one_line_why": "References underlying establishment survey tables but does not state the aggregate 2021 figure needed to verify the claim."
+        },
+        {
+          "sid": "biden_2022:0114",
+          "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_12032021.htm",
+          "supports_claim": null,
+          "one_line_why": "Provides monthly data leading into the full-year total but does not state the 2021 aggregate figure itself."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+          "source_url": "https://www.bls.gov/ces/publications/highlights/2022/current-employment-statistics-highlights-01-2022.pdf",
+          "supports_claim": true,
+          "one_line_why": "BLS CES highlights show 12.559M in January 2022 and 12.190M in December 2020, which when subtracted yields 369,000."
+        },
+        {
+          "sid": "biden_2022:0169",
+          "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+          "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+          "supports_claim": true,
+          "one_line_why": "Official BLS data shows manufacturing employment at 12.559M in Jan 2022 vs 12.190M in Dec 2020, yielding exactly 369,000 gain."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "source_url": "https://www.cms.gov/newsroom/fact-sheets/american-rescue-plan-and-marketplace",
+          "supports_claim": false,
+          "one_line_why": "CMS official reports ~$50/month per person (~$600/year), far below the $2,400/year per family claim."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "source_url": "https://www.congress.gov/117/meeting/house/111378/documents/HHRG-117-IF14-20210323-SD018.pdf",
+          "supports_claim": false,
+          "one_line_why": "Covered California shows average household net premium drop ~$119/month (~$1,428/year), below the $2,400/year per family claim."
+        },
+        {
+          "sid": "biden_2022:0211",
+          "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+          "source_url": "https://www.kff.org/affordable-care-act/how-the-american-rescue-plan-act-affects-subsidies-for-marketplace-shoppers-and-people-who-are-uninsured/",
+          "supports_claim": false,
+          "one_line_why": "KFF analysis estimates ~$70/month (~$840/year) for typical individual purchasers, substantially below $2,400/year per family."
+        },
+        {
+          "sid": "biden_2022:0216",
+          "claim": "Many families pay up to $14,000 a year for child care per child.",
+          "source_url": "https://dhs.ri.gov/media/3066/download?language=en",
+          "supports_claim": true,
+          "one_line_why": "Rhode Island 75th-percentile infant center weekly rate of ~$289 calculates to ~$13.9k/yr, directly matching the $14k claim."
+        },
+        {
+          "sid": "biden_2022:0266",
+          "claim": "We’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.",
+          "source_url": "https://www.foxnews.com/us/number-covid-patients-us-hospitals-record-low",
+          "supports_claim": true,
+          "one_line_why": "Reports ~11,860 hospitalized average as 'lowest since summer 2021' with prior June 2021 low of 12,041, directly supporting claim that Feb/Mar 2022 reached July-level lows; date verification needed."
+        },
+        {
+          "sid": "biden_2022:0305",
+          "claim": "And with 75 percent of adult Americans fully vaccinated and hospitalizations down by 77 percent, most Americans can remo",
+          "source_url": "https://stacks.cdc.gov/view/cdc/114173",
+          "supports_claim": true,
+          "one_line_why": "CDC summary quantifies case/hospitalization declines from mid-January peak, providing basis for the 77% hospitalization reduction claim."
+        }
+      ]
+    },
+    {
+      "speech": "trump_2026",
+      "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+      "claims": 182,
+      "sidecar_complete": true,
+      "counts": {
+        "released": 10,
+        "still_gated": 28,
+        "newly_gated": 27,
+        "unchanged_decided": 117,
+        "not_rescored": 0
+      },
+      "flips": [
+        {
+          "sid": "trump_2026:0043",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+          "claim_truncated": false,
+          "old_verdict": null,
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 5,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 5,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0054",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "More Americans are working today than at any time in the history of our country.",
+          "claim_truncated": false,
+          "old_verdict": "FALSE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0057",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0098",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas M",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 9,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0099",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "He fought bravely in the famous Battle of Manila, worked so hard.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0102",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in t",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 5,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0106",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "I was there.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 5,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 5,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0111",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 7,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0130",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republ",
+          "claim_truncated": true,
+          "old_verdict": "FALSE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 9,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0137",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 9,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 9,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0153",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "You know, I asked Michael Dell, how do you make all that money?",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "",
+          "before": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0191",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "Many of the wars I settled was because of the threat of tariffs.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0255",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "For five years, she and her husband have struggled with infertility and they turned to IVF.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "",
+          "before": {
+            "pack_items": 5,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0256",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "One drug has been costing Catherine $4,000 to purchase.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0294",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "Your 401(k)s are way up.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 4,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 4,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0310",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0340",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas para",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0341",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 5,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0343",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien c",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0428",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 7,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0450",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's fac",
+          "claim_truncated": true,
+          "old_verdict": "MISLEADING",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0482",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0487",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 5,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0514",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement.",
+          "claim_truncated": false,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 4,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 4,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0553",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 sol",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 4,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 4,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0554",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "Think of that, 25,000 soldiers are dying a month, a war which would have never happened if I were president, would have ",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 5,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0559",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people wi",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 7,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0564",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,00",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 7,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 7,
+            "independent": 4,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 4,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0616",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stoppe",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-eval",
+          "before": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0638",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 5,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 5,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0639",
+          "speech": "trump_2026",
+          "class": "released",
+          "claim": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the reg",
+          "claim_truncated": true,
+          "old_verdict": "UNVERIFIABLE",
+          "old_gate_code": "insufficient-qualifying-evidence",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 6,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0643",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0659",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one b",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0660",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "He absorbed four agonizing shots, shredding his leg into numerous pieces.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0664",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the thr",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 1,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 1,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0665",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mi",
+          "claim_truncated": true,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "",
+          "before": {
+            "pack_items": 10,
+            "independent": 4,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 4,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 10,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": false,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        },
+        {
+          "sid": "trump_2026:0667",
+          "speech": "trump_2026",
+          "class": "newly_gated",
+          "claim": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle.",
+          "claim_truncated": false,
+          "old_verdict": "TRUE",
+          "old_gate_code": "",
+          "claim_shape": "c-third",
+          "before": {
+            "pack_items": 6,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          },
+          "after": {
+            "pack_items": 6,
+            "independent": 0,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 0,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": false,
+            "agrees": true
+          },
+          "baseline_reproduced": true
+        }
+      ],
+      "join": {
+        "items": 1472,
+        "matched": 1472,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_without_scores": [],
+        "sidecar_sids_not_in_artifact": []
+      },
+      "shapes_filled_from_sidecar": 175,
+      "gate_reproduction": {
+        "matched": 182,
+        "mismatched": 0,
+        "mismatches": []
+      },
+      "breakdown_divergence": [],
+      "rescore_spend_usd": 0.579665,
+      "rescore_spend_by_pass": {
+        "b1a": 0.37197,
+        "b2": 0.207695
+      },
+      "rescore_sids_by_pass": {
+        "b1a": 182,
+        "b2": 45
+      },
+      "rescore_soft_failures": [],
+      "stance_before": {
+        "items": 1472,
+        "supports": 797,
+        "refutes": 231,
+        "null": 444,
+        "arithmetic_hinge": 0,
+        "null_rate": 0.3016304347826087
+      },
+      "stance_after": {
+        "items": 1472,
+        "supports": 827,
+        "refutes": 336,
+        "null": 309,
+        "arithmetic_hinge": 22,
+        "null_rate": 0.20991847826086957
+      },
+      "arithmetic_hinges": [
+        {
+          "sid": "trump_2026:0022",
+          "claim": "The flow of deadly fentanyl across our border is down by a record 56 percent in one year.",
+          "source_url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843827",
+          "supports_claim": false,
+          "one_line_why": "Claim asserts 56% drop in fentanyl flow; forensic-seizure data show only 28.8% → 23.2% (a 19.4% relative decline), contradicting the 56% figure."
+        },
+        {
+          "sid": "trump_2026:0030",
+          "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "supports_claim": false,
+          "one_line_why": "Official BLS core CPI for December 2025 = 2.6% YoY; this is recent but not demonstrably a five-year low without historical comparison, and does not corroborate the claim's framing of a downward-driven achievement."
+        },
+        {
+          "sid": "trump_2026:0030",
+          "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+          "source_url": "https://www.washingtonexaminer.com/news/white-house/4469755/trump-boasts-falling-inflation-during-joint-address-context/",
+          "supports_claim": true,
+          "one_line_why": "Press coverage reports core CPI 2.5% (year ending January) and administration's framing of 'lowest since March 2021,' which if accurate would support a five-year low claim (Feb 2026 minus 5 years ≈ Feb 2021)."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://alfred.stlouisfed.org/release?ob=pv&od=desc&rd=2026-01-13&rid=10",
+          "supports_claim": true,
+          "one_line_why": "ALFRED St. Louis Fed vintage data for CPILFESL (core CPI series) December 2025 provides official BLS series data used in three-month annualized calculations."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://www.bls.gov/cpi/tables/supplemental-files/home.htm",
+          "supports_claim": true,
+          "one_line_why": "BLS supplemental XLSX tables for December 2025 contain the precise seasonally-adjusted index series levels needed to verify the 1.7% three-month annualized calculation."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "supports_claim": true,
+          "one_line_why": "Primary BLS December 2025 CPI release is the direct source document from which the ~1.7% three-month annualized core rate is computed."
+        },
+        {
+          "sid": "trump_2026:0031",
+          "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_10242025.htm",
+          "supports_claim": true,
+          "one_line_why": "Official BLS September 2025 CPI index level is a component input to the three-month annualized calculation spanning Q4 2025."
+        },
+        {
+          "sid": "trump_2026:0043",
+          "claim": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+          "source_url": "https://www.bea.gov/news/2025/new-foreign-direct-investment-united-states-2024",
+          "supports_claim": false,
+          "one_line_why": "Claim says 'less than $1 trillion in four long years'; snippet shows 2024 FDI was $151B, and notes it was below the 2014–2023 average, implying annual figures in that range—summing four years of ~$150B each yields ~$600B, well below $1T, bu"
+        },
+        {
+          "sid": "trump_2026:0046",
+          "claim": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
+          "source_url": "https://www.bea.gov/news/2024/new-foreign-direct-investment-united-states-2023",
+          "supports_claim": false,
+          "one_line_why": "BEA data for 2021–2023 shows cumulative FDI under $1 trillion, contradicting the claim's assertion of 'much more than $18 trillion for one year.'"
+        },
+        {
+          "sid": "trump_2026:0052",
+          "claim": "American oil production is up by more than 600,000 barrels a day and we just received from our new friend and partner, V",
+          "source_url": "https://www.energy.gov/articles/fact-sheet-president-trump-restoring-prosperity-safety-and-security-united-states-and",
+          "supports_claim": false,
+          "one_line_why": "Official DOE fact sheet cites ~380k bpd early flow rate; if sustained over six weeks (42 days) yields ~16M barrels, far short of 80M claimed received by late February."
+        },
+        {
+          "sid": "trump_2026:0055",
+          "claim": "Think about that, any time in the history of our country, more working today and 100 percent of all jobs created under m",
+          "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+          "supports_claim": true,
+          "one_line_why": "BLS CES total nonfarm series shows net increase from 158,268k (Jan 2025) to 158,592k (Jan 2026); combined with item 3, implies government employment declined, consistent with claim."
+        },
+        {
+          "sid": "trump_2026:0057",
+          "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+          "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-households-1.pdf",
+          "supports_claim": null,
+          "one_line_why": "Primary USDA/FNS household caseload data is relevant to SNAP trends but measures households rather than persons; snippet does not provide the figures needed to verify the 2.4M persons claim."
+        },
+        {
+          "sid": "trump_2026:0057",
+          "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+          "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-persons-1.pdf",
+          "supports_claim": null,
+          "one_line_why": "Primary USDA/FNS data series on SNAP participation is the measurement needed to verify the 2.4M reduction claim, but snippet does not state the actual figures or change."
+        },
+        {
+          "sid": "trump_2026:0137",
+          "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+          "source_url": "https://www.irs.gov/newsroom/what-to-know-about-the-no-tax-on-overtime-deduction",
+          "supports_claim": null,
+          "one_line_why": "IRS specifics on overtime deduction caps ($12,500 single/$25,000 joint) and phaseouts are essential to sizing the tax benefit but do not directly state Megan's $5,000 savings."
+        },
+        {
+          "sid": "trump_2026:0137",
+          "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+          "source_url": "https://www.irs.gov/newsroom/working-families-tax-cuts-individuals-and-workers",
+          "supports_claim": null,
+          "one_line_why": "Official IRS overview permits computation of whether $5,000 is plausible, but snippet does not itself state Megan's tax savings or confirm the claim's magnitude."
+        },
+        {
+          "sid": "trump_2026:0161",
+          "claim": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time ",
+          "source_url": "https://www.whitehouse.gov/wp-content/uploads/2025/03/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+          "supports_claim": false,
+          "one_line_why": "CEA projections show $303,800 at $5,000/yr (maximum), $154,800 at half-max ($2,500/yr), and $5,800 with no contributions; half-max is not modest and still required to exceed $100k."
+        },
+        {
+          "sid": "trump_2026:0208",
+          "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+          "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+          "supports_claim": false,
+          "one_line_why": "BLS 12-month CPI of 2.7% in Dec 2025 does not support a simple $34,000 per-family inflation charge; the claim requires cumulative calculation, not a single-year rate."
+        },
+        {
+          "sid": "trump_2026:0208",
+          "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+          "source_url": "https://www.bls.gov/opub/ted/2026/consumer-price-index-2025-in-review.htm",
+          "supports_claim": null,
+          "one_line_why": "Official BLS CPI documents provide the raw price-change data needed to verify whether inflation was 'record-setting' and to size cumulative burden, but snippet does not state the figures themselves."
+        },
+        {
+          "sid": "trump_2026:0219",
+          "claim": "The price of eggs is down 60 percent.",
+          "source_url": "https://data.bls.gov/timeseries/APU0000708111",
+          "supports_claim": true,
+          "one_line_why": "BLS data shows Mar 2025 peak $6.227/doz and Jan 2026 $2.577/doz, which equals a 59–60% decline, directly matching the claim."
+        },
+        {
+          "sid": "trump_2026:0295",
+          "claim": "Yet, half of all of working Americans still do not have access to a retirement plan with matching contributions from an ",
+          "source_url": "https://www.congress.gov/event/118th-congress/senate-event/LC73084/text",
+          "supports_claim": false,
+          "one_line_why": "Senate HELP materials cite roughly 50+ million workers not offered workplace plans, which at typical workforce size (~160M) implies ~31% lack access, not 50%."
+        },
+        {
+          "sid": "trump_2026:0583",
+          "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+          "source_url": "https://usafacts.org/reports/state-of-the-union/defense/",
+          "supports_claim": null,
+          "one_line_why": "USAFacts fact sheet compiling historical defense spending trends is directly relevant to judging whether FY2026 is 'record,' but snippet does not state the actual comparison or conclusion."
+        },
+        {
+          "sid": "trump_2026:0583",
+          "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+          "source_url": "https://www.congress.gov/crs-product/IN12641",
+          "supports_claim": null,
+          "one_line_why": "CRS NDAA authorization figure (~$890.6B) is a primary data series for national defense, but snippet does not clarify whether this is the total defense outlay, how it compares historically, or whether it constitutes a 'record.'"
+        }
+      ]
+    }
+  ],
+  "released_sids": [
+    "biden_2022:0155",
+    "biden_2022:0244",
+    "biden_2022:0311",
+    "clinton_1998:0021",
+    "clinton_1998:0026",
+    "clinton_1998:0028",
+    "clinton_1998:0038",
+    "clinton_1998:0194",
+    "clinton_1998:0364",
+    "gwbush_2006:0133",
+    "obama_2014:0056",
+    "obama_2014:0177",
+    "obama_2014:0280",
+    "trump_2026:0191",
+    "trump_2026:0294",
+    "trump_2026:0310",
+    "trump_2026:0428",
+    "trump_2026:0553",
+    "trump_2026:0554",
+    "trump_2026:0559",
+    "trump_2026:0564",
+    "trump_2026:0616",
+    "trump_2026:0639"
+  ],
+  "newly_gated_sids": [
+    "biden_2022:0019",
+    "biden_2022:0100",
+    "biden_2022:0124",
+    "biden_2022:0137",
+    "biden_2022:0171",
+    "biden_2022:0211",
+    "biden_2022:0284",
+    "biden_2022:0376",
+    "biden_2022:0420",
+    "biden_2022:0427",
+    "biden_2022:0431",
+    "clinton_1998:0027",
+    "clinton_1998:0101",
+    "clinton_1998:0107",
+    "clinton_1998:0134",
+    "clinton_1998:0135",
+    "clinton_1998:0195",
+    "clinton_1998:0210",
+    "clinton_1998:0211",
+    "clinton_1998:0225",
+    "clinton_1998:0227",
+    "clinton_1998:0236",
+    "clinton_1998:0243",
+    "clinton_1998:0358",
+    "gwbush_2006:0033",
+    "gwbush_2006:0134",
+    "gwbush_2006:0189",
+    "gwbush_2006:0217",
+    "obama_2014:0001",
+    "obama_2014:0004",
+    "obama_2014:0045",
+    "obama_2014:0070",
+    "obama_2014:0114",
+    "obama_2014:0123",
+    "obama_2014:0125",
+    "obama_2014:0126",
+    "obama_2014:0189",
+    "obama_2014:0198",
+    "trump_2026:0043",
+    "trump_2026:0054",
+    "trump_2026:0057",
+    "trump_2026:0098",
+    "trump_2026:0099",
+    "trump_2026:0102",
+    "trump_2026:0106",
+    "trump_2026:0111",
+    "trump_2026:0130",
+    "trump_2026:0137",
+    "trump_2026:0153",
+    "trump_2026:0255",
+    "trump_2026:0256",
+    "trump_2026:0340",
+    "trump_2026:0341",
+    "trump_2026:0343",
+    "trump_2026:0450",
+    "trump_2026:0482",
+    "trump_2026:0487",
+    "trump_2026:0514",
+    "trump_2026:0638",
+    "trump_2026:0643",
+    "trump_2026:0659",
+    "trump_2026:0660",
+    "trump_2026:0664",
+    "trump_2026:0665",
+    "trump_2026:0667"
+  ],
+  "stance": {
+    "before": {
+      "items": 4344,
+      "supports": 2883,
+      "refutes": 325,
+      "null": 1136
+    },
+    "after": {
+      "items": 4344,
+      "supports": 3198,
+      "refutes": 467,
+      "null": 679
+    }
+  },
+  "arithmetic_hinges": [
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_01062006.pdf",
+      "supports_claim": null,
+      "one_line_why": "BLS December 2005 payroll tables enable computing job growth over two-and-a-half years, but snippet does not state the computed total or Japan/EU comparison."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_02032006.pdf",
+      "supports_claim": null,
+      "one_line_why": "BLS January 2006 monthly nonfarm payroll series covers Feb 2003–Jan 2006, permitting cumulative calculation, but snippet does not provide the computed total or Japan/EU comparison."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+      "supports_claim": null,
+      "one_line_why": "BLS December 2005 payroll data enables computing cumulative jobs since mid-2003, but snippet does not state the actual figure or comparison."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "claim": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combin",
+      "source_url": "https://www.bls.gov/news.release/history/empsit_02032006.txt",
+      "supports_claim": null,
+      "one_line_why": "BLS January 2006 primary nonfarm payroll series explicitly cited to verify ~4.6M cumulative U.S. job gain, but snippet does not state the actual figure or Japan/EU comparison."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://tile.loc.gov/storage-services/master/gdc/gdcebookspublic/20/23/69/30/17/2023693017/2023693017.pdf",
+      "supports_claim": false,
+      "one_line_why": "CBO Dec 2005 projects ~15% of GDP by 2030; characterization as 'majority share of federal outlays' is speculative and does not establish 60% of budget."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://www.cbo.gov/publication/21546",
+      "supports_claim": false,
+      "one_line_why": "CBO projects SS+Medicare+Medicaid at ~16% of GDP by 2030, not 60% of federal budget; these are different metrics (share of GDP vs. share of budget)."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://www.gao.gov/assets/a111311.html",
+      "supports_claim": false,
+      "one_line_why": "GAO-05-318T projects SS+Medicare+Medicaid at 15.6% of GDP in 2030, not 60% of federal budget; GDP share and budget share are distinct measures."
+    },
+    {
+      "sid": "gwbush_2006:0163",
+      "claim": "By 2030, spending for Social Security, Medicare, and Medicaid alone will be almost 60 percent of the entire federal budg",
+      "source_url": "https://www.gao.gov/assets/a202553.html",
+      "supports_claim": false,
+      "one_line_why": "GAO simulation shows S+M+M at ~14.8% of GDP in 2030; implication of 'over half of federal spending' is inference, not direct measurement of budget share."
+    },
+    {
+      "sid": "gwbush_2006:0187",
+      "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+      "source_url": "https://www.energy.gov/cfo/articles/fy-2007-budget-justification",
+      "supports_claim": null,
+      "one_line_why": "DOE CFO budget justification page hosts detailed spending figures but snippet does not state whether they sum to nearly $10 billion since 2001."
+    },
+    {
+      "sid": "gwbush_2006:0187",
+      "claim": "Since 2001, we have spent nearly $10 billion to develop cleaner, cheaper, and more reliable alternative energy sources.",
+      "source_url": "https://www.energy.gov/documents/fy07highlightspdf",
+      "supports_claim": null,
+      "one_line_why": "DOE FY2007 Budget Highlights provides program-level funding data useful for verification but snippet does not state the cumulative since-2001 total."
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "claim": "Drug use among youth is down 19 percent since 2001.",
+      "source_url": "https://record.umich.edu/articles/overall-illicit-drug-use-by-american-teens-continues-gradual-decline/",
+      "supports_claim": true,
+      "one_line_why": "MTF operator reports past-month illicit teen drug use fell from ~19% (2001) to ~16% (2005), which is the ~19% decline the claim asserts."
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "claim": "Drug use among youth is down 19 percent since 2001.",
+      "source_url": "https://www.justice.gov/archive/olp/pdf/ndcs06.pdf",
+      "supports_claim": true,
+      "one_line_why": "White House cites MTF data showing 19.4% to 15.7%, which equals a 19% drop matching the claim exactly."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://en.wikipedia.org/wiki/1997_United_States_federal_budget",
+      "supports_claim": true,
+      "one_line_why": "FY1997 deficit of $22.6B (0.3% GDP) down from ~$290B in FY1992 yields ~92% reduction, directly confirming the '90 percent' cut claim."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+      "supports_claim": true,
+      "one_line_why": "St. Louis Fed dataset of annual federal surplus/deficit allows computation of FY1992-to-FY1997 percentage reduction, which yields ~90% when calculated."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://www.frbsf.org/research-and-insights/publications/economic-letter/1998/01/the-budget-deficit/",
+      "supports_claim": true,
+      "one_line_why": "Fed analysis documents sharp deficit decline from 4.7% of GDP (1992) to 0.3% (1997), consistent with ~90% reduction and supports the magnitude of improvement claimed."
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "claim": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1",
+      "source_url": "https://www.govinfo.gov/content/pkg/BUDGET-1999-TAB/pdf/BUDGET-1999-TAB-3-1.pdf",
+      "supports_claim": true,
+      "one_line_why": "OMB Historical Table 1.1 shows unified deficit fell from −$290,402M (1992) to −$21,943M (1997), a ~92% reduction, directly corroborating the claim's '90 percent' deficit cut."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.cbo.gov/sites/default/files/105th-congress-1997-1998/reports/012898.pdf",
+      "supports_claim": null,
+      "one_line_why": "CBO testimony discusses 1997 receipts and tax law effects on tax burdens; relevance to the 20-year low rate claim depends on whether testimony contains historical rate comparisons, unclear from description."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.cbo.gov/sites/default/files/revenue0.pdf",
+      "supports_claim": null,
+      "one_line_why": "CBO document on budgetary implications and provisions is primary source material; relevance to the 20-year low rate claim depends on whether it contains effective tax rate comparisons across time, unclear from description."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.jct.gov/getattachment/8e76364f-e214-48c2-a8ee-67be06fd636a/x-39-97-2150.pdf",
+      "supports_claim": null,
+      "one_line_why": "JCT document describes 1997 legislation and distributional effects; relevance to the 20-year low rate claim depends on whether it contains historical effective rate data, unclear from description."
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "claim": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r",
+      "source_url": "https://www.jct.gov/getattachment/def435ec-2c9e-46c6-9ca8-36945f02ca06/s-23-97.pdf",
+      "supports_claim": null,
+      "one_line_why": "JCT Blue Book provides distributional and effective-rate tables for the 1997 act; relevance depends on whether tables show middle-class rates at 20-year lows, which cannot be assessed from description alone."
+    },
+    {
+      "sid": "clinton_1998:0091",
+      "claim": "Today, record high exports account for fully one-third of our economic growth.",
+      "source_url": "https://bea.gov/sites/default/files/2019-04/gdp397p.txt",
+      "supports_claim": null,
+      "one_line_why": "Primary BEA preliminary Q3 1997 GDP release provides export contribution data but snippet does not state whether it equals one-third of total growth."
+    },
+    {
+      "sid": "clinton_1998:0091",
+      "claim": "Today, record high exports account for fully one-third of our economic growth.",
+      "source_url": "https://www.bea.gov/system/files/newsreleases/national/gdp/1997/gdp397a.txt",
+      "supports_claim": null,
+      "one_line_why": "Primary BEA GDP release for Q3 1997 provides net exports contribution data but snippet does not state the specific one-third figure or overall share."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+      "supports_claim": null,
+      "one_line_why": "DOL budget shows 1996–1997 funding levels (~$1.12B to ~$1.25B) but does not provide 1993 baseline or explicit doubling comparison."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "source_url": "https://www.congress.gov/committee-report/104th-congress/house-report/659",
+      "supports_claim": null,
+      "one_line_why": "House Appropriations report shows FY1997 Title III funding at ~$1.1B, a single year's figure without 1993 baseline to verify doubling."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "claim": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "source_url": "https://www.everycrsreport.com/reports/98-203.html",
+      "supports_claim": null,
+      "one_line_why": "CRS analysis details FY1998–1999 funding levels (~$1.35B) but does not state 1993 baseline or explicit doubling comparison."
+    },
+    {
+      "sid": "obama_2014:0001",
+      "claim": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo",
+      "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+      "supports_claim": null,
+      "one_line_why": "BLS time series allows computation of the figure but snippet does not state the result; would require arithmetic to verify."
+    },
+    {
+      "sid": "obama_2014:0087",
+      "claim": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job c",
+      "source_url": "http://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+      "supports_claim": true,
+      "one_line_why": "GTM Research analysis of ~132,000 PV installations in 2013 yields approximately one system every four minutes, corroborating the claim's rate."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+      "supports_claim": true,
+      "one_line_why": "DOL official reference corroborates which states raised statutory minimum-wage rates in the relevant year."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "source_url": "https://www.dol.gov/agencies/whd/mw-consolidated",
+      "supports_claim": true,
+      "one_line_why": "DOL primary data table is the authoritative source for verifying which states changed minimum-wage laws in the relevant period; corroborates the five-state count."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "claim": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "source_url": "https://www.dol.gov/agencies/whd/state/minimum-wage/tipped/2014",
+      "supports_claim": true,
+      "one_line_why": "Federal Labor table confirms NJ, NY, CT, and RI increases by early 2014; combined with CA from item 4, accounts for five states."
+    },
+    {
+      "sid": "obama_2014:0189",
+      "claim": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+      "source_url": "https://www.everycrsreport.com/files/20130226_R42973_44c181d93ef92acbbebebd1a13eb57774c7678a8.pdf",
+      "supports_claim": false,
+      "one_line_why": "CRS table shows 1981 minimum $3.35 = $8.61 in real (2013) dollars; $7.25 in 2014 is ~16% lower, not ~20%."
+    },
+    {
+      "sid": "obama_2014:0202",
+      "claim": "Today, most workers don’t have a pension.",
+      "source_url": "http://www.dol.gov/ebsa/pdf/2011pensionplanbulletin.pdf",
+      "supports_claim": null,
+      "one_line_why": "Source provides aggregate participant counts (~130M) across all pension plan types in 2011 but does not state what share of the total workforce this represents, making it impossible to assess the claim directly."
+    },
+    {
+      "sid": "biden_2022:0114",
+      "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.htm",
+      "supports_claim": null,
+      "one_line_why": "References underlying establishment survey tables but does not state the aggregate 2021 figure needed to verify the claim."
+    },
+    {
+      "sid": "biden_2022:0114",
+      "claim": "In fact—our economy created over 6.5 million new jobs just last year, more jobs created in one year than ever before in ",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_12032021.htm",
+      "supports_claim": null,
+      "one_line_why": "Provides monthly data leading into the full-year total but does not state the 2021 aggregate figure itself."
+    },
+    {
+      "sid": "biden_2022:0169",
+      "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+      "source_url": "https://www.bls.gov/ces/publications/highlights/2022/current-employment-statistics-highlights-01-2022.pdf",
+      "supports_claim": true,
+      "one_line_why": "BLS CES highlights show 12.559M in January 2022 and 12.190M in December 2020, which when subtracted yields 369,000."
+    },
+    {
+      "sid": "biden_2022:0169",
+      "claim": "All told, we created 369,000 new manufacturing jobs in America just last year.",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+      "supports_claim": true,
+      "one_line_why": "Official BLS data shows manufacturing employment at 12.559M in Jan 2022 vs 12.190M in Dec 2020, yielding exactly 369,000 gain."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+      "source_url": "https://www.cms.gov/newsroom/fact-sheets/american-rescue-plan-and-marketplace",
+      "supports_claim": false,
+      "one_line_why": "CMS official reports ~$50/month per person (~$600/year), far below the $2,400/year per family claim."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+      "source_url": "https://www.congress.gov/117/meeting/house/111378/documents/HHRG-117-IF14-20210323-SD018.pdf",
+      "supports_claim": false,
+      "one_line_why": "Covered California shows average household net premium drop ~$119/month (~$1,428/year), below the $2,400/year per family claim."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "claim": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their ",
+      "source_url": "https://www.kff.org/affordable-care-act/how-the-american-rescue-plan-act-affects-subsidies-for-marketplace-shoppers-and-people-who-are-uninsured/",
+      "supports_claim": false,
+      "one_line_why": "KFF analysis estimates ~$70/month (~$840/year) for typical individual purchasers, substantially below $2,400/year per family."
+    },
+    {
+      "sid": "biden_2022:0216",
+      "claim": "Many families pay up to $14,000 a year for child care per child.",
+      "source_url": "https://dhs.ri.gov/media/3066/download?language=en",
+      "supports_claim": true,
+      "one_line_why": "Rhode Island 75th-percentile infant center weekly rate of ~$289 calculates to ~$13.9k/yr, directly matching the $14k claim."
+    },
+    {
+      "sid": "biden_2022:0266",
+      "claim": "We’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.",
+      "source_url": "https://www.foxnews.com/us/number-covid-patients-us-hospitals-record-low",
+      "supports_claim": true,
+      "one_line_why": "Reports ~11,860 hospitalized average as 'lowest since summer 2021' with prior June 2021 low of 12,041, directly supporting claim that Feb/Mar 2022 reached July-level lows; date verification needed."
+    },
+    {
+      "sid": "biden_2022:0305",
+      "claim": "And with 75 percent of adult Americans fully vaccinated and hospitalizations down by 77 percent, most Americans can remo",
+      "source_url": "https://stacks.cdc.gov/view/cdc/114173",
+      "supports_claim": true,
+      "one_line_why": "CDC summary quantifies case/hospitalization declines from mid-January peak, providing basis for the 77% hospitalization reduction claim."
+    },
+    {
+      "sid": "trump_2026:0022",
+      "claim": "The flow of deadly fentanyl across our border is down by a record 56 percent in one year.",
+      "source_url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843827",
+      "supports_claim": false,
+      "one_line_why": "Claim asserts 56% drop in fentanyl flow; forensic-seizure data show only 28.8% → 23.2% (a 19.4% relative decline), contradicting the 56% figure."
+    },
+    {
+      "sid": "trump_2026:0030",
+      "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+      "supports_claim": false,
+      "one_line_why": "Official BLS core CPI for December 2025 = 2.6% YoY; this is recent but not demonstrably a five-year low without historical comparison, and does not corroborate the claim's framing of a downward-driven achievement."
+    },
+    {
+      "sid": "trump_2026:0030",
+      "claim": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+      "source_url": "https://www.washingtonexaminer.com/news/white-house/4469755/trump-boasts-falling-inflation-during-joint-address-context/",
+      "supports_claim": true,
+      "one_line_why": "Press coverage reports core CPI 2.5% (year ending January) and administration's framing of 'lowest since March 2021,' which if accurate would support a five-year low claim (Feb 2026 minus 5 years ≈ Feb 2021)."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://alfred.stlouisfed.org/release?ob=pv&od=desc&rd=2026-01-13&rid=10",
+      "supports_claim": true,
+      "one_line_why": "ALFRED St. Louis Fed vintage data for CPILFESL (core CPI series) December 2025 provides official BLS series data used in three-month annualized calculations."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://www.bls.gov/cpi/tables/supplemental-files/home.htm",
+      "supports_claim": true,
+      "one_line_why": "BLS supplemental XLSX tables for December 2025 contain the precise seasonally-adjusted index series levels needed to verify the 1.7% three-month annualized calculation."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+      "supports_claim": true,
+      "one_line_why": "Primary BLS December 2025 CPI release is the direct source document from which the ~1.7% three-month annualized core rate is computed."
+    },
+    {
+      "sid": "trump_2026:0031",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_10242025.htm",
+      "supports_claim": true,
+      "one_line_why": "Official BLS September 2025 CPI index level is a component input to the three-month annualized calculation spanning Q4 2025."
+    },
+    {
+      "sid": "trump_2026:0043",
+      "claim": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+      "source_url": "https://www.bea.gov/news/2025/new-foreign-direct-investment-united-states-2024",
+      "supports_claim": false,
+      "one_line_why": "Claim says 'less than $1 trillion in four long years'; snippet shows 2024 FDI was $151B, and notes it was below the 2014–2023 average, implying annual figures in that range—summing four years of ~$150B each yields ~$600B, well below $1T, bu"
+    },
+    {
+      "sid": "trump_2026:0046",
+      "claim": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
+      "source_url": "https://www.bea.gov/news/2024/new-foreign-direct-investment-united-states-2023",
+      "supports_claim": false,
+      "one_line_why": "BEA data for 2021–2023 shows cumulative FDI under $1 trillion, contradicting the claim's assertion of 'much more than $18 trillion for one year.'"
+    },
+    {
+      "sid": "trump_2026:0052",
+      "claim": "American oil production is up by more than 600,000 barrels a day and we just received from our new friend and partner, V",
+      "source_url": "https://www.energy.gov/articles/fact-sheet-president-trump-restoring-prosperity-safety-and-security-united-states-and",
+      "supports_claim": false,
+      "one_line_why": "Official DOE fact sheet cites ~380k bpd early flow rate; if sustained over six weeks (42 days) yields ~16M barrels, far short of 80M claimed received by late February."
+    },
+    {
+      "sid": "trump_2026:0055",
+      "claim": "Think about that, any time in the history of our country, more working today and 100 percent of all jobs created under m",
+      "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+      "supports_claim": true,
+      "one_line_why": "BLS CES total nonfarm series shows net increase from 158,268k (Jan 2025) to 158,592k (Jan 2026); combined with item 3, implies government employment declined, consistent with claim."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+      "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-households-1.pdf",
+      "supports_claim": null,
+      "one_line_why": "Primary USDA/FNS household caseload data is relevant to SNAP trends but measures households rather than persons; snippet does not provide the figures needed to verify the 2.4M persons claim."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "claim": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off ",
+      "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-persons-1.pdf",
+      "supports_claim": null,
+      "one_line_why": "Primary USDA/FNS data series on SNAP participation is the measurement needed to verify the 2.4M reduction claim, but snippet does not state the actual figures or change."
+    },
+    {
+      "sid": "trump_2026:0137",
+      "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+      "source_url": "https://www.irs.gov/newsroom/what-to-know-about-the-no-tax-on-overtime-deduction",
+      "supports_claim": null,
+      "one_line_why": "IRS specifics on overtime deduction caps ($12,500 single/$25,000 joint) and phaseouts are essential to sizing the tax benefit but do not directly state Megan's $5,000 savings."
+    },
+    {
+      "sid": "trump_2026:0137",
+      "claim": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t",
+      "source_url": "https://www.irs.gov/newsroom/working-families-tax-cuts-individuals-and-workers",
+      "supports_claim": null,
+      "one_line_why": "Official IRS overview permits computation of whether $5,000 is plausible, but snippet does not itself state Megan's tax savings or confirm the claim's magnitude."
+    },
+    {
+      "sid": "trump_2026:0161",
+      "claim": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time ",
+      "source_url": "https://www.whitehouse.gov/wp-content/uploads/2025/03/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+      "supports_claim": false,
+      "one_line_why": "CEA projections show $303,800 at $5,000/yr (maximum), $154,800 at half-max ($2,500/yr), and $5,800 with no contributions; half-max is not modest and still required to exceed $100k."
+    },
+    {
+      "sid": "trump_2026:0208",
+      "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+      "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+      "supports_claim": false,
+      "one_line_why": "BLS 12-month CPI of 2.7% in Dec 2025 does not support a simple $34,000 per-family inflation charge; the claim requires cumulative calculation, not a single-year rate."
+    },
+    {
+      "sid": "trump_2026:0208",
+      "claim": "And record-setting inflation that cost the typical family $34,000 in just a speck of time.",
+      "source_url": "https://www.bls.gov/opub/ted/2026/consumer-price-index-2025-in-review.htm",
+      "supports_claim": null,
+      "one_line_why": "Official BLS CPI documents provide the raw price-change data needed to verify whether inflation was 'record-setting' and to size cumulative burden, but snippet does not state the figures themselves."
+    },
+    {
+      "sid": "trump_2026:0219",
+      "claim": "The price of eggs is down 60 percent.",
+      "source_url": "https://data.bls.gov/timeseries/APU0000708111",
+      "supports_claim": true,
+      "one_line_why": "BLS data shows Mar 2025 peak $6.227/doz and Jan 2026 $2.577/doz, which equals a 59–60% decline, directly matching the claim."
+    },
+    {
+      "sid": "trump_2026:0295",
+      "claim": "Yet, half of all of working Americans still do not have access to a retirement plan with matching contributions from an ",
+      "source_url": "https://www.congress.gov/event/118th-congress/senate-event/LC73084/text",
+      "supports_claim": false,
+      "one_line_why": "Senate HELP materials cite roughly 50+ million workers not offered workplace plans, which at typical workforce size (~160M) implies ~31% lack access, not 50%."
+    },
+    {
+      "sid": "trump_2026:0583",
+      "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+      "source_url": "https://usafacts.org/reports/state-of-the-union/defense/",
+      "supports_claim": null,
+      "one_line_why": "USAFacts fact sheet compiling historical defense spending trends is directly relevant to judging whether FY2026 is 'record,' but snippet does not state the actual comparison or conclusion."
+    },
+    {
+      "sid": "trump_2026:0583",
+      "claim": "So thanks to Republican in Congress, we're investing that record number of dollars, have no choice, in the United States",
+      "source_url": "https://www.congress.gov/crs-product/IN12641",
+      "supports_claim": null,
+      "one_line_why": "CRS NDAA authorization figure (~$890.6B) is a primary data series for national defense, but snippet does not clarify whether this is the total defense outlay, how it compares historically, or whether it constitutes a 'record.'"
+    }
+  ],
+  "arithmetic_hinge_sids": [
+    "biden_2022:0114",
+    "biden_2022:0169",
+    "biden_2022:0211",
+    "biden_2022:0216",
+    "biden_2022:0266",
+    "biden_2022:0305",
+    "clinton_1998:0032",
+    "clinton_1998:0035",
+    "clinton_1998:0091",
+    "clinton_1998:0101",
+    "gwbush_2006:0134",
+    "gwbush_2006:0163",
+    "gwbush_2006:0187",
+    "gwbush_2006:0217",
+    "obama_2014:0001",
+    "obama_2014:0087",
+    "obama_2014:0177",
+    "obama_2014:0189",
+    "obama_2014:0202",
+    "trump_2026:0022",
+    "trump_2026:0030",
+    "trump_2026:0031",
+    "trump_2026:0043",
+    "trump_2026:0046",
+    "trump_2026:0052",
+    "trump_2026:0055",
+    "trump_2026:0057",
+    "trump_2026:0137",
+    "trump_2026:0161",
+    "trump_2026:0208",
+    "trump_2026:0219",
+    "trump_2026:0295",
+    "trump_2026:0583"
+  ],
+  "costed_b1b": {
+    "released": 23,
+    "extras_named": 6,
+    "extras_not_already_released": 5,
+    "extras_overlapping_released": [],
+    "extras_dropped_as_newly_gated": [
+      "trump_2026:0343"
+    ],
+    "claims_to_adjudicate": 28,
+    "per_claim_usd": [
+      0.0642,
+      0.0748
+    ],
+    "per_claim_usd_source": "costs.PER_CLAIM_USD_MEASURED (ledger-derived)",
+    "per_claim_usd_planning": [
+      0.065,
+      0.08
+    ],
+    "cost_low_usd": 1.8,
+    "cost_high_usd": 2.09,
+    "cost_low_planning_usd": 1.82,
+    "cost_high_planning_usd": 2.24,
+    "ceiling_usd": 10.0,
+    "wave_planning_ceiling_usd": 3.28,
+    "b1a_planned_usd": 0.44,
+    "b1a_observed_usd": 1.6038,
+    "b1a_overran_plan": true,
+    "committed_b1a_usd": 1.6038,
+    "remaining_usd": 8.3962,
+    "fits_ceiling": true,
+    "fits_wave_planning_ceiling": true
+  }
+}

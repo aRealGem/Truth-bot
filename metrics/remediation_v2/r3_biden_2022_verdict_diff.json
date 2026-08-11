@@ -1,0 +1,46 @@
+{
+  "speech_id": "biden_2022",
+  "rebuild_of": "c733c283-f10f-4410-93d3-d66b18d2697b",
+  "new_run_id": "f570d45c-a450-4b9d-9d67-b225cca8cefe",
+  "wave": false,
+  "escape": {
+    "kind": "extra-sid escape",
+    "reason": "R-3 publish-blocking: neither claim has a stored rationale in any generation of its lineage, and no deterministic re-gate can write one",
+    "sids": [
+      "biden_2022:0432",
+      "trump_2026:0462"
+    ],
+    "tag": "r3",
+    "wave_set_widened": false,
+    "wave_set_size": 29,
+    "source_artifact": "current publishing head (post-wave, post-rulings)",
+    "note": "--extra-sids admits claims the flip set never released. It is for a publish-blocking defect outside the flip set; the wave's own claim set, report and diffs are untouched."
+  },
+  "tag": "r3",
+  "wave_sids": [
+    "biden_2022:0432"
+  ],
+  "reasons": {
+    "biden_2022:0432": "extra-sid escape: R-3 publish-blocking: neither claim has a stored rationale in any generation of its lineage, and no deterministic re-gate can write one",
+    "trump_2026:0462": "extra-sid escape: R-3 publish-blocking: neither claim has a stored rationale in any generation of its lineage, and no deterministic re-gate can write one"
+  },
+  "n_compared": 1,
+  "counts": {
+    "unchanged": 0,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 0,
+    "split_changes": 1,
+    "other": 0
+  },
+  "gate_forced_new": 0,
+  "per_sid": [
+    {
+      "sid": "biden_2022:0432",
+      "old": "MISLEADING",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body."
+    }
+  ]
+}

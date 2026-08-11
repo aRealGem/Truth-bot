@@ -21,13 +21,16 @@ from __future__ import annotations
 
 import logging
 from datetime import date
-from typing import Callable, Optional, Sequence
+from typing import TYPE_CHECKING, Callable, Optional, Sequence
 
 from hydramind.invariants import check_i5_provenance
 from truthbot.verify.retrievers import Retriever
 
+if TYPE_CHECKING:      # import-light: the hint only, never the brave/httpx tail
+    from truthbot.verify.relevance import PackScorer
+
 from . import era_lint, speech_context
-from .consolidator import PACK_CAP_V2, consolidate
+from .consolidator import PACK_CAP_V2, consolidate, era_note_for, scoring_telemetry
 from .evidence_pack import EvidencePack, PackItem, _retrieved_iso, _sha256, window_for
 
 logger = logging.getLogger(__name__)
@@ -64,6 +67,36 @@ def _serial_runner(pool: Sequence[Retriever],
     return [call(r) for r in pool]
 
 
+def pack_item_from_citation(i: int, cit) -> PackItem:
+    """One consolidator citation → the ``PackItem`` the panel actually sees.
+
+    Module-level rather than nested inside :func:`build_evidence_pack_v2`
+    because it is the ONE definition of how a consolidated citation becomes a
+    pack item — role, era note, stance, relevance and the I5 provenance check
+    included. The stored-pack adjudication wave
+    (``scripts/wave_adjudicate.py``) re-gates packs that are already on disk
+    and has to produce items that are byte-identical to a live build; it
+    imports this instead of restating it, so the two paths cannot drift."""
+    ev = cit.evidence
+    item = PackItem(
+        pack_id=f"E{i}",
+        source_name=ev.source_name or "Unknown",
+        source_url=ev.source_url,
+        tier=ev.source_tier,
+        snippet=ev.snippet or "",
+        retrieved_at=_retrieved_iso(ev),
+        sha256=_sha256(ev.source_url, ev.snippet or ""),
+        supports_claim=ev.supports_claim,
+        relevance_score=ev.relevance_score,
+        published_at=(ev.published_at.date().isoformat()
+                      if ev.published_at else None),
+        role=getattr(cit, "role", "") or "",
+        era_note=era_note_for(cit),
+    )
+    check_i5_provenance(item.provenance())   # I5: fail closed at entry
+    return item
+
+
 def build_evidence_pack_v2(
     sid: str,
     claim_text: str,
@@ -76,6 +109,8 @@ def build_evidence_pack_v2(
     shortlist_runner: Optional[ShortlistRunner] = None,
     claim_shape: str = "",
     relation_of=None,
+    era_exempt: bool = False,
+    scorer: Optional["PackScorer"] = None,
 ) -> EvidencePack:
     """Assemble a shared_pack_v2 ``EvidencePack`` for one claim.
 
@@ -94,9 +129,39 @@ def build_evidence_pack_v2(
     quota (see ``consolidate``). ``relation_of`` is closed over speaker +
     utterance by the CALLER (typically the publish CLI's pack_builder), so
     this builder still receives no speaker — the callable is identical
-    machinery for every speaker (I3-relational)."""
+    machinery for every speaker (I3-relational).
+
+    ``scorer`` (remediation v2, B1b — owner ruling Q-1): the relevance/stance
+    scoring hook, ``(claim_text, list[Evidence]) -> None``, mutating in place.
+    Called on the merged shortlist candidates BEFORE ``consolidate`` so the
+    quota's ``_bearing`` test sees REAL stance — which is the whole fix. The v2
+    path historically never scored: R1/R2/R3 went straight into ``consolidate``,
+    so every item kept the 0.5 relevance default and any ``None`` stance could
+    never credit ``MIN_BEARING_T13``, gate-forcing Unverifiable on packs that
+    held perfectly good evidence.
+
+    It is INJECTED, never built here: scoring is MODEL SPEND, so the caller owns
+    that decision (production callers keep it behind a default-off
+    ``--score-evidence`` flag pending DC-B1 sign-off), and the ``None`` default
+    keeps every existing caller — and every offline test — byte-identical and
+    free. Build one with ``verify.relevance.build_scorer()``.
+
+    Exceptions from ``scorer`` deliberately PROPAGATE (unlike a dead retriever,
+    which is soft): ``relevance.score_evidence`` already fails soft on model
+    errors, so what escapes is either a real defect or a deliberate budget halt
+    — and a budget breaker that got swallowed here would defeat its purpose."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
+    if utterance is None and not era_exempt:
+        # Fail CLOSED (remediation v2, 1.3): an unregistered speech date used
+        # to silently disable ALL era gating (speech_date_for -> None meant
+        # _contemporaneous had nothing to check and assert_pack_within_era
+        # no-opped). The Obama-2014 rescue leg shipped 2026-dated evidence
+        # into a 2014 speech exactly this way.
+        raise era_lint.EraLintError(
+            f"no utterance date registered for {sid!r} — the era gate cannot "
+            "run. Call speech_context.register_speech_date() first, or pass "
+            "era_exempt=True for a deliberately dateless build.")
     # Historical-era policy (wiki projects:truthbot:historical-era-design):
     # pre-web speeches run lenient — unless the claim is (heuristically) a
     # prediction, which must never be judged with hindsight.
@@ -132,13 +197,34 @@ def build_evidence_pack_v2(
         results = runner(pool, lambda r: _call_one(r, ctx))
         return [(r.label + label_suffix, sl) for r, sl in zip(pool, results)]
 
+    # URLs already sent to the scorer — the retry round scores only its NEW
+    # candidates, so a rescued claim never pays twice for the same page.
+    scored_urls: set[str] = set()
+
+    def _score(pairs) -> None:
+        """Score the not-yet-scored candidates of these shortlists, in place."""
+        if scorer is None:
+            return
+        batch = []
+        for _label, shortlist in pairs:
+            for ev in shortlist:
+                key = (ev.source_url or "").lower().rstrip("/")
+                if not key or key in scored_urls:
+                    continue
+                scored_urls.add(key)
+                batch.append(ev)
+        if batch:
+            scorer(claim_text, batch)
+
     shortlists = _shortlists(retrievers, "", context)
+    _score(shortlists)               # BEFORE consolidate — the quota sees stance
     res = consolidate(sid, shortlists, utterance=utterance, window=window,
                       max_items=max_items, era_mode=mode,
                       claim_shape=claim_shape, relation_of=relation_of)
     if not res.quota_met:
         retry = _shortlists(retry_retrievers or retrievers, "-retry",
                             _RETRY_FOCUS + context)
+        _score(retry)
         res = consolidate(sid, shortlists + retry, utterance=utterance,
                           window=window, max_items=max_items, era_mode=mode,
                           claim_shape=claim_shape, relation_of=relation_of)
@@ -147,35 +233,31 @@ def build_evidence_pack_v2(
                         "(%s) — verdict will be forced Unverifiable",
                         sid, res.gate_code)
 
-    def _pack_item(i: int, cit) -> PackItem:
-        ev = cit.evidence
-        item = PackItem(
-            pack_id=f"E{i}",
-            source_name=ev.source_name or "Unknown",
-            source_url=ev.source_url,
-            tier=ev.source_tier,
-            snippet=ev.snippet or "",
-            retrieved_at=_retrieved_iso(ev),
-            sha256=_sha256(ev.source_url, ev.snippet or ""),
-            supports_claim=ev.supports_claim,
-            relevance_score=ev.relevance_score,
-            published_at=(ev.published_at.date().isoformat()
-                          if ev.published_at else None),
-            role=getattr(cit, "role", "") or "",
-        )
-        check_i5_provenance(item.provenance())   # I5: fail closed at entry
-        return item
-
-    items = [_pack_item(i, cit) for i, cit in enumerate(res.items, start=1)]
+    items = [pack_item_from_citation(i, cit)
+             for i, cit in enumerate(res.items, start=1)]
     # Pre-cap pool (PR-A2.2): persisted alongside the pack when the cap
     # actually discarded candidates, so cap/quota changes can be measured
     # offline without re-retrieval. Same E<n> numbering — the pool's first
     # len(items) entries ARE the pack.
     pool: list[PackItem] = []
     if len(res.pre_cap_items) > len(res.items):
-        pool = [_pack_item(i, cit)
+        pool = [pack_item_from_citation(i, cit)
                 for i, cit in enumerate(res.pre_cap_items, start=1)]
+    # Scoring coverage (Phase A, A1) — computed over the CAPPED pack, the set
+    # the panel and the quota actually see. It reads the SAME mutated Evidence
+    # the scorer wrote through (_pack_item copies relevance_score /
+    # supports_claim off each item), so it needs no wiring of its own: with
+    # ``scorer=None`` it reports 0 scored / N default relevance, which is the
+    # pre-B1b v2 path — R1/R2/R3 reaching consolidate() without ever passing
+    # through ``verify.relevance.score_evidence``; with a scorer supplied it
+    # reports scored>0 and the run becomes fit-to-gate
+    # (publish.consistency.is_fit_to_gate). Recording it is what turns that
+    # from a call-graph fact into a measurable, journaled, lintable one.
     pack = EvidencePack(sid=sid, window=window, items=items,
-                        gate_code=res.gate_code, pool=pool)
-    era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
+                        gate_code=res.gate_code, pool=pool,
+                        excluded_fc=list(res.excluded_fc),
+                        quarantined=list(getattr(res, "quarantined", []) or []),
+                        scoring=scoring_telemetry(items))
+    if not era_exempt:
+        era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
     return pack

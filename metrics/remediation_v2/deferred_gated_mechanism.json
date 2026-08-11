@@ -1,0 +1,344 @@
+{
+  "schema": "truthbot-deferred-gated-mechanism v1",
+  "generated": "2026-08-10T18:11:07.259004+00:00",
+  "ruling_date": "2026-08-10",
+  "method": "four gate configurations over the same consolidator the flip set uses; the first configuration to withhold a claim owns it. $0 — no model calls, no retrieval.",
+  "leg_totals": {
+    "re-score": 27,
+    "D15": 66,
+    "D16alpha": 26,
+    "both": 65
+  },
+  "shipped_total": 65,
+  "by_mechanism": {
+    "D15": 39,
+    "re-score": 26
+  },
+  "rescued_by_d16alpha": [
+    "clinton_1998:0006"
+  ],
+  "arithmetic": "27 gated by the re-score alone, minus 1 the D16(alpha) statistical-release rule releases, plus 39 D15 adds on top of the re-score, = 65",
+  "mechanism": {
+    "biden_2022:0019": "D15",
+    "biden_2022:0100": "re-score",
+    "biden_2022:0124": "re-score",
+    "biden_2022:0137": "D15",
+    "biden_2022:0171": "D15",
+    "biden_2022:0211": "re-score",
+    "biden_2022:0284": "D15",
+    "biden_2022:0376": "re-score",
+    "biden_2022:0420": "D15",
+    "biden_2022:0427": "re-score",
+    "biden_2022:0431": "D15",
+    "clinton_1998:0027": "D15",
+    "clinton_1998:0101": "re-score",
+    "clinton_1998:0107": "re-score",
+    "clinton_1998:0134": "D15",
+    "clinton_1998:0135": "D15",
+    "clinton_1998:0195": "D15",
+    "clinton_1998:0210": "re-score",
+    "clinton_1998:0211": "re-score",
+    "clinton_1998:0225": "D15",
+    "clinton_1998:0227": "D15",
+    "clinton_1998:0236": "D15",
+    "clinton_1998:0243": "D15",
+    "clinton_1998:0358": "re-score",
+    "gwbush_2006:0033": "D15",
+    "gwbush_2006:0134": "D15",
+    "gwbush_2006:0189": "D15",
+    "gwbush_2006:0217": "re-score",
+    "obama_2014:0001": "re-score",
+    "obama_2014:0004": "re-score",
+    "obama_2014:0045": "D15",
+    "obama_2014:0070": "re-score",
+    "obama_2014:0114": "D15",
+    "obama_2014:0123": "D15",
+    "obama_2014:0125": "D15",
+    "obama_2014:0126": "D15",
+    "obama_2014:0189": "re-score",
+    "obama_2014:0198": "re-score",
+    "trump_2026:0043": "re-score",
+    "trump_2026:0054": "re-score",
+    "trump_2026:0057": "re-score",
+    "trump_2026:0098": "D15",
+    "trump_2026:0099": "D15",
+    "trump_2026:0102": "D15",
+    "trump_2026:0106": "D15",
+    "trump_2026:0111": "D15",
+    "trump_2026:0130": "re-score",
+    "trump_2026:0137": "re-score",
+    "trump_2026:0153": "D15",
+    "trump_2026:0255": "D15",
+    "trump_2026:0256": "D15",
+    "trump_2026:0340": "D15",
+    "trump_2026:0341": "re-score",
+    "trump_2026:0343": "D15",
+    "trump_2026:0450": "re-score",
+    "trump_2026:0482": "D15",
+    "trump_2026:0487": "re-score",
+    "trump_2026:0514": "D15",
+    "trump_2026:0638": "D15",
+    "trump_2026:0643": "D15",
+    "trump_2026:0659": "D15",
+    "trump_2026:0660": "D15",
+    "trump_2026:0664": "D15",
+    "trump_2026:0665": "re-score",
+    "trump_2026:0667": "re-score"
+  },
+  "per_speech": [
+    {
+      "speech": "biden_2022",
+      "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+      "legs": {
+        "re-score": [
+          "biden_2022:0100",
+          "biden_2022:0124",
+          "biden_2022:0211",
+          "biden_2022:0376",
+          "biden_2022:0427"
+        ],
+        "D15": [
+          "biden_2022:0019",
+          "biden_2022:0100",
+          "biden_2022:0124",
+          "biden_2022:0137",
+          "biden_2022:0171",
+          "biden_2022:0211",
+          "biden_2022:0284",
+          "biden_2022:0376",
+          "biden_2022:0420",
+          "biden_2022:0427",
+          "biden_2022:0431"
+        ],
+        "D16alpha": [
+          "biden_2022:0100",
+          "biden_2022:0124",
+          "biden_2022:0211",
+          "biden_2022:0376",
+          "biden_2022:0427"
+        ],
+        "both": [
+          "biden_2022:0019",
+          "biden_2022:0100",
+          "biden_2022:0124",
+          "biden_2022:0137",
+          "biden_2022:0171",
+          "biden_2022:0211",
+          "biden_2022:0284",
+          "biden_2022:0376",
+          "biden_2022:0420",
+          "biden_2022:0427",
+          "biden_2022:0431"
+        ]
+      }
+    },
+    {
+      "speech": "clinton_1998",
+      "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+      "legs": {
+        "re-score": [
+          "clinton_1998:0006",
+          "clinton_1998:0101",
+          "clinton_1998:0107",
+          "clinton_1998:0210",
+          "clinton_1998:0211",
+          "clinton_1998:0358"
+        ],
+        "D15": [
+          "clinton_1998:0006",
+          "clinton_1998:0027",
+          "clinton_1998:0101",
+          "clinton_1998:0107",
+          "clinton_1998:0134",
+          "clinton_1998:0135",
+          "clinton_1998:0195",
+          "clinton_1998:0210",
+          "clinton_1998:0211",
+          "clinton_1998:0225",
+          "clinton_1998:0227",
+          "clinton_1998:0236",
+          "clinton_1998:0243",
+          "clinton_1998:0358"
+        ],
+        "D16alpha": [
+          "clinton_1998:0101",
+          "clinton_1998:0107",
+          "clinton_1998:0210",
+          "clinton_1998:0211",
+          "clinton_1998:0358"
+        ],
+        "both": [
+          "clinton_1998:0027",
+          "clinton_1998:0101",
+          "clinton_1998:0107",
+          "clinton_1998:0134",
+          "clinton_1998:0135",
+          "clinton_1998:0195",
+          "clinton_1998:0210",
+          "clinton_1998:0211",
+          "clinton_1998:0225",
+          "clinton_1998:0227",
+          "clinton_1998:0236",
+          "clinton_1998:0243",
+          "clinton_1998:0358"
+        ]
+      }
+    },
+    {
+      "speech": "gwbush_2006",
+      "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+      "legs": {
+        "re-score": [
+          "gwbush_2006:0217"
+        ],
+        "D15": [
+          "gwbush_2006:0033",
+          "gwbush_2006:0134",
+          "gwbush_2006:0189",
+          "gwbush_2006:0217"
+        ],
+        "D16alpha": [
+          "gwbush_2006:0217"
+        ],
+        "both": [
+          "gwbush_2006:0033",
+          "gwbush_2006:0134",
+          "gwbush_2006:0189",
+          "gwbush_2006:0217"
+        ]
+      }
+    },
+    {
+      "speech": "obama_2014",
+      "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+      "legs": {
+        "re-score": [
+          "obama_2014:0001",
+          "obama_2014:0004",
+          "obama_2014:0070",
+          "obama_2014:0189",
+          "obama_2014:0198"
+        ],
+        "D15": [
+          "obama_2014:0001",
+          "obama_2014:0004",
+          "obama_2014:0045",
+          "obama_2014:0070",
+          "obama_2014:0114",
+          "obama_2014:0123",
+          "obama_2014:0125",
+          "obama_2014:0126",
+          "obama_2014:0189",
+          "obama_2014:0198"
+        ],
+        "D16alpha": [
+          "obama_2014:0001",
+          "obama_2014:0004",
+          "obama_2014:0070",
+          "obama_2014:0189",
+          "obama_2014:0198"
+        ],
+        "both": [
+          "obama_2014:0001",
+          "obama_2014:0004",
+          "obama_2014:0045",
+          "obama_2014:0070",
+          "obama_2014:0114",
+          "obama_2014:0123",
+          "obama_2014:0125",
+          "obama_2014:0126",
+          "obama_2014:0189",
+          "obama_2014:0198"
+        ]
+      }
+    },
+    {
+      "speech": "trump_2026",
+      "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+      "legs": {
+        "re-score": [
+          "trump_2026:0043",
+          "trump_2026:0054",
+          "trump_2026:0057",
+          "trump_2026:0130",
+          "trump_2026:0137",
+          "trump_2026:0341",
+          "trump_2026:0450",
+          "trump_2026:0487",
+          "trump_2026:0665",
+          "trump_2026:0667"
+        ],
+        "D15": [
+          "trump_2026:0043",
+          "trump_2026:0054",
+          "trump_2026:0057",
+          "trump_2026:0098",
+          "trump_2026:0099",
+          "trump_2026:0102",
+          "trump_2026:0106",
+          "trump_2026:0111",
+          "trump_2026:0130",
+          "trump_2026:0137",
+          "trump_2026:0153",
+          "trump_2026:0255",
+          "trump_2026:0256",
+          "trump_2026:0340",
+          "trump_2026:0341",
+          "trump_2026:0343",
+          "trump_2026:0450",
+          "trump_2026:0482",
+          "trump_2026:0487",
+          "trump_2026:0514",
+          "trump_2026:0638",
+          "trump_2026:0643",
+          "trump_2026:0659",
+          "trump_2026:0660",
+          "trump_2026:0664",
+          "trump_2026:0665",
+          "trump_2026:0667"
+        ],
+        "D16alpha": [
+          "trump_2026:0043",
+          "trump_2026:0054",
+          "trump_2026:0057",
+          "trump_2026:0130",
+          "trump_2026:0137",
+          "trump_2026:0341",
+          "trump_2026:0450",
+          "trump_2026:0487",
+          "trump_2026:0665",
+          "trump_2026:0667"
+        ],
+        "both": [
+          "trump_2026:0043",
+          "trump_2026:0054",
+          "trump_2026:0057",
+          "trump_2026:0098",
+          "trump_2026:0099",
+          "trump_2026:0102",
+          "trump_2026:0106",
+          "trump_2026:0111",
+          "trump_2026:0130",
+          "trump_2026:0137",
+          "trump_2026:0153",
+          "trump_2026:0255",
+          "trump_2026:0256",
+          "trump_2026:0340",
+          "trump_2026:0341",
+          "trump_2026:0343",
+          "trump_2026:0450",
+          "trump_2026:0482",
+          "trump_2026:0487",
+          "trump_2026:0514",
+          "trump_2026:0638",
+          "trump_2026:0643",
+          "trump_2026:0659",
+          "trump_2026:0660",
+          "trump_2026:0664",
+          "trump_2026:0665",
+          "trump_2026:0667"
+        ]
+      }
+    }
+  ]
+}

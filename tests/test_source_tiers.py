@@ -46,9 +46,21 @@ def test_statistical_agency_data_pages_are_s1(url):
     assert classify_tier(url) == SourceTier.GOVERNMENT
 
 
-def test_statistical_agency_press_shop_is_s3():
-    """A nonpartisan agency's own press page is S3 — demoted, not condemned."""
-    assert classify_tier("https://www.bls.gov/bls/newsrels.htm") == SourceTier.ESTABLISHED
+def test_protected_statistical_agency_press_shop_is_s1():
+    """UPDATED PIN (DC-2a delta 2, jackie 2026-08-02): bls.gov is a PROTECTED
+    statistical function — GOVERNMENT regardless of press framing (the demote
+    criterion is partisan-principal AND comms-function; BLS fails the first
+    prong). This used to pin S3 (Established)."""
+    assert classify_tier("https://www.bls.gov/bls/newsrels.htm") == SourceTier.GOVERNMENT
+
+
+def test_nonpartisan_press_shop_is_still_s3():
+    """The nonpartisan carve-out's press demotion survives for hosts NOT on
+    the DC-2a delta-2 protected list: a science agency's press-shop path is
+    S3 — demoted, not condemned."""
+    assert classify_tier(
+        "https://www.nih.gov/news-events/news-releases/some-announcement"
+    ) == SourceTier.ESTABLISHED
 
 
 @pytest.mark.parametrize("url", [
@@ -214,18 +226,21 @@ def test_agency_press_announcements_still_demote(url):
 
 @pytest.mark.parametrize("url", [
     "https://www.nato.int/cps/en/natohq/official_texts.htm",
-    "https://www.un.int/some/unmapped/path",
     "https://www.army.mil/some/unmapped/path",
 ])
-def test_quarantine_is_scoped_to_dot_gov(url):
-    """REGRESSION: the quarantine must not reach .int or .mil.
-
-    An earlier revision applied it to the whole government class and demoted
-    nato.int/cps/en/natohq/* to S5. ``.int`` is treaty-established
-    intergovernmental orgs — a primary-source class with no US partisan press
-    shop to guard against. D7's quarantine is about .gov.
-    """
+def test_registry_mapped_mil_int_hosts_stay_government(url):
+    """UPDATED PIN (DC-2a delta 3, jackie 2026-08-02): .mil/.int no longer
+    fail OPEN to Government — the census-enumerated hosts (nato.int, army.mil,
+    …) carry explicit government entries in tier_registry.yaml instead, so
+    their primary-source material keeps its tier through the mapping."""
     assert classify_tier(url) == SourceTier.GOVERNMENT
+
+
+def test_unmapped_mil_int_now_quarantines():
+    """UPDATED PIN (DC-2a delta 3): an UNMAPPED .int (or .mil) host now fails
+    CLOSED to quarantine, same as .gov — this used to pin GOVERNMENT (the
+    fail-open the delta removes). un.int has no registry entry."""
+    assert classify_tier("https://www.un.int/some/unmapped/path") == SourceTier.POLITICAL
 
 
 # ── the tier must not be able to decide a verdict ─────────────────────────────

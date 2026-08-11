@@ -1,0 +1,225 @@
+schema: truthbot-statistical-agency-registry v1
+version: 2026-08-09
+
+# ============================================================================
+# THE versioned FUNCTION-BASED statistical-agency allowlist (D16, condition 1).
+#
+# Loaded by truthbot.verify.statistical_agency; consumed by
+# truthbot.verdict.statistical_release, which is the D16 rule the consolidator
+# calls behind TRUTHBOT_D16_STATISTICAL_RELEASE (default OFF).
+#
+# WHAT THIS FILE IS FOR
+# ---------------------
+# The era rule (remediation v2, item 1.3) marks anything published after the
+# utterance but inside the fair-game window "post-speech · context-only": it is
+# displayed but can never credit MIN_BEARING_T13. That was aimed at same-speech
+# fact-checks and reaction coverage. It also silences the January jobs report
+# published three days after a February speech — a document that REPORTS
+# PRE-UTTERANCE FACTS and merely happens to be printed later.
+#
+# D16 releases that band, but only for records whose PUBLISHER'S FUNCTION is
+# statistical measurement. This registry is that function test, and it is an
+# ALLOWLIST: a host that is not listed is not released. Fail closed.
+#
+# WHY FUNCTION AND NOT DOCUMENT CLASS (the design's whole point)
+# -------------------------------------------------------------
+# An earlier, blanket proposal — "any Government-tier post-speech item may
+# credit" — was REJECTED, because the two motivating examples turned out to be
+# the principal's OWN executive documents:
+#
+#   gwbush_2006:0217  the ONDCP National Drug Control Strategy, served from
+#                     justice.gov and files.eric.ed.gov;
+#   clinton_1998:0101 the FY1999 President's Budget, served from gpo.gov.
+#
+# ``principals.principal_relation`` keys on HOST, so both read "independent" and
+# a relation test cannot catch them. Detecting them by DOCUMENT CLASS is real
+# work and is deliberately deferred (logged D17-candidate).
+#
+# The function test needs neither. The President's Budget and the ONDCP
+# Strategy are not statistical-agency records NO MATTER WHICH HOST SERVES THEM,
+# because justice.gov, files.eric.ed.gov and gpo.gov are not statistical
+# agencies. Structurally excluded, for free:
+#
+#   * Executive Office of the President units — OMB, ONDCP, CEA (deny labels +
+#     the eop.gov / whitehouse deny rules);
+#   * anything *whitehouse* — every administration's press shop and every NARA
+#     mirror of one (deny substring);
+#   * agency PRESS offices — the newsroom, not the release (press prefixes);
+#   * DOCUMENT ARCHIVES that merely REPRINT statistical-agency output alongside
+#     executive documents (fraser.stlouisfed.org — see its deny entry).
+#
+# EVALUATION ORDER (statistical_agency.classify_ex):
+#   1. deny_host_substrings   -> DENY  (structural; "whitehouse")
+#   2. deny_host_labels       -> DENY  (structural; exact dot-label: omb/ondcp/cea)
+#   3. deny_domains           -> DENY  (longest-suffix; explicit, documented)
+#   4. press prefixes         -> DENY  (the agency's own press shop)
+#   5. longest-suffix entry   -> ALLOW, subject to its allow_paths/deny_paths
+#   6. anything else          -> DENY  ("not-listed" — the fail-closed default)
+#
+# Deny rules run BEFORE the allowlist ON PURPOSE: a structural exclusion must
+# be unable to lose to a later-added entry or a broader suffix.
+#
+# PRESS PATHS ARE NOT RESTATED HERE. They are INHERITED from
+# tier_registry.yaml's ``stat_press_prefixes`` — the list the tier registry
+# already uses for exactly this population (press=established entries), where
+# it encodes the hard-won distinction that bls.gov/news.release/* is the jobs
+# report while bls.gov/newsroom/* is the press shop. One list, one meaning; a
+# second copy would drift. ``press_prefixes`` below is ADDITIVE to it.
+#
+# Every entry carries a one-line rationale and a date. Extend consciously:
+# each new host widens the only door through which post-speech evidence can
+# reach a verdict.
+# ============================================================================
+
+deny:
+  # "anything *whitehouse*" — substring on the whole host, so it catches
+  # whitehouse.gov, obamawhitehouse.archives.gov, clintonwhitehouse4.
+  # archives.gov, georgewbush-whitehouse.archives.gov and any mirror NARA
+  # mints next. The presidential press shop is never a statistical agency.
+  host_substrings: [whitehouse]
+
+  # Executive Office of the President units, matched as an EXACT dot-label
+  # (never a substring — "omb" as a substring would hit "ombudsman.*").
+  # OMB, ONDCP and CEA publish the President's Budget, the National Drug
+  # Control Strategy and the Economic Report of the President: executive
+  # policy documents authored by the principal's own staff.
+  host_labels: [omb, ondcp, cea, eop]
+
+  # Explicit, documented suffix denials. Everything unlisted is already
+  # denied, so an entry here exists only where a deny must BEAT a plausible
+  # allow — it is documentation as code.
+  domains:
+    - domain: fraser.stlouisfed.org
+      rationale: >-
+        FRASER is a DOCUMENT ARCHIVE, not a statistical product. It reprints
+        genuine BLS releases (gwbush_2006:0133 carries the January 2006
+        Employment Situation from FRASER) side by side with the OMB budget
+        appendix (gwbush_2006:0155, FY2007) and the CEA's Economic Report of
+        the President (clinton_1998:0167) — the EXACT executive document class
+        the reviewer rejected. A host that serves both cannot be a function
+        test, so the whole host is denied and the BLS release must be cited
+        from bls.gov. Denied EXPLICITLY rather than by omission so that adding
+        fred/alfred (which are St. Louis Fed statistical products) can never
+        drag FRASER in behind a broader suffix.
+      date: 2026-08-09
+    - domain: eop.gov
+      rationale: "Executive Office of the President — the principal's own staff, by definition not an independent statistical agency"
+      date: 2026-08-09
+
+  # ADDITIVE to tier_registry.yaml's stat_press_prefixes (which are inherited,
+  # not copied). Prefix match on the lowercased path.
+  press_prefixes:
+    - /media/releases
+    - /media/press
+    - /news/press
+    - /opa/pr
+    - /about/new
+
+entries:
+  # ── federal statistical system: the principal statistical agencies ────────
+  - domain: bls.gov
+    agency: BLS
+    rationale: >-
+      Bureau of Labor Statistics — the payroll, unemployment, CPI and ECI
+      series. Its releases are dated by the REFERENCE MONTH and published weeks
+      later, which is precisely the pattern the era rule was silencing: the
+      January Employment Situation lands 3 February and reports January.
+    date: 2026-08-09
+  - domain: bea.gov
+    agency: BEA
+    rationale: >-
+      Bureau of Economic Analysis — GDP, personal income and outlays, the NIPA
+      accounts. NOTE the path shape: BEA publishes its statistical releases
+      under /news/ (bea.gov/news/1998/personal-income-and-outlays-december-
+      1997), so the generic tier-registry press_prefixes must NOT be applied
+      here — only the narrower stat_press_prefixes are (see the header).
+    date: 2026-08-09
+  - domain: census.gov
+    agency: Census
+    rationale: "Census Bureau — the decennial census, ACS, CPS operations, trade and construction series"
+    date: 2026-08-09
+  - domain: nass.usda.gov
+    agency: USDA-NASS
+    rationale: "National Agricultural Statistics Service — the agricultural census and the crop/livestock series (covers quickstats.nass.usda.gov by suffix)"
+    date: 2026-08-09
+  - domain: nces.ed.gov
+    agency: NCES
+    rationale: >-
+      National Center for Education Statistics — NAEP, IPEDS, the Digest of
+      Education Statistics. Scoped to the NCES host, NOT to ed.gov: the
+      Department's policy and press output is not a statistical product, and
+      files.eric.ed.gov (an IES-funded literature clearinghouse that served the
+      ONDCP Strategy in gwbush_2006:0217) is deliberately NOT reachable from
+      this entry.
+    date: 2026-08-09
+  - domain: eia.gov
+    agency: EIA
+    rationale: "Energy Information Administration — the Short-Term Energy Outlook, Natural Gas Monthly, Today in Energy series"
+    date: 2026-08-09
+
+  # ── congressional analytical/audit agencies ───────────────────────────────
+  - domain: cbo.gov
+    agency: CBO
+    rationale: "Congressional Budget Office — the Budget and Economic Outlook, Monthly Budget Review, cost estimates; nonpartisan by statute"
+    date: 2026-08-09
+  - domain: gao.gov
+    agency: GAO
+    rationale: "Government Accountability Office — audit and evaluation reports; the legislative branch's independent measurement function"
+    date: 2026-08-09
+  - domain: crsreports.congress.gov
+    agency: CRS
+    rationale: >-
+      Congressional Research Service products, on the OFFICIAL CRS host only.
+      congress.gov as a whole is NOT listed — it also serves the Congressional
+      Record, which D15 classifies as a record of the utterance itself — and
+      third-party CRS mirrors (everycrsreport.com, which appears in
+      clinton_1998:0101) are not the agency.
+    date: 2026-08-09
+
+  # ── Federal Reserve statistical products ─────────────────────────────────
+  - domain: fred.stlouisfed.org
+    agency: FRED
+    rationale: "FRED — the Federal Reserve Bank of St. Louis economic time-series database; a series, not a document archive (contrast fraser.stlouisfed.org, denied above)"
+    date: 2026-08-09
+  - domain: alfred.stlouisfed.org
+    agency: ALFRED
+    rationale: "ALFRED — FRED's vintage/as-first-released archive; the canonical answer to 'what did the series say ON the utterance date'"
+    date: 2026-08-09
+
+  # ── health statistics: NCHS and the CDC's statistical products ───────────
+  - domain: cdc.gov
+    agency: NCHS/CDC-statistical
+    rationale: >-
+      CDC is not a statistical agency as a whole — it runs a large press shop —
+      so this entry is PATH-SCOPED to its statistical products: NCHS (the
+      National Center for Health Statistics), MMWR (the surveillance series),
+      and the named survey/surveillance systems. biden_2022:0268's CDC MEDIA
+      STATEMENT is excluded by exactly this rule while biden_2022:0266's CDC
+      Weekly Review (on stacks.cdc.gov) is not.
+    date: 2026-08-09
+    allow_paths: [/nchs, /mmwr, /brfss, /nhsn, /nhanes, /nhis, /nvss,
+                  /growthcharts, /flu/weekly, /covid-data-tracker]
+  - domain: stacks.cdc.gov
+    agency: NCHS/CDC-statistical
+    rationale: "CDC Stacks — the agency's PUBLICATIONS repository (MMWR, NCHS reports, surveillance summaries); a repository of statistical output, not a newsroom"
+    date: 2026-08-09
+  - domain: wonder.cdc.gov
+    agency: NCHS/CDC-statistical
+    rationale: "CDC WONDER — the public query interface over NCHS vital-statistics and surveillance datasets"
+    date: 2026-08-09
+  - domain: data.cdc.gov
+    agency: NCHS/CDC-statistical
+    rationale: "CDC's open-data hub — datasets only"
+    date: 2026-08-09
+  - domain: archive.cdc.gov
+    agency: NCHS/CDC-statistical
+    rationale: >-
+      The CDC's archived mirror, which prefixes the old path with
+      /www_cdc_gov. Scoped to the SAME statistical products as cdc.gov, spelled
+      out rather than derived, so that the mirror can never be a wider door
+      than the live host: archive.cdc.gov/www_cdc_gov/media/releases/* (the
+      biden_2022:0268 press statement) matches no allow_path and is denied.
+    date: 2026-08-09
+    allow_paths: [/www_cdc_gov/nchs, /www_cdc_gov/mmwr, /www_cdc_gov/brfss,
+                  /www_cdc_gov/nhsn, /www_cdc_gov/nhanes, /www_cdc_gov/nhis,
+                  /www_cdc_gov/nvss, /www_cdc_gov/growthcharts]

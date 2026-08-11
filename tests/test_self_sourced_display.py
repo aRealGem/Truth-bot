@@ -2,7 +2,7 @@
 
 Pins the display-only contract: a gate-forced Unverifiable whose only bearing
 sources are the speaker's own organization renders "Unverified — self-sourced
-only" (both lens axes), its self-records are badged on the source strip, the
+only", its self-records are badged on the source strip, the
 verdict panel gains the decomposition chip, and claims.json exports enough
 provenance (``evidence_gate``, ``self_sourced_only``) for the consistency
 checker to re-derive every chip number. NO verdict, gate, or weight changes.
@@ -131,13 +131,13 @@ def test_gate_string_pins_the_consolidator_constant() -> None:
 # ── Claim card + source strip ─────────────────────────────────────────────────
 
 
-def test_claim_card_renders_self_sourced_pill_on_both_axes() -> None:
+def test_claim_card_renders_self_sourced_pill() -> None:
     html = _claim_card(_bundle(), 1, 1)
     assert SELF_SOURCED_PILL in html
     assert "pill-self-sourced" in html
-    # Both lens attrs carry the sub-state so the toggle can't restore a bare
-    # "Unverifiable" (same mechanism as the anecdote pill).
-    assert html.count(SELF_SOURCED_PILL) >= 2
+    # The visible pill text is the sub-state — never a bare "Unverifiable"
+    # headline pill (same mechanism as the anecdote pill).
+    assert f'>{SELF_SOURCED_PILL}</span>' in html
 
 
 def test_claim_card_badges_the_self_records() -> None:

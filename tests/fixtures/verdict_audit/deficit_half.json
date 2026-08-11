@@ -1,0 +1,98 @@
+{
+ "_frozen_from": "metrics/pca_runs/7208bbbb… (published artifact, run prefix 7208bbbb)",
+ "speech_id": "biden_2022",
+ "utterance": "2022-03-01",
+ "claim": {
+  "sid": "biden_2022:0244",
+  "text": "By the end of this year, the deficit will be down to less than half what it was before I took office.",
+  "context": "And tonight, I’m announcing that the Justice Department will name a chief prosecutor for pandemic fraud. || By the end of this year, the deficit will be down to less than half what it was before I took office. || The only president ever to cut the deficit by more than one trillion dollars in a single year."
+ },
+ "row": {
+  "sid": "biden_2022:0244",
+  "status": "resolved",
+  "verdict": "TRUE",
+  "confidence": 0.875,
+  "citations": [
+   "E2",
+   "E3",
+   "E4",
+   "E7"
+  ],
+  "reasoning": "CBO projections and YTD FY2022 data at claim time tracked the deficit below half the $3.1T FY2020 / $2.77T FY2021 pre-Biden baselines.",
+  "votes": {
+   "TRUE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "TRUE"
+   ],
+   "critic": [
+    "TRUE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2022-03-08] CBO: FY2022 deficit just $259B in first 4 months, far below prior years — tracking toward a steep full-year drop.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.cbo.gov/publication/57841",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-03-08] CBO monthly review: FY2022 first five-month deficit $475B — less than half the same period in FY2021 ($1,047B).",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.cbo.gov/system/files/2022-03/57841-MBR.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2020-11-09] Official CBO report: FY2020 deficit $3.1 trillion (pre-Biden baseline).",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.cbo.gov/publication/56746",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2021-07-21] CBO's standing projection at claim time: FY2022 deficit ~$1.2T, below half of the FY2020/FY2021 shortfalls.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.cbo.gov/publication/57339",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-01-26] CBO report showing actual FY2021 deficit was $2.78 trillion (useful baseline for ‘before I took office’).",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.cbo.gov/publication/57614",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2021-02-11] CBO baseline outlook projecting deficits through FY2031, available pre-claim.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.cbo.gov/publication/56970",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2021-10-22] Treasury/OMB: FY2021 deficit was $2.77T — the prior-year baseline against which the halving is measured.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://home.treasury.gov/news/press-releases/jy0428",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2021-07-01] July 2021 CBO update to 2021-2031 outlook with FY2022 projections.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.cbo.gov/publication/57218",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "Treasury FiscalData historical deficit series including FY2020.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://fiscaldata.treasury.gov/americas-finance-guide/national-deficit/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2022-02-08] CBO January 2022 review shows FY2022 deficit running well below prior-year pace as COVID spending wanes.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.cbo.gov/publication/57759",
+   "source_tier": "Government"
+  }
+ ]
+}

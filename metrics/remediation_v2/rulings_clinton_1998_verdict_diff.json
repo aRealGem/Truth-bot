@@ -1,0 +1,139 @@
+{
+  "speech_id": "clinton_1998",
+  "rebuild_of": "fcbc8db2-e025-4cb7-9199-36db723fcfde",
+  "new_run_id": "393f7d06-3299-495e-863c-4136a9ced603",
+  "rulings": true,
+  "ruling_sids": [
+    "clinton_1998:0027",
+    "clinton_1998:0101",
+    "clinton_1998:0107",
+    "clinton_1998:0134",
+    "clinton_1998:0135",
+    "clinton_1998:0195",
+    "clinton_1998:0210",
+    "clinton_1998:0211",
+    "clinton_1998:0225",
+    "clinton_1998:0227",
+    "clinton_1998:0236",
+    "clinton_1998:0243",
+    "clinton_1998:0358"
+  ],
+  "mechanism": {
+    "clinton_1998:0027": "D15",
+    "clinton_1998:0101": "re-score",
+    "clinton_1998:0107": "re-score",
+    "clinton_1998:0134": "D15",
+    "clinton_1998:0135": "D15",
+    "clinton_1998:0195": "D15",
+    "clinton_1998:0210": "re-score",
+    "clinton_1998:0211": "re-score",
+    "clinton_1998:0225": "D15",
+    "clinton_1998:0227": "D15",
+    "clinton_1998:0236": "D15",
+    "clinton_1998:0243": "D15",
+    "clinton_1998:0358": "re-score"
+  },
+  "n_compared": 13,
+  "counts": {
+    "unchanged": 0,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 13,
+    "newly_decided": 0,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 13,
+  "per_sid": [
+    {
+      "sid": "clinton_1998:0027",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "That's why we have more than doubled funding for training dislocated workers since 1993."
+    },
+    {
+      "sid": "clinton_1998:0107",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And remember the big picture here: While we've been entering into hundreds of new trade agreements, we've been creating "
+    },
+    {
+      "sid": "clinton_1998:0134",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare."
+    },
+    {
+      "sid": "clinton_1998:0135",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Today, she's a dispatcher with a van company."
+    },
+    {
+      "sid": "clinton_1998:0195",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in histo"
+    },
+    {
+      "sid": "clinton_1998:0210",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "For 50 years, NATO contained communism and kept America and Europe secure."
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Now these three formerly Communist countries have said yes to democracy."
+    },
+    {
+      "sid": "clinton_1998:0225",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "One of those— —thank you—one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbe"
+    },
+    {
+      "sid": "clinton_1998:0227",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "After college in Colorado, he joined the Army."
+    },
+    {
+      "sid": "clinton_1998:0236",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff—Generals John Shalikashvili, Colin Powell"
+    },
+    {
+      "sid": "clinton_1998:0243",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy t"
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Beginning this year, 1998, men and women from 16 countries will build a foothold in the heavens, the international space"
+    }
+  ]
+}

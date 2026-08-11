@@ -1,0 +1,188 @@
+{
+  "schema": "truthbot-methodology-manifest v1",
+  "comment": "Remediation v2 item 1.4 (2026-08-02). Every pca_runs artifact is pinned to the methodology GENERATION it was produced under, so an older-generation artifact can never be re-published as-is: truthbot.publish.consistency.check_run_artifacts asserts the current-generation invariants (S5 cap, era, zero fact-check URLs) only over runs labeled current_generation and permanently reports the rest as legacy. Generations classified by inspection: no 'evidence' key => no-evidence; evidence with no Political tier => pre-s5-tiering; Political present but per-sid counts exceed the <=3 cap => pre-s5-cap; cap respected + role axis + era fail-closed => v2.3-role-axis-s5cap.",
+  "current_generation": "v2.3-role-axis-s5cap",
+  "generations": {
+    "v2.3-role-axis-s5cap": "S5 political tier + <=3 cap + role axis + era fail-closed",
+    "pre-s5-cap": "S5 political tier present but no per-claim <=3 saturation cap; obama_2014 runs carry rescue-leg era violations",
+    "pre-s5-tiering": "no S5 political tier existed — every .gov host classified top-tier Government; early runs also predate the fact-check exclusion",
+    "no-evidence": "artifact stores rows/claims only, no evidence key — evidence packs were not persisted"
+  },
+  "runs": {
+    "0e0d9336-10f7-4e5e-bf58-941b3790ad79": {
+      "speech_id": "trump_2026",
+      "generation": "no-evidence",
+      "published": false
+    },
+    "23939712-59ea-449d-93f7-a0a0b449efd8": {
+      "speech_id": "trump_2026",
+      "generation": "pre-s5-tiering",
+      "published": true
+    },
+    "28965cdf-046e-4c87-a5d1-d21b6529c625": {
+      "speech_id": "obama_2014",
+      "generation": "pre-s5-cap",
+      "published": true
+    },
+    "365f5caa-07cb-4d1b-a570-dcb02e1c5cbe": {
+      "speech_id": "biden_2022",
+      "generation": "no-evidence",
+      "published": false
+    },
+    "577f6ff6-0e4b-47c6-aed9-83df855dddb7": {
+      "speech_id": "biden_2022",
+      "generation": "pre-s5-tiering",
+      "published": false
+    },
+    "5c321299-1c27-43b4-8c85-5d7b0b24edda": {
+      "speech_id": "trump_2026",
+      "generation": "pre-s5-tiering",
+      "published": false
+    },
+    "5ebcabe3-05d9-4484-a8a5-e28e0bf883e1": {
+      "speech_id": "trump_2026",
+      "generation": "pre-s5-tiering",
+      "published": false
+    },
+    "6fdfde0e-1393-4a7a-9144-abd0fc48b5a1": {
+      "speech_id": "obama_2014",
+      "generation": "pre-s5-cap",
+      "published": false
+    },
+    "7208bbbb-c802-4155-932f-d0cc66803b24": {
+      "speech_id": "biden_2022",
+      "generation": "pre-s5-tiering",
+      "published": true
+    },
+    "7c59e9e0-0062-487d-84e3-4af15ab94aab": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": true
+    },
+    "807edf03-484d-42ed-a9cb-b12b5c3d3f52": {
+      "speech_id": "biden_2022",
+      "generation": "pre-s5-tiering",
+      "published": false
+    },
+    "92f39851-8870-4609-97f6-458798d5dbb8": {
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": true
+    },
+    "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b": {
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "d0010426-2e8f-4449-b839-60f85d923d56": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "4de8a551-ea99-440d-aca0-12a133e620e3": {
+      "speech_id": "obama_2014",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "37744fc8-41f1-4375-9f8a-01ca17d0327f": {
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "4ee5a251-9b3c-49be-9283-0ac062ac2c10": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "8577979b-91e3-48df-b84a-62b2516af91b": {
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "fcbc8db2-e025-4cb7-9199-36db723fcfde": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "0ae0f3b8-4728-4a6d-aab6-1e39160eca4d": {
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "91d400ba-838c-4a10-8077-5681a9223734": {
+      "speech_id": "obama_2014",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "9c4262a7-67bd-476e-b433-90424dd0b3e6": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "c733c283-f10f-4410-93d3-d66b18d2697b": {
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "393f7d06-3299-495e-863c-4136a9ced603": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "04738dd5-831f-4d90-bbef-6a18508c887f": {
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "c8008f2a-e844-4944-b39c-4be61d5e575f": {
+      "speech_id": "obama_2014",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "83117c1a-a27f-4df1-9183-302472a52e68": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "46dfcce8-7a4e-41c9-b714-ec3555229412": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "f570d45c-a450-4b9d-9d67-b225cca8cefe": {
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "2d90a74b-43aa-4a55-8e5b-4b24f16d05a5": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "5c923c25-b065-4a9f-80bf-d23db4f9bcd1": {
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "49b2e3e8-1667-4460-8989-b265914d4450": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "2cbda3e4-c578-442a-aee7-c5c28a388048": {
+      "speech_id": "obama_2014",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "ddb05ee3-7d9c-4b2c-beaf-e197b9354379": {
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "91dd7a34-7a3c-4f40-bcdc-276b2cb15d26": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    }
+  }
+}

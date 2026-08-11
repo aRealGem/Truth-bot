@@ -1,0 +1,59 @@
+{
+  "speech_id": "gwbush_2006",
+  "rebuild_of": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+  "new_run_id": "0ae0f3b8-4728-4a6d-aab6-1e39160eca4d",
+  "wave": true,
+  "wave_sids": [
+    "gwbush_2006:0133"
+  ],
+  "reasons": {
+    "biden_2022:0155": "released",
+    "biden_2022:0244": "released",
+    "biden_2022:0311": "released",
+    "clinton_1998:0021": "released",
+    "clinton_1998:0026": "released",
+    "clinton_1998:0028": "released",
+    "clinton_1998:0038": "released",
+    "clinton_1998:0194": "released",
+    "clinton_1998:0364": "released",
+    "gwbush_2006:0133": "released",
+    "obama_2014:0056": "released",
+    "obama_2014:0177": "released",
+    "obama_2014:0280": "released",
+    "trump_2026:0191": "released",
+    "trump_2026:0294": "released",
+    "trump_2026:0310": "released",
+    "trump_2026:0428": "released",
+    "trump_2026:0553": "released",
+    "trump_2026:0554": "released",
+    "trump_2026:0559": "released",
+    "trump_2026:0564": "released",
+    "trump_2026:0616": "released",
+    "trump_2026:0639": "released",
+    "trump_2026:0030": "named-extra",
+    "trump_2026:0031": "named-extra",
+    "trump_2026:0023": "named-extra",
+    "trump_2026:0024": "named-extra",
+    "clinton_1998:0313": "named-extra",
+    "trump_2026:0462": "models-split extra"
+  },
+  "n_compared": 1,
+  "counts": {
+    "unchanged": 0,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 1,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 0,
+  "per_sid": [
+    {
+      "sid": "gwbush_2006:0133",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Our economy is healthy and vigorous and growing faster than other major industrialized nations."
+    }
+  ]
+}

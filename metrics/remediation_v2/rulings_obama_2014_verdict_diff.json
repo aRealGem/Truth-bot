@@ -1,0 +1,112 @@
+{
+  "speech_id": "obama_2014",
+  "rebuild_of": "91d400ba-838c-4a10-8077-5681a9223734",
+  "new_run_id": "c8008f2a-e844-4944-b39c-4be61d5e575f",
+  "rulings": true,
+  "ruling_sids": [
+    "obama_2014:0001",
+    "obama_2014:0004",
+    "obama_2014:0045",
+    "obama_2014:0070",
+    "obama_2014:0114",
+    "obama_2014:0123",
+    "obama_2014:0125",
+    "obama_2014:0126",
+    "obama_2014:0189",
+    "obama_2014:0198"
+  ],
+  "mechanism": {
+    "obama_2014:0001": "re-score",
+    "obama_2014:0004": "re-score",
+    "obama_2014:0045": "D15",
+    "obama_2014:0070": "re-score",
+    "obama_2014:0114": "D15",
+    "obama_2014:0123": "D15",
+    "obama_2014:0125": "D15",
+    "obama_2014:0126": "D15",
+    "obama_2014:0189": "re-score",
+    "obama_2014:0198": "re-score"
+  },
+  "n_compared": 10,
+  "counts": {
+    "unchanged": 0,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 10,
+    "newly_decided": 0,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 10,
+  "per_sid": [
+    {
+      "sid": "obama_2014:0001",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo"
+    },
+    {
+      "sid": "obama_2014:0004",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "A rural doctor gave a young child the first prescription to treat asthma that his mother could afford."
+    },
+    {
+      "sid": "obama_2014:0045",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train near"
+    },
+    {
+      "sid": "obama_2014:0070",
+      "old": "Models split",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Over the past five years, my administration has made more loans to small business owners than any other."
+    },
+    {
+      "sid": "obama_2014:0114",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And today, Detroit Manufacturing Systems has more than 700 employees."
+    },
+    {
+      "sid": "obama_2014:0123",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Misty DeMars is a mother of two young boys."
+    },
+    {
+      "sid": "obama_2014:0125",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "She put herself through college."
+    },
+    {
+      "sid": "obama_2014:0126",
+      "old": "FALSE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "She’d never collected unemployment benefits."
+    },
+    {
+      "sid": "obama_2014:0189",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here."
+    },
+    {
+      "sid": "obama_2014:0198",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Right now, it helps about half of all parents at some point."
+    }
+  ]
+}

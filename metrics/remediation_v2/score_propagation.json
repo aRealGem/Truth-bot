@@ -1,0 +1,207 @@
+{
+  "schema": "truthbot-score-propagation v1",
+  "generated": "2026-08-10T19:17:35.610203+00:00",
+  "applied": true,
+  "generation": "v2.3-role-axis-s5cap",
+  "spend_usd": 0.0,
+  "speeches": [
+    {
+      "speech": "gwbush_2006",
+      "head": "04738dd5-831f-4d90-bbef-6a18508c887f",
+      "head_path": "metrics/pca_runs/04738dd5-831f-4d90-bbef-6a18508c887f.json",
+      "run_id": "5c923c25-b065-4a9f-80bf-d23db4f9bcd1",
+      "before": {
+        "items": 396,
+        "relevance_scored": 9,
+        "relevance_rate": 0.022727272727272728,
+        "stance_null": 99,
+        "stance_null_rate": 0.25,
+        "fit_to_gate": false,
+        "reason": "stance-null rate 25.0% exceeds the 15% ceiling (99 of 396 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+      },
+      "after": {
+        "items": 396,
+        "relevance_scored": 382,
+        "relevance_rate": 0.9646464646464646,
+        "stance_null": 57,
+        "stance_null_rate": 0.14393939393939395,
+        "fit_to_gate": true,
+        "reason": "382 of 396 items relevance-scored, stance-null 14.4% (<= 15%)"
+      },
+      "telemetry": {
+        "packs": 48,
+        "items": 396,
+        "matched": 396,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_missing_from_head": [],
+        "sids_missing_from_sidecar": []
+      },
+      "sidecar_spend_usd": 0.130378,
+      "sids_by_pass": {
+        "b1a": 48,
+        "b2": 11
+      }
+    },
+    {
+      "speech": "clinton_1998",
+      "head": "393f7d06-3299-495e-863c-4136a9ced603",
+      "head_path": "metrics/pca_runs/393f7d06-3299-495e-863c-4136a9ced603.json",
+      "run_id": "49b2e3e8-1667-4460-8989-b265914d4450",
+      "before": {
+        "items": 792,
+        "relevance_scored": 67,
+        "relevance_rate": 0.0845959595959596,
+        "stance_null": 199,
+        "stance_null_rate": 0.25126262626262624,
+        "fit_to_gate": false,
+        "reason": "stance-null rate 25.1% exceeds the 15% ceiling (199 of 792 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+      },
+      "after": {
+        "items": 792,
+        "relevance_scored": 762,
+        "relevance_rate": 0.9621212121212122,
+        "stance_null": 113,
+        "stance_null_rate": 0.14267676767676768,
+        "fit_to_gate": true,
+        "reason": "762 of 792 items relevance-scored, stance-null 14.3% (<= 15%)"
+      },
+      "telemetry": {
+        "packs": 92,
+        "items": 792,
+        "matched": 792,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_missing_from_head": [],
+        "sids_missing_from_sidecar": []
+      },
+      "sidecar_spend_usd": 0.302973,
+      "sids_by_pass": {
+        "b1a": 92,
+        "b2": 21
+      }
+    },
+    {
+      "speech": "obama_2014",
+      "head": "c8008f2a-e844-4944-b39c-4be61d5e575f",
+      "head_path": "metrics/pca_runs/c8008f2a-e844-4944-b39c-4be61d5e575f.json",
+      "run_id": "2cbda3e4-c578-442a-aee7-c5c28a388048",
+      "before": {
+        "items": 799,
+        "relevance_scored": 23,
+        "relevance_rate": 0.028785982478097622,
+        "stance_null": 178,
+        "stance_null_rate": 0.2227784730913642,
+        "fit_to_gate": false,
+        "reason": "stance-null rate 22.3% exceeds the 15% ceiling (178 of 799 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+      },
+      "after": {
+        "items": 799,
+        "relevance_scored": 775,
+        "relevance_rate": 0.9699624530663329,
+        "stance_null": 93,
+        "stance_null_rate": 0.11639549436795996,
+        "fit_to_gate": true,
+        "reason": "775 of 799 items relevance-scored, stance-null 11.6% (<= 15%)"
+      },
+      "telemetry": {
+        "packs": 96,
+        "items": 799,
+        "matched": 799,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_missing_from_head": [],
+        "sids_missing_from_sidecar": []
+      },
+      "sidecar_spend_usd": 0.294482,
+      "sids_by_pass": {
+        "b1a": 96,
+        "b2": 20
+      }
+    },
+    {
+      "speech": "biden_2022",
+      "head": "f570d45c-a450-4b9d-9d67-b225cca8cefe",
+      "head_path": "metrics/pca_runs/f570d45c-a450-4b9d-9d67-b225cca8cefe.json",
+      "run_id": "ddb05ee3-7d9c-4b2c-beaf-e197b9354379",
+      "before": {
+        "items": 885,
+        "relevance_scored": 29,
+        "relevance_rate": 0.0327683615819209,
+        "stance_null": 167,
+        "stance_null_rate": 0.18870056497175142,
+        "fit_to_gate": false,
+        "reason": "stance-null rate 18.9% exceeds the 15% ceiling (167 of 885 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+      },
+      "after": {
+        "items": 885,
+        "relevance_scored": 842,
+        "relevance_rate": 0.9514124293785311,
+        "stance_null": 107,
+        "stance_null_rate": 0.12090395480225989,
+        "fit_to_gate": true,
+        "reason": "842 of 885 items relevance-scored, stance-null 12.1% (<= 15%)"
+      },
+      "telemetry": {
+        "packs": 111,
+        "items": 885,
+        "matched": 885,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_missing_from_head": [],
+        "sids_missing_from_sidecar": []
+      },
+      "sidecar_spend_usd": 0.296257,
+      "sids_by_pass": {
+        "b1a": 111,
+        "b2": 18
+      }
+    },
+    {
+      "speech": "trump_2026",
+      "head": "2d90a74b-43aa-4a55-8e5b-4b24f16d05a5",
+      "head_path": "metrics/pca_runs/2d90a74b-43aa-4a55-8e5b-4b24f16d05a5.json",
+      "run_id": "91dd7a34-7a3c-4f40-bcdc-276b2cb15d26",
+      "before": {
+        "items": 1472,
+        "relevance_scored": 109,
+        "relevance_rate": 0.07404891304347826,
+        "stance_null": 418,
+        "stance_null_rate": 0.28396739130434784,
+        "fit_to_gate": false,
+        "reason": "stance-null rate 28.4% exceeds the 15% ceiling (418 of 1472 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+      },
+      "after": {
+        "items": 1472,
+        "relevance_scored": 1414,
+        "relevance_rate": 0.9605978260869565,
+        "stance_null": 309,
+        "stance_null_rate": 0.20991847826086957,
+        "fit_to_gate": false,
+        "reason": "stance-null rate 21.0% exceeds the 15% ceiling (309 of 1472 items carry no stance) — those items cannot credit the quota, so the forced-Unverifiable gate is measuring retrieval silence, not evidence"
+      },
+      "telemetry": {
+        "packs": 182,
+        "items": 1472,
+        "matched": 1472,
+        "sidecar_unmatched": [],
+        "artifact_unscored": [],
+        "sids_missing_from_head": [],
+        "sids_missing_from_sidecar": []
+      },
+      "sidecar_spend_usd": 0.579665,
+      "sids_by_pass": {
+        "b1a": 182,
+        "b2": 45
+      }
+    }
+  ],
+  "totals": {
+    "items": 4344,
+    "matched": 4344,
+    "sidecar_rows_unmatched": 0,
+    "items_not_covered": 0,
+    "fit_after": 4,
+    "speeches": 5
+  }
+}

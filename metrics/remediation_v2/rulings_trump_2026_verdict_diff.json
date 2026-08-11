@@ -1,0 +1,283 @@
+{
+  "speech_id": "trump_2026",
+  "rebuild_of": "9c4262a7-67bd-476e-b433-90424dd0b3e6",
+  "new_run_id": "83117c1a-a27f-4df1-9183-302472a52e68",
+  "rulings": true,
+  "ruling_sids": [
+    "trump_2026:0023",
+    "trump_2026:0024",
+    "trump_2026:0043",
+    "trump_2026:0054",
+    "trump_2026:0057",
+    "trump_2026:0098",
+    "trump_2026:0099",
+    "trump_2026:0102",
+    "trump_2026:0106",
+    "trump_2026:0111",
+    "trump_2026:0130",
+    "trump_2026:0137",
+    "trump_2026:0153",
+    "trump_2026:0255",
+    "trump_2026:0256",
+    "trump_2026:0340",
+    "trump_2026:0341",
+    "trump_2026:0343",
+    "trump_2026:0450",
+    "trump_2026:0482",
+    "trump_2026:0487",
+    "trump_2026:0514",
+    "trump_2026:0638",
+    "trump_2026:0643",
+    "trump_2026:0659",
+    "trump_2026:0660",
+    "trump_2026:0664",
+    "trump_2026:0665",
+    "trump_2026:0667"
+  ],
+  "mechanism": {
+    "trump_2026:0023": "",
+    "trump_2026:0024": "",
+    "trump_2026:0043": "re-score",
+    "trump_2026:0054": "re-score",
+    "trump_2026:0057": "re-score",
+    "trump_2026:0098": "D15",
+    "trump_2026:0099": "D15",
+    "trump_2026:0102": "D15",
+    "trump_2026:0106": "D15",
+    "trump_2026:0111": "D15",
+    "trump_2026:0130": "re-score",
+    "trump_2026:0137": "re-score",
+    "trump_2026:0153": "D15",
+    "trump_2026:0255": "D15",
+    "trump_2026:0256": "D15",
+    "trump_2026:0340": "D15",
+    "trump_2026:0341": "re-score",
+    "trump_2026:0343": "D15",
+    "trump_2026:0450": "re-score",
+    "trump_2026:0482": "D15",
+    "trump_2026:0487": "re-score",
+    "trump_2026:0514": "D15",
+    "trump_2026:0638": "D15",
+    "trump_2026:0643": "D15",
+    "trump_2026:0659": "D15",
+    "trump_2026:0660": "D15",
+    "trump_2026:0664": "D15",
+    "trump_2026:0665": "re-score",
+    "trump_2026:0667": "re-score"
+  },
+  "n_compared": 29,
+  "counts": {
+    "unchanged": 2,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 27,
+    "newly_decided": 0,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 27,
+  "per_sid": [
+    {
+      "sid": "trump_2026:0023",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "And last year the murder rate saw its single largest decline in recorded history."
+    },
+    {
+      "sid": "trump_2026:0024",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years."
+    },
+    {
+      "sid": "trump_2026:0043",
+      "old": "Models split",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In four long years, the last administration got less than $1 trillion in new investment in the United States."
+    },
+    {
+      "sid": "trump_2026:0054",
+      "old": "FALSE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "More Americans are working today than at any time in the history of our country."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off "
+    },
+    {
+      "sid": "trump_2026:0098",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas M"
+    },
+    {
+      "sid": "trump_2026:0099",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "He fought bravely in the famous Battle of Manila, worked so hard."
+    },
+    {
+      "sid": "trump_2026:0102",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in t"
+    },
+    {
+      "sid": "trump_2026:0106",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I was there."
+    },
+    {
+      "sid": "trump_2026:0111",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above."
+    },
+    {
+      "sid": "trump_2026:0130",
+      "old": "FALSE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republ"
+    },
+    {
+      "sid": "trump_2026:0137",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no t"
+    },
+    {
+      "sid": "trump_2026:0153",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "You know, I asked Michael Dell, how do you make all that money?"
+    },
+    {
+      "sid": "trump_2026:0255",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "For five years, she and her husband have struggled with infertility and they turned to IVF."
+    },
+    {
+      "sid": "trump_2026:0256",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "One drug has been costing Catherine $4,000 to purchase."
+    },
+    {
+      "sid": "trump_2026:0340",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas para"
+    },
+    {
+      "sid": "trump_2026:0341",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being"
+    },
+    {
+      "sid": "trump_2026:0343",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien c"
+    },
+    {
+      "sid": "trump_2026:0450",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's fac"
+    },
+    {
+      "sid": "trump_2026:0482",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine."
+    },
+    {
+      "sid": "trump_2026:0487",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over."
+    },
+    {
+      "sid": "trump_2026:0514",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement."
+    },
+    {
+      "sid": "trump_2026:0638",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique."
+    },
+    {
+      "sid": "trump_2026:0643",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight."
+    },
+    {
+      "sid": "trump_2026:0659",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one b"
+    },
+    {
+      "sid": "trump_2026:0660",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "He absorbed four agonizing shots, shredding his leg into numerous pieces."
+    },
+    {
+      "sid": "trump_2026:0664",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the thr"
+    },
+    {
+      "sid": "trump_2026:0665",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mi"
+    },
+    {
+      "sid": "trump_2026:0667",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle."
+    }
+  ]
+}

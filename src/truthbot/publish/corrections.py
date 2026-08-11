@@ -118,3 +118,64 @@ def apply_to_artifact(artifact: dict, entries: list[dict]) -> int:
             f"corrections reference sids absent from the {speech_id} artifact: "
             f"{sorted(missing)}")
     return applied
+
+
+def load_resolution_changes(path: Path) -> list[dict]:
+    """F9: the ``resolution_state_changes`` block of data/corrections.json — the
+    net-visible non-ledger moves (verdict crossed a models-split boundary).
+    Missing file or key → empty."""
+    path = Path(path)
+    if not path.exists():
+        return []
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    return [e for e in (doc.get("resolution_state_changes") or []) if e.get("sid")]
+
+
+def annotate_to_artifact(artifact: dict, entries: list[dict],
+                         resolution: list[dict] | None = None) -> int:
+    """F12: SKIP-mode annotation. The staged head already carries the corrected
+    verdict, so the verdict is NOT rewritten — but the corrections page promises
+    every corrected claim keeps a visible note on its provenance strip, so this
+    stamps ``row['corrected']`` (which the bridge surfaces as the strip's
+    correction note) by joining the ledger to the rows by sid.
+
+    Guard is the MIRROR of :func:`apply_to_artifact`: a ledger entry must match
+    the row's CURRENT (baked) verdict, so a stale ledger describing a run that is
+    not being shipped is still caught. Resolution-state changes (models-split
+    boundary) carry no vocabulary verdict, so they are annotated by sid without a
+    verdict assertion. Returns the number of rows annotated."""
+    speech_id = ((artifact.get("meta") or {}).get("speech_id")) or ""
+    by_sid = {e["sid"]: e for e in entries if e.get("speech_id") == speech_id}
+    res_by = {e["sid"]: e for e in (resolution or [])
+              if e.get("speech_id") == speech_id}
+    rows = {r.get("sid"): r for r in artifact.get("rows") or []}
+    annotated = 0
+    for sid, e in by_sid.items():
+        row = rows.get(sid)
+        if row is None:
+            raise CorrectionsError(
+                f"correction for {sid} absent from the {speech_id} artifact")
+        current = (row.get("verdict") or "").strip().upper()
+        if current != e["new_verdict"].upper():
+            raise CorrectionsError(
+                f"skip-mode annotation for {sid} expects the baked verdict "
+                f"{e['new_verdict']!r} but the artifact row says {current!r}")
+        row["corrected"] = {
+            "old": e["old_verdict"].upper(), "new": e["new_verdict"].upper(),
+            "date": e["date"], "reason": e["reason"],
+            "source": e.get("source", ""), "note": note_for(e),
+        }
+        annotated += 1
+    for sid, e in res_by.items():
+        row = rows.get(sid)
+        if row is None:
+            continue
+        row["corrected"] = {
+            "old": e["old_verdict"], "new": e["new_verdict"],
+            "date": e.get("date", ""), "reason": e.get("reason", ""),
+            "source": e.get("source", ""),
+            "note": (f"Resolution-state change {e['old_verdict']} → "
+                     f"{e['new_verdict']} ({e.get('date', '')})"),
+        }
+        annotated += 1
+    return annotated

@@ -1,8 +1,8 @@
 """Render-side tests for the 5-bucket coarse-axis projection.
 
 The headline ``.claim-pill`` should:
-  * carry both ``data-coarse-lenient`` and ``data-coarse-strict`` attributes,
-  * render the Lenient label by default,
+  * render the Strict coarse label — the ONE published axis since the
+    lens toggle was removed (remediation v2, 1.8 / DC-4'),
   * keep the per-model strip on the 6-bucket fine-label CSS classes
     (``vt-mostly-true`` / ``vt-exaggerated`` / etc., never ``vt-truthy``).
 
@@ -75,7 +75,9 @@ def _bundle(
     )
 
 
-def test_headline_pill_carries_both_projection_data_attrs() -> None:
+def test_headline_pill_renders_split_verdict_not_unverifiable() -> None:
+    """A split claim's pill shows the process outcome ("Models split") with
+    its own CSS slug — never folded to Unverifiable (audit V6)."""
     bundle = _bundle(
         fine_label=VerdictLabel.MOSTLY_TRUE,
         model_labels=[VerdictLabel.MOSTLY_TRUE, VerdictLabel.EXAGGERATED,
@@ -86,19 +88,15 @@ def test_headline_pill_carries_both_projection_data_attrs() -> None:
         strict_strength="none",
     )
     html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
-    assert 'data-fine-label="Mostly True"' in html
-    assert 'data-coarse-lenient="Truthy"' in html
-    assert 'data-coarse-strict="Models split"' in html
-    assert 'data-coarse-lenient-css="truthy"' in html
     # 'Models split' has its own slug since the P67.4 display-integrity
     # fix (T0.2) — the aggregate bars need a distinct split segment.
-    assert 'data-coarse-strict-css="split"' in html
+    assert ">Models split</span>" in html
+    assert "claim-pill-headline v-split" in html
 
 
-def test_headline_pill_default_renders_strict_label_and_class() -> None:
-    """2026-04-30: published default flipped from Lenient to Strict.
-    The pill now paints the Strict projection on initial render — the
-    lens-toggle JS still swaps to Lenient when the user picks it."""
+def test_headline_pill_renders_strict_label_and_class() -> None:
+    """The pill paints the Strict projection — the single published axis
+    (remediation v2, 1.8 removed the lens toggle; no data-* twins remain)."""
     bundle = _bundle(
         fine_label=VerdictLabel.EXAGGERATED,
         model_labels=[VerdictLabel.EXAGGERATED, VerdictLabel.MOSTLY_TRUE,
@@ -108,14 +106,16 @@ def test_headline_pill_default_renders_strict_label_and_class() -> None:
     )
     html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
     assert "claim-pill-headline" in html
-    # Default-rendered class + visible label is the Strict projection.
+    # Rendered class + visible label is the Strict projection.
     assert "v-falsey" in html
     assert ">Falsey</span>" in html
-    # Fine label is NOT what's painted by default — it lives in data-* only.
-    assert ">Exaggerated</span>" not in html
-    # Both axes still in the data-* attrs so the toggle has both sides.
-    assert 'data-coarse-lenient="Truthy"' in html
-    assert 'data-coarse-strict="Falsey"' in html
+    # Fine label is NOT what's painted on the headline pill (the per-model
+    # strip keeps fine labels; the Exaggerated pill text appears only there).
+    assert "claim-pill-headline v-exaggerated" not in html
+    # The retired lens data-attrs are gone.
+    assert "data-coarse-lenient" not in html
+    assert "data-coarse-strict" not in html
+    assert "data-fine-label" not in html
 
 
 def test_per_model_strip_keeps_fine_axis_classes() -> None:
@@ -152,9 +152,6 @@ def test_headline_pill_falls_back_to_fine_label_for_legacy_bundles() -> None:
     html = _claim_card(bundle, idx=1, total=1, rel="../", standalone=True)
     # Visible pill text falls back to fine label.
     assert ">Mostly True</span>" in html
-    # data-* attrs echo the fine label so JS toggle no-ops cleanly.
-    assert 'data-coarse-lenient="Mostly True"' in html
-    assert 'data-coarse-strict="Mostly True"' in html
 
 
 def test_dissent_count_uses_fine_axis_not_coarse_label() -> None:

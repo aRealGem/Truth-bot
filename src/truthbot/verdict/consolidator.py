@@ -28,13 +28,16 @@ evidence_pack v2.0 payload per item: {url, date, tier, stance, one_line_why}.
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Optional, Sequence
+from typing import Iterable, Optional, Sequence
 
 from truthbot.domains import is_substantive_url
 from truthbot.models import Evidence, SourceTier
-from truthbot.verify.factcheck_exclusion import is_excluded_factchecker
+from truthbot.verify.factcheck_exclusion import factcheck_exclusion_reason
+from truthbot.verify.mutable_endpoints import is_mutable_latest
+from truthbot.verify.tier_registry import QUARANTINE_REASON, classify_tier_ex
 
 from . import era_lint
 
@@ -63,6 +66,100 @@ _TIER_RANK = {
 _T13 = {SourceTier.GOVERNMENT, SourceTier.WIRE, SourceTier.ESTABLISHED}
 
 
+POST_SPEECH_NOTE = "post-speech · context-only"
+
+# ── Scoring-coverage telemetry (remediation v2 Phase A, A1) ──────────────────
+#
+# The v2 pack path NEVER scores relevance or stance. ``verify.relevance.
+# score_evidence`` — the only writer of ``relevance_score`` / ``supports_claim``
+# — is reachable from the legacy v1 provider (pipeline._build_open_book_provider)
+# and the R4 archive retriever ONLY; ``build_evidence_pack_v2`` wires the
+# R1/R2/R3 shortlists straight into :func:`consolidate`. So every v2 item keeps
+# the pydantic default relevance (models.py Evidence.relevance_score = 0.5) and
+# whatever stance the retriever's own JSON claimed — with retrievers.py mapping
+# stance "context" → None. Since ``_bearing`` requires True/False, those nulls
+# can never credit MIN_BEARING_T13 and the pack gate-forces Unverifiable.
+#
+# None of that was VISIBLE on disk: nothing recorded how much of a pack was
+# unscored. These helpers make the coverage a first-class, journaled number so
+# the condition is measurable (and lintable) instead of inferred.
+
+#: ``models.Evidence.relevance_score``'s pydantic default. An item still
+#: carrying it was never seen by the relevance layer. ``None`` counts as
+#: unscored too (``PackItem.relevance_score`` defaults to None on packs built
+#: with no relevance layer at all).
+DEFAULT_RELEVANCE_SCORE = 0.5
+
+#: Keys of the per-pack scoring telemetry dict, in report order.
+SCORING_KEYS = ("items", "relevance_scored", "relevance_default",
+                "stance_supports", "stance_refutes", "stance_null")
+
+
+def _field(obj, name):
+    """Read ``name`` off an attribute-style object OR a mapping.
+
+    Evidence, PackItem, ConsolidatedItem-wrapped Evidence and the plain dicts
+    stored in a run artifact's ``evidence`` map all answer the same two
+    questions; one accessor lets live packs and stored artifacts share ONE
+    telemetry implementation (so the lint over old artifacts and the field
+    written by new runs can never drift apart)."""
+    if isinstance(obj, Mapping):
+        return obj.get(name)
+    ev = getattr(obj, "evidence", None)
+    if ev is not None and not hasattr(obj, name):
+        obj = ev
+    return getattr(obj, name, None)
+
+
+def scoring_telemetry(items: Iterable) -> dict:
+    """Scoring coverage for one pack's items.
+
+    ``{items, relevance_scored, relevance_default, stance_supports,
+    stance_refutes, stance_null}`` — counts only, so the journal line stays
+    small. ``relevance_default`` counts items whose relevance is the untouched
+    0.5 default (or None, i.e. no relevance layer at all); everything else is
+    ``relevance_scored``. Stance counts partition the pack by
+    ``supports_claim`` True / False / None."""
+    tel = dict.fromkeys(SCORING_KEYS, 0)
+    for it in items:
+        tel["items"] += 1
+        rel = _field(it, "relevance_score")
+        if rel is None or rel == DEFAULT_RELEVANCE_SCORE:
+            tel["relevance_default"] += 1
+        else:
+            tel["relevance_scored"] += 1
+        stance = _field(it, "supports_claim")
+        if stance is True:
+            tel["stance_supports"] += 1
+        elif stance is False:
+            tel["stance_refutes"] += 1
+        else:
+            tel["stance_null"] += 1
+    return tel
+
+
+def scoring_telemetry_from_artifact(evidence: Mapping) -> dict:
+    """The SAME telemetry, summed over a STORED run artifact's ``evidence``
+    dict (``{sid: [evidence dict, …]}``).
+
+    Artifacts predating the ``EvidencePack.scoring`` field carry no telemetry
+    of their own, so the lint recomputes it from what is actually on disk.
+    Adds ``packs`` plus the two derived rates the fitness lint thresholds on
+    (0.0 on an empty artifact — no division by zero, no crash)."""
+    tel = dict.fromkeys(SCORING_KEYS, 0)
+    packs = 0
+    for items in (evidence or {}).values():
+        packs += 1
+        one = scoring_telemetry(items or [])
+        for k in SCORING_KEYS:
+            tel[k] += one[k]
+    n = tel["items"]
+    tel["packs"] = packs
+    tel["scored_rate"] = (tel["relevance_scored"] / n) if n else 0.0
+    tel["stance_null_rate"] = (tel["stance_null"] / n) if n else 0.0
+    return tel
+
+
 @dataclass(frozen=True)
 class ConsolidatedItem:
     """One v2 pack item plus its merge provenance."""
@@ -73,6 +170,24 @@ class ConsolidatedItem:
     # (claim_shape + relation_of supplied). Rides into the panel payload so an
     # attribution-only self record is visibly non-probative to the seats.
     role: str = ""
+    # Post-speech band (remediation v2, 1.3): dated after the utterance but
+    # within the fair-game window. Admitted for context, NEVER verdict-bearing
+    # (cannot credit the quota) — same-speech fact-checks and reaction
+    # coverage live in exactly this band.
+    post_speech: bool = False
+    # D15 (RATIFIED 2026-08-09, default ON): which ``verdict.utterance_record`` rule
+    # found this item to be a record of the SPEECH ITSELF ('' = no rule, or the
+    # flag is off). When set, ``role`` is forced to ``utterance-record`` and the
+    # item credits nothing. Kept ALONGSIDE ``role`` so the journal records WHICH
+    # rule fired, not merely that one did.
+    utterance_rule: str = ""
+    # D16(α) (RATIFIED 2026-08-09, default ON): which ``verdict.statistical_release``
+    # period rule found this POST-SPEECH item to be a statistical-agency record
+    # of a PRE-UTTERANCE data period ('' = no rule, or the flag is off). It is
+    # the inverse of the two fields above — the only thing in this dataclass
+    # that GIVES an item back its quota credit, and it can only ever apply to
+    # an item ``post_speech`` had already taken it from.
+    stat_release_rule: str = ""
 
     def to_payload_v2(self) -> dict:
         ev = self.evidence
@@ -82,10 +197,24 @@ class ConsolidatedItem:
             "date": ev.published_at.date().isoformat() if ev.published_at else None,
             "tier": ev.source_tier.value,
             "stance": stance,
-            "one_line_why": (ev.snippet or "").strip()[:200],
+            # B2: when the scorer stated the COMPARISON it made, that is a far
+            # better line than the snippet — it says why this item bears on the
+            # claim rather than merely what the page says. Falls back to the
+            # snippet, which is what every item scored before B2 carries.
+            "one_line_why": ((ev.one_line_why or "").strip()
+                             or (ev.snippet or "").strip())[:200],
         }
+        if getattr(ev, "arithmetic_hinge", False):
+            # The stance came from arithmetic the SCORER performed over the
+            # series, so it is a hypothesis for the seats to check, not a
+            # settled reading. Saying so in the payload is the point: the panel
+            # must not treat it as proof (R-2 computed-exhibit routing).
+            payload["arithmetic_hinge"] = True
         if self.role and self.role != "normal":
             payload["role"] = self.role
+        note = era_note_for(self)
+        if note:
+            payload["era_note"] = note
         return payload
 
 
@@ -96,6 +225,16 @@ class ConsolidationResult:
     quota_met: bool = False
     gate_code: str = ""              # GATE_INSUFFICIENT when forced-UV applies
     dropped: dict[str, int] = field(default_factory=dict)  # reason -> count
+    # Per-item fact-check exclusion log (remediation v2, 1.1): every FC drop
+    # is recorded — {"url", "reason", "retriever"} — and journaled with the
+    # pack. Exclusions are never silent.
+    excluded_fc: list[dict] = field(default_factory=list)
+    # Quarantine telemetry (remediation v2, 1.2 / S-6): kept items whose tier
+    # came from the fail-closed quarantine of an unmapped government-class
+    # host (tier_registry reason "quarantine-unmapped-gov"). They are KEPT —
+    # classified POLITICAL, so they can never credit the quota — but journaled
+    # so an unmapped-host burst is visible instead of silently bottom-tiered.
+    quarantined: list[str] = field(default_factory=list)
     retrospective: int = 0           # lenient mode: admitted post-era items
     # The full post-filter/post-quota candidate list BEFORE the pack cap, in
     # final order (PR-A2.2). Persisting this is what makes "would claim X have
@@ -107,6 +246,20 @@ class ConsolidationResult:
     # {"normal": 6, "primary-record": 2, "attribution-only": 1}. Empty on
     # non-role-aware consolidations.
     role_tally: dict[str, int] = field(default_factory=dict)
+    # D15 utterance-record telemetry (flag-gated, default OFF): one
+    # {"url", "rule"} per kept item classified as a record of the speech
+    # itself. ALWAYS empty with the flag off — which is how a reader can tell
+    # "D15 found nothing here" from "D15 was not running". Unlike role_tally
+    # this is populated on role-aware AND legacy consolidations, because the
+    # exclusion does not depend on the claim shape.
+    utterance_records: list[dict] = field(default_factory=list)
+    # D16(α) statistical-release telemetry (flag-gated, default OFF): one
+    # {"url", "rule", "agency", "reason", "period", "period_start"} per kept
+    # item the allowlist released back into the quota. ALWAYS empty with the
+    # flag off. Carries the AGENCY and the registry REASON, not just the rule,
+    # because the ratification question is per-host: a reviewer must be able to
+    # see which allowlist entries actually did work before agreeing to them.
+    statistical_releases: list[dict] = field(default_factory=list)
 
     @property
     def schema_version(self) -> str:
@@ -120,6 +273,60 @@ def _bearing(ev: Evidence) -> bool:
     """An item 'bears on the core assertion' when the stance layer classified
     it as supports or refutes (not ambiguous context)."""
     return ev.supports_claim is True or ev.supports_claim is False
+
+
+def era_note_for(cit) -> str:
+    """The era note a post-speech item should display — ``""`` for everything
+    else.
+
+    ONE implementation, because the note is written in two places (the v2
+    payload here and the ``PackItem`` built in ``evidence_pack_v2``) and a
+    reader who sees ``post-speech · context-only`` under an item the gate
+    actually spent would be reading a false statement. With D16 off — which is
+    production — this returns exactly ``POST_SPEECH_NOTE``, unchanged."""
+    if not getattr(cit, "post_speech", False):
+        return ""
+    if getattr(cit, "stat_release_rule", ""):
+        from truthbot.verdict.statistical_release import RELEASE_NOTE
+
+        return RELEASE_NOTE
+    return POST_SPEECH_NOTE
+
+
+def _post_speech_blocked(it: "ConsolidatedItem") -> bool:
+    """Does the post-speech band withhold this item's quota credit?
+
+    The band is context-only (remediation v2, 1.3) UNLESS D16(α) released it as
+    a statistical-agency record of a pre-utterance data period. Written once
+    and used on every quota branch, so the release cannot reach one branch and
+    miss another — the D11.2 role branches count corroborants and primary
+    records with their own ``post_speech`` tests."""
+    return it.post_speech and not it.stat_release_rule
+
+
+def _d15_on(explicit: Optional[bool]) -> bool:
+    """Is the D15 utterance-record exclusion active for this consolidation?
+
+    ``None`` (the default) defers to the ``TRUTHBOT_D15_UTTERANCE_RECORD``
+    environment flag, which since the 2026-08-09 ratification is ON unless the
+    variable explicitly says otherwise. An explicit True/False is the same
+    override as an argument, for tests and the $0 blast-radius measurement —
+    which is how a measurement can ask for the pre-ratification gate without
+    touching the environment every other consolidation in the process reads."""
+    from truthbot.verdict import utterance_record
+
+    return utterance_record.flag_enabled() if explicit is None else bool(explicit)
+
+
+def _d16_on(explicit: Optional[bool]) -> bool:
+    """Is the D16(α) statistical-release RELEASE active for this consolidation?
+
+    The exact analogue of :func:`_d15_on`: ``None`` (the default) defers to
+    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, ON since the same 2026-08-09
+    ratification unless the variable explicitly says otherwise."""
+    from truthbot.verdict import statistical_release
+
+    return statistical_release.flag_enabled() if explicit is None else bool(explicit)
 
 
 def _round_robin(shortlists: Sequence[tuple[str, Sequence[Evidence]]]):
@@ -146,6 +353,8 @@ def consolidate(
     era_mode: str = "strict",
     claim_shape: str = "",
     relation_of=None,
+    utterance_record: Optional[bool] = None,
+    statistical_release: Optional[bool] = None,
 ) -> ConsolidationResult:
     """Assemble a shared_pack_v2 pack from retriever shortlists.
 
@@ -171,11 +380,49 @@ def consolidate(
     PARTICIPANT corroborant fills the independent slot, an ATTRIBUTION-ONLY
     item satisfies nothing, and a decided verdict always needs at least one
     non-self credit. With either absent, quota behavior is bit-for-bit
-    today's."""
+    today's.
+
+    D15 utterance-record exclusion (RATIFIED 2026-08-09, DEFAULT ON — see
+    ``docs/decisions/D15-utterance-derivative.md``): ``utterance_record=None``
+    (the default) defers to ``TRUTHBOT_D15_UTTERANCE_RECORD``, which is ON
+    unless the variable explicitly says otherwise, so this is what the gate
+    now does. Items ``verdict.utterance_record`` identifies as records of
+    THIS speech — the DCPD transcript, the day's Congressional Record, the
+    Weekly Compilation issue, the archive copy of the address, same-speech
+    recap coverage — take role ``utterance-record`` and credit the quota ZERO
+    on BOTH quota branches. They stay in the pack and stay displayed:
+    provenance, never proof. A claim may not witness itself.
+
+    D16(α) statistical-release RELEASE (RATIFIED 2026-08-09, DEFAULT ON —
+    see ``docs/decisions/D16-statistical-release.md``): the mirror image of
+    D15, and the only rule here that GIVES credit back.
+    ``statistical_release=None`` (the default) defers to
+    ``TRUTHBOT_D16_STATISTICAL_RELEASE``, ON since the same ratification. A
+    POST-SPEECH item — one the 1.3 era rule had marked context-only — may
+    credit the quota again IFF its host is on the fail-closed
+    ``verify.statistical_agency`` allowlist AND its snippet or URL names a
+    parseable data period at or before the utterance. The fair-game cap (S-2)
+    is untouched: this releases items already inside the band, it never widens
+    the band. Where D15 and D16 both apply D15 wins — a record of the
+    utterance credits nothing."""
     result = ConsolidationResult(sid=sid)
     seen: set[str] = set()
     kept: list[ConsolidatedItem] = []
     era_class: dict[int, int] = {}   # id(item) -> 0 contemporaneous / 1 undated / 2 retro
+    d15_on = _d15_on(utterance_record)
+    # The REGISTERED speech date is the anchor every D15 rule checks against
+    # (a Congressional Record from another day is a different day's business).
+    # Resolved once per pack, and only when the flag is on, so the flag-off
+    # path does not even take the import.
+    d15_speech_date = None
+    if d15_on:
+        from truthbot.verdict import speech_context
+        from truthbot.verdict import utterance_record as _ur
+
+        d15_speech_date = speech_context.speech_date_for(sid)
+    d16_on = _d16_on(statistical_release)
+    if d16_on:
+        from truthbot.verdict import statistical_release as _sr
 
     def _drop(reason: str) -> None:
         result.dropped[reason] = result.dropped.get(reason, 0) + 1
@@ -200,11 +447,21 @@ def consolidate(
             _drop("duplicate-url")
             continue
         seen.add(key)
-        if is_excluded_factchecker(url) or ev.source_tier == SourceTier.FACTCHECK:
+        fc_reason = factcheck_exclusion_reason(url)
+        if not fc_reason and ev.source_tier == SourceTier.FACTCHECK:
+            fc_reason = "tier:factcheck"
+        if fc_reason:
             _drop("factcheck-excluded")
+            result.excluded_fc.append(
+                {"url": url, "reason": fc_reason, "retriever": label})
             continue
         if not is_substantive_url(url):
             _drop("non-substantive-url")
+            continue
+        if is_mutable_latest(url):
+            # Live latest-release pointers drift out of the claim's era no
+            # matter what date retrieval saw (remediation v2, 1.3).
+            _drop("mutable-latest-endpoint")
             continue
         d = era_lint.item_date(ev.published_at, ev.snippet or "")
         contemp = _contemporaneous(d)
@@ -216,8 +473,33 @@ def consolidate(
             continue
         if contemp is False:
             result.retrospective += 1
-        item = ConsolidatedItem(evidence=ev, draw_round=draw_round, retriever=label)
+        post = (utterance is not None and d is not None
+                and utterance < d <= era_lint.fair_game_end(utterance))
+        # D15: decided HERE, from the URL + snippet + registered speech date,
+        # so the role is fixed before any ordering or capping and cannot
+        # depend on where the item happened to land in the pack.
+        u_rule = ""
+        if d15_on:
+            u_rule = _ur.utterance_record_rule(
+                url, ev.snippet or "", speech_date=d15_speech_date, item_date=d)
+        # D16(α): decided from the same three inputs, and ONLY for items the
+        # post-speech band would otherwise silence. A D15 utterance record is
+        # never released — the stronger exclusion wins, and asking here rather
+        # than at the quota keeps that visible on the item itself.
+        s_rule = ""
+        if d16_on and post and not u_rule:
+            s_rule = _sr.statistical_release_rule(
+                url, ev.snippet or "", utterance=utterance, item_date=d)
+        item = ConsolidatedItem(evidence=ev, draw_round=draw_round,
+                                retriever=label, post_speech=post,
+                                utterance_rule=u_rule,
+                                stat_release_rule=s_rule,
+                                role=_ur.ROLE if u_rule else "")
         era_class[id(item)] = 0 if contemp else (1 if contemp is None else 2)
+        # Quarantine telemetry (1.2): computed once per kept item; cheap and
+        # additive — the classification itself is unchanged.
+        if classify_tier_ex(url)[1] == QUARANTINE_REASON:
+            result.quarantined.append(url)
         kept.append(item)
 
     # T6 quota: keep at most MAX_T6 OTHER items, dropping the lowest-priority
@@ -258,8 +540,13 @@ def consolidate(
         from dataclasses import replace
 
         from truthbot.verdict.evidential_role import evidential_role
-        roles = {id(it): evidential_role(claim_shape,
-                                         relation_of(it.evidence)).value
+        # A D15 utterance record keeps the role it was constructed with: it is
+        # the stronger statement (credit 0 on every branch), and it is decided
+        # by the document's identity rather than by the claim's shape, so the
+        # D11.2 table must not overwrite it.
+        roles = {id(it): (it.role if it.utterance_rule
+                          else evidential_role(claim_shape,
+                                               relation_of(it.evidence)).value)
                  for it in kept}
         kept = [replace(it, role=roles[id(it)]) for it in kept]
         # id()s changed with replace(); carry era classes across.
@@ -268,12 +555,36 @@ def consolidate(
         for it in kept:
             result.role_tally[it.role] = result.role_tally.get(it.role, 0) + 1
 
+    result.utterance_records = [{"url": it.evidence.source_url,
+                                 "rule": it.utterance_rule}
+                                for it in kept if it.utterance_rule]
+    if d16_on:
+        result.statistical_releases = [
+            _sr.statistical_release_detail(
+                it.evidence.source_url, it.evidence.snippet or "",
+                utterance=utterance,
+                item_date=era_lint.item_date(it.evidence.published_at,
+                                             it.evidence.snippet or ""))
+            or {"url": it.evidence.source_url, "rule": it.stat_release_rule}
+            for it in kept if it.stat_release_rule]
+
     result.pre_cap_items = list(kept)
     result.items = kept[:max_items]
     if len(kept) > max_items:
         result.dropped["pack-cap"] = len(kept) - max_items
 
     def _quota_credit(it: ConsolidatedItem) -> bool:
+        if it.utterance_rule:
+            # D15: a record of the speech itself is provenance, not proof. It
+            # cannot credit the quota on ANY tier, in EITHER era mode — a
+            # transcript is a GOVERNMENT document and would otherwise sail
+            # through both the T1-3 branch and the lenient-GOVERNMENT branch.
+            return False
+        if _post_speech_blocked(it):
+            # Post-speech band is context-only — it can inform, never decide
+            # (remediation v2, 1.3) — unless D16(α) released it as a
+            # statistical-agency record of a pre-utterance data period.
+            return False
         if it.evidence.source_tier in _T13 and _bearing(it.evidence):
             return True
         # Lenient: an era-contemporaneous GOVERNMENT document counts even
@@ -297,9 +608,11 @@ def consolidate(
         independent = sum(1 for it in result.items
                           if it.role == "normal" and _quota_credit(it))
         corroborants = sum(1 for it in result.items
-                           if it.role == "corroborant" and _bearing(it.evidence))
+                           if it.role == "corroborant" and _bearing(it.evidence)
+                           and not _post_speech_blocked(it))
         primary = sum(1 for it in result.items
-                      if it.role == "primary-record" and _bearing(it.evidence))
+                      if it.role == "primary-record" and _bearing(it.evidence)
+                      and not _post_speech_blocked(it))
         credits = independent + corroborants + min(1, primary)
         result.quota_met = (credits >= MIN_BEARING_T13
                             and (independent >= 1 or corroborants >= 1))

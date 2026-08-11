@@ -1,0 +1,3517 @@
+{
+  "schema": "truthbot-dc6-review v1",
+  "generated": "2026-08-06",
+  "generation": "v2.3-role-axis-s5cap",
+  "aggregate": {
+    "corpus": {
+      "claims": 529,
+      "unchanged": 388,
+      "decided_to_decided_changed": 49,
+      "newly_gated": 66,
+      "newly_decided": 17,
+      "split_changes": 9,
+      "other": 0,
+      "changed_total": 141,
+      "gate_forced_new": 87
+    },
+    "per_speech": {
+      "clinton_1998": {
+        "speech_id": "clinton_1998",
+        "speaker": "Bill Clinton",
+        "old_run_id": "7c59e9e0-0062-487d-84e3-4af15ab94aab",
+        "new_run_id": "d0010426-2e8f-4449-b839-60f85d923d56",
+        "claims": 92,
+        "unchanged": 69,
+        "decided_to_decided_changed": 8,
+        "newly_gated": 11,
+        "newly_decided": 4,
+        "split_changes": 0,
+        "other": 0,
+        "changed_total": 23,
+        "gate_forced_new": 14
+      },
+      "gwbush_2006": {
+        "speech_id": "gwbush_2006",
+        "speaker": "George W. Bush",
+        "old_run_id": "92f39851-8870-4609-97f6-458798d5dbb8",
+        "new_run_id": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+        "claims": 48,
+        "unchanged": 37,
+        "decided_to_decided_changed": 3,
+        "newly_gated": 5,
+        "newly_decided": 3,
+        "split_changes": 0,
+        "other": 0,
+        "changed_total": 11,
+        "gate_forced_new": 7
+      },
+      "obama_2014": {
+        "speech_id": "obama_2014",
+        "speaker": "Barack Obama",
+        "old_run_id": "28965cdf-046e-4c87-a5d1-d21b6529c625",
+        "new_run_id": "4de8a551-ea99-440d-aca0-12a133e620e3",
+        "claims": 96,
+        "unchanged": 75,
+        "decided_to_decided_changed": 7,
+        "newly_gated": 7,
+        "newly_decided": 4,
+        "split_changes": 3,
+        "other": 0,
+        "changed_total": 21,
+        "gate_forced_new": 12
+      },
+      "biden_2022": {
+        "speech_id": "biden_2022",
+        "speaker": "Joe Biden",
+        "old_run_id": "7208bbbb-c802-4155-932f-d0cc66803b24",
+        "new_run_id": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+        "claims": 111,
+        "unchanged": 91,
+        "decided_to_decided_changed": 3,
+        "newly_gated": 12,
+        "newly_decided": 3,
+        "split_changes": 2,
+        "other": 0,
+        "changed_total": 20,
+        "gate_forced_new": 16
+      },
+      "trump_2026": {
+        "speech_id": "trump_2026",
+        "speaker": "Donald Trump",
+        "old_run_id": "23939712-59ea-449d-93f7-a0a0b449efd8",
+        "new_run_id": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+        "claims": 182,
+        "unchanged": 116,
+        "decided_to_decided_changed": 28,
+        "newly_gated": 31,
+        "newly_decided": 3,
+        "split_changes": 4,
+        "other": 0,
+        "changed_total": 66,
+        "gate_forced_new": 38
+      }
+    }
+  },
+  "distributions": {
+    "per_speech": {
+      "clinton_1998": {
+        "speech_id": "clinton_1998",
+        "speaker": "Bill Clinton",
+        "old": {
+          "True": 72,
+          "Mostly True": 0,
+          "Misleading": 9,
+          "False": 2,
+          "Unverifiable": 8,
+          "Models split": 1
+        },
+        "new": {
+          "True": 71,
+          "Mostly True": 0,
+          "Misleading": 5,
+          "False": 1,
+          "Unverifiable": 14,
+          "Models split": 1
+        },
+        "old_decided": {
+          "decided": 83,
+          "total": 92,
+          "rate": 0.9022
+        },
+        "new_decided": {
+          "decided": 77,
+          "total": 92,
+          "rate": 0.837
+        },
+        "decided_rate_delta": -0.0652,
+        "denominator_mismatch": false
+      },
+      "gwbush_2006": {
+        "speech_id": "gwbush_2006",
+        "speaker": "George W. Bush",
+        "old": {
+          "True": 37,
+          "Mostly True": 0,
+          "Misleading": 5,
+          "False": 0,
+          "Unverifiable": 6,
+          "Models split": 0
+        },
+        "new": {
+          "True": 35,
+          "Mostly True": 0,
+          "Misleading": 4,
+          "False": 1,
+          "Unverifiable": 8,
+          "Models split": 0
+        },
+        "old_decided": {
+          "decided": 42,
+          "total": 48,
+          "rate": 0.875
+        },
+        "new_decided": {
+          "decided": 40,
+          "total": 48,
+          "rate": 0.8333
+        },
+        "decided_rate_delta": -0.0417,
+        "denominator_mismatch": false
+      },
+      "obama_2014": {
+        "speech_id": "obama_2014",
+        "speaker": "Barack Obama",
+        "old": {
+          "True": 78,
+          "Mostly True": 0,
+          "Misleading": 3,
+          "False": 4,
+          "Unverifiable": 10,
+          "Models split": 1
+        },
+        "new": {
+          "True": 71,
+          "Mostly True": 0,
+          "Misleading": 5,
+          "False": 2,
+          "Unverifiable": 15,
+          "Models split": 3
+        },
+        "old_decided": {
+          "decided": 85,
+          "total": 96,
+          "rate": 0.8854
+        },
+        "new_decided": {
+          "decided": 78,
+          "total": 96,
+          "rate": 0.8125
+        },
+        "decided_rate_delta": -0.0729,
+        "denominator_mismatch": false
+      },
+      "biden_2022": {
+        "speech_id": "biden_2022",
+        "speaker": "Joe Biden",
+        "old": {
+          "True": 96,
+          "Mostly True": 0,
+          "Misleading": 4,
+          "False": 1,
+          "Unverifiable": 7,
+          "Models split": 3
+        },
+        "new": {
+          "True": 86,
+          "Mostly True": 0,
+          "Misleading": 5,
+          "False": 1,
+          "Unverifiable": 17,
+          "Models split": 2
+        },
+        "old_decided": {
+          "decided": 101,
+          "total": 111,
+          "rate": 0.9099
+        },
+        "new_decided": {
+          "decided": 92,
+          "total": 111,
+          "rate": 0.8288
+        },
+        "decided_rate_delta": -0.0811,
+        "denominator_mismatch": false
+      },
+      "trump_2026": {
+        "speech_id": "trump_2026",
+        "speaker": "Donald Trump",
+        "old": {
+          "True": 94,
+          "Mostly True": 0,
+          "Misleading": 31,
+          "False": 43,
+          "Unverifiable": 14,
+          "Models split": 1
+        },
+        "new": {
+          "True": 74,
+          "Mostly True": 0,
+          "Misleading": 21,
+          "False": 38,
+          "Unverifiable": 45,
+          "Models split": 4
+        },
+        "old_decided": {
+          "decided": 168,
+          "total": 183,
+          "rate": 0.918
+        },
+        "new_decided": {
+          "decided": 133,
+          "total": 182,
+          "rate": 0.7308
+        },
+        "decided_rate_delta": -0.1872,
+        "denominator_mismatch": true
+      }
+    },
+    "corpus": {
+      "old": {
+        "True": 377,
+        "Mostly True": 0,
+        "Misleading": 52,
+        "False": 50,
+        "Unverifiable": 45,
+        "Models split": 6
+      },
+      "new": {
+        "True": 337,
+        "Mostly True": 0,
+        "Misleading": 40,
+        "False": 43,
+        "Unverifiable": 99,
+        "Models split": 10
+      },
+      "old_decided": {
+        "decided": 479,
+        "total": 530,
+        "rate": 0.9038
+      },
+      "new_decided": {
+        "decided": 420,
+        "total": 529,
+        "rate": 0.794
+      },
+      "decided_rate_delta": -0.1098
+    },
+    "era_parity": {
+      "old_spread": {
+        "min": 0.875,
+        "max": 0.918,
+        "spread": 0.043,
+        "min_speech": "gwbush_2006",
+        "max_speech": "trump_2026"
+      },
+      "new_spread": {
+        "min": 0.7308,
+        "max": 0.837,
+        "spread": 0.1062,
+        "min_speech": "trump_2026",
+        "max_speech": "clinton_1998"
+      },
+      "spread_delta": 0.0632,
+      "narrowed": false
+    }
+  },
+  "anecdote_parity": {
+    "anecdote_claim_type": "personal-anecdote",
+    "per_speech": {
+      "clinton_1998": {
+        "speech_id": "clinton_1998",
+        "speaker": "Bill Clinton",
+        "claims_compared": 92,
+        "anecdotes": 7,
+        "anecdote_share": 0.0761,
+        "anecdotes_abstained_new": 1,
+        "old_raw": {
+          "decided": 83,
+          "total": 92,
+          "rate": 0.9022
+        },
+        "new_raw": {
+          "decided": 77,
+          "total": 92,
+          "rate": 0.837
+        },
+        "old_adjusted": {
+          "decided": 76,
+          "total": 85,
+          "rate": 0.8941
+        },
+        "new_adjusted": {
+          "decided": 71,
+          "total": 85,
+          "rate": 0.8353
+        },
+        "delta_raw": -0.0652,
+        "delta_adjusted": -0.0588,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 92,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "gwbush_2006": {
+        "speech_id": "gwbush_2006",
+        "speaker": "George W. Bush",
+        "claims_compared": 48,
+        "anecdotes": 1,
+        "anecdote_share": 0.0208,
+        "anecdotes_abstained_new": 0,
+        "old_raw": {
+          "decided": 42,
+          "total": 48,
+          "rate": 0.875
+        },
+        "new_raw": {
+          "decided": 40,
+          "total": 48,
+          "rate": 0.8333
+        },
+        "old_adjusted": {
+          "decided": 41,
+          "total": 47,
+          "rate": 0.8723
+        },
+        "new_adjusted": {
+          "decided": 39,
+          "total": 47,
+          "rate": 0.8298
+        },
+        "delta_raw": -0.0417,
+        "delta_adjusted": -0.0425,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 48,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "obama_2014": {
+        "speech_id": "obama_2014",
+        "speaker": "Barack Obama",
+        "claims_compared": 96,
+        "anecdotes": 23,
+        "anecdote_share": 0.2396,
+        "anecdotes_abstained_new": 2,
+        "old_raw": {
+          "decided": 85,
+          "total": 96,
+          "rate": 0.8854
+        },
+        "new_raw": {
+          "decided": 78,
+          "total": 96,
+          "rate": 0.8125
+        },
+        "old_adjusted": {
+          "decided": 64,
+          "total": 73,
+          "rate": 0.8767
+        },
+        "new_adjusted": {
+          "decided": 57,
+          "total": 73,
+          "rate": 0.7808
+        },
+        "delta_raw": -0.0729,
+        "delta_adjusted": -0.0959,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 96,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "biden_2022": {
+        "speech_id": "biden_2022",
+        "speaker": "Joe Biden",
+        "claims_compared": 111,
+        "anecdotes": 9,
+        "anecdote_share": 0.0811,
+        "anecdotes_abstained_new": 0,
+        "old_raw": {
+          "decided": 101,
+          "total": 111,
+          "rate": 0.9099
+        },
+        "new_raw": {
+          "decided": 92,
+          "total": 111,
+          "rate": 0.8288
+        },
+        "old_adjusted": {
+          "decided": 94,
+          "total": 102,
+          "rate": 0.9216
+        },
+        "new_adjusted": {
+          "decided": 83,
+          "total": 102,
+          "rate": 0.8137
+        },
+        "delta_raw": -0.0811,
+        "delta_adjusted": -0.1079,
+        "raw_matches_section4": true,
+        "join": {
+          "from_artifact": 111,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      },
+      "trump_2026": {
+        "speech_id": "trump_2026",
+        "speaker": "Donald Trump",
+        "claims_compared": 182,
+        "anecdotes": 52,
+        "anecdote_share": 0.2857,
+        "anecdotes_abstained_new": 22,
+        "old_raw": {
+          "decided": 167,
+          "total": 182,
+          "rate": 0.9176
+        },
+        "new_raw": {
+          "decided": 133,
+          "total": 182,
+          "rate": 0.7308
+        },
+        "old_adjusted": {
+          "decided": 123,
+          "total": 130,
+          "rate": 0.9462
+        },
+        "new_adjusted": {
+          "decided": 103,
+          "total": 130,
+          "rate": 0.7923
+        },
+        "delta_raw": -0.1868,
+        "delta_adjusted": -0.1539,
+        "raw_matches_section4": false,
+        "join": {
+          "from_artifact": 182,
+          "from_claims_json": 0,
+          "unresolved": 0,
+          "unresolved_sids": []
+        }
+      }
+    },
+    "corpus": {
+      "old_raw": {
+        "decided": 478,
+        "total": 529,
+        "rate": 0.9036
+      },
+      "new_raw": {
+        "decided": 420,
+        "total": 529,
+        "rate": 0.794
+      },
+      "old_adjusted": {
+        "decided": 398,
+        "total": 437,
+        "rate": 0.9108
+      },
+      "new_adjusted": {
+        "decided": 353,
+        "total": 437,
+        "rate": 0.8078
+      }
+    },
+    "spread": {
+      "old_raw": {
+        "min": 0.875,
+        "max": 0.9176,
+        "spread": 0.0426,
+        "min_speech": "gwbush_2006",
+        "max_speech": "trump_2026"
+      },
+      "new_raw": {
+        "min": 0.7308,
+        "max": 0.837,
+        "spread": 0.1062,
+        "min_speech": "trump_2026",
+        "max_speech": "clinton_1998"
+      },
+      "old_adjusted": {
+        "min": 0.8723,
+        "max": 0.9462,
+        "spread": 0.0739,
+        "min_speech": "gwbush_2006",
+        "max_speech": "trump_2026"
+      },
+      "new_adjusted": {
+        "min": 0.7808,
+        "max": 0.8353,
+        "spread": 0.0545,
+        "min_speech": "obama_2014",
+        "max_speech": "clinton_1998"
+      },
+      "raw_spread_delta": 0.0636,
+      "adjusted_spread_delta": -0.0194,
+      "raw_narrowed": false,
+      "adjusted_narrowed": true
+    },
+    "join": {
+      "from_artifact": 529,
+      "from_claims_json": 0,
+      "unresolved": 0,
+      "unresolved_sids": [],
+      "site_root": "/home/ccagent/truth-bot/site-pca",
+      "site_index_size": 529
+    }
+  },
+  "coverage": [
+    {
+      "speech_id": "clinton_1998",
+      "old_rows": 92,
+      "old_claims": 92,
+      "new_rows": 92,
+      "compared": 92,
+      "dropped_sids": [],
+      "dropped_detail": [],
+      "added_sids": []
+    },
+    {
+      "speech_id": "gwbush_2006",
+      "old_rows": 48,
+      "old_claims": 48,
+      "new_rows": 48,
+      "compared": 48,
+      "dropped_sids": [],
+      "dropped_detail": [],
+      "added_sids": []
+    },
+    {
+      "speech_id": "obama_2014",
+      "old_rows": 96,
+      "old_claims": 96,
+      "new_rows": 96,
+      "compared": 96,
+      "dropped_sids": [],
+      "dropped_detail": [],
+      "added_sids": []
+    },
+    {
+      "speech_id": "biden_2022",
+      "old_rows": 111,
+      "old_claims": 111,
+      "new_rows": 111,
+      "compared": 111,
+      "dropped_sids": [],
+      "dropped_detail": [],
+      "added_sids": []
+    },
+    {
+      "speech_id": "trump_2026",
+      "old_rows": 183,
+      "old_claims": 182,
+      "new_rows": 182,
+      "compared": 182,
+      "dropped_sids": [
+        "trump_2026:0311"
+      ],
+      "dropped_detail": [
+        {
+          "sid": "trump_2026:0311",
+          "old_verdict": "FALSE",
+          "had_claim_record": false
+        }
+      ],
+      "added_sids": []
+    }
+  ],
+  "canonical_counts": {
+    "canonical_claims": 529,
+    "statement": "The corpus is 529 claims. The published 530 is 529 + 1 orphan row (trump_2026:0311) — a verdict row with no claim record, rendered as \"(claim text unavailable)\". The rebuilt artifacts carry no orphans.",
+    "old": {
+      "claims": 529,
+      "rows": 530,
+      "orphan_rows": [
+        "trump_2026:0311"
+      ]
+    },
+    "new": {
+      "claims": 529,
+      "rows": 529,
+      "orphan_rows": []
+    },
+    "published": {
+      "records": 530,
+      "placeholder_records": 1,
+      "placeholder_ids": [
+        "9d0d98cc-280c-4a2d-a007-e14a3870da48"
+      ]
+    },
+    "named_exclusions": [
+      {
+        "sid": "trump_2026:0311",
+        "why": "row with no claim record (orphan); never a fact-check"
+      }
+    ]
+  },
+  "dropped_rows": [
+    {
+      "sid": "trump_2026:0311",
+      "speech_id": "trump_2026",
+      "old_label": "FALSE",
+      "kind": "orphan_row",
+      "reason": "Orphan row: the prior artifact carried a verdict row with NO matching claim record, so the published claims.json shows it as \"(claim text unavailable)\". The rebuild emits rows only for real claims, so it is gone. This is a count correction, not a verdict correction — no reader ever saw a fact-check here.",
+      "published_effect": "published row count 530 → 529; claim count unchanged at 529"
+    }
+  ],
+  "changed_claims": [
+    {
+      "sid": "clinton_1998:0007",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Crime has dropped for a record five years in a row, and the welfare rolls are at their lowest levels in 27 years.",
+      "claim_text_full": "Crime has dropped for a record five years in a row, and the welfare rolls are at their lowest levels in 27 years.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "FBI data support a fifth consecutive crime decline, but government welfare data show 1997 rolls/recipiency were not the lowest in 27 years, contradicting the absolute welfare claim"
+    },
+    {
+      "sid": "clinton_1998:0057",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Last year I proposed and you passed 220,000 new Pell grant scholarships for deserving students.",
+      "claim_text_full": "Last year I proposed and you passed 220,000 new Pell grant scholarships for deserving students.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Contemporaneous White House signing statement and Clinton's own signing remarks (Nov 1997) both attest the enacted Pell increase made an additional 220,000 students eligible, matching the claim's cor…"
+    },
+    {
+      "sid": "clinton_1998:0071",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Thanks to the actions of this Congress last year, we will soon have, for the very first time, a voluntary national test based on national s…",
+      "claim_text_full": "Thanks to the actions of this Congress last year, we will soon have, for the very first time, a voluntary national test based on national standards in fourth grade reading and eighth grade math.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Government evidence confirms P.L. 105-78 (enacted Nov 1997) funded development of the first-ever voluntary national tests in 4th-grade reading and 8th-grade math on NAEP standards, matching the claim…"
+    },
+    {
+      "sid": "clinton_1998:0156",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Millions of Americans between the ages of 55 and 65 have lost their health insurance.",
+      "claim_text_full": "Millions of Americans between the ages of 55 and 65 have lost their health insurance.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Census and EBRI show ~3 million near-elderly (55–64) uninsured in 1996, so 'millions' lacking coverage—with documented erosion of retiree/employer coverage driving loss—is supported without material…"
+    },
+    {
+      "sid": "clinton_1998:0170",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Since then, about 15 million people have taken advantage of it, and I've met a lot of them all across this country.",
+      "claim_text_full": "Since then, about 15 million people have taken advantage of it, and I've met a lot of them all across this country.",
+      "old_label": "MISLEADING",
+      "new_label": "FALSE",
+      "old_verdict": "Misleading",
+      "new_verdict": "False",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "official FMLA survey/Commission evidence put actual FMLA leave use far below the claimed roughly 15 million by the utterance date"
+    },
+    {
+      "sid": "clinton_1998:0192",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "I think every American should know that most juvenile crime is committed between the hours of 3 in the afternoon and 8 at night.",
+      "claim_text_full": "I think every American should know that most juvenile crime is committed between the hours of 3 in the afternoon and 8 at night.",
+      "old_label": "FALSE",
+      "new_label": "MISLEADING",
+      "old_verdict": "False",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the federal data showed an after-school peak but only about 20% of juvenile violent crimes in the relevant afternoon period, not a majority between 3 p.m. and 8 p.m."
+    },
+    {
+      "sid": "clinton_1998:0270",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Under the leadership of Vice President Gore, we've reduced the federal payroll by 300,000 workers, cut 16,000 pages of regulation, eliminat…",
+      "claim_text_full": "Under the leadership of Vice President Gore, we've reduced the federal payroll by 300,000 workers, cut 16,000 pages of regulation, eliminated hundreds of programs, and improved the operations of virtually every government agency.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "real NPR-era workforce, regulatory, and program cuts were documented, but government data and GAO/Congress reviews show the 300,000 figure and sweeping agency-improvement attribution were overstated…"
+    },
+    {
+      "sid": "clinton_1998:0337",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Now, think about this: The entire store of human knowledge now doubles every five years.",
+      "claim_text_full": "Now, think about this: The entire store of human knowledge now doubles every five years.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "contemporaneous sources stated that broadly available information and medical knowledge doubled about every five years, supporting the claim as made"
+    },
+    {
+      "sid": "gwbush_2006:0154",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "Every year of my Presidency, we've reduced the growth of nonsecurity discretionary spending, and last year you passed bills that cut this s…",
+      "claim_text_full": "Every year of my Presidency, we've reduced the growth of nonsecurity discretionary spending, and last year you passed bills that cut this spending.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the absolute claim that growth was reduced every year and that the prior year’s bills cut the category is contradicted by budget data showing nonsecurity/nondefense discretionary authority or funding…"
+    },
+    {
+      "sid": "gwbush_2006:0218",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "There are fewer abortions in America than at any point in the last three decades, and the number of children born to teenage mothers has be…",
+      "claim_text_full": "There are fewer abortions in America than at any point in the last three decades, and the number of children born to teenage mothers has been falling for a dozen years in a row.",
+      "old_label": "MISLEADING",
+      "new_label": "FALSE",
+      "old_verdict": "Misleading",
+      "new_verdict": "False",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "The teen-birth half is true (12th straight annual decline, E4/E6), but the claim's leading absolute — abortions lower than at any point in three decades — is contradicted, since government and Guttma…"
+    },
+    {
+      "sid": "gwbush_2006:0249",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "We're removing debris and repairing highways and rebuilding stronger levees.",
+      "claim_text_full": "We're removing debris and repairing highways and rebuilding stronger levees.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Contemporary government/wire evidence confirms all three ongoing efforts — debris removal (E4, E5), highway repair (E1, E3), and levee rebuilding to stronger design (E6, E9, E10) — with only E7 tempe…"
+    },
+    {
+      "sid": "obama_2014:0114",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+      "claim_text_full": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+      "old_label": "TRUE",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "All supporting items merely restate the speech's own figure; no independent employment record confirms >700, though E5's >600-in-first-year growth is loosely consistent."
+    },
+    {
+      "sid": "obama_2014:0125",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "She put herself through college.",
+      "claim_text_full": "She put herself through college.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Official White House guest bio and independent reporting confirm DeMars put herself through college."
+    },
+    {
+      "sid": "obama_2014:0157",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Last year, I also pledged to connect 99 percent of our students to high-speed broadband over the next four years.",
+      "claim_text_full": "Last year, I also pledged to connect 99 percent of our students to high-speed broadband over the next four years.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Obama made the 2013 ConnectED pledge to connect 99% of students to high-speed broadband within five years, which reasonably corresponded to roughly four years remaining at the January 2014 utterance"
+    },
+    {
+      "sid": "obama_2014:0189",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+      "claim_text_full": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "The real minimum wage did decline since Reagan's era, but the best inflation-adjusted estimates put the drop at ~12-16% ($3.35/1981 ≈ $8.24-$8.61 in 2013-14 dollars vs $7.25), so 'about twenty percen…"
+    },
+    {
+      "sid": "obama_2014:0218",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Just one week earlier, Amanda said, that surgery would’ve meant bankruptcy.",
+      "claim_text_full": "Just one week earlier, Amanda said, that surgery would’ve meant bankruptcy.",
+      "old_label": "TRUE",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "provided evidence only documents that the SOTU contained the assertion, not independent evidence that Amanda actually said the surgery would have meant bankruptcy"
+    },
+    {
+      "sid": "obama_2014:0221",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "More than nine million Americans have signed up for private health insurance or Medicaid coverage.",
+      "claim_text_full": "More than nine million Americans have signed up for private health insurance or Medicaid coverage.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "official contemporaneous figures showed about 2.15 million marketplace plan selections and roughly 6.3–6.6 million Medicaid/CHIP applications or determinations, which did not establish more than nine…"
+    },
+    {
+      "sid": "obama_2014:0223",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Because of this law, no American can ever again be dropped or denied coverage for a preexisting condition like asthma, back pain, or cancer.",
+      "claim_text_full": "Because of this law, no American can ever again be dropped or denied coverage for a preexisting condition like asthma, back pain, or cancer.",
+      "old_label": "FALSE",
+      "new_label": "MISLEADING",
+      "old_verdict": "False",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the ACA broadly barred preexisting-condition denials starting in 2014, but the absolute claim is contradicted by documented exceptions such as grandfathered individual plans and transitional non-enfo…"
+    },
+    {
+      "sid": "biden_2022:0167",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Ford is investing $11 billion to build electric vehicles, creating 11,000 jobs across the country.",
+      "claim_text_full": "Ford is investing $11 billion to build electric vehicles, creating 11,000 jobs across the country.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Ford and SK announced about $11.4 billion in EV/battery investment and nearly/about 11,000 new jobs before the utterance date"
+    },
+    {
+      "sid": "biden_2022:0211",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their health care premium…",
+      "claim_text_full": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their health care premiums.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "ARP did lower ACA marketplace premiums for millions, and $2,400/year matches an illustrative family-of-four calculation, but evidence shows average savings were lower for typical individuals/househol…"
+    },
+    {
+      "sid": "biden_2022:0431",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "He loved building Legos with their daughter.",
+      "claim_text_full": "He loved building Legos with their daughter.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Gold Star tribute and official SOTU record corroborate that Heath loved building Legos with his daughter."
+    },
+    {
+      "sid": "trump_2026:0017",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Today our border is secure, our spirit is restored, inflation is plummeting, incomes are rising fast, the roaring economy is roaring like n…",
+      "claim_text_full": "Today our border is secure, our spirit is restored, inflation is plummeting, incomes are rising fast, the roaring economy is roaring like never before and our enemies are scared.",
+      "old_label": "MISLEADING",
+      "new_label": "FALSE",
+      "old_verdict": "Misleading",
+      "new_verdict": "False",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the absolute 'roaring like never before' is contradicted by BEA data showing GDP decelerating (1.4% Q4, 2.2% year vs 2.8%), while 'inflation plummeting' and 'incomes rising fast' overstate merely eas…"
+    },
+    {
+      "sid": "trump_2026:0019",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "After four years in which millions and millions of illegal aliens poured across our borders totally unvetted and unchecked, we now have the…",
+      "claim_text_full": "After four years in which millions and millions of illegal aliens poured across our borders totally unvetted and unchecked, we now have the strongest and most secure border in American history by far.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "encounters/releases were reported at historic lows and official releases echoed the framing, but the evidence supports at most a recent historic low/zero releases, not the sweeping claim of the stron…"
+    },
+    {
+      "sid": "trump_2026:0023",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "And last year the murder rate saw its single largest decline in recorded history.",
+      "claim_text_full": "And last year the murder rate saw its single largest decline in recorded history.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "available 2025 data showed a large preliminary decline, but the record-setting national claim was only a projection and AP reported FBI confirmation was not yet available as of the utterance"
+    },
+    {
+      "sid": "trump_2026:0024",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years.",
+      "claim_text_full": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "contemporary CCJ-based reporting supported that 2025 had about a 21% homicide decline, the largest one-year drop on record, and the lowest homicide rate since records back to 1900"
+    },
+    {
+      "sid": "trump_2026:0031",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "claim_text_full": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "old_label": "FALSE",
+      "new_label": "TRUE",
+      "old_verdict": "False",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Primary BLS data and outlet analyses confirm the Q4-2025 three-month annualized core CPI rate was ~1.7%, its lowest since early 2021, matching the claim's specific 'last three months' framing (distin…"
+    },
+    {
+      "sid": "trump_2026:0046",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
+      "claim_text_full": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
+      "old_label": "MISLEADING",
+      "new_label": "FALSE",
+      "old_verdict": "Misleading",
+      "new_verdict": "False",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "The core $18T-in-one-year figure is contradicted by BEA FDI data (~$151–232B/yr) and audits showing even the White House's own tracker (~$9.6T) is largely unenforceable pledges, not secured investmen…"
+    },
+    {
+      "sid": "trump_2026:0053",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "American natural gas production is at an all-time high because I kept my promise to drill baby drill.",
+      "claim_text_full": "American natural gas production is at an all-time high because I kept my promise to drill baby drill.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "U.S. natural gas production was at record levels, but the evidence attributes the growth to continuing shale-region trends and prior record-setting years rather than uniquely to the speaker’s new “dr…"
+    },
+    {
+      "sid": "trump_2026:0054",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "More Americans are working today than at any time in the history of our country.",
+      "claim_text_full": "More Americans are working today than at any time in the history of our country.",
+      "old_label": "TRUE",
+      "new_label": "FALSE",
+      "old_verdict": "True",
+      "new_verdict": "False",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Government data shows the all-time employment peak was Dec 2025 (163,992K) with Jan/Feb 2026 declines, so 'today' is below the record, contradicting this absolute claim."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps.",
+      "claim_text_full": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps.",
+      "old_label": "MISLEADING",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the cited SNAP tables and deregulation guidance are pointers whose snippets contain no actual figures to confirm the 2.4-million or either 'record' claim"
+    },
+    {
+      "sid": "trump_2026:0092",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "And Los Angeles is going to be safe just like Washington D.C. is now one of the safest cities in the country.",
+      "claim_text_full": "And Los Angeles is going to be safe just like Washington D.C. is now one of the safest cities in the country.",
+      "old_label": "FALSE",
+      "new_label": "MISLEADING",
+      "old_verdict": "False",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "DC's dramatic, real crime decline (30-year low, homicides down ~32%) is spun into the exaggerated impression that DC is now 'one of the safest cities in the country,' which the evidence of substantia…"
+    },
+    {
+      "sid": "trump_2026:0106",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "I was there.",
+      "claim_text_full": "I was there.",
+      "old_label": "FALSE",
+      "new_label": "TRUE",
+      "old_verdict": "False",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "contemporary reports document the speaker visiting and surveying the Kerr County/Camp Mystic flood site in person after the July 4, 2025 disaster"
+    },
+    {
+      "sid": "trump_2026:0109",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "As the waters threatened to sweep her away, 11-year-old Millie Kate McClelland closed her eyes and prayed to God.",
+      "claim_text_full": "As the waters threatened to sweep her away, 11-year-old Millie Kate McClelland closed her eyes and prayed to God.",
+      "old_label": "TRUE",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the provided evidence shows the line was said or repeated in transcripts and coverage, but does not independently verify that the child actually closed her eyes and prayed during the flood"
+    },
+    {
+      "sid": "trump_2026:0137",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no tax on overtime and…",
+      "claim_text_full": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no tax on overtime and our expanded child tax credit done again by Republicans, Megan and her husband will take home more than $5,000 extra just for the year cutting her tax bill in more than half.",
+      "old_label": "MISLEADING",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the tip/overtime/CTC provisions are real and $5,000 is plausible per IRS caps, but no evidence discloses Megan's actual household tax figures to confirm the >$5,000 / halved-bill magnitude"
+    },
+    {
+      "sid": "trump_2026:0153",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "You know, I asked Michael Dell, how do you make all that money?",
+      "claim_text_full": "You know, I asked Michael Dell, how do you make all that money?",
+      "old_label": "TRUE",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "provided evidence corroborates Dell’s public dorm-room computer origin story and the speech transcript, but not the private assertion that Trump personally asked Dell this question"
+    },
+    {
+      "sid": "trump_2026:0186",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "But the good news is that almost all countries and corporations want to keep the deal that they already made.",
+      "claim_text_full": "But the good news is that almost all countries and corporations want to keep the deal that they already made.",
+      "old_label": "FALSE",
+      "new_label": "TRUE",
+      "old_verdict": "False",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Wire and government sources confirm partners (EU explicitly, others per USTR) want to keep the existing deals with no partner signalling withdrawal, supporting the core assertion despite one lower-ti…"
+    },
+    {
+      "sid": "trump_2026:0215",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Their policies created the high prices.",
+      "claim_text_full": "Their policies created the high prices.",
+      "old_label": "MISLEADING",
+      "new_label": "FALSE",
+      "old_verdict": "Misleading",
+      "new_verdict": "False",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Independent economic analyses attribute the price surge mainly to supply-chain shocks, not the prior administration's policies, contradicting the sole-causation core (only partisan GOP research suppo…"
+    },
+    {
+      "sid": "trump_2026:0219",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "The price of eggs is down 60 percent.",
+      "claim_text_full": "The price of eggs is down 60 percent.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Government BLS/USDA data show a ~59–60% peak-to-current retail decline (Mar 2025 $6.23 → Jan 2026 $2.58), matching the claim, though YoY was only ~34%."
+    },
+    {
+      "sid": "trump_2026:0231",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "With our government giving them hundreds and hundreds of billions of dollars a year as their stock prices soared 1,000, 1,200, 1,400 and ev…",
+      "claim_text_full": "With our government giving them hundreds and hundreds of billions of dollars a year as their stock prices soared 1,000, 1,200, 1,400 and even 1,700 percent, like nothing else.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Real underlying facts (hundreds of billions in federal payments to private insurers, large multi-year insurer stock gains) but exaggerated and cherry-picked — ACA subsidies themselves run ~$125B/yr,…"
+    },
+    {
+      "sid": "trump_2026:0241",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Other presidents tried to do it, but they never could.",
+      "claim_text_full": "Other presidents tried to do it, but they never could.",
+      "old_label": "FALSE",
+      "new_label": "TRUE",
+      "old_verdict": "False",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Government sources confirm Medicare gained negotiation authority 'for the first time' under the IRA, so prior administrations' drug-pricing efforts never achieved it."
+    },
+    {
+      "sid": "trump_2026:0319",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "The Somali pirates who ransacked Minnesota, remind us that there are large parts of the world where bribery, corruption, and lawlessness ar…",
+      "claim_text_full": "The Somali pirates who ransacked Minnesota, remind us that there are large parts of the world where bribery, corruption, and lawlessness are the norm, not the exception.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Core assertions — massive Somali-linked fraud in Minnesota ('ransacked') and Somalia among the most corrupt nations where corruption is the norm — are both directly supported; 'pirates' is rhetorical…"
+    },
+    {
+      "sid": "trump_2026:0343",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our c…",
+      "claim_text_full": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our country at record numbers and we're getting them the hell out of here fast.",
+      "old_label": "FALSE",
+      "new_label": "TRUE",
+      "old_verdict": "False",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Official DHS releases contemporaneous with the utterance support record-number removals of illegal-alien criminals, backing the core assertion."
+    },
+    {
+      "sid": "trump_2026:0450",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's face as she looked up…",
+      "claim_text_full": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's face as she looked up at her attacker in the last seconds of her life.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "MISLEADING",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the core assertion that Iryna looked up at her attacker in terror in her final seconds is contradicted by affidavit-based reporting that surveillance showed the attacker struck her from behind with n…"
+    },
+    {
+      "sid": "trump_2026:0487",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+      "claim_text_full": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+      "old_label": "TRUE",
+      "new_label": "UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "provided evidence confirms the remark was made and the shooting occurred but does not independently verify the private conversation or bedside details"
+    },
+    {
+      "sid": "trump_2026:0509",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "In my first 10 months I ended eight wars, including Cambodia.",
+      "claim_text_full": "In my first 10 months I ended eight wars, including Cambodia.",
+      "old_label": "MISLEADING",
+      "new_label": "FALSE",
+      "old_verdict": "Misleading",
+      "new_verdict": "False",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the absolute claim of ending eight wars is contradicted — independent review finds several conflicts unresolved, exaggerated, or predating his term, and even the real Cambodia-Thailand case is a frag…"
+    },
+    {
+      "sid": "trump_2026:0566",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "We stopped them from hanging a lot of them with the threat of serious violence.",
+      "claim_text_full": "We stopped them from hanging a lot of them with the threat of serious violence.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "higher-trust reporting contradicted the core assertion that Trump’s threats had halted planned hangings, noting Iran was still signaling fast trials/executions and calling the claimed halt false"
+    },
+    {
+      "sid": "trump_2026:0579",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Also, we just approved $1 trillion budget.",
+      "claim_text_full": "Also, we just approved $1 trillion budget.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "the recent enacted appropriations measure was about $1.2 trillion and overall federal/discretionary budget figures were not a newly approved $1 trillion budget"
+    },
+    {
+      "sid": "trump_2026:0635",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "We're working closely with the new president of Venezuela, Delcy Rodriguez, to unleash extraordinary economic gains for both of our countri…",
+      "claim_text_full": "We're working closely with the new president of Venezuela, Delcy Rodriguez, to unleash extraordinary economic gains for both of our countries and to bring new hope to those who have suffered so terribly.",
+      "old_label": "TRUE",
+      "new_label": "MISLEADING",
+      "old_verdict": "True",
+      "new_verdict": "Misleading",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Real economic coordination (OFAC license, oil deals) exists, but framing Rodriguez as elected 'new president' and the relationship as close partnership overstates an unelected interim leader installe…"
+    },
+    {
+      "sid": "trump_2026:0642",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "But since the raid, we have worked with the new leadership, and they have ordered the closure of that vile prison and released hundreds of…",
+      "claim_text_full": "But since the raid, we have worked with the new leadership, and they have ordered the closure of that vile prison and released hundreds of political prisoners already with more to come.",
+      "old_label": "MISLEADING",
+      "new_label": "TRUE",
+      "old_verdict": "Misleading",
+      "new_verdict": "True",
+      "change_class": "decided_to_decided_changed",
+      "rationale": "Evidence confirms ordered closure of El Helicoide and hundreds of political prisoners released since the raid, with more pending under the amnesty law."
+    },
+    {
+      "sid": "clinton_1998:0021",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "We have the smallest government in 35 years, but a more progressive one.",
+      "claim_text_full": "We have the smallest government in 35 years, but a more progressive one.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0026",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "This year, our deficit is projected to be $10 billion and heading lower.",
+      "claim_text_full": "This year, our deficit is projected to be $10 billion and heading lower.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0028",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Tonight I come before you to announce that the federal deficit, once so incomprehensibly large that it had 11 zeros, will be, simply, zero.",
+      "claim_text_full": "Tonight I come before you to announce that the federal deficit, once so incomprehensibly large that it had 11 zeros, will be, simply, zero.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0029",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "I will submit to Congress for 1999 the first balanced budget in 30 years.",
+      "claim_text_full": "I will submit to Congress for 1999 the first balanced budget in 30 years.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0038",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that immediately follow.",
+      "claim_text_full": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that immediately follow.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Now, with these teachers—listen—with these teachers, we will actually be able to reduce class size in the first, second, and third grades t…",
+      "claim_text_full": "Now, with these teachers—listen—with these teachers, we will actually be able to reduce class size in the first, second, and third grades to an average of 18 students a class, all across America.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0090",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "In the last five years, we have led the way in opening new markets, with 240 trade agreements that remove foreign barriers to products bear…",
+      "claim_text_full": "In the last five years, we have led the way in opening new markets, with 240 trade agreements that remove foreign barriers to products bearing the proud stamp \"Made in the USA.\"",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0132",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "I'm pleased to report we have also met that goal, two full years ahead of schedule.",
+      "claim_text_full": "I'm pleased to report we have also met that goal, two full years ahead of schedule.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0194",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Drug use is on the decline.",
+      "claim_text_full": "Drug use is on the decline.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0226",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "His father was a decorated Vietnam vet.",
+      "claim_text_full": "His father was a decorated Vietnam vet.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0364",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Nearly 200 years ago, a tattered flag, its broad stripes and bright stars still gleaming through the smoke of a fierce battle, moved Franci…",
+      "claim_text_full": "Nearly 200 years ago, a tattered flag, its broad stripes and bright stars still gleaming through the smoke of a fierce battle, moved Francis Scott Key to scribble a few words on the back of an envelope, the words that became our national anthem.",
+      "old_label": "FALSE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "False",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "gwbush_2006:0024",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "In 1945, there were about two dozen lonely democracies in the world.",
+      "claim_text_full": "In 1945, there were about two dozen lonely democracies in the world.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "gwbush_2006:0133",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "Our economy is healthy and vigorous and growing faster than other major industrialized nations.",
+      "claim_text_full": "Our economy is healthy and vigorous and growing faster than other major industrialized nations.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "In the last five years, the tax relief you passed has left $880 billion in the hands of American workers, investors, small businesses, and…",
+      "claim_text_full": "In the last five years, the tax relief you passed has left $880 billion in the hands of American workers, investors, small businesses, and families.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "gwbush_2006:0155",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "This year my budget will cut it again, and reduce or eliminate more than 140 programs that are performing poorly or not fulfilling essentia…",
+      "claim_text_full": "This year my budget will cut it again, and reduce or eliminate more than 140 programs that are performing poorly or not fulfilling essential priorities.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "By passing these reforms, we will save the American taxpayer another $14 billion next year and stay on track to cut the deficit in half by…",
+      "claim_text_full": "By passing these reforms, we will save the American taxpayer another $14 billion next year and stay on track to cut the deficit in half by 2009.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "obama_2014:0055",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "With the economy picking up speed, companies say they intend to hire more people this year.",
+      "claim_text_full": "With the economy picking up speed, companies say they intend to hire more people this year.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "obama_2014:0121",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "But first, this Congress needs to restore the unemployment insurance you just let expire for 1.6 million people.",
+      "claim_text_full": "But first, this Congress needs to restore the unemployment insurance you just let expire for 1.6 million people.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "obama_2014:0158",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Tonight, I can announce that with the support of the FCC and companies like Apple, Microsoft, Sprint, and Verizon, we’ve got a down payment…",
+      "claim_text_full": "Tonight, I can announce that with the support of the FCC and companies like Apple, Microsoft, Sprint, and Verizon, we’ve got a down payment to start connecting more than 15,000 schools and twenty million students over the next two years, without adding a dime to the deficit.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "claim_text_full": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "obama_2014:0255",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan.",
+      "claim_text_full": "When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "obama_2014:0280",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "American diplomacy, backed by the threat of force, is why Syria’s chemical weapons are being eliminated, and we will continue to work with…",
+      "claim_text_full": "American diplomacy, backed by the threat of force, is why Syria’s chemical weapons are being eliminated, and we will continue to work with the international community to usher in the future the Syrian people deserve – a future free of dictatorship, terror and fear.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "obama_2014:0283",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "As we gather here tonight, Iran has begun to eliminate its stockpile of higher levels of enriched uranium.",
+      "claim_text_full": "As we gather here tonight, Iran has begun to eliminate its stockpile of higher levels of enriched uranium.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0045",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Putin is now isolated from the world more than ever.",
+      "claim_text_full": "Putin is now isolated from the world more than ever.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0051",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "The US Department of Justice is assembling a dedicated task force to go after the crimes of Russian oligarchs.",
+      "claim_text_full": "The US Department of Justice is assembling a dedicated task force to go after the crimes of Russian oligarchs.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0154",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Intel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to $100 billion.",
+      "claim_text_full": "Intel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to $100 billion.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0168",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "GM is making the largest investment in its history—$7 billion to build electric vehicles, creating 4,000 jobs in Michigan.",
+      "claim_text_full": "GM is making the largest investment in its history—$7 billion to build electric vehicles, creating 4,000 jobs in Michigan.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0194",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Top business leaders and most Americans support my plan.",
+      "claim_text_full": "Top business leaders and most Americans support my plan.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0200",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Insulin costs about $10 a vial to make.",
+      "claim_text_full": "Insulin costs about $10 a vial to make.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0244",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "By the end of this year, the deficit will be down to less than half what it was before I took office.",
+      "claim_text_full": "By the end of this year, the deficit will be down to less than half what it was before I took office.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0285",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "And we’re launching the “Test to Treat” initiative so people can get tested at a pharmacy, and if they’re positive, receive antiviral pills…",
+      "claim_text_full": "And we’re launching the “Test to Treat” initiative so people can get tested at a pharmacy, and if they’re positive, receive antiviral pills on the spot at no cost.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0311",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation.",
+      "claim_text_full": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0362",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democr…",
+      "claim_text_full": "Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0366",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "We’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.",
+      "claim_text_full": "We’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.",
+      "old_label": "Models split",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Models split",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "biden_2022:0437",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "The VA is pioneering new ways of linking toxic exposures to diseases, already helping more veterans get benefits.",
+      "claim_text_full": "The VA is pioneering new ways of linking toxic exposures to diseases, already helping more veterans get benefits.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0035",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Mortgage rates are the lowest in four years and falling fast, and the annual cost of a typical new mortgage is down almost $5,000 just sinc…",
+      "claim_text_full": "Mortgage rates are the lowest in four years and falling fast, and the annual cost of a typical new mortgage is down almost $5,000 just since I took office, one year.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0040",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "The stock market has set 53 all-time record highs since the election.",
+      "claim_text_full": "The stock market has set 53 all-time record highs since the election.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0090",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer v…",
+      "claim_text_full": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer version right in Los Angeles.",
+      "old_label": "FALSE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "False",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0100",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "He was badly wounded and almost killed by enemy machine guns in Luzon.",
+      "claim_text_full": "He was badly wounded and almost killed by enemy machine guns in Luzon.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0110",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "She thought she was going to die.",
+      "claim_text_full": "She thought she was going to die.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0161",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time they turn 18.",
+      "claim_text_full": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time they turn 18.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0191",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Many of the wars I settled was because of the threat of tariffs.",
+      "claim_text_full": "Many of the wars I settled was because of the threat of tariffs.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0279",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "She placed bids on 20 homes and lost all of those bids to gigantic investment firms that bypassed inspection, paid all cash and turned thos…",
+      "claim_text_full": "She placed bids on 20 homes and lost all of those bids to gigantic investment firms that bypassed inspection, paid all cash and turned those houses into rentals, stealing away her American dream.",
+      "old_label": "UNVERIFIABLE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0294",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Your 401(k)s are way up.",
+      "claim_text_full": "Your 401(k)s are way up.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0310",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $19 billion from the…",
+      "claim_text_full": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $19 billion from the American taxpayer.",
+      "old_label": "FALSE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "False",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0325",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car traveling at 60 miles an…",
+      "claim_text_full": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car traveling at 60 miles an hour or more.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0326",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "The driver was an illegal alien let in by Joe Biden and given a commercial driver's license by open borders politicians in California.",
+      "claim_text_full": "The driver was an illegal alien let in by Joe Biden and given a commercial driver's license by open borders politicians in California.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0327",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Doctors said Delilah would never be able to walk or talk, have a good life.",
+      "claim_text_full": "Doctors said Delilah would never be able to walk or talk, have a good life.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0328",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "She wouldn't even be able to eat again.",
+      "claim_text_full": "She wouldn't even be able to eat again.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0329",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "But against all odds, she is now in the first grade, learning to walk.",
+      "claim_text_full": "But against all odds, she is now in the first grade, learning to walk.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0334",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Many, if not most, illegal aliens do not speak English and cannot read even the most basic road signs as to direction, speed, danger or loc…",
+      "claim_text_full": "Many, if not most, illegal aliens do not speak English and cannot read even the most basic road signs as to direction, speed, danger or location.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0400",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "In 2021, Sage was 14 when school officials in Virginia sought to socially transition her to a new gender, treating her as a boy and hiding…",
+      "claim_text_full": "In 2021, Sage was 14 when school officials in Virginia sought to socially transition her to a new gender, treating her as a boy and hiding it from her parents.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0402",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Before long, a confused Sage ran away from home.",
+      "claim_text_full": "Before long, a confused Sage ran away from home.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0428",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping America's next gen…",
+      "claim_text_full": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping America's next generation positioned to succeed and strongly succeed in the future.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0469",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Sarah Beckstrom died in order to defend our capital.",
+      "claim_text_full": "Sarah Beckstrom died in order to defend our capital.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0553",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 soldiers are dying eac…",
+      "claim_text_full": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 soldiers are dying each and every month.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0559",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people with what's called ro…",
+      "claim_text_full": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people with what's called roadside bombs.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0564",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,000 protesters in the…",
+      "claim_text_full": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,000 protesters in their own country.",
+      "old_label": "MISLEADING",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "Misleading",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0569",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "After Midnight Hammer, they were warned to make no future attempts to rebuild their weapons program in a particular, nuclear weapons, yet t…",
+      "claim_text_full": "After Midnight Hammer, they were warned to make no future attempts to rebuild their weapons program in a particular, nuclear weapons, yet they continue starting it all over.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0616",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stopped it completely com…",
+      "claim_text_full": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stopped it completely coming in by water or sea.",
+      "old_label": "FALSE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "False",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0639",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the regime's really infamo…",
+      "claim_text_full": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the regime's really infamous prison in Caracas.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0652",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "But the deeds of one warrior that night will live forever in the eternal chronicles of military valor, Chief Warrant Officer Five, Eric Slo…",
+      "claim_text_full": "But the deeds of one warrior that night will live forever in the eternal chronicles of military valor, Chief Warrant Officer Five, Eric Slover, planned the mission and was the flight lead in the cockpit of the first helicopter.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0666",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "The success of the entire mission and the lives of his fellow warriors hinge on Eric's ability to take the searing pain, it was unbelievabl…",
+      "claim_text_full": "The success of the entire mission and the lives of his fellow warriors hinge on Eric's ability to take the searing pain, it was unbelievable what's happened to his legs, of the bullets and keep on flying and landing and people knew what was happening.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0683",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "In the skies over Korea in 1952, Royce was in the dogfight of a lifetime, legendary dogfight.",
+      "claim_text_full": "In the skies over Korea in 1952, Royce was in the dogfight of a lifetime, legendary dogfight.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0685",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "It was his first aerial combat of the war and despite being massively outnumbered and outgunned, Royce led the takedown of four enemy jets…",
+      "claim_text_full": "It was his first aerial combat of the war and despite being massively outnumbered and outgunned, Royce led the takedown of four enemy jets and almost destroyed the others, vanquishing his adversaries while taking 263 bullets to his own plane and being seriously hurt.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "trump_2026:0686",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "His story was secret for over 50 years.",
+      "claim_text_full": "His story was secret for over 50 years.",
+      "old_label": "TRUE",
+      "new_label": "gated-UNVERIFIABLE",
+      "old_verdict": "True",
+      "new_verdict": "Unverifiable",
+      "change_class": "newly_gated",
+      "rationale": "Forced UNVERIFIABLE: the evidence pack failed the quality gate (too few qualifying Tier-1..3 sources bearing on the core assertion) after one targeted re-retrieval."
+    },
+    {
+      "sid": "clinton_1998:0056",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Since then, this Congress—across party lines—and the American people have responded, in the most important year for education in a generati…",
+      "claim_text_full": "Since then, this Congress—across party lines—and the American people have responded, in the most important year for education in a generation, expanding public school choice, opening the way to 3,000 new charter schools, working to connect every classroom in the country to the information superhighway, committing to expand Head Start to a million children, launching America Reads, sending literally thousands of college students into our elementary schools to make sure all our 8-year-olds can read.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Each cited initiative — 3,000 charters, America Reads with college tutors, Head Start toward a million, classroom connectivity — is corroborated by government records, and the claim frames them as co…"
+    },
+    {
+      "sid": "clinton_1998:0113",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Recent months have brought serious financial problems to Thailand, Indonesia, South Korea, and beyond.",
+      "claim_text_full": "Recent months have brought serious financial problems to Thailand, Indonesia, South Korea, and beyond.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "IMF bailouts for South Korea and Indonesia plus contemporaneous reporting confirm serious 1997–98 financial crises across Thailand, Indonesia, and South Korea."
+    },
+    {
+      "sid": "clinton_1998:0173",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "Last year I cohosted the very first White House Conference on Child Care with one of our foremost experts, America's First Lady.",
+      "claim_text_full": "Last year I cohosted the very first White House Conference on Child Care with one of our foremost experts, America's First Lady.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Multiple sources confirm Clinton co-hosted the first-ever White House Conference on Child Care with the First Lady on Oct 23, 1997 — the year before the Jan 1998 utterance."
+    },
+    {
+      "sid": "clinton_1998:0332",
+      "speech_id": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "claim_text": "This year Hillary and I launched the White House Millennium Program to promote America's creativity and innovation, and to preserve our her…",
+      "claim_text_full": "This year Hillary and I launched the White House Millennium Program to promote America's creativity and innovation, and to preserve our heritage and culture into the 21st century.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "contemporary official and news records show Clinton and Hillary Clinton launched the White House Millennium Program in 1997 to celebrate American creativity and preserve heritage and culture into the…"
+    },
+    {
+      "sid": "gwbush_2006:0095",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "The same is true of Iran, a nation now held hostage by a small clerical elite that is isolating and repressing its people.",
+      "claim_text_full": "The same is true of Iran, a nation now held hostage by a small clerical elite that is isolating and repressing its people.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Contemporaneous HRW, UN, and State Department reporting confirm Iran was governed by a clerical elite (Guardian Council vetting) that repressed and isolated its people."
+    },
+    {
+      "sid": "gwbush_2006:0206",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "We've made a good start in the early grades with the No Child Left Behind Act, which is raising standards and lifting test scores across ou…",
+      "claim_text_full": "We've made a good start in the early grades with the No Child Left Behind Act, which is raising standards and lifting test scores across our country.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Government NAEP data show real early-grade (4th) math (+3) and reading (+1) gains through 2005, supporting the hedged 'good start in the early grades' claim, though NCLB causation is contested."
+    },
+    {
+      "sid": "gwbush_2006:0245",
+      "speech_id": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "claim_text": "And this good work is being led by our First Lady, Laura Bush.",
+      "claim_text_full": "And this good work is being led by our First Lady, Laura Bush.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Multiple contemporaneous government and official sources confirm Laura Bush led the Helping America's Youth initiative as of the utterance date."
+    },
+    {
+      "sid": "obama_2014:0045",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans…",
+      "claim_text_full": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans and military spouses.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "290,000 hired/trained by April 2013 (E4) trajectory supports ~400,000 by the January 2014 utterance, and the figure appears in official SOTU records."
+    },
+    {
+      "sid": "obama_2014:0086",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "It’s not just oil and natural gas production that’s booming; we’re becoming a global leader in solar, too.",
+      "claim_text_full": "It’s not just oil and natural gas production that’s booming; we’re becoming a global leader in solar, too.",
+      "old_label": "Models split",
+      "new_label": "TRUE",
+      "old_verdict": "Models split",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Contemporary data show record US solar installs (surpassing Germany, joining top-tier installers) and rapid growth, supporting the hedged 'becoming a global leader' claim."
+    },
+    {
+      "sid": "obama_2014:0087",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job can’t be outsourced.",
+      "claim_text_full": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job can’t be outsourced.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "GTM Research documents one U.S. solar system installed every four minutes in 2013, and BLS/DOE evidence confirms installation is domestic, non-outsourceable labor."
+    },
+    {
+      "sid": "obama_2014:0198",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Right now, it helps about half of all parents at some point.",
+      "claim_text_full": "Right now, it helps about half of all parents at some point.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "CBPP and CEA reports confirm about half of taxpayers with children claim the EITC at some point over a multi-decade period, matching the claim."
+    },
+    {
+      "sid": "biden_2022:0127",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "That’s why it was so important to pass the Bipartisan Infrastructure Law—the most sweeping investment to rebuild America in history.",
+      "claim_text_full": "That’s why it was so important to pass the Bipartisan Infrastructure Law—the most sweeping investment to rebuild America in history.",
+      "old_label": "Models split",
+      "new_label": "MISLEADING",
+      "old_verdict": "Models split",
+      "new_verdict": "Misleading",
+      "change_class": "newly_decided",
+      "rationale": "The core—a massive historic infrastructure investment—is real, but the absolute superlative 'most sweeping in history' overstates it; the one independent source (E10) calibrates to 'largest in decade…"
+    },
+    {
+      "sid": "biden_2022:0216",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "Many families pay up to $14,000 a year for child care per child.",
+      "claim_text_full": "Many families pay up to $14,000 a year for child care per child.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "High-cost-area child care demonstrably reaches ~$14k+ per child, supporting the 'up to $14,000' framing."
+    },
+    {
+      "sid": "biden_2022:0432",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body.",
+      "claim_text_full": "But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body.",
+      "old_label": "Models split",
+      "new_label": "MISLEADING",
+      "old_verdict": "Models split",
+      "new_verdict": "Misleading",
+      "change_class": "newly_decided",
+      "rationale": ""
+    },
+    {
+      "sid": "trump_2026:0030",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+      "claim_text_full": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+      "old_label": "Models split",
+      "new_label": "FALSE",
+      "old_verdict": "Models split",
+      "new_verdict": "False",
+      "change_class": "newly_decided",
+      "rationale": "the latest supported core CPI figure was a recent low but only framed as lowest since March 2021, not more than five years, while core PCE was not at a five-year low"
+    },
+    {
+      "sid": "trump_2026:0099",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "He fought bravely in the famous Battle of Manila, worked so hard.",
+      "claim_text_full": "He fought bravely in the famous Battle of Manila, worked so hard.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Independent biographical reporting confirms Taggart served under MacArthur and fought in the real Battle of Manila/Luzon, matching the core assertion without material exaggeration."
+    },
+    {
+      "sid": "trump_2026:0341",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being stabbed 25 times.",
+      "claim_text_full": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being stabbed 25 times.",
+      "old_label": "gated-UNVERIFIABLE",
+      "new_label": "TRUE",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "True",
+      "change_class": "newly_decided",
+      "rationale": "Contemporary sentencing coverage confirms mother found 16-yr-old cheerleader Lizbeth Medina stabbed to death in a bathtub before the Christmas parade, matching the claim."
+    },
+    {
+      "sid": "obama_2014:0034",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Upward mobility has stalled.",
+      "claim_text_full": "Upward mobility has stalled.",
+      "old_label": "FALSE",
+      "new_label": "Models split",
+      "old_verdict": "False",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "obama_2014:0070",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Over the past five years, my administration has made more loans to small business owners than any other.",
+      "claim_text_full": "Over the past five years, my administration has made more loans to small business owners than any other.",
+      "old_label": "TRUE",
+      "new_label": "Models split",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "obama_2014:0285",
+      "speech_id": "obama_2014",
+      "speaker": "Barack Obama",
+      "claim_text": "Unprecedented inspections help the world verify, every day, that Iran is not building a bomb.",
+      "claim_text_full": "Unprecedented inspections help the world verify, every day, that Iran is not building a bomb.",
+      "old_label": "TRUE",
+      "new_label": "Models split",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "biden_2022:0385",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "I signed 80 bipartisan bills into law last year.",
+      "claim_text_full": "I signed 80 bipartisan bills into law last year.",
+      "old_label": "TRUE",
+      "new_label": "Models split",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "biden_2022:0397",
+      "speech_id": "biden_2022",
+      "speaker": "Joe Biden",
+      "claim_text": "I believe in recovery, and I celebrate the 23 million Americans in recovery.",
+      "claim_text_full": "I believe in recovery, and I celebrate the 23 million Americans in recovery.",
+      "old_label": "TRUE",
+      "new_label": "Models split",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "trump_2026:0015",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "Today, our border is secure.",
+      "claim_text_full": "Today, our border is secure.",
+      "old_label": "MISLEADING",
+      "new_label": "Models split",
+      "old_verdict": "Misleading",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "trump_2026:0043",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+      "claim_text_full": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+      "old_label": "FALSE",
+      "new_label": "Models split",
+      "old_verdict": "False",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "trump_2026:0257",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "But a few weeks ago, she logged on to the website and got that same drug that cost costs $4,000, got it for under $500, a reduction of much…",
+      "claim_text_full": "But a few weeks ago, she logged on to the website and got that same drug that cost costs $4,000, got it for under $500, a reduction of much more actually than $3,500.",
+      "old_label": "TRUE",
+      "new_label": "Models split",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    },
+    {
+      "sid": "trump_2026:0462",
+      "speech_id": "trump_2026",
+      "speaker": "Donald Trump",
+      "claim_text": "After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted.",
+      "claim_text_full": "After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted.",
+      "old_label": "TRUE",
+      "new_label": "Models split",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "change_class": "split_changes",
+      "rationale": ""
+    }
+  ],
+  "spend": {
+    "per_speech": [
+      {
+        "speech_id": "clinton_1998",
+        "speaker": "Bill Clinton",
+        "old_run_id": "7c59e9e0-0062-487d-84e3-4af15ab94aab",
+        "new_run_id": "d0010426-2e8f-4449-b839-60f85d923d56",
+        "claims": 92,
+        "legs": 1,
+        "proxy_usd_ledger_true": 0.8791,
+        "offproxy_usd_ESTIMATE": 5.9663,
+        "log_total_usd": 6.8454,
+        "brief_stated_usd": 6.85,
+        "delta_vs_brief": -0.0046,
+        "note": "single leg, 19 chunks"
+      },
+      {
+        "speech_id": "gwbush_2006",
+        "speaker": "George W. Bush",
+        "old_run_id": "92f39851-8870-4609-97f6-458798d5dbb8",
+        "new_run_id": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+        "claims": 48,
+        "legs": 1,
+        "proxy_usd_ledger_true": 0.2479,
+        "offproxy_usd_ESTIMATE": 2.8344,
+        "log_total_usd": 3.0823,
+        "brief_stated_usd": 3.08,
+        "delta_vs_brief": 0.0023,
+        "note": "single leg, 10 chunks"
+      },
+      {
+        "speech_id": "obama_2014",
+        "speaker": "Barack Obama",
+        "old_run_id": "28965cdf-046e-4c87-a5d1-d21b6529c625",
+        "new_run_id": "4de8a551-ea99-440d-aca0-12a133e620e3",
+        "claims": 96,
+        "legs": 2,
+        "proxy_usd_ledger_true": 0.7577,
+        "offproxy_usd_ESTIMATE": 6.478,
+        "log_total_usd": 7.2357,
+        "brief_stated_usd": 7.24,
+        "delta_vs_brief": -0.0043,
+        "note": "leg 1 banked 80/96 rows (proxy $0.6586, off-proxy est $5.4007) before an L-W worker failure; leg 2 ran the remaining 16 (proxy $0.0991, off-proxy est $1.0773)"
+      },
+      {
+        "speech_id": "biden_2022",
+        "speaker": "Joe Biden",
+        "old_run_id": "7208bbbb-c802-4155-932f-d0cc66803b24",
+        "new_run_id": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+        "claims": 111,
+        "legs": 2,
+        "proxy_usd_ledger_true": 0.7361,
+        "offproxy_usd_ESTIMATE": 7.6371,
+        "log_total_usd": 8.3732,
+        "brief_stated_usd": 8.0,
+        "delta_vs_brief": 0.3732,
+        "note": "leg 1 banked 60/111 rows (proxy $0.3480, off-proxy est $4.3690) before a browsing-model timeout; leg 2 ran the remaining 51 (proxy $0.3881, off-proxy est $3.2681)"
+      },
+      {
+        "speech_id": "trump_2026",
+        "speaker": "Donald Trump",
+        "old_run_id": "23939712-59ea-449d-93f7-a0a0b449efd8",
+        "new_run_id": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+        "claims": 182,
+        "legs": 1,
+        "proxy_usd_ledger_true": 1.7272,
+        "offproxy_usd_ESTIMATE": 11.8864,
+        "log_total_usd": 13.6136,
+        "brief_stated_usd": 13.61,
+        "delta_vs_brief": 0.0036,
+        "note": "single leg, 37 chunks"
+      }
+    ],
+    "shape_backfill_usd_ledger_true": 0.63,
+    "proxy_usd_ledger_true": 4.978,
+    "offproxy_usd_ESTIMATE": 34.8022,
+    "log_derived_total_usd": 39.7802,
+    "brief_stated_per_speech_sum_usd": 38.78,
+    "brief_stated_total_usd": 38.8,
+    "cost_basis": {
+      "proxy": "ledger-true — billed by the LiteLLM proxy key",
+      "off_proxy": "ESTIMATE — models called outside the proxy, costed from token counts at published list rates",
+      "mixed": true,
+      "offproxy_is_lower_bound": true,
+      "resumed_speeches": [
+        "obama_2014",
+        "biden_2022"
+      ],
+      "disclosure": "MIXED COST BASIS, AND A KNOWN UNDERCOUNT — this total is a lower bound, not a receipt. `proxy` is LEDGER-TRUE: the LiteLLM proxy key was billed and the figure is read back from that ledger. `off-proxy` is an ESTIMATE: models called outside the proxy, costed from token counts at published list rates. The two are summed here because there is no better corpus number, but they are not the same kind of evidence. Separately, obama_2014 and biden_2022 were interrupted and RESUMED, and phase3_rebuild banks only PROXY spend in the chunk journal (append_chunk_journal is handed the proxy_key_spend delta), so a resumed session carries the prior leg's proxy cost forward and DROPS that leg's off-proxy estimate — which is why those two runs' self-reported totals ($1.8350 obama_2014, $4.0042 biden_2022) are far below the per-leg figures reconstructed in this table. That reconstruction recovers only what was banked: both legs died inside the following chunk, after its retrieval had already run and before anything was journalled, and that spend is unrecoverable. The off-proxy component — and therefore the corpus total — is a LOWER BOUND, and the two resumed runs' per-claim rates must not be used to price future work (DC-B1 prices off the three single-session runs only)."
+    },
+    "basis_disclosure": "MIXED COST BASIS, AND A KNOWN UNDERCOUNT — this total is a lower bound, not a receipt. `proxy` is LEDGER-TRUE: the LiteLLM proxy key was billed and the figure is read back from that ledger. `off-proxy` is an ESTIMATE: models called outside the proxy, costed from token counts at published list rates. The two are summed here because there is no better corpus number, but they are not the same kind of evidence. Separately, obama_2014 and biden_2022 were interrupted and RESUMED, and phase3_rebuild banks only PROXY spend in the chunk journal (append_chunk_journal is handed the proxy_key_spend delta), so a resumed session carries the prior leg's proxy cost forward and DROPS that leg's off-proxy estimate — which is why those two runs' self-reported totals ($1.8350 obama_2014, $4.0042 biden_2022) are far below the per-leg figures reconstructed in this table. That reconstruction recovers only what was banked: both legs died inside the following chunk, after its retrieval had already run and before anything was journalled, and that spend is unrecoverable. The off-proxy component — and therefore the corpus total — is a LOWER BOUND, and the two resumed runs' per-claim rates must not be used to price future work (DC-B1 prices off the three single-session runs only).",
+    "discrepancies": [
+      "biden_2022: run logs total $8.3732 vs $8.00 stated in the DC-6 brief (+0.3732)",
+      "corpus: run logs total $39.7802 (incl. $0.63 shape backfill) vs ~$38.80 stated in the brief; the brief's per-speech figures themselves sum to $38.78 BEFORE the backfill, so the stated total appears to double-count the backfill as already included"
+    ]
+  },
+  "render": {
+    "site_root": "/tmp/dc6-site-a9",
+    "reports": 5,
+    "claims": 529,
+    "artifacts": [
+      {
+        "speech_id": "clinton_1998",
+        "run_id": "d0010426-2e8f-4449-b839-60f85d923d56",
+        "expected_run_id": "d0010426-2e8f-4449-b839-60f85d923d56",
+        "ok": true
+      },
+      {
+        "speech_id": "gwbush_2006",
+        "run_id": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+        "expected_run_id": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+        "ok": true
+      },
+      {
+        "speech_id": "obama_2014",
+        "run_id": "4de8a551-ea99-440d-aca0-12a133e620e3",
+        "expected_run_id": "4de8a551-ea99-440d-aca0-12a133e620e3",
+        "ok": true
+      },
+      {
+        "speech_id": "biden_2022",
+        "run_id": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+        "expected_run_id": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+        "ok": true
+      },
+      {
+        "speech_id": "trump_2026",
+        "run_id": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+        "expected_run_id": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+        "ok": true
+      }
+    ],
+    "picked_all_new": true,
+    "selection_errors": [],
+    "violations": []
+  },
+  "badge_diff": {
+    "keyed_on": "(speaker, normalised claim_text)",
+    "old_claims": 530,
+    "new_claims": 529,
+    "matched": 529,
+    "only_old": 1,
+    "only_new": 0,
+    "verdict_changes": 139,
+    "duplicate_keys_old": 0,
+    "duplicate_keys_new": 0,
+    "id_overlap": 0,
+    "id_keying_would_be_vacuous": true,
+    "changes": [
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "American diplomacy, backed by the threat of force, is why Syria’s chemical weapons are being eliminated, and we will continue to work with…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "As we gather here tonight, Iran has begun to eliminate its stockpile of higher levels of enriched uranium.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Because of this law, no American can ever again be dropped or denied coverage for a preexisting condition like asthma, back pain, or cancer.",
+        "old_verdict": "False",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "But first, this Congress needs to restore the unemployment insurance you just let expire for 1.6 million people.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job can’t be outsourced.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "It’s not just oil and natural gas production that’s booming; we’re becoming a global leader in solar, too.",
+        "old_verdict": "Models split",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Just one week earlier, Amanda said, that surgery would’ve meant bankruptcy.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Last year, I also pledged to connect 99 percent of our students to high-speed broadband over the next four years.",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "More than nine million Americans have signed up for private health insurance or Medicaid coverage.",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Over the past five years, my administration has made more loans to small business owners than any other.",
+        "old_verdict": "True",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Right now, it helps about half of all parents at some point.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "She put herself through college.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans…",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Tonight, I can announce that with the support of the FCC and companies like Apple, Microsoft, Sprint, and Verizon, we’ve got a down payment…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Unprecedented inspections help the world verify, every day, that Iran is not building a bomb.",
+        "old_verdict": "True",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "Upward mobility has stalled.",
+        "old_verdict": "False",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Barack Obama",
+        "claim_text": "With the economy picking up speed, companies say they intend to hire more people this year.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Crime has dropped for a record five years in a row, and the welfare rolls are at their lowest levels in 27 years.",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Drug use is on the decline.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "His father was a decorated Vietnam vet.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "I think every American should know that most juvenile crime is committed between the hours of 3 in the afternoon and 8 at night.",
+        "old_verdict": "False",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "I will submit to Congress for 1999 the first balanced budget in 30 years.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "I'm pleased to report we have also met that goal, two full years ahead of schedule.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "In the last five years, we have led the way in opening new markets, with 240 trade agreements that remove foreign barriers to products bear…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Last year I cohosted the very first White House Conference on Child Care with one of our foremost experts, America's First Lady.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Last year I proposed and you passed 220,000 new Pell grant scholarships for deserving students.",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Millions of Americans between the ages of 55 and 65 have lost their health insurance.",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Nearly 200 years ago, a tattered flag, its broad stripes and bright stars still gleaming through the smoke of a fierce battle, moved Franci…",
+        "old_verdict": "False",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that immediately follow.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Now, think about this: The entire store of human knowledge now doubles every five years.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Now, with these teachers—listen—with these teachers, we will actually be able to reduce class size in the first, second, and third grades t…",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Recent months have brought serious financial problems to Thailand, Indonesia, South Korea, and beyond.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Since then, about 15 million people have taken advantage of it, and I've met a lot of them all across this country.",
+        "old_verdict": "Misleading",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Since then, this Congress—across party lines—and the American people have responded, in the most important year for education in a generati…",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Thanks to the actions of this Congress last year, we will soon have, for the very first time, a voluntary national test based on national s…",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "This year Hillary and I launched the White House Millennium Program to promote America's creativity and innovation, and to preserve our her…",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "This year, our deficit is projected to be $10 billion and heading lower.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Tonight I come before you to announce that the federal deficit, once so incomprehensibly large that it had 11 zeros, will be, simply, zero.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "Under the leadership of Vice President Gore, we've reduced the federal payroll by 300,000 workers, cut 16,000 pages of regulation, eliminat…",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Bill Clinton",
+        "claim_text": "We have the smallest government in 35 years, but a more progressive one.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "After a four-month deployment, she voluntarily extended her service, and her rank was going to be lifted.",
+        "old_verdict": "True",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "After four years in which millions and millions of illegal aliens poured across our borders totally unvetted and unchecked, we now have the…",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "After Midnight Hammer, they were warned to make no future attempts to rebuild their weapons program in a particular, nuclear weapons, yet t…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Also, we just approved $1 trillion budget.",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "American natural gas production is at an all-time high because I kept my promise to drill baby drill.",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "And in the last three months of 2025, it was down to 1.7 percent.",
+        "old_verdict": "False",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "And just over the last couple of months with the protests, they've killed at least, it looks like 32,000 protests, 32,000 protesters in the…",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "And last year the murder rate saw its single largest decline in recorded history.",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "And Los Angeles is going to be safe just like Washington D.C. is now one of the safest cities in the country.",
+        "old_verdict": "False",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "And students and educators in every state have joined the First Lady's efforts in the presidential AI challenge, keeping America's next gen…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "And we're working very hard to end the ninth war, the killing and slaughter between Russia and Ukraine, where 25,000 soldiers are dying eac…",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "And with our new military campaign, we have stopped record amounts of drugs coming into our country and virtually stopped it completely com…",
+        "old_verdict": "False",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "As the waters threatened to sweep her away, 11-year-old Millie Kate McClelland closed her eyes and prayed to God.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Before long, a confused Sage ran away from home.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "But a few weeks ago, she logged on to the website and got that same drug that cost costs $4,000, got it for under $500, a reduction of much…",
+        "old_verdict": "True",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "But after Enrique ran for office and opposed Maduro, he was kidnaped by Maduro's security forces and thrown into the regime's really infamo…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "But against all odds, she is now in the first grade, learning to walk.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "But in 12 months, my administration has driven core inflation down to the lowest level in more than five years.",
+        "old_verdict": "Models split",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "But since the raid, we have worked with the new leadership, and they have ordered the closure of that vile prison and released hundreds of…",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "But the deeds of one warrior that night will live forever in the eternal chronicles of military valor, Chief Warrant Officer Five, Eric Slo…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "But the good news is that almost all countries and corporations want to keep the deal that they already made.",
+        "old_verdict": "False",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car traveling at 60 miles an…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Doctors said Delilah would never be able to walk or talk, have a good life.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "He fought bravely in the famous Battle of Manila, worked so hard.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "He was badly wounded and almost killed by enemy machine guns in Luzon.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our c…",
+        "old_verdict": "False",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being stabbed 25 times.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "His story was secret for over 50 years.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "I was there.",
+        "old_verdict": "False",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer v…",
+        "old_verdict": "False",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "In 2021, Sage was 14 when school officials in Virginia sought to socially transition her to a new gender, treating her as a boy and hiding…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+        "old_verdict": "False",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "In my first 10 months I ended eight wars, including Cambodia.",
+        "old_verdict": "Misleading",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "In the skies over Korea in 1952, Royce was in the dogfight of a lifetime, legendary dogfight.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "It was his first aerial combat of the war and despite being massively outnumbered and outgunned, Royce led the takedown of four enemy jets…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Many of the wars I settled was because of the threat of tariffs.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Many, if not most, illegal aliens do not speak English and cannot read even the most basic road signs as to direction, speed, danger or loc…",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no tax on overtime and…",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "More Americans are working today than at any time in the history of our country.",
+        "old_verdict": "True",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Mortgage rates are the lowest in four years and falling fast, and the annual cost of a typical new mortgage is down almost $5,000 just sinc…",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's face as she looked up…",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Other presidents tried to do it, but they never could.",
+        "old_verdict": "False",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Sarah Beckstrom died in order to defend our capital.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "She wouldn't even be able to eat again.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time they turn 18.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "The driver was an illegal alien let in by Joe Biden and given a commercial driver's license by open borders politicians in California.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "The price of eggs is down 60 percent.",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "The Somali pirates who ransacked Minnesota, remind us that there are large parts of the world where bribery, corruption, and lawlessness ar…",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "The stock market has set 53 all-time record highs since the election.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "The success of the entire mission and the lives of his fellow warriors hinge on Eric's ability to take the searing pain, it was unbelievabl…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Their policies created the high prices.",
+        "old_verdict": "Misleading",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "There's been no more stunning example than Minnesota, where members of the Somali community have pillaged an estimated $19 billion from the…",
+        "old_verdict": "False",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "They've killed and maimed thousands of American service members and hundreds of thousands and even millions of people with what's called ro…",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Think of it, much less than $1 trillion for four years versus much more than $18 trillion for one year.",
+        "old_verdict": "Misleading",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years.",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Today our border is secure, our spirit is restored, inflation is plummeting, incomes are rising fast, the roaring economy is roaring like n…",
+        "old_verdict": "Misleading",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Today, our border is secure.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "We stopped them from hanging a lot of them with the threat of serious violence.",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "We're working closely with the new president of Venezuela, Delcy Rodriguez, to unleash extraordinary economic gains for both of our countri…",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "With our government giving them hundreds and hundreds of billions of dollars a year as their stock prices soared 1,000, 1,200, 1,400 and ev…",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "You know, I asked Michael Dell, how do you make all that money?",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "Your 401(k)s are way up.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "And this good work is being led by our First Lady, Laura Bush.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "By passing these reforms, we will save the American taxpayer another $14 billion next year and stay on track to cut the deficit in half by…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "Every year of my Presidency, we've reduced the growth of nonsecurity discretionary spending, and last year you passed bills that cut this s…",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "In 1945, there were about two dozen lonely democracies in the world.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "In the last five years, the tax relief you passed has left $880 billion in the hands of American workers, investors, small businesses, and…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "Our economy is healthy and vigorous and growing faster than other major industrialized nations.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "The same is true of Iran, a nation now held hostage by a small clerical elite that is isolating and repressing its people.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "There are fewer abortions in America than at any point in the last three decades, and the number of children born to teenage mothers has be…",
+        "old_verdict": "Misleading",
+        "new_verdict": "False"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "This year my budget will cut it again, and reduce or eliminate more than 140 programs that are performing poorly or not fulfilling essentia…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "We're removing debris and repairing highways and rebuilding stronger levees.",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "George W. Bush",
+        "claim_text": "We've made a good start in the early grades with the No Child Left Behind Act, which is raising standards and lifting test scores across ou…",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "And we’re launching the “Test to Treat” initiative so people can get tested at a pharmacy, and if they’re positive, receive antiviral pills…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body.",
+        "old_verdict": "Models split",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "By the end of this year, the deficit will be down to less than half what it was before I took office.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Ford is investing $11 billion to build electric vehicles, creating 11,000 jobs across the country.",
+        "old_verdict": "Misleading",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "GM is making the largest investment in its history—$7 billion to build electric vehicles, creating 4,000 jobs in Michigan.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "He loved building Legos with their daughter.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "I believe in recovery, and I celebrate the 23 million Americans in recovery.",
+        "old_verdict": "True",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "I signed 80 bipartisan bills into law last year.",
+        "old_verdict": "True",
+        "new_verdict": "Models split"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Insulin costs about $10 a vial to make.",
+        "old_verdict": "Misleading",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Intel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to $100 billion.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their health care premium…",
+        "old_verdict": "True",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Many families pay up to $14,000 a year for child care per child.",
+        "old_verdict": "Unverifiable",
+        "new_verdict": "True"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Putin is now isolated from the world more than ever.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democr…",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "That’s why it was so important to pass the Bipartisan Infrastructure Law—the most sweeping investment to rebuild America in history.",
+        "old_verdict": "Models split",
+        "new_verdict": "Misleading"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "The US Department of Justice is assembling a dedicated task force to go after the crimes of Russian oligarchs.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "The VA is pioneering new ways of linking toxic exposures to diseases, already helping more veterans get benefits.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "Top business leaders and most Americans support my plan.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "We’ve sent 475 million vaccine doses to 112 countries, more than any other nation.",
+        "old_verdict": "True",
+        "new_verdict": "Unverifiable"
+      },
+      {
+        "speaker": "Joe Biden",
+        "claim_text": "We’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.",
+        "old_verdict": "Models split",
+        "new_verdict": "Unverifiable"
+      }
+    ],
+    "only_old_claims": [
+      {
+        "speaker": "Donald Trump",
+        "claim_text": "(claim text unavailable)",
+        "verdict": "False"
+      }
+    ],
+    "only_new_claims": []
+  },
+  "reconciliation": {
+    "per_speech_changed_total": 141,
+    "badge_invisible_changes": 2,
+    "badge_invisible_sids": [
+      "trump_2026:0110",
+      "trump_2026:0279"
+    ],
+    "expected_badge_changes": 139,
+    "actual_badge_changes": 139,
+    "agree": true,
+    "delta": 0
+  },
+  "flags": [
+    "era parity: the spread of decided-rates across the five speeches WIDENED from 4.3 pts to 10.6 pts (trump_2026 is now the least-decided at 73.1% vs clinton_1998 at 83.7%). The rebuild unified the METHOD; it did not equalise the OUTCOME",
+    "era parity flips between bases: the decided-rate spread WIDENED raw (+6.4 pts) but NARROWED with personal anecdotes excluded (-1.9 pts) — the parity reading depends on whether you count anecdotes as gate failures",
+    "trump_2026: the anecdote-parity denominator (182 compared sids) differs from section 4's tally — section 4 counts every row in each artifact, this section counts the sids the rebuild compared",
+    "trump_2026: 1 sid(s) present in the published run (183 rows) are ABSENT from the rebuild (182 rows) and were never re-adjudicated — trump_2026:0311 (old verdict FALSE, ORPHAN — the published run had no claim record for it and rendered '(claim text unavailable)'). Publishing changes that report's claim count from 183 to 182; 1 of the dropped sid(s) were orphan rows, so the drop removes a broken card rather than losing a checked claim",
+    "badge diff: 1 claim(s) present only in the published site and 0 only in the staged render",
+    "biden_2022: run logs total $8.3732 vs $8.00 stated in the DC-6 brief (+0.3732)",
+    "corpus: run logs total $39.7802 (incl. $0.63 shape backfill) vs ~$38.80 stated in the brief; the brief's per-speech figures themselves sum to $38.78 BEFORE the backfill, so the stated total appears to double-count the backfill as already included"
+  ],
+  "corrections": {
+    "changed_total": 141,
+    "ledger_eligible": 125,
+    "not_ledger_representable": 16,
+    "archive_path": "data/corrections-archive-2026-08-06.json",
+    "archived_entries": 17,
+    "archived_notes": 1,
+    "proposed_entries": 125
+  }
+}

@@ -151,6 +151,27 @@ class Evidence(BaseModel):
         le=1.0,
         description="0–1 relevance to the claim",
     )
+    one_line_why: Optional[str] = Field(
+        None,
+        description=(
+            "The COMPARISON the stance rests on, in the scorer's words — the "
+            "claim's figure against this source's figure ('claim says 3.2M new "
+            "jobs; table row for Jan 2026 shows 2.9M'). None = never scored "
+            "with the B2 contract, in which case the pack payload falls back "
+            "to the snippet, which is what every earlier item carries."
+        ),
+    )
+    arithmetic_hinge: bool = Field(
+        default=False,
+        description=(
+            "The stance depends on ARITHMETIC THE SCORER PERFORMED over the "
+            "series — a maximum across a series, a ratio, a real-terms "
+            "deflation — rather than on a figure the source states outright. "
+            "Such a stance is a HYPOTHESIS for the panel, never proof, and "
+            "must not settle a verdict on its own; these items are collected "
+            "for computed-exhibit treatment (R-2, publish/computed_exhibit.py)."
+        ),
+    )
 
 
 class Verdict(BaseModel):
@@ -437,6 +458,69 @@ class VerdictProvenance(BaseModel):
             "consolidator could not meet tier quotas even after one targeted "
             "re-retrieval, so the verdict was FORCED Unverifiable. Empty on "
             "quota-met packs and all pre-v2 runs."
+        ),
+    )
+    audit_flags: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Deterministic agreed-verdict audit findings (remediation v2, "
+            "1.12): lint names from verdict.verdict_audit that fired on this "
+            "row at publish time (e.g. 'invented_referent'). Empty on clean "
+            "rows and on all pre-audit runs."
+        ),
+    )
+    audit_queue: bool = Field(
+        default=False,
+        description=(
+            "True when a queue-action audit finding (measure_alignment) "
+            "routed this row to metrics/audits/readjudication_queue.jsonl "
+            "for HUMAN review. Never triggers a model call by itself."
+        ),
+    )
+    panel_seat_rationales: list[dict] = Field(
+        default_factory=list,
+        description=(
+            "Each seat's OWN rationale text (R-3, 2026-08-10): "
+            "[{role, verdict, confidence, reasoning, citations}]. Recorded so "
+            "(a) the stage-2 discriminator can ADOPT a stored rationale "
+            "verbatim instead of publishing a blank one, and (b) a published "
+            "models-split can show BOTH reasons instead of the bare line "
+            "'Panel split — no consensus verdict.' Empty on pre-R-3 runs, "
+            "which renders exactly today's page."
+        ),
+    )
+    rationale_provenance: dict = Field(
+        default_factory=dict,
+        description=(
+            "Non-empty when the published rationale was ADOPTED from a seat "
+            "rather than authored by the resolver that set the verdict (R-3): "
+            "{mode, adopted_from, adopted_verdict, resolver, attribution, "
+            "synthesized}. ``synthesized`` is always False — the discriminator "
+            "never writes prose. Rendered as attribution on the provenance "
+            "strip so adopted text is not mistaken for the resolver's words."
+        ),
+    )
+    coherence_note: str = Field(
+        default="",
+        description=(
+            "Adjacent-claim coherence annotation (D14, A7): non-empty when this "
+            "claim and a neighbour rate the same statistic with different "
+            "verdicts. Both are published as adjudicated and the disagreement is "
+            "DISCLOSED here rather than resolved by forcing the labels to agree. "
+            "Rendered as an editorial annotation on the claim; empty on rows "
+            "without an adjacent-coherence conflict."
+        ),
+    )
+    computed_exhibit: dict = Field(
+        default_factory=dict,
+        description=(
+            "Computed exhibit (A8 / R-2): a pinned-vintage arithmetic "
+            "derivation attached to a numeric claim-vs-series comparison — "
+            "{series, source, vintage_date, inputs, formula, result, "
+            "claim_ref}. ADMISSIBLE ONLY for numeric claim-vs-series "
+            "comparison: publish.computed_exhibit.attach refuses to attach "
+            "one to a C-EVAL judgment. Empty on every other claim and on all "
+            "pre-A8 runs, so an empty dict renders exactly today's page."
         ),
     )
 

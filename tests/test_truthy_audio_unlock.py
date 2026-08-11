@@ -44,13 +44,16 @@ def test_embedded_js_uses_promise_returning_unlock_audio() -> None:
     assert "queueMicrotask(function() { fn(ctx);" in JS
 
 
-def test_standalone_truthbot_js_default_lens_is_strict() -> None:
-    """Standalone asset must mirror embedded DEFAULT_LENS (Strict since 2026-04-30)."""
+def test_standalone_truthbot_js_has_no_lens_toggle() -> None:
+    """Standalone asset must mirror the embedded JS: the editorial-lens
+    toggle was removed (remediation v2, 1.8 / DC-4') and must not linger
+    in the package-dir mirror either."""
     from pathlib import Path
 
     js_path = Path(__file__).resolve().parents[1] / "src" / "truthbot" / "publish" / "assets" / "truthbot.js"
     js_src = js_path.read_text(encoding="utf-8")
-    assert "var DEFAULT_LENS = 'strict';" in js_src
+    assert "DEFAULT_LENS" not in js_src
+    assert "editorial-lens" not in js_src
 def test_embedded_js_queues_pointerdown_for_first_gesture_autoplay() -> None:
     """``pointerdown`` fires before the subsequent ``click``, which
     matters when the user's first interaction is a navigation link.

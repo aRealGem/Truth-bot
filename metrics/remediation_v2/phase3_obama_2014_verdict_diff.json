@@ -1,0 +1,703 @@
+{
+  "speech_id": "obama_2014",
+  "rebuild_of": "28965cdf-046e-4c87-a5d1-d21b6529c625",
+  "new_run_id": "4de8a551-ea99-440d-aca0-12a133e620e3",
+  "old_tally": {
+    "TRUE": 78,
+    "UNVERIFIABLE": 10,
+    "FALSE": 4,
+    "MISLEADING": 3,
+    "Models split": 1
+  },
+  "new_tally": {
+    "TRUE": 71,
+    "UNVERIFIABLE": 15,
+    "Models split": 3,
+    "MISLEADING": 5,
+    "FALSE": 2
+  },
+  "n_compared": 96,
+  "counts": {
+    "unchanged": 75,
+    "decided_to_decided_changed": 7,
+    "newly_gated": 7,
+    "newly_decided": 4,
+    "split_changes": 3,
+    "other": 0
+  },
+  "gate_forced_new": 12,
+  "per_sid": [
+    {
+      "sid": "obama_2014:0000",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Mr. Speaker, Mr. Vice President, Members of Congress, my fellow Americans: Today in America, a teacher spent extra time "
+    },
+    {
+      "sid": "obama_2014:0001",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jo"
+    },
+    {
+      "sid": "obama_2014:0003",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "A farmer prepared for the spring after the strongest five-year stretch of farm exports in our history."
+    },
+    {
+      "sid": "obama_2014:0004",
+      "old": "UNVERIFIABLE",
+      "new": "UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "A rural doctor gave a young child the first prescription to treat asthma that his mother could afford."
+    },
+    {
+      "sid": "obama_2014:0008",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Here are the results of your efforts: The lowest unemployment rate in over five years."
+    },
+    {
+      "sid": "obama_2014:0013",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "And for the first time in over a decade, business leaders around the world have declared that China is no longer the wor"
+    },
+    {
+      "sid": "obama_2014:0010",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "A manufacturing sector that’s adding jobs for the first time since the 1990s."
+    },
+    {
+      "sid": "obama_2014:0011",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "More oil produced at home than we buy from the rest of the world – the first time that’s happened in nearly twenty years"
+    },
+    {
+      "sid": "obama_2014:0012",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Our deficits – cut by more than half."
+    },
+    {
+      "sid": "obama_2014:0030",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Over more than three decades, even before the Great Recession hit, massive shifts in technology and global competition h"
+    },
+    {
+      "sid": "obama_2014:0031",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Today, after four years of economic growth, corporate profits and stock prices have rarely been higher, and those at the"
+    },
+    {
+      "sid": "obama_2014:0032",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But average wages have barely budged."
+    },
+    {
+      "sid": "obama_2014:0033",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Inequality has deepened."
+    },
+    {
+      "sid": "obama_2014:0034",
+      "old": "FALSE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "Upward mobility has stalled."
+    },
+    {
+      "sid": "obama_2014:0044",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Michelle’s Let’s Move partnership with schools, businesses, and local leaders has helped bring down childhood obesity ra"
+    },
+    {
+      "sid": "obama_2014:0055",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "With the economy picking up speed, companies say they intend to hire more people this year."
+    },
+    {
+      "sid": "obama_2014:0056",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "And over half of big manufacturers say they’re thinking of insourcing jobs from abroad."
+    },
+    {
+      "sid": "obama_2014:0045",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train near"
+    },
+    {
+      "sid": "obama_2014:0046",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Taking a page from that playbook, the White House just organized a College Opportunity Summit where already, 150 univers"
+    },
+    {
+      "sid": "obama_2014:0058",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Both Democrats and Republicans have argued that our tax code is riddled with wasteful, complicated loopholes that punish"
+    },
+    {
+      "sid": "obama_2014:0065",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "My administration has launched two hubs for high-tech manufacturing in Raleigh and Youngstown, where we’ve connected bus"
+    },
+    {
+      "sid": "obama_2014:0066",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Tonight, I’m announcing we’ll launch six more this year."
+    },
+    {
+      "sid": "obama_2014:0070",
+      "old": "TRUE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "Over the past five years, my administration has made more loans to small business owners than any other."
+    },
+    {
+      "sid": "obama_2014:0071",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And when ninety-eight percent of our exporters are small businesses, new trade partnerships with Europe and the Asia-Pac"
+    },
+    {
+      "sid": "obama_2014:0076",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Federally-funded research helped lead to the ideas and inventions behind Google and smartphones."
+    },
+    {
+      "sid": "obama_2014:0082",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Businesses plan to invest almost $100 billion in new factories that use natural gas."
+    },
+    {
+      "sid": "obama_2014:0080",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The all-of-the-above energy strategy I announced a few years ago is working, and today, America is closer to energy inde"
+    },
+    {
+      "sid": "obama_2014:0086",
+      "old": "Models split",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "It’s not just oil and natural gas production that’s booming; we’re becoming a global leader in solar, too."
+    },
+    {
+      "sid": "obama_2014:0087",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Every four minutes, another American home or business goes solar; every panel pounded into place by a worker whose job c"
+    },
+    {
+      "sid": "obama_2014:0088",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Let’s continue that progress with a smarter tax policy that stops giving $4 billion a year to fossil fuel industries tha"
+    },
+    {
+      "sid": "obama_2014:0090",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "When we rescued our automakers, for example, we worked with them to set higher fuel efficiency standards for our cars."
+    },
+    {
+      "sid": "obama_2014:0093",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Over the past eight years, the United States has reduced our total carbon pollution more than any other nation on Earth."
+    },
+    {
+      "sid": "obama_2014:0095",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That’s why I directed my administration to work with states, utilities, and others to set new standards on the amount of"
+    },
+    {
+      "sid": "obama_2014:0103",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Independent economists say immigration reform will grow our economy and shrink our deficits by almost $1 trillion in the"
+    },
+    {
+      "sid": "obama_2014:0109",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Two years ago, as the auto industry came roaring back, Andra Rush opened up a manufacturing firm in Detroit."
+    },
+    {
+      "sid": "obama_2014:0121",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "But first, this Congress needs to restore the unemployment insurance you just let expire for 1.6 million people."
+    },
+    {
+      "sid": "obama_2014:0110",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "She knew that Ford needed parts for the best-selling truck in America, and she knew how to make them."
+    },
+    {
+      "sid": "obama_2014:0114",
+      "old": "TRUE",
+      "new": "UNVERIFIABLE",
+      "category": "decided_to_decided_changed",
+      "text": "And today, Detroit Manufacturing Systems has more than 700 employees."
+    },
+    {
+      "sid": "obama_2014:0123",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Misty DeMars is a mother of two young boys."
+    },
+    {
+      "sid": "obama_2014:0124",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "She’d been steadily employed since she was a teenager."
+    },
+    {
+      "sid": "obama_2014:0125",
+      "old": "UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "She put herself through college."
+    },
+    {
+      "sid": "obama_2014:0126",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "She’d never collected unemployment benefits."
+    },
+    {
+      "sid": "obama_2014:0127",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In May, she and her husband used their life savings to buy their first home."
+    },
+    {
+      "sid": "obama_2014:0128",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "A week later, budget cuts claimed the job she loved."
+    },
+    {
+      "sid": "obama_2014:0134",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That’s why I’ve been asking CEOs to give more long-term unemployed workers a fair shot at that new job and new chance to"
+    },
+    {
+      "sid": "obama_2014:0153",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "But in the meantime, thirty states have raised pre-k funding on their own."
+    },
+    {
+      "sid": "obama_2014:0138",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Estiven Rodriguez couldn’t speak a word of English when he moved to New York City at age nine."
+    },
+    {
+      "sid": "obama_2014:0142",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We worked with lenders to reform student loans, and today, more young people are earning college degrees than ever befor"
+    },
+    {
+      "sid": "obama_2014:0143",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Race to the Top, with the help of governors from both parties, has helped states raise expectations and performance."
+    },
+    {
+      "sid": "obama_2014:0151",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, I asked this Congress to help states make high-quality pre-K available to every four year-old."
+    },
+    {
+      "sid": "obama_2014:0158",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Tonight, I can announce that with the support of the FCC and companies like Apple, Microsoft, Sprint, and Verizon, we’ve"
+    },
+    {
+      "sid": "obama_2014:0157",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Last year, I also pledged to connect 99 percent of our students to high-speed broadband over the next four years."
+    },
+    {
+      "sid": "obama_2014:0165",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Today, women make up about half our workforce."
+    },
+    {
+      "sid": "obama_2014:0166",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But they still make 77 cents for every dollar a man earns."
+    },
+    {
+      "sid": "obama_2014:0174",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Now, women hold a majority of lower-wage jobs – but they’re not the only ones stifled by stagnant wages."
+    },
+    {
+      "sid": "obama_2014:0177",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In the year since I asked this Congress to raise the minimum wage, five states have passed laws to raise theirs."
+    },
+    {
+      "sid": "obama_2014:0180",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "John’s an owner of Punch Pizza in Minneapolis, and Nick helps make the dough."
+    },
+    {
+      "sid": "obama_2014:0181",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Only now he makes more of it: John just gave his employees a raise, to ten bucks an hour – a decision that eased their f"
+    },
+    {
+      "sid": "obama_2014:0185",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Profitable corporations like Costco see higher wages as the smart way to boost productivity and reduce turnover."
+    },
+    {
+      "sid": "obama_2014:0189",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here."
+    },
+    {
+      "sid": "obama_2014:0207",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "MyRA guarantees a decent return with no risk of losing what you put in."
+    },
+    {
+      "sid": "obama_2014:0190",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Tom Harkin and George Miller have a bill to fix that by lifting the minimum wage to $10.10."
+    },
+    {
+      "sid": "obama_2014:0198",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Right now, it helps about half of all parents at some point."
+    },
+    {
+      "sid": "obama_2014:0202",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Today, most workers don’t have a pension."
+    },
+    {
+      "sid": "obama_2014:0204",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And while the stock market has doubled over the last five years, that doesn’t help folks who don’t have 401ks."
+    },
+    {
+      "sid": "obama_2014:0214",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "A pre-existing condition used to mean that someone like Amanda Shelley, a physician assistant and single mom from Arizon"
+    },
+    {
+      "sid": "obama_2014:0216",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "On January 3rd, she felt a sharp pain."
+    },
+    {
+      "sid": "obama_2014:0217",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "On January 6th, she had emergency surgery."
+    },
+    {
+      "sid": "obama_2014:0218",
+      "old": "TRUE",
+      "new": "UNVERIFIABLE",
+      "category": "decided_to_decided_changed",
+      "text": "Just one week earlier, Amanda said, that surgery would’ve meant bankruptcy."
+    },
+    {
+      "sid": "obama_2014:0220",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Already, because of the Affordable Care Act, more than three million Americans under age 26 have gained coverage under t"
+    },
+    {
+      "sid": "obama_2014:0221",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "More than nine million Americans have signed up for private health insurance or Medicaid coverage."
+    },
+    {
+      "sid": "obama_2014:0223",
+      "old": "FALSE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "Because of this law, no American can ever again be dropped or denied coverage for a preexisting condition like asthma, b"
+    },
+    {
+      "sid": "obama_2014:0225",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And we did all this while adding years to Medicare’s finances, keeping Medicare premiums flat, and lowering prescription"
+    },
+    {
+      "sid": "obama_2014:0246",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, part of the Voting Rights Act was weakened."
+    },
+    {
+      "sid": "obama_2014:0247",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "But conservative Republicans and liberal Democrats are working together to strengthen it; and the bipartisan commission "
+    },
+    {
+      "sid": "obama_2014:0255",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan."
+    },
+    {
+      "sid": "obama_2014:0256",
+      "old": "FALSE",
+      "new": "FALSE",
+      "category": "unchanged",
+      "text": "Today, all our troops are out of Iraq."
+    },
+    {
+      "sid": "obama_2014:0257",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "More than 60,000 of our troops have already come home from Afghanistan."
+    },
+    {
+      "sid": "obama_2014:0258",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "With Afghan forces now in the lead for their own security, our troops have moved to a support role."
+    },
+    {
+      "sid": "obama_2014:0264",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "While we have put al Qaeda’s core leadership on a path to defeat, the threat has evolved, as al Qaeda affiliates and oth"
+    },
+    {
+      "sid": "obama_2014:0280",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "American diplomacy, backed by the threat of force, is why Syria’s chemical weapons are being eliminated, and we will con"
+    },
+    {
+      "sid": "obama_2014:0283",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "As we gather here tonight, Iran has begun to eliminate its stockpile of higher levels of enriched uranium."
+    },
+    {
+      "sid": "obama_2014:0279",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "American diplomacy has rallied more than fifty countries to prevent nuclear materials from falling into the wrong hands,"
+    },
+    {
+      "sid": "obama_2014:0282",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And it is American diplomacy, backed by pressure, that has halted the progress of Iran’s nuclear program – and rolled pa"
+    },
+    {
+      "sid": "obama_2014:0284",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It is not installing advanced centrifuges."
+    },
+    {
+      "sid": "obama_2014:0285",
+      "old": "TRUE",
+      "new": "Models split",
+      "category": "split_changes",
+      "text": "Unprecedented inspections help the world verify, every day, that Iran is not building a bomb."
+    },
+    {
+      "sid": "obama_2014:0289",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We are clear-eyed about Iran’s support for terrorist organizations like Hezbollah, which threaten our allies; and the mi"
+    },
+    {
+      "sid": "obama_2014:0300",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Our alliance with Europe remains the strongest the world has ever known."
+    },
+    {
+      "sid": "obama_2014:0316",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I first met Cory Remsburg, a proud Army Ranger, at Omaha Beach on the 65th anniversary of D-Day."
+    },
+    {
+      "sid": "obama_2014:0319",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "A few months later, on his tenth deployment, Cory was nearly killed by a massive roadside bomb in Afghanistan."
+    },
+    {
+      "sid": "obama_2014:0320",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "His comrades found him in a canal, face down, underwater, shrapnel in his brain."
+    },
+    {
+      "sid": "obama_2014:0321",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For months, he lay in a coma."
+    },
+    {
+      "sid": "obama_2014:0323",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Over the years, he’s endured dozens of surgeries and procedures, and hours of grueling rehab every day."
+    },
+    {
+      "sid": "obama_2014:0324",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Even now, Cory is still blind in one eye."
+    },
+    {
+      "sid": "obama_2014:0325",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "He still struggles on his left side."
+    },
+    {
+      "sid": "obama_2014:0327",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Day by day, he’s learned to speak again and stand again and walk again – and he’s working toward the day when he can ser"
+    }
+  ]
+}

@@ -1,0 +1,675 @@
+{
+  "speech_id": "clinton_1998",
+  "rebuild_of": "7c59e9e0-0062-487d-84e3-4af15ab94aab",
+  "new_run_id": "d0010426-2e8f-4449-b839-60f85d923d56",
+  "old_tally": {
+    "TRUE": 72,
+    "MISLEADING": 9,
+    "UNVERIFIABLE": 8,
+    "FALSE": 2,
+    "Models split": 1
+  },
+  "new_tally": {
+    "UNVERIFIABLE": 14,
+    "TRUE": 71,
+    "MISLEADING": 5,
+    "FALSE": 1,
+    "Models split": 1
+  },
+  "n_compared": 92,
+  "counts": {
+    "unchanged": 69,
+    "decided_to_decided_changed": 8,
+    "newly_gated": 11,
+    "newly_decided": 4,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 14,
+  "per_sid": [
+    {
+      "sid": "clinton_1998:0021",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "We have the smallest government in 35 years, but a more progressive one."
+    },
+    {
+      "sid": "clinton_1998:0000",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Mr. Speaker, Mr. Vice President, members of the 105th Congress, distinguished guests, my fellow Americans: Since the las"
+    },
+    {
+      "sid": "clinton_1998:0004",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For 209 years it has been the President's duty to report to you on the state of the Union."
+    },
+    {
+      "sid": "clinton_1998:0006",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We have more than 14 million new jobs, the lowest unemployment in 24 years, the lowest core inflation in 30 years; incom"
+    },
+    {
+      "sid": "clinton_1998:0007",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "Crime has dropped for a record five years in a row, and the welfare rolls are at their lowest levels in 27 years."
+    },
+    {
+      "sid": "clinton_1998:0026",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "This year, our deficit is projected to be $10 billion and heading lower."
+    },
+    {
+      "sid": "clinton_1998:0028",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Tonight I come before you to announce that the federal deficit, once so incomprehensibly large that it had 11 zeros, wil"
+    },
+    {
+      "sid": "clinton_1998:0029",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I will submit to Congress for 1999 the first balanced budget in 30 years."
+    },
+    {
+      "sid": "clinton_1998:0025",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "When I took office, the deficit for 1998 was projected to be $357 billion and heading higher."
+    },
+    {
+      "sid": "clinton_1998:0027",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation."
+    },
+    {
+      "sid": "clinton_1998:0038",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Now, if we balance the budget for next year, it is projected that we'll then have a sizable surplus in the years that im"
+    },
+    {
+      "sid": "clinton_1998:0032",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It is the product of hard work by the American people and of two visionary actions in Congress: the courageous vote in 1"
+    },
+    {
+      "sid": "clinton_1998:0035",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, together, we enacted targeted tax cuts so that the typical middle-class family will now have the lowest tax r"
+    },
+    {
+      "sid": "clinton_1998:0054",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, from this podium, I said that education has to be our highest priority."
+    },
+    {
+      "sid": "clinton_1998:0055",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I laid out a 10-point plan to move us forward and urged all of us to let politics stop at the schoolhouse door."
+    },
+    {
+      "sid": "clinton_1998:0056",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Since then, this Congress—across party lines—and the American people have responded, in the most important year for educ"
+    },
+    {
+      "sid": "clinton_1998:0057",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Last year I proposed and you passed 220,000 new Pell grant scholarships for deserving students."
+    },
+    {
+      "sid": "clinton_1998:0058",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Student loans, already less expensive and easier to repay—now you get to deduct the interest."
+    },
+    {
+      "sid": "clinton_1998:0059",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Families all over America now can put their savings into new tax-free education IRAs."
+    },
+    {
+      "sid": "clinton_1998:0060",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And this year, for the first two years of college, families will get a $1,500 tax credit—a HOPE scholarship that will co"
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Now, with these teachers—listen—with these teachers, we will actually be able to reduce class size in the first, second,"
+    },
+    {
+      "sid": "clinton_1998:0061",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And for junior and senior year, graduate school, and job training, there is a lifetime learning credit."
+    },
+    {
+      "sid": "clinton_1998:0071",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Thanks to the actions of this Congress last year, we will soon have, for the very first time, a voluntary national test "
+    },
+    {
+      "sid": "clinton_1998:0083",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, in Chicago, they made that decision—not to hold our children back but to lift them up."
+    },
+    {
+      "sid": "clinton_1998:0084",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Chicago stopped social promotion and started mandatory summer school to help students who are behind to catch up."
+    },
+    {
+      "sid": "clinton_1998:0090",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In the last five years, we have led the way in opening new markets, with 240 trade agreements that remove foreign barrie"
+    },
+    {
+      "sid": "clinton_1998:0091",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Today, record high exports account for fully one-third of our economic growth."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "That's why we have more than doubled funding for training dislocated workers since 1993."
+    },
+    {
+      "sid": "clinton_1998:0107",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And remember the big picture here: While we've been entering into hundreds of new trade agreements, we've been creating "
+    },
+    {
+      "sid": "clinton_1998:0113",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Recent months have brought serious financial problems to Thailand, Indonesia, South Korea, and beyond."
+    },
+    {
+      "sid": "clinton_1998:0132",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I'm pleased to report we have also met that goal, two full years ahead of schedule."
+    },
+    {
+      "sid": "clinton_1998:0130",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And we're now replacing welfare checks with paychecks."
+    },
+    {
+      "sid": "clinton_1998:0131",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, after a record four-year decline in welfare rolls, I challenged our nation to move two million more Americans"
+    },
+    {
+      "sid": "clinton_1998:0134",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare."
+    },
+    {
+      "sid": "clinton_1998:0135",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Today, she's a dispatcher with a van company."
+    },
+    {
+      "sid": "clinton_1998:0136",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "She's saved enough money to move her family into a good neighborhood, and she's helping other welfare recipients go to w"
+    },
+    {
+      "sid": "clinton_1998:0145",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Two years ago we helped guarantee that Americans can keep their health insurance when they change jobs."
+    },
+    {
+      "sid": "clinton_1998:0146",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year we extended health care to up to five million children."
+    },
+    {
+      "sid": "clinton_1998:0148",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "A hundred and sixty million of our fellow citizens are in managed care plans."
+    },
+    {
+      "sid": "clinton_1998:0156",
+      "old": "MISLEADING",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Millions of Americans between the ages of 55 and 65 have lost their health insurance."
+    },
+    {
+      "sid": "clinton_1998:0165",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Tomorrow, like every day, 3,000 children will start smoking, and 1,000 will die early as a result."
+    },
+    {
+      "sid": "clinton_1998:0167",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "In the new economy, most parents work harder than ever."
+    },
+    {
+      "sid": "clinton_1998:0169",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The Family and Medical Leave Act was the very first bill I was privileged to sign into law as President in 1993."
+    },
+    {
+      "sid": "clinton_1998:0170",
+      "old": "MISLEADING",
+      "new": "FALSE",
+      "category": "decided_to_decided_changed",
+      "text": "Since then, about 15 million people have taken advantage of it, and I've met a lot of them all across this country."
+    },
+    {
+      "sid": "clinton_1998:0173",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "Last year I cohosted the very first White House Conference on Child Care with one of our foremost experts, America's Fir"
+    },
+    {
+      "sid": "clinton_1998:0194",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Drug use is on the decline."
+    },
+    {
+      "sid": "clinton_1998:0188",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Violent crime is down; robbery is down; assault is down; burglary is down—for five years in a row, all across America."
+    },
+    {
+      "sid": "clinton_1998:0192",
+      "old": "FALSE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "I think every American should know that most juvenile crime is committed between the hours of 3 in the afternoon and 8 a"
+    },
+    {
+      "sid": "clinton_1998:0195",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in histo"
+    },
+    {
+      "sid": "clinton_1998:0198",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Today there are large number of vacancies in the federal courts."
+    },
+    {
+      "sid": "clinton_1998:0199",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Here is what the Chief Justice of the United States wrote: \"Judicial vacancies cannot remain at such high levels indefin"
+    },
+    {
+      "sid": "clinton_1998:0210",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For 50 years, NATO contained communism and kept America and Europe secure."
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Now these three formerly Communist countries have said yes to democracy."
+    },
+    {
+      "sid": "clinton_1998:0215",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This Christmas, Hillary and I traveled to Sarajevo with Senator and Mrs. Dole and a bipartisan congressional delegation."
+    },
+    {
+      "sid": "clinton_1998:0216",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We saw children playing in the streets, where two years ago they were hiding from snipers and shells."
+    },
+    {
+      "sid": "clinton_1998:0226",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "His father was a decorated Vietnam vet."
+    },
+    {
+      "sid": "clinton_1998:0225",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "One of those— —thank you—one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbe"
+    },
+    {
+      "sid": "clinton_1998:0227",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "After college in Colorado, he joined the Army."
+    },
+    {
+      "sid": "clinton_1998:0228",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year he led an infantry unit that stopped a mob of extremists from taking over a radio station that is a voice of d"
+    },
+    {
+      "sid": "clinton_1998:0234",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This year, four decades after it was first proposed by President Eisenhower, a comprehensive nuclear test ban is within "
+    },
+    {
+      "sid": "clinton_1998:0240",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Saddam Hussein has spent the better part of this decade and much of his nation's wealth not on providing for the Iraqi p"
+    },
+    {
+      "sid": "clinton_1998:0241",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "The United Nations weapons inspectors have done a truly remarkable job finding and destroying more of Iraq's arsenal tha"
+    },
+    {
+      "sid": "clinton_1998:0236",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff—Generals John Shalikashvili, Colin Powell"
+    },
+    {
+      "sid": "clinton_1998:0242",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Now Saddam Hussein wants to stop them from completing their mission."
+    },
+    {
+      "sid": "clinton_1998:0243",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy t"
+    },
+    {
+      "sid": "clinton_1998:0245",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year the Senate ratified the Chemical Weapons Convention to protect our soldiers and citizens from poison gas."
+    },
+    {
+      "sid": "clinton_1998:0247",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The Biological Weapons Convention has been in effect for 23 years now."
+    },
+    {
+      "sid": "clinton_1998:0263",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This year, by March 6, at long last the Senate will actually vote on bipartisan campaign finance reform proposed by Sena"
+    },
+    {
+      "sid": "clinton_1998:0270",
+      "old": "TRUE",
+      "new": "MISLEADING",
+      "category": "decided_to_decided_changed",
+      "text": "Under the leadership of Vice President Gore, we've reduced the federal payroll by 300,000 workers, cut 16,000 pages of r"
+    },
+    {
+      "sid": "clinton_1998:0274",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, by an overwhelming bipartisan margin, the House of Representatives passed sweeping IRS reforms."
+    },
+    {
+      "sid": "clinton_1998:0279",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "For the past five years, we have worked to bring the spark of private enterprise to inner city and poor rural areas, wit"
+    },
+    {
+      "sid": "clinton_1998:0282",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year, this Congress took strong action to help the District of Columbia."
+    },
+    {
+      "sid": "clinton_1998:0288",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Last year we put in place the toughest-ever controls on smog and soot."
+    },
+    {
+      "sid": "clinton_1998:0289",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We moved to protect Yellowstone, the Everglades, Lake Tahoe."
+    },
+    {
+      "sid": "clinton_1998:0290",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We expanded every community's right to know about the toxins that threaten their children."
+    },
+    {
+      "sid": "clinton_1998:0291",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Just yesterday, our food safety plan took effect, using new science to protect consumers from dangers like E. coli and s"
+    },
+    {
+      "sid": "clinton_1998:0295",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The vast majority of scientists have concluded unequivocally that if we don't reduce the emission of greenhouse gases, a"
+    },
+    {
+      "sid": "clinton_1998:0296",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "This past December, America led the world to reach a historic agreement committing our nation to reduce greenhouse gas e"
+    },
+    {
+      "sid": "clinton_1998:0300",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Well, today our economy is the strongest in a generation, and our environment is the cleanest in a generation."
+    },
+    {
+      "sid": "clinton_1998:0313",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "I've launched this national initiative on race to help us recognize our common interests and to bridge the opportunity g"
+    },
+    {
+      "sid": "clinton_1998:0332",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "This year Hillary and I launched the White House Millennium Program to promote America's creativity and innovation, and "
+    },
+    {
+      "sid": "clinton_1998:0337",
+      "old": "UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "decided_to_decided_changed",
+      "text": "Now, think about this: The entire store of human knowledge now doubles every five years."
+    },
+    {
+      "sid": "clinton_1998:0338",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "In the 1980s, scientists identified the gene causing cystic fibrosis; it took nine years."
+    },
+    {
+      "sid": "clinton_1998:0339",
+      "old": "Models split",
+      "new": "Models split",
+      "category": "unchanged",
+      "text": "Last year scientists located the gene that causes Parkinson's Disease—in only nine days."
+    },
+    {
+      "sid": "clinton_1998:0344",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "We have already discovered genes for breast cancer and diabetes."
+    },
+    {
+      "sid": "clinton_1998:0350",
+      "old": "gated-UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "unchanged",
+      "text": "Think of this: The first time I made a State of the Union speech to you, only a handful of physicists used the World Wid"
+    },
+    {
+      "sid": "clinton_1998:0351",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Now, in schools, in libraries, homes, and businesses, millions and millions of Americans surf the 'Net every day."
+    },
+    {
+      "sid": "clinton_1998:0355",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "It's getting kind of clogged, you know, and the next-generation Internet will operate at speeds up to 1,000 times faster"
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "old": "MISLEADING",
+      "new": "MISLEADING",
+      "category": "unchanged",
+      "text": "Beginning this year, 1998, men and women from 16 countries will build a foothold in the heavens, the international space"
+    },
+    {
+      "sid": "clinton_1998:0360",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And this October, a true American hero, a veteran pilot of 149 combat missions and one five-hour space flight that chang"
+    },
+    {
+      "sid": "clinton_1998:0364",
+      "old": "FALSE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Nearly 200 years ago, a tattered flag, its broad stripes and bright stars still gleaming through the smoke of a fierce b"
+    },
+    {
+      "sid": "clinton_1998:0365",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "Today, that Star-Spangled Banner, along with the Declaration of Independence, the Constitution, and the Bill of Rights, "
+    }
+  ]
+}

@@ -35,10 +35,11 @@ def test_resolved_pca_card_speaks_panel_vote_vocabulary_with_provenance():
     assert "1 of 1" not in html
     # provenance chain surfaced (Layer A + tally + Severity Classifier override).
     # The two-stage FALSE-vs-MISLEADING discriminator is shown to readers as
-    # "Severity Classifier"; the internal identifier remains "CRM-114".
+    # "Severity Classifier"; the internal identifier remains "CRM-114". Since
+    # remediation v2 (1.12) the override line names itself an auto-adjustment.
     assert "Layer A: check-worthy (A2)" in html
     assert "PCA panel: Misleading ×2, False ×1" in html
-    assert "Severity Classifier: MISLEADING→FALSE" in html
+    assert "Auto-adjusted: MISLEADING→FALSE (Severity Classifier)" in html
     # No reader-facing "CRM-114" anywhere in the rendered card (provenance strip,
     # tooltip, or the reasoning-body override annotation).
     assert "CRM-114" not in html
@@ -141,8 +142,9 @@ def test_pca_chip_shows_fine_label_not_falsey_umbrella():
            "split": True, "escalated": True}
     html = _card(row, _claim("s:6", "New laws subvert elections.", "A2"))
     assert "Falsey" not in html
-    assert 'data-coarse-lenient="Misleading"' in html
-    assert 'data-coarse-strict="Misleading"' in html
+    # The headline pill paints the panel's own label (the bridge stores
+    # Misleading on the published strict axis; lens data-attrs retired, 1.8).
+    assert ">Misleading</span>" in html
 
 
 def test_sources_consulted_shows_pack_ids():
@@ -203,8 +205,8 @@ def test_reasoning_eids_link_to_sources_consulted_anchors():
 
 def test_anecdote_unverifiable_renders_anecdote_pill():
     # P67 2026-07-20 (jackie): a private person's story that comes back
-    # Unverifiable is a GENRE limit, not a failed verification — distinct pill
-    # on both lens axes, genre in the Layer A provenance line.
+    # Unverifiable is a GENRE limit, not a failed verification — distinct
+    # pill, genre in the Layer A provenance line.
     row = {"sid": "s:9", "status": "resolved", "verdict": "UNVERIFIABLE",
            "confidence": 0.6, "citations": [], "reasoning": "No public record.",
            "votes": {"UNVERIFIABLE": 2, "TRUE": 1}, "split": False, "escalated": True}
@@ -214,10 +216,8 @@ def test_anecdote_unverifiable_renders_anecdote_pill():
                          "claim_type": "personal-anecdote"}}
     html = _card(row, claim)
 
-    assert ">Anecdote</span>" in html
+    assert ">Anecdote</span>" in html                 # never a bare "Unverifiable"
     assert "pill-anecdote" in html
-    assert 'data-coarse-lenient="Anecdote"' in html   # lens toggle can't restore Unverifiable
-    assert 'data-coarse-strict="Anecdote"' in html
     assert "Layer A: check-worthy (A2, personal-anecdote)" in html
     assert "no independent" in html.lower()           # reader-facing genre copy
 

@@ -1,0 +1,114 @@
+{
+ "_frozen_from": "metrics/pca_runs/4ee5a251… (Phase-3 rebuild artifact, run prefix 4ee5a251)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0343",
+  "text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our country at record numbers and we're getting them the hell out of here fast.",
+  "context": "Lizbeth's killer was a previously arrested illegal alien who had broken in and brutally, just brutally extinguished the brightest light in her family's life, violently and viciously. || Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our country at record numbers and we're getting them the hell out of here fast. || We don't want them."
+ },
+ "row": {
+  "sid": "trump_2026:0343",
+  "status": "resolved",
+  "verdict": "TRUE",
+  "confidence": 0.75,
+  "citations": [
+   "E4",
+   "E5",
+   "E7"
+  ],
+  "reasoning": "Official DHS releases contemporaneous with the utterance support record-number removals of illegal-alien criminals, backing the core assertion.",
+  "votes": {
+   "TRUE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "TRUE"
+   ],
+   "critic": [
+    "TRUE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2026-02-24] Official Congressional Record transcript contains the quoted passage and recognition of Jacqueline Medina in the gallery.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+   "source_tier": "Government",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2024-12-19] ICE’s FY2024 annual report: 271,484 ERO removals; breakdown shows only ~32.7% had criminal histories, giving official baseline data.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://cis.org/sites/default/files/2025-05/iceAnnualReportFY2024.pdf",
+   "source_tier": "Other",
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-02-25] Quotes Trump's exact words; confirms Romero overstayed visa, on probation for prior burglary, mother in gallery.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.fox26houston.com/news/lizbeth-medina-murdered-texas-teen-cheerleader-killed-undocumented-immigrant",
+   "source_tier": "Other",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2025-10-27] Official DHS release touting record 527,000+ removals under Trump/Noem — direct support for 'record numbers' framing.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.dhs.gov/news/2025/10/27/dhs-removes-more-half-million-illegal-aliens-us",
+   "source_tier": "Political",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-20] Official DHS release explicitly frames removals of criminal illegal aliens as record-breaking heading into 2026.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.dhs.gov/news/2026/01/20/dhs-sets-stage-another-historic-record-breaking-year-under-president-trump",
+   "source_tier": "Political",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-02-24] White House/DCPD official State of the Union transcript includes the exact language about deporting 'illegal alien criminals' and Jacqueline Medina.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+   "source_tier": "Government",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-20] Official DHS recap of first-year criminal-alien enforcement actions; supports 'deporting illegal alien criminals.'",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.dhs.gov/news/2026/01/20/dhs-recaps-worst-worst-criminal-illegal-aliens-ice-took-enforcement-action-during",
+   "source_tier": "Political",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-02-01] DHS Office of Homeland Security Statistics primary monthly enforcement/removal tables — authoritative data to test 'record numbers.'",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://ohss.dhs.gov/topics/immigration/immigration-enforcement/monthly-tables",
+   "source_tier": "Government",
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-02-25] Associated Press transcript reproduces the president's lines including the mother's presence and the deportation claim.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://apnews.com/article/c13e2a07df999b464b733f4a6e84dbd4",
+   "source_tier": "Wire",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "ICE FY2024 annual report: 271,484 ERO removals; 32.7% had criminal histories—provides official data to evaluate 'record numbers' and 'criminals' claim.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.ice.gov/doclib/eoy/iceAnnualReportFY2024.pdf",
+   "source_tier": "Government",
+   "relevance_score": 0.5
+  }
+ ]
+}

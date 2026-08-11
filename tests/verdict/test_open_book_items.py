@@ -104,9 +104,16 @@ class _TwoStageStubHM:
 
 
 def test_adjudicate_routes_adverse_ties_to_crm114():
+    from datetime import date
+
+    from truthbot.verdict import speech_context
+
     hm = _TwoStageStubHM()
-    claims = [{"sid": s, "text": "x", "context": ""}
-              for s in ("s_resolved", "s_adverse_tie", "s_true_tie", "s_unanimous_false")]
+    sids = ("s_resolved", "s_adverse_tie", "s_true_tie", "s_unanimous_false")
+    for s in sids:
+        # era gate fails closed on unregistered speeches (remediation v2, 1.3)
+        speech_context.register_speech_date(s, date(2026, 1, 1))
+    claims = [{"sid": s, "text": "x", "context": ""} for s in sids]
     rows, _m, notes = adjudicator.adjudicate(
         hm, claims, evidence_provider=_FakeProvider(), two_stage=True)
     # the discriminator saw the resolved-adverse row AND the F/M/U tie — but NOT the

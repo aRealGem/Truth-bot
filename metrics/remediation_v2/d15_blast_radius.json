@@ -1,0 +1,1310 @@
+{
+  "schema": "truthbot-d15-blast-radius v1",
+  "generated": "2026-08-08T17:08:47.828017+00:00",
+  "flag": "TRUTHBOT_D15_UTTERANCE_RECORD (default OFF \u2014 NOT enabled)",
+  "speeches": [
+    "gwbush_2006",
+    "clinton_1998",
+    "obama_2014",
+    "biden_2022",
+    "trump_2026"
+  ],
+  "speeches_missing_sidecar": [],
+  "corpus": {
+    "stored": {
+      "claims": 529,
+      "flagged_items": 387,
+      "flagged_bearing": 182,
+      "flagged_bearing_t13": 153,
+      "gate_changed": 48,
+      "claims_touched": 241,
+      "by_rule": {
+        "presidency-ucsb-address": 39,
+        "crec-congressional-record": 130,
+        "wcpd-weekly-compilation": 21,
+        "recap-language": 104,
+        "dcpd-daily-compilation": 93
+      },
+      "by_tier": {
+        "Other": 57,
+        "Government": 253,
+        "Political": 38,
+        "Established": 14,
+        "Wire": 25
+      }
+    },
+    "rescored": {
+      "claims": 529,
+      "flagged_items": 387,
+      "flagged_bearing": 315,
+      "flagged_bearing_t13": 242,
+      "gate_changed": 50,
+      "claims_touched": 241,
+      "by_rule": {
+        "presidency-ucsb-address": 39,
+        "crec-congressional-record": 130,
+        "wcpd-weekly-compilation": 21,
+        "recap-language": 104,
+        "dcpd-daily-compilation": 93
+      },
+      "by_tier": {
+        "Other": 57,
+        "Government": 253,
+        "Political": 38,
+        "Established": 14,
+        "Wire": 25
+      }
+    }
+  },
+  "per_speech": [
+    {
+      "speech": "gwbush_2006",
+      "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+      "vintages": {
+        "stored": {
+          "claims": 48,
+          "flagged_items": 26,
+          "flagged_bearing": 12,
+          "flagged_bearing_t13": 6,
+          "by_rule": {
+            "presidency-ucsb-address": 4,
+            "crec-congressional-record": 9,
+            "wcpd-weekly-compilation": 1,
+            "recap-language": 12
+          },
+          "by_tier": {
+            "Other": 5,
+            "Government": 11,
+            "Political": 8,
+            "Established": 2
+          },
+          "gate_changed": 1,
+          "newly_gated_sids": [
+            {
+              "sid": "gwbush_2006:0189",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "So tonight I announce the Advanced Energy Initiative\u2014a 22-percent increase in clean-energy research\u2014at the Department of",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 19
+        },
+        "rescored": {
+          "claims": 48,
+          "flagged_items": 26,
+          "flagged_bearing": 19,
+          "flagged_bearing_t13": 9,
+          "by_rule": {
+            "presidency-ucsb-address": 4,
+            "crec-congressional-record": 9,
+            "wcpd-weekly-compilation": 1,
+            "recap-language": 12
+          },
+          "by_tier": {
+            "Other": 5,
+            "Government": 11,
+            "Political": 8,
+            "Established": 2
+          },
+          "gate_changed": 2,
+          "newly_gated_sids": [
+            {
+              "sid": "gwbush_2006:0033",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Their aim is to seize power in Iraq and use it as a safe haven to launch attacks against America and the world.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "gwbush_2006:0189",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "So tonight I announce the Advanced Energy Initiative\u2014a 22-percent increase in clean-energy research\u2014at the Department of",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 19
+        }
+      }
+    },
+    {
+      "speech": "clinton_1998",
+      "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+      "vintages": {
+        "stored": {
+          "claims": 92,
+          "flagged_items": 92,
+          "flagged_bearing": 42,
+          "flagged_bearing_t13": 30,
+          "by_rule": {
+            "presidency-ucsb-address": 20,
+            "crec-congressional-record": 25,
+            "recap-language": 27,
+            "wcpd-weekly-compilation": 20
+          },
+          "by_tier": {
+            "Other": 29,
+            "Government": 46,
+            "Political": 15,
+            "Established": 2
+          },
+          "gate_changed": 10,
+          "newly_gated_sids": [
+            {
+              "sid": "clinton_1998:0025",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "When I took office, the deficit for 1998 was projected to be $357 billion and heading higher.",
+              "rules": [
+                "crec-congressional-record",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0027",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0134",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "recap-language",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0135",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Today, she's a dispatcher with a van company.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "recap-language",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0136",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "She's saved enough money to move her family into a good neighborhood, and she's helping other welfare recipients go to w",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0195",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in histo",
+              "rules": [
+                "crec-congressional-record",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0225",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "One of those\u2014 \u2014thank you\u2014one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbe",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0227",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "After college in Colorado, he joined the Army.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0236",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff\u2014Generals John Shalikashvili, Colin Powell",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0243",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy t",
+              "rules": [
+                "presidency-ucsb-address",
+                "recap-language",
+                "wcpd-weekly-compilation"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 46
+        },
+        "rescored": {
+          "claims": 92,
+          "flagged_items": 92,
+          "flagged_bearing": 82,
+          "flagged_bearing_t13": 47,
+          "by_rule": {
+            "presidency-ucsb-address": 20,
+            "crec-congressional-record": 25,
+            "recap-language": 27,
+            "wcpd-weekly-compilation": 20
+          },
+          "by_tier": {
+            "Other": 29,
+            "Government": 46,
+            "Political": 15,
+            "Established": 2
+          },
+          "gate_changed": 10,
+          "newly_gated_sids": [
+            {
+              "sid": "clinton_1998:0027",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0090",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "In the last five years, we have led the way in opening new markets, with 240 trade agreements that remove foreign barrie",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "recap-language",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0134",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "recap-language",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0135",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Today, she's a dispatcher with a van company.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "recap-language",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0195",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in histo",
+              "rules": [
+                "crec-congressional-record",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0225",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "One of those\u2014 \u2014thank you\u2014one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbe",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0227",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "After college in Colorado, he joined the Army.",
+              "rules": [
+                "crec-congressional-record",
+                "presidency-ucsb-address",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0236",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff\u2014Generals John Shalikashvili, Colin Powell",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0243",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy t",
+              "rules": [
+                "presidency-ucsb-address",
+                "recap-language",
+                "wcpd-weekly-compilation"
+              ]
+            },
+            {
+              "sid": "clinton_1998:0350",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "Think of this: The first time I made a State of the Union speech to you, only a handful of physicists used the World Wid",
+              "rules": [
+                "crec-congressional-record",
+                "recap-language"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 46
+        }
+      }
+    },
+    {
+      "speech": "obama_2014",
+      "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+      "vintages": {
+        "stored": {
+          "claims": 96,
+          "flagged_items": 67,
+          "flagged_bearing": 32,
+          "flagged_bearing_t13": 27,
+          "by_rule": {
+            "dcpd-daily-compilation": 19,
+            "presidency-ucsb-address": 3,
+            "recap-language": 27,
+            "crec-congressional-record": 18
+          },
+          "by_tier": {
+            "Government": 44,
+            "Other": 3,
+            "Established": 6,
+            "Political": 14
+          },
+          "gate_changed": 6,
+          "newly_gated_sids": [
+            {
+              "sid": "obama_2014:0045",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train near",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "obama_2014:0066",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Tonight, I\u2019m announcing we\u2019ll launch six more this year.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "obama_2014:0110",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "She knew that Ford needed parts for the best-selling truck in America, and she knew how to make them.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "obama_2014:0114",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+              "rules": [
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "obama_2014:0123",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Misty DeMars is a mother of two young boys.",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "obama_2014:0126",
+              "old_verdict": "FALSE",
+              "was_gated_in_artifact": false,
+              "claim": "She\u2019d never collected unemployment benefits.",
+              "rules": [
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 50
+        },
+        "rescored": {
+          "claims": 96,
+          "flagged_items": 67,
+          "flagged_bearing": 58,
+          "flagged_bearing_t13": 47,
+          "by_rule": {
+            "dcpd-daily-compilation": 19,
+            "presidency-ucsb-address": 3,
+            "recap-language": 27,
+            "crec-congressional-record": 18
+          },
+          "by_tier": {
+            "Government": 44,
+            "Other": 3,
+            "Established": 6,
+            "Political": 14
+          },
+          "gate_changed": 7,
+          "newly_gated_sids": [
+            {
+              "sid": "obama_2014:0045",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train near",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "obama_2014:0114",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+              "rules": [
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "obama_2014:0123",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Misty DeMars is a mother of two young boys.",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "obama_2014:0125",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "She put herself through college.",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "obama_2014:0126",
+              "old_verdict": "FALSE",
+              "was_gated_in_artifact": false,
+              "claim": "She\u2019d never collected unemployment benefits.",
+              "rules": [
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "obama_2014:0153",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "But in the meantime, thirty states have raised pre-k funding on their own.",
+              "rules": [
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "obama_2014:0255",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan.",
+              "rules": [
+                "recap-language"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 50
+        }
+      }
+    },
+    {
+      "speech": "biden_2022",
+      "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+      "vintages": {
+        "stored": {
+          "claims": 111,
+          "flagged_items": 45,
+          "flagged_bearing": 21,
+          "flagged_bearing_t13": 17,
+          "by_rule": {
+            "dcpd-daily-compilation": 13,
+            "crec-congressional-record": 20,
+            "presidency-ucsb-address": 8,
+            "recap-language": 4
+          },
+          "by_tier": {
+            "Government": 33,
+            "Other": 11,
+            "Political": 1
+          },
+          "gate_changed": 8,
+          "newly_gated_sids": [
+            {
+              "sid": "biden_2022:0019",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "In this struggle as President Zelenskyy said in his speech to the European Parliament \u201cLight will win over darkness.\u201d Th",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0137",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "And tonight, I\u2019m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrep",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0171",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "As Ohio Senator Sherrod Brown says, \u201cIt\u2019s time to bury the label \u201cRust Belt.\u201d It\u2019s time.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0284",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month.",
+              "rules": [
+                "crec-congressional-record",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "biden_2022:0289",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Even if you already ordered free tests tonight, I am announcing that you can order more from covidtests.gov starting nex",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0420",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "One of those soldiers was my son Major Beau Biden.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "biden_2022:0427",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Combat medic in Kosovo and Iraq.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "biden_2022:0431",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "He loved building Legos with their daughter.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 30
+        },
+        "rescored": {
+          "claims": 111,
+          "flagged_items": 45,
+          "flagged_bearing": 40,
+          "flagged_bearing_t13": 30,
+          "by_rule": {
+            "dcpd-daily-compilation": 13,
+            "crec-congressional-record": 20,
+            "presidency-ucsb-address": 8,
+            "recap-language": 4
+          },
+          "by_tier": {
+            "Government": 33,
+            "Other": 11,
+            "Political": 1
+          },
+          "gate_changed": 8,
+          "newly_gated_sids": [
+            {
+              "sid": "biden_2022:0019",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "In this struggle as President Zelenskyy said in his speech to the European Parliament \u201cLight will win over darkness.\u201d Th",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0137",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "And tonight, I\u2019m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrep",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0146",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "If you travel 20 miles east of Columbus, Ohio, you\u2019ll find 1,000 empty acres of land.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "biden_2022:0154",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "Intel\u2019s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0171",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "As Ohio Senator Sherrod Brown says, \u201cIt\u2019s time to bury the label \u201cRust Belt.\u201d It\u2019s time.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "biden_2022:0284",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month.",
+              "rules": [
+                "crec-congressional-record",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "biden_2022:0420",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "One of those soldiers was my son Major Beau Biden.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "biden_2022:0431",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "He loved building Legos with their daughter.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 30
+        }
+      }
+    },
+    {
+      "speech": "trump_2026",
+      "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+      "vintages": {
+        "stored": {
+          "claims": 182,
+          "flagged_items": 157,
+          "flagged_bearing": 75,
+          "flagged_bearing_t13": 73,
+          "by_rule": {
+            "dcpd-daily-compilation": 61,
+            "crec-congressional-record": 58,
+            "recap-language": 34,
+            "presidency-ucsb-address": 4
+          },
+          "by_tier": {
+            "Government": 119,
+            "Wire": 25,
+            "Established": 4,
+            "Other": 9
+          },
+          "gate_changed": 23,
+          "newly_gated_sids": [
+            {
+              "sid": "trump_2026:0095",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "But strange things took place and now I've got them because I got the Olympics and I got the 2026 FIFA World Cup and I w",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0098",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas M",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0099",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "He fought bravely in the famous Battle of Manila, worked so hard.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0102",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in t",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0111",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0130",
+              "old_verdict": "FALSE",
+              "was_gated_in_artifact": false,
+              "claim": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republ",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "trump_2026:0153",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "You know, I asked Michael Dell, how do you make all that money?",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0255",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "For five years, she and her husband have struggled with infertility and they turned to IVF.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0256",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "One drug has been costing Catherine $4,000 to purchase.",
+              "rules": [
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0340",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas para",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0341",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0343",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien c",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0482",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0487",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0497",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "With God's help, Andrew has battled back from the edge of death\u2014and we're talking about the edge of death, on his way to",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0514",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0638",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique.",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0643",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight.",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0659",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one b",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0660",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "He absorbed four agonizing shots, shredding his leg into numerous pieces.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0664",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the thr",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0665",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mi",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "presidency-ucsb-address",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0667",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 96
+        },
+        "rescored": {
+          "claims": 182,
+          "flagged_items": 157,
+          "flagged_bearing": 116,
+          "flagged_bearing_t13": 109,
+          "by_rule": {
+            "dcpd-daily-compilation": 61,
+            "crec-congressional-record": 58,
+            "recap-language": 34,
+            "presidency-ucsb-address": 4
+          },
+          "by_tier": {
+            "Government": 119,
+            "Wire": 25,
+            "Established": 4,
+            "Other": 9
+          },
+          "gate_changed": 23,
+          "newly_gated_sids": [
+            {
+              "sid": "trump_2026:0098",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas M",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0099",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "He fought bravely in the famous Battle of Manila, worked so hard.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0102",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in t",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0106",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "I was there.",
+              "rules": [
+                "crec-congressional-record"
+              ]
+            },
+            {
+              "sid": "trump_2026:0111",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0153",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "You know, I asked Michael Dell, how do you make all that money?",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0255",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "For five years, she and her husband have struggled with infertility and they turned to IVF.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0256",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "One drug has been costing Catherine $4,000 to purchase.",
+              "rules": [
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0279",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "She placed bids on 20 homes and lost all of those bids to gigantic investment firms that bypassed inspection, paid all c",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0325",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car travel",
+              "rules": [
+                "dcpd-daily-compilation",
+                "presidency-ucsb-address"
+              ]
+            },
+            {
+              "sid": "trump_2026:0329",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "But against all odds, she is now in the first grade, learning to walk.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0340",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas para",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0343",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien c",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0379",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "And this should be an easy one, and by the way, it's polling at 89 percent, including Democrats, 89 percent.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0402",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "Before long, a confused Sage ran away from home.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation",
+                "recap-language"
+              ]
+            },
+            {
+              "sid": "trump_2026:0405",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": true,
+              "claim": "But today, all of that is behind them because Sage is a proud and wonderful young woman with a full ride scholarship to ",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0482",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0514",
+              "old_verdict": "UNVERIFIABLE",
+              "was_gated_in_artifact": false,
+              "claim": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0638",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique.",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0643",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight.",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0659",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one b",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0660",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "He absorbed four agonizing shots, shredding his leg into numerous pieces.",
+              "rules": [
+                "crec-congressional-record",
+                "dcpd-daily-compilation"
+              ]
+            },
+            {
+              "sid": "trump_2026:0664",
+              "old_verdict": "TRUE",
+              "was_gated_in_artifact": false,
+              "claim": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the thr",
+              "rules": [
+                "dcpd-daily-compilation"
+              ]
+            }
+          ],
+          "released_sids": [],
+          "claims_touched": 96
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "speech_id": "trump_2026",
+  "rebuild_of": "83117c1a-a27f-4df1-9183-302472a52e68",
+  "new_run_id": "46dfcce8-7a4e-41c9-b714-ec3555229412",
+  "r1": true,
+  "ruling_sids": [
+    "trump_2026:0031"
+  ],
+  "shape": {
+    "from": "c-eval",
+    "to": "c-count"
+  },
+  "n_compared": 1,
+  "counts": {
+    "unchanged": 1,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 0,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 0,
+  "per_sid": [
+    {
+      "sid": "trump_2026:0031",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "And in the last three months of 2025, it was down to 1.7 percent."
+    }
+  ]
+}

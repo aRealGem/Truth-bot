@@ -1,0 +1,166 @@
+{
+  "schema": "truthbot-wave-rulings v1",
+  "generated": "2026-08-10T18:11:07.263124+00:00",
+  "ruling_date": "2026-08-10",
+  "applied": true,
+  "mechanism_summary": {
+    "by_mechanism": {
+      "D15": 39,
+      "re-score": 26
+    },
+    "arithmetic": "27 gated by the re-score alone, minus 1 the D16(alpha) statistical-release rule releases, plus 39 D15 adds on top of the re-score, = 65"
+  },
+  "per_speech": [
+    {
+      "speech": "biden_2022",
+      "source_run": "8577979b-91e3-48df-b84a-62b2516af91b",
+      "deferred_recorded": 11,
+      "deferred_applied": 11,
+      "deferred_unmeasured": [],
+      "rationales_adopted": [],
+      "coherence_annotated": [],
+      "blank_rationales_remaining": [
+        {
+          "sid": "biden_2022:0432",
+          "verdict": "MISLEADING",
+          "resolver": "crm114-tie-routing",
+          "detail": "biden_2022:0432 publishes MISLEADING with no rationale text (resolver: crm114-tie-routing)"
+        }
+      ],
+      "by_mechanism": {
+        "D15": 6,
+        "re-score": 5
+      },
+      "new_run_id": "c733c283-f10f-4410-93d3-d66b18d2697b",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/c733c283-f10f-4410-93d3-d66b18d2697b.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/rulings_biden_2022_verdict_diff.json",
+      "counts": {
+        "unchanged": 0,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 11,
+        "newly_decided": 0,
+        "split_changes": 0,
+        "other": 0
+      }
+    },
+    {
+      "speech": "clinton_1998",
+      "source_run": "fcbc8db2-e025-4cb7-9199-36db723fcfde",
+      "deferred_recorded": 13,
+      "deferred_applied": 13,
+      "deferred_unmeasured": [],
+      "rationales_adopted": [],
+      "coherence_annotated": [],
+      "blank_rationales_remaining": [],
+      "by_mechanism": {
+        "D15": 8,
+        "re-score": 5
+      },
+      "new_run_id": "393f7d06-3299-495e-863c-4136a9ced603",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/393f7d06-3299-495e-863c-4136a9ced603.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/rulings_clinton_1998_verdict_diff.json",
+      "counts": {
+        "unchanged": 0,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 13,
+        "newly_decided": 0,
+        "split_changes": 0,
+        "other": 0
+      }
+    },
+    {
+      "speech": "gwbush_2006",
+      "source_run": "0ae0f3b8-4728-4a6d-aab6-1e39160eca4d",
+      "deferred_recorded": 4,
+      "deferred_applied": 4,
+      "deferred_unmeasured": [],
+      "rationales_adopted": [],
+      "coherence_annotated": [],
+      "blank_rationales_remaining": [],
+      "by_mechanism": {
+        "D15": 3,
+        "re-score": 1
+      },
+      "new_run_id": "04738dd5-831f-4d90-bbef-6a18508c887f",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/04738dd5-831f-4d90-bbef-6a18508c887f.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/rulings_gwbush_2006_verdict_diff.json",
+      "counts": {
+        "unchanged": 0,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 4,
+        "newly_decided": 0,
+        "split_changes": 0,
+        "other": 0
+      }
+    },
+    {
+      "speech": "obama_2014",
+      "source_run": "91d400ba-838c-4a10-8077-5681a9223734",
+      "deferred_recorded": 10,
+      "deferred_applied": 10,
+      "deferred_unmeasured": [],
+      "rationales_adopted": [],
+      "coherence_annotated": [],
+      "blank_rationales_remaining": [],
+      "by_mechanism": {
+        "re-score": 5,
+        "D15": 5
+      },
+      "new_run_id": "c8008f2a-e844-4944-b39c-4be61d5e575f",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/c8008f2a-e844-4944-b39c-4be61d5e575f.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/rulings_obama_2014_verdict_diff.json",
+      "counts": {
+        "unchanged": 0,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 10,
+        "newly_decided": 0,
+        "split_changes": 0,
+        "other": 0
+      }
+    },
+    {
+      "speech": "trump_2026",
+      "source_run": "9c4262a7-67bd-476e-b433-90424dd0b3e6",
+      "deferred_recorded": 27,
+      "deferred_applied": 27,
+      "deferred_unmeasured": [],
+      "rationales_adopted": [
+        {
+          "sid": "trump_2026:0023",
+          "verdict": "MISLEADING",
+          "mode": "adopted-verbatim",
+          "adopted_from": "arbiter",
+          "adopted_verdict": "MISLEADING",
+          "adopted_from_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+          "resolver": "crm114-discriminator",
+          "attribution": "adopted from the arbiter seat of run 4ee5a251",
+          "synthesized": false,
+          "note": "the wave run discarded its seats' rationale text at reduce time, so the nearest stored panel output for this sid and verdict is the source"
+        }
+      ],
+      "coherence_annotated": [
+        [
+          "trump_2026:0023",
+          "trump_2026:0024"
+        ]
+      ],
+      "blank_rationales_remaining": [],
+      "by_mechanism": {
+        "re-score": 10,
+        "D15": 17
+      },
+      "new_run_id": "83117c1a-a27f-4df1-9183-302472a52e68",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/83117c1a-a27f-4df1-9183-302472a52e68.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/rulings_trump_2026_verdict_diff.json",
+      "counts": {
+        "unchanged": 2,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 27,
+        "newly_decided": 0,
+        "split_changes": 0,
+        "other": 0
+      }
+    }
+  ],
+  "spend_usd": 0.0
+}

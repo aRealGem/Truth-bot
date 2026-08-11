@@ -1,0 +1,4658 @@
+{
+  "schema": "truthbot-rescore-sidecar v1",
+  "speech_id": "biden_2022",
+  "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+  "model": "claude-haiku",
+  "generated": "2026-08-08T15:32:49.208351+00:00",
+  "spend_usd": 0.215807,
+  "sids": {
+    "biden_2022:0017": [
+      {
+        "source_url": "https://www.cnn.com/videos/world/2022/02/26/ukraine-civilians-block-russian-tanks-with-body-and-bikes-nr-vpx.cnn",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.sky.com/video/ukraine-invasion-people-try-to-stop-russian-tanks-from-advancing-in-bakhmach-12552368",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/video/world/ukrainian-man-tries-to-stop-russian-tank/2022/02/28/15e0bd81-5938-4662-9acf-ddf89f652f5a_video.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/03/02/opinion/ukraine-russia-war-zelensky.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0019": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://multimedia.europarl.europa.eu/en/video/volodymyr-zelenskyys-speech-on-war-in-ukraine-european-parliament_N01_AFPS_220310_ZELE",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nationalworld.com/news/world/volodymyr-zelensky-speech-today-full-transcript-of-ukraine-presidents-statement-to-european-parliament-3592244",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/2022/03/02/ukrainian-ambassadors-standing-ovations-russia/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0025": [
+      {
+        "source_url": "https://www.nato.int/en/about-us/organization/founding-treaty",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nato.usmission.gov/about-nato/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/nato_static_fl2014/assets/pdf/2020/12/pdf/201201-reflection-group-final-report-uni.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nato.int/cps/en/natohq/news_174589.htm",
+        "relevance_score": 0.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://commonslibrary.parliament.uk/research-briefings/cbp-9426/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs_external_products/R/PDF/R46066/R46066.11.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iwm.org.uk/learning/nato-the-origins-of-a-political-and-military-alliance",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/cps/en/natohq/news_184633.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nato.int/docu/review/articles/2021/03/19/enlarging-natos-toolbox-to-counter-hybrid-threats/index.html",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nato.int/docu/update/45-49/1949e.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0026": [
+      {
+        "source_url": "https://www.nato.int/en/news-and-events/articles/news/2020/03/27/north-macedonia-joins-nato-as-30th-ally",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/cps/en/natohq/news_174589.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/en/about-us/organization/nato-member-countries",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/en/news-and-events/articles/news/2020/03/30/north-macedonias-flag-raised-at-nato-headquarters-following-accession-to-nato",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2017-2021.state.gov/north-macedonia-joins-the-nato-alliance/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato-pa.int/news/north-macedonia-joins-nato-30th-ally-becomes-full-member-nato-pa",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.defensenews.com/global/europe/2020/03/27/its-official-north-macedonia-becomes-natos-30th-member/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/2020-09-09_R45739_7e832e1975e8502fd998b0f2432d2c9bc7220d0c.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0030": [
+      {
+        "source_url": "https://www.cnn.com/2022/01/14/politics/us-intelligence-russia-false-flag",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://en.special.kremlin.ru/events/president/transcripts/74285",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs_external_products/IN/PDF/IN11806/IN11806.5.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.defense.gov/News/Transcripts/Transcript/Article/2938678/secretary-of-defense-lloyd-j-austin-iii-holds-a-press-conference-at-nato-headqu/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/cps/en/natohq/news_191856.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0031": [
+      {
+        "source_url": "https://www.nato.int/en/about-us/official-texts-and-resources/official-texts/2022/02/24/statement-by-the-north-atlantic-council-on-russias-attack-on-ukraine",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/world/ukraine-standoff-diplomacy-biden-putin-macron-russia-invasion-rcna15112",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.usnews.com/news/national-news/articles/2022-02-12/biden-works-to-dissuade-putin-from-ukraine-invasion-in-hour-long-phone-call-with-russian-leader",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.osce.org/chairpersonship/512974",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2021-2025.state.gov/external-content/the-situation-in-and-around-ukraine-including-the-recent-non-compliance-with-osce-commitments/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2021-2025.state.gov/secretary-antony-j-blinken-and-ukrainian-foreign-minister-dmytro-kuleba-at-a-joint-press-availability-2/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/02/24/1073015013/ukraine-russia-invasion-war-diplomacy",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2021-2025.state.gov/briefings/department-press-briefing-january-11-2022/",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0038": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/white-house-press-release-state-the-union-address-prepared-for-delivery",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/joint-statement-further-restrictive-economic-measures",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://my.usembassy.gov/remarks-by-president-biden-on-russias-unprovoked-and-unjustified-attack-on-ukraine/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/12/readout-of-president-bidens-call-with-president-vladimir-putin-of-russia/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/24/fact-sheet-joined-by-allies-and-partners-the-united-states-imposes-devastating-costs-on-russia/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/03/01/1083854104/biden-state-of-the-union-full-text-2022",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/03/01/us/politics/biden-sotu-transcript.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/world/europe/eu-launch-new-sanctions-against-russia-over-barbaric-attack-ukraine-2022-02-24/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0040": [
+      {
+        "source_url": "https://www.cnn.com/2022/01/14/politics/us-intelligence-russia-false-flag/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.defense.gov/News/Transcripts/Transcript/Article/2922998/pentagon-press-secretary-john-f-kirby-holds-a-press-briefing/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rferl.org/a/ukraine-invasion-russia-fake-pretext/31685484.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/02/03/1078030856/u-s-says-russia-is-planning-a-false-flag-attack-against-ukraine",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/national-security/2022/02/11/russia-ukraine-invasion-intelligence/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/national-security/us-using-declassified-intel-fight-info-war-russia-even-intel-isnt-rock-rcna23014",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bbc.com/news/world-europe-59998988",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/us-russia-planning-video-fake-ukrainian-attack-corpses/story?id=82651966",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/amp/ncna1287514",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0045": [
+      {
+        "source_url": "https://2021-2025.state.gov/g7-foreign-ministers-statement-on-russia-and-ukraine-3/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://press.un.org/en/2022/ga12407.doc.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.voanews.com/amp/un-general-assembly-overwhelmingly-condemns-russia-s-invasion-of-ukraine-/6467348.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/03/01/remarks-of-president-joe-biden-state-of-the-union-address-as-delivered/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.coe.int/en/web/portal/-/council-of-europe-suspends-russia-s-rights-of-representation",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0608",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/recent-actions/20220302",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/national-security/2022/03/01/ukraine-cia-putin-analysis/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/vladimir-putin-russia-ukraine-dwindling-options-isolation/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2021-2025.state.gov/secretary-antony-j-blinken-and-european-commission-president-ursula-von-der-leyen-before-their-meeting-2/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0046": [
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/24/fact-sheet-joined-by-allies-and-partners-the-united-states-imposes-devastating-costs-on-russia/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0608",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/recent-actions/20220224",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/IF12062",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.consilium.europa.eu/en/press/press-releases/2022/03/02/russia-s-military-aggression-against-ukraine-eu-bans-certain-russian-banks-from-swift-system-and-introduces-further-restrictions/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bankingdive.com/news/us-extends-sanctions-to-russias-2-largest-banks/619447/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0677",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0047": [
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0608",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/26/joint-statement-on-further-restrictive-economic-measures/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnbc.com/2022/02/26/eu-uk-canada-us-pledge-to-remove-selected-russian-banks-from-swift.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/recent-actions/20220224",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://amp.cnn.com/cnn/2022/02/26/politics/biden-ukraine-russia-swift/index.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/02/27/1083361122/u-s-and-european-allies-move-to-cut-russian-banks-off-from-swift",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/02/26/1083270999/ukraine-russia-swift-sanctions",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.reuters.com/business/finance/eu-excludes-seven-russian-banks-swift-official-journal-2022-03-02/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0048": [
+      {
+        "source_url": "https://www.cbr.ru/eng/hd_base/mrrf/mrrf_m/?UniDbQuery.From=01.2022&UniDbQuery.Posted=True&UniDbQuery.To=02.2022",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0612",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/faqs/updated",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://rollcall.com/2022/02/28/new-sanctions-cut-russia-off-from-its-foreign-currency-reserves/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/24/fact-sheet-joined-by-allies-and-partners-the-united-states-imposes-devastating-costs-on-russia/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/media/918806/download?inline",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2022/02/26/russia-central-bank-white-house/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/02/28/us/politics/us-sanctions-russia-central-bank.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0624",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2022/03/03/russia-ruble-putin-sanctions/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0051": [
+      {
+        "source_url": "https://www.justice.gov/archives/opa/pr/attorney-general-merrick-b-garland-announces-launch-task-force-kleptocapture",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/opa/pr/attorney-general-merrick-b-garland-announces-launch-task-force-kleptocapture",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/russia-ukraine-oligarch-sanctions/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://edition.cnn.com/2022/03/02/politics/yachts-russian-oligarchs/index.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.upi.com/Top_News/US/2022/03/02/Justice-Russia-Oligarchs-KleptoCapture-task-force/9671646243026/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/03/01/remarks-of-president-joe-biden-state-of-the-union-address-as-delivered/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/world/us-launches-kleptocapture-task-force-aimed-russian-oligarchs-2022-03-02/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/doj-announces-task-force-target-russian-oligarchs-assets/story?id=83204998",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0055": [
+      {
+        "source_url": "https://www.cnbc.com/2022/02/28/russian-ruble-dives-nearly-30percent-against-the-dollar-amid-sanctions-ukraine-crisis.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbr.ru/currency_base/daily/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/data/CCUSMA02RUM618N",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/russia-ukraine-ruble-sanctions/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/outlook/2022/02/28/ruble-has-plummeted-its-not-first-time/",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0056": [
+      {
+        "source_url": "https://www.forbes.com/sites/jonathanponciano/2022/02/28/russia-stocks-crash-even-with-moscow-stock-exchange-closed-experts-call-market-uninvestable/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.moex.com/n41370",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/02/27/world/europe/ruble-russia-stock-market.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/moscow-exchange-suspends-trading-all-markets-2022-02-24/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0062": [
+      {
+        "source_url": "https://2021-2025.state.gov/additional-military-assistance-for-ukraine/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.state.gov/the-united-states-announces-additional-humanitarian-assistance-for-the-people-of-ukraine/",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://ge.usembassy.gov/overwhelming-majority-of-nations-demand-putin-end-war-in-ukraine/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.usaid.gov/sites/default/files/2022-02-27_USG_Ukraine_Complex_Emergency_Fact_Sheet_2.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/press-release-the-united-states-announces-additional-humanitarian-assistance-ukraine",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/03/02/remarks-by-president-biden-in-state-of-the-union-address/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.usaid.gov/sites/default/files/2022-05/2022-02-27_USG_Ukraine_Complex_Emergency_Fact_Sheet_2.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/wmd/library/news/ukraine/2022/ukraine-220227-state01.htm",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://ru.usembassy.gov/united-states-announces-additional-humanitarian-assistance-for-people-of-ukraine-022722/",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.state.gov/assistance-made-available-for-ukraine-since-february-24-2022-2",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0066": [
+      {
+        "source_url": "https://media.defense.gov/2022/Feb/02/2002931655/-1/-1/0/EUROPE-POSTURE-UPDATES-FACT-SHEET.PDF",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://media.defense.gov/2022/Feb/22/2002943228/-1/-1/1/POSTURE-UPDATES-IN-SUPPORT-OF-ALLIES-IN-EUROPE.PDF?source=GovDelivery",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://media.defense.gov/2022/Mar/08/2002952460/-1/-1/1/2022-0308-MAR-5-SDOB-FACTSHEET-POSTURE-IN-SUPPORT-OF-ALLIES-IN-EUROPE.PDF",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/02/22/remarks-by-president-biden-announcing-response-to-russian-actions-in-ukraine/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.army.mil/article/254189/biden_shifts_us_troops_in_europe_to_defend_frontline_nato_states",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.defense.gov/News/News-Stories/Article/Article/2920844/us-to-deploy-3000-troops-to-romania-poland-germany/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.army.mil/article/253724/us_to_deploy_3000_troops_to_romania_poland_germany",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.war.gov/News/Transcripts/Transcript/Article/2921277/pentagon-press-secretary-john-f-kirby-holds-a-press-briefing/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.europeafrica.army.mil/ArticleViewPressRelease/Article/2936466/press-release-us-army-europe-and-africa-commander-visits-2nd-cavalry-regiment-s/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.navytimes.com/news/your-navy/2022/03/04/uss-truman-aircraft-join-buildup-of-nato-air-policing-patrols-over-eastern-europe/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0073": [
+      {
+        "source_url": "https://www.reuters.com/world/europe/uk-says-russian-advance-kyiv-slowed-by-staunch-ukrainian-resistance-2022-02-28/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.osw.waw.pl/en/publikacje/osw-commentary/2021-08-24/a-durable-state-30th-anniversary-ukraines-independence",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.president.gov.ua/en/news/promova-prezidenta-volodimira-zelenskogo-z-nagodi-30-yi-rich-70333",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://apnews.com/article/russia-ukraine-putin-biden-europe-avril-haines-5c9707de86165915e7ce9d10d18464f3",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/2022/02/28/ukraine-russia-kyiv-defense/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bbc.com/news/world-europe-60530082",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2021-2025.state.gov/ukraines-independence-day/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/03/03/us/politics/russia-ukraine-military.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/02/12/1080205477/history-ukraine-russia",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0078": [
+      {
+        "source_url": "https://www.iea.org/news/iea-member-countries-to-make-60-million-barrels-of-oil-available-following-russias-invasion-of-ukraine",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/us-and-30-countries-commit-release-60-million-barrels-oil-strategic-reserves-stabilize",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/doe-announces-emergency-sale-30-million-barrels-crude-oil-strategic-petroleum-reserve",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/03/01/statement-by-press-secretary-jen-psaki-on-coordinated-iea-release-to-support-global-energy-security/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CPUB-117spub12/pdf/GPO-CPUB-117spub12.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/03/01/1083697896/iea-oil-emergency-reserves-stockpiles-ukraine-russia-war",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbc.ca/lite/story/1.6368573",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/international-energy-agency-to-release-60-million-barrels-of-oil/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/climate-environment/2022/03/01/iea-gasoline-prices-oil-reserves/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0079": [
+      {
+        "source_url": "https://www.energy.gov/articles/us-and-30-countries-commit-release-60-million-barrels-oil-strategic-reserves-stabilize",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/node/4817825",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iea.org/news/iea-member-countries-to-make-60-million-barrels-of-oil-available-following-russias-invasion-of-ukraine",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/doe-announces-emergency-sale-30-million-barrels-crude-oil-strategic-petroleum-reserve",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/ceser/articles/doe-announces-emergency-notice-sale-crude-oil-strategic-petroleum-reserve-address",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.thenationalnews.com/business/energy/2022/03/01/iea-to-release-60-million-barrels-of-oil-from-emergency-stocks/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=51538",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/hgeo/opr/history-spr-releases",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/international-energy-agency-to-release-60-million-barrels-of-oil/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/ceser/articles/spr-2022-annual-report-congress",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0087": [
+      {
+        "source_url": "https://www.reuters.com/world/europe/more-than-64-people-detained-anti-war-protests-russia-protest-monitor-2022-03-06/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.aljazeera.com/news/2022/2/27/thousands-attend-ukraine-solidarity-march-in-berlin",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rferl.org/a/russia-ukraine-antiwar-protests/31726586.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/world/europe/large-crowds-gather-hamburg-paris-protest-russias-war-ukraine-2022-03-05/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/2022/03/06/protest-arrests-russia/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/02/26/1083314709/protests-world-ukraine-russia",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/pictures/russia-ukraine-invasion-protests/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bbc.com/news/world-europe-60640204",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/world/protesters-stand-with-ukraine-across-united-states-2022-02-24/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0100": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/metro_06032020.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/metro_06032020.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://millercenter.org/president/biden/life-before-the-presidency",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/metro_04292020.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://aese.psu.edu/research/centers/cecd/publications/pa-county-population-dynamics/population-and-demographic-change-2010-2020/download/psu_cecd_demographic_2020_lackawanna.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/node/110",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/regions/mid-atlantic/news-release/2021/occupationalemploymentandwages_scranton_20210720.htm",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.census.gov/quickfacts/fact/table/scrantoncitypennsylvania/HSD310223",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/metro_06022021.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0102": [
+      {
+        "source_url": "https://www.congress.gov/bill/117th-congress/house-bill/1319",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/legislation/2021/01/20/president-biden-announces-american-rescue-plan/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/legislation/2021/01/20/president-biden-announces-american-rescue-plan/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2021/03/11/remarks-by-president-biden-at-signing-of-the-american-rescue-plan/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/117th-congress/house-bill/1319/all-info",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.loc.gov/item/global-legal-monitor/2021-03-11/united-states-president-biden-signs-american-rescue-plan-act-into-law-to-address-ongoing-issues-related-to-coronavirus-pandemic/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnbc.com/2021/03/11/biden-1point9-trillion-covid-relief-package-thursday-afternoon.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ballotpedia.org/American_Rescue_Plan_Act_of_2021",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0107": [
+      {
+        "source_url": "https://home.treasury.gov/news/featured-stories/fact-sheet-the-american-rescue-plan-will-deliver-immediate-economic-relief-to-families",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/wp-content/uploads/2021/03/ARP-Fact-Sheet-AAPI-Communities.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0248",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/136/American-Rescue-Plan-Six-Month-Report.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/policy-issues/coronavirus/assistance-for-american-families-and-workers/economic-impact-payments",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-117hhrg47065/html/CHRG-117hhrg47065.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/720/719118.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0110": [
+      {
+        "source_url": "https://home.treasury.gov/system/files/136/Fact-Sheet-03-18-21.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/library/stories/2022/02/harder-to-pay-bills-now-that-child-tax-credit-payments-have-ended.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/136/American-Rescue-Plan-Six-Month-Report.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/federal-tax/american-rescue-plan-act-includes-critical-expansions-of-child-tax-credit-and",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/federal-tax/the-2017-trump-tax-law-was-skewed-to-the-rich-expensive-and-failed-to-deliver",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0357",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/library/stories/2021/03/many-american-households-use-stimulus-payments-to-pay-down-debt.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2021/03/American-Rescue-Plan-Fact-Sheet.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0533",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/library/stories/2021/07/spanish-language-survey-respondents-report-greater-pandemic-hardships.html",
+        "relevance_score": 0.65,
+        "supports_claim": false
+      }
+    ],
+    "biden_2022:0114": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.htm",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2022/nonfarm-payroll-employment-rose-by-199000-in-december-2021.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/monetarypolicy/2022-02-mpr-part1.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/releases/osec/osec20220107",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/PAYEMS",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0574",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/02/04/remarks-by-president-biden-on-the-january-jobs-report/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.htm",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_12032021.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0115": [
+      {
+        "source_url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-advance-estimate",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/files/docs/publications/bea/newsreleases/bea_newsreleases_20220127_technote.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2022/gross-domestic-product-fourth-quarter-and-year-2021-second-estimate",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2022-01/tech4q21_adv.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2022/01/27/gdp-2021-q4-economy/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+        "relevance_score": 0.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/us-economy-grew-57-2021-rebounding-2020-recession-rcna13771",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnbc.com/2022/01/27/gdp-grew-at-a-6point9percent-pace-to-close-out-2021-stronger-than-expected-despite-omicron-spread.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.pgpf.org/article/the-us-economy-grew-at-its-fastest-rate-since-1984/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0116": [
+      {
+        "source_url": "https://eprints.lse.ac.uk/107919/",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://academic.oup.com/ser/article/20/2/539/6500315",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/57413",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/131/Tax-Expenditures-2021.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/tax-cuts-rich-50-years-no-trickle-down",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2021/03/19/bidens-democrats-want-roll-back-reagan-era-are-party-country-ready/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0117": [
+      {
+        "source_url": "https://academic.oup.com/ser/article/20/2/539/6500315",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nber.org/papers/w27922",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/econres/notes/feds-notes/wealth-and-income-concentration-in-the-scf-20200928.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/econres/notes/feds-notes/updating-the-distributional-financial-accounts-20201109.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/56073",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0124": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-28",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.asce.org/publications-and-news/civil-engineering-source/society-news/article/2021/03/asces-infrastructure-report-card-gives-us-c/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/transportation/2021/04/30/us-infrastructure-ranking/",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://democrats-smallbusiness.house.gov/news/documentsingle.aspx?DocumentID=3785",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/opinions/no-americas-infrastructure-is-not-crumbling/2021/04/06/ab97cc50-9554-11eb-a6d0-13d207aadb78_story.html",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0125": [
+      {
+        "source_url": "https://www.washingtonpost.com/transportation/2021/04/30/us-infrastructure-ranking/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www3.weforum.org/docs/WEF_TheGlobalCompetitivenessReport2019.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.france24.com/en/americas/20210727-1-trillion-plan-how-does-the-us-rank-globally-on-infrastructure",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2021/03/31/fact-sheet-the-american-jobs-plan/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2022/03/01/biden-state-of-union-live-updates/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2021/04/01/983470782/by-the-numbers-bidens-2-trillion-infrastructure-plan",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GOVPUB-C13-1c344eaa7ab4faa58a1aa8bf9d834e90/pdf/GOVPUB-C13-1c344eaa7ab4faa58a1aa8bf9d834e90.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/opinions/no-americas-infrastructure-is-not-crumbling/2021/04/06/ab97cc50-9554-11eb-a6d0-13d207aadb78_story.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/biden-infrastructure-plan-cost-2-trillion-8-years/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0127": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-the-bipartisan-infrastructure-deal",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/11/06/fact-sheet-the-bipartisan-infrastructure-deal/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2021/11/06/fact-sheet-the-bipartisan-infrastructure-deal/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/57406",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/infrastructure",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/08/02/updated-fact-sheet-bipartisan-infrastructure-investment-and-jobs-act/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/117th-congress/house-bill/3684/text",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R46826",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epa.gov/system/files/documents/2021-11/e-ow-bid-fact-sheet-final.508.pdf",
+        "relevance_score": 0.55,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2021/11/15/1055936695/president-biden-has-signed-a-1-2-trillion-infrastructure-bill",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0136": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-president-biden-lay-out-bold-commitments-rebuilding-americas-crumbling",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/23/fact-sheet-biden-%E2%81%A0harris-administration-delivering-results-100-days-into-infrastructure-implementation/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-03/pdf/CREC-2022-03-03.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://amp.cnn.com/cnn/2022/02/27/politics/biden-infrastructure-law",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/wp-content/uploads/2022/01/BUILDING-A-BETTER-AMERICA_FINAL.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CPUB-117spub12/pdf/GPO-CPUB-117spub12.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.transportation.gov/briefing-room/president-biden-announces-first-its-kind-infrastructure-investment-nine-nationally",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0137": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-president-biden-lay-out-bold-commitments-rebuilding-americas-crumbling",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/press-release-fhwa-delivers-largest-federal-highway-apportionment-decades-part-bipartisan",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/03/01/us/politics/mitch-landrieu-infrastructure-biden.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://highways.dot.gov/newsroom/fhwa-delivers-largest-federal-highway-apportionment-decades-part-bipartisan-infrastructure",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.transportation.gov/briefing-room/usdot-releases-state-state-fact-sheets-highlighting-benefits-bipartisan",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0139": [
+      {
+        "source_url": "https://comptroller.defense.gov/Portals/45/Documents/defbudget/FY2022/FY22_Green_Book.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/03/04/fact-sheet-biden-harris-administration-delivers-on-made-in-america-commitments/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://comptroller.defense.gov/Portals/45/Documents/defbudget/FY2022/FY2022_Budget_Request_Overview_Book.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/01/25/president-biden-to-sign-executive-order-strengthening-buy-american-provisions-ensuring-future-of-america-is-made-in-america-by-all-of-americas-workers/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-2022-TAB/BUDGET-2022-TAB-4-1/context",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/omb/management/made-in-america/federal-procurement/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/2022/03/07/2022-04173/federal-acquisition-regulation-amendments-to-the-far-buy-american-act-requirements",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/117th-congress/senate-report/39/1",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R46748",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/117th-congress/house-report/118/1",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      }
+    ],
+    "biden_2022:0140": [
+      {
+        "source_url": "https://uscode.house.gov/view.xhtml?path=%2Fprelim%40title41%2Fsubtitle4%2Fchapter83&edition=prelim",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202100085/pdf/DCPD-202100085.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R46748",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2022-03-07/pdf/2022-04179.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.hklaw.com/en/insights/publications/2022/03/biden-administration-finalizes-important-changes-to-buy-american-rule",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.acquisition.gov/content/publication-fac-2022-05",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.mayerbrown.com/en/insights/publications/2022/03/final-rule-strengthens-buy-american-act-requirements-for-us-government-contractors-and-their-supply-chains",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.acquisition.gov/early-posting-of-FAR-final-rule/2021-008-news",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2022/03/04/biden-use-federal-purchasing-power-increase-us-manufacturing/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0146": [
+      {
+        "source_url": "https://www.intc.com/news-events/press-releases/detail/1521/intel-announces-next-us-site-with-landmark-investment-in",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/03/02/remarks-by-president-biden-in-state-of-the-union-address/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://newsroom.intel.com/press-kit/intel-invests-ohio",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/01/20/fact-sheet-biden-harris-administration-bringing-semiconductor-manufacturing-back-to-america/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://apps.lickingcounty.gov/arcgis/rest/services/Auditor/ParcelsSearch/MapServer",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01-pt1-PgH1200-2.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/white-house/biden-uses-20-billion-intel-ohio-investment-push-congress-pass-n1287838",
+        "relevance_score": 0.6,
+        "supports_claim": false
+      }
+    ],
+    "biden_2022:0148": [
+      {
+        "source_url": "https://www.intc.com/news-events/press-releases/detail/1521/intel-announces-next-us-site-with-landmark-investment-in",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.intc.com/news-events/press-releases/detail/1521/intel-announces-next-us-site-with-landmark-investment-in?stream=top",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.commerce.gov/news/press-releases/2022/01/statements-us-secretary-commerce-gina-m-raimondo-and-deputy-secretary",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2022/01/21/intel-chip-factory-ohio/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Business/intel-investing-20-billion-bring-chip-manufacturing-ohio/story?id=82395975",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0154": [
+      {
+        "source_url": "https://www.intc.com/news-events/press-releases/detail/1521/intel-announces-next-us-site-with-landmark-investment-in",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://download.intel.com/newsroom/2022/manufacturing/Gelsinger-White-House-Comments.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200142/pdf/DCPD-202200142.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.98,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/crec/2022/03/01/168/37/CREC-2022-03-01.pdf",
+        "relevance_score": 0.98,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://apnews.com/article/intel-to-build-20b-ohio-chip-facility-amid-global-shortage-45f7c849b5f8f9fa2c6d2a3f0d9b6c7a",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0155": [
+      {
+        "source_url": "https://www.reuters.com/technology/intel-plans-new-chip-manufacturing-site-ohio-report-2022-01-21/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.intc.com/news-events/press-releases/detail/1521/intel-announces-next-us-site-with-landmark-investment-in",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.intc.com/news-events/press-releases/detail/1521/intel-announces-next-us-site-with-landmark-investment-in?stream=top",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/state-of-the-union-2022/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/01/21/technology/intel-to-invest-at-least-20-billion-in-new-chip-factories-in-ohio.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0165": [
+      {
+        "source_url": "https://reshorenow.org/blog/reshoring-initiative-2021-data-report/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.intc.com/news-events/press-releases/detail/1521/intel-announces-next-us-site-with-landmark-investment-in",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.commerce.gov/news/press-releases/2021/03/statement-us-secretary-commerce-gina-m-raimondo-intels-plan-build-new",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://gov.texas.gov/news/post/governor-abbott-announces-new-17-billion-samsung-manufacturing-facility-in-taylor",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/TLMFGCONS",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://governor.ohio.gov/media/news-and-media/Governor-DeWine-Announces-Monumental-Investment-by-Intel-to-Bring-Their-Most-Advanced-Semiconductor-Manufacturing-Plants-to-Ohio-01212022",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://apnews.com/article/intel-to-build-20b-ohio-chip-facility-3c1e3b6b6d5b0b6b2f8f4d8b2c2a1b3e",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/summary/46641",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.npr.org/2022/01/21/1074733306/intel-ohio-computer-chips",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0167": [
+      {
+        "source_url": "https://corporate.ford.com/articles/electrification/blue-oval-city.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://media.ford.com/content/fordmedia/fna/us/en/news/2021/09/27/ford-to-lead-americas-shift-to-electric-vehicles.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/ford-jolts-auto-industry-11-4-billion-investment-new-electric-n1280182",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2021/09/28/ford-jobs-electric-batteries/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0168": [
+      {
+        "source_url": "https://investor.gm.com/news-releases/news-release-details/gm-accelerates-its-drive-lead-ev-industry-7-billion-investment/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.gm.com/home.detail.html/Pages/news/us/en/2022/jan/0125-michigan-investment.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.michigan.gov/whitmer/news/press-releases/2022/01/25/secures-historic-7-billion-investment-by-gm-to-create-thousands-of-manufacturing-jobs-",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0169": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2021/current-employment-statistics-highlights-12-2021.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/2022/article/employment-recovery-continues-in-2021.htm",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES3000000001",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/MANEMP",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2022/current-employment-statistics-highlights-01-2022.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/index.cfm/democrats/fact-sheets?ID=F8D8901B-1446-4B05-A87D-0C3535C7AC43",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/_cache/files/e6b293d1-ad31-429e-a459-f55cc3b3870e/jec---manufacturing-progress-under-biden---fact-sheet---feb-2022---final.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0171": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01-senate.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.richlandsource.com/2022/01/31/sherrod-brown-burying-the-term-rust-belt/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.brown.senate.gov/newsroom/newsletters/burying-the-term-rust-belt",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/03/02/remarks-by-president-biden-in-state-of-the-union-address/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/crec/2022/03/01/CREC-2022-03-01.pdf",
+        "relevance_score": 0.98,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.richlandsource.com/2022/01/21/sherrod-brown-today-we-are-burying-the-term-rust-belt/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.banking.senate.gov/newsroom/majority/brown-the-american-people-deserve-a-fed-board-that-works-for-them",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200155/pdf/DCPD-202200155.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2022/03/01/biden-state-of-the-union-live-updates/",
+        "relevance_score": 0.98,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0172": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_03042022.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02102022.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/data/tables/2022/demo/hhp/hhp42.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02102022.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2022/01/08/2021-shattered-records-but/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/realer_02102022.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://brp-prod-bcc.bloomberg.com/news/articles/2022-01-07/u-s-sees-record-job-growth-in-2021-after-millions-lost-in-2020",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2022/current-employment-statistics-highlights-02-2022.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/releases/osec/osec20220304",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0177": [
+      {
+        "source_url": "https://www.stlouisfed.org/publications/review/2022/02/07/global-supply-chain-disruptions-and-inflation-during-the-covid-19-pandemic",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/02/global-value-chains-efficiency-and-risks-in-the-context-of-covid-19_e838d87a/67c75fdc-en.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ecb.europa.eu/press/economic-bulletin/focus/2022/html/ecb.ebbox202108_01~e8ceebe51f.en.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/monetarypolicy/beigebook202203.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://files.gao.gov/reports/GAO-21-265/index.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/btn/volume-10/how-did-the-covid-19-pandemic-affect-input-costs-for-us-producers.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0180": [
+      {
+        "source_url": "https://www.congress.gov/crs_external_products/IF/PDF/IF12000/IF12000.1.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.clevelandfed.org/publications/economic-commentary/2021/ec-202117-semiconductor-shortages-vehicle-production-prices",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.alixpartners.com/newsroom/press-release-shortages-related-to-semiconductors-to-cost-the-auto-industry-210-billion-in-revenues-this-year-says-new-alixpartners-forecast/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.commerce.gov/news/blog/2022/01/results-semiconductor-supply-chain-request-information",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://apnews.com/article/coronavirus-pandemic-bb12adb6106019a618440d85fd91f77e",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/us-policy/2021/07/28/chip-shortage-2q-earnings/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/autos-transportation/automakers-chip-firms-differ-when-semiconductor-shortage-will-abate-2022-02-04/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/gm-and-ford-semiconductor-plant-closing-michigan-illinois-missouri-auto-industry/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/retail-consumer/chip-shortage-cost-automakers-110-bln-revenues-2021-alixpartners-2021-05-14/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2021/06/08/fact-sheet-biden-harris-administration-announces-supply-chain-disruptions-task-force-to-address-short-term-supply-chain-discontinuities/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0181": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02102022.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02102022.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_01122022.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.clevelandfed.org/publications/economic-commentary/2021/ec-202117-semiconductor-shortages-vehicle-production-prices",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.coxautoinc.com/insights-hub/feb-2022-muvvi/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/CUUR0000SETA02",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fredblog.stlouisfed.org/2021/05/the-jump-in-used-car-prices/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/news/blog/2022-02-25/personal-income-and-outlays-january-2022-1",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0194": [
+      {
+        "source_url": "https://westhealth.org/news/most-americans-support-medicare-negotiation-for-drug-prices-despite-claims-it-would-hurt-innovation/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.ipsos.com/en-us/news-polls/bidens-build-back-better-framework-supported-over-half-americans-110321",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/01/26/remarks-by-president-biden-at-build-back-better-ceo-roundtable/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200037/pdf/DCPD-202200037.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0197": [
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/148231",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/85309/cdc_85309_DS1.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/diabetes/php/data-research/index.html",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/103877/cdc_103877_DS1.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://hcup-us.ahrq.gov/reports/statbriefs/sb279-Diabetes-Inpatient-Stays-2018.jsp",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://diabetesresearch.org/wp-content/uploads/2022/05/national-diabetes-statistics-report-2020.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK573775/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.medscape.com/viewarticle/967279",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      }
+    ],
+    "biden_2022:0199": [
+      {
+        "source_url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes/type-1-diabetes",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01-pt1-PgH1200-2.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/diabetes/signs-symptoms/just-diagnosed-type-1.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-28",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/dc-md-va/2022/03/03/joshua-davice-state-union-type-1-diabetes/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://medlineplus.gov/ency/article/000305.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.niddk.nih.gov/health-information/diabetes/overview/insulin-medicines-treatments",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.breakthrought1d.org/for-the-media/press-releases/jdrf-official-statement-president-bidens-comments-about-insulin-affordability-during-state-of-the-union/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7839613/",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://magazine.medlineplus.gov/article/type-1-diabetes-what-you-need-to-know",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0200": [
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/states-are-trying-cap-price-insulin-pharmaceutical-companies-are-pushing-n1236766",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rand.org/pubs/articles/2021/the-astronomical-price-of-insulin-hurts-american-families.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://beyondtype1.org/how-much-does-it-cost-to-produce-insulin/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.finance.senate.gov/imo/media/doc/Grassley-Wyden%20Insulin%20Report%20(FINAL).pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.finance.senate.gov/imo/media/doc/Grassley-Wyden%20Insulin%20Report%20(FINAL%201).pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://le.utah.gov/interim/2021/pdf/00003465.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/private/pdf/264056/Comparing-Insulin-Prices.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8597930/",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0201": [
+      {
+        "source_url": "https://www.rand.org/pubs/research_reports/RRA788-1.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.finance.senate.gov/imo/media/doc/Grassley-Wyden%20Insulin%20Report%20(FINAL).pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.finance.senate.gov/chairmans-news/grassley-wyden-release-insulin-investigation-uncovering-business-practices-between-drug-companies-and-pbms-that-keep-prices-high",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://le.utah.gov/interim/2021/pdf/00003465.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/documents/7ec40da6efd90a2a71cf3399a5b3b24d/insulin-price-comparisons.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rand.org/content/dam/rand/pubs/research_reports/RRA700/RRA788-1/RAND_RRA788-1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sec.gov/divisions/corpfin/cf-noaction/14a-8/2022/trinityelililly030722-14a8.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2022/03/03/cheaper-insulin-plan/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/comparing-insulin-prices-us-other-countries",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/migrated_legacy_files//196281/Comparing-Insulin-Prices.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0211": [
+      {
+        "source_url": "https://cms.gov/newsroom/press-releases/american-rescue-plan-lowered-health-costs-millions-americans-ahead-august-15-deadline-get-covered",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/newsroom/fact-sheets/american-rescue-plan-and-marketplace",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.kff.org/affordable-care-act/how-the-american-rescue-plan-act-affects-subsidies-for-marketplace-shoppers-and-people-who-are-uninsured/",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://cms.gov/newsroom/press-releases/biden-harris-administration-announces-145-million-americans-signed-affordable-health-care-during",
+        "relevance_score": 0.75,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cms.gov/files/document/health-insurance-exchanges-2022-open-enrollment-report-final.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/2021-07/aspe-arp-ui-ib.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.cms.gov/files/document/american-rescue-plan-fast-facts-cms.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/meeting/house/111378/documents/HHRG-117-IF14-20210323-SD018.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.cms.gov/files/document/marketplace-enrollment-and-savings-infographic.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/health/health-provisions-in-american-rescue-plan-act-improve-access-to-health-coverage",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0216": [
+      {
+        "source_url": "https://www.ffyf.org/resources/2022/02/child-care-prices-rose-significantly-in-2020-continuing-decades-long-trend-of-major-annual-increases/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://info.childcareaware.org/media/new-report-finds-fewer-child-care-providers-and-increased-prices-highlighting-need-for-significant-federal-investment-in-child-care",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ocfs.ny.gov/main/reports/2022-Child-Care-Market-Rate-Survey.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/04/28/fact-sheet-the-american-families-plan/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/increases-out-pocket-child-care-costs-1995-2016",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dol.gov/sites/dolgov/files/WB/NDCP/WB_IssueBrief-NDCP-final.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://dhs.ri.gov/media/3066/download?language=en",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.stlouisfed.org/publications/regional-economist/2022/jan/pandemic-rising-costs-challenge-child-care-industry",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/live-updates/biden-state-of-the-union-address-unity-russia/",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0229": [
+      {
+        "source_url": "https://itep.org/55-profitable-corporations-zero-corporate-tax/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://itep.org/55-corporations-exploit-old-and-new-loopholes-to-pay-0-in-federal-taxes-in-2020/",
+        "relevance_score": 0.98,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2021/04/05/corporations-federal-taxes/",
+        "relevance_score": 0.96,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2021/04/02/business/economy/zero-corporate-tax.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R46887",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2021/10/21/bidens-favorite-stat-that-55-major-corporations-paid-no-federal-income-tax/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/state-of-the-union-2022/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0232": [
+      {
+        "source_url": "https://www.oecd.org/tax/beps/statement-on-a-two-pillar-solution-to-address-the-tax-challenges-arising-from-the-digitalisation-of-the-economy-october-2021.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-issues/beps/statement-on-a-two-pillar-solution-to-address-the-tax-challenges-arising-from-the-digitalisation-of-the-economy-july-2021.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0394",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.loc.gov/item/global-legal-monitor/2021-07-13/international-130-countries-and-jurisdictions-agree-to-plans-for-global-minimum-corporate-tax-rate/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/countries-backs-global-minimum-corporate-tax-least-15-2021-07-01/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/us-policy/2021/07/01/global-corporate-tax-oecd/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/crec/2022/03/01/CREC-2022-03-01.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0240": [
+      {
+        "source_url": "https://www.cbo.gov/publication/56542",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202000194/pdf/DCPD-202000194.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://oversightdemocrats.house.gov/news/press-releases/chairwoman-maloney-issues-statement-on-president-trump-s-removal-of-ig-glenn",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/national-security/trump-removes-inspector-general-who-was-to-oversee-2-trillion-stimulus-spending/2020/04/07/2f0c6cb8-78ea-11ea-9bee-c5bf9d2e3288_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govexec.com/oversight/2020/04/trump-removed-acting-pentagon-ig-slated-lead-pandemic-oversight/164419/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2020/04/07/829136780/in-another-pushback-against-oversight-trump-removes-pandemic-inspector-general",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnbc.com/2020/04/07/coronavirus-relief-trump-removes-inspector-general-overseeing-2-trillion-package.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.grassley.senate.gov/download/2020-04-21-ceg-to-potus-sigpr?download=1",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/trump-abruptly-removes-inspector-general-named-oversee-2t/story?id=70024680",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2020/04/03/trump-coronavirus-inspector-general-brian-miller/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0242": [
+      {
+        "source_url": "https://www.oig.dol.gov/public/reports/oa/2021/19-21-005-03-315.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnbc.com/2021/12/21/criminals-have-stolen-nearly-100-billion-in-covid-relief-funds-secret-service.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://legacy.sba.gov/document/report-21-07-inspection-sbas-implementation-paycheck-protection-program",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/politics-news/secret-service-nearly-100b-stolen-pandemic-relief-funds-n1286430",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.thehill.com/policy/healthcare/596447-doj-to-name-a-chief-prosecutor-for-pandemic-fraud-biden-says/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oversight.gov/sites/default/files/oig-reports/TIGTA/202146034fr.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/justice-department/biggest-fraud-generation-looting-covid-relief-program-known-ppp-n1279664",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/d9/press-releases/attachments/2021/05/17/attorney_general_memorandum_-_covid-19_fraud_enforcement_task_force_0.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-21-387",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oversight.gov/sites/default/files/documents/reports/2021-04/SIGPR-Quarterly-Report-Congress-March-31-2021.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0244": [
+      {
+        "source_url": "https://www.cbo.gov/publication/57841",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/261/FSOC2022AnnualReport.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/state-of-the-union-2022/",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/56746",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0428",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fiscal.treasury.gov/files/reports-statements/mts/mts0921.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.crfb.org/blogs/closer-look-record-31-trillion-deficit-fy-2020",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/sm1155",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/57170",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/57841/html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0245": [
+      {
+        "source_url": "https://www.cbo.gov/publication/57539",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-2021-TAB/BUDGET-2021-TAB-2-1",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://fiscaldata.treasury.gov/americas-finance-guide/national-deficit/",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbo.gov/system/files/2022-03/57841-MBR.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbo.gov/system/files/2021-02/51134-2021-02-11-historicalbudgetdata.xlsx",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://fiscal.treasury.gov/accounting/us-financial-report/2021/where-we-are-now",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/58268",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.crfb.org/blogs/did-president-biden-reduce-deficit-1-trillion",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.crfb.org/blogs/treasury-2021-deficit-was-28-trillion",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      }
+    ],
+    "biden_2022:0250": [
+      {
+        "source_url": "https://www.usitc.gov/research_and_analysis/tradeshifts/2020/special_topic.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/28/fact-sheet-lowering-prices-and-leveling-the-playing-field-in-ocean-shipping",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/28/fact-sheet-lowering-prices-and-leveling-the-playing-field-in-ocean-shipping/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/117th-congress/senate-event/LC72604/text",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bloomberg.com/news/features/2022-01-18/supply-chain-crisis-helped-shipping-companies-reap-150-billion-in-2021",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bloomberg.com/news/newsletters/2022-01-18/supply-chain-latest-ship-profits-soar-while-freight-inflation-rises",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.commerce.senate.gov/2022/3/sen-cantwell-commerce-committee-to-pursue-ocean-shipping-reforms",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/china-us-container-shipping-rates-sail-past-20000-record-2021-08-05/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/chrg/CHRG-117shrg55620/CHRG-117shrg55620.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0251": [
+      {
+        "source_url": "https://www.reuters.com/business/maersk-triples-quarterly-profit-despite-lower-container-volumes-2021-11-02/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-lowering-prices-and-leveling-the-playing-field-ocean-shipping",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.freightos.com/freight-resources/freightos-baltic-index-futures-chicago-mercantile-exchange/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://oversightdemocrats.house.gov/news/press-releases/chairs-clyburn-and-krishnamoorthi-seek-information-from-ocean-freight-carriers",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/28/fact-sheet-lowering-prices-and-leveling-the-playing-field-in-ocean-shipping",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.stlouisfed.org/on-the-economy/2022/january/dynamics-international-shipping-costs",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/maersk-expects-tailwind-last-amid-high-demand-containers-2021-05-05/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://coronavirus.house.gov/news/press-releases/chairs-clyburn-and-krishnamoorthi-seek-information-ocean-freight-carriers-about",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0253": [
+      {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8796926/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.weill.cornell.edu/news/2021/11/private-equity-ownership-of-nursing-homes-linked-to-lower-quality-of-care-higher",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nber.org/papers/w28474",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.medpac.gov/wp-content/uploads/import_data/scrape_files/docs/default-source/reports/jun21_medpac_report_to_congress_sec.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/28/fact-sheet-protecting-seniors-and-people-with-disabilities-by-improving-safety-and-quality-of-care-in-the-nations-nursing-homes/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2020/05/07/business/coronavirus-nursing-homes-profits-private-coronavirus.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0266": [
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02042022.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/115111/cdc_115111_DS1.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/114173",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2022/t0225-covid-19-update.html",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/107687",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/g62h-syeh",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.foxnews.com/us/number-covid-patients-us-hospitals-record-low",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ourworldindata.org/covid-hospitalizations",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0267": [
+      {
+        "source_url": "https://www.cdc.gov/media/releases/2022/s0225-covid-guidance.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2022/t0225-covid-19-update.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/114898/cdc_114898_DS1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/health-shots/2022/02/25/1082249002/cdc-says-americans-can-now-go-unmasked-in-many-parts-of-the-country",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/114901/cdc_114901_DS1.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2022/02/25/health/cdc-covid-metrics-mask-guidance/index.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/114900",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/cdc-guidelines-mask-indoors-covid-19/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/health/2022/02/25/cdc-mask-guidance-changed-metrics/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://time.com/6151467/cdc-new-mask-guidance/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0268": [
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2022/a0225-covid-19-update.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02252022.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2022/t0225-covid-19-update.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/science/science-briefs/indicators-monitoring-community-levels.html",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/114901/cdc_114901_DS1.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.nbcnews.com/health/health-news/cdc-indoor-masking-no-longer-necessary-us-rcna17686",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2022/s0303-covid-19-community-levels.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/health-shots/2022/02/25/1082249002/cdc-says-americans-can-now-go-unmasked-in-many-parts-of-the-country",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2022/02/25/health/cdc-covid-metrics-mask-guidance/index.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.wbur.org/npr/1082249002/cdc-says-americans-can-now-go-unmasked-in-many-parts-of-the-country",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0277": [
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/71/wr/mm7104e3.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2022/s0211-covid-19-boosters.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2114255",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2115624",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/71/wr/mm7105e1.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0282": [
+      {
+        "source_url": "https://www.pfizer.com/news/press-release/press-release-detail/pfizers-novel-covid-19-oral-antiviral-treatment-candidate",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2118542",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.fda.gov/media/155194/download?attachment=",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/health/2021/11/05/pfizer-covid-pill/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/health/health-news/pfizers-covid-antiviral-pill-may-cut-severe-illness-89-percent-rcna4593",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0283": [
+      {
+        "source_url": "https://www.pfizer.com/news/press-release/press-release-detail/pfizer-provide-us-government-additional-10-million",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.axios.com/2022/01/04/us-pfizer-pill-covid-double",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CPUB-117spub12/pdf/GPO-CPUB-117spub12.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/healthcare-pharmaceuticals/us-govt-buy-10-mln-courses-pfizers-covid-19-pill-529-bln-2021-11-18/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/health-shots/2022/02/01/1075876794/feds-contract-with-pfizer-for-paxlovid-has-some-surprises",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/us-doubling-accelerating-order-of-pfizer-antiviral-pills/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0284": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/health-shots/2022/02/01/1075876794/feds-contract-with-pfizer-for-paxlovid-has-some-surprises",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://millercenter.org/the-presidency/presidential-speeches/march-1-2022-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/health/2022/03/04/test-and-treat-covid-program-pharmacies/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://rollcall.com/factbase/biden/transcript/joe-biden-press-conference-covid-response-team-march-2-2022/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/covidplan/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/biden-pfizer-covid-pill-antiviral-double-shipment/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0285": [
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.hhs.gov/about/news/2022/03/08/fact-sheet-biden-administration-launches-nationwide-test-treat-initiative-ensuring-rapid-on-spot-access-lifesaving-covid-treatments.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/press-briefing-white-house-and-hhs-public-health-officials",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/healthcare-pharmaceuticals/biden-announces-new-covid-initiative-that-gives-americans-free-pills-2022-03-02/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-28",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/health-shots/2022/03/08/1085078893/test-to-treat-gets-covid-pills-to-at-risk-patients-fast-but-its-reach-is-limited",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/03/02/1083905865/the-white-house-has-a-new-plan-for-covid-19-aimed-at-getting-things-back-to-norm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/health/2022/03/04/test-and-treat-covid-program-pharmacies/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0288": [
+      {
+        "source_url": "https://www.nbcnews.com/politics/white-house/biden-administration-make-500-million-home-covid-tests-available-free-n1286356",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/background-press-call-the-rollout-500-million-free-tests-american-homes",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/white-house/how-order-free-covid-tests-home-use-white-house-website-n1287647",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.usps.com/2022/01/21/covid-19-tests/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.jpeocbrnd.osd.mil/News-and-Media/News/Article/2900934/dod-awards-contracts-to-purchase-covid-19-antigen-over-the-counter-test-kits-in/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/biden-administration-launch-website-free-home-covid-tests/story?id=82272681",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/free-covid-tests-online-white-house-website/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/03/01/remarks-of-president-joe-biden-state-of-the-union-address-as-delivered/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/white-house/biden-administration-issues-first-contract-home-covid-test-delivery-n1287189",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0289": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/03/07/1085022030/you-can-order-free-covid-tests-from-the-government-again",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/crec/2022/03/01/168/37/CREC-2022-03-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/03/01/remarks-of-president-joe-biden-state-of-the-union-address-as-delivered/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.fox9.com/news/2nd-round-of-free-at-home-covid-tests-available-now",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/politics/story/2022-03-01/full-transcript-president-biden-state-of-the-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/white-house/how-order-free-covid-tests-home-use-white-house-website-n1287647",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/health-shots/2022/03/07/1084948639/you-can-order-free-covid-tests-from-the-government-again",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0291": [
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8830620/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/71/wr/mm7106a4.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/70/wr/mm7023a3.htm?s_cid=mm7023a3_w",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.frontiersin.org/articles/10.3389/fgene.2022.801332/full",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/35143464/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/70/wr/mm7050e1.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/variants/cdc-role-surveillance.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.who.int/news/item/26-11-2021-classification-of-omicron-%28b.1.1.529%29-sars-cov-2-variant-of-concern",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.medrxiv.org/content/10.1101/2021.08.21.21262393v2",
+        "relevance_score": 0.5,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/113732",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0305": [
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02042022.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/114951/cdc_114951_DS1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/covid-data/covidview/past-reports/02112022.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-22-105291",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/114173",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/covidvaxview/weekly-dashboard/adult-vaccination-coverage.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-28",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/coronavirus/2019-ncov/vaccines/reporting-vaccinations.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0306": [
+      {
+        "source_url": "https://www.cms.gov/files/document/11022-faqs-otc-testing-guidance.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2022/03/NAT-COVID-19-PREPAREDNESS-PLAN.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/111561/cdc_111561_DS1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/press-briefings/2022/03/02/press-briefing-by-white-house-and-hhs-public-health-officials-march-2-2022",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/01/19/1074010111/the-federal-government-offers-free-covid-19-tests-and-n95-masks",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.hrsa.gov/about/news/press-releases/coverage-uninsured-covid19-vaccinations-claims",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/white-house/biden-administration-issues-first-contract-home-covid-test-delivery-n1287189",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/health/coverage-for-covid-19-testing-vaccinations-and-treatment",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/press-briefing-white-house-covid-19-response-team-and-public-health-officials-77",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/business/healthcare-pharmaceuticals/us-to-make-400-million-n95-masks-available-free-fight-covid-19-official-2022-01-19/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0311": [
+      {
+        "source_url": "https://2021-2025.state.gov/covid-19-vaccine-deliveries/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/03/02/1083905865/the-white-house-has-a-new-plan-for-covid-19-aimed-at-getting-things-back-to-norm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-28",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.kff.org/coronavirus-covid-19/issue-brief/u-s-international-covid-19-vaccine-donations-tracker/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/02/fact-sheet-the-biden-administrations-commitment-to-global-health/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://share.america.gov/us-sends-covid-19-vaccines-worldwide-february-2022/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs_external_products/IF/PDF/IF12013/IF12013.3.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/covid-vaccine-pfizer-global-distribution-biden-administration/",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0321": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200067/pdf/DCPD-202200067.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.com/Politics/biden-heads-york-city-highlight-combating-gun-crime/story?id=82647210",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/us/nyc-final-salute-nypd-jason-rivera",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.governor.ny.gov/news/governor-hochul-directs-flags-half-staff-honor-fallen-nypd-officers-rivera-and-mora",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/nypd-officers-wilbert-mora-jason-rivera-killed-in-harlem-shooting/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/US/biden-nyc-mayor-release-plans-curb-gun-violence/story?id=82649365",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bja.ojp.gov/program/medalofvalor/recipients/fallen-detective-wilbert-mora-and-fallen-detective-jason-rivera",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/nypd-wilbert-mora-funeral-new-york-police-officer-shot/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0322": [
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/nypd-officers-shot-jason-rivera-wilbert-mora-lashawn-mcneil-saturday/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ksat.com/news/national/2022/01/22/nyc-police-officer-killed-2nd-critical-in-harlem-shooting/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/nypd-officer-killed-another-critical-condition-harlem-shooting-police-rcna13145",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/nation/2022/01/21/new-york-police-shooting//",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/harlem-police-officers-shot/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/us/harlem-ambush-suspect-lashawn-mcneil-probation-criminal-record-nypd",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/US/nypd-officer-killed-wounded-shooting/story?id=82406830",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bja.ojp.gov/program/medalofvalor/recipients/fallen-detective-wilbert-mora-and-fallen-detective-jason-rivera",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0323": [
+      {
+        "source_url": "https://www.cbsnews.com/news/wilbert-mora-police-officer-dies-harlem-shooting/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.news4jax.com/news/2022/01/25/2nd-nypd-officer-dies-days-after-harlem-shooting/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abc7ny.com/nypd-officer-shot-wilbert-mora-harlem-police-shooting-killed/11508216/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/nation/2022/01/21/new-york-police-shooting/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ag.ny.gov/press-release/2022/attorney-general-james-statement-death-nypd-officer-wilbert-mora",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/nypd-wilbert-mora-funeral-new-york-police-officer-shot/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/nypd-officers-shot-jason-rivera-wilbert-mora-lashawn-mcneil-saturday/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/US/nypd-officer-killed-wounded-shooting/story?id=82406830",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://council.nyc.gov/press/statement-from-speaker-adrienne-adams-3",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0324": [
+      {
+        "source_url": "https://www.cnn.com/2022/01/24/us/jason-rivera-nypd-officer-profile/index.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nyc.gov/site/nypd/about/memorials/fallen-heroes.page",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/nypd-officer-jason-rivera-funeral/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/nation/2022/01/21/new-york-police-shooting/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/US/nypd-officer-killed-wounded-shooting/story?id=82406830",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnewyork.com/news/local/nypd-in-mourning-what-we-know-about-fallen-officers-jason-rivera-wilbert-mora/3509944/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/nypd-officers-shot-jason-rivera-wilbert-mora-lashawn-mcneil-saturday/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/jason-rivera-nypd-officers-shot-harlem/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://council.nyc.gov/press/2022/01/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0332": [
+      {
+        "source_url": "https://www.justice.gov/d9/pages/attachments/2021/06/07/bwc_memo_june2021.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archives/opa/pr/department-justice-announces-department-wide-policy-chokeholds-and-no-knock-entries",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/dag/page/file/1432531/download",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/d9/pages/attachments/2021/09/14/2021.09.13_chokehold_carotid_restraint_knock_and_announce_policy_final_0.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archives/opa/pr/justice-department-announces-first-federal-agents-use-body-worn-cameras",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/justice-department-chokeholds-no-knock-entries-law-enforcement/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2021/09/14/politics/justice-chokeholds-no-knock-warrant/index.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2021/06/08/1004472519/justice-department-says-it-will-now-require-federal-officers-to-wear-body-camera",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ktvz.com/news/ap-national-news/2021/09/14/justice-dept-curtails-agents-use-no-knock-warrants/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0333": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2022-01-27/pdf/2022-00292.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/136/SLFRF-Final-Rule-Overview.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jy0550",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/136/SLFRP-Fact-Sheet-FINAL1-508A.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/b-333978.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/opa/pr/justice-department-awards-nearly-444-million-support-violence-intervention-efforts",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bjatta.bja.ojp.gov/news/recording-now-available-webinar-evidence-based-theory-and-research-community-violence",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0347": [
+      {
+        "source_url": "https://www.brennancenter.org/our-work/research-reports/voting-laws-roundup-december-2021",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.brennancenter.org/our-work/research-reports/voting-laws-roundup-february-2022",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/elections/19-states-enacted-voting-restrictions-2021-rcna8342",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://capitol.texas.gov/tlodocs/87R/billtext/html/SB00001I.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.flsenate.gov/Session/Bill/2021/90",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0353": [
+      {
+        "source_url": "https://www.supremecourt.gov/publicinfo/press/pressreleases/pr_01-27-22",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.pbs.org/newshour/amp/politics/read-joe-bidens-full-2022-state-of-the-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/01/27/remarks-by-president-biden-on-the-retirement-of-supreme-court-justice-stephen-breyer/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.fjc.gov/history/judges/breyer-stephen-gerald",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/publicinfo/press/pressreleases/pr_01-27-22b",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/about/biographies.aspx?os=app",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ballotpedia.org/Stephen_Breyer",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/01/27/1076091746/supreme-court-justice-breyer-retire-announce-biden-white-house",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/supreme-court-justice-stephen-breyer-retire/story?id=74363429",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/read-justice-stephen-breyers-retirement-letter/story?id=82509050",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0356": [
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/02/25/president-biden-nominates-judge-ketanji-brown-jackson-to-serve-as-associate-justice-of-the-u-s-supreme-court/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/25/president-biden-nominates-judge-ketanji-brown-jackson-to-serve-as-associate-justice-of-the-u-s-supreme-court/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/LSB10702",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/02/25/remarks-by-president-biden-on-his-nomination-of-judge-ketanji-brown-jackson-to-serve-as-associate-justice-of-the-u-s-supreme-court/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/nomination/117th-congress/1783",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2022/02/25/politics/supreme-court-ketanji-brown-jackson",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.fjc.gov/history/judges/jackson-ketanji-brown",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/supreme-court/biden-nominate-judge-ketanji-brown-jackson-supreme-court-rcna15941",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/world/us/biden-announce-us-supreme-court-pick-friday-white-house-sources-2022-02-25/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://thehill.com/regulation/court-battles/594977-biden-names-ketanji-brown-jackson-dc-appeals-court-judge-to-supreme/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0362": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/icymi-judge-jackson-endorsed-leading-law-enforcement-officials-and-associations",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://s3.documentcloud.org/documents/21279044/luttig-letter-endorsing-judge-jackson-for-supreme-court.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.judiciary.senate.gov/judge-thomas-griffith-support-for-jackson",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.judiciary.senate.gov/imo/media/doc/Letter-from-conservatives-endorsing-Jackson-to-SCOTUS%20%281%29.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-117shrg49380/html/CHRG-117shrg49380.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/crec/2022/03/08/168/41/CREC-2022-03-08.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.judiciary.senate.gov/imo/media/doc/2.26.22%20-%20Judge%20Thomas%20Griffith%20Support%20for%20Jackson.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/opinions/2022/03/02/judge-jackson-republican-endorsements-supreme-court/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/ketanji-brown-jackson-endorsed-fellow-clerks-supreme-court/story?id=83238623",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0365": [
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/cbp-announces-46-million-rail-refresh",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/spotlights/decentralized-training-and-mobile-scanning-equipment-yield-successes",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dhs.gov/publication/non-intrusive-inspection-systems-program",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/cbp-announces-january-2021-operational-update",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbp.gov/sites/default/files/documents/nii_factsheet_2.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PLAW-116publ299",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.leidos.com/insights/us-customs-and-border-protection-selects-leidos-multi-energy-portal-inspection-contract",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rfidjournal.com/news/u-s-customs-and-border-patrol-launches-multi-technology-screening-solution/190869/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0366": [
+      {
+        "source_url": "https://riograndeguardian.com/stories/president-biden-speaks-about-immigration-border-security-in-state-of-the-union-address,13159",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archives/opa/pr/attorney-general-announces-initiatives-combat-human-smuggling-and-trafficking-and-fight",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.justice.gov/opa/pr/attorney-general-announces-initiatives-combat-human-smuggling-and-trafficking-and-fight",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.justice.gov/usao-az/pr/law-enforcement-cooperation-between-united-states-and-mexico-leads-mexican-takedown",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/texas/news/troops-mexico-honduras-guatemala-guard-borders-lower-migration/",
+        "relevance_score": 0.5,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://adamisacson.com/weekly-border-update-march-4-2022/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dhs.gov/archive/news/2021/12/03/dhs-highlights-efforts-address-human-trafficking",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.justice.gov/criminal/joint-task-force-alpha",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/crs_external_products/IF/PDF/IF10215/IF10215.27.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/us-launches-operation-targeting-migrant-smuggling-gangs/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0368": [
+      {
+        "source_url": "https://2021-2025.state.gov/announcing-new-assistance-to-respond-to-humanitarian-challenges-in-central-america/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-the-collaborative-migration-management-strategy",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2021/07/29/fact-sheet-the-collaborative-migration-management-strategy",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/2021/02/05/2021-02561/creating-a-comprehensive-regional-framework-to-address-the-causes-of-migration-to-manage-migration",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-strategy-address-the-root-causes-migration-central-america",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2021/07/29/fact-sheet-strategy-to-address-the-root-causes-of-migration-in-central-america/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2021-2025.state.gov/translations/spanish/estados-unidos-y-costa-rica-anuncian-colaboracion-en-materia-migratoria-y-de-proteccion/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.state.gov/suspending-and-terminating-the-asylum-cooperative-agreements-with-the-governments-el-salvador-guatemala-and-honduras/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://cl.usembassy.gov/secretary-blinken-travels-to-bogota-to-advance-the-u-s-colombia-partnership/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0373": [
+      {
+        "source_url": "https://www.uschamber.com/immigration/alliance-for-a-new-immigration-consensus-announcement-letter-to-congress",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.uschamber.com/assets/documents/210317_kv_immigrationlegislation_house.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://docs.house.gov/meetings/JU/JU01/20210211/111174/HHRG-117-JU01-20210211-SD021.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0376": [
+      {
+        "source_url": "https://www.scotusblog.com/2021/12/court-leaves-texas-six-week-abortion-ban-in-effect-and-narrows-abortion-providers-challenge/",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.guttmacher.org/article/2021/10/first-time-ever-us-states-enacted-more-100-abortion-restrictions-single-year",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/grantednotedlist/21grantednotedlist",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2021/12/01/supreme-court-mississippi-abortion-live-updates/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.npr.org/2021/09/20/1038972266/supreme-court-date-roe-wade-dobbs-jackson-womens",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/opinions/20pdf/21a24_8759.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 0.1,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0377": [
+      {
+        "source_url": "https://www.guttmacher.org/article/2021/12/state-policy-trends-2021-worst-year-abortion-rights-almost-half-century",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.guttmacher.org/article/2021/07/state-policy-trends-midyear-2021-already-worst-legislative-year-ever-us-abortion",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/docket/docketfiles/html/public/19-1392.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2021/07/09/1014475875/abortion-rights-laws-states-record-conservatives",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0385": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CCAL-117hcal-S1/pdf/CCAL-117hcal-S1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govtrack.us/congress/members/joseph_biden/300008",
+        "relevance_score": 0.85,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-28",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/state-of-the-union-2022/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.archives.gov/federal-register/laws/117-first-session",
+        "relevance_score": 0.85,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200141/html/DCPD-202200141.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/public-laws/117th-congress",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PLAW-117publ43",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0387": [
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/speeches-remarks/2022/03/02/remarks-by-president-biden-in-state-of-the-union-address/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/117th-congress/senate-bill/3623/text",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.murkowski.senate.gov/press/release/murkowski-and-colleagues-introduce-bipartisan-bill-to-reauthorize-violence-against-women-act-",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2022/02/03/biden-new-york-city-crime-guns/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/amendment/117th-congress/house-amendment/31/text",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.pbs.org/newshour/politics/read-joe-bidens-full-2022-state-of-the-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0397": [
+      {
+        "source_url": "https://www.samhsa.gov/data/sites/default/files/reports/rpt35325/NSDUHFFRPDFWHTMLFiles2020/2020NSDUHFFR1PDFW102121.pdf?sf164479698=1",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/presidential-actions/2021/08/31/a-proclamation-on-national-recovery-month-2021/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2022/03/01/fact-sheet-addressing-addiction-and-the-overdose-epidemic/",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2022/04/National-Drug-Control-2022Strategy.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.samhsa.gov/data/sites/default/files/reports/rpt35325/NSDUHFFRPDFWHTMLFiles2020/2020NSDUHFFR1PDFW102121.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-addressing-addiction-and-the-overdose-epidemic",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://hudsonhealth.org/hudson-celebrates-recovery-month/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.samhsa.gov/data/sites/default/files/reports/rpt35325/NSDUHFFRPDFWHTMLFiles2020/2020NSDUHFFR102121.htm",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/117/crec/2021/09/29/167/170/CREC-2021-09-29-house.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0400": [
+      {
+        "source_url": "https://www.ed.gov/sites/ed/files/2021/03/FINAL_ARP-ESSER-FACT-SHEET.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/2021/04/22/2021-08359/american-rescue-plan-act-elementary-and-secondary-school-emergency-relief-fund",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/117/plaws/publ2/PLAW-117publ2.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www2.ed.gov/documents/coronavirus/lost-instructional-time.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://learningpolicyinstitute.org/blog/covid-analysis-american-rescue-plan-act-2021",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ed.gov/grants-and-programs/formula-grants/response-formula-grants/covid-19-emergency-relief-grants/elementary-and-secondary-school-emergency-relief-fund",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ed.gov/sites/ed/files/documents/coronavirus/lost-instructional-time.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://safesupportivelearning.ed.gov/news/secretary-cardonas-dear-colleague-letter-addressing-teacher-and-staff-shortages-arp-esser",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/b-333274",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.tcta.org/american-rescue-plan-act-injects-over-123-billion-into-schools",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0403": [
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/71/su/su7102a1.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.hhs.gov/about/news/2021/12/07/us-surgeon-general-issues-advisory-on-youth-mental-health-crisis-further-exposed-by-covid-19-pandemic.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.hhs.gov/sites/default/files/surgeon-general-youth-mental-health-advisory.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/nchs/data/databriefs/db381-H.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/healthyyouth/data/yrbs/pdf/YRBSDataSummaryTrendsReport2019-508.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/yrbs/dstr/pdf/YRBSDataSummaryTrendsReport2019-508.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/69/wr/mm6945a3.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.akleg.gov/basis/get_documents.asp?session=33&docid=3211",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.usnews.com/news/health-news/articles/2021-12-07/surgeon-general-issues-advisory-on-youth-mental-health",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.aap.org/en/advocacy/child-and-adolescent-healthy-mental-development/aap-aacap-cha-declaration-of-a-national-emergency-in-child-and-adolescent-mental-health/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0412": [
+      {
+        "source_url": "https://www.va.gov/HOMELESS/38k_National_Housing_Challenge.asp",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.va.gov/health-care/pay-copay-bill/financial-hardship/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.va.gov/HOMELESS/docs/HPO-General-Fact-Sheet-FY-2021-3-2022-508.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.va.gov/99006/copayment-debt-relief-options-available-to-veterans/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/117th-congress/house-bill/1319/text/rh",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.va.gov/press-room/press-statement-va-resumes-overpayment-notifications-medical-copayment-collections-while-continuing-to-offer-veterans-expansive-debt-relief-options/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.va.gov/press-room/enrollment-applications-now-available-for-accelerated-program-to-prepare-veterans-for-high-demand-careers/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.va.gov/COMMUNITYCARE/revenue_ops/Financial_Hardship.asp",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0414": [
+      {
+        "source_url": "https://www.publichealth.va.gov/exposures/burnpits/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nationalacademies.org/read/25837/chapter/1",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dav.org/wp-content/uploads/Burn-Pit-Exposure-2021.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.va.gov/84610/veterans-sign-va-burn-pit-registry/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stacks.cdc.gov/view/cdc/225300",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.va.gov/disability/eligibility/hazardous-materials-exposure/specific-environmental-hazards/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0420": [
+      {
+        "source_url": "https://www.congress.gov/117/crec/2022/03/01/168/37/CREC-2022-03-01.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ballotpedia.org/Beau_Biden",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.britannica.com/biography/Beau-Biden",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/state-of-the-union-biden-burn-pits-beau-biden-cancer/?intcid=CNI-00-10aaa3a",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ruiz.house.gov/media-center/in-the-news/biden-uses-state-union-call-focus-burn-pits-which-he-believes-affected-his",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2022/03/08/biden-burn-pits-beau-texas/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0427": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.legacy.com/us/obituaries/thisweeknews/name/heath-robinson-obituary?id=1859739",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://burnpits360.org/blogs/news/gold-star-story-heath-robinson",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.army.mil/article/242739/kfor_conducts_joint_force_protection_exercise_at_camp_bondsteel",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.publichealth.va.gov/docs/exposures/va-ahobp-registry-data-report-feb2022.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://beatty.house.gov/media-center/in-the-news/3-central-ohioans-invited-to-2022-state-of-the-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0428": [
+      {
+        "source_url": "https://www.congress.gov/committee-report/117th-congress/house-report/249/1",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.wkyc.com/article/news/local/ohio/sandusky-native-burn-pit-activist-first-lady-state-of-the-union/95-447bf488-3c55-4a31-b7bd-781fa8e4db83",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irontontribune.com/2022/03/05/brown-welcomes-ohio-veterans-advocate-to-capitol-as-first-ladys-state-of-the-union-guest/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.publichealth.va.gov/exposures/publications/military-exposures/meyh-4/index.asp",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8158372/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0431": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://burnpits360.org/blogs/news/gold-star-story-heath-robinson",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CPUB-117spub12/pdf/GPO-CPUB-117spub12.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://sanduskyregister.com/news/244347/veteran-suffering-from-burn-pits-dies/",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0432": [
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK562786/",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.wkyc.com/article/news/local/ohio/sandusky-native-burn-pit-activist-first-lady-state-of-the-union/95-447bf488-3c55-4a31-b7bd-781fa8e4db83",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.warrelatedillness.va.gov/WARRELATEDILLNESS/education/exposures/burn-pits.asp",
+        "relevance_score": 0.6,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://news.yahoo.com/ohio-nurse-widow-burn-pit-193301094.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://assessments.epa.gov/risk/document/%26deid%3D351404",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://news.va.gov/89496/breaking-news-va-plans-expansion-of-benefits-disability-claims-conditions-related-certain-toxic-exposures/",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/117th-congress/senate-bill/437/text",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0437": [
+      {
+        "source_url": "https://news.va.gov/press-room/va-pilots-evaluation-model-to-determine-potential-exposure-to-environmental-hazards-while-serving/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.va.gov/press-room/va-will-propose-adding-rare-cancers-to-the-presumed-service-connected-list-as-related-to-military-environmental-exposure/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.va.gov/100788/va-will-propose-adding-rare-respiratory-cancers-to-the-presumed-service-connected-list/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/2021/08/05/2021-16693/presumptive-service-connection-for-respiratory-conditions-due-to-exposure-to-particulate-matter",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/117th-congress/house-bill/3967/text/eh",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.publichealth.va.gov/exposures/publications/agent-orange/agent-orange-2020/presumptive.asp",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/117/crec/2022/03/03/168/39/CREC-2022-03-03-pt1-PgH1279.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://int.moaa.org/content/publications-and-media/news-articles/2021-news-articles/advocacy/pilot-program-will-change-how-va-links-illnesses-to-toxic-exposure/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stateoftheunion.onetwothree.net/texts/20220301.html",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0442": [
+      {
+        "source_url": "https://www.cdc.gov/nchs/products/databriefs/db427.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/nchs/data/databriefs/db427.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/volumes/70/wr/mm7014e1.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cancer.org/research/cancer-facts-statistics/all-cancer-facts-figures/cancer-facts-figures-2022.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://jamanetwork.com/journals/jama/fullarticle/2778234",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0443": [
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/fact-sheet-president-biden-reignites-cancer-moonshot-end-cancer-we-know-it",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/statements-releases/2022/02/02/fact-sheet-president-biden-reignites-cancer-moonshot-to-end-cancer-as-we-know-it/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2022/02/02/1077620199/cancer-moonshot-biden",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/briefing-room/speeches-remarks/2022/02/02/remarks-by-president-biden-at-an-event-to-reignite-the-cancer-moonshot/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/health/2022/02/02/biden-cancer-moonshot-renewal/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2022/02/02/us/politics/biden-cancer-moonshot.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://edition.cnn.com/2022/02/02/politics/cancer-moonshot-initiative-white-house-biden/index.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202200127/pdf/DCPD-202200127.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "biden_2022:0447": [
+      {
+        "source_url": "https://www.darpa.mil/about/innovation-timeline/arpanet",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fedscoop.com/darpa-for-health-arpa-h-biden-sotu/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-28",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.darpa.mil/news/features/arpanet",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/wp-content/uploads/2021/08/2021-07-25_ARPA-H-Fact-Sheet.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.darpa.mil/about",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.darpa.mil/attachments/DARPAOverviewAug30-2021.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nih.gov/sites/default/files/2025-02/5-25-2021-House-LHHS-FY-2022.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/wp-content/uploads/2021/08/2021-07-25_ARPA-H-Fact-Sheet.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.darpa.mil/about/innovation-timeline/tcp-ip",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ]
+  },
+  "soft_failures": []
+}

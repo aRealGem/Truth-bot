@@ -76,6 +76,53 @@ def discriminate(hm: HydraMind, items: list[dict], *, tier: str = "standard",
     return out
 
 
+#: Provenance marker written onto a row whose rationale was ADOPTED rather than
+#: authored by the resolver that set the verdict. Read by the publish bridge so
+#: the strip can attribute the text instead of implying the resolver wrote it.
+ADOPTED_PREFIX = "adopted from"
+
+
+def adopt_seat_rationale(row: dict, final: str) -> Optional[dict]:
+    """Give ``row`` the CHOSEN SEAT's stored rationale, VERBATIM (R-3 ruling,
+    2026-08-10). Returns the provenance record it wrote, or None.
+
+    The stage-2 discriminator resolves a tie by NAMING a label; it does not
+    write prose, and until this existed the resolved row carried an empty
+    ``reasoning``. That published a fact-check that could not say why, and it
+    blinded ``verdict_audit.adjacent_coherence_conflicts``, which links claims
+    partly through rationale text.
+
+    The fix is structural and adds NO new text to the corpus. Among the seats
+    that voted ``final``, the one with a non-empty rationale is adopted (arbiter
+    first — it is the seat that saw the split — then the panel order). The text
+    is copied UNCHANGED; the attribution lives in ``rationale_provenance``, not
+    in the prose, so the sentence a reader sees is exactly the sentence a model
+    wrote. If no seat voted ``final`` with text to give, nothing is invented and
+    the row is left for the no-blank-rationale lint to catch.
+
+    A row that already carries a rationale is never overwritten."""
+    if str(row.get("reasoning") or "").strip():
+        return None
+    seats = [s for s in (row.get("seat_rationales") or [])
+             if str(s.get("verdict") or "").strip().upper() == str(final).strip().upper()
+             and str(s.get("reasoning") or "").strip()]
+    if not seats:
+        return None
+    seats.sort(key=lambda s: 0 if str(s.get("role")) == "arbiter" else 1)
+    chosen = seats[0]
+    prov = {
+        "mode": "adopted-verbatim",
+        "adopted_from": str(chosen.get("role") or "seat"),
+        "adopted_verdict": str(chosen.get("verdict") or ""),
+        "resolver": "crm114-discriminator",
+        "attribution": f"{ADOPTED_PREFIX} {chosen.get('role') or 'seat'} seat",
+        "synthesized": False,
+    }
+    row["reasoning"] = str(chosen.get("reasoning"))
+    row["rationale_provenance"] = prov
+    return prov
+
+
 def apply_tie_routing(rows: list[dict], disc: dict[str, str]) -> list[dict]:
     """Resolve DISAGREEMENT-flagged adverse-severity ties with the discriminator's
     binary call (in place). Only fires for rows the caller routed (i.e. present in
@@ -83,7 +130,11 @@ def apply_tie_routing(rows: list[dict], disc: dict[str, str]) -> list[dict]:
     "final": ...}`` and its vote tally intact, so the tie and its adjudication are
     both readable from the artifact — an explicit stage-2 decision, never a silent
     tie-break (I2). Confidence stays None (no seat consensus to average) and
-    citations stay [] (the tie had no winning seat to take citations from)."""
+    citations stay [] (the tie had no winning seat to take citations from).
+
+    R-3 (2026-08-10): the resolved row also ADOPTS the chosen seat's stored
+    rationale verbatim (:func:`adopt_seat_rationale`). Before this, every
+    tie-routed row published with a blank rationale."""
     for row in rows:
         if row.get("status") != "disagreement":
             continue
@@ -92,6 +143,7 @@ def apply_tie_routing(rows: list[dict], disc: dict[str, str]) -> list[dict]:
             row["crm114"] = {"stage1": "DISAGREEMENT", "final": final}
             row["status"] = "resolved"
             row["verdict"] = final
+            adopt_seat_rationale(row, final)
     return rows
 
 
@@ -100,7 +152,12 @@ def apply_discrimination(rows: list[dict], disc: dict[str, str]) -> list[dict]:
 
     Only a RESOLVED row whose verdict is FALSE or MISLEADING is eligible; a changed row
     records ``crm114`` = {"stage1", "final"} for telemetry. Rows the panel resolved as
-    TRUE, or abstained on, are never touched (they never entered the adverse bucket)."""
+    TRUE, or abstained on, are never touched (they never entered the adverse bucket).
+
+    R-3 (2026-08-10): a flipped row whose rationale is BLANK adopts the chosen
+    seat's stored text (:func:`adopt_seat_rationale`). A row that already carries
+    the stage-1 winner's rationale keeps it — re-attributing an existing rationale
+    after a severity flip is a separate question, logged as a D17 candidate."""
     for row in rows:
         if row.get("status") != "resolved" or row.get("verdict") not in _ADVERSE:
             continue
@@ -108,4 +165,5 @@ def apply_discrimination(rows: list[dict], disc: dict[str, str]) -> list[dict]:
         if final in _ADVERSE and final != row["verdict"]:
             row["crm114"] = {"stage1": row["verdict"], "final": final}
             row["verdict"] = final
+            adopt_seat_rationale(row, final)
     return rows

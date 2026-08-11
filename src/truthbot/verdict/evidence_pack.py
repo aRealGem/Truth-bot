@@ -91,6 +91,10 @@ class PackItem:
     # attribution-only | plain-s5 | "" (legacy / normal). Display + payload
     # metadata; NOT part of the I5 provenance quad.
     role: str = ""
+    # Era note (remediation v2, 1.3): "post-speech · context-only" for items
+    # dated after the utterance but within fair-game. Display + payload
+    # metadata; such items never credit the quota. NOT part of the I5 quad.
+    era_note: str = ""
 
     def provenance(self) -> dict:
         """The I5 provenance record (``url/retrieved_at/sha256/tier`` required)."""
@@ -121,6 +125,10 @@ class PackItem:
         # normal — pre-shape packs carry the exact prior payload.
         if self.role and self.role != "normal":
             payload["role"] = self.role
+        # Post-speech band (remediation v2, 1.3): the panel is told the item
+        # may inform context but must not decide the verdict.
+        if self.era_note:
+            payload["era_note"] = self.era_note
         return payload
 
 
@@ -145,6 +153,23 @@ class EvidencePack:
     # it exists so the packs journal can persist what the cap discarded and a
     # cap/quota change can be measured offline without re-retrieval.
     pool: list[PackItem] = field(default_factory=list)
+    # Fact-check exclusion log (remediation v2, 1.1): what the consolidator
+    # dropped as fact-checker content and why — journaled with the pack,
+    # never part of the panel payload. Exclusions are never silent.
+    excluded_fc: list[dict] = field(default_factory=list)
+    # Quarantine telemetry (remediation v2, 1.2 / S-6): URLs of kept items
+    # whose POLITICAL tier came from the fail-closed quarantine of an unmapped
+    # government-class host ("quarantine-unmapped-gov"), not from a mapped
+    # rule — journaled with the pack, never part of the panel payload.
+    quarantined: list[str] = field(default_factory=list)
+    # Scoring-coverage telemetry (remediation v2 Phase A, A1):
+    # ``consolidator.scoring_telemetry`` over this pack's items — how many
+    # carry the untouched default relevance vs a real score, and the stance
+    # True/False/None split. Set by the v2 builder; empty on v1 packs.
+    # Journaled with the pack, never part of the panel payload. This is the
+    # number that makes "the v2 path never scores relevance or stance"
+    # visible on disk instead of inferable only by reading the call graph.
+    scoring: dict = field(default_factory=dict)
 
     @property
     def ids(self) -> list[str]:
@@ -223,13 +248,21 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
     Items without a URL are dropped — I5 requires a url, and an unaddressable
     snippet cannot be cited or re-verified.
 
-    Reserved fact-check slot (P67 Round B.5): once ranked, if no FactCheck-tier
-    item made the cap but one exists, swap the highest-relevance FactCheck item
-    into the last slot. A direct ruling (factcheck.org / PolitiFact) must not be
-    crowded out of the pack by on-topic background explainers — the biden_2022:0342
-    case, where a factcheck.org ruling fell E1→E4 and the panel flipped
-    FALSE→ABSTAIN. Exactly ONE slot is reserved: packs that already surface a
-    ruling, or that retrieved none, are unchanged."""
+    Fact-checker content is EXCLUDED, never reserved (remediation v2 Phase A,
+    A2). A "reserved fact-check slot" used to live here: if no FactCheck-tier
+    item made the cap but one existed, it displaced the last slot, so a
+    PolitiFact or factcheck.org ruling could not be crowded out (the
+    biden_2022:0342 case, P67 Round B.5). T2.1 then made the opposite call —
+    truth-bot reaches its own verdict from primary sources and must never
+    launder another outlet's ruling into its evidence — and the v2 consolidator
+    drops fact-checkers outright. The v1 builder kept FORCING one in. Nothing
+    on the v2 path called it, so no shipped verdict came from it; it sat here
+    as a trap for the next caller of build_evidence_pack, guaranteeing the one
+    item current policy most wants out of the pack. Exclusion now matches
+    consolidate(): the same ``factcheck_exclusion_reason`` domain/path rules,
+    plus the tier itself."""
+    from truthbot.verify.factcheck_exclusion import factcheck_exclusion_reason
+
     seen: set[str] = set()
     unique: list[Evidence] = []
     for ev in evidence:
@@ -240,6 +273,14 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
             # A homepage or listing index can never BE evidence — it only
             # points at a site (the snopes.com/?pagenum=3 pack-slot bug).
             continue
+        if factcheck_exclusion_reason(url) or ev.source_tier == SourceTier.FACTCHECK:
+            # T2.1, enforced on BOTH pack paths: another outlet's ruling is not
+            # our evidence. Same two-part test consolidate() applies (blocklist
+            # domain/path rules OR the FACTCHECK tier), so a retriever that
+            # tiers a ruling as Established is still caught, and a
+            # FACTCHECK-tiered host outside the blocklist is too.
+            logger.info("v1 pack: excluded fact-checker content %s", url)
+            continue
         key = url.lower().rstrip("/")
         if key in seen:
             continue
@@ -247,15 +288,7 @@ def _dedup_rank_cap(evidence: list[Evidence], max_items: int) -> list[Evidence]:
         unique.append(ev)
     unique.sort(key=lambda e: (-(e.relevance_score if e.relevance_score is not None else 0.5),
                                _TIER_RANK.get(e.source_tier, 99)))  # stable
-    capped = unique[:max_items]
-    if capped and not any(e.source_tier == SourceTier.FACTCHECK for e in capped):
-        # unique is already relevance-then-tier sorted, so the first FactCheck is
-        # the best one. It can only be absent from a FULL cap (a shorter cap holds
-        # all of unique, ruling included), so displace the last, lowest-ranked slot.
-        ruling = next((e for e in unique if e.source_tier == SourceTier.FACTCHECK), None)
-        if ruling is not None and len(capped) == max_items:
-            capped[-1] = ruling
-    return capped
+    return unique[:max_items]
 
 
 def build_evidence_pack(
@@ -266,6 +299,7 @@ def build_evidence_pack(
     today: Optional[date] = None,
     max_items: int = DEFAULT_MAX_ITEMS,
     context: str = "",
+    era_exempt: bool = False,
 ) -> EvidencePack:
     """Fetch, dedup, rank, cap, and provenance-stamp evidence for one claim.
 
@@ -274,6 +308,14 @@ def build_evidence_pack(
     — a provenance gap fails closed here, at evidence entry, not at verdict time."""
     window = window_for(sid, today=today)
     utterance = speech_context.speech_date_for(sid)
+    if utterance is None and not era_exempt:
+        # Fail CLOSED (remediation v2, 1.3): an unregistered speech date used
+        # to silently disable ALL era gating — the Obama-2014 rescue leg
+        # shipped 2026-dated evidence into a 2014 speech this way.
+        raise era_lint.EraLintError(
+            f"no utterance date registered for {sid!r} — the era gate cannot "
+            "run. Call speech_context.register_speech_date() first, or pass "
+            "era_exempt=True for a deliberately dateless build.")
     claim = Claim(transcript_id=sid.split(":", 1)[0], text=claim_text, context=context or None)
     raw = provider.get_evidence(claim, window=window)
     raw = [ev for ev in raw if _within_window(ev, window)]
@@ -300,5 +342,6 @@ def build_evidence_pack(
     pack = EvidencePack(sid=sid, window=window, items=items)
     # T1.1: the build FAILS on era violations — defense in depth behind the
     # two filters above (a violation here means a filter regressed).
-    era_lint.assert_pack_within_era(pack, utterance)
+    if not era_exempt:
+        era_lint.assert_pack_within_era(pack, utterance)
     return pack

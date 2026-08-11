@@ -575,13 +575,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.35rem;
 }
 
-/* Paired editorial-lens blocks: ``hidden`` must win over display:flex on
-   `.report-bar` / `.report-counts` / etc. Otherwise index report cards
-   stack *both* Strict and Lenient bars at once (user only wants one bar). */
-[data-lens-axis][hidden] {
-  display: none !important;
-}
-
 /* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
 .report-bar {
   display: flex;
@@ -590,18 +583,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0.25rem 0 1rem;
 }
 .report-bar .seg { transition: filter 200ms ease; }
-.report-bar-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6rem;
-}
-.report-bar-caption {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-muted);
-}
 
 .report-counts {
   display: flex;
@@ -730,14 +711,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 
 /* Big verdict bar inside the panel */
 .vp-bar-wrap { padding: 1.5rem 1.75rem; }
-.vp-lens-caption {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink-muted);
-  margin-bottom: 0.5rem;
-}
 .vp-bar {
   display: flex;
   height: 38px;
@@ -1150,14 +1123,119 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.15rem;
   color: var(--ink-faint);
 }
+/* Computed exhibit (A8 / R-2) — the arithmetic, both input levels, and the
+   data vintage. Deliberately a distinct block, not a badge tucked into the
+   provenance strip: R-2 wants a reader to be able to redo the division. */
+.computed-exhibit {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, #3b6ea5);
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+}
+.computed-exhibit .ce-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.computed-exhibit .ce-badge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent, #3b6ea5);
+}
+.computed-exhibit .ce-series {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-formula {
+  font-family: var(--mono);
+  margin: 0 0 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs {
+  list-style: none;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs li {
+  display: flex;
+  gap: 0.6rem;
+}
+.computed-exhibit .ce-date { color: var(--ink-muted); min-width: 6.5rem; }
+.computed-exhibit .ce-vintage,
+.computed-exhibit .ce-note {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-note { margin-top: 0.3rem; }
 /* Post-publication correction note (T1.5) — amber, can't be missed. */
 .pca-correction {
   margin-top: 0.25rem;
   color: var(--v-exaggerated);
 }
 .pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
+/* D14 (A7) adjacent-claim coherence annotation — always visible, editorial. */
+.pca-coherence {
+  margin-top: 0.4rem;
+  background: #fefbf3;
+  border-left: 3px solid var(--v-exaggerated);
+  padding: 0.5rem 0.75rem;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+.pca-coherence .coherence-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  display: block;
+  margin-bottom: 0.15rem;
+}
 .corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
 .corrections-note { color: var(--ink-muted); }
+/* F9: models-split resolution-state badge — neutral, not a verdict colour. */
+.vt-split {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  color: var(--ink-muted);
+  border: 1px dashed var(--rule, #d8d4ca);
+  border-radius: 3px;
+  padding: 0 0.3em;
+}
+/* D-B: per-speech stance-scored coverage disclosure block. */
+.stance-coverage {
+  margin: 1.25rem 0;
+  background: var(--surface, #faf9f6);
+  border: 1px solid var(--rule, #e5e2da);
+  border-left: 3px solid var(--ink-muted);
+  padding: 0.9rem 1.1rem;
+  font-size: 0.9rem;
+}
+.stance-coverage-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.stance-coverage p { margin: 0.35rem 0; }
+.stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+.stance-coverage-exception {
+  border-left: 3px solid var(--v-exaggerated);
+  padding-left: 0.75rem;
+  background: #fefbf3;
+}
 /* Pipeline diagram (About, T4.2) — structural only, no figures. */
 .pipeline-diagram {
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
@@ -1654,46 +1732,6 @@ hr.rule-light {
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }
 .vt-split        { color: var(--v-split); }
-
-/* ── Editorial-lens chip (status bar) ──────────────────────────────────────
-   Toggles the headline pill between the Lenient and Strict 5-bucket
-   projections. Hidden by default; the toggle JS reveals it once it has
-   wired up at least one ``.claim-pill-headline`` element on the page. */
-.editorial-lens {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.1rem 0.55rem;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-.editorial-lens:hover,
-.editorial-lens:focus-visible {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: var(--ink-faint);
-  outline: none;
-}
-.editorial-lens .lens-label {
-  color: var(--ink-faint);
-  text-transform: uppercase;
-}
-.editorial-lens .lens-value {
-  font-weight: 600;
-}
-.editorial-lens[data-lens="strict"] .lens-value {
-  color: var(--v-falsey);
-}
-.editorial-lens[data-lens="lenient"] .lens-value {
-  color: var(--v-truthy);
-}
-
 
 /* [20] Truthy SVG internal animations ────────────────────────────────── */
 /* These drive Truthy's idle behavior, eye states, and pose changes.

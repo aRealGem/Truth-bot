@@ -63,6 +63,11 @@ def normalize(item: ItemResult, *, closed_book: bool = True) -> dict:
         "reasoning": "",
         "votes": ag.get("votes", {}),
         "by_role": ag.get("by_role", {}),   # role → [labels]; critics may be a panel
+        # R-3 (2026-08-10): each seat's OWN rationale text, verbatim. Carried on
+        # every row — resolved or tied — because it is the only STORED text the
+        # stage-2 discriminator can adopt from, and the only way a published
+        # models-split can show more than one reason. Never synthesized.
+        "seat_rationales": list(ag.get("seat_rationales") or []),
         "split": bool(ag.get("split", False)),
         "escalated": bool(ag.get("escalated", False)),
     }

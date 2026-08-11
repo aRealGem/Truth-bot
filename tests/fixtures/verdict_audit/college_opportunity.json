@@ -1,0 +1,86 @@
+{
+ "_frozen_from": "metrics/pca_runs/28965cdf… (published artifact, run prefix 28965cdf)",
+ "speech_id": "obama_2014",
+ "utterance": "2014-01-28",
+ "claim": {
+  "sid": "obama_2014:0046",
+  "text": "Taking a page from that playbook, the White House just organized a College Opportunity Summit where already, 150 universities, businesses, and nonprofits have made concrete commitments to reduce inequality in access to higher education – and help every hardworking kid go to college and succeed when they get to campus.",
+  "context": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans and military spouses. || Taking a page from that playbook, the White House just organized a College Opportunity Summit where already, 150 universities, businesses, and nonprofits have made concrete commitments to reduce inequality in access to higher education – and help every hardworking kid go to college and succeed when they get to campus. || Across the country, we’re partnering with mayors, governors, and state legislatures on issues from homelessness to marriage equality."
+ },
+ "row": {
+  "sid": "obama_2014:0046",
+  "status": "resolved",
+  "verdict": "TRUE",
+  "confidence": 0.875,
+  "citations": [
+   "E1",
+   "E2",
+   "E4",
+   "E7"
+  ],
+  "reasoning": "official records confirm the Jan 2014 summit with 100+ colleges plus 40 organizations (~140+) making concrete commitments, supporting the ~150 figure without material exaggeration",
+  "votes": {
+   "TRUE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "TRUE"
+   ],
+   "critic": [
+    "TRUE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2014-01-16] Official White House PDF listing the actual commitments made at the Jan 16, 2014 summit by universities, businesses, and nonprofits.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/college_opportunity_commitments.pdf",
+   "source_tier": "Political"
+  },
+  {
+   "snippet": "[2014-01-16] Official fact sheet says over 100 colleges/universities and 40 organizations announced commitments to expand college opportunity.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/16/fact-sheet-president-and-first-lady-s-call-action-college-opportunity",
+   "source_tier": "Political"
+  },
+  {
+   "snippet": "[2014-01-28] Primary transcript of SOTU speech containing the exact claim.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+   "source_tier": "Political"
+  },
+  {
+   "snippet": "[2014-01-16] Government transcript of summit remarks repeats more than 100 colleges and 40 organizations announcing commitments.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400028/pdf/DCPD-201400028.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2014-01-16] Harvard GSE account of participating in the January 2014 summit, corroborating attendance and commitments from institutions.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.gse.harvard.edu/ideas/news/14/01/long-participate-white-house-summit",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "University summary of the initiative confirming ~100 college presidents and 40 nonprofits made January 2014 commitments.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.colorado.edu/csl/white-house-college-opportunity-initiative",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2014-01-28] Official State of the Union transcript contains the exact claim and establishes the claim date.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2014-01-28] Established outlet reprinting full SOTU text with the claim.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.washingtonpost.com/news/answer-sheet/wp/2014/01/28/obama-on-education-in-sotu-text/",
+   "source_tier": "Established"
+  }
+ ]
+}

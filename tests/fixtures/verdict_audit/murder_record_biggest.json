@@ -1,0 +1,103 @@
+{
+ "_frozen_from": "metrics/pca_runs/4ee5a251… (Phase-3 rebuild artifact, run prefix 4ee5a251)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0024",
+  "text": "This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years.",
+  "context": "And last year the murder rate saw its single largest decline in recorded history. || This is the biggest decline, think of it, in recorded history—the lowest number in over 125 years. || Year 1900, in fact substantially before my wonderful father—I had a wonderful father, Fred—before he was born, substantially before he was born."
+ },
+ "row": {
+  "sid": "trump_2026:0024",
+  "status": "resolved",
+  "verdict": "TRUE",
+  "confidence": 0.81,
+  "citations": [
+   "E1",
+   "E2",
+   "E3",
+   "E8"
+  ],
+  "reasoning": "contemporary CCJ-based reporting supported that 2025 had about a 21% homicide decline, the largest one-year drop on record, and the lowest homicide rate since records back to 1900",
+  "votes": {
+   "TRUE": 2,
+   "MISLEADING": 1
+  },
+  "by_role": {
+   "proposer": [
+    "TRUE"
+   ],
+   "critic": [
+    "MISLEADING"
+   ],
+   "arbiter": [
+    "TRUE"
+   ]
+  },
+  "split": true,
+  "escalated": true
+ },
+ "evidence": [
+  {
+   "snippet": "[2026-01-22] CCJ report: 2025 homicide rate on pace for largest single-year drop and lowest rate in records back to 1900.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://counciloncj.org/whats-driving-the-drop-in-homicide-how-low-might-it-go/",
+   "source_tier": "Other",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-01] CCJ year‑end 2025 analysis projects ~21% homicide drop and a ~4.0/100k national rate—lowest since 1900 if FBI confirms.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://counciloncj.org/crime-trends-in-u-s-cities-year-end-2025-update/",
+   "source_tier": "Other",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-22] CBS reports CCJ finding: ~21% drop in murders in 2025, the largest one‑year decline and potentially lowest rate since 1900.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.cbsnews.com/news/murders-plummet-crime-trends-2025/",
+   "source_tier": "Established",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2025-08-05] FBI/CDE 2024 official quick‑stats: 16,935 murders, 5.0 per 100,000 in 2024 (baseline for evaluating 2025 projection).",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://cde.ucr.cjis.gov/LATEST/resources/reports/Reported%20Crimes%20in%20the%20Nation%20Quick%20Stats.pdf",
+   "source_tier": "Political",
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-01] NCHS Data Brief (Mortality in the U.S., 2024) documents homicide declines in 2024 and their contribution to increased life expectancy.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.cdc.gov/nchs/products/databriefs/db548.htm",
+   "source_tier": "Government",
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-02-24] Official White House release explicitly states the murder rate fell to its lowest in 125 years and claims the largest single‑year drop in recorded history.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.whitehouse.gov/releases/2026/02/president-trump-returned-our-nation-to-law-and-order/?query-11-page=50",
+   "source_tier": "Political",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2025-08-05] Official FBI 2024 data (murder -14.9%); supports record-decline framing but is prior year, not the 125-year claim.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics",
+   "source_tier": "Political",
+   "relevance_score": 0.5
+  },
+  {
+   "snippet": "[2026-01-23] NYT: 2025 homicide rate lowest in 125 years, largest single-year drop per CCJ.",
+   "source_name": "R3-grok-search",
+   "source_url": "https://www.nytimes.com/2026/01/22/us/murder-rate-drop-report.html",
+   "source_tier": "Established",
+   "supports_claim": true,
+   "relevance_score": 0.5
+  }
+ ]
+}

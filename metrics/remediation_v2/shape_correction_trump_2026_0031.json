@@ -1,0 +1,28 @@
+{
+  "schema": "truthbot-shape-correction v1",
+  "generated": "2026-08-10T18:34:13.982913+00:00",
+  "ruling": "R-1",
+  "ruling_date": "2026-08-10",
+  "sid": "trump_2026:0031",
+  "claim_text": "And in the last three months of 2025, it was down to 1.7 percent.",
+  "old_shape": "c-eval",
+  "new_shape": "c-count",
+  "kind": "shape correction",
+  "justification": "Justified on the claim text alone, which is the basis the Layer-A classifier is instructed to use: \"And in the last three months of 2025, it was down to 1.7 percent\" contains no superlative, no causal attribution and no comparison — the three c-eval triggers. All of them belong to the PRECEDING sentence (trump_2026:0030, \"my administration has driven core inflation down to the lowest level in more than five years\"), which is correctly c-eval and is not changed. What :0031 states is a bare quantity measured against a published data series, which is c-count. The original c-eval was a Layer-A backfill artifact of reading the sentence in its neighbour's context.",
+  "moves": [
+    {
+      "what": "gate quota branch",
+      "how": "c-count is a MINISTERIAL shape (verdict.evidential_role.MINISTERIAL_SHAPES), so a SELF source becomes PRIMARY_RECORD and a PARTICIPANT source becomes CORROBORANT. Under c-eval, a SELF source was ATTRIBUTION_ONLY and carried quota weight 0."
+    },
+    {
+      "what": "computed-exhibit admissibility",
+      "how": "c-eval is the one shape in publish.computed_exhibit.INADMISSIBLE_SHAPES, so the ratified exhibit was REFUSED for this claim. c-count is not, so it is now admissible and is attached."
+    }
+  ],
+  "not_changed": {
+    "sid": "trump_2026:0030",
+    "shape": "c-eval",
+    "why": "superlative plus causal attribution — correctly shaped, no exhibit, publishes as already adjudicated"
+  },
+  "sidecar_untouched": "metrics/remediation_v2/shapes_backfill_trump_2026.json still records c-eval. It is the record of what the classifier produced; overwriting it would erase the evidence that a correction happened."
+}

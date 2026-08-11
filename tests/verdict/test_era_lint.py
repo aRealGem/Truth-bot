@@ -98,11 +98,15 @@ def test_assert_pack_within_era_raises_on_violation() -> None:
                         items=[_item("E1", "2026-05-01")])
     with pytest.raises(EraLintError, match="fair-game window"):
         assert_pack_within_era(pack, UTT)
-    # clean pack → no raise; unknown utterance → no-op
+    # clean pack → no raise
     assert_pack_within_era(
         EvidencePack(sid="s", window=CODED_WINDOW, items=[_item("E1", "2026-02-25")]),
         UTT)
-    assert_pack_within_era(pack, None)
+    # unknown utterance in strict mode → fail CLOSED (remediation v2, 1.3);
+    # lenient mode remains a policy no-op.
+    with pytest.raises(EraLintError, match="cannot run in strict mode"):
+        assert_pack_within_era(pack, None)
+    assert_pack_within_era(pack, None, era_mode="lenient")
 
 
 # ── build-time filter ────────────────────────────────────────────────────────

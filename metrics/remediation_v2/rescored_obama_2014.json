@@ -1,0 +1,4198 @@
+{
+  "schema": "truthbot-rescore-sidecar v1",
+  "speech_id": "obama_2014",
+  "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+  "model": "claude-haiku",
+  "generated": "2026-08-08T15:29:34.466409+00:00",
+  "spend_usd": 0.196485,
+  "sids": {
+    "obama_2014:0000": [
+      {
+        "source_url": "https://nces.ed.gov/ccd/tables/AFGR0812.asp",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://new.every1graduates.org/wp-content/uploads/2013/02/Building-A-Grad-Nation-2013-Full-FINAL-web.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs2012/2012006.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs2013/2013309.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/coe/pdf/Indicator_COI/coe_coi_2013_05.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ed.gov/news/press-releases/states-report-new-high-school-graduation-rates-using-more-accurate-common-measure",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/dropout/ind_05.asp",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/coe/indicator/coi/high-school-graduation-rates?tid=4",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://rollcall.com/2014/01/28/state-of-the-union-fact-sheet/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0001": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/node/255651",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_201312.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/10/employment-situation-december",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/index.cfm/republicans/analysis?id=A00EAA9A-701C-44B7-9F96-AB2799B81A1C",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC553/text",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0003": [
+      {
+        "source_url": "https://ers.usda.gov/sites/default/files/_laserfiche/outlooks/35780/41325_aes80.pdf?v=81052",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.usda.gov/about-usda/news/press-releases/2013/12/20/fact-sheet-growing-markets-around-world-americas-agricultural-productivity",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.fas.usda.gov/newsroom/statement-agriculture-secretary-tom-vilsack-us-agricultural-exports-2013",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.usda.gov/sites/default/files/documents/FY_2015_Budget_Summary_and_Annual_Performance_Plan.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.fas.usda.gov/newsroom/growing-markets-around-world-americas-agricultural-productivity",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://content.govdelivery.com/accounts/USDAOC/bulletins/6a1c7b",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ers.usda.gov/publications/outlook-reports/",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.ers.usda.gov/publications/35775",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://esmis.nal.usda.gov/sites/default/release-files/6m311p28w/n870zr46x/6t053g726/AES-12-02-2013.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.growingproduce.com/vegetables/record-growth-projected-for-agricultural-exports/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0004": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/affordable-care-act-adolescents-0",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/GPO-CPUB-113spub23/pdf/GPO-CPUB-113spub23.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cms.gov/cciio/resources/fact-sheets-and-faqs/ehb-2-20-2013",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/state-union-2014-excerpts/story?id=22269708",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-21",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/node/305034",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0008": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/spotlight/2012/the-recession-of-2007-2009/home.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/releases/opa/opa20140047",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.rpc.senate.gov/policy-papers/december-2013-unemployment-report",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/jobs-report-economy-added-74000-jobs-in-december/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/us/us-economy-adds-74k-jobs-unemployment-falls-to-6-7-percent-because-fewer-people-seek-work",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/economy-ended-2013-with-a-whimper/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/wonk/wp/2014/01/10/the-unemployment-rate-fell-to-6-7-percent-dont-celebrate/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0010": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES3000000001",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20131112.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.latimes.com/business/la-fi-mo-obama-sotu-manufacturing-20140128-story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://dockerhub.commerce.gov/blog/2014/01/30/delivering-american-economic-comeback.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/Politics/state-union-2014-excerpts/story?id=22269708",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0011": [
+      {
+        "source_url": "https://www.eia.gov/Todayinenergy/detail.php?id=10451",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/outlooks/steo/archives/jan14.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/us-domestic-oil-production-exceeds-imports-first-time-18-years",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/economy/us-oil-production-surpasses-imports/2013/11/13/ee03fd60-4cce-11e3-ac54-aa84301ced81_graphic.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.trust.org/item/20140128142727-h7n6p",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0012": [
+      {
+        "source_url": "https://www.cbo.gov/publication/44716",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/45010",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/44716-%20MBR_FY2013_0.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jl2197",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fiscal.treasury.gov/files/reports-statements/mts/mts0913.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-2014-TAB",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://money.cnn.com/2013/10/30/news/economy/deficit-2013-treasury/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/43907",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://thehill.com/policy/finance/188734-deficit-was-680-billion-in-2013/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0013": [
+      {
+        "source_url": "https://www.prnewswire.com/news-releases/at-kearney-fdi-confidence-index-shows-the-us-surging-to-top-destination-for-expected-foreign-direct-investment-for-the-first-time-since-2001-213122231.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.kearney.com/documents/291362523/%2A/Ready%2Bfor%2BTakeoff-FDICI%2B2014.pdf/c06bb4e3-f168-b025-9402-8c2f7ac4aec5",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/2013fdi_report_-_final_for_web.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.75,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/remarks-president-state-union-address-january-28-2014",
+        "relevance_score": 0.75,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.75,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0030": [
+      {
+        "source_url": "https://economics.mit.edu/sites/default/files/publications/the%20china%20syndrome%202013.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ddorn.net/papers/Autor-Dorn-LowSkillServices-Polarization.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/pubs/feds/2013/201357/201357pap.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www2.census.gov/library/publications/2013/demo/p60-245/p60-245.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0031": [
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2019-02/gdp3q13_2nd_fax.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://eml.berkeley.edu/~saez/saez-UStopincomes-2012.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/releases/z1/20131209/z1r-4.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.forbes.com/sites/maggiemcgrath/2013/12/31/markets-finish-2013-with-record-highs/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2014/gross-domestic-product-4th-quarter-and-annual-2013-advance-estimate",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2019-02/gdp3q13_3rd_0.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/SP500",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bea.gov/data/income-saving/corporate-profits",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0032": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/realer_12172013.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/wkyeng_01222014.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2014/ted_20140122.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epi.org/publication/a-decade-of-flat-wages-the-key-barrier-to-shared-prosperity-and-a-rising-middle-class/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/realer_01162014.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/eci_01312014.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.epi.org/publication/causes-of-wage-stagnation/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/realer_01162013.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/2013/demo/p60-245.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0033": [
+      {
+        "source_url": "https://eml.berkeley.edu/~saez/saez-UStopincomes-2012.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www2.census.gov/library/publications/2013/demo/p60-245/p60-245.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/blog/income-inequality-remains-at-historic-high-census-data-show",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/44604",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/businessmain/top-1-percent-took-record-share-us-income-2012-8c11118666",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/krueger_cap_speech_final_remarks.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0034": [
+      {
+        "source_url": "https://opportunityinsights.org/paper/recentintergenerationalmobility/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://rajchetty.com/wp-content/uploads/2021/04/mobility_trends_published.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/economy/economic-mobility-hasnt-changed-in-a-half-century-in-america-economists-declare/2014/01/22/e845db4a-83a2-11e3-8099-9181471f7aaf_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2014/01/23/business/upward-mobility-has-not-declined-study-says.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2012/01/05/us/harder-for-americans-to-rise-from-lower-rungs.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2014/01/23/265356290/study-upward-mobility-no-tougher-in-u-s-than-two-decades-ago",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/ERP-2012/summary",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0044": [
+      {
+        "source_url": "https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6231a4.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2013/p0806-childhood-obesity.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/mmwr/pdf/wk/mm62e0806.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/vitalsigns/childhoodobesity/index.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/6362452/",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://letsmove.obamawhitehouse.archives.gov/blog/2013/08/06/evidence-progress-new-cdc-report-shows-declines-childhood-obesity-rates-among-low-in",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/newyork/news/report-childhood-obesity-rates-fell-in-18-states",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.yahoo.com/surprising-dip-childhood-obesity-rates-211256412.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0045": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/08/10/fact-sheet-obama-administration-s-work-honor-our-military-families-and-v/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2013/04/30/first-lady-michelle-obama-announces-new-hiring-commitments-veterans-and-military-spo",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2013/04/30/op-ed-first-lady-michelle-obama-and-dr-jill-biden-fortunecom-businesses-",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0046": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/16/fact-sheet-president-and-first-lady-s-call-action-college-opportunity",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/college_opportunity_commitments_1-16-2014_final.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.csmonitor.com/USA/Education/2014/0116/Obamas-host-summit-to-help-low-income-students-go-to-college",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.insidehighered.com/news/2014/01/16/obama-administration-announces-new-college-commitments-and-funding-low-income",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/answer-sheet/wp/2014/01/28/obama-on-education-in-sotu-text/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0055": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/jolts_11222013.htm",
+        "relevance_score": 0.4,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.businessroundtable.org/ceo-economic-outlook-index/2013/Q4",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://investor.manpowergroup.com/static-files/26414451-1c08-4e49-9fa8-0a34982533a1",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0056": [
+      {
+        "source_url": "https://www.industryweek.com/the-economy/competitiveness/article/21966447/reshoring-gaining-strength-among-large-manufacturers-bcg-survey-finds",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://reshoringmfg.com/majority-of-large-manufacturers-are-now-planning-or-considering-reshoring-marketwatch-press-release/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2013/09/20/business/us-textile-factories-return.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/parallels/2014/01/22/265080779/as-overseas-costs-rise-more-u-s-companies-are-reshoring",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0058": [
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC800/text",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/economy/2013/09/09/01002442-199a-11e3-82ef-a059e54c49d0_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs_external_products/R/PDF/R42927/R42927.4.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.crfb.org/blogs/baucus-releases-international-tax-reform-draft",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oecd.org/en/publications/2013/02/addressing-base-erosion-and-profit-shifting_g1g2a9bc.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.hsgac.senate.gov/wp-content/uploads/imo/media/doc/CUT%20Loopholes%20Act%20Summary%20S.%20268%202-4-13s.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/tg1427",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://schakowsky.house.gov/media/press-releases/schakowsky-sanders-introduce-stop-corporate-tax-dodging-act-close-notorious-tax",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/congressional-report/113th-congress/house-report/17",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0065": [
+      {
+        "source_url": "https://www.nist.gov/news-events/news/2012/08/national-additive-manufacturing-innovation-institute-announced",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/15/president-obama-announces-new-public-private-manufacturing-innovation-in",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.americamakes.us/ncdmm-chosen-manage-national-additive-manufacturing-innovation-institute-namii/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2010-2014.commerce.gov/news/press-releases/2012/08/16/obama-administration-announces-new-public-private-partnership-support.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nist.gov/news-events/news/2013/11/public-comment-requested-manufacturing-networks-suggested-metrics-ip",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.semiconductor-today.com/news_items/2014/JAN/DOE_150114.shtml",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0066": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/15/president-obama-announces-new-public-private-manufacturing-innovation-in",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/15/north-carolina-home-america-s-newest-high-tech-manufacturing-hub",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.npr.org/2014/01/15/262788908/obama-unveils-new-plans-to-encourage-manufacturing-jobs",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://ssti.org/blog/president-urges-expansion-national-manufacturing-network-state-union-address",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/wonk/wp/2014/01/28/read-obamas-2014-state-of-the-union-address/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ibtimes.com/state-union-2014-obama-pushes-more-high-tech-manufacturing-hubs-1550693",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0070": [
+      {
+        "source_url": "https://www.sba.gov/sites/default/files/aboutsbaarticle/SBA%207a%20and%20504%20Gross%20Loan%20Approval%20Volume%20as%2009-30-13.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/on-small-business/sba-backs-roughly-30-billion-in-small-business-loans-for-the-third-straight-year/2013/10/29/eb137e28-40da-11e3-a624-41d661b0bb78_story.html",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20130502_R40985_91d1f3b40b4c9c5f74064b47378ef0c2b11aca73.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2012/03/05/business-lending-showing-new-signs-strength",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/256/LGR-October-2013--cleared-for-transmittal-with-charts.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/publications/other-reports/files/sbfreport2012.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.sba.gov/document/report-small-business-administration-loan-program-performance",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://advocacy.sba.gov/wp-content/uploads/2019/07/rs427-2013-Small-Business-Lending-Study-Summary.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R41146",
+        "relevance_score": 0.9,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0071": [
+      {
+        "source_url": "https://ustr.gov/about-us/policy-offices/press-office/speeches/transcripts/2014/January/Small-Business-AUSTR-testimony-Small-Business-Subcommittee-Ag-Energy-Tra",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://blog.trade.gov/2013/05/13/u-s-exporters-reach-record-high-in-2011/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/foreign-trade/Press-Release/edb/2013prelimprofile.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-113hhrg81701/pdf/CHRG-113hhrg81701.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC27422/text",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://legacy.trade.gov/mas/ian/build/groups/public/@tg_ian/documents/webcontent/tg_ian_005410.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://ustr.gov/tpp/overview-of-the-TPP",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://2010-2014.commerce.gov/news/fact-sheets/2013/05/24/fact-sheet-national-export-initiative.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ustr.gov/issue-areas/small-business",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/R42694.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0076": [
+      {
+        "source_url": "https://www.forbes.com/sites/bruceupbin/2013/06/13/debunking-the-narrative-of-silicon-valleys-innovation-might/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sciencecoalition.org/downloads/1390490336mitpetersingerfederallysupportedinnovationswhitepaperjan2014-21.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.science.gov/communications/trivia.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nsf-gov-resources.nsf.gov/pubs/2013/nsf13079/nsf13079.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nsf-gov-resources.nsf.gov/pubs/2013/nsf13079/nsf13079.pdf?VersionId=p9IbQqd4YT4mwpeBvpfCPlmV7dubQsib",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/112th-congress/house-report/564/1",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/itsallpolitics/2014/01/28/267901424/transcript-obamas-state-of-the-union-address-as-prepared-for-delivery",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.gps.gov/multimedia/exhibits/smithsonian/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.darpa.mil/research/programs/transformative-apps",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0080": [
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=14531",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=13251",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/outlooks/steo/archives/jan14.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/outlooks/steo/archives/jul13.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/outlooks/aeo/er/pdf/0383er%282014%29.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=15131",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.aol.com/news/2013-01-09-u-s-crude-imports-forecast-at-25-year-low-in-2013.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.aol.com/2012-12-11-eia-forecasts-lower-u-s-crude-imports.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0082": [
+      {
+        "source_url": "https://www.nationalgeographic.com/science/article/140131-natural-gas-manufacturing-jobs",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.prnewswire.com/news-releases/ihs-report-predicts-long-term-advantage-for-us-chemical-industry-due-to-shale-gas-revolution-222394581.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.laportetx.gov/ArchiveCenter/ViewFile/Item/1385",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/2013/03/28/175483517/cheap-natural-gas-pumping-new-life-into-u-s-factories",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0086": [
+      {
+        "source_url": "https://www.energy.gov/cmei/success-stories/articles/eere-success-story-nationwide-slashing-red-tape-speed-solar",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://seia.org/news/us-solar-industry-records-second-largest-quarter-ever/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://seia.org/blog/us-solar-industry-records-explosive-growth-third-quarter/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ferc.gov/legal/staff-reports/2013/dec-energy-infrastructure.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=14531",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=8570",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://emp.lbl.gov/sites/all/files/lbnl-6350e.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=8510",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://docs.nrel.gov/docs/fy15osti/62580.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0087": [
+      {
+        "source_url": "https://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.greentechmedia.com/articles/read/america-installs-a-solar-system-every-four-minutes",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/green/solar_power/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://blogs.reuters.com/breakingviews/2014/01/03/u-s-utilities-face-german-style-solar-burn/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/mlr/2013/article/implementing-the-2010-standard-occupational-classification-in-the-occupational-employment-statistics-program.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/statement-energy-secretary-ernest-moniz-2013-solar-jobs-census",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20130404.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=12991",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0088": [
+      {
+        "source_url": "https://home.treasury.gov/system/files/131/General-Explanations-FY2014.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20131030_R42374_9a8510e76ff6ba49ab12ce296044239303dcec75.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/131/Tax-Expenditures-FY2014.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.hamiltonproject.org/assets/legacy/files/downloads_and_links/THP_15WaysFedBudget_Prop5.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.jct.gov/getattachment/8bf84027-b7fe-4c13-a00f-0c36a3425cad/s-1-13-4504.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/03-06-FuelsandEnergy_Brief.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": false
+      }
+    ],
+    "obama_2014:0090": [
+      {
+        "source_url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/13f44fb4e2c2d39d85257a68005d0154.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2012/08/28/obama-administration-finalizes-historic-545-mpg-fuel-efficiency-standard",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P100F1E5.TXT",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-13-138r",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.transportation.gov/regulations/federal-register-documents/2012-21972",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/12/09/statement-president",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.heraldnet.com/2012/08/28/new-mileage-rules-in-tank/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0093": [
+      {
+        "source_url": "https://www.iea.org/reports/redrawing-the-energy-climate-map",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.pbl.nl/en/publications/trends-in-global-co2-emissions-2013-report",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=10691",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinEnergy/detail.php?id=14571",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eia.gov/environment/emissions/carbon/",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://cbsnews.com/news/us-carbon-emissions-hit-18-year-low",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0095": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/06/25/presidential-memorandum-power-sector-carbon-pollution-standards",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2013-07-01/pdf/2013-15941.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://public-inspection.federalregister.gov/2014-13725.pdf?1403015300=",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.epa.gov/epa/cleanpowerplan/2013-proposed-carbon-pollution-standard-new-power-plants.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/president-obama-climate-action-plan",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.epa.gov/epa/newsreleases/fact-sheet-president-obama-announce-historic-carbon-pollution-standards-power-plants.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.epa.gov/epa/sites/production/files/2013-09/documents/20130920technicalfactsheet.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.georgetownclimate.org/articles/epa-proposes-carbon-pollution-standards-for-new-power-plants.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/113th-congress/senate-bill/1324",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0103": [
+      {
+        "source_url": "https://www.cbo.gov/publication/44346",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/sites/default/files/cbofiles/attachments/s744.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/44225",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/44397",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/44372",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/examining-the-congressional-budget-office-cost-estimate-of-the-senate-immigration-bill",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/world/cbo-immigration-bill-would-decrease-deficit-197-billion-over-10-flna6c10369417",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.americanimmigrationcouncil.org/fact-sheet/power-reform-cbo-report-quantifies-economic-benefits-senate-immigration-bill/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/31/seizing-opportunity-pass-commonsense-immigration-reform",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html?hpid=z3",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0109": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.michigan.gov/formergovernors/recent/snyder/press-releases/2012/08/22/snyder-celebrates-grand-opening-of-detroit-manufacturing-systems",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.prnewswire.com/news-releases/rush-group-and-faurecia-announce-joint-automotive-manufacturing-venture-in-detroit-149978445.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/white-house-press-release-white-house-announces-additional-guests-the-first-ladys-box",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/detroit/news/new-plant-means-new-jobs-for-detroit/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/27/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-addr",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/113/crec/2014/01/28/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0110": [
+      {
+        "source_url": "https://www.congress.gov/113/crec/2014/01/28/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.michiganradio.org/business/2014-02-03/how-detroit-manufacturing-systems-hired-hundreds-of-workers-in-the-city",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.prnewswire.com/news-releases/rush-group-and-faurecia-announce-joint-automotive-manufacturing-venture-in-detroit-149978445.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.michigan.gov/formergovernors/recent/snyder/press-releases/2012/08/22/snyder-celebrates-grand-opening-of-detroit-manufacturing-systems",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/transcripts/173540365",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/detroit/news/new-plant-means-new-jobs-for-detroit/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0114": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://content.govdelivery.com/accounts/USDOL/bulletins/a280c7",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.mlive.com/politics/2014/01/detroit_manufacturing_inspires.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-addr",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/08/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0121": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/updated_ui_report_-_final.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/wonk/wp/2014/01/24/what-happens-when-jobless-benefits-get-cut-lets-ask-north-carolina/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/failure-to-extend-emergency-unemployment-benefits-will-hurt-jobless-workers-in-every-state",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/releases/eta/eta20140123",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/unemployment-benefits-dominate-the-agenda/2014/01/31/3a63a70a-8659-11e3-b85b-b305db87fb90_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20130905_R42936_1c6b106c66beeb7b56a93a0efac98078c44db30d.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0123": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/27/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oakpark.com/2014/01/28/oak-park-resident-misty-demars-is-guest-at-state-of-the-union-speech/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://chicago.suntimes.com/news/2014/1/28/18598685/jobless-oak-park-woman-misty-demars-white-house-guest-at-state-of-the-union",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/kenneth-bae-family-fort-lee-mayor-among-state-of-the-union-guests/",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0124": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://chicago.suntimes.com/news/2014/1/28/18598685/jobless-oak-park-woman-misty-demars-white-house-guest-at-state-of-the-union",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/white-house-press-release-white-house-announces-additional-guests-the-first-ladys-box-0",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/node/255086/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://apnews.com/united-states-government-467e87a267de40618484099a3d877c2b",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-2014-book1/PPP-2014-book1-doc-pg62-3",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400059/pdf/DCPD-201400059.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/kenneth-bae-family-fort-lee-mayor-among-state-of-the-union-guests/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0125": [
+      {
+        "source_url": "https://www.oakpark.com/2014/01/29/oak-park-resident-in-state-of-the-union-spotlight/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/white-house-press-release-white-house-announces-additional-guests-the-first-ladys-box-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/node/255086/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-2014-book1/PPP-2014-book1-doc-pg62-3",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/kenneth-bae-family-fort-lee-mayor-among-state-of-the-union-guests/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400059/pdf/DCPD-201400059.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0126": [
+      {
+        "source_url": "https://chicago.suntimes.com/news/2014/1/28/18598685/jobless-oak-park-woman-misty-demars-white-house-guest-at-state-of-the-union",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/DCPD-201400050",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oakpark.com/2014/01/28/oak-park-resident-misty-demars-is-guest-at-state-of-the-union-speech/",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400059/pdf/DCPD-201400059.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/obamas-2014-state-of-the-union-wish-list/",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/kenneth-bae-family-fort-lee-mayor-among-state-of-the-union-guests/",
+        "relevance_score": 1.0,
+        "supports_claim": false
+      }
+    ],
+    "obama_2014:0127": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oakpark.com/2014/01/29/oak-park-resident-in-state-of-the-union-spotlight/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.oakpark.com/2014/01/28/oak-park-resident-misty-demars-is-guest-at-state-of-the-union-speech/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/node/255086/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/113/crec/2014/01/28/CREC-2014-01-28.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400059/pdf/DCPD-201400059.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0128": [
+      {
+        "source_url": "https://www.oakpark.com/2014/01/29/oak-park-resident-in-state-of-the-union-spotlight/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.oakpark.com/News/Articles/1-28-2014/Oak-Park-resident-Misty-DeMars-is-guest-at-State-of-the-Union-speech/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/08/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/113/crec/2014/01/28/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/obamas-2014-state-of-the-union-address-full-text/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0134": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/31/fact-sheet-opportunity-all-president-s-call-action-give-long-term-unempl",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/hundreds-of-firms-vow-to-help-long-term-unemployed-under-white-house-initiative/2014/01/31/23affcac-8a91-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bloomberg.com/news/articles/2014-01-31/ceos-pledge-help-to-white-house-for-long-term-unemployed",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/31/fact-sheet-opportunity-for-all-president-s-call-action-give-long-term-unempl",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/post-politics/wp/2014/01/31/obama-to-host-white-house-summit-on-long-term-unemployed-firday/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://money.cnn.com/2014/01/31/news/economy/unemployment-obama",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0138": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dnainfo.com/new-york/20140120/washington-heights/president-obama-praises-washington-heights-high-schooler/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnewyork.com/news/local/state-of-the-union-first-lady-michelle-obama-guest-nyc-teen/2015918/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/16/remarks-president-and-first-lady-college-opportunity-summit",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-2014-book1/PPP-2014-book1-doc-pg62-3",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0142": [
+      {
+        "source_url": "https://secure-media.collegeboard.org/digitalServices/misc/trends/education-pays-2013-full-report-022714.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2010-2014.commerce.gov/blog/2012/02/24/census-bureau-releases-national-level-data-education-levels-bachelors-degree-attainm.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/digest/d13/tables/dt13_104.20.asp",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/pubs2013/2013037.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/content/dam/Census/library/publications/2012/demo/p20-566.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/use-work/resource-library/report/compendium/digest-education-statistics-2012?pubid=2014015",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/R41127.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/08/09/remarks-president-student-loans-bill-signing",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/programs/digest/d13/ch_3.asp",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2012/06/07/presidential-memorandum-improving-repayment-options-federal-student-loan",
+        "relevance_score": 0.55,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0143": [
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED559916.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.tn.gov/former-governor-haslam/news/2013/11/7/tennessee-students-the-fastest-improving-in-the-nation.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nces.ed.gov/nationsreportcard/pubs/main2013/2014451.aspx",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/gao-13-777.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://files.eric.ed.gov/fulltext/ED580339.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-13-777",
+        "relevance_score": 0.5,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2012/04/20/press-briefing-press-secretary-jay-carney-and-secretary-education-arne-d",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.chalkbeat.org/tennessee/2013/11/7/21091461/tennessee-students-lead-the-nation-in-growth-on-naep/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/ew/articles/2013/06/18/36laine.h32.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/local/education/common-core-foes-spreading-misinformation-duncan-says/2013/06/25/332e9574-ddc8-11e2-948c-d644453cf169_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0151": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/02/12/remarks-president-state-union-address",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/02/12/president-barack-obamas-state-union-address-prepared-delivery/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/02/13/fact-sheet-president-obama-s-plan-early-education-all-americans",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://acf.gov/archive/blog/2013/02/president-obamas-plan-early-education-all-americans",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://acf.gov/sites/default/files/documents/ecd/fact_sheet_president_obama_508_0.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ed.gov/sites/ed/files/about/overview/budget/budget14/summary/14summary.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/policy-politics/obama-urges-big-preschool-expansion-in-state-of-the-union-speech/2013/02",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://edsource.org/2013/few-details-accompany-obamas-call-for-expanded-preschool/27059",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/obama-touts-plan-for-universal-preschool/2013/02/14/e16a4888-76a6-11e2-95e4-6148e45d7adb_story.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0153": [
+      {
+        "source_url": "https://www.washingtonpost.com/blogs/govbeat/wp/2014/01/10/thirty-states-are-raising-pre-kindergarten-funding/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ecs.org/clearinghouse/01/10/34/11034.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ecs.org/clearinghouse/01/06/90/10690.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://stateimpact.npr.org/florida/2014/01/29/what-the-president-said-about-education-in-the-state-of-the-union/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/30/remarks-president-world-class-education",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0157": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/06/06/president-obama-unveils-connected-initiative-bring-america-s-students-di",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/white-house-press-release-president-obama-unveils-connected-initiative-bring-americas",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.ntia.gov/blog/2013/connecting-america-s-schools-next-generation-broadband",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2013/06/06/bringing-america-s-students-digital-age/",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/obama-pitches-plan-to-bring-broadband-and-wifi-to-all-schools/2013/06/06/d0c8779e-cebb-11e2-8845-d970ccb04497_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/obamas-2014-state-of-the-union-address-full-text/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://thejournal.com/articles/2013/06/06/president-obama-reveals-initiative.aspx",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400056/pdf/DCPD-201400056.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/answer-sheet/wp/2013/06/06/text-of-obama-speech-we-will-connect-99-percent-of-schools-to-internet/",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      }
+    ],
+    "obama_2014:0158": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/state-union-fact-sheet-opportunity-all",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/02/04/fact-sheet-opportunity-all-answering-president-s-call-enrich-american-ed",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/local/education/obama-announces-public-and-private-investments-for-high-speed-internet-in-schools/2014/02/04/dbe4f64e-8d3c-11e3-98ab-fe5228217bd1_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/thetwo-way/2014/02/04/271618232/obama-secures-funding-to-help-connect-students-to-internet",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://blogs.microsoft.com/blog/2014/02/04/we-heard-the-presidents-connected-call-to-action-and-here-is-our-billion-dollar-response-to-put-affordable-technology-in-the-hands-of-u-s-students-nationwide/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.edweek.org/policy-politics/obamas-connected-initiative-gets-major-fcc-corporate-financial-support/2014/02",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0165": [
+      {
+        "source_url": "https://www.bls.gov/cps/wlf-databook-2013.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/cps/aa2012/cpsaat11.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/newsroom/releases/archives/employment_occupations/cb12-225.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/cps/demographics/women-labor-force.htm",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/reports/womens-databook/archive/womenlaborforce_2012.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/image/image_file/equal_pay-task_force_progress_report_june_10_2013.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2012/ted_20120501.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0166": [
+      {
+        "source_url": "https://www2.census.gov/library/publications/2013/demo/p60-245/p60-245.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/newsroom/archives/2013-pr/cb13-165.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/2013/demo/p60-245.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/content/dam/Census/newsroom/press-kits/2013/20130917_ip_slides_with_plotpoints.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/reports/womens-earnings/archive/womensearnings_2012.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fraser.stlouisfed.org/files/docs/publications/bls/reports/womensearnings_2012.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20131104.htm",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.pbs.org/newshour/nation/women-still-earned-77-cents-to-a-mans-dollar-in-2012",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20120314_R41897_b76b8a141e1579a2cad40c7b903b1bdac860082a.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0174": [
+      {
+        "source_url": "https://www.bls.gov/opub/reports/womens-databook/archive/womenlaborforce_2012.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/library/publications/2013/demo/p60-245.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://files.epi.org/2013/bp357--federal-minimum-wage-increase.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.epi.org/publication/raising-federal-minimum-wage-to-1010/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0177": [
+      {
+        "source_url": "https://webserver.rilin.state.ri.us/PublicLaws/law17/law17302-14.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ncsl.org/research/labor-and-employment/2013-state-minimum-wage-legislation",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://portal.ct.gov/malloy-archive/press-room/press-releases/2013/06-2013/gov-malloy-signs-minimum-wage-increase-into-law",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.gov.ca.gov/archive/gov39/2013/09/25/news18224/index.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/mw-consolidated",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://dol.ny.gov/history-minimum-wage-new-york-state",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/state",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/state/minimum-wage/tipped/2014",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0180": [
+      {
+        "source_url": "http://www.startribune.com/punch-pizza-co-owner-worker-to-attend-state-of-union/242429521/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/minnesota/news/punch-pizza-to-be-featured-in-state-of-the-union/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://tcbmag.com/pizza-chain-expects-shout-out-in-state-of-the-union/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/08/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0181": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/minnesota/news/punch-pizza-raises-minimum-wage-to-10-per-hour/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://minnesota.cbslocal.com/2013/12/06/punch-pizza-raises-minimum-wage-to-10-per-hour/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.startribune.com/obama-praises-minneapolis-based-punch-pizza/242506351",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/113/crec/2014/01/28/CREC-2014-01-28.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/minnesota/news/investing-in-our-people-punch-pizza-raising-minimum-wage-to-10/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/minnesota/news/punch-pizza-to-be-featured-in-state-of-the-union/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0185": [
+      {
+        "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983213000005/costproxy2013.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bloomberg.com/news/articles/2013-06-06/costco-ceo-craig-jelinek-leads-the-cheapest-happiest-company-in-the-world",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sec.gov/Archives/edgar/data/909832/000144530513002422/cost10k2013.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.forbes.com/sites/timworstall/2013/03/06/of-course-costco-supports-a-higher-minimum-wage-it-already-pays-above-it/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/id/wbna51101496",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/local/in-pr-georges-county-obama-visits-costco-in-campaign-to-raise-minimum-wage/2014/01/29/55b00fcc-88a1-11e3-833c-33098f9e5267_story.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/on-leadership/wp/2014/01/28/why-obama-hearts-costco/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0189": [
+      {
+        "source_url": "https://www.everycrsreport.com/files/20130226_R42973_44c181d93ef92acbbebebd1a13eb57774c7678a8.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.epi.org/publication/raising-federal-minimum-wage-to-1010/",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://council.seattle.gov/2014/01/17/history-and-background-on-the-minimum-wage/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/data/cpiaucsl",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/history/chart",
+        "relevance_score": 0.8,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC30593/text",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/fact-sheet-opportunity-all-rewarding-hard-work",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/epi_minimum_wage.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0190": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/BILLS-113hr1010ih/pdf/BILLS-113hr1010ih.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.help.senate.gov/dem/newsroom/press/joined-by-business-leaders-and-workers-sen-harkin-rep-miller-unveil-bill-to-raise-the-minimum-wage-to-1010",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/113th-congress/house-bill/1010",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://democrats-edworkforce.house.gov/media/press-releases/joined-by-business-leaders-and-workers-sen-harkin-rep-miller-unveil-bill-to-raise-the-minimum-wage-to-1010",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/113th-congress/senate-bill/1737",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govtrack.us/congress/bills/113/s460/text",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.help.senate.gov/ranking/newsroom/press/on-4th-anniversary-of-last-minimum-wage-increase-harkin-and-miller-point-to-new-poll-data-showing-broad-bipartisan-support-for-legislation-to-raise-the-minimum-wage-to-1010",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aflcio.org/2013/3/5/miller-harkin-introduce-bill-raise-minimum-wage-1010",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0198": [
+      {
+        "source_url": "https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-returns-complete-report-publication-1304-basic-tables-part-2",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbpp.org/sites/default/files/atoms/files/6-26-12tax.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbpp.org/research/federal-tax/eitc-and-child-tax-credit-promote-work-reduce-poverty-and-support-childrens",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/50th_anniversary_cea_report_-_final_post_embargo.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/btn/volume-2/spending-patterns-of-families-receiving-means-tested-government-assistance.htm",
+        "relevance_score": 0.2,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.census.gov/data/tables/2012/demo/families/cps-2012.html",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0202": [
+      {
+        "source_url": "https://www.bls.gov/ebs/publications/pdf/bulletin-2776-september-2013-employee-benefits-in-the-united-states-march-2013.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20130103.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/ebs2_07172013.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ebri.org/content/full/ebri-s-2013-retirement-confidence-survey-perceived-savings-needs-outpace-reality-for-many-5175",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/btn/volume-1/who-has-benefits-in-private-industry-in-2012.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ebri.org/docs/default-source/ebri-press-release/pr-1054.pdf?sfvrsn=832a362f_0",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "http://www.dol.gov/ebsa/pdf/2011pensionplanbulletin.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.bls.gov/ebs/factsheets/defined-benefit-frozen-plans.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.gao.gov/products/GAO-14-9",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2013/ted_20130719.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0204": [
+      {
+        "source_url": "https://www.sec.gov/Archives/edgar/data/83246/000114420414006072/v367253_fwp.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/SP500",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2013/05/25/business/economy/sp-has-more-than-doubled-under-obama.html",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/pubs/bulletin/2012/pdf/scf12.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://sp.jpmorgan.com/spweb/content/download/225240",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.mprnews.org/story/2013/03/05/the-dow-has-never-been-higher",
+        "relevance_score": 0.5,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/ebs2_07172013.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/id/wbna52581502",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/ebs2_07112012.htm",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0207": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/29/fact-sheet-opportunity-all-securing-dignified-retirement-all-americans",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/presidential-memorandum-retirement-savings-security/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sparkinstitute.org/content-files/treasury_dept_myra_fact_sheet_2-4-14.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/fact-sheet-opportunity-all-securing-dignified-retirement-all-americans",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/obama-takes-state-of-the-union-themes-on-the-road-touts-minimum-wage-hike/2014/01/29/4d30474c-88fe-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.pionline.com/article/20140129/ONLINE/140129837/obama-treasury-detail-new-myra-savings-plan",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/obama-pitches-myra-retirement-savings-plan/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0214": [
+      {
+        "source_url": "https://www.gao.gov/products/gao-12-439",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/27/white-house-announces-first-round-guests-first-ladys-box-state-union-add",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/CCIIO/Resources/Fact-Sheets-and-FAQs/marketreforms-2-22-2013",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/blog/2014/01/27/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/CCIIO/Resources/Forms-Reports-and-Other-Resources/Downloads/pcip-expenditures-3-31-2013.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/irb/2013-19_IRB",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/wp-srv/special/politics/2014-state-of-the-union/guests/",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.pbs.org/newshour/politics/congress-invites-state-of-the-union-guests-who-embody-2014-s-politics",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.kff.org/health-reform/fact-sheet/obamacare-and-you-if-you-have-a-pre-existing-condition/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0216": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://cronkitenewsonline.com/2014/01/five-arizonans-among-24-people-sitting-with-first-lady-for-state-of-the-union/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/27/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/113/crec/2014/01/28/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/obamas-2014-state-of-the-union-address-full-text/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/politics/transcript-of-president-obamas-2014-state-of-the-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0217": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://cronkitenewsonline.com/2014/01/five-arizonans-among-24-people-sitting-with-first-lady-for-state-of-the-union/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/27/first-ladys-box-seats-2014-state-union",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/state-of-the-union-2014",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.3,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.daytondailynews.com/news/national/guest-join-first-lady-for-speech/nAUUhdbGBUoMbgPGFa1ENI/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/kenneth-bae-family-fort-lee-mayor-among-state-of-the-union-guests/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0218": [
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PPP-2014-book1/PPP-2014-book1-doc-pg62-3",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28-pt1-PgH1473-5.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-addr",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.forbes.com/sites/beltway/2014/01/28/full-text-president-obamas-2014-state-of-the-union-address/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/obama-will-promise-to-expand-opportunity-with-or-without-congress/2014/01/28/53d5573a-8869-11e3-833c-33098f9e5267_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://kffhealthnews.org/news/obama-state-of-the-union-health-reform-marketplaces-exchanges/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0220": [
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/migrated_legacy_files//43691/ib.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/number-young-adults-gaining-insurance-due-affordable-care-act-now-tops-3-million-0",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/nchs/products/databriefs/db137.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/new-report-shows-affordable-care-act-has-expanded-insurance-coverage-among-young-adults-all-races-0",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cdc.gov/nchs/data/databriefs/db137.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://jamanetwork.com/journals/jama/fullarticle/1569178",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/insur201306.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nejm.org/doi/10.1056/NEJMsa1212779",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://archive.cdc.gov/www_cdc_gov/nchs/data/nhis/earlyrelease/Young_Adults_Health_Access_052012.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/new-census-estimates-show-3-million-more-americans-had-health-insurance-coverage-2012-0",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0221": [
+      {
+        "source_url": "https://www.medicaid.gov/medicaid/downloads/december-2013-enrollment-report.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/reports/health-insurance-marketplace-january-2014-enrollment-report",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.reuters.com/article/2013/12/31/us-usa-healthcare-enrollment-idUSBRE9BU0FK20131231",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.kff.org/wp-content/uploads/sites/7/2014/01/8548-medicaid-enrollment-under-the-affordable-care-act-understanding-the-numbers2.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.hhs.gov/healthcare/facts/blog/2013/12/enrollment-surged.html",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/newsroom/press-releases/nearly-365000-americans-selected-plans-health-insurance-marketplace-october-and-november",
+        "relevance_score": 0.65,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0223": [
+      {
+        "source_url": "https://www.federalregister.gov/documents/2013/02/27/2013-04335/patient-protection-and-affordable-care-act-health-insurance-market-rules-rate-review",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://law.justia.com/codes/us/2013/title-42/chapter-6a/subchapter-xxv/part-a/subpart-1/section-300gg-3/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/cciio/resources/files/downloads/market-rules-technical-summary-2-27-2013.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.irs.gov/irb/2013-19_IRB",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/2013/02/27/2013-05003/patient-protection-and-affordable-care-act-health-insurance-market-rules-rate-review",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://cms.gov/newsroom/press-releases/health-insurance-marketplace-opens-offers-millions-americans-quality-affordable-health-care-coverage",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/CCIIO/Resources/Letters/Downloads/commissioner-letter-11-14-2013.PDF",
+        "relevance_score": 0.6,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://cms.gov/newsroom/press-releases/hhs-and-states-move-forward-offer-quality-affordable-health-coverage-2014",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/files/20120416_R42069_29d6bf80e59830cfec576f468bd2719ac2bac400.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.healthcare.gov/coverage/pre-existing-conditions/",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      }
+    ],
+    "obama_2014:0225": [
+      {
+        "source_url": "https://www.cms.gov/newsroom/press-releases/cms-announces-major-savings-medicare-beneficiaries",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/newsroom/press-releases/trustees-report-shows-reduced-cost-growth-longer-medicare-solvency",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/ReportsTrustFunds/downloads/tr2013.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://cms.gov/newsroom/press-releases/new-data-shows-affordable-care-act-helped-seniors-save-89-billion-prescription-drugs-nationwide",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ssa.gov/OACT/TRSUM/2013/index.html",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://aspe.hhs.gov/sites/default/files/migrated_legacy_files//43886/ib.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.commonwealthfund.org/publications/newsletter-article/medicare-solvency-extended-trustees-warn-against-complacency",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0246": [
+      {
+        "source_url": "https://www.supremecourt.gov/opinions/12pdf/12-96_6k47.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.law.cornell.edu/supct/pdf/12-96.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/archives/opa/speech/attorney-general-eric-holder-delivers-remarks-supreme-court-decision-shelby-county-v",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/supreme-court-stops-use-of-key-part-of-voting-rights-act/2013/06/25/26888528-dda5-11e2-b197-f248b21f94c4_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.justice.gov/crt/shelby-county-decision",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://supreme.justia.com/cases/federal/us/570/12-96/case.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/the-fix/wp/2013/02/27/the-supreme-court-voting-rights-act-case-explained/",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0247": [
+      {
+        "source_url": "https://www.eac.gov/sites/default/files/eac_assets/1/6/Amer-Voting-Exper-final-draft-01-09-14-508.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.supportthevoter.gov/files/2014/01/Amer-Voting-Exper-final-draft-01-09-14-508.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/113th-congress/house-bill/3899/text",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.eac.gov/news/2014/01/22/presidential-commission-election-administration-presents-recommendations-president",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.pew.org/en/about/news-room/press-releases-and-statements/2014/01/22/presidential-commission-on-election-administration-releases-recommendations-to-improve-elections",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.latimes.com/nation/la-na-voting-recommendations-20140123-story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/post-politics/wp/2014/01/16/bipartisan-group-releases-plan-to-fix-voting-rights-act/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://bobbyscott.house.gov/media-center/press-releases/scott-statement-recommendations-presidential-commission-election",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://cha.house.gov/press-release/house-administration-reviews-voting-process-bauer-ginsberg-commission-recommendations",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0255": [
+      {
+        "source_url": "https://www.brookings.edu/wp-content/uploads/2016/07/index20130228.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://docplayer.net/13772239-Iraq-index-tracking-variables-of-reconstruction-security-in-post-saddam-iraq.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sigar.mil/Portals/147/Files/reports/quarterly-reports/2012-01-30qr.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-30/pdf/CREC-2014-01-30-pt1-PgS627.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://history.army.mil/portals/143/Images/Publications/catalog/70-135.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/05/23/remarks-president-national-defense-university/",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0256": [
+      {
+        "source_url": "https://www.stateoig.gov/uploads/report/report_pdf_file/isp-i-13-25a_1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/remarks-president-state-union-address/",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.7,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.stateoig.gov/uploads/report/report_pdf_file/aud-mero-13-33_1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CPRT-112SPRT63954/html/CPRT-112SPRT63954.htm",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/ei/pix/veterans/2013/217422.htm",
+        "relevance_score": 0.85,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC30742/text",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://news.yahoo.com/enhanced-u-security-baghdad-embassy-includes-fewer-100-220657586.html",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.army.mil/article/70048/the_office_of_security_cooperation_maintaining_a_presence_in_iraq_once_soldiers_go_home",
+        "relevance_score": 0.75,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/news/worldviews/wp/2014/01/29/obamas-six-big-foreign-policy-points-in-the-state-of-the-union/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0257": [
+      {
+        "source_url": "https://dod.defense.gov/Portals/1/Documents/pubs/October_1230_Report_Master_Nov7.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sigar.mil/pdf/quarterlyreports/2014-01-30qr.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2013/02/12/politics/obama-sotu-afghanistan-troops/index.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/02/12/fact-sheet-afghanistan",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/blogs/politics/2013/02/kobama-to-announce-34000-troop-afghanistan-drawdown-this-year",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/how-many-us-troops-are-still-in-afghanistan/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2013/02/12/politics/obama-sotu-afghanistan-troops",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.sigar.mil/pdf/quarterlyreports/2014Jan30QR.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0258": [
+      {
+        "source_url": "https://dod.defense.gov/Portals/1/Documents/pubs/October_1230_Report_Master_Nov7.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/military/library/news/2013/06/mil-130618-ukmod02.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.globalsecurity.org/military/library/news/2013/06/mil-130618-afps03.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/02/12/fact-sheet-afghanistan",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/nato_static_fl2014/assets/pdf/pdf_2013_10/20131018_131022-MediaBackgrounder_ANSF_en.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.army.mil/article/93665/Soldiers_in_Afghanistan_continue_mission_as_2013_arrives/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/cps/en/natohq/topics_69366.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/en/what-we-do/operations-and-missions/nato-and-afghanistan",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0264": [
+      {
+        "source_url": "https://www.washingtonpost.com/world/al-qaeda-force-captures-fallujah-amid-rise-in-violence-in-iraq/2014/01/03/8abaeb2a-74aa-11e3-8def-a33011492df2_story.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://nsarchive.gwu.edu/document/33185-document-19-office-director-national-intelligence-worldwide-threat-assessment-us",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/j/ct/rls/crt/2012/209979.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.longwarjournal.org/archives/2014/01/al_qaeda_seizes_cont.php",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CHRG-113hhrg81977/pdf/CHRG-113hhrg81977.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/11/19/remarks-prepared-delivery-assistant-president-homeland-security-and-coun",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0279": [
+      {
+        "source_url": "https://2009-2017.state.gov/t/isn/nuclearsecuritysummit/2012/index.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/address-before-joint-session-the-congress-the-state-the-union-21",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.state.gov/new-start-treaty",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/t/isn/rls/rm/187647.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://armscontrolcenter.org/fact-sheet-2012-seoul-nuclear-security-summit-results/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/p/eur/ci/rs/usrussiabilat/214349.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/ne/uranium-management-and-policy?nrg_redirect=93471",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.energy.gov/nepa/eis-0240-disposition-surplus-highly-enriched-uranium",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0280": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://opcw.unmissions.org/first-priority-chemicals-syria-transported-latakia-and-removed-country",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.opcw.org/media-centre/news/2014/01/first-priority-chemicals-syria-transported-latakia-and-removed-country",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/09/14/statement-president-us-russian-agreement-framework-elimination-syrian-ch",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/08/30/government-assessment-syrian-government-s-use-chemical-weapons-august-21",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/node/233496",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bbc.com/news/world-middle-east-24091633",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nytimes.com/2013/09/15/world/middleeast/syria-talks.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.bbc.com/news/world-middle-east-23876085",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/syriacw",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0282": [
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/prs/ps/2014/01/220054.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/20/statement-press-secretary-jay-carney-implementation-joint-plan-action",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/16/summary-technical-understandings-related-implementation-joint-plan-actio/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/12/statement-president-implementation-first-step-agreement-islamic-republic",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/secretary/remarks/2014/01/219566.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/system/files/126/jpoa.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iaea.org/newscenter/news/iaea-director-general%E2%80%99s-statement-iran",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iaea.org/sites/default/files/publications/documents/infcircs/2013/infcirc856.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/kerry-in-geneva-raising-hopes-for-historic-nuclear-deal-with-iran/2013/11/23/53e7bfe6-5430-11e3-9fe0-fd2ca728e67c_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0283": [
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/prs/ps/2014/01/220054.htm",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iaea.org/sites/default/files/documents/gov-inf-2014-14_8.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iaea.org/sites/default/files/gov2014-2.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/16/summary-technical-understandings-related-implementation-joint-plan-actio",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/20/statement-press-secretary-jay-carney-implementation-joint-plan-action-re",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/16/summary-technical-understandings-related-implementation-joint-plan-actio",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0284": [
+      {
+        "source_url": "https://www.globalsecurity.org/wmd/library/news/iran/2014/iran-140120-presstv01.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iaea.org/sites/default/files/gov2014-2.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/16/summary-technical-understandings-related-implementation-joint-plan-actio",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/system/files/126/jpoa.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400014/html/DCPD-201400014.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/prs/ps/2014/01/220054.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/prs/ps/2014/01/220058.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2013/11/23/fact-sheet-first-step-understandings-regarding-islamic-republic-iran-s-n",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/20/statement-press-secretary-jay-carney-implementation-joint-plan-action-re",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0285": [
+      {
+        "source_url": "https://www.iaea.org/sites/default/files/gov2014-2.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.iaea.org/sites/default/files/govinf2014-1.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2013/11/23/fact-sheet-first-step-understandings-regarding-islamic-republic-iran-s-n",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ofac.treasury.gov/system/files/126/jpoa.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/16/summary-technical-understandings-related-implementation-joint-plan-actio/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "http://www.reuters.com/article/2014/01/20/us-iran-nuclear-idUSBREA0J00420140120",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/article/2014/01/29/us-iran-nuclear-iaea-idUSBREA0S0W320140129",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/event/113th-congress/house-event/LC495/text",
+        "relevance_score": 0.8,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/prs/dpb/2014/01/219935.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/node/324496",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0289": [
+      {
+        "source_url": "https://2009-2017.state.gov/j/ct/rls/crt/2012/209985.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://documents.un.org/api/symbol/access?l=en&s=S%2F2013%2F331&t=pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/prs/ps/2013/05/210145.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/jl1980",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.terrorism-info.org.il/en/20524/",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://home.treasury.gov/news/press-releases/tg1709",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/secretary/remarks/2013/05/209795.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://2009-2017.state.gov/r/pa/prs/dpb/2013/06/211168.htm",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/hezbollah-says-its-getting-game-changing-weapons-from-syria",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.reuters.com/article/us-syria-crisis/syrian-rebels-lose-strategic-town-in-boost-for-assad-idUSBRE9530VE20130605",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0300": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.osw.waw.pl/en/publikacje/osw-commentary/2014-01-14/nsa-impact-wiretapping-scandal-german-american-relations",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://2009-2017-fpc.state.gov/220909.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nato.int/en/news-and-events/events/transcripts/2014/01/27/secretary-generals-annual-report-2013",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.npr.org/sections/thetwo-way/2014/01/08/260804272/germanys-merkel-to-visit-u-s-amid-anger-over-nsa-spying",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.cnn.com/2013/10/25/world/europe/europe-summit-nsa-spying",
+        "relevance_score": 0.9,
+        "supports_claim": false
+      },
+      {
+        "source_url": "https://www.nbcnews.com/storyline/nsa-snooping/u-s--german-relations-hit-new-low-amid-nsa-n11496",
+        "relevance_score": 0.95,
+        "supports_claim": false
+      }
+    ],
+    "obama_2014:0316": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/injured-ranger-cory-remsburg-gets-sotu-spotlight/2014/01/28/26f190f8-8896-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/army-ranger-cory-remsburg-honored-hero-during-state-union-address-flna2d12014373",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.csmonitor.com/USA/USA-Update/2014/0129/Who-is-Cory-Remsburg-And-what-does-he-mean-to-Obama",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://edition.cnn.com/2014/01/29/politics/war-hero-sotu",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0/",
+        "relevance_score": 0.6,
+        "supports_claim": null
+      }
+    ],
+    "obama_2014:0319": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/injured-ranger-cory-remsburg-gets-sotu-spotlight/2014/01/28/26f190f8-8894-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/army-ranger-cory-remsburg-honored-hero-during-state-union-address-flna2d12014373",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28-pt1-PgS526-4.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://patch.com/illinois/niles/who-is-sgt-cory-remsburg",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/injured-ranger-cory-remsburg-gets-sotu-spotlight/2014/01/28/26f190f8-8896-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/politics/army-ranger-who-does-not-quit-earns-longest-state-of-the-union-ovation.amp",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/blogs/politics/2014/01/meet-the-state-of-the-union-guest-who-got-the-most-applause/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0320": [
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/injured-ranger-cory-remsburg-gets-sotu-spotlight/2014/01/28/26f190f8-8896-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/army-ranger-cory-remsburg-honored-hero-during-state-union-address-flna2d12014373",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28-pt1-PgS526-4.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.csmonitor.com/USA/USA-Update/2014/0129/Who-is-Cory-Remsburg-And-what-does-he-mean-to-Obama",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/29/sgt-1st-class-cory-remsburg-soldiers-va-support",
+        "relevance_score": 0.75,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/storyline/state-of-the-union/army-ranger-cory-remsburg-honored-hero-state-union-n18321",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.newyorker.com/news/john-cassidy/the-meaning-of-cory-remsburg",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0321": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/injured-ranger-cory-remsburg-gets-sotu-spotlight/2014/01/28/26f190f8-8896-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/army-ranger-cory-remsburg-honored-hero-during-state-union-address-flna2D12014373",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.foxnews.com/politics/army-ranger-who-does-not-quit-earns-longest-state-of-the-union-ovation.amp",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/node/315181",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://patch.com/illinois/niles/who-is-sgt-cory-remsburg",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.defense.gov/Multimedia/Photos/igphoto/2002032295",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/blogs/politics/2014/01/meet-the-state-of-the-union-guest-who-got-the-most-applause/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0323": [
+      {
+        "source_url": "https://www.nbcnews.com/storyline/state-of-the-union/army-ranger-cory-remsburg-honored-hero-state-union-n18321",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/army-ranger-cory-remsburg-honored-hero-during-state-union-address-flna2d12014373",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2013/08/10/remarks-first-lady-and-president-disabled-american-veterans-convention",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-the-disabled-american-veterans-national-convention-orlando-florida",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/node/255446",
+        "relevance_score": 0.85,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ktla.com/news/army-ranger-cory-remsburg-honored-during-state-of-the-union-address/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28-pt1-PgH1478-3.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/full-text-of-obamas-2014-state-of-the-union-address/2014/01/28/e0c93358-887f-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0324": [
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/injured-ranger-cory-remsburg-gets-sotu-spotlight/2014/01/28/26f190f8-8896-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/the-press-office/2014/01/28/president-barack-obamas-state-union-address",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/army-ranger-cory-remsburg-honored-hero-during-state-union-address-flna2d12014373",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/white-house-announces-additional-guests-first-ladys-box-state-union-ad-0",
+        "relevance_score": 0.7,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.congress.gov/113/crec/2014/01/28/CREC-2014-01-28.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/storyline/state-of-the-union/army-ranger-cory-remsburg-honored-hero-state-union-n18321",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://foxnews.com/politics/army-ranger-who-does-not-quit-earns-longest-state-of-the-union-ovation.amp",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ksl.com/article/28537504",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/blogs/politics/2014/01/meet-the-state-of-the-union-guest-who-got-the-most-applause",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0325": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/national-security/injured-ranger-cory-remsburg-gets-sotu-spotlight/2014/01/28/26f190f8-8896-11e3-a5bd-844629433ba3_story.html",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2014-01-28/pdf/CREC-2014-01-28.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.nbcnews.com/news/us-news/army-ranger-cory-remsburg-honored-hero-during-state-union-address-flna2D12014373",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://myfox8.com/news/meet-cory-remsburg-the-war-hero-recognized-during-the-state-of-the-union-address/",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.ksl.com/article/28537504",
+        "relevance_score": 0.95,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/blogs/politics/2014/01/meet-the-state-of-the-union-guest-who-got-the-most-applause",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      }
+    ],
+    "obama_2014:0327": [
+      {
+        "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/blog/2014/01/29/sgt-1st-class-cory-remsburg-soldiers-va-support",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1-doc-pg72.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/hero-saluted-at-state-of-the-union-faces-toughest-battle-yet/",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-201400050/pdf/DCPD-201400050.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://ktla.com/2014/01/28/army-ranger-cory-remsburg-honored-during-state-of-the-union-address",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://foxnews.com/politics/army-ranger-who-does-not-quit-earns-longest-state-of-the-union-ovation.amp",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://news.va.gov/12303/sgt-cory-remsburg-soldiers-on-with-va-support/",
+        "relevance_score": 0.9,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://obamawhitehouse.archives.gov/realitycheck/joiningforces/blog/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      },
+      {
+        "source_url": "https://abcnews.go.com/blogs/politics/2014/01/meet-the-state-of-the-union-guest-who-got-the-most-applause/",
+        "relevance_score": 0.8,
+        "supports_claim": true
+      }
+    ]
+  },
+  "soft_failures": []
+}

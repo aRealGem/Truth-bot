@@ -1,0 +1,278 @@
+{
+  "schema": "truthbot-dcb1-estimate v2",
+  "generated": "2026-08-07",
+  "status": "NOTHING HAS BEEN RUN. No model or API call was made producing this document; no spend has occurred. Both deliverables are written and tested offline, and remain DC-B1-gated.",
+  "decision": {
+    "pinned": true,
+    "scope": "(a) re-score all 4,344 stored evidence items + (b) re-adjudicate the FULL gate-forced pool (87 claims) plus the 6 named extras = 93 claims",
+    "items_rescored": 4344,
+    "claims_readjudicated": 93,
+    "estimated_low_usd": 6.41,
+    "estimated_high_usd": 7.4,
+    "authorized_ceiling_usd": 10.0,
+    "ceiling_not_forecast": "The 87 is the MAXIMUM candidate pool, not a prediction. Actual spend lands below the ceiling; the expected outcome is nearer $4.",
+    "zero_cost_outcomes": [
+      "adjudication only fires for claims the repaired gate actually RELEASES — a claim that does not flip costs $0",
+      "claims that remain legitimately gated (genuinely fewer than 2 bearing Tier-1..3 items after scoring) cost $0 — the gate was right, no panel runs",
+      "currently-decided claims that the repair newly WITHHOLDS cost $0 — withholding a verdict needs no panel call"
+    ],
+    "why_not_partial": "Partial coverage would leave gate-forced claims asymmetrically unadjudicated: which claims got a second look would depend on where the budget stopped rather than on the evidence. That is an M-6 evenhandedness failure — the published corpus would carry two classes of gate-forced Unverifiable, distinguishable only by budget history. The saving is ~$3 and is not worth the asymmetry.",
+    "days": 1,
+    "daily_cap_usd": 20.0,
+    "stress_test_usd": 7.62,
+    "stress_test_basis": "chars/4 tokenization 50% low on (a) AND all 93 claims adjudicating at the high per-claim rate: $0.66 + $6.96 = $7.62, still $2.38 under the ceiling",
+    "previous_proposed_cap_usd": 8.0,
+    "cap_change_reason": "$7.40 against an $8.00 cap is only 8% headroom, and a mid-run cap breach is its own incident — a halted job leaves the corpus half-re-adjudicated, i.e. the same evenhandedness problem arrived at by accident. $10.00 gives 35% headroom over the worst case and still fits inside one $20 day."
+  },
+  "b1a_rescore": {
+    "model": "claude-haiku",
+    "lane": "LiteLLM proxy (ON-proxy → ledger-true, not estimated)",
+    "method": "exact score_evidence prompt per sid via relevance.score_payload, measured from the stored artifacts, at 4.0 chars/token, priced with hydramind.models.RATE_TABLE_USD_PER_MTOK['claude-haiku'] = (0.80, 4.00) USD/Mtok in/out",
+    "pricing_basis": {
+      "prices_both_directions": true,
+      "input_chars": "len(relevance._SCORE_SYSTEM) + len(relevance.score_payload(claim_text, items)) per sid — the system prompt plus the exact payload score_evidence would send, measured not guessed",
+      "output_chars": "REPLY_CHARS_OVERHEAD (16) + REPLY_CHARS_PER_ITEM (46) * len(items) — the fixed {\"i\", \"relevance\", \"supports\"} record per item plus the {\"scores\": [...]} wrapper",
+      "chars_per_token": 4.0,
+      "rate_in_usd_per_mtok": 0.8,
+      "rate_out_usd_per_mtok": 4.0,
+      "rate_source": "hydramind.models.RATE_TABLE_USD_PER_MTOK['claude-haiku']",
+      "measured_tokens_in": 288406,
+      "measured_tokens_out": 52072,
+      "calls": 529,
+      "items": 4344,
+      "tokens_in_per_item": 66.4,
+      "tokens_out_per_item": 12.0,
+      "cost_usd_per_item": 0.000101,
+      "why_the_per_item_figure_is_low": "one line of the payload in and one small JSON record out, amortised across a batched per-sid call — 66 input + 12 output tokens per item at Haiku rates is $0.0001, which is arithmetic, not optimism",
+      "caveats": [
+        "chars/4 is an APPROXIMATION, not a tokenizer run; JSON scaffolding and URLs tokenize worse than prose, so the true input count is plausibly 10-25% higher (even at +50% this line is under $0.70)",
+        "the claude-haiku rate-table entry is flagged in hydramind/models.py as a fallback estimate because Haiku is proxy-priced in practice; Haiku is ON-PROXY, so the funded run is LEDGER-TRUE (proxy_lane.proxy_key_spend) and this estimate only has to be good enough to set a cap"
+      ]
+    },
+    "calls": 529,
+    "items": 4344,
+    "total_cost_usd_est": 0.4391,
+    "per_speech": {
+      "gwbush_2006": {
+        "calls": 48,
+        "items": 396,
+        "prompt_chars": 107155,
+        "reply_chars_est": 18984,
+        "tokens_in_est": 26789,
+        "tokens_out_est": 4746,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.0404,
+        "skipped_no_claim_text": []
+      },
+      "clinton_1998": {
+        "calls": 92,
+        "items": 792,
+        "prompt_chars": 209339,
+        "reply_chars_est": 37904,
+        "tokens_in_est": 52335,
+        "tokens_out_est": 9476,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.0798,
+        "skipped_no_claim_text": []
+      },
+      "obama_2014": {
+        "calls": 96,
+        "items": 799,
+        "prompt_chars": 208534,
+        "reply_chars_est": 38290,
+        "tokens_in_est": 52134,
+        "tokens_out_est": 9572,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.08,
+        "skipped_no_claim_text": []
+      },
+      "biden_2022": {
+        "calls": 111,
+        "items": 885,
+        "prompt_chars": 234402,
+        "reply_chars_est": 42486,
+        "tokens_in_est": 58600,
+        "tokens_out_est": 10622,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.0894,
+        "skipped_no_claim_text": []
+      },
+      "trump_2026": {
+        "calls": 182,
+        "items": 1472,
+        "prompt_chars": 394194,
+        "reply_chars_est": 70624,
+        "tokens_in_est": 98548,
+        "tokens_out_est": 17656,
+        "rate_in_usd_per_mtok": 0.8,
+        "rate_out_usd_per_mtok": 4.0,
+        "cost_usd_est": 0.1495,
+        "skipped_no_claim_text": []
+      }
+    }
+  },
+  "b1b_readjudication": {
+    "per_claim_usd_low": 0.0642,
+    "per_claim_usd_high": 0.0748,
+    "per_claim_source": "measured full-stack cost/claim of the three NON-RESUMED phase-3 rebuilds (gwbush 0.0642, clinton 0.0744, trump 0.0748); the two resumed legs undercount because banked_cost carries only proxy spend across sessions, not the off-proxy R2/R3 estimate — see carry_forward_obligations",
+    "pinned_scope": {
+      "claims": 93,
+      "composition": "87 currently gate-forced (the full pool) + 6 named extras, none overlapping",
+      "low_usd": 5.97,
+      "high_usd": 6.96
+    },
+    "max_candidate_pool_all_gate_forced": {
+      "claims": 87,
+      "low_usd": 5.59,
+      "high_usd": 6.51,
+      "note": "PINNED. Every currently gate-forced claim could in principle flip once its evidence is scored; each one that does not costs $0."
+    },
+    "named_extras": {
+      "claims": 6,
+      "low_usd": 0.39,
+      "high_usd": 0.45,
+      "sids": [
+        "trump_2026:0023",
+        "trump_2026:0024",
+        "trump_2026:0030",
+        "trump_2026:0031",
+        "trump_2026:0343",
+        "clinton_1998:0313"
+      ],
+      "note": "all six are currently DECIDED, not gate-forced — additive to any flip set, no overlap"
+    },
+    "brief_correction": "The brief called this 'the 66 currently gate-forced claims'. 66 is the newly_gated count (claims the rebuild newly gated relative to the published run), summed from the phase3_*_verdict_diff.json files. The count CURRENTLY gate-forced in the rebuilt runs is 87, and 87 is the pinned pool."
+  },
+  "fitness_finding_composition": "17 stored run artifacts = 5 published (live on the site) + 5 rebuilt (staged, unpublished) + 7 superseded (retained per archive-never-delete). The A1 finding that every stored run is unfit to gate is stated over all 17, not over the 5 published reports; this spend repairs the rebuilt cohort, which is the one queued for publication.",
+  "carry_forward_obligations": [
+    {
+      "id": "spend-basis-mixed-and-lower-bound",
+      "destination": "DC-6' final ledger / spend reconciliation",
+      "statement": "The corpus spend total is a MIXED BASIS — proxy spend is ledger-true (the LiteLLM proxy key was billed), off-proxy spend is a list-rate ESTIMATE — and the two RESUMED legs (obama_2014, biden_2022) UNDERCOUNT their off-proxy portion: phase3_rebuild banks only proxy spend in the chunk journal (append_chunk_journal is handed the proxy_key_spend delta), so a resumed session carries the prior leg's proxy cost forward and drops that leg's off-proxy estimate. The DC-6 table reconstructs both legs from the run logs, recovering what the runner's own SPEND line lost — but only down to the last BANKED chunk; both legs died inside the following chunk after its retrieval had already run. The corpus total is therefore a LOWER BOUND on the off-proxy component, and the two resumed runs' per-claim rates must not be used to price future work.",
+      "implemented_in": "scripts/dc6_package.py :: SPEND_BASIS_DISCLOSURE — emitted to dc6_review.json (spend.basis_disclosure, spend.cost_basis.disclosure) and to the '6. Spend + provenance' section of dc6_review.md",
+      "asserted_by": "tests/test_dc6_package.py :: test_spend_table_carries_the_mixed_basis_and_undercount_disclosure, test_rendered_spend_section_states_the_disclosure, test_committed_review_carries_the_spend_basis_disclosure"
+    }
+  ],
+  "per_speech": {
+    "gwbush_2006": {
+      "claims": 48,
+      "items": 396,
+      "gate_forced": 7,
+      "newly_gated": 5,
+      "stance_null": 102,
+      "relevance_default": 396,
+      "rebuild_cost_usd": 3.0823,
+      "rebuild_cost_per_claim": 0.0642,
+      "resumed_run_cost_undercounts": false,
+      "rescore_cost_usd_est": 0.0404
+    },
+    "clinton_1998": {
+      "claims": 92,
+      "items": 792,
+      "gate_forced": 14,
+      "newly_gated": 11,
+      "stance_null": 222,
+      "relevance_default": 792,
+      "rebuild_cost_usd": 6.8453,
+      "rebuild_cost_per_claim": 0.0744,
+      "resumed_run_cost_undercounts": false,
+      "rescore_cost_usd_est": 0.0798
+    },
+    "obama_2014": {
+      "claims": 96,
+      "items": 799,
+      "gate_forced": 12,
+      "newly_gated": 7,
+      "stance_null": 187,
+      "relevance_default": 799,
+      "rebuild_cost_usd": 1.835,
+      "rebuild_cost_per_claim": 0.0191,
+      "resumed_run_cost_undercounts": true,
+      "rescore_cost_usd_est": 0.08
+    },
+    "biden_2022": {
+      "claims": 111,
+      "items": 885,
+      "gate_forced": 16,
+      "newly_gated": 12,
+      "stance_null": 181,
+      "relevance_default": 885,
+      "rebuild_cost_usd": 4.0042,
+      "rebuild_cost_per_claim": 0.0361,
+      "resumed_run_cost_undercounts": true,
+      "rescore_cost_usd_est": 0.0894
+    },
+    "trump_2026": {
+      "claims": 182,
+      "items": 1472,
+      "gate_forced": 38,
+      "newly_gated": 31,
+      "stance_null": 444,
+      "relevance_default": 1472,
+      "rebuild_cost_usd": 13.6136,
+      "rebuild_cost_per_claim": 0.0748,
+      "resumed_run_cost_undercounts": false,
+      "rescore_cost_usd_est": 0.1495
+    }
+  },
+  "totals": {
+    "items": 4344,
+    "claims": 529,
+    "gate_forced": 87,
+    "newly_gated": 66,
+    "rescore_usd_est": 0.4391,
+    "pinned_low_usd": 6.41,
+    "pinned_high_usd": 7.4
+  },
+  "authorized_ceiling_usd": 10.0,
+  "daily_cap_usd": 20.0,
+  "sequencing": [
+    {
+      "step": 1,
+      "what": "B1a re-score, ~$0.44; calibrate with --speech gwbush_2006 --go --budget 0.25 (48 sids, est. $0.04) and stop to re-price if ledger-true cost lands far from estimate",
+      "budget_usd": 0.25
+    },
+    {
+      "step": 2,
+      "what": "join the sidecars, identify the ACTUAL flip set from rescored_<speech>.json — pure local analysis, this is where the ceiling becomes a real number",
+      "budget_usd": 0.0
+    },
+    {
+      "step": 3,
+      "what": "B1b re-adjudication of the flip set + the 6 named claims, budget set from step 2's actual count at $0.075/claim",
+      "budget_usd": 9.0
+    }
+  ],
+  "appendix_priced_alternatives_not_choices": {
+    "note": "Retained for AUDIT TRAIL ONLY. Priced while the scope was open; superseded by the pinned full-pool scope above. Adopting any of them would reintroduce the M-6 evenhandedness problem described in decision.why_not_partial.",
+    "newly_gated_subset": {
+      "claims": 66,
+      "low_usd": 4.24,
+      "high_usd": 4.94,
+      "why_not": "'newly gated' is a property of the diff against the published run, not of the claim's evidence — a claim gate-forced in BOTH runs is no less wrongly gated"
+    },
+    "partial_50pct_of_max": {
+      "claims": 44,
+      "low_usd": 2.82,
+      "high_usd": 3.29,
+      "why_not": "the 50% would be chosen by budget, not by evidence"
+    },
+    "partial_50pct_of_newly_gated": {
+      "claims": 33,
+      "low_usd": 2.12,
+      "high_usd": 2.47,
+      "why_not": "both objections at once"
+    },
+    "midpoint_50pct_plus_extras_plus_b1a": {
+      "claims": 50,
+      "low_usd": 3.65,
+      "high_usd": 4.18,
+      "why_not": "the 'midpoint scenario' the earlier draft offered as a live option; it is not one"
+    },
+    "superseded_recommended_cap_usd": 8.0
+  }
+}

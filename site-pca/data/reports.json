@@ -1,11 +1,12 @@
 [
   {
-    "id": "80ac5b2a-213b-4f93-ac14-8bb503cb3e64",
+    "id": "a27f5ffe-910a-4821-b2e9-bd6ee11f8f3a",
     "date": "2026-02-24",
+    "generated_at": "2026-08-11T22:33:32Z",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "U.S. Capitol",
-    "claim_count": 183,
+    "claim_count": 182,
     "panel_roster": {
       "name": "prod",
       "seats": {
@@ -22,43 +23,49 @@
     },
     "triage_count": 540,
     "verdict_distribution": {
-      "True": 94,
+      "True": 60,
       "Mostly True": 0,
-      "Misleading": 31,
+      "Misleading": 22,
       "Exaggerated": 0,
-      "False": 43,
-      "Unverifiable": 14,
+      "False": 39,
+      "Unverifiable": 57,
       "Truthy": 0,
       "Falsey": 0,
-      "Models split": 1
+      "Models split": 4
     },
     "verdict_distribution_lenient": {
-      "True": 94,
+      "True": 60,
       "Truthy": 0,
-      "Unverifiable": 14,
+      "Unverifiable": 57,
       "Falsey": 0,
-      "False": 43,
-      "Models split": 1,
-      "Misleading": 31
+      "False": 39,
+      "Models split": 4,
+      "Misleading": 22
     },
     "verdict_distribution_strict": {
-      "True": 94,
+      "True": 60,
       "Truthy": 0,
-      "Unverifiable": 14,
+      "Unverifiable": 57,
       "Falsey": 0,
-      "False": 43,
-      "Models split": 1,
-      "Misleading": 31
+      "False": 39,
+      "Models split": 4,
+      "Misleading": 22
     },
-    "model_agreement_rate": 0.727,
-    "url": "reports/2026-02-24-donald-trump-80ac5b.html",
+    "model_agreement_rate": 0.533,
+    "url": "reports/2026-02-24-donald-trump-583aca.html",
     "tier_counts": {
-      "gov": 146,
-      "wire": 48,
-      "news": 79,
+      "gov": 164,
+      "wire": 32,
+      "news": 75,
       "fc": 0,
-      "political": 162,
-      "other": 165
+      "political": 65,
+      "other": 132
+    },
+    "tier_fallback": {
+      "joined": 468,
+      "fallback": 0,
+      "total": 468,
+      "fallback_rate": 0.0
     },
     "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
@@ -66,8 +73,9 @@
     "channel": ""
   },
   {
-    "id": "aa8c461d-1ecb-4d5e-b1e0-2f1b2cfbaf0b",
+    "id": "35fee8e1-ac0a-438d-aecf-1a24a90b4ba8",
     "date": "2022-03-01",
+    "generated_at": "2026-08-11T22:33:31Z",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -88,43 +96,49 @@
     },
     "triage_count": 369,
     "verdict_distribution": {
-      "True": 96,
+      "True": 80,
       "Mostly True": 0,
-      "Misleading": 4,
+      "Misleading": 3,
       "Exaggerated": 0,
       "False": 1,
-      "Unverifiable": 7,
+      "Unverifiable": 24,
       "Truthy": 0,
       "Falsey": 0,
       "Models split": 3
     },
     "verdict_distribution_lenient": {
-      "True": 96,
+      "True": 80,
       "Truthy": 0,
-      "Unverifiable": 7,
+      "Unverifiable": 24,
       "Falsey": 0,
       "False": 1,
       "Models split": 3,
-      "Misleading": 4
+      "Misleading": 3
     },
     "verdict_distribution_strict": {
-      "True": 96,
+      "True": 80,
       "Truthy": 0,
-      "Unverifiable": 7,
+      "Unverifiable": 24,
       "Falsey": 0,
       "False": 1,
       "Models split": 3,
-      "Misleading": 4
+      "Misleading": 3
     },
-    "model_agreement_rate": 0.829,
-    "url": "reports/2022-03-01-joe-biden-aa8c46.html",
+    "model_agreement_rate": 0.685,
+    "url": "reports/2022-03-01-joe-biden-d359c0.html",
     "tier_counts": {
-      "gov": 129,
-      "wire": 21,
-      "news": 57,
+      "gov": 134,
+      "wire": 17,
+      "news": 64,
       "fc": 0,
-      "political": 143,
-      "other": 91
+      "political": 51,
+      "other": 80
+    },
+    "tier_fallback": {
+      "joined": 346,
+      "fallback": 0,
+      "total": 346,
+      "fallback_rate": 0.0
     },
     "source_of_claims": "Joe Biden",
     "source_of_claims_professional_public_title": "President",
@@ -132,8 +146,9 @@
     "channel": ""
   },
   {
-    "id": "4a245ab3-0a47-4166-8da3-45260c1bfa7b",
+    "id": "7cbb18c6-8b53-4392-907d-b95edeb63466",
     "date": "2014-01-28",
+    "generated_at": "2026-08-11T22:33:32Z",
     "speaker": "Barack Obama",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -154,43 +169,49 @@
     },
     "triage_count": 243,
     "verdict_distribution": {
-      "True": 78,
+      "True": 69,
       "Mostly True": 0,
-      "Misleading": 3,
+      "Misleading": 4,
       "Exaggerated": 0,
-      "False": 4,
-      "Unverifiable": 10,
+      "False": 1,
+      "Unverifiable": 20,
       "Truthy": 0,
       "Falsey": 0,
-      "Models split": 1
+      "Models split": 2
     },
     "verdict_distribution_lenient": {
-      "True": 78,
+      "True": 69,
       "Truthy": 0,
-      "Unverifiable": 10,
+      "Unverifiable": 20,
       "Falsey": 0,
-      "False": 4,
-      "Models split": 1,
-      "Misleading": 3
+      "False": 1,
+      "Models split": 2,
+      "Misleading": 4
     },
     "verdict_distribution_strict": {
-      "True": 78,
+      "True": 69,
       "Truthy": 0,
-      "Unverifiable": 10,
+      "Unverifiable": 20,
       "Falsey": 0,
-      "False": 4,
-      "Models split": 1,
-      "Misleading": 3
+      "False": 1,
+      "Models split": 2,
+      "Misleading": 4
     },
-    "model_agreement_rate": 0.823,
-    "url": "reports/2014-01-28-barack-obama-4a245a.html",
+    "model_agreement_rate": 0.719,
+    "url": "reports/2014-01-28-barack-obama-bc9c9f.html",
     "tier_counts": {
-      "gov": 90,
-      "wire": 6,
-      "news": 44,
+      "gov": 105,
+      "wire": 3,
+      "news": 39,
       "fc": 0,
-      "political": 86,
-      "other": 71
+      "political": 56,
+      "other": 62
+    },
+    "tier_fallback": {
+      "joined": 265,
+      "fallback": 0,
+      "total": 265,
+      "fallback_rate": 0.0
     },
     "source_of_claims": "Barack Obama",
     "source_of_claims_professional_public_title": "President",
@@ -198,8 +219,9 @@
     "channel": ""
   },
   {
-    "id": "ba3fbe87-acdf-44f2-8953-cda81bc9a92a",
+    "id": "8a3bda13-f0a0-49e7-ba43-718e3c5dec93",
     "date": "2006-01-31",
+    "generated_at": "2026-08-11T22:33:31Z",
     "speaker": "George W. Bush",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -220,43 +242,49 @@
     },
     "triage_count": 227,
     "verdict_distribution": {
-      "True": 37,
+      "True": 32,
       "Mostly True": 0,
-      "Misleading": 5,
+      "Misleading": 4,
       "Exaggerated": 0,
-      "False": 0,
-      "Unverifiable": 6,
+      "False": 1,
+      "Unverifiable": 11,
       "Truthy": 0,
       "Falsey": 0,
       "Models split": 0
     },
     "verdict_distribution_lenient": {
-      "True": 37,
+      "True": 32,
       "Truthy": 0,
-      "Unverifiable": 6,
+      "Unverifiable": 11,
       "Falsey": 0,
-      "False": 0,
+      "False": 1,
       "Models split": 0,
-      "Misleading": 5
+      "Misleading": 4
     },
     "verdict_distribution_strict": {
-      "True": 37,
+      "True": 32,
       "Truthy": 0,
-      "Unverifiable": 6,
+      "Unverifiable": 11,
       "Falsey": 0,
-      "False": 0,
+      "False": 1,
       "Models split": 0,
-      "Misleading": 5
+      "Misleading": 4
     },
-    "model_agreement_rate": 0.771,
-    "url": "reports/2006-01-31-george-w-bush-ba3fbe.html",
+    "model_agreement_rate": 0.708,
+    "url": "reports/2006-01-31-george-w-bush-82f462.html",
     "tier_counts": {
-      "gov": 99,
-      "wire": 1,
-      "news": 21,
+      "gov": 84,
+      "wire": 0,
+      "news": 16,
       "fc": 0,
-      "political": 16,
-      "other": 34
+      "political": 22,
+      "other": 31
+    },
+    "tier_fallback": {
+      "joined": 153,
+      "fallback": 0,
+      "total": 153,
+      "fallback_rate": 0.0
     },
     "source_of_claims": "George W. Bush",
     "source_of_claims_professional_public_title": "President",
@@ -264,8 +292,9 @@
     "channel": ""
   },
   {
-    "id": "93221f58-acd6-4139-adf6-69e99f722bc9",
+    "id": "57839db1-ae53-4ade-9b53-d829eba26fa6",
     "date": "1998-01-27",
+    "generated_at": "2026-08-11T22:33:32Z",
     "speaker": "Bill Clinton",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -286,43 +315,49 @@
     },
     "triage_count": 278,
     "verdict_distribution": {
-      "True": 72,
+      "True": 64,
       "Mostly True": 0,
-      "Misleading": 9,
+      "Misleading": 5,
       "Exaggerated": 0,
-      "False": 2,
-      "Unverifiable": 8,
+      "False": 1,
+      "Unverifiable": 21,
       "Truthy": 0,
       "Falsey": 0,
       "Models split": 1
     },
     "verdict_distribution_lenient": {
-      "True": 72,
+      "True": 64,
       "Truthy": 0,
-      "Unverifiable": 8,
+      "Unverifiable": 21,
       "Falsey": 0,
-      "False": 2,
+      "False": 1,
       "Models split": 1,
-      "Misleading": 9
+      "Misleading": 5
     },
     "verdict_distribution_strict": {
-      "True": 72,
+      "True": 64,
       "Truthy": 0,
-      "Unverifiable": 8,
+      "Unverifiable": 21,
       "Falsey": 0,
-      "False": 2,
+      "False": 1,
       "Models split": 1,
-      "Misleading": 9
+      "Misleading": 5
     },
-    "model_agreement_rate": 0.75,
-    "url": "reports/1998-01-27-bill-clinton-93221f.html",
+    "model_agreement_rate": 0.609,
+    "url": "reports/1998-01-27-bill-clinton-54f0ca.html",
     "tier_counts": {
-      "gov": 170,
+      "gov": 138,
       "wire": 0,
-      "news": 24,
+      "news": 32,
       "fc": 0,
-      "political": 33,
+      "political": 39,
       "other": 53
+    },
+    "tier_fallback": {
+      "joined": 262,
+      "fallback": 0,
+      "total": 262,
+      "fallback_rate": 0.0
     },
     "source_of_claims": "Bill Clinton",
     "source_of_claims_professional_public_title": "President",

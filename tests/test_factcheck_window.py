@@ -117,23 +117,47 @@ def test_pack_drops_dated_items_outside_era_window():
     assert "https://example.com/undated" in urls          # undated items pass
 
 
-def test_pack_keeps_dated_items_when_window_unknown():
+def test_pack_fails_closed_when_speech_date_unknown():
+    # Remediation v2 (1.3): an unregistered speech date used to silently
+    # disable era gating; the build now fails closed unless the caller
+    # explicitly declares the build dateless.
+    import pytest
+
+    from truthbot.verdict.era_lint import EraLintError
+
     p = _Provider([_ev("https://a/x", datetime(2026, 2, 9))])
-    pack = build_evidence_pack("mystery_2099:1", "c", p)   # no registered speech date
+    with pytest.raises(EraLintError, match="no utterance date registered"):
+        build_evidence_pack("mystery_2099:1", "c", p)
+    pack = build_evidence_pack("mystery_2099:1", "c", p, era_exempt=True)
     assert [it.source_url for it in pack.items] == ["https://a/x"]
 
 
 def test_pack_drops_homepage_and_listing_urls():
-    # trump_2026:0107 (jackie): snopes.com homepage + a ?pagenum listing page
-    # occupied 2 of 6 pack slots. Non-substantive URLs never enter the pack.
+    # trump_2026:0107 (jackie): a homepage + a ?pagenum listing page occupied
+    # 2 of 6 pack slots. Non-substantive URLs never enter the pack. Restated on
+    # a neutral host since A2: the original snopes.com trio is now excluded a
+    # step earlier by the fact-checker rule (asserted directly below), which
+    # would hide what THIS regression is about.
+    p = _Provider([
+        _ev("https://www.reuters.com/"),
+        _ev("https://www.reuters.com/world/?pagenum=3"),
+        _ev("https://www.reuters.com/world/us/texas-flood-camp/"),
+    ])
+    pack = build_evidence_pack("trump_2026:0107", "c", p)
+    assert [it.source_url for it in pack.items] == [
+        "https://www.reuters.com/world/us/texas-flood-camp/"]
+
+
+def test_pack_excludes_factchecker_content_outright():
+    """A2: the v1 builder now applies the same T2.1 exclusion consolidate()
+    does, so the whole snopes.com trio — homepage, listing AND the substantive
+    article — is gone, where before the article took a pack slot."""
     p = _Provider([
         _ev("https://www.snopes.com/"),
         _ev("https://www.snopes.com/fact-check/?pagenum=3"),
         _ev("https://www.snopes.com/fact-check/texas-flood-camp/"),
     ])
-    pack = build_evidence_pack("trump_2026:0107", "c", p)
-    assert [it.source_url for it in pack.items] == [
-        "https://www.snopes.com/fact-check/texas-flood-camp/"]
+    assert build_evidence_pack("trump_2026:0107", "c", p).items == []
 
 
 def test_factcheck_connector_drops_listing_results(monkeypatch):

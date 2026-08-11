@@ -318,3 +318,65 @@ def test_provenance_evidence_gate_key_wins_over_provenance_code():
     row["provenance_code"] = "insufficient-qualifying-evidence"
     out = bridge.bridge([row], [_claim("p:1")])
     assert out.bundles[0].consensus.provenance.evidence_gate == "some-future-code"
+
+
+# ── 0462 ruling (2026-08-10): a published split shows BOTH rationales ─────────
+# Persistent-split-after-2 publishes as Models-Split. Rendering it as the bare
+# line "Panel split — no consensus verdict" tells a reader the panel disagreed
+# without telling them what about, so the seats' own text is carried verbatim.
+
+_SPLIT_SEATS = [
+    {"role": "proposer", "verdict": "TRUE", "confidence": 0.7,
+     "reasoning": "the enlistment extension is stated in two Guard releases",
+     "citations": ["E1"]},
+    {"role": "critic", "verdict": "FALSE", "confidence": 0.6,
+     "reasoning": "no release says the extension was voluntary", "citations": []},
+    {"role": "arbiter", "verdict": "UNVERIFIABLE", "confidence": 0.4,
+     "reasoning": "the promotion is not documented anywhere in the pack",
+     "citations": []},
+]
+
+
+def test_published_split_carries_every_sides_rationale_verbatim():
+    row = _row("s:0", status="disagreement",
+               votes={"TRUE": 1, "FALSE": 1, "UNVERIFIABLE": 1},
+               seat_rationales=_SPLIT_SEATS)
+    b = bridge.row_to_bundle(row)
+    expl = b.consensus.explanation
+    assert b.consensus.consensus_verdict == "Models split"
+    for seat in _SPLIT_SEATS:
+        assert seat["reasoning"] in expl        # verbatim, all three
+    assert "Proposer (True):" in expl and "Critic (False):" in expl
+    # and the structured copy survives for the renderer
+    assert len(b.consensus.provenance.panel_seat_rationales) == 3
+
+
+def test_split_rationales_picks_one_seat_per_distinct_verdict():
+    row = _row("s:1", status="disagreement",
+               seat_rationales=_SPLIT_SEATS + [
+                   {"role": "critic2", "verdict": "TRUE", "confidence": 0.5,
+                    "reasoning": "duplicate side, must not double the True case",
+                    "citations": []}])
+    sides = bridge.split_rationales(row)
+    assert [s["verdict"] for s in sides] == ["True", "False", "Unverifiable"]
+
+
+def test_split_without_captured_rationales_renders_exactly_as_before():
+    """Pre-R-3 bundles have no seat text; the old line is the fallback so an
+    archived run renders bit-for-bit as it did."""
+    row = _row("s:2", status="disagreement", votes={"TRUE": 1, "FALSE": 1})
+    b = bridge.row_to_bundle(row)
+    assert b.consensus.explanation == "Panel split — no consensus verdict."
+
+
+def test_adopted_rationale_provenance_reaches_the_published_bundle():
+    row = _row("a:0", verdict="MISLEADING", reasoning="the seat's own sentence",
+               votes={"MISLEADING": 1, "FALSE": 1, "UNVERIFIABLE": 1},
+               crm114={"stage1": "DISAGREEMENT", "final": "MISLEADING"},
+               rationale_provenance={"mode": "adopted-verbatim",
+                                     "adopted_from": "proposer",
+                                     "resolver": "crm114-discriminator",
+                                     "synthesized": False})
+    prov = bridge.row_to_bundle(row).consensus.provenance
+    assert prov.rationale_provenance["adopted_from"] == "proposer"
+    assert prov.rationale_provenance["synthesized"] is False

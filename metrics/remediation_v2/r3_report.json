@@ -1,0 +1,143 @@
+{
+  "schema": "truthbot-wave-report v1",
+  "generated": "2026-08-10T18:55:00.565058+00:00",
+  "wave_date": "2026-08-09",
+  "rules": {
+    "utterance_record": true,
+    "statistical_release": true
+  },
+  "tag": "r3",
+  "escape": {
+    "kind": "extra-sid escape",
+    "reason": "R-3 publish-blocking: neither claim has a stored rationale in any generation of its lineage, and no deterministic re-gate can write one",
+    "sids": [
+      "biden_2022:0432",
+      "trump_2026:0462"
+    ],
+    "tag": "r3",
+    "wave_set_widened": false,
+    "wave_set_size": 29,
+    "source_artifact": "current publishing head (post-wave, post-rulings)",
+    "note": "--extra-sids admits claims the flip set never released. It is for a publish-blocking defect outside the flip set; the wave's own claim set, report and diffs are untouched."
+  },
+  "claim_set": [
+    "biden_2022:0432",
+    "trump_2026:0462"
+  ],
+  "reasons": {
+    "biden_2022:0432": "extra-sid escape: R-3 publish-blocking: neither claim has a stored rationale in any generation of its lineage, and no deterministic re-gate can write one",
+    "trump_2026:0462": "extra-sid escape: R-3 publish-blocking: neither claim has a stored rationale in any generation of its lineage, and no deterministic re-gate can write one"
+  },
+  "dropped": {},
+  "per_speech": [
+    {
+      "speech": "biden_2022",
+      "sids": [
+        "biden_2022:0432"
+      ],
+      "complete": true,
+      "rows_banked": 1,
+      "packs": [
+        {
+          "sid": "biden_2022:0432",
+          "speech": "biden_2022",
+          "claim_shape": "c-eval",
+          "stored_items": 7,
+          "pack_items": 7,
+          "gate_code": "",
+          "quota_met": true,
+          "scores_joined": 7,
+          "items_unscored": 0,
+          "credit": {
+            "pack_items": 7,
+            "independent": 2,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 2,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          }
+        }
+      ],
+      "journal": "/home/ccagent/truth-bot/metrics/journals/biden_2022_r3.jsonl",
+      "new_run_id": "f570d45c-a450-4b9d-9d67-b225cca8cefe",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/f570d45c-a450-4b9d-9d67-b225cca8cefe.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/r3_biden_2022_verdict_diff.json",
+      "counts": {
+        "unchanged": 0,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 0,
+        "newly_decided": 0,
+        "split_changes": 1,
+        "other": 0
+      }
+    },
+    {
+      "speech": "trump_2026",
+      "sids": [
+        "trump_2026:0462"
+      ],
+      "complete": true,
+      "rows_banked": 1,
+      "packs": [
+        {
+          "sid": "trump_2026:0462",
+          "speech": "trump_2026",
+          "claim_shape": "c-exist",
+          "stored_items": 10,
+          "pack_items": 10,
+          "gate_code": "",
+          "quota_met": true,
+          "scores_joined": 10,
+          "items_unscored": 0,
+          "credit": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          }
+        }
+      ],
+      "journal": "/home/ccagent/truth-bot/metrics/journals/trump_2026_r3.jsonl",
+      "new_run_id": "2d90a74b-43aa-4a55-8e5b-4b24f16d05a5",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/2d90a74b-43aa-4a55-8e5b-4b24f16d05a5.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/r3_trump_2026_verdict_diff.json",
+      "counts": {
+        "unchanged": 0,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 0,
+        "newly_decided": 1,
+        "split_changes": 0,
+        "other": 0
+      }
+    }
+  ],
+  "exhibit_decisions": {},
+  "halted": "",
+  "spend_usd": 0.0602,
+  "cap_usd": 0.25,
+  "spend_measurement": {
+    "method": "LiteLLM proxy key spend ledger, read after the escape run settled.",
+    "authoritative": "proxy",
+    "proxy_settled_usd": 0.0602,
+    "journal_reconciliation": {
+      "journals": ["metrics/journals/biden_2022_r3.jsonl", "metrics/journals/trump_2026_r3.jsonl"],
+      "journal_logged_usd": 0.008,
+      "proxy_settled_usd": 0.0602,
+      "delta_usd": 0.0522,
+      "cause": "async proxy-counter lag at reduce time — same class as the R-1 reshape (see r1_reshape_rerun_report.json). The chunk journals banked the pre-settle figure; the proxy ledger is the settled truth.",
+      "authoritative": "proxy",
+      "totals_effect": "the R-3 escape's contribution to spend accounting is $0.0602, not the journaled $0.0080."
+    },
+    "dc_b1_scope_restatement": "With the proxy figure authoritative, the R-3 escape run cost $0.0602 (2 claims, 4 panel calls — trump_2026:0462 took three to break the persistent split). This is the figure carried against the DC-B1 authorized ceiling; the journaled $0.0080 understated it by an async-lag artifact and must not be used for carry-forward accounting. Per-claim this is $0.0301, above the clean single-adjudication pack-reuse band (costs.PACK_REUSE_USD_MEASURED 0.0036-0.0132) precisely because of 0462's triple call, so it stays an OUTLIER outside that band rather than widening it."
+  }
+}

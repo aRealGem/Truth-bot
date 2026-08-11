@@ -198,12 +198,23 @@ def lint_pack_items(sid: str, items: Iterable[Any], utterance: date,
 def assert_pack_within_era(pack, utterance: Optional[date],
                            era_mode: str = "strict") -> None:
     """Publish-time gate (T1.1: build fails on violations). No-op when the
-    utterance date is unknown — there is no era to violate — or when the pack
-    was built under the historical-era LENIENT policy, where retrospective
-    items are admitted by design (the consolidator ranks them behind
-    contemporaneous sources instead of dropping them)."""
-    if utterance is None or era_mode == "lenient":
+    pack was built under the historical-era LENIENT policy, where
+    retrospective items are admitted by design (the consolidator ranks them
+    behind contemporaneous sources instead of dropping them).
+
+    Strict mode FAILS CLOSED on an unknown utterance date (remediation v2,
+    1.3): "no era registered" used to mean "no era to violate", which let the
+    Obama-2014 rescue leg publish 2026-dated evidence into a 2014 speech.
+    Deliberately dateless builds skip this gate via era_exempt=True in the
+    builders instead of calling it with None."""
+    if era_mode == "lenient":
         return
+    if utterance is None:
+        raise EraLintError(
+            f"no utterance date for {getattr(pack, 'sid', '?')!r} — the era "
+            "gate cannot run in strict mode. Register the speech date "
+            "(speech_context.register_speech_date) or build with "
+            "era_exempt=True.")
     violations, _, _ = lint_pack_items(
         pack.sid, pack.items, utterance, window=pack.window)
     if violations:

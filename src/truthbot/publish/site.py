@@ -25,6 +25,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -32,7 +33,31 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+from truthbot.models import SourceTier
+from truthbot.models import SourceTier as _SourceTier
 from truthbot.models import VerdictBundle, VerdictLabel
+from truthbot.publish import computed_exhibit as _computed_exhibit
+# Bucket orders, projections, family sets, and the one folding rule live in
+# ``truthbot.publish.aggregation`` (remediation v2, 1.6) — the single source
+# of truth this render layer and the consistency checker both import. The
+# public names are re-exported here for backward compat with existing
+# importers of ``publish.site``.
+from truthbot.publish.aggregation import (
+    ADVERSE_FAMILY as _ADVERSE_FAMILY,
+    AGGREGATE_BAR_ORDER,
+    COARSE_LENIENT_PROJECTION,
+    COARSE_STRICT_PROJECTION,
+    COARSE_VERDICT_ORDER,
+    TIER_LINE_ORDER,  # noqa: F401  (re-export)
+    TRUE_FAMILY as _TRUE_FAMILY,
+    coarse_label as _agg_coarse_label,
+    distribution_from_claims as _agg_distribution_from_claims,
+    family_verdict as _agg_family_verdict,
+    fine_label as _agg_fine_label,
+    normalize_url as _normalize_url,
+    project_dist as _agg_project_dist,
+    sources_line as _agg_sources_line,
+)
 from truthbot.verify.principals import PrincipalRelation, principal_relation
 from truthbot.verify.source_tiers import TIER_BUCKET, TIER_DISPLAY, classify_tier
 
@@ -60,48 +85,6 @@ VERDICT_CSS: dict[str, str] = {
 # Display order for the verdict bar legend (always show all 6)
 VERDICT_ORDER = ["True", "Mostly True", "Exaggerated", "Misleading", "False", "Unverifiable"]
 
-# 5-bucket coarse-axis "Truthy scale" — used by every aggregate display
-# (verdict panel, TOC pills, report cards, index totals). Order is most
-# positive → most negative so segment-bar renderers can iterate it directly.
-# Source rubric: ``eval/sotu-2026/findings-review.md`` Part H.
-COARSE_VERDICT_ORDER = ["True", "Truthy", "Unverifiable", "Falsey", "False"]
-
-# Aggregate BAR order — family-grouped union of the coarse and fine axes.
-# When the Falsey umbrella left the PCA per-claim pills (2026-07-19), the
-# aggregate bars kept iterating COARSE_VERDICT_ORDER, so fine-labeled PCA
-# claims (Misleading, Exaggerated, Mostly True) silently vanished from the
-# graph while the headline still counted them in its family totals — "95 of
-# 132 false-leaning" with only 44 visible on the bar (jackie, 2026-07-20).
-# This order includes both axes' labels, contiguous by family (true family →
-# abstain → adverse family), so the bar shows every decided claim and the
-# family rail's brackets equal the headline's totals by construction.
-AGGREGATE_BAR_ORDER = ["True", "Mostly True", "Truthy",
-                       "Unverifiable", "Models split",
-                       "Exaggerated", "Misleading", "Falsey", "False"]
-
-# Mirror of LENIENT_PROJECTION / STRICT_PROJECTION in
-# ``src/truthbot/verify/engine.py``, but keyed on the *fine-axis label string*
-# (not the ``VerdictLabel`` enum) so this module can stay string-typed. The
-# two must stay in lockstep — see test_consensus_projection.py for the
-# canonical mapping invariants.
-COARSE_LENIENT_PROJECTION: dict[str, str] = {
-    "True":         "True",
-    "Mostly True":  "Truthy",
-    "Exaggerated":  "Truthy",
-    "Misleading":   "Falsey",
-    "False":        "False",
-    "Unverifiable": "Unverifiable",
-}
-
-COARSE_STRICT_PROJECTION: dict[str, str] = {
-    "True":         "True",
-    "Mostly True":  "Truthy",
-    "Exaggerated":  "Falsey",   # diverges from Lenient
-    "Misleading":   "Falsey",
-    "False":        "False",
-    "Unverifiable": "Unverifiable",
-}
-
 VERDICT_EMOJI: dict[str, str] = {
     "True":          "✅",
     "Mostly True":   "🟢",
@@ -118,14 +101,43 @@ STRENGTH_LABEL: dict[str, str] = {
     "single": "Single model",
 }
 
-TIER_TABLE = [
-    ("Government",  ".gov, .mil, .int — BLS, BEA, CBO, Census, NATO, etc.",   "Highest"),
-    ("Wire",        "AP, Reuters",                                              "High"),
-    ("Established", "NYT, WaPo, BBC, NPR, CBS, NBC, ABC",                      "Medium-High"),
-    ("Academic",    "Peer-reviewed journals, university presses",               "Medium-High"),
-    ("Fact-check",  "PolitiFact, FactCheck.org, Snopes, FullFact",             "Medium"),
-    ("Other",       "Blogs, opinion sites, social media, unverified sources",   "Low"),
-]
+# About-page prose per tier: (name, example sources, trust weight), keyed by
+# the SourceTier enum. Display CODES and the tier set itself DERIVE from
+# ``truthbot.verify.source_tiers.TIER_DISPLAY`` — the shipped ladder — via
+# ``_tier_table_rows()``, so the About table cannot drift from the registry
+# again (the old hand-typed table lacked T7·Pol entirely; remediation v2, 1.9).
+_TIER_TABLE_PROSE: "dict[Any, tuple[str, str, str]]" = {
+    _SourceTier.GOVERNMENT: (
+        "Government", ".gov, .mil, .int — BLS, BEA, CBO, Census, NATO, etc.", "Highest"),
+    _SourceTier.WIRE: ("Wire", "AP, Reuters", "High"),
+    _SourceTier.ESTABLISHED: (
+        "Established", "NYT, WaPo, BBC, NPR, CBS, NBC, ABC", "Medium-High"),
+    _SourceTier.ACADEMIC: (
+        "Academic", "Peer-reviewed journals, university presses", "Medium-High"),
+    _SourceTier.FACTCHECK: (
+        "Fact-check", "PolitiFact, FactCheck.org, Snopes, FullFact — "
+        "excluded from evidence packs (see footnote)", "Excluded from packs"),
+    _SourceTier.OTHER: (
+        "Other", "Blogs, opinion sites, social media, unverified sources", "Low"),
+    _SourceTier.POLITICAL: (
+        "Political", "Campaign sites, party organs, an agency's press-release "
+        "path class", "Lowest — attribution only"),
+}
+
+
+def _tier_table_rows() -> list[tuple[str, str, str]]:
+    """(tier cell, sources cell, trust-weight cell) per shipped tier.
+
+    Iterates ``TIER_DISPLAY`` (the registry-backed ladder, in rank order
+    T1..T7) so every shipped tier — T7·Pol included — appears exactly once;
+    a registry tier without prose still renders (enum name, no examples)
+    rather than silently vanishing."""
+    rows: list[tuple[str, str, str]] = []
+    for tier, (code, _css) in TIER_DISPLAY.items():
+        name, sources, weight = _TIER_TABLE_PROSE.get(
+            tier, (tier.value.title(), "", "—"))
+        rows.append((f"{code} {name}".strip(), sources, weight))
+    return rows
 
 def _url_display_host(url: str) -> str:
     """Return a display-friendly hostname from a URL."""
@@ -140,6 +152,17 @@ def _url_display_host(url: str) -> str:
 GITHUB_URL = "https://github.com/aRealGem/Truth-bot"
 PIPELINE_VERSION = "0.2.0"
 
+# Public base URL of the published site. Mirrors ``settings.site_url`` in
+# truthbot.config, but read from the environment directly so the render layer
+# keeps its zero-config-import convention (same reason SitePublisher reads
+# TRUTHBOT_SITE_ROOT itself).
+_DEFAULT_SITE_URL = "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca"
+
+
+def _site_url() -> str:
+    """Base URL for absolute self-links (canonical / og:url / feed entries)."""
+    return os.environ.get("TRUTHBOT_SITE_URL", _DEFAULT_SITE_URL).rstrip("/")
+
 # Pre-1.0 releases are flagged "Beta" next to the version string everywhere the
 # version is rendered. Flips off automatically when PIPELINE_VERSION crosses 1.0.
 IS_BETA = PIPELINE_VERSION.split(".", 1)[0] == "0"
@@ -149,39 +172,10 @@ BETA_BADGE_HTML = (
 )
 BETA_TEXT_SUFFIX = ' (beta)' if IS_BETA else ''
 
-# Atom feed template. [SITE_URL] is a placeholder replaced when a production
-# domain is configured. Entries are appended by the pipeline at the marker below.
-FEED_XML_TEMPLATE = f"""\
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>truth-bot{BETA_TEXT_SUFFIX}</title>
-  <subtitle>Automated political fact-checking with multi-model consensus</subtitle>
-  <link href="[SITE_URL]/feed.xml" rel="self" type="application/atom+xml"/>
-  <link href="[SITE_URL]/" rel="alternate" type="text/html"/>
-  <link href="[SITE_URL]/corrections.html" rel="related" type="text/html" title="Corrections"/>
-  <updated>2026-04-21T19:18:00Z</updated>
-  <id>urn:truth-bot:feed</id>
-  <author>
-    <name>truth-bot pipeline</name>
-  </author>
-  <generator version="{PIPELINE_VERSION}">truth-bot{BETA_TEXT_SUFFIX}</generator>
-  <rights>Data sourced from public speeches and cited web evidence.</rights>
-
-  <entry>
-    <title>Donald Trump \u2014 March 04, 2026</title>
-    <link href="[SITE_URL]/reports/2026-03-04-donald-trump-165937.html" rel="alternate" type="text/html"/>
-    <id>urn:truth-bot:report:2026-03-04-donald-trump-165937</id>
-    <published>2026-03-04T00:00:00Z</published>
-    <updated>2026-04-21T19:18:00Z</updated>
-    <summary type="text">5 claims checked. Verdict: Largely False (3 of 5 claims). Multi-model AI fact-check of address to Joint Session of Congress at U.S. Capitol.</summary>
-    <category term="fact-check"/>
-    <category term="speech"/>
-  </entry>
-
-  <!-- Pipeline appends new <entry> blocks here as reports are generated -->
-
-</feed>
-"""
+# The Atom feed is RENDERED from the reports index at publish time \u2014 see
+# ``_render_feed`` (remediation v2, 1.5). The old static FEED_XML_TEMPLATE
+# (verbatim [SITE_URL] placeholder, one hand-typed phantom entry, frozen
+# <updated> stamp) is gone.
 
 # Google Fonts link tags (exact — do not modify)
 _GOOGLE_FONTS = """\
@@ -218,6 +212,16 @@ class SiteReport:
     # A per-RUN fact (one roster judges the whole run), rendered once in the report
     # provenance. Default empty → legacy-clean (no composition block rendered).
     panel_roster: dict = field(default_factory=dict)
+    # Stable speech identity (DC-3'): e.g. "obama_2014". When set, the report
+    # slug derives its suffix from this id instead of the per-run UUID, so
+    # re-rendering the same speech reuses the same URL. Default empty →
+    # legacy UUID-suffixed slugs.
+    speech_id: str = ""
+    # D-B: per-speech stance-scored coverage for the disclosure block. Keys:
+    # {stance_null, items, rate_pct, ceiling_pct, over_ceiling, tier_breakdown,
+    # packs_with_null, total_packs}. Default empty → no coverage block (legacy
+    # renders and any run without scored evidence).
+    stance_coverage: dict = field(default_factory=dict)
 
     @property
     def date_str(self) -> str:
@@ -235,14 +239,12 @@ class SiteReport:
     def verdict_distribution(self) -> dict[str, int]:
         dist: dict[str, int] = {v: 0 for v in VERDICT_CSS}
         for b in self.checkable_bundles:
-            # PCA split claims carry consensus_label=UNVERIFIABLE (never silently
-            # dropped) but a "Models split" verdict. Count them in their own bucket
-            # rather than folding them into Unverifiable — the coarse distributions
-            # already keep the two distinct, and the headline should match.
-            if b.consensus.consensus_verdict == "Models split":
-                label = "Models split"
-            else:
-                label = b.consensus.consensus_label.value
+            # PCA split / no-verdict claims carry consensus_label=UNVERIFIABLE
+            # (never silently dropped) but a distinct verdict text. Count them
+            # in their own bucket rather than folding them into Unverifiable —
+            # aggregation.fine_label is the one rule for this.
+            label = _agg_fine_label(b.consensus.consensus_verdict,
+                                    b.consensus.consensus_label.value)
             dist[label] = dist.get(label, 0) + 1
         return dist
 
@@ -250,46 +252,39 @@ class SiteReport:
     def verdict_distribution_lenient(self) -> dict[str, int]:
         """5-bucket histogram on the Lenient projection axis.
 
-        Reads ``coarse_lenient_label`` straight off the bundle's
-        ``ConsensusVerdict`` when present (post-projection bundles). Falls
-        back to projecting ``consensus_label`` on the fly via
-        ``COARSE_LENIENT_PROJECTION`` for legacy bundles whose coarse
-        fields are still empty strings — keeps render output consistent
-        regardless of when the cache was last refreshed.
+        Deprecated — single-axis since remediation v2 (1.8 / DC-4'); no
+        rendered surface reads it and under the PCA verdict contract it
+        equals the strict distribution. Kept because the field still ships
+        in reports.json for data compatibility.
+
+        Folding is delegated to ``aggregation.coarse_label``: the stored
+        ``coarse_lenient_label`` wins when present (post-projection bundles),
+        legacy bundles project the fine label on the fly, and split /
+        no-verdict rows pass through verbatim (audit V6: never folded to
+        Unverifiable).
         """
-        return self._coarse_distribution(
-            label_attr="coarse_lenient_label",
-            projection=COARSE_LENIENT_PROJECTION,
-        )
+        return self._coarse_distribution("lenient")
 
     @property
     def verdict_distribution_strict(self) -> dict[str, int]:
         """5-bucket histogram on the Strict projection axis (Exaggerated → Falsey)."""
-        return self._coarse_distribution(
-            label_attr="coarse_strict_label",
-            projection=COARSE_STRICT_PROJECTION,
-        )
+        return self._coarse_distribution("strict")
 
-    def _coarse_distribution(
-        self,
-        label_attr: str,
-        projection: dict[str, str],
-    ) -> dict[str, int]:
-        dist: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
-        # Add a "Models split" bucket alongside the 5 coarse buckets so the
-        # split-projection guardrail in engine._project_consensus shows up in
-        # aggregates rather than being silently dropped. Renderers can choose
-        # to fold it into "Mixed verdict" presentation.
-        dist["Models split"] = 0
-        for b in self.checkable_bundles:
-            stored = getattr(b.consensus, label_attr, "") or ""
-            if stored:
-                label = stored
-            else:
-                fine = b.consensus.consensus_label.value
-                label = projection.get(fine, "Unverifiable")
-            dist[label] = dist.get(label, 0) + 1
-        return dist
+    def _coarse_distribution(self, axis: str) -> dict[str, int]:
+        # Delegates to aggregation.distribution_from_claims — the same
+        # function consistency.py re-derives every published aggregate with,
+        # so the renderer and the checker cannot drift (1.6).
+        rows = [
+            {
+                "consensus_verdict": _agg_fine_label(
+                    b.consensus.consensus_verdict,
+                    b.consensus.consensus_label.value),
+                f"coarse_{axis}_label": getattr(
+                    b.consensus, f"coarse_{axis}_label", "") or "",
+            }
+            for b in self.checkable_bundles
+        ]
+        return _agg_distribution_from_claims(rows, axis)
 
     @property
     def model_agreement_rate(self) -> float:
@@ -301,7 +296,15 @@ class SiteReport:
 
     @property
     def report_slug(self) -> str:
-        short = self.report_id[:6]  # first 6 chars of UUID — unique per run
+        # DC-3' stable slugs: when the report knows its speech identity, the
+        # suffix is a deterministic hash of speech_id — every re-render of the
+        # same speech lands on the same URL (no more one-orphaned-page-per-
+        # publish). Legacy callers without a speech_id keep the per-run UUID
+        # prefix, which is unique per publish by construction.
+        if self.speech_id:
+            short = hashlib.sha1(self.speech_id.encode("utf-8")).hexdigest()[:6]
+        else:
+            short = self.report_id[:6]  # first 6 chars of UUID — unique per run
         return f"{self.date_str}-{_slug(self.speaker)}-{short}"
 
     @property
@@ -542,57 +545,18 @@ def _pretty_model_label(adapter: str, model_id: str = "") -> str:
     return " ".join(pieces) or adapter or "model"
 
 
-# Family aggregation for headline verdicts (2026-07-19 editorial review):
-# a report that is 72% False+Misleading must headline "Largely False", not
-# "Mixed verdict" just because no single adverse bucket crossed a threshold.
-# True-leaning and false-leaning labels aggregate into two families over
-# DECIDED claims; Unverifiable / Models split / No verdict are abstentions
-# and stay out of the denominator.
-_TRUE_FAMILY: frozenset[str] = frozenset({"True", "Mostly True", "Truthy"})
-_ADVERSE_FAMILY: frozenset[str] = frozenset(
-    {"False", "Falsey", "Misleading", "Exaggerated"})
+# Family aggregation for headline verdicts: the family sets + the percent-true
+# math live in ``truthbot.publish.aggregation`` (single source of truth, 1.6);
+# ``_TRUE_FAMILY`` / ``_ADVERSE_FAMILY`` above are re-exported aliases.
 
 
 def _family_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """Percent-true headline (jackie, 2026-07-25: "just show percent true" —
-    supersedes the 2026-07-19 graded bands, whose 'Mostly True' read as an
-    endorsement at 55% truthiness).
-
-    Returns (label_text, css_class, ratio_text). The label is the TRUE-family
-    share of DECIDED claims, e.g. '56% True' — the same families and the same
-    decided-claims denominator the bands used (Unverifiable / Models split /
-    No verdict are abstentions, out of the denominator, and disclosed by the
-    ratio text). Color bands (jackie, 2026-07-25): true-share > 75% green,
-    50-75% inclusive yellow (vt-mid), under 50% red — the words never grade,
-    the number speaks.
-    A report with claims but zero decided verdicts headlines 'Unverifiable'.
+    """Percent-true headline — thin wrapper over
+    :func:`truthbot.publish.aggregation.family_verdict` (see its docstring
+    for the bands + rationale). Returns (label_text, css_class, ratio_text).
     """
-    total = sum(dist.values())
-    if total == 0:
-        return "No claims evaluated", "neutral", "0 claims checked"
-    t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
-    f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
-    decided = t + f
-    if decided == 0:
-        return "Unverifiable", "neutral", f"{total} claims checked"
-    share = t / decided
-    label = f"{round(100 * share)}% True"
-    ratio = f"{t} of {decided} decided claims rated True"
-    if share > 0.75:
-        css = f"vt-{_verdict_css('True')}"
-    elif share >= 0.50:
-        css = "vt-mid"
-    else:
-        css = f"vt-{_verdict_css('False')}"
-    return label, css, ratio
-
-
-def _binary_verdict(dist: dict[str, int]) -> tuple[str, str, str]:
-    """Both lenses now show the same percent-true headline (jackie,
-    2026-07-25) — the Strict/Lenient distinction lives in the graded vs
-    coarse DISTRIBUTIONS below the headline, not in the headline wording.
-    One computation, one presentation: delegates to ``_family_verdict``."""
-    return _family_verdict(dist)
+    fam = _agg_family_verdict(dist)
+    return fam.label, fam.css, fam.ratio_text
 
 
 def _headline_verdict(dist: dict[str, int]) -> tuple[str, str]:
@@ -626,28 +590,139 @@ def _headline_verdict_coarse(dist: dict[str, int]) -> tuple[str, str]:
 
 
 def _tier_bucket(url: str) -> str:
-    """Classify a source URL into one of: gov, wire, news, fc, political, other."""
+    """Classify a source URL into one of: gov, wire, news, fc, political, other.
+
+    Rules-only fallback for a URL with no stored tier — see
+    :func:`stored_tier_index` for why that is the exception, not the path."""
     return TIER_BUCKET[classify_tier(url)]
+
+
+# ── Stored-tier join (remediation v2 Phase A, A5 / C-3(a)) ───────────────────
+#
+# ``ModelVerdict.web_sources`` is a bare list of URL strings: it carries no
+# tier. Until now the renderer classified those URLs with classify_tier at
+# RENDER time, which means a published report was showing tiers derived from
+# whatever the registry said the day it was rendered — while the artifact
+# beside it stored the tiers the pipeline actually adjudicated on. On the two
+# published modern reports those disagreed on 414 of 1543 and 272 of 918 items.
+# A fact-check that displays a different evidence hierarchy than the one it
+# reasoned over is not reporting its own work.
+#
+# Owner ruling C-3(a): join web_sources to the claim's evidence-pack items by
+# NORMALIZED url, take the STORED tier on a hit, fall back to classify_tier on
+# a miss, and COUNT the misses so the fallback rate is a published number
+# rather than an assumption. A miss is legitimate (a model can cite a URL that
+# never entered the pack) but it is also exactly how tier drift would sneak
+# back in, so the rate is telemetry, not a detail: anything above a low single
+# digit percent is a defect signal, not background.
+
+
+def stored_tier_index(bundle) -> dict[str, SourceTier]:
+    """``normalize_url(item url) -> stored SourceTier`` for one claim's pack.
+
+    Built from ``VerdictBundle.sources_consulted`` — the FULL retrieved pack
+    (every item, not just the cited ones), each carrying the tier the pipeline
+    assigned at adjudication time. Unparseable tier strings are skipped rather
+    than coerced: a bogus stored value must show up as a join MISS in the
+    telemetry, not as a silently invented tier.
+    """
+    index: dict[str, SourceTier] = {}
+    for src in getattr(bundle, "sources_consulted", None) or []:
+        key = _normalize_url(src.get("url") or "")
+        if not key:
+            continue
+        try:
+            index[key] = SourceTier(src.get("tier"))
+        except ValueError:
+            continue
+    return index
+
+
+def _resolve_tier(url: str, index: "dict[str, SourceTier] | None",
+                  tally: "dict[str, int] | None" = None) -> tuple[SourceTier, bool]:
+    """``(tier, from_stored)`` for one URL against a stored-tier index.
+
+    Increments ``tally['joined']`` or ``tally['fallback']`` when given one, so
+    every caller that resolves a tier also measures the join.
+    """
+    key = _normalize_url(url)
+    stored = index.get(key) if (index and key) else None
+    if stored is not None:
+        if tally is not None:
+            tally["joined"] = tally.get("joined", 0) + 1
+        return stored, True
+    if tally is not None:
+        tally["fallback"] = tally.get("fallback", 0) + 1
+    return classify_tier(url), False
+
+
+def _new_tier_tally() -> dict[str, int]:
+    return {"joined": 0, "fallback": 0}
+
+
+def tier_join_rate(tally: dict[str, int]) -> dict[str, float | int]:
+    """Publishable telemetry row for a tally: totals + the fallback RATE."""
+    joined = int(tally.get("joined", 0))
+    fallback = int(tally.get("fallback", 0))
+    total = joined + fallback
+    return {"joined": joined, "fallback": fallback, "total": total,
+            "fallback_rate": round(fallback / total, 6) if total else 0.0}
+
+
+def tier_counts_with_join(site_report) -> tuple[dict[str, int], dict[str, int]]:
+    """``(tier bucket counts, join tally)`` for one report.
+
+    Same deduped tally the Sources line has always shown, except the tier now
+    comes from the claim's own evidence pack whenever the URL is in it. Dedup
+    is on the NORMALIZED url (it used to be on the raw string), so the same
+    document reached by http and https counts once instead of twice.
+    """
+    seen: set[str] = set()
+    counts = {"gov": 0, "wire": 0, "news": 0, "fc": 0, "political": 0, "other": 0}
+    tally = _new_tier_tally()
+    for bundle in site_report.checkable_bundles:
+        index = stored_tier_index(bundle)
+        for mv in bundle.model_verdicts:
+            for url in mv.web_sources or []:
+                key = _normalize_url(url)
+                if not key or key in seen:
+                    continue
+                seen.add(key)
+                tier, _ = _resolve_tier(url, index, tally)
+                counts[TIER_BUCKET[tier]] += 1
+    return counts, tally
 
 
 def _tier_counts_for_report(site_report) -> dict[str, int]:
     """Tally deduped source URLs per tier bucket across all checkable bundles."""
-    seen: set[str] = set()
-    counts = {"gov": 0, "wire": 0, "news": 0, "fc": 0, "political": 0, "other": 0}
-    for bundle in site_report.checkable_bundles:
-        for mv in bundle.model_verdicts:
-            for url in mv.web_sources or []:
-                if not url or url in seen:
-                    continue
-                seen.add(url)
-                counts[_tier_bucket(url)] += 1
-    return counts
+    return tier_counts_with_join(site_report)[0]
 
 
-def _tier_badge(url: str) -> str:
-    """Return an evidence-tier span for a source URL."""
-    code, css = TIER_DISPLAY[classify_tier(url)]
-    return f'<span class="evidence-tier {css}">{code}</span>'
+def _tier_badge(url: str, tier: "SourceTier | str | None" = None,
+                tally: "dict[str, int] | None" = None) -> str:
+    """Evidence-tier span for a source URL.
+
+    ``tier`` is the STORED tier when the caller has it (pack items carry one
+    directly; ``web_sources`` URLs get theirs from :func:`stored_tier_index`).
+    Without it the badge falls back to the render-time rules. The rendered
+    ``data-tier-src`` attribute records which of the two happened, so the
+    fallback rate is auditable from the HTML itself and the build-time lint can
+    assert rendered-tier == stored-tier on every joined item.
+    """
+    from_stored = tier is not None
+    if isinstance(tier, str):
+        try:
+            tier = SourceTier(tier)
+        except ValueError:
+            tier, from_stored = None, False
+    if tier is None:
+        tier, from_stored = _resolve_tier(url, None, tally)
+    elif tally is not None:
+        tally["joined"] = tally.get("joined", 0) + 1
+    code, css = TIER_DISPLAY[tier]
+    src_attr = "stored" if from_stored else "classified"
+    return (f'<span class="evidence-tier {css}" data-tier-src="{src_attr}">'
+            f'{code}</span>')
 
 
 # Layer 4 — anti-hallucination publish-layer rendering.
@@ -718,6 +793,8 @@ def _evidence_list_html(
     urls: list[str],
     *,
     classifications: "dict[str, str] | None" = None,
+    tier_index: "dict[str, SourceTier] | None" = None,
+    tally: "dict[str, int] | None" = None,
 ) -> str:
     """Render evidence URLs as evidence-list structure.
 
@@ -728,6 +805,11 @@ def _evidence_list_html(
 
     Without ``classifications`` every URL renders as verified (the
     pre-Layer-4 behavior), so older publish runs still look identical.
+
+    ``tier_index`` (A5 / C-3(a)) is the claim's ``stored_tier_index`` — these
+    URLs come from ``ModelVerdict.web_sources`` and carry no tier of their
+    own, so the badge is joined back to the evidence pack rather than
+    re-derived. ``tally`` accumulates the joined/fallback counts.
     """
     if not urls:
         return '<p style="font-size:0.88rem;color:var(--ink-muted)">No sources retrieved.</p>'
@@ -738,7 +820,8 @@ def _evidence_list_html(
             # Defense in depth — never render a known-broken URL even
             # if it slipped through filter-sidecar.
             continue
-        badge = _tier_badge(url)
+        _tier, _hit = _resolve_tier(url, tier_index, tally)
+        badge = _tier_badge(url, _tier if _hit else None)
         short = url.replace("https://", "").replace("http://", "")
         if len(short) > 80:
             short = short[:77] + "…"
@@ -762,7 +845,8 @@ def _evidence_list_html(
 
 
 def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
-                            self_ids: Optional[set[str]] = None) -> str:
+                            self_ids: Optional[set[str]] = None,
+                            tally: "dict[str, int] | None" = None) -> str:
     """Render the FULL retrieved evidence pack (all items, not just cited).
 
     Independent of what the verdict cited: a claim can have a non-empty pack
@@ -776,6 +860,12 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
     ``self_ids`` (PR-A2.1): pack ids whose source org is the speaker's own
     principal — those items carry a "speaker's own org" badge so the reader
     can see at a glance which records are the claimant's.
+
+    A5 / C-3(a): a pack item carries its OWN stored tier, so no join is needed
+    here — the badge renders that tier directly, and the item advertises it as
+    ``data-stored-tier`` so the build-time lint can prove the badge and the
+    stored value agree instead of eyeballing two spans that happen to sit next
+    to each other.
     """
     if not sources:
         return ""
@@ -788,7 +878,7 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
         name = (src.get("source") or "").strip()
         tier = (src.get("tier") or "").strip()
         snippet = (src.get("snippet") or "").strip()
-        badge = _tier_badge(url)
+        badge = _tier_badge(url, tier or None, tally)
         if str(src.get("id") or "").strip() in self_ids:
             badge += ('<span class="ev-self" title="This source is the speaker&#39;s '
                       'own organization (administration, party, or campaign at the '
@@ -807,8 +897,10 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
         pack_id = (src.get("id") or "").strip()
         id_html = f'<span class="ev-id">[{_esc(pack_id)}]</span>' if pack_id else ""
         li_anchor = f' id="{_esc(anchor_base)}-{_esc(pack_id)}"' if anchor_base and pack_id else ""
+        stored_attr = f' data-stored-tier="{_esc(tier)}"' if tier else ""
         items.append(
-            f'<li class="source-verified"{li_anchor}><span class="ev-mark">→</span>{id_html}{badge}'
+            f'<li class="source-verified"{li_anchor}{stored_attr}>'
+            f'<span class="ev-mark">→</span>{id_html}{badge}'
             f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
             f'{name_html}{tier_html}{snippet_html}</li>'
         )
@@ -1225,15 +1317,18 @@ def _verdict_panel(site_report) -> str:
     claim_count = len(site_report.checkable_bundles)
     model_count, model_hint = _models_engaged(site_report)
     agree_rate  = site_report.model_agreement_rate
-    # 5-bucket Truthy-scale aggregates rendered side-by-side; the Lens
-    # chip swaps them in lockstep with the per-claim headline pills.
-    # Strict is the published default (matches the per-claim pill + lens chip).
-    dist_lenient = site_report.verdict_distribution_lenient
-    dist_strict  = site_report.verdict_distribution_strict
-    # Lens semantics (2026-07-19): Lenient = the simple Truthy/Falsey lean,
-    # Strict = the graded family bands — two presentations of one computation.
-    headline_lenient, hcls_lenient, ratio_text_lenient = _binary_verdict(dist_lenient)
-    headline_strict,  hcls_strict,  ratio_text_strict  = _family_verdict(dist_strict)
+    # Single-axis presentation (remediation v2, 1.8 / DC-4'): the report
+    # renders the Strict 5-bucket aggregate only. The Strict/Lenient toggle
+    # was structurally inert — the PCA verdict contract emits only
+    # True/False/Misleading/Unverifiable, whose projections are identical on
+    # both axes, so every published pill was byte-identical under either
+    # lens. One distribution, one presentation.
+    dist_strict = site_report.verdict_distribution_strict
+    # DC-4' band note (A3): the FamilyVerdict label IS the band display —
+    # since 2026-07-25 it is the percent-true figure ("56% True", color
+    # carries the band) and it already renders here on report headers and in
+    # ``_report_card`` on index cards. No separate band-word chip exists.
+    headline_strict, hcls_strict, ratio_text_strict = _family_verdict(dist_strict)
 
     # Mascot mood derives from the published headline (remediation T0.3), not
     # the independent truthy-score rollup. Since 2026-07-25 the headline TEXT
@@ -1268,20 +1363,12 @@ def _verdict_panel(site_report) -> str:
         + '</div>'
     )
 
-    # Two paired headline+ratio blocks, one per lens. Strict is the
-    # published default (2026-04-30 editorial flip from Lenient) so it
-    # ships first and visible; Lenient ships ``hidden`` and the lens
-    # chip flips them. Non-JS clients therefore see Strict.
+    # Single headline+ratio block (the paired strict/lenient twin blocks
+    # left with the lens toggle, remediation v2 1.8).
     text_col = (
         '<div class="vp-text-col">'
-        + '<div class="vp-headline-lens" data-lens-axis="strict">'
         + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
         + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
-        + '</div>'
-        + '<div class="vp-headline-lens" data-lens-axis="lenient" hidden>'
-        + '<div class="vp-verdict ' + hcls_lenient + '">' + _esc(headline_lenient) + '</div>'
-        + '<div class="vp-ratio">' + _esc(ratio_text_lenient) + '</div>'
-        + '</div>'
         + '</div>'
     )
 
@@ -1291,22 +1378,17 @@ def _verdict_panel(site_report) -> str:
     # IDENTICAL to the headline (remediation T0.3): the two families
     # over decided claims, abstentions (Unverifiable / Models split)
     # excluded — the chips and the "N of M decided" ratio can never
-    # disagree. Both frames are lens-aware via the paired
-    # data-lens-axis pattern; Strict is the published default.
+    # disagree.
     def _pct(numerator: int, total: int) -> str:
         return format(numerator / total, '.0%') if total else "0%"
 
-    def _family_split(dist: dict[str, int]) -> tuple[int, int, int]:
-        t = sum(v for k, v in dist.items() if k in _TRUE_FAMILY)
-        f = sum(v for k, v in dist.items() if k in _ADVERSE_FAMILY)
-        return t, f, t + f
-
-    t_strict,  f_strict,  decided_strict  = _family_split(dist_strict)
-    t_lenient, f_lenient, decided_lenient = _family_split(dist_lenient)
+    # Family math comes from the same FamilyVerdict the headline used (1.6) —
+    # chips and headline literally share one computation.
+    _fam_strict = _agg_family_verdict(dist_strict)
+    t_strict,  f_strict,  decided_strict  = (
+        _fam_strict.true_count, _fam_strict.adverse_count, _fam_strict.decided)
     truthy_pct_strict  = _pct(t_strict,  decided_strict)
-    truthy_pct_lenient = _pct(t_lenient, decided_lenient)
     false_pct_strict   = _pct(f_strict,  decided_strict)
-    false_pct_lenient  = _pct(f_lenient, decided_lenient)
 
     truthy_frame_title = (
         "True-leaning family (True + Mostly True + Truthy) over decided "
@@ -1324,10 +1406,7 @@ def _verdict_panel(site_report) -> str:
         + '    <div class="vp-headline-stat vp-stat-truthy" title="' + _esc(truthy_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_TRUTHY_RATE, size=42) + '</div>\n'
         + '      <div class="vp-stat-body">\n'
-        + '        <div class="vp-stat-num">'
-        + '<span class="lens-target" data-lens-axis="strict">' + truthy_pct_strict + '</span>'
-        + '<span class="lens-target" data-lens-axis="lenient" hidden>' + truthy_pct_lenient + '</span>'
-        + '</div>\n'
+        + '        <div class="vp-stat-num">' + truthy_pct_strict + '</div>\n'
         + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
         + '        <div class="vp-stat-hint">true-leaning / decided claims</div>\n'
         + '      </div>\n'
@@ -1335,10 +1414,7 @@ def _verdict_panel(site_report) -> str:
         + '    <div class="vp-headline-stat vp-stat-false" title="' + _esc(false_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_FALSE_RATE, size=42) + '</div>\n'
         + '      <div class="vp-stat-body">\n'
-        + '        <div class="vp-stat-num">'
-        + '<span class="lens-target" data-lens-axis="strict">' + false_pct_strict + '</span>'
-        + '<span class="lens-target" data-lens-axis="lenient" hidden>' + false_pct_lenient + '</span>'
-        + '</div>\n'
+        + '        <div class="vp-stat-num">' + false_pct_strict + '</div>\n'
         + '        <div class="vp-stat-lbl">False or worse</div>\n'
         + '        <div class="vp-stat-hint">false-leaning / decided claims</div>\n'
         + '      </div>\n'
@@ -1367,28 +1443,11 @@ def _verdict_panel(site_report) -> str:
         '  </div>\n'
     )
 
-    # Lens-aware verdict bar + legend. Same paired-element pattern as the
-    # headline above. Both axes are 5-bucket so the segment colors match
-    # the per-claim pill palette (Truthy / Falsey gradient stops).
-    #
-    # Each block now carries a ``vp-lens-caption`` so the reader knows
-    # which lens they're seeing (the legend below the bar lists buckets,
-    # not the active rubric). Strict block is rendered first and visible
-    # by default — Lenient ships ``hidden`` and the lens chip flips it.
-    bar_html_lenient = _verdict_bar_html(dist_lenient, order=AGGREGATE_BAR_ORDER,
-                                         family_rail=True)
-    bar_html_strict  = _verdict_bar_html(dist_strict,  order=AGGREGATE_BAR_ORDER,
-                                         family_rail=True)
-    bar_html = (
-        '<div class="vp-bar-lens" data-lens-axis="strict">'
-        + '<div class="vp-lens-caption">Strict lens</div>'
-        + bar_html_strict
-        + '</div>'
-        + '<div class="vp-bar-lens" data-lens-axis="lenient" hidden>'
-        + '<div class="vp-lens-caption">Lenient lens</div>'
-        + bar_html_lenient
-        + '</div>'
-    )
+    # Verdict bar + legend on the one published distribution. The segment
+    # colors match the per-claim pill palette (Truthy / Falsey gradient
+    # stops); the family rail brackets the same totals the headline uses.
+    bar_html = _verdict_bar_html(dist_strict, order=AGGREGATE_BAR_ORDER,
+                                 family_rail=True)
 
     model_names = sorted({mv.adapter_name for b in site_report.checkable_bundles for mv in b.model_verdicts})
     model_str = ' · '.join(model_names) if model_names else 'Multi-model'
@@ -1504,7 +1563,10 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
     coverage / model-id / mode / tool-URL grounding / no_response
     counters. Coverage denominator is ``len(checkable_bundles)`` —
     every bundle is expected to carry one verdict per registered
-    adapter; missing or ``no_response`` rows count against coverage.
+    adapter; genuinely missing or ``no_response`` rows count against
+    coverage, while PCA split claims (panel voted, no consensus — the
+    bridge emits zero ModelVerdicts for them) count as covered and are
+    tallied separately in ``split_contributed`` (1.7).
     """
     from collections import defaultdict
     bundles = list(site_report.checkable_bundles)
@@ -1518,6 +1580,7 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
             "tiers": defaultdict(int),
             "verdicts_total": 0,
             "no_response": 0,
+            "split_contributed": 0,
             "mrs_total": 0,
             "web_total": 0,
         }
@@ -1546,15 +1609,24 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
             slot["mrs_total"] += len(getattr(mv, "model_reported_sources", None) or [])
             slot["web_total"] += len(mv.web_sources or [])
 
-    # Backfill no_response when an adapter produced ZERO verdicts on a
-    # bundle (rare but possible if engine skipped it entirely). For
-    # every adapter present at all, count missing-bundle rows as
-    # no_response so coverage = (total_claims - missing) / total_claims.
+    # Backfill when an adapter produced ZERO verdicts on a bundle. Two very
+    # different causes used to look identical here (remediation v2, 1.7):
+    # a PCA split claim bridges with model_verdicts=[] because the panel
+    # VOTED but did not converge — that is a disclosed process outcome, not
+    # a coverage hole — while a genuine engine miss really is one. Classify
+    # per bundle via the consensus provenance: panel_votes non-empty means
+    # the panel ran, so the claim counts as covered ("split_contributed");
+    # only true absence counts as no_response and can degrade the run.
     all_adapters = set(per_adapter.keys())
     for bundle in bundles:
         present = seen_per_bundle.get(bundle.claim.id, set())
+        prov = getattr(bundle.consensus, "provenance", None)
+        panel_ran = bool(prov and prov.panel_votes)
         for missing in all_adapters - present:
-            per_adapter[missing]["no_response"] += 1
+            if panel_ran:
+                per_adapter[missing]["split_contributed"] += 1
+            else:
+                per_adapter[missing]["no_response"] += 1
 
     rows: "list[dict[str, Any]]" = []
     for name in sorted(per_adapter):
@@ -1593,6 +1665,7 @@ def _adapter_run_stats(site_report) -> "list[dict[str, Any]]":
                 "mrs_total": mrs_total,
                 "web_total": web_total,
                 "grounding_pct": grounding_pct,
+                "split_contributed": slot["split_contributed"],
                 "degraded": coverage_pct < _DEGRADED_COVERAGE_THRESHOLD,
             }
         )
@@ -1654,6 +1727,12 @@ def _run_manifest_html(site_report) -> str:
         )
         if r["degraded"]:
             cov_text = f'<strong>{cov_text}</strong>'
+        if r.get("split_contributed"):
+            _n_split = r["split_contributed"]
+            cov_text += (
+                f' <span class="run-manifest-pct">· {_n_split} split '
+                f'(panel voted, no consensus)</span>'
+            )
         if r["grounding_pct"] is None:
             grounding_text = '<span class="run-manifest-pct">—</span>'
         else:
@@ -1694,10 +1773,25 @@ def _run_manifest_html(site_report) -> str:
             + '</p>'
         )
 
-    summary_text = (
-        f'Run manifest · {len(rows)} model{"s" if len(rows) != 1 else ""} '
-        f'· {total_claims} claim{"s" if total_claims != 1 else ""}'
-    )
+    # PCA runs (panel_roster present) headline the DISTINCT seat models —
+    # counting the bridge's single reconciled adapter row as "1 model"
+    # under-reported a 3-model panel (1.7; same fix class as
+    # ``_models_engaged``). Legacy multi-adapter runs keep the row count.
+    seats = (getattr(site_report, "panel_roster", None) or {}).get("seats") or {}
+    seat_models = {m for ms in seats.values() for m in (ms or []) if m}
+    if seat_models:
+        n_seat = len(seat_models)
+        summary_text = (
+            f'Run manifest · {n_seat} seat model{"s" if n_seat != 1 else ""} '
+            f'· {total_claims} claim{"s" if total_claims != 1 else ""}'
+        )
+        adapter_th = "Panel"
+    else:
+        summary_text = (
+            f'Run manifest · {len(rows)} model{"s" if len(rows) != 1 else ""} '
+            f'· {total_claims} claim{"s" if total_claims != 1 else ""}'
+        )
+        adapter_th = "Adapter"
     if degraded_rows:
         summary_text += f' · {len(degraded_rows)} degraded'
 
@@ -1711,7 +1805,7 @@ def _run_manifest_html(site_report) -> str:
         + '<div class="run-manifest-body">'
         + '<table class="run-manifest-table">'
         + '<thead><tr>'
-        + '<th>Adapter</th>'
+        + f'<th>{adapter_th}</th>'
         + '<th>Model</th>'
         + '<th>Mode</th>'
         + '<th>Coverage</th>'
@@ -1828,27 +1922,15 @@ def _models_engaged(site_report) -> tuple[int, str]:
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
-    # Editorial-lens chip toggles the headline-pill projection between
-    # Strict (default since 2026-04-30) and Lenient. The chip is hidden
-    # by default and the toggle JS reveals it on pages that have any
-    # claim pills to flip.
-    lens_chip = (
-        '    <button type="button" class="editorial-lens" data-lens="strict" hidden '
-        'title="Toggle the report verdict between the Strict lens (graded: Largely/Mostly '
-        'True/False over decided claims, Mixed for coin-flips) and the Lenient lens '
-        '(simple overall lean: Truthy or Falsey). Same claims, same counts — two '
-        'presentations.">\n'
-        '      <span class="lens-label">Lens:</span>\n'
-        '      <span class="lens-value">Strict</span>\n'
-        '    </button>\n'
-    )
+    # The Strict/Lenient editorial-lens chip was removed here (remediation
+    # v2, 1.8 / DC-4'): the toggle was structurally inert under the PCA
+    # verdict contract — both projections rendered identical pills.
     return (
         '<div class="status-bar">\n'
         '  <div class="row">\n'
         '    <span class="live">Operational</span>\n'
         f'    <span>Pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>\n'
         f'    <span>{model_str}</span>\n'
-        + lens_chip +
         f'    <span class="stamp">{_esc(stamp)}</span>\n'
         '  </div>\n'
         '</div>\n'
@@ -1907,29 +1989,51 @@ def _social_head(
     og_type: str = "website",
     og_image_alt: str = "truth-bot: automated political fact-checking with multi-model consensus",
     include_feed_link: bool = False,
+    page_path: Optional[str] = None,
+    meta_description: Optional[str] = None,
 ) -> str:
-    """Emit favicon links, Open Graph meta, Twitter Card meta, and optional feed link.
+    """Emit favicon links, description/canonical meta, Open Graph meta,
+    Twitter Card meta, and optional feed link.
 
     `rel` is the path prefix to reach the site root from the page
     (`./` for root pages, `../` for pages in `reports/` or `claims/`).
+
+    ``page_path`` (1.10) is the page's site-relative path ("" for the index,
+    ``None`` to omit): when given, a ``<link rel=canonical>`` and matching
+    ``og:url`` are emitted absolute against ``_site_url()``. The social-card
+    images are always absolute — crawlers don't resolve relative og:image
+    URLs against the page. ``meta_description`` defaults to the page's own
+    ``og_description`` (NOT the module default — the index bans phrases the
+    default contains).
     """
     twitter_desc = og_description
+    desc = og_description if meta_description is None else meta_description
+    image_abs = f"{_site_url()}/assets/social-card.png"
     parts = [
         f'  <link rel="icon" href="{rel}favicon.ico" sizes="any">\n',
         f'  <link rel="icon" href="{rel}assets/favicon-32.png" type="image/png" sizes="32x32">\n',
         f'  <link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png">\n',
+        f'  <meta name="description" content="{_esc(desc)}">\n',
+    ]
+    if page_path is not None:
+        canonical = f"{_site_url()}/{page_path}" if page_path else f"{_site_url()}/"
+        parts += [
+            f'  <link rel="canonical" href="{_esc(canonical)}">\n',
+            f'  <meta property="og:url" content="{_esc(canonical)}">\n',
+        ]
+    parts += [
         f'  <meta property="og:type" content="{_esc(og_type)}">\n',
         '  <meta property="og:site_name" content="truth-bot">\n',
         f'  <meta property="og:title" content="{_esc(og_title)}">\n',
         f'  <meta property="og:description" content="{_esc(og_description)}">\n',
-        f'  <meta property="og:image" content="{rel}assets/social-card.png">\n',
+        f'  <meta property="og:image" content="{_esc(image_abs)}">\n',
         '  <meta property="og:image:width" content="1200">\n',
         '  <meta property="og:image:height" content="630">\n',
         f'  <meta property="og:image:alt" content="{_esc(og_image_alt)}">\n',
         '  <meta name="twitter:card" content="summary_large_image">\n',
         f'  <meta name="twitter:title" content="{_esc(og_title)}">\n',
         f'  <meta name="twitter:description" content="{_esc(twitter_desc)}">\n',
-        f'  <meta name="twitter:image" content="{rel}assets/social-card.png">\n',
+        f'  <meta name="twitter:image" content="{_esc(image_abs)}">\n',
         f'  <meta name="twitter:image:alt" content="{_esc(og_image_alt)}">\n',
     ]
     if include_feed_link:
@@ -1948,6 +2052,7 @@ def _page_index(
     og_title: str = "truth-bot — Automated Political Fact-Checking",
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "website",
+    page_path: str = "",
 ) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
@@ -1964,7 +2069,8 @@ def _page_index(
         # Keep in sync with --bg in CSS.
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("./", og_title, og_description, og_type=og_type, include_feed_link=True)
+        + _social_head("./", og_title, og_description, og_type=og_type,
+                       include_feed_link=True, page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -1991,6 +2097,7 @@ def _page_report(
     og_title: Optional[str] = None,
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "article",
+    page_path: Optional[str] = None,
 ) -> str:
     stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     foot_html = (
@@ -2007,7 +2114,8 @@ def _page_report(
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("../", _og_title, og_description, og_type=og_type)
+        + _social_head("../", _og_title, og_description, og_type=og_type,
+                       page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="../assets/styles.css">\n'
@@ -2032,6 +2140,7 @@ def _page_about(
     og_title: Optional[str] = None,
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "website",
+    page_path: Optional[str] = None,
 ) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
@@ -2047,7 +2156,8 @@ def _page_about(
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("./", _og_title, og_description, og_type=og_type)
+        + _social_head("./", _og_title, og_description, og_type=og_type,
+                       page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -2071,6 +2181,7 @@ def _page_truthy(
     footer: str = "",
     og_title: Optional[str] = None,
     og_description: str = _DEFAULT_OG_DESCRIPTION,
+    page_path: Optional[str] = None,
 ) -> str:
     """Fun / mascot page shell — same chrome as about, no truthbot.js (inline _TRUTHY_FUN_SCRIPT in body)."""
     foot_html = (
@@ -2087,7 +2198,8 @@ def _page_truthy(
         f'  <meta name="generator" content="truth-bot {PIPELINE_VERSION}{BETA_TEXT_SUFFIX}">\n'
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
-        + _social_head("./", _og_title, og_description, og_type="website")
+        + _social_head("./", _og_title, og_description, og_type="website",
+                       page_path=page_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="./assets/styles.css">\n'
@@ -2236,6 +2348,27 @@ def _is_self_sourced_unverified(bundle: VerdictBundle) -> bool:
     return has_bearing_self
 
 
+def _correction_provenance_html(prov, rel: str = "../") -> str:
+    """The post-publication correction note (T1.5) and the D14 coherence
+    annotation (A7) for a claim — the ONE emit path (F14).
+
+    Emitted on the claim card independently of the provenance CHAIN, so a
+    corrected claim keeps its "⚠ Corrected OLD → NEW (date) · reason" line even on
+    a gated/minimal page whose provenance strip has no chain parts and renders
+    empty. Both the full and the minimal template call THIS, so the note cannot be
+    silently dropped by one of them again. A correction is never silent."""
+    html = ""
+    if getattr(prov, "correction_note", ""):
+        html += (f'<div class="pca-correction">⚠ {_esc(prov.correction_note)} '
+                 f'· <a href="{rel}corrections.html">Corrections</a></div>')
+    coherence_note = str(getattr(prov, "coherence_note", "") or "")
+    if coherence_note:
+        html += ('<div class="pca-coherence">'
+                 '<span class="coherence-label">Adjacent-claim coherence</span>'
+                 f'{_esc(coherence_note)}</div>')
+    return html
+
+
 def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
                           rel: str = "../") -> str:
     """The Layer A → PCA panel → CRM-114 chain, rendered as a compact strip.
@@ -2254,8 +2387,27 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     if prov.panel_votes:
         parts.append(f"PCA panel: {_pca_vote_tally(prov.panel_votes)}")
     if prov.crm114_final:
+        # Explicit auto-adjustment disclosure (remediation v2, 1.12): a
+        # discriminator override is named as what it is. Public copy keeps
+        # the "Severity Classifier" name — the internal CRM-114 identifier is
+        # deliberately reader-invisible (test_site_render_pca policy).
         stage1 = prov.crm114_stage1 or "?"
-        parts.append(f"Severity Classifier: {stage1}→{prov.crm114_final}")
+        parts.append(f"Auto-adjusted: {stage1}→{prov.crm114_final} "
+                     f"(Severity Classifier)")
+    # Standing agreed-verdict audit marker (1.12): deterministic-lint
+    # findings disclosed on the strip; the queue bit reads as under review.
+    audit_flags = list(getattr(prov, "audit_flags", None) or [])
+    if audit_flags:
+        suffix = " · queued for review" if getattr(prov, "audit_queue",
+                                                   False) else ""
+        parts.append(f"audit: {', '.join(audit_flags)}{suffix}")
+    # Adopted-rationale attribution (F5 / R-3): when the published rationale was
+    # taken from a seat rather than authored by the resolver, name the source,
+    # run-qualified, so adopted text is never mistaken for the resolver's words.
+    rp = getattr(prov, "rationale_provenance", None) or {}
+    attribution = str(rp.get("attribution") or "")
+    if attribution:
+        parts.append(f"Rationale: {attribution}")
     if not parts:
         return ""
     chain = _esc(" → ".join(parts))
@@ -2263,59 +2415,62 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     seat_html = (
         f'<div class="pca-seats">{_esc(seat_line)}</div>' if seat_line else ""
     )
-    # Post-publication correction (T1.5): shown wherever the verdict is,
-    # linked to the public changelog — a correction is never silent.
-    corr_html = ""
-    if getattr(prov, "correction_note", ""):
-        corr_html = (
-            f'<div class="pca-correction">⚠ {_esc(prov.correction_note)} '
-            f'· <a href="{rel}corrections.html">Corrections</a></div>'
-        )
+    # The correction and coherence notes are NOT emitted here: they ride on the
+    # claim card via :func:`_correction_provenance_html` (F14), so they survive on
+    # a gated/minimal claim whose provenance chain is empty and this strip renders
+    # nothing. One emit path, two templates — they cannot drift.
     return (
         '<div class="pca-provenance" '
         'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
         'tally, each seat&#39;s own prediction, and any Severity Classifier '
         'stage-2 override.">'
-        f'{chain}{seat_html}{corr_html}</div>'
+        f'{chain}{seat_html}</div>'
     )
 
 
 def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
-                standalone: bool = False, panel_roster: Optional[dict] = None) -> str:
+                standalone: bool = False, panel_roster: Optional[dict] = None,
+                tier_tally: "dict[str, int] | None" = None) -> str:
+    """Render one claim card.
+
+    ``tier_tally`` (A5 / C-3(a)) is the optional measurement hook: pass a
+    :func:`_new_tier_tally` dict to count how many of THIS card's tier badges
+    came from the stored evidence pack vs. fell back to the render-time rules.
+    The published per-report figure is the deduped one from
+    :func:`tier_counts_with_join`; this hook measures the rendered surface.
+    """
     claim = bundle.claim
     consensus = bundle.consensus
-    fine_label = consensus.consensus_label.value
-    # Headline defaults to the Strict 5-bucket projection (2026-04-30
-    # editorial flip from Lenient). Older cached bundles (pre-projection-
-    # layer) carry blank coarse fields; in that case fall back to the
-    # fine label so existing reports still render.
-    coarse_lenient = (consensus.coarse_lenient_label or "").strip()
-    coarse_strict = (consensus.coarse_strict_label or "").strip()
-    label = coarse_strict or fine_label
+    # Folding through aggregation (1.6): a split / no-verdict claim reads its
+    # verdict text on EVERY axis — including data-fine-label, which used to
+    # echo "Unverifiable" for split rows (audit V6).
+    fine_label = _agg_fine_label(consensus.consensus_verdict,
+                                 consensus.consensus_label.value)
+    # Headline renders the Strict 5-bucket projection — the one published
+    # axis since the lens toggle was removed (remediation v2, 1.8 / DC-4';
+    # under the PCA verdict contract both projections are identical anyway).
+    # Older cached bundles (pre-projection-layer) carry blank coarse fields;
+    # on this surface they ECHO the fine label (passed as the stored value
+    # below) so legacy reports re-render without rebuilding their bundles —
+    # while split rows still pass through coarse_label's non-folding rule.
+    _stored_strict = (consensus.coarse_strict_label or "").strip()
+    label = _agg_coarse_label(
+        fine_label, _stored_strict or fine_label, "strict")
     css = _verdict_css(label)
-    # Pre-compute both axes for the JS toggle. When projections are absent
-    # (legacy bundles), data-* attrs echo the fine label so toggling becomes
-    # a visual no-op rather than a broken render.
-    fine_css = _verdict_css(fine_label)
-    lenient_attr = coarse_lenient or fine_label
-    strict_attr = coarse_strict or fine_label
-    lenient_css = _verdict_css(lenient_attr)
-    strict_css = _verdict_css(strict_attr)
-    # Guest-anecdote treatment: swap the pill TEXT on both lens axes (so the
-    # Lenient/Strict toggle can't restore "Unverifiable") but keep the
-    # Unverifiable color family; the dashed pill border marks the genre.
+    # Guest-anecdote treatment: swap the pill TEXT but keep the Unverifiable
+    # color family; the dashed pill border marks the genre.
     anecdote = _is_anecdote_unverifiable(bundle)
-    pill_title = ("Headline shows the 5-bucket coarse projection. Per-model strip below uses "
-                  "the 6-bucket fine scale. Use the Editorial lens chip to toggle Lenient/Strict.")
+    pill_title = ("Headline shows the 5-bucket coarse published verdict. "
+                  "The per-model strip below keeps the 6-bucket fine labels for audit.")
     anecdote_cls = ""
     if anecdote:
-        label = lenient_attr = strict_attr = ANECDOTE_PILL
+        label = ANECDOTE_PILL
         pill_title = ANECDOTE_TITLE
         anecdote_cls = " pill-anecdote"
-    # Self-sourced-only treatment (PR-A2.1): same both-axes text swap as the
-    # anecdote pill so the lens toggle can't restore a bare "Unverifiable".
+    # Self-sourced-only treatment (PR-A2.1): same text swap as the anecdote
+    # pill — an honest sub-state, never a bare "Unverifiable".
     elif _is_self_sourced_unverified(bundle):
-        label = lenient_attr = strict_attr = SELF_SOURCED_PILL
+        label = SELF_SOURCED_PILL
         pill_title = SELF_SOURCED_TITLE
         anecdote_cls = " pill-self-sourced"
     n = str(idx).zfill(2)
@@ -2496,11 +2651,16 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     # a claim with a non-empty pack but zero citations still shows its real
     # sources rather than a bare "No sources retrieved."
     consulted = list(getattr(bundle, "sources_consulted", None) or [])
+    # A5 / C-3(a): the pack is the tier authority for this claim. Built once
+    # here and used by BOTH source surfaces below, so the combined-evidence
+    # list (bare web_sources URLs, no tier of their own) shows the adjudicated
+    # tier rather than one re-derived at render time.
+    _tier_index = stored_tier_index(bundle)
     consulted_html = ""
     if consulted:
         consulted_inner = _sources_consulted_html(
             consulted, anchor_base=_anchor_base,
-            self_ids=_self_source_ids(bundle))
+            self_ids=_self_source_ids(bundle), tally=tier_tally)
         if consulted_inner:
             # Collapsed by default (2026-07-19 review): the snippet verbiage is
             # audit detail, not first-read content — one click away, not in the way.
@@ -2511,10 +2671,22 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
                 '</details>'
             )
 
+    # Computed exhibit (A8 / R-2): the pinned-vintage arithmetic behind a
+    # numeric claim-vs-series comparison — formula, both input levels, and the
+    # vintage date. Empty for every claim that carries no exhibit (which is
+    # every claim on a pre-A8 run), so a page without one renders byte-for-byte
+    # as it does today. Admissibility — NEVER on a C-EVAL judgment — is
+    # enforced at attach time and re-checked here against the claim's shape.
+    _prov = bundle.consensus.provenance
+    computed_exhibit_html = _computed_exhibit.exhibit_html(
+        dict(getattr(_prov, "computed_exhibit", None) or {}),
+        claim_shape=getattr(_prov, "layer_a_claim_shape", ""),
+        esc=_esc)
+
     unverified_block = _model_cited_unverified_html(unverified_urls)
     if all_urls:
         evidence_inner = (
-            f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None)}'
+            f'{_evidence_list_html(all_urls[:10], classifications=combined_classifications or None, tier_index=_tier_index, tally=tier_tally)}'
             f'{unverified_block}'
         )
     elif unverified_urls:
@@ -2563,10 +2735,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="claim-head-icon")
         + f'    <span class="claim-num">Claim {n} / {str(total).zfill(2)}</span>'
         '  </span>'
-        f'  <span class="claim-pill claim-pill-headline lens-pill v-{css}{anecdote_cls}"'
-        f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
-        f' data-coarse-lenient="{_esc(lenient_attr)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
-        f' data-coarse-strict="{_esc(strict_attr)}" data-coarse-strict-css="{_esc(strict_css)}"'
+        f'  <span class="claim-pill claim-pill-headline v-{css}{anecdote_cls}"'
         f' title="{_esc(pill_title)}">'
         f'{_esc(label)}</span>'
         f'  {triage_badge}'
@@ -2575,7 +2744,12 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  {_claim_quote_html(claim)}'
         f'  {context_html}'
         f'  {caveat_html}'
+        f'  {computed_exhibit_html}'
         f'  {models_block}'
+        # F14: correction + coherence notes, emitted here (one path) so they
+        # render on EVERY claim — including a gated/minimal claim whose
+        # ``models_block`` provenance strip is empty.
+        f'  {_correction_provenance_html(consensus.provenance, rel)}'
         f'  {evidence_html}'
         f'  {consulted_html}'
         '  <div class="claim-foot">'
@@ -2632,37 +2806,26 @@ def _toc(bundles: list[VerdictBundle]) -> str:
     items = []
     for i, b in enumerate(bundles, 1):
         consensus = b.consensus
-        fine_label = consensus.consensus_label.value
-        # Coarse-axis labels with on-the-fly fallback for legacy bundles
-        # whose coarse fields are still empty. Same fallback pattern used
-        # on the per-claim headline pill in _claim_card.
-        coarse_lenient = (
-            consensus.coarse_lenient_label
-            or COARSE_LENIENT_PROJECTION.get(fine_label, "Unverifiable")
-        )
-        coarse_strict = (
-            consensus.coarse_strict_label
-            or COARSE_STRICT_PROJECTION.get(fine_label, "Unverifiable")
-        )
-        # Default text is Strict (matches the published default lens
-        # since the 2026-04-30 flip).
-        default_label = coarse_strict
-        default_css   = _verdict_css(default_label)
-        fine_css      = _verdict_css(fine_label)
-        lenient_css   = _verdict_css(coarse_lenient)
-        strict_css    = _verdict_css(coarse_strict)
+        # Folding through aggregation (1.6): split / no-verdict rows keep
+        # their verdict text on every axis (never "Unverifiable"); legacy
+        # bundles with blank coarse fields project the fine label on the fly.
+        fine_label = _agg_fine_label(consensus.consensus_verdict,
+                                     consensus.consensus_label.value)
+        # The mini-pill shows the Strict coarse projection — the one
+        # published axis (remediation v2, 1.8), same fold as the claim
+        # card's headline pill.
+        default_label = _agg_coarse_label(
+            fine_label, consensus.coarse_strict_label, "strict")
+        default_css = _verdict_css(default_label)
         toc_anecdote_cls = ""
         if _is_anecdote_unverifiable(b):
-            # Mirror the claim card's guest-anecdote pill on both lens axes.
-            default_label = coarse_lenient = coarse_strict = ANECDOTE_PILL
+            # Mirror the claim card's guest-anecdote pill.
+            default_label = ANECDOTE_PILL
             toc_anecdote_cls = " pill-anecdote"
         items.append(
             f'<a class="toc-item" href="#claim-{i}">'
             f'  <span class="toc-num">{str(i).zfill(2)}</span>'
-            f'  <span class="toc-pill lens-pill v-{default_css}{toc_anecdote_cls}"'
-            f' data-fine-label="{_esc(fine_label)}" data-fine-css="{_esc(fine_css)}"'
-            f' data-coarse-lenient="{_esc(coarse_lenient)}" data-coarse-lenient-css="{_esc(lenient_css)}"'
-            f' data-coarse-strict="{_esc(coarse_strict)}" data-coarse-strict-css="{_esc(strict_css)}">'
+            f'  <span class="toc-pill v-{default_css}{toc_anecdote_cls}">'
             f'{_esc(default_label)}</span>'
             f'  <span class="toc-text">"{_esc(b.claim.text)}"</span>'
             '  <span class="toc-jump">↓</span>'
@@ -2674,52 +2837,43 @@ def _toc(bundles: list[VerdictBundle]) -> str:
 def _report_card(r: dict) -> str:
     claim_count = r.get("claim_count", 0)
 
-    # 5-bucket coarse-axis aggregates for both lenses. Falls back to
-    # projecting the legacy 6-bucket distribution if a report predates
-    # the projection layer (older reports.json entries).
+    # Strict 5-bucket coarse-axis aggregate — the one published axis
+    # (remediation v2, 1.8). Falls back to projecting the legacy 6-bucket
+    # distribution if a report predates the projection layer (older
+    # reports.json entries).
     fine_dist = r.get("verdict_distribution", {}) or {}
-    dist_lenient = r.get("verdict_distribution_lenient") or _project_dist(
-        fine_dist, COARSE_LENIENT_PROJECTION
-    )
-    dist_strict = r.get("verdict_distribution_strict") or _project_dist(
-        fine_dist, COARSE_STRICT_PROJECTION
-    )
+    dist_strict = (r.get("verdict_distribution_strict")
+                   or _agg_project_dist(fine_dist, "strict"))
 
-    def _card_axis_html(d: dict[str, int], axis: str = "strict") -> tuple[str, str, str, str, str]:
-        """Return (headline_html, ratio_text, segs_html, counts_html, rail_html)
-        for one axis. Strict lens = graded family bands; Lenient lens = simple
-        Truthy/Falsey. rail_html is the family rail tying the headline's
-        leaning totals to the bar."""
-        if axis == "lenient":
-            headline, cls, ratio_text = _binary_verdict(d)
-        else:
-            headline, cls, ratio_text = _family_verdict(d)
-        # Every bucket renders, Models split included — the card bar must sum
-        # to claim_count just like the report-page bar (remediation T0.2).
-        total_named = sum(d.values()) or 1
-        segs_inner: list[str] = []
-        counts_inner: list[str] = []
-        for label in AGGREGATE_BAR_ORDER:
-            count = d.get(label, 0)
-            if not count:
-                continue
-            segs_inner.append(
-                f'<div class="seg v-{_verdict_css(label)}" '
-                f'style="width:{count/total_named*100:.1f}%"></div>'
-            )
-            counts_inner.append(
-                f'<div class="ct"><span class="swatch v-{_verdict_css(label)}"></span>'
-                f'{_esc(label)} <span class="n">{count}</span></div>'
-            )
-        head_html = (
-            f'<span class="label {cls}">{_esc(headline)}</span>'
-            f'<span class="ratio">{_esc(ratio_text)}</span>'
+    # Headline (percent-true FamilyVerdict label — the band display, DC-4'),
+    # segment bar, per-bucket counts, and the family rail tying the
+    # headline's leaning totals to the bar.
+    headline, cls, ratio_text = _family_verdict(dist_strict)
+    # Every bucket renders, Models split included — the card bar must sum
+    # to claim_count just like the report-page bar (remediation T0.2).
+    total_named = sum(dist_strict.values()) or 1
+    segs_inner: list[str] = []
+    counts_inner: list[str] = []
+    for label in AGGREGATE_BAR_ORDER:
+        count = dist_strict.get(label, 0)
+        if not count:
+            continue
+        segs_inner.append(
+            f'<div class="seg v-{_verdict_css(label)}" '
+            f'style="width:{count/total_named*100:.1f}%"></div>'
         )
-        rail = _family_rail_html(d, AGGREGATE_BAR_ORDER, rail_class="report-family-rail")
-        return head_html, ratio_text, "".join(segs_inner), "".join(counts_inner), rail
-
-    head_lenient, _ratio_lenient, segs_lenient, counts_lenient, rail_lenient = _card_axis_html(dist_lenient, axis="lenient")
-    head_strict,  _ratio_strict,  segs_strict,  counts_strict,  rail_strict  = _card_axis_html(dist_strict, axis="strict")
+        counts_inner.append(
+            f'<div class="ct"><span class="swatch v-{_verdict_css(label)}"></span>'
+            f'{_esc(label)} <span class="n">{count}</span></div>'
+        )
+    head_strict = (
+        f'<span class="label {cls}">{_esc(headline)}</span>'
+        f'<span class="ratio">{_esc(ratio_text)}</span>'
+    )
+    rail_strict = _family_rail_html(dist_strict, AGGREGATE_BAR_ORDER,
+                                    rail_class="report-family-rail")
+    segs_strict = "".join(segs_inner)
+    counts_strict = "".join(counts_inner)
 
     meta_bits = []
     if r.get("date"):
@@ -2729,18 +2883,21 @@ def _report_card(r: dict) -> str:
     meta = '<span class="sep">·</span>'.join(meta_bits)
 
     tier_counts = r.get("tier_counts") or {}
-    # "other" ships too (remediation F6): it is the largest cited-source
-    # bucket on both SOTU reports — omitting it made the chip row read as if
-    # only vetted tiers fed the verdicts.
-    _tier_label_order = [("gov", "gov"), ("wire", "wire"), ("news", "news"),
-                         ("fc", "fc"), ("other", "other")]
-    _tier_parts = [
-        f'{tier_counts.get(key, 0)} {label}'
-        for key, label in _tier_label_order
-        if tier_counts.get(key, 0)
-    ]
+    # Every nonzero bucket ships, via aggregation.sources_line (1.6):
+    # "other" since remediation F6, and "press/political" since remediation
+    # v2 — the old hand-kept order omitted the political bucket entirely,
+    # hiding 162 sources on the Trump card. The data-tier-counts attribute
+    # is the machine-readable mirror consistency.check_site lints against
+    # reports.json tier_counts.
+    _tier_pairs = _agg_sources_line(tier_counts)
+    _tier_parts = [f'{count} {label}' for label, count in _tier_pairs]
+    _tier_attr = " ".join(
+        f"{key}:{tier_counts.get(key, 0)}"
+        for key, _label in TIER_LINE_ORDER if tier_counts.get(key, 0)
+    )
     src_tiers_html = (
-        f'    <span class="src-tiers">Sources: {" · ".join(_tier_parts)}</span>'
+        f'    <span class="src-tiers" data-tier-counts="{_esc(_tier_attr)}">'
+        f'Sources: {" · ".join(_tier_parts)}</span>'
         if _tier_parts else ''
     )
 
@@ -2752,20 +2909,12 @@ def _report_card(r: dict) -> str:
         f'      <div class="report-meta">{meta}</div>'
         '    </div>'
         '    <div class="verdict-pill">'
-        f'      <span class="lens-target" data-lens-axis="strict">{head_strict}</span>'
-        f'      <span class="lens-target" data-lens-axis="lenient" hidden>{head_lenient}</span>'
+        f'      <span>{head_strict}</span>'
         '    </div>'
         '  </div>'
-        '  <div class="report-bar-row">'
-        f'    <div class="report-bar-caption lens-target" data-lens-axis="strict">Strict lens</div>'
-        f'    <div class="report-bar-caption lens-target" data-lens-axis="lenient" hidden>Lenient lens</div>'
-        '  </div>'
-        f'  <div class="lens-target" data-lens-axis="strict">{rail_strict}</div>'
-        f'  <div class="lens-target" data-lens-axis="lenient" hidden>{rail_lenient}</div>'
-        f'  <div class="report-bar lens-target" data-lens-axis="strict">{segs_strict}</div>'
-        f'  <div class="report-bar lens-target" data-lens-axis="lenient" hidden>{segs_lenient}</div>'
-        f'  <div class="report-counts lens-target" data-lens-axis="strict">{counts_strict}</div>'
-        f'  <div class="report-counts lens-target" data-lens-axis="lenient" hidden>{counts_lenient}</div>'
+        f'  {rail_strict}'
+        f'  <div class="report-bar">{segs_strict}</div>'
+        f'  <div class="report-counts">{counts_strict}</div>'
         '  <div class="report-cta">'
         f'    <span class="src">{claim_count} claim{"s" if claim_count != 1 else ""}</span>'
         + src_tiers_html +
@@ -2775,22 +2924,9 @@ def _report_card(r: dict) -> str:
     )
 
 
-def _project_dist(
-    fine_dist: dict[str, int], projection: dict[str, str]
-) -> dict[str, int]:
-    """Project a 6-bucket distribution onto the 5-bucket coarse axis.
-
-    Used by ``_report_card`` and the index-aggregate path to backfill the
-    coarse fields when a ``reports.json`` entry predates the projection
-    layer (older runs). Counts that map to the same coarse bucket are
-    summed (e.g. ``Mostly True + Exaggerated → Truthy`` under Lenient).
-    """
-    out: dict[str, int] = {v: 0 for v in COARSE_VERDICT_ORDER}
-    out["Models split"] = 0
-    for fine_label, cnt in fine_dist.items():
-        coarse = projection.get(fine_label, "Unverifiable")
-        out[coarse] = out.get(coarse, 0) + cnt
-    return out
+# ``_project_dist`` moved to ``aggregation.project_dist`` (1.6) — with the
+# non-folding fix: a "Models split" fine bucket now passes through instead of
+# being projected to Unverifiable.
 
 
 def _agg_bar(
@@ -2800,9 +2936,7 @@ def _agg_bar(
     """Site-wide aggregate verdict bar + legend.
 
     ``order`` defaults to the 6-bucket ``VERDICT_ORDER`` for backward
-    compat, but the index renderer now passes ``COARSE_VERDICT_ORDER`` for
-    both Lenient and Strict aggregate views (rendered side-by-side and
-    swapped by the lens toggle).
+    compat; aggregate callers pass a coarse-axis order.
     """
     label_order = order if order is not None else VERDICT_ORDER
     total = sum(verdict_totals.get(l, 0) for l in label_order) or 1
@@ -3418,13 +3552,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.35rem;
 }
 
-/* Paired editorial-lens blocks: ``hidden`` must win over display:flex on
-   `.report-bar` / `.report-counts` / etc. Otherwise index report cards
-   stack *both* Strict and Lenient bars at once (user only wants one bar). */
-[data-lens-axis][hidden] {
-  display: none !important;
-}
-
 /* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
 .report-bar {
   display: flex;
@@ -3433,18 +3560,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0.25rem 0 1rem;
 }
 .report-bar .seg { transition: filter 200ms ease; }
-.report-bar-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6rem;
-}
-.report-bar-caption {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-muted);
-}
 
 .report-counts {
   display: flex;
@@ -3573,14 +3688,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 
 /* Big verdict bar inside the panel */
 .vp-bar-wrap { padding: 1.5rem 1.75rem; }
-.vp-lens-caption {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink-muted);
-  margin-bottom: 0.5rem;
-}
 .vp-bar {
   display: flex;
   height: 38px;
@@ -3993,14 +4100,119 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin-top: 0.15rem;
   color: var(--ink-faint);
 }
+/* Computed exhibit (A8 / R-2) — the arithmetic, both input levels, and the
+   data vintage. Deliberately a distinct block, not a badge tucked into the
+   provenance strip: R-2 wants a reader to be able to redo the division. */
+.computed-exhibit {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, #3b6ea5);
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+}
+.computed-exhibit .ce-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.computed-exhibit .ce-badge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent, #3b6ea5);
+}
+.computed-exhibit .ce-series {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-formula {
+  font-family: var(--mono);
+  margin: 0 0 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs {
+  list-style: none;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs li {
+  display: flex;
+  gap: 0.6rem;
+}
+.computed-exhibit .ce-date { color: var(--ink-muted); min-width: 6.5rem; }
+.computed-exhibit .ce-vintage,
+.computed-exhibit .ce-note {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-note { margin-top: 0.3rem; }
 /* Post-publication correction note (T1.5) — amber, can't be missed. */
 .pca-correction {
   margin-top: 0.25rem;
   color: var(--v-exaggerated);
 }
 .pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
+/* D14 (A7) adjacent-claim coherence annotation — always visible, editorial. */
+.pca-coherence {
+  margin-top: 0.4rem;
+  background: #fefbf3;
+  border-left: 3px solid var(--v-exaggerated);
+  padding: 0.5rem 0.75rem;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+.pca-coherence .coherence-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  display: block;
+  margin-bottom: 0.15rem;
+}
 .corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
 .corrections-note { color: var(--ink-muted); }
+/* F9: models-split resolution-state badge — neutral, not a verdict colour. */
+.vt-split {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  color: var(--ink-muted);
+  border: 1px dashed var(--rule, #d8d4ca);
+  border-radius: 3px;
+  padding: 0 0.3em;
+}
+/* D-B: per-speech stance-scored coverage disclosure block. */
+.stance-coverage {
+  margin: 1.25rem 0;
+  background: var(--surface, #faf9f6);
+  border: 1px solid var(--rule, #e5e2da);
+  border-left: 3px solid var(--ink-muted);
+  padding: 0.9rem 1.1rem;
+  font-size: 0.9rem;
+}
+.stance-coverage-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.stance-coverage p { margin: 0.35rem 0; }
+.stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+.stance-coverage-exception {
+  border-left: 3px solid var(--v-exaggerated);
+  padding-left: 0.75rem;
+  background: #fefbf3;
+}
 /* Pipeline diagram (About, T4.2) — structural only, no figures. */
 .pipeline-diagram {
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
@@ -4497,46 +4709,6 @@ hr.rule-light {
 .vt-truthy       { color: var(--v-truthy); }
 .vt-falsey       { color: var(--v-falsey); }
 .vt-split        { color: var(--v-split); }
-
-/* ── Editorial-lens chip (status bar) ──────────────────────────────────────
-   Toggles the headline pill between the Lenient and Strict 5-bucket
-   projections. Hidden by default; the toggle JS reveals it once it has
-   wired up at least one ``.claim-pill-headline`` element on the page. */
-.editorial-lens {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.1rem 0.55rem;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-.editorial-lens:hover,
-.editorial-lens:focus-visible {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: var(--ink-faint);
-  outline: none;
-}
-.editorial-lens .lens-label {
-  color: var(--ink-faint);
-  text-transform: uppercase;
-}
-.editorial-lens .lens-value {
-  font-weight: 600;
-}
-.editorial-lens[data-lens="strict"] .lens-value {
-  color: var(--v-falsey);
-}
-.editorial-lens[data-lens="lenient"] .lens-value {
-  color: var(--v-truthy);
-}
-
 
 /* [20] Truthy SVG internal animations ────────────────────────────────── */
 /* These drive Truthy's idle behavior, eye states, and pose changes.
@@ -5538,142 +5710,6 @@ JS = """\
   }
 })();
 
-/* ─────────────────────────────────────────────────────────────────────
-   Editorial-lens toggle — flips every Truthy-scale display between the
-   Strict (default since 2026-04-30) and Lenient 5-bucket coarse-axis
-   projections.
-
-   Two render patterns are toggled together so the page never goes
-   internally inconsistent (e.g. headline says "Mostly Truthy" while the
-   verdict bar still shows the Strict aggregate):
-
-   1) PER-PILL SWAP — in-place text+class rewrite on individual pills.
-      Used by the per-claim headline pill (claim card) and the
-      per-claim TOC mini-pill on report pages. Both wear ``.lens-pill``
-      and carry the data-coarse-{lenient,strict} attribute pair.
-
-   2) PAIRED-AXIS SWAP — show/hide complementary blocks pre-rendered
-      server-side. Used by aggregate views: the verdict-panel headline
-      + ratio + bar, the per-report cards on the index, and any future
-      lens-aware aggregate. Each block wears ``[data-lens-axis="X"]``
-      and the toggle simply flips the ``hidden`` attribute.
-
-   The per-model strip pills (Anthropic / OpenAI / Gemini / xAI) are
-   NEVER touched — they keep the 6-bucket fine labels for audit.
-
-   Body data attribute ``document.body.dataset.lens`` is also set so
-   any lens-aware CSS rule can react.
-
-   Persistence: ``localStorage.editorial-lens`` ∈ {"lenient","strict"}.
-   Default: strict (2026-04-30 editorial flip from Lenient — Strict
-   tracks more closely with the reference set per FitnessScorer Run 5
-   and stays the conservative default for non-JS clients). Stored
-   user preference still wins on revisit.
-   No-op if the page has nothing toggleable (e.g. about, 404).
-   ───────────────────────────────────────────────────────────────────── */
-(function() {
-  'use strict';
-
-  var STORAGE_KEY = 'editorial-lens';
-  var DEFAULT_LENS = 'strict';
-  var ALL_PILL_CSS_CLASSES = [
-    'v-true', 'v-mostly-true', 'v-exaggerated', 'v-misleading',
-    'v-false', 'v-unverifiable', 'v-truthy', 'v-falsey', 'v-split'
-  ];
-
-  function readLens() {
-    try {
-      var v = localStorage.getItem(STORAGE_KEY);
-      return (v === 'strict' || v === 'lenient') ? v : DEFAULT_LENS;
-    } catch (e) {
-      return DEFAULT_LENS;
-    }
-  }
-
-  function writeLens(lens) {
-    try { localStorage.setItem(STORAGE_KEY, lens); } catch (e) { /* ignore */ }
-  }
-
-  function applyLensToPill(pill, lens) {
-    var label, cssSlug;
-    if (lens === 'strict') {
-      label = pill.getAttribute('data-coarse-strict') || pill.getAttribute('data-fine-label') || '';
-      cssSlug = pill.getAttribute('data-coarse-strict-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
-    } else {
-      label = pill.getAttribute('data-coarse-lenient') || pill.getAttribute('data-fine-label') || '';
-      cssSlug = pill.getAttribute('data-coarse-lenient-css') || pill.getAttribute('data-fine-css') || 'unverifiable';
-    }
-    if (!label) return;
-    pill.textContent = label;
-    for (var i = 0; i < ALL_PILL_CSS_CLASSES.length; i++) {
-      pill.classList.remove(ALL_PILL_CSS_CLASSES[i]);
-    }
-    pill.classList.add('v-' + cssSlug);
-  }
-
-  function applyLensToAxisPairs(lens) {
-    /* Show the block tagged with the active lens, hide the other.
-       Idempotent — safe to call repeatedly. */
-    var blocks = document.querySelectorAll('[data-lens-axis]');
-    for (var i = 0; i < blocks.length; i++) {
-      var axis = blocks[i].getAttribute('data-lens-axis');
-      if (axis === lens) {
-        blocks[i].hidden = false;
-      } else {
-        blocks[i].hidden = true;
-      }
-    }
-  }
-
-  function applyLens(lens) {
-    /* 1) per-pill text+class swap (headline pill + TOC pill) */
-    var pills = document.querySelectorAll('.lens-pill');
-    for (var i = 0; i < pills.length; i++) {
-      applyLensToPill(pills[i], lens);
-    }
-    /* 2) paired-axis show/hide for aggregate displays */
-    applyLensToAxisPairs(lens);
-    /* 3) body data-attr so any lens-aware CSS rule can react */
-    if (document.body) document.body.setAttribute('data-lens', lens);
-    /* 4) chip state */
-    var chip = document.querySelector('.editorial-lens');
-    if (chip) {
-      chip.setAttribute('data-lens', lens);
-      var valEl = chip.querySelector('.lens-value');
-      if (valEl) valEl.textContent = (lens === 'strict') ? 'Strict' : 'Lenient';
-      chip.setAttribute('aria-pressed', lens === 'strict' ? 'true' : 'false');
-    }
-  }
-
-  function init() {
-    var pills = document.querySelectorAll('.lens-pill');
-    var axisBlocks = document.querySelectorAll('[data-lens-axis]');
-    var chip = document.querySelector('.editorial-lens');
-    var hasToggleableContent = pills.length > 0 || axisBlocks.length > 0;
-    if (!hasToggleableContent) {
-      if (chip) chip.hidden = true;
-      return;
-    }
-    var lens = readLens();
-    applyLens(lens);
-    if (chip) {
-      chip.hidden = false;
-      chip.addEventListener('click', function() {
-        var current = chip.getAttribute('data-lens') || DEFAULT_LENS;
-        var next = (current === 'lenient') ? 'strict' : 'lenient';
-        writeLens(next);
-        applyLens(next);
-      });
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-})();
-
 /* ── E-id jump links: reveal targets hidden inside collapsed <details> ──
    Reasoning cites pack ids as anchors into "Sources consulted", which is
    collapsed by default; plain fragment navigation won't open a closed
@@ -6240,6 +6276,49 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     )
 
 
+def _render_stance_coverage(site_report: SiteReport) -> str:
+    """D-B: the per-speech stance-scored coverage disclosure block.
+
+    One format on every report: how much of the evidence the scorer took a
+    stance on, stated against the 15% stance-null ceiling, plus the note that
+    government records are stance-free by nature. The one speech over the ceiling
+    (trump_2026, 21.0%) additionally carries the owner-ratified exception notice
+    and the tier decomposition of its nulls — shown, not hidden."""
+    cov = site_report.stance_coverage or {}
+    if not cov.get("items"):
+        return ""
+    rate = cov["rate_pct"]
+    ceiling = cov["ceiling_pct"]
+    scored = cov["items"] - cov["stance_null"]
+    body = (
+        '<aside class="stance-coverage">'
+        '<span class="stance-coverage-label">Evidence coverage</span>'
+        f'<p>The stance scorer took a support or refute position on '
+        f'{scored:,} of {cov["items"]:,} evidence items; '
+        f'<strong>{rate:.1f}%</strong> ({cov["stance_null"]:,} items) carried no '
+        f'stance. The threshold for publishing a speech is {ceiling:.0f}% '
+        f'stance-null.</p>'
+        '<p class="stance-coverage-note">Government records — statutes, official '
+        'statistics, transcripts — are frequently stance-free by nature: they '
+        'state facts without arguing for or against a claim, so a share of '
+        'null stance is expected and is not a retrieval failure.</p>'
+    )
+    if cov.get("over_ceiling"):
+        tiers = cov.get("tier_breakdown") or {}
+        parts = ", ".join(f"{t} {n}" for t, n in tiers.items())
+        body += (
+            '<p class="stance-coverage-exception"><strong>Published under an '
+            'exception.</strong> This report exceeds the '
+            f'{ceiling:.0f}% ceiling at {rate:.1f}% and is published under an '
+            'owner-ratified exception for this release; the exception expires '
+            'when the D17 retrieval-contract fix and a re-render land. The '
+            f'{cov["stance_null"]:,} stance-null items decompose by source tier '
+            f'as: {parts} — across {cov["packs_with_null"]} of '
+            f'{cov["total_packs"]} evidence packs.</p>'
+        )
+    return body + '</aside>'
+
+
 def _render_report(site_report: SiteReport) -> str:
     """Render a full per-speech report page."""
     src_link = ""
@@ -6374,6 +6453,7 @@ def _render_report(site_report: SiteReport) -> str:
         hero_html
         + _verdict_panel(site_report)
         + correction_banner
+        + _render_stance_coverage(site_report)
         + toc_section_head
         + toc_html
         + '<div class="section-head">'
@@ -6410,6 +6490,7 @@ def _render_report(site_report: SiteReport) -> str:
         og_title=_report_og_title,
         og_description=_report_og_desc,
         og_type="article",
+        page_path=site_report.report_url,
     )
 
 
@@ -6538,6 +6619,7 @@ def _render_statement_triage(site_report: SiteReport) -> str:
             f"{site_report.display_date} remarks, and the pipeline stage that excluded each."
         ),
         og_type="article",
+        page_path=f"reports/{site_report.triage_slug}.html",
     )
 
 
@@ -6562,14 +6644,33 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
     _claim_text_trunc = bundle.claim.text[:60]
     _claim_og_title = f"Claim: {_claim_text_trunc} — truth-bot"
     _verdict_label = bundle.consensus.consensus_verdict
-    _total_models = len(bundle.model_verdicts)
-    _agree_models = sum(
-        1 for mv in bundle.model_verdicts
-        if mv.label.value == _verdict_label
-    )
+    # Agreement meta speaks panel-vote vocabulary on PCA bundles (1.7): the
+    # bridge collapses the panel to ONE reconciled ModelVerdict (zero on a
+    # split), so the old adapter tally read "1 of 1 models agree" — or
+    # "0 of 0" on splits. panel_votes preserves the real seat tally. Legacy
+    # multi-adapter bundles (no votes) keep the adapter-count wording.
+    _votes = dict(getattr(bundle.consensus.provenance, "panel_votes", {}) or {})
+    if _votes and _verdict_label == "Models split":
+        _agree_text = "Panel split — no consensus."
+    elif _votes:
+        _n_seats = sum(_votes.values())
+        _agree_text = (
+            f"{max(_votes.values())} of {_n_seats} "
+            f"seat{'s' if _n_seats != 1 else ''} agree."
+        )
+    else:
+        _total_models = len(bundle.model_verdicts)
+        _agree_models = sum(
+            1 for mv in bundle.model_verdicts
+            if mv.label.value == _verdict_label
+        )
+        _agree_text = (
+            f"{_agree_models} of {_total_models} "
+            f"model{'s' if _total_models != 1 else ''} agree."
+        )
     _claim_og_desc = (
         f"Verdict: {_verdict_label}. "
-        f"{_agree_models} of {_total_models} model{'s' if _total_models != 1 else ''} agree. "
+        f"{_agree_text} "
         "Checked against a shared, cited evidence pack."
     )
     return _page_report(
@@ -6579,6 +6680,7 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
         og_title=_claim_og_title,
         og_description=_claim_og_desc,
         og_type="article",
+        page_path=f"claims/{bundle.claim.id}.html",
     )
 
 
@@ -6649,6 +6751,7 @@ def _render_truthy() -> str:
             "Truthy McTruthface is truth-bot's citizen-funded fact-checking mascot. "
             "A fact-check for every citizen."
         ),
+        page_path="truthy.html",
     )
 
 
@@ -6937,6 +7040,7 @@ def _render_model_insights(insights: "ModelPanelInsights | None") -> str:
             "fact-check panel — pairwise agreement, truthy bias, lone-outlier "
             "splits."
         ),
+        page_path="model-insights.html",
     )
 
 
@@ -7026,22 +7130,37 @@ def _render_model_insights_v2(reports: list[dict], claims: list[dict]) -> str:
                        "arbiter side-taking, and severity overrides for every "
                        "published report.",
         og_type="website",
+        page_path="model-insights.html",
     )
 
 
-def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None) -> str:
+def _corrections_verdict_span(v: str) -> str:
+    """A verdict badge for the corrections tables. A standard verdict gets its
+    colour; a models-split STATE (F9) gets a neutral badge so it reads as a
+    resolution state, not a verdict."""
+    vv = (v or "").strip()
+    if vv.upper() in ("TRUE", "FALSE", "MISLEADING", "UNVERIFIABLE"):
+        return (f'<span class="vt-{_verdict_css(vv.capitalize())}">'
+                f'{_esc(vv.upper())}</span>')
+    return f'<span class="vt-split">{_esc(vv)}</span>'
+
+
+def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
+                        resolution_changes: Optional[list[dict]] = None) -> str:
     """The public Corrections page (P67.6 / T1.5) — a fact-checking-norm
     changelog: claim id, old → new verdict, reason, date. Rendered on every
     publish (empty state included) so the page exists before its first entry
-    and readers can always find the correction policy."""
+    and readers can always find the correction policy.
+
+    ``resolution_changes`` (F9): the net-visible non-ledger moves whose verdict
+    crossed a models-split boundary, shown in their own section so a change of
+    resolution state is disclosed as clearly as a change of verdict."""
     if entries:
         rows = "".join(
             f'<tr><td class="mono">{_esc(e["sid"])}</td>'
             f'<td>{_esc(e["speech_id"])}</td>'
-            f'<td><span class="vt-{_verdict_css(e["old_verdict"].capitalize())}">'
-            f'{_esc(e["old_verdict"].upper())}</span> → '
-            f'<span class="vt-{_verdict_css(e["new_verdict"].capitalize())}">'
-            f'{_esc(e["new_verdict"].upper())}</span></td>'
+            f'<td>{_corrections_verdict_span(e["old_verdict"])} → '
+            f'{_corrections_verdict_span(e["new_verdict"])}</td>'
             f'<td>{_esc(e["reason"])}</td>'
             f'<td>{_esc(e["date"])}</td></tr>'
             for e in entries
@@ -7055,10 +7174,44 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
     else:
         table = ('<p class="dim">No corrections have been issued for the '
                  'currently published reports.</p>')
+    resolution_html = ""
+    if resolution_changes:
+        rrows = "".join(
+            f'<tr><td class="mono">{_esc(e["sid"])}</td>'
+            f'<td>{_esc(e["speech_id"])}</td>'
+            f'<td>{_corrections_verdict_span(e["old_verdict"])} → '
+            f'{_corrections_verdict_span(e["new_verdict"])}</td>'
+            f'<td>{_esc(e.get("reason", ""))}</td>'
+            f'<td>{_esc(e.get("date", ""))}</td></tr>'
+            for e in resolution_changes
+        )
+        resolution_html = (
+            '<h3>Resolution-state changes</h3>'
+            '<p>These claims did not change from one verdict to another; they '
+            'crossed into or out of a <em>models-split</em> state — the panel '
+            'reaching, or ceasing to reach, a consensus — between the previously '
+            'published run and this one. Shown here for the same reason a verdict '
+            'change is: the published outcome moved.</p>'
+            '<table class="tier-table corrections-table">'
+            '<tr><th>Claim</th><th>Report</th><th>Resolution state</th>'
+            '<th>Reason</th><th>Date</th></tr>'
+            f'{rrows}</table>'
+        )
+    # A note flagged ``draft`` is framing prose awaiting owner red-pen (S-8): it
+    # is carried in data/corrections.json so the owner can review it against the
+    # staged site, but it MUST NOT render as final published prose. It is emitted
+    # as an HTML comment only — present in the template output for review, never
+    # visible on the page — so a staged render can never be mistaken for the
+    # approved wording.
     notes_html = "".join(
         f'<p class="corrections-note"><strong>{_esc(n["date"])}</strong> — '
         f'{_esc(n["text"])}</p>'
-        for n in (notes or [])
+        for n in (notes or []) if not n.get("draft")
+    )
+    draft_html = "".join(
+        f'<!-- DRAFT corrections framing (owner red-pen required, not published): '
+        f'{_esc(n["text"])} -->'
+        for n in (notes or []) if n.get("draft")
     )
     body = (
         '<h2>Corrections</h2><hr class="rule">'
@@ -7069,7 +7222,9 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
         'old and new verdict, the reason, and the date. Corrections are never '
         'applied silently.</p>'
         + notes_html
+        + draft_html
         + table
+        + resolution_html
     )
     footer = (
         f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
@@ -7084,6 +7239,7 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
         og_description="Public changelog of corrected verdicts: claim, old and "
                        "new verdict, reason, and date.",
         og_type="website",
+        page_path="corrections.html",
     )
 
 
@@ -7106,19 +7262,81 @@ def _render_model_insights_redirect() -> str:
     )
 
 
+# ── Report alias stubs (DC-3' — stable slugs, dead URLs redirect) ────────────
+#
+# data/report_aliases.json maps every dead report URL (per-run UUID slugs
+# orphaned by past re-publishes, recovered from git history, plus the
+# committed slugs that rotate to stable at the next regen) to its speech's
+# STABLE speech_id-derived slug. SitePublisher emits a redirect stub at each
+# old filename whenever the target exists in the rendered site, so no
+# previously shared link 404s after a regeneration.
+
+#: Repo ledger of old-slug → stable-slug filenames (both under reports/).
+_REPORT_ALIASES_PATH = (Path(__file__).resolve().parents[3]
+                        / "data" / "report_aliases.json")
+
+
+def _load_report_aliases(path: Optional[Path] = None) -> dict[str, str]:
+    """Load the alias ledger; missing file → no aliases (fresh checkouts,
+    downstream users of the package without the repo data dir)."""
+    p = Path(path) if path else _REPORT_ALIASES_PATH
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+    except (FileNotFoundError, OSError):
+        return {}
+    return dict(doc.get("aliases") or {})
+
+
+def _render_report_alias_stub(new_name: str) -> str:
+    """Redirect stub for a dead report URL — modeled on
+    ``_render_model_insights_redirect``: meta-refresh + rel=canonical to the
+    stable page, one honest sentence for anyone who lands here."""
+    canonical = f"{_site_url()}/reports/{new_name}"
+    return (
+        '<!doctype html>\n<html lang="en">\n<head>\n'
+        '  <meta charset="utf-8">\n'
+        f'  <meta http-equiv="refresh" content="0; url=./{new_name}">\n'
+        f'  <link rel="canonical" href="{canonical}">\n'
+        '  <title>Report moved — truth-bot</title>\n'
+        '</head>\n<body>\n'
+        '  <p>This report was re-adjudicated and republished. '
+        f'<a href="./{new_name}">Continue to the current report</a>.</p>\n'
+        '</body>\n</html>\n'
+    )
+
+
 def _render_about() -> str:
-    """Render the about/method page (PCA-era architecture; refreshed 2026-07-20)."""
+    """Render the about/method page (PCA-era architecture; refreshed 2026-07-20;
+    reconciled against shipped behavior in remediation v2, 1.9)."""
+    # The pack-cap copy renders from the pipeline constant so the About page
+    # cannot drift from the consolidator again (it said "six" while
+    # PACK_CAP_V2 was 10). Local import: consolidator is pipeline-side and
+    # the render layer stays import-light at module level.
+    from truthbot.verdict.consolidator import PACK_CAP_V2
+    _cap_words = {6: "six", 8: "eight", 10: "ten", 12: "twelve"}
+    pack_cap_word = _cap_words.get(PACK_CAP_V2, str(PACK_CAP_V2))
+
     prompt_text = _pca_prompt_text()
     phash = _prompt_hash()
 
+    # Rows derive from the shipped tier registry (TIER_DISPLAY) — all seven
+    # tiers, T7·Pol included — so this table cannot drift from what the
+    # pipeline actually assigns (remediation v2, 1.9).
     tier_rows = "".join(
         f'<tr><td><strong>{_esc(t)}</strong></td><td>{_esc(d)}</td><td>{_esc(q)}</td></tr>'
-        for t, d, q in TIER_TABLE
+        for t, d, q in _tier_table_rows()
     )
     tier_table = (
         f'<table class="tier-table">'
         f'<tr><th>Tier</th><th>Sources</th><th>Trust weight</th></tr>'
         f'{tier_rows}</table>'
+        f'<p class="dim" style="margin-top:0.5rem;font-size:0.85rem">'
+        f'Fact-check organizations (T5·FC) are excluded from evidence packs '
+        f'by design — the panel reaches its own verdicts from primary '
+        f'sources rather than inheriting another checker\'s ruling; they '
+        f'appear only in gold-side evaluation. Political-tier items '
+        f'(T7·Pol) are admissible only to confirm a claim was made — they '
+        f'can never decide a verdict.</p>'
     )
 
     models_list = (
@@ -7151,8 +7369,8 @@ def _render_about() -> str:
         "<li><strong>One panel, one pass:</strong> The proposer→critic→arbiter structure "
         "and the second-stage Severity Classifier are the accuracy mechanism, and boundary "
         "calls (False vs Misleading) remain the hardest cases.</li>"
-        "<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in an evidence pack "
-        "(up to ten items) assembled at run time. If retrieval misses the decisive source "
+        f"<li><strong>Retrieval-bounded:</strong> Verdicts are grounded in an evidence pack "
+        f"(up to {pack_cap_word} items) assembled at run time. If retrieval misses the decisive source "
         "and the pack fails the quality bar, the claim is forced to Unverifiable — the "
         "panel is instructed not to fill gaps from memory.</li>"
         "<li><strong>No cross-claim context:</strong> Each claim is judged independently. "
@@ -7184,11 +7402,12 @@ def _render_about() -> str:
         f'though a sentence may name its own speaker.</p>'
         f'<p style="margin-top:0.75rem"><strong>2 · Evidence retrieval.</strong> For each '
         f'claim, a small model writes targeted search queries (the era\'s fiscal year, the '
-        f'specific statistic or program named), and the pipeline fetches candidates via web '
-        f'search plus fact-check databases — time-scoped to the claim\'s era so a 2026 '
-        f'article cannot decide a 2022 claim. Candidates are scored for relevance to the '
+        f'specific statistic or program named), and the pipeline fetches candidates via '
+        f'web-search connectors — time-scoped to the claim\'s era so a 2026 '
+        f'article cannot decide a 2022 claim. Fact-check sites are excluded from the '
+        f'candidate pool by design. Candidates are scored for relevance to the '
         f'claim, deduplicated, stripped of non-evidence (homepages, listing pages), and '
-        f'capped at six items ranked by relevance, then source trust. Every pack item '
+        f'capped at {pack_cap_word} items ranked by relevance, then source trust. Every pack item '
         f'carries a URL, retrieval timestamp, and content hash.</p>'
         f'<p style="margin-top:0.75rem"><strong>3 · The verdict panel (PCA).</strong> A '
         f'<em>proposer</em> drafts a verdict from the evidence; a <em>critic</em> '
@@ -7197,7 +7416,7 @@ def _render_about() -> str:
         f'Unverifiable — and must cite pack items by id (the E1, E2… ids you see in '
         f'reasoning and source lists; citations outside the pack are rejected). A '
         f'genuine tie is either resolved by the Severity Classifier — recorded on the '
-        f'claim\'s provenance strip — or published as "Panel split"; a tie is never '
+        f'claim\'s provenance strip — or published as "Models split"; a tie is never '
         f'dropped without a visible trace. The panel is speaker-blind in its inputs: '
         f'the speaker\'s name is withheld as metadata, though the claim text itself '
         f'may still identify the speaker.</p>'
@@ -7211,7 +7430,9 @@ def _render_about() -> str:
         f'check against. Those claims still run the full panel, but when they come back '
         f'unverifiable they are labeled <em>Anecdote</em> — a limit of the genre, not a '
         f'failed verification. An anecdote the press independently investigated gets a '
-        f'real verdict.</p>'
+        f'real verdict. The anecdote count ships as a footnote beneath each report\'s '
+        f'aggregate verdict bar, so the reader can see how much of the Unverifiable '
+        f'bucket is this genre.</p>'
         f'<div class="pipeline-diagram" aria-label="Pipeline diagram">'
         f'<span class="pd-node">Transcript</span><span class="pd-arrow">→</span>'
         f'<span class="pd-node">Check-worthiness triage<br><small>A1 + A2, speaker withheld</small></span>'
@@ -7227,18 +7448,21 @@ def _render_about() -> str:
         f'</div>'
         f'<h3 style="margin-top:1.5rem">How to read a report</h3>'
         f'<p><strong>Per-claim pill.</strong> Each claim headlines the panel\'s own verdict '
-        f'(True, False, Misleading, Unverifiable — or Anecdote / Panel split). The '
+        f'(True, False, Misleading, Unverifiable — or Anecdote / Models split). The '
         f'provenance strip beneath the verdict shows the full chain: how the claim was '
         f'routed, what each seat predicted, the vote tally, and any Severity Classifier '
         f'override. E-ids in the reasoning link to the exact evidence item cited.</p>'
         f'<p style="margin-top:0.75rem"><strong>Report headline &amp; leaning totals.</strong> '
-        f'Claims aggregate into two families — true-leaning (True) and false-leaning (False '
-        f'+ Misleading) — over <em>decided</em> claims only; Unverifiable, Anecdote, and '
-        f'Panel split are abstentions and stay out of the denominator. The headline band is '
-        f'the dominant family\'s share of decided claims: ≥70% "Largely," ≥55% "Mostly," '
-        f'under 55% "Mixed verdict." The family rail above each verdict bar brackets the '
-        f'same totals on the graph itself, so the headline\'s "N of M decided claims '
-        f'X-leaning" is always visibly derivable.</p>'
+        f'Claims aggregate into two families — true-leaning (True, Mostly True, Truthy) '
+        f'and false-leaning (False, Falsey, Misleading, Exaggerated) — over '
+        f'<em>decided</em> claims only; Unverifiable, Anecdote, and '
+        f'Models split are abstentions and stay out of the denominator. The headline is '
+        f'the true-leaning family\'s share of decided claims, shown as a percentage '
+        f'("56% True"); its color carries the band — green above 75%, yellow from 50% '
+        f'to 75%, red below 50%. The words never grade; the number speaks. The family '
+        f'rail above each verdict bar brackets the same totals on the graph itself, so '
+        f'the headline\'s "N of M decided claims X-leaning" is always visibly '
+        f'derivable.</p>'
         f'<p style="margin-top:0.75rem"><strong>Display conventions.</strong> Aggregate '
         f'bars show every claim, including a distinct <em>Models split</em> segment for '
         f'panel deadlocks — segments always sum to the report\'s claim count. Guest '
@@ -7251,17 +7475,20 @@ def _render_about() -> str:
         f'severity overrides. Each report\'s <em>Statement Triage</em> page carries its '
         f'falsifiability ratio: the share of the speech that made a checkable claim at '
         f'all, a statistic about the genre rather than the speaker.</p>'
-        f'<p style="margin-top:0.75rem"><strong>The Lens chip</strong> flips between two '
-        f'presentations of the same computation: <em>Lenient</em> shows the simple '
-        f'Truthy/Falsey lean; <em>Strict</em> (the default) shows the graded bands. The two '
-        f'lenses share the Mixed band and the decided-claims denominator — they can never '
-        f'disagree about whether a report is a toss-up.</p>'
+        f'<p style="margin-top:0.75rem"><strong>One presentation.</strong> Every surface '
+        f'— per-claim pills, report headline, verdict bars, index cards — renders the '
+        f'same strict 5-bucket scale from one computation: the "%-True" headline over '
+        f'decided claims, with the color band as its only grading. There is one grading '
+        f'posture and no reader-selectable alternative: claims are graded as spoken, and '
+        f'absolutes — "record", "never", "always", "first ever" — are read literally.</p>'
         f'<h3 style="margin-top:1.5rem">Who\'s on the panel</h3>'
         f'{models_list}'
         f'<h3 style="margin-top:1.5rem">Source tier hierarchy</h3>'
         f'<p>Evidence items carry a trust tier assigned from the source\'s registered '
-        f'domain. Relevance to the claim ranks first; tier breaks ties and is what the '
-        f'panel is told to weigh on conflicting evidence.</p>'
+        f'domain and path class (e.g. an agency\'s press-release path ranks T7·Pol '
+        f'while its statistical releases rank T1·Gov). Relevance to the claim ranks '
+        f'first; tier breaks ties and is what the panel is told to weigh on '
+        f'conflicting evidence.</p>'
         f'{tier_table}'
         f'<h3 style="margin-top:1.5rem">Known limitations</h3>'
         f'{limitations}'
@@ -7291,6 +7518,7 @@ def _render_about() -> str:
             "evidence, and a second-stage severity check."
         ),
         og_type="website",
+        page_path="about.html",
     )
 
 
@@ -7309,6 +7537,97 @@ def _render_404() -> str:
     )
 
 
+# ── Atom feed (remediation v2, 1.5) ──────────────────────────────────────────
+
+
+def _iso_utc(dt: datetime) -> str:
+    """ISO-8601 UTC with Z suffix; naive datetimes are assumed UTC."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _feed_display_date(date_str: str) -> str:
+    """'2026-03-04' → 'March 04, 2026'; anything unparseable passes through."""
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").strftime("%B %d, %Y")
+    except (TypeError, ValueError):
+        return date_str or "Unknown date"
+
+
+def _render_feed(reports: list[dict], site_url: str) -> str:
+    """Render the Atom feed — one <entry> per reports.json row (the caller
+    passes the freshly sorted index, newest speech first).
+
+    Every value derives from the index row: link/id from the report url,
+    <published> from the speech date, <updated> from the row's per-publish
+    ``generated_at`` stamp (speech-date fallback for legacy rows), the
+    summary from the strict-axis family verdict via ``aggregation``. The
+    feed-level <updated> is the max entry <updated>. All text is
+    XML-escaped. Replaces the static template whose phantom entry and
+    [SITE_URL] placeholder shipped verbatim (1.5).
+    """
+    from xml.sax.saxutils import escape, quoteattr
+
+    entry_blocks: list[str] = []
+    updated_stamps: list[str] = []
+    for r in reports:
+        url = str(r.get("url", ""))
+        stem = Path(url).stem
+        title = f"{r.get('speaker', '')} — {_feed_display_date(r.get('date', ''))}"
+        published = (f"{r['date']}T00:00:00Z" if r.get("date")
+                     else str(r.get("generated_at", "")))
+        updated = str(r.get("generated_at", "") or published)
+        updated_stamps.append(updated)
+        claim_count = r.get("claim_count", 0)
+        dist = (r.get("verdict_distribution_strict")
+                or _agg_project_dist(r.get("verdict_distribution") or {}, "strict"))
+        fam = _agg_family_verdict(dist)
+        summary = (
+            f"{claim_count} claim{'s' if claim_count != 1 else ''} checked. "
+            f"Verdict: {fam.label} — {fam.ratio_text}. "
+            "Multi-model AI fact-check with cited sources."
+        )
+        entry_blocks.append(
+            "  <entry>\n"
+            f"    <title>{escape(title)}</title>\n"
+            f"    <link href={quoteattr(f'{site_url}/{url}')} "
+            'rel="alternate" type="text/html"/>\n'
+            f"    <id>urn:truth-bot:report:{escape(stem)}</id>\n"
+            f"    <published>{escape(published)}</published>\n"
+            f"    <updated>{escape(updated)}</updated>\n"
+            f'    <summary type="text">{escape(summary)}</summary>\n'
+            '    <category term="fact-check"/>\n'
+            '    <category term="speech"/>\n'
+            "  </entry>\n"
+        )
+
+    feed_updated = (max(updated_stamps) if updated_stamps
+                    else _iso_utc(datetime.now(timezone.utc)))
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<feed xmlns="http://www.w3.org/2005/Atom">\n'
+        f"  <title>truth-bot{BETA_TEXT_SUFFIX}</title>\n"
+        "  <subtitle>Automated political fact-checking with multi-model "
+        "consensus</subtitle>\n"
+        f"  <link href={quoteattr(site_url + '/feed.xml')} rel=\"self\" "
+        'type="application/atom+xml"/>\n'
+        f"  <link href={quoteattr(site_url + '/')} rel=\"alternate\" "
+        'type="text/html"/>\n'
+        f"  <link href={quoteattr(site_url + '/corrections.html')} "
+        'rel="related" type="text/html" title="Corrections"/>\n'
+        f"  <updated>{escape(feed_updated)}</updated>\n"
+        "  <id>urn:truth-bot:feed</id>\n"
+        "  <author>\n    <name>truth-bot pipeline</name>\n  </author>\n"
+        f'  <generator version="{PIPELINE_VERSION}">'
+        f"truth-bot{BETA_TEXT_SUFFIX}</generator>\n"
+        "  <rights>Data sourced from public speeches and cited web "
+        "evidence.</rights>\n\n"
+        + "".join(entry_blocks)
+        + "</feed>\n"
+    )
+
+
 # ── SitePublisher ─────────────────────────────────────────────────────────────
 
 class SitePublisher:
@@ -7324,7 +7643,9 @@ class SitePublisher:
 
     def __init__(self, site_root: Optional[str | Path] = None,
                  corrections: Optional[list[dict]] = None,
-                 correction_notes: Optional[list[dict]] = None) -> None:
+                 correction_notes: Optional[list[dict]] = None,
+                 report_aliases: Optional[dict[str, str]] = None,
+                 resolution_changes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
@@ -7334,6 +7655,16 @@ class SitePublisher:
         # rendered on corrections.html each publish. Empty → empty-state page.
         self._corrections: list[dict] = list(corrections or [])
         self._correction_notes: list[dict] = list(correction_notes or [])
+        # F9: net-visible resolution-state changes (verdict crossed a models-split
+        # boundary) — their own section on corrections.html.
+        self._resolution_changes: list[dict] = list(resolution_changes or [])
+        # Dead-URL → stable-slug redirect ledger (DC-3'). Defaults to the
+        # repo's data/report_aliases.json; stubs are only ever emitted for
+        # aliases whose TARGET page exists in this site root, so synthetic /
+        # test publishes are unaffected by the repo ledger.
+        self._report_aliases: dict[str, str] = (
+            dict(report_aliases) if report_aliases is not None
+            else _load_report_aliases())
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -7357,6 +7688,17 @@ class SitePublisher:
                 bundle.speaker = site_report.speaker
             if not bundle.date_str:
                 bundle.date_str = site_report.date_str
+
+        # A5 / C-3(a): announce the stored-tier join BEFORE the pages go out,
+        # so a broken join is visible in the render log rather than only in
+        # reports.json after the fact.
+        _tier_tel = self._tier_meta(site_report)["tier_fallback"]
+        _tier_label = getattr(site_report, "speech_id", "") or site_report.report_id
+        print(f"tier join · {_tier_label}: "
+              f"{_tier_tel['joined']} of {_tier_tel['total']} cited URLs matched a "
+              f"stored evidence-pack tier · fallback rate "
+              f"{_tier_tel['fallback_rate']:.1%} ({_tier_tel['fallback']} "
+              f"re-derived at render time)", flush=True)
 
         # Write report page
         report_html = _render_report(site_report)
@@ -7398,6 +7740,10 @@ class SitePublisher:
         self._write_reports_index(reports_index)
         self._write_claims_index(claims_index)
 
+        # Atom feed renders from the sorted index (1.5) — one entry per
+        # report, absolute links via TRUTHBOT_SITE_URL.
+        self._write_feed(reports_index)
+
         # Regenerate index
         stats = self._compute_stats(reports_index, claims_index)
         index_html = _render_index(reports_index, stats)
@@ -7419,7 +7765,14 @@ class SitePublisher:
         )
         self._write(self._root / "corrections.html",
                     _render_corrections(self._corrections,
-                                        self._correction_notes))
+                                        self._correction_notes,
+                                        self._resolution_changes))
+
+        # Redirect stubs for dead report URLs (DC-3'): whenever a stable
+        # target page exists in this render, every aliased old filename gets
+        # a meta-refresh + canonical stub so previously shared links keep
+        # resolving after the slug rotation.
+        self._write_alias_stubs()
 
         return report_path.resolve()
 
@@ -7437,7 +7790,6 @@ class SitePublisher:
         self._write(self._root / "assets" / "truthbot.js", JS)
         self._copy_icons()
         self._copy_social_assets()
-        self._write_feed()
 
     def _copy_icons(self) -> None:
         """Copy package-shipped icon SVGs to the site's assets/icons/ folder."""
@@ -7466,10 +7818,30 @@ class SitePublisher:
             (self._root / "favicon.ico").write_bytes(ico_src.read_bytes())
             logger.debug("Copied favicon.ico to site root")
 
-    def _write_feed(self) -> None:
-        """Write Atom feed template to site root. Placeholder [SITE_URL] preserved."""
-        (self._root / "feed.xml").write_text(FEED_XML_TEMPLATE, encoding="utf-8")
-        logger.debug("Wrote feed.xml")
+    def _write_alias_stubs(self) -> None:
+        """Emit reports/{old}.html redirect stubs for every alias whose
+        stable target exists in this site root (DC-3').
+
+        Self-alias guard: old == new is skipped (a ledger row that maps a
+        stable slug to itself must never overwrite the real page). Aliases
+        whose target is absent are skipped silently — they belong to
+        speeches not (yet) published into this root."""
+        for old_name, new_name in self._report_aliases.items():
+            if old_name == new_name:
+                continue
+            if not (self._root / "reports" / new_name).exists():
+                continue
+            self._write(self._root / "reports" / old_name,
+                        _render_report_alias_stub(new_name))
+
+    def _write_feed(self, reports: list[dict]) -> None:
+        """Render + write the Atom feed from the freshly sorted reports index
+        — one entry per published report (1.5). Called from ``publish`` after
+        the index is written, never from the asset copier: the feed is data,
+        not a static asset."""
+        (self._root / "feed.xml").write_text(
+            _render_feed(reports, _site_url()), encoding="utf-8")
+        logger.debug("Wrote feed.xml (%d entries)", len(reports))
 
     def _write(self, path: Path, content: str) -> None:
         path.write_text(content, encoding="utf-8")
@@ -7501,10 +7873,31 @@ class SitePublisher:
         p = self._root / "data" / "claims.json"
         p.write_text(json.dumps(claims, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    def _tier_meta(self, sr: SiteReport) -> dict:
+        """Source-tier tally + the A5 join telemetry, as reports.json fields.
+
+        ``tier_fallback`` is the published measurement C-3(a) asks for: over
+        every deduped URL the models cited, how often the renderer found the
+        claim's stored tier (``joined``) and how often it had to re-derive one
+        (``fallback``). A miss is legitimate — a model can cite a URL that was
+        never in the pack — but the RATE is the signal: past a low single-digit
+        percent it means the join is broken or the packs are not the evidence
+        the verdicts were written from, and the tiers on the page stop being
+        the tiers the panel reasoned over. Published rather than logged so it
+        is reviewable after the fact, like every other figure on the site.
+        """
+        counts, tally = tier_counts_with_join(sr)
+        return {"tier_counts": counts, "tier_fallback": tier_join_rate(tally)}
+
     def _report_meta(self, sr: SiteReport) -> dict:
         return {
             "id":                  sr.report_id,
             "date":                sr.date_str,
+            # Publish stamp for the feed's per-entry <updated> (1.5).
+            # Deterministic when the caller sets SiteReport.generated_at
+            # (e.g. from artifact data); otherwise it is the dataclass
+            # default — wall clock at SiteReport construction.
+            "generated_at":        _iso_utc(sr.generated_at),
             "speaker":             sr.speaker,
             "role":                sr.role,
             "venue":               sr.venue,
@@ -7515,16 +7908,18 @@ class SitePublisher:
             "panel_roster":        dict(getattr(sr, "panel_roster", None) or {}),
             "triage_count":        len(getattr(sr, "characterization", None) or []),
             "verdict_distribution": sr.verdict_distribution,
-            # 5-bucket coarse-axis distributions for lens-aware aggregate
-            # rendering on the index page (and external consumers of
-            # reports.json that want the Truthy-scale histogram). The
-            # 6-bucket ``verdict_distribution`` above is kept for backward
-            # compat with anyone already reading reports.json.
+            # 5-bucket coarse-axis distributions (Truthy-scale histograms)
+            # for the index renderer and external consumers of reports.json.
+            # The 6-bucket ``verdict_distribution`` above is kept for
+            # backward compat with anyone already reading reports.json.
+            # ``verdict_distribution_lenient`` is deprecated — single-axis
+            # since remediation v2 (1.8 / DC-4'); it equals strict under the
+            # PCA verdict contract and ships only for data compatibility.
             "verdict_distribution_lenient": sr.verdict_distribution_lenient,
             "verdict_distribution_strict":  sr.verdict_distribution_strict,
             "model_agreement_rate": round(sr.model_agreement_rate, 3),
             "url":                 sr.report_url,
-            "tier_counts":         _tier_counts_for_report(sr),
+            **self._tier_meta(sr),
             # New decomposed speaker/speech fields
             "source_of_claims":                          sr.source_of_claims or sr.speaker,
             "source_of_claims_professional_public_title": sr.source_of_claims_professional_public_title or sr.role,
@@ -7547,6 +7942,9 @@ class SitePublisher:
             # strings on legacy bundles deserialize cleanly; downstream
             # consumers can detect "post-projection" data by checking for
             # non-empty ``coarse_lenient_label``.
+            # ``coarse_lenient_*`` is deprecated — audit/data-only, never
+            # rendered; the site is single-axis (strict) since remediation v2
+            # (1.8 / DC-4' / R-1) and these ship for compat alone.
             "coarse_lenient_label":   bundle.consensus.coarse_lenient_label,
             "coarse_lenient_strength": bundle.consensus.coarse_lenient_strength,
             "coarse_strict_label":     bundle.consensus.coarse_strict_label,
@@ -7579,6 +7977,12 @@ class SitePublisher:
                 "evidence_gate":   getattr(bundle.consensus.provenance,
                                            "evidence_gate", ""),
                 "self_sourced_only": _is_self_sourced_unverified(bundle),
+                # Standing agreed-verdict audit (remediation v2, 1.12):
+                # deterministic-lint findings + the human-review queue bit.
+                "audit_flags":     list(getattr(bundle.consensus.provenance,
+                                                "audit_flags", None) or []),
+                "audit_queue":     bool(getattr(bundle.consensus.provenance,
+                                                "audit_queue", False)),
             },
             "url": f"claims/{bundle.claim.id}.html",
         }
@@ -7614,7 +8018,7 @@ class SitePublisher:
             for label, cnt in r.get("verdict_distribution", {}).items():
                 verdict_totals[label] = verdict_totals.get(label, 0) + cnt
 
-        # 5-bucket coarse-axis aggregates for the lens-aware index. Both
+        # 5-bucket coarse-axis aggregates for the stats export. Both
         # axes are summed across whichever per-report fields exist; legacy
         # reports.json entries that predate the projection layer simply
         # contribute 0s. The renderer falls back to projecting from the
@@ -7631,22 +8035,22 @@ class SitePublisher:
             for label, cnt in (r.get("verdict_distribution_strict") or {}).items():
                 verdict_totals_strict[label] = verdict_totals_strict.get(label, 0) + cnt
         # Fallback projection for legacy reports.json entries that have only
-        # the 6-bucket verdict_distribution. We project each report's
-        # 6-bucket dist into both axes and add it in.
+        # the 6-bucket verdict_distribution: aggregation.project_dist per
+        # axis (1.6) — its non-folding rule keeps a legacy "Models split"
+        # fine bucket out of Unverifiable, unlike the old inline fold.
         for r in reports:
             if r.get("verdict_distribution_lenient") and r.get("verdict_distribution_strict"):
                 continue
             fine = r.get("verdict_distribution") or {}
-            for fine_label, cnt in fine.items():
-                if not r.get("verdict_distribution_lenient"):
-                    lenient_label = COARSE_LENIENT_PROJECTION.get(fine_label, "Unverifiable")
-                    verdict_totals_lenient[lenient_label] = (
-                        verdict_totals_lenient.get(lenient_label, 0) + cnt
+            if not r.get("verdict_distribution_lenient"):
+                for label, cnt in _agg_project_dist(fine, "lenient").items():
+                    verdict_totals_lenient[label] = (
+                        verdict_totals_lenient.get(label, 0) + cnt
                     )
-                if not r.get("verdict_distribution_strict"):
-                    strict_label = COARSE_STRICT_PROJECTION.get(fine_label, "Unverifiable")
-                    verdict_totals_strict[strict_label] = (
-                        verdict_totals_strict.get(strict_label, 0) + cnt
+            if not r.get("verdict_distribution_strict"):
+                for label, cnt in _agg_project_dist(fine, "strict").items():
+                    verdict_totals_strict[label] = (
+                        verdict_totals_strict.get(label, 0) + cnt
                     )
 
         # Distinct leaders reviewed
@@ -7765,6 +8169,7 @@ def _site_report_from_artifact(artifact: dict) -> SiteReport:
         transcript_source_url=meta.get("source_url", "") or "",
         bundles=[],
         characterization=list(artifact.get("characterization", []) or []),
+        speech_id=str(meta.get("speech_id", "") or ""),
     )
 
 

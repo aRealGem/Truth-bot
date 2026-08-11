@@ -1,0 +1,121 @@
+{
+  "speech_id": "biden_2022",
+  "rebuild_of": "8577979b-91e3-48df-b84a-62b2516af91b",
+  "new_run_id": "c733c283-f10f-4410-93d3-d66b18d2697b",
+  "rulings": true,
+  "ruling_sids": [
+    "biden_2022:0019",
+    "biden_2022:0100",
+    "biden_2022:0124",
+    "biden_2022:0137",
+    "biden_2022:0171",
+    "biden_2022:0211",
+    "biden_2022:0284",
+    "biden_2022:0376",
+    "biden_2022:0420",
+    "biden_2022:0427",
+    "biden_2022:0431"
+  ],
+  "mechanism": {
+    "biden_2022:0019": "D15",
+    "biden_2022:0100": "re-score",
+    "biden_2022:0124": "re-score",
+    "biden_2022:0137": "D15",
+    "biden_2022:0171": "D15",
+    "biden_2022:0211": "re-score",
+    "biden_2022:0284": "D15",
+    "biden_2022:0376": "re-score",
+    "biden_2022:0420": "D15",
+    "biden_2022:0427": "re-score",
+    "biden_2022:0431": "D15"
+  },
+  "n_compared": 11,
+  "counts": {
+    "unchanged": 0,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 11,
+    "newly_decided": 0,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 11,
+  "per_sid": [
+    {
+      "sid": "biden_2022:0019",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” Th"
+    },
+    {
+      "sid": "biden_2022:0100",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "I remember when my dad had to leave our home in Scranton, Pennsylvania to find work."
+    },
+    {
+      "sid": "biden_2022:0124",
+      "old": "UNVERIFIABLE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "America used to have the best roads, bridges, and airports on Earth."
+    },
+    {
+      "sid": "biden_2022:0137",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And tonight, I’m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrep"
+    },
+    {
+      "sid": "biden_2022:0171",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "As Ohio Senator Sherrod Brown says, “It’s time to bury the label “Rust Belt.” It’s time."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "old": "MISLEADING",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their "
+    },
+    {
+      "sid": "biden_2022:0284",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month."
+    },
+    {
+      "sid": "biden_2022:0376",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "The constitutional right affirmed in Roe v."
+    },
+    {
+      "sid": "biden_2022:0420",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "One of those soldiers was my son Major Beau Biden."
+    },
+    {
+      "sid": "biden_2022:0427",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "Combat medic in Kosovo and Iraq."
+    },
+    {
+      "sid": "biden_2022:0431",
+      "old": "TRUE",
+      "new": "gated-UNVERIFIABLE",
+      "category": "newly_gated",
+      "text": "He loved building Legos with their daughter."
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "truthbot-dc6-corrections-entries v1",
+  "generated": "2026-08-10",
+  "generation": "v2.3-role-axis-s5cap",
+  "usage": "PUBLICATION RECORD for the R-1 shape correction. FACTS ONLY (S-8): sid, claim text, old and new shape, old and new verdict, and the mechanical reason — including, explicitly, that the correction moves the gate's quota branch. The lineage paragraph is the owner's to write and is deliberately absent.",
+  "changed_total": 0,
+  "ledger_eligible": 0,
+  "not_ledger_representable": 0,
+  "dropped_total": 0,
+  "entries": [],
+  "non_ledger_changes": [],
+  "dropped_rows": [],
+  "shape_changes": [
+    {
+      "sid": "trump_2026:0031",
+      "speech_id": "trump_2026",
+      "claim": "And in the last three months of 2025, it was down to 1.7 percent.",
+      "old_shape": "c-eval",
+      "new_shape": "c-count",
+      "verdict_before": "TRUE",
+      "verdict_after": "TRUE",
+      "verdict_moved": false,
+      "exhibit_attached": true,
+      "reason": "SHAPE CORRECTION: the claim's Layer-A shape was corrected from c-eval to c-count on the claim text alone (the sentence carries no superlative, no causal attribution and no comparison — those belong to the preceding sentence, which is unchanged). The correction MOVES THE GATE'S QUOTA BRANCH: c-count is a ministerial shape, so a source published by the speaker's own organisation counts as a primary record rather than attribution-only at zero weight. It also makes the claim admissible for a computed exhibit, which the c-eval shape forbids. The re-adjudication was run with that exhibit attached — CPILFESL core CPI, ALFRED vintage 2026-02-24, (Dec/Sep)^4-1 = 1.701%, with a second row over the preceding three months, (Sep/Jun)^4-1 = 3.412%, supplying the direction the phrase \"down to\" asserts",
+      "justification": "Justified on the claim text alone, which is the basis the Layer-A classifier is instructed to use: \"And in the last three months of 2025, it was down to 1.7 percent\" contains no superlative, no causal attribution and no comparison — the three c-eval triggers. All of them belong to the PRECEDING sentence (trump_2026:0030, \"my administration has driven core inflation down to the lowest level in more than five years\"), which is correctly c-eval and is not changed. What :0031 states is a bare quantity measured against a published data series, which is c-count. The original c-eval was a Layer-A backfill artifact of reading the sentence in its neighbour's context.",
+      "moves": [
+        {
+          "what": "gate quota branch",
+          "how": "c-count is a MINISTERIAL shape (verdict.evidential_role.MINISTERIAL_SHAPES), so a SELF source becomes PRIMARY_RECORD and a PARTICIPANT source becomes CORROBORANT. Under c-eval, a SELF source was ATTRIBUTION_ONLY and carried quota weight 0."
+        },
+        {
+          "what": "computed-exhibit admissibility",
+          "how": "c-eval is the one shape in publish.computed_exhibit.INADMISSIBLE_SHAPES, so the ratified exhibit was REFUSED for this claim. c-count is not, so it is now admissible and is attached."
+        }
+      ],
+      "excluded_because": "published verdict unchanged — a SHAPE correction, which data/corrections.json's schema (old verdict → new verdict) cannot express. It is recorded here because it changes the gate's quota branch and adds a computed exhibit to the published page."
+    }
+  ],
+  "r1": {
+    "date": "2026-08-10",
+    "speeches": [
+      "trump_2026"
+    ],
+    "claims_reshaped": 1,
+    "verdicts_moved": 0,
+    "exhibits_attached": 1
+  }
+}

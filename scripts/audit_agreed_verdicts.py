@@ -24,10 +24,21 @@ Crash-safe by construction (P67.3 lesson): results append to a JSONL file
 after every claim; re-running with the same --out skips already-audited sids,
 so proxy phantom-budget legs resume cleanly.
 
+Since remediation v2 (1.12) this is a thin CLI over
+``truthbot.verdict.verdict_audit`` — the standing pipeline stage owns the
+DECIDED vocabulary, the agreed-row selection, the deterministic lints
+(``--deterministic``, $0), and the Phase-3 model-pass selection
+(``--sample-k``/``--seed``). The model-call machinery below is kept intact
+but is unreachable without the explicit ``--live`` budget flag.
+
 Usage (repo root):
+  # $0 deterministic lints only (the standing audit, run standalone):
+  PYTHONPATH=. .venv/bin/python scripts/audit_agreed_verdicts.py --deterministic
+
+  # metered model pass (requires the explicit budget flags):
   PYTHONPATH=. .venv/bin/python scripts/audit_agreed_verdicts.py \
-      --out metrics/audits/agreed_verdicts_2026-07-21.jsonl [--limit 10] \
-      [--speech trump_2026] [--dry-run]
+      --out metrics/audits/agreed_verdicts_2026-07-21.jsonl --live [--limit 10] \
+      [--speech trump_2026] [--sample-k 20 --seed 7] [--dry-run]
 """
 from __future__ import annotations
 
@@ -44,7 +55,9 @@ sys.path.insert(0, str(REPO))
 
 import requests
 
-DECIDED = {"TRUE", "FALSE", "MISLEADING"}
+from truthbot.verdict import verdict_audit
+
+DECIDED = verdict_audit.DECIDED  # single source of truth (1.12)
 
 SYSTEM_PROMPT = """\
 You are a senior fact-check reviewer auditing verdicts produced by a panel of
@@ -79,15 +92,9 @@ Respond with STRICT JSON, no prose outside it:
 
 
 def latest_artifacts() -> list[Path]:
-    candidates = sorted((REPO / "metrics" / "pca_runs").glob("*.json"),
-                        key=lambda p: p.stat().st_mtime)
-    latest: dict[str, Path] = {}
-    for p in candidates:
-        d = json.loads(p.read_text(encoding="utf-8"))
-        if "evidence" not in d:
-            continue
-        latest[(d.get("meta") or {}).get("speech_id") or p.stem] = p
-    return list(latest.values())
+    # F4: single-sourced, deterministic head resolution (rebuild_of DAG leaf).
+    from truthbot.publish.heads import publishing_heads
+    return list(publishing_heads().values())
 
 
 def sid_index(sid: str) -> int:
@@ -179,9 +186,52 @@ def call_model(base: str, key: str, prompt: str, model: str) -> dict:
     return parsed
 
 
+def run_deterministic(speech_filter: str = "") -> int:
+    """$0 mode (1.12): the standing deterministic lints over the stored
+    artifacts' decided non-split rows, with per-lint counts. Returns the
+    number of rows with at least one finding. No key, no network, no spend."""
+    from collections import Counter
+    from datetime import date
+
+    total = audited = flagged = 0
+    lint_counts: Counter = Counter()
+    for path in latest_artifacts():
+        artifact = json.loads(path.read_text(encoding="utf-8"))
+        meta = artifact.get("meta") or {}
+        speech = meta.get("speech_id", "")
+        if speech_filter and speech != speech_filter:
+            continue
+        utt = None
+        if meta.get("date"):
+            try:
+                utt = date.fromisoformat(str(meta["date"])[:10])
+            except ValueError:
+                utt = None
+        rows = artifact.get("rows") or []
+        total += len(rows)
+        result = verdict_audit.audit_rows(
+            artifact.get("claims") or [], rows,
+            artifact.get("evidence") or {}, utterance=utt)
+        audited += len(result)
+        for sid, entry in sorted(result.items()):
+            if not entry["audit_flags"]:
+                continue
+            flagged += 1
+            lint_counts.update(entry["audit_flags"])
+            queue = "  → RE-ADJUDICATION QUEUE" if entry["audit_queue"] else ""
+            print(f"  ⚑ {sid}: {', '.join(entry['audit_flags'])}{queue}")
+    print(f"\ndeterministic audit: {audited}/{total} decided non-split rows "
+          f"linted; {flagged} row(s) with findings")
+    for lint, n in lint_counts.most_common():
+        print(f"  {lint}: {n} ({n / audited:.2%} of audited)" if audited
+              else f"  {lint}: {n}")
+    return flagged
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--out", required=True, help="JSONL results path (appended; resume-safe)")
+    ap.add_argument("--out", help="JSONL results path (appended; resume-safe); "
+                    "required for the model pass")
     ap.add_argument("--limit", type=int, default=0, help="stop after N new audits (metering)")
     ap.add_argument("--speech", default="", help="restrict to one speech_id")
     # Proxy ALIAS (virtual keys are alias-scoped): "claude-sonnet" resolves to
@@ -189,7 +239,30 @@ def main() -> None:
     ap.add_argument("--model", default="claude-sonnet")
     ap.add_argument("--dry-run", action="store_true",
                     help="print selection counts + the first prompt; no calls")
+    # Remediation v2 (1.12) — thin-CLI modes over verdict_audit:
+    ap.add_argument("--deterministic", action="store_true",
+                    help="run ONLY the $0 deterministic lints and exit "
+                         "(no key, no model, no spend)")
+    ap.add_argument("--live", action="store_true",
+                    help="EXPLICIT budget flag: without it (or --dry-run) the "
+                         "model pass refuses to run — zero unauthorized spend")
+    ap.add_argument("--sample-k", type=int, default=-1,
+                    help="use the Phase-3 selection (crm114 overrides + gate "
+                         "rows + a K-row seeded sample) instead of all "
+                         "agreed decided rows")
+    ap.add_argument("--seed", type=int, default=0,
+                    help="seed for --sample-k's random sample")
     args = ap.parse_args()
+
+    if args.deterministic:
+        run_deterministic(args.speech)
+        return
+    if not args.out:
+        ap.error("--out is required for the model pass "
+                 "(or use --deterministic for the $0 lints)")
+    if not args.dry_run and not args.live:
+        ap.error("the model pass spends budget: pass --live explicitly "
+                 "(or --dry-run / --deterministic for $0 modes)")
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -216,10 +289,18 @@ def main() -> None:
         claims_by_sid = {c["sid"]: c for c in artifact.get("claims") or []}
         evidence = artifact.get("evidence") or {}
 
-        rows = [r for r in artifact.get("rows") or []
-                if not r.get("escalated") and (r.get("verdict") or "") in DECIDED]
-        print(f"{speech}: {len(rows)} non-escalated decided claims "
-              f"({len(done & {r['sid'] for r in rows})} already audited)")
+        # Selection lives in verdict_audit (1.12): the classic agreed-row set,
+        # or the Phase-3 model-pass contract when --sample-k is given.
+        if args.sample_k >= 0:
+            rows = verdict_audit.select_model_audit_rows(
+                artifact.get("rows") or [], k=args.sample_k, seed=args.seed)
+            print(f"{speech}: {len(rows)} rows via Phase-3 selection "
+                  f"(k={args.sample_k}, seed={args.seed}; "
+                  f"{len(done & {r['sid'] for r in rows})} already audited)")
+        else:
+            rows = verdict_audit.agreed_decided_rows(artifact.get("rows") or [])
+            print(f"{speech}: {len(rows)} non-escalated decided claims "
+                  f"({len(done & {r['sid'] for r in rows})} already audited)")
 
         for row in rows:
             sid = row["sid"]
@@ -243,7 +324,9 @@ def main() -> None:
             record = {
                 "sid": sid, "speech": speech,
                 "shipped_verdict": row.get("verdict"),
-                "escalated": False,
+                # False for the classic agreed-row selection; the Phase-3
+                # selection (--sample-k) can include escalated crm114/gate rows.
+                "escalated": bool(row.get("escalated", False)),
                 **{k: result.get(k) for k in
                    ("verdict_sound", "error_classes", "suggested_verdict",
                     "confidence", "explanation", "_usage")},

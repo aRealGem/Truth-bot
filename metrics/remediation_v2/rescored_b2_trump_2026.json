@@ -1,0 +1,2493 @@
+{
+  "schema": "truthbot-rescore-sidecar v1",
+  "speech_id": "trump_2026",
+  "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+  "model": "claude-haiku",
+  "generated": "2026-08-08T17:32:08.645124+00:00",
+  "spend_usd": 0.207695,
+  "sids": {
+    "trump_2026:0010": [
+      {
+        "source_url": "https://www.bea.gov/news/2025/gross-domestic-product-4th-quarter-and-year-2024-third-estimate-gdp-industry-and",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'stagnant economy' inherited 12 months ago (early 2025); source shows real GDP grew 2.8% in 2024 and 2.4% in Q4 2024, indicating growth not stagnation."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02122025.htm",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'inflation at record levels'; source shows Jan 2025 CPI at 3.0% YoY, far below the 2022 peak of 9.1%, contradicting record-level claim."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2025/gross-domestic-product-4th-quarter-and-year-2024-advance-estimate",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'stagnant economy' inherited; source shows Q4 2024 real GDP at 2.3% and full-year 2024 at 2.8%, indicating growth not stagnation."
+      },
+      {
+        "source_url": "https://www.cnbc.com/2025/02/12/cpi-january-2025.html",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'inflation at record levels'; source shows Jan 2025 CPI at 3.0% YoY versus 2022 peak of 9.1%, contradicting the record-level assertion."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/cbp-releases-december-2024-monthly-update",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'wide open border'; source shows Dec 2024 Border Patrol encounters at ~47,330, down 81% year-over-year, indicating tightening not an open border."
+      },
+      {
+        "source_url": "https://www.fbi.gov/news/press-releases/fbi-releases-2023-crime-in-the-nation-statistics",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'rampant crime at home'; source shows 2023 national violent crime and murder fell, contradicting the rampant crime characterization."
+      },
+      {
+        "source_url": "https://platform.migrationpolicy.org/article/frequently-requested-statistics-immigrants-and-immigration-united-states-2025",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Source provides FY2024 encounter context (~2.9M nationwide, ~2.1M southern border) but does not directly assess whether the border was 'wide open' at the time of the speech."
+      },
+      {
+        "source_url": "https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'rampant crime at home'; source shows 2024 violent crime fell 4.5% and murder down ~15% to lowest since 1969, contradicting rampant crime claim."
+      },
+      {
+        "source_url": "https://www.army.mil/article/280028/army_exceeds_fy_2024_active_duty_recruiting_goals",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'horrendous recruitment for military'; source shows Army exceeded FY2024 recruiting goal of 55,300 recruits, indicating success not horrendous recruitment."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/61735",
+        "relevance_score": 0.55,
+        "supports_claim": null,
+        "one_line_why": "Source documents migration policy changes and encounter declines after June 2024 but does not directly assess the state of the border at the time of the speech."
+      }
+    ],
+    "trump_2026:0015": [
+      {
+        "source_url": "https://publicstats.cbp.gov/t/PublicFacing/views/CBPNationwideEncountersFEBFY26/NW-SBO-NBOState2619",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "CBP dashboard shows nonzero encounter counts in Feb 2026, contradicting an absolute 'secure' claim that implies zero border activity."
+      },
+      {
+        "source_url": "https://www.pewresearch.org/short-reads/2026/02/02/migrant-encounters-at-the-us-mexico-border-are-at-their-lowest-level-in-more-than-50-years/",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "Pew analysis corroborates historically low encounters (lowest in 50+ years), supporting a characterization of the border as secure relative to recent history."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/stats",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "Primary CBP records show ongoing encounters, which contradicts an absolute 'secure' framing if security means zero crossings."
+      },
+      {
+        "source_url": "https://files.gao.gov/reports/GAO-26-107425/index.html",
+        "relevance_score": 0.55,
+        "supports_claim": false,
+        "one_line_why": "GAO findings of custody and medical-care shortcomings indicate operational strain, suggesting the border system is not fully secure operationally."
+      },
+      {
+        "source_url": "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month-zero-releases-border",
+        "relevance_score": 0.65,
+        "supports_claim": true,
+        "one_line_why": "Nine straight months of zero releases at the border supports a claim of heightened border security and control."
+      },
+      {
+        "source_url": "https://files.gao.gov/reports/GAO-25-107346/index.html",
+        "relevance_score": 0.5,
+        "supports_claim": false,
+        "one_line_why": "GAO documentation of planning gaps and reliance on temporary facilities suggests systemic vulnerabilities, background context rather than direct contradiction."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/one-year-most-secure-border-history",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "CBP official framing of FY2026 as most secure border in history with record-low crossings directly corroborates the claim."
+      },
+      {
+        "source_url": "https://www.dhs.gov/news/2025/11/05/dhs-delivers-historic-start-border-crossings-fy-2026",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "DHS documents historic low border crossings entering FY2026, establishing the factual basis for characterizing the border as secure."
+      },
+      {
+        "source_url": "https://ohss.dhs.gov/khsm/cbp-encounters",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Reference to a data source without specific figures or findings; does not itself support or refute the claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Verbatim statement of the claim itself from official transcript; confirms the claim was made but does not evaluate its truth."
+      }
+    ],
+    "trump_2026:0017": [
+      {
+        "source_url": "https://www.bea.gov/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim says economy is 'roaring like never before'; BEA data shows real GDP slowed to 1.4% in Q4 2025 from 4.4% in Q3, with full-year 2.2% vs 2.8% in 2024—deceleration, not acceleration."
+      },
+      {
+        "source_url": "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month-zero-releases-border",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts 'border is secure'; DHS reports 9 consecutive months of zero border releases, directly supporting the assertion."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/one-year-most-secure-border-history",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts 'border is secure'; CBP official release documents record-low encounters and zero releases, calling it most secure border in history."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Claim says inflation is 'plummeting'; BLS CPI shows January 2.4% year-over-year (down from 2.7%), which is moderating but not plummeting."
+      },
+      {
+        "source_url": "https://www.pewresearch.org/short-reads/2026/02/02/migrant-encounters-at-the-us-mexico-border-are-at-their-lowest-level-in-more-than-50-years/",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts 'border is secure'; Pew analysis of CBP data shows FY2025 encounters fell to lowest level since 1970 (237,538), supporting border security claim."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/historic-9th-straight-month-zero-releases-border",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts 'border is secure'; CBP primary data shows January 2026 SW apprehensions ~6,073, down 84% year-over-year, supporting secure border assertion."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-january-2026",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Claim says 'incomes are rising fast'; BEA data shows personal income +0.4% in January and real PCE only +0.1%, indicating modest real gains, not fast growth."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/realer_02132026.htm",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Claim says 'incomes are rising fast'; BLS real earnings show real average hourly earnings up ~1.2% year-over-year, which is modest, not fast."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Snippet identifies a baseline CPI release but provides no figures or trend data to evaluate the 'plummeting' inflation claim."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-december-2025",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Claim says 'incomes are rising fast'; BEA shows personal income rose 0.3% in December 2025, a modest monthly gain, not rapid."
+      }
+    ],
+    "trump_2026:0019": [
+      {
+        "source_url": "https://www.cbp.gov/sites/default/files/2025-06/25_0630_cbp-snapshot-fy24.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'strongest and most secure border in American history'; CBP FY2024 data shows ~2.1M encounters, contradicting 'most secure' characterization for that period."
+      },
+      {
+        "source_url": "https://www.pewresearch.org/short-reads/2026/02/02/migrant-encounters-at-the-us-mexico-border-are-at-their-lowest-level-in-more-than-50-years/",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Claim's second half asserts current border is now most secure; FY2025 southwest-border encounters of 237,538 represent historic low, supporting the 'now secure' assertion despite prior high numbers."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/one-year-most-secure-border-history",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official CBP framing directly echoes claim's core assertion that border is now most secure in history."
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/gao-26-107425.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "GAO documents ~2M encounters per year in FY2021–FY2024, establishing baseline for 'millions poured across' claim but contradicting 'most secure' for those four years."
+      },
+      {
+        "source_url": "https://www.dhs.gov/news/2026/02/04/historic-9th-straight-month-zero-releases-border",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "DHS January 2026 data shows record-low encounters and 9 consecutive months of zero releases, supporting the claim's assertion of current border security."
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/2024/10/07/2024-22602/securing-the-border",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Federal Register rule documents regulatory steps taken in 2024 to limit admissions; provides context for policy shift but does not directly measure border security or encounter volumes."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/historic-9th-straight-month-zero-releases-border",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "CBP January 2026 historic-low encounters and 9th straight month of zero releases directly support the claim's assertion of current border being most secure."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2025-03-25/pdf/2025-05128.pdf",
+        "relevance_score": 0.65,
+        "supports_claim": null,
+        "one_line_why": "DHS termination of parole programs evidences prior large admissions and policy reversal but does not directly measure current border security or validate 'most secure' claim."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/IN12457.html",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "CRS documents record-high FY2023 encounters and 2,135,005 in FY2024, contradicting claim that the prior four years had a 'most secure' border."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-24-107051",
+        "relevance_score": 0.75,
+        "supports_claim": false,
+        "one_line_why": "GAO notes millions of encounters and data/oversight gaps, contradicting claim that aliens poured across 'totally unvetted and unchecked.'"
+      }
+    ],
+    "trump_2026:0022": [
+      {
+        "source_url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843827",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 56% drop in fentanyl flow; forensic-seizure data show only 28.8% → 23.2% (a 19.4% relative decline), contradicting the 56% figure.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.dhs.gov/news/2025/09/30/cbp-reports-drug-seizures-surge-again-august",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "DHS press release directly states fentanyl trafficking at southern border down 56% vs same period 2024, matching the claim's assertion and apparent source."
+      },
+      {
+        "source_url": "https://files.gao.gov/reports/GAO-25-107667/index.html",
+        "relevance_score": 0.6,
+        "supports_claim": false,
+        "one_line_why": "GAO data on ~460,000 lbs seized FY2021–FY2024 shows large recent seizure volumes rather than a clear one-year 56% drop, undermining the specific one-year decline claim."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/cbp-releases-january-2025-monthly-update",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Single monthly seizure figure (1,029 lbs January 2025) provides a data point but does not directly address the one-year 56% change claim."
+      },
+      {
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/one-year-most-secure-border-history",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Official CBP one-year retrospective published just before utterance touts fentanyl-flow declines, consistent with the 56% claim's framing and timing."
+      },
+      {
+        "source_url": "https://www.cbp.gov/border-security/frontline-against-fentanyl",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "CBP record seizures in FY2023–FY2024 contradict a simple one-year 56% reduction in flow, suggesting seizures remained high rather than declining sharply."
+      },
+      {
+        "source_url": "https://www.washingtonexaminer.com/news/investigations/3885845/why-less-fentanyl-seized-at-border-despite-trump-crackdown/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Methodological critique questioning whether lower seizures equal lower flow is relevant background but does not directly measure the 56% figure itself."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/GAO-26-107918",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "GAO explanation of limits of seizure-based flow estimates is relevant context but does not directly address whether the 56% claim is accurate."
+      },
+      {
+        "source_url": "https://files.gao.gov/reports/GAO-26-107501/index.html",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Northern border seizure and apprehension data are geographically distinct from the southern border fentanyl flow claim and do not bear on it."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Congressional Record transcript of State of the Union contains the exact 56% claim, confirming the utterance was made as stated."
+      }
+    ],
+    "trump_2026:0024": [
+      {
+        "source_url": "https://counciloncj.org/whats-driving-the-drop-in-homicide-how-low-might-it-go/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "CCJ report directly states 2025 homicide rate is on pace for largest single-year drop and lowest rate in records back to 1900 (126+ years), matching both parts of the claim."
+      },
+      {
+        "source_url": "https://counciloncj.org/crime-trends-in-u-s-cities-year-end-2025-update/",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Projects ~21% homicide drop and ~4.0/100k rate lowest since 1900, corroborating both the magnitude of decline and the 125+ year low assertion."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/murders-plummet-crime-trends-2025/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "CBS/CCJ report confirms ~21% drop as largest one-year decline and potentially lowest rate since 1900, directly supporting both elements of the claim."
+      },
+      {
+        "source_url": "https://cde.ucr.cjis.gov/LATEST/resources/reports/Reported%20Crimes%20in%20the%20Nation%20Quick%20Stats.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Provides 2024 baseline (5.0 per 100k) useful for context but does not itself address the 2025 decline or 125-year comparison."
+      },
+      {
+        "source_url": "https://www.cdc.gov/nchs/products/databriefs/db548.htm",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Documents 2024 homicide declines and life expectancy but does not address the 2025 figures or 125-year historical claim."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/releases/2026/02/president-trump-returned-our-nation-to-law-and-order/?query-11-page=50",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House statement explicitly confirms murder rate fell to lowest in 125 years and largest single-year drop in recorded history, directly matching the claim's language and assertions."
+      },
+      {
+        "source_url": "https://www.fbi.gov/news/press-releases/fbi-releases-2024-reported-crimes-in-the-nation-statistics",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "2024 FBI data showing -14.9% decline supports record-decline framing but is prior year and does not address the 125-year claim."
+      },
+      {
+        "source_url": "https://www.nytimes.com/2026/01/22/us/murder-rate-drop-report.html",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "NYT reports 2025 homicide rate lowest in 125 years and largest single-year drop per CCJ, directly corroborating both parts of the claim."
+      }
+    ],
+    "trump_2026:0029": [
+      {
+        "source_url": "https://www.bls.gov/cpi/tables/supplemental-files/historical-cpi-u-202411.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "BLS historical CPI series shows late-1970s/1980s annual inflation far exceeded 2021–2023 peak, directly contradicting 'worst in history' claim."
+      },
+      {
+        "source_url": "https://www.usinflationcalculator.com/inflation/historical-inflation-rates/",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "CPI table shows 2022 peak of ~9.1% far below 1917–1920 highs, directly contradicting 'worst in history' assertion."
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/monetarypolicy/2024-03-mpr-part1.htm",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Fed's PCE inflation peak of ~7.1% in 2022 is documented as lower than earlier decades' peaks, contradicting the 'worst in history' claim."
+      },
+      {
+        "source_url": "https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Full CPI series 1913–2026 shows earlier eras had higher inflation than Biden-era peak, directly refuting 'worst in history'."
+      },
+      {
+        "source_url": "https://www.cbo.gov/system/files/2024-02/59710-Outlook-2024.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "CBO report documents pandemic fiscal support and inflation drivers but does not directly compare Biden-era inflation to historical peaks or claim 'worst in history'."
+      }
+    ],
+    "trump_2026:0030": [
+      {
+        "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-december-2025",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim says core inflation driven to lowest in 5+ years; BEA primary data shows core PCE 3.0% YoY December 2025, up from prior month, contradicting both the direction and the five-year-low assertion."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Official BLS core CPI for December 2025 = 2.6% YoY; this is recent but not demonstrably a five-year low without historical comparison, and does not corroborate the claim's framing of a downward-driven achievement.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Official BLS core CPI January 2026 = 2.5%, which the snippet identifies as 'the recent low cited in the claim,' directly supporting the lowest-in-five-years assertion if January 2026 is within 12 months of the speech date."
+      },
+      {
+        "source_url": "https://www.richmondfed.org/research/national_economy/macro_minute/2026/price_pressures_pop_at_end_of_2025",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Richmond Fed data on core PCE three- and six-month annualized rates ~3% at end of 2025 contradicts the claim that core inflation has been driven down to a five-year low."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-october-and-november-2025",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "BEA core PCE trending upward (2.7% Oct → 2.8% Nov) rather than down to a five-year low directly contradicts the claim's assertion of downward movement."
+      },
+      {
+        "source_url": "https://www.bea.gov/index.php/news/2026/personal-income-and-outlays-december-2025",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "BEA release identified but no specific figures provided; background material on data availability rather than a measurement that can be compared to the claim."
+      },
+      {
+        "source_url": "https://www.reuters.com/technology/licensable-video-trump-touts-his-economic-agenda-state-union-2026-02-24/",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "Confirms the exact claim was made in the Feb 24, 2026 State of the Union but does not itself provide inflation data to verify or refute the assertion."
+      },
+      {
+        "source_url": "https://www.bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Reference to a data landing page for verification but no actual figures or historical series provided; background pointer rather than evidence."
+      },
+      {
+        "source_url": "https://www.washingtonexaminer.com/news/white-house/4469755/trump-boasts-falling-inflation-during-joint-address-context/",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Press coverage reports core CPI 2.5% (year ending January) and administration's framing of 'lowest since March 2021,' which if accurate would support a five-year low claim (Feb 2026 minus 5 years ≈ Feb 2021).",
+        "arithmetic_hinge": true
+      }
+    ],
+    "trump_2026:0031": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Primary BLS December 2025 CPI release is the direct source document from which the ~1.7% three-month annualized core rate is computed.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_10242025.htm",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Official BLS September 2025 CPI index level is a component input to the three-month annualized calculation spanning Q4 2025.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/releases/2025/12/trump-delivers-core-inflation-hits-lowest-level-in-nearly-five-years/",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "White House statement frames core inflation at lowest level in nearly five years, corroborating the claim's assertion about Q4 2025 performance."
+      },
+      {
+        "source_url": "https://www.bls.gov/cpi/tables/supplemental-files/home.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "BLS supplemental XLSX tables for December 2025 contain the precise seasonally-adjusted index series levels needed to verify the 1.7% three-month annualized calculation.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.morningstar.com/economy/key-takeaways-after-best-news-core-inflation-long-time",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Established outlet analysis confirms core-inflation three-month annualized rate reached lowest since early 2021, consistent with claim's Q4 2025 figure."
+      },
+      {
+        "source_url": "https://alfred.stlouisfed.org/release?ob=pv&od=desc&rd=2026-01-13&rid=10",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "ALFRED St. Louis Fed vintage data for CPILFESL (core CPI series) December 2025 provides official BLS series data used in three-month annualized calculations.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://tradingeconomics.com/united-states/core-inflation-rate/news/511088",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "Data outlet reports core inflation hit lowest since March 2021, consistent with the claim's characterization of Q4 2025 as a multi-year low."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2026/personal-income-and-outlays-october-and-november-2025",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "BEA core PCE (2.7–2.8% year-over-year) is a different inflation measure and basis than the claim's 1.7% three-month annualized core CPI; not directly comparable."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/cpi-report-today-inflation-december-2025-tariffs/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "December 2025 CPI year-over-year rate (2.7%) is a different time-aggregation and annualization method than the claim's 1.7% three-month annualized core rate; provides context but does not directly verify the specific figure."
+      }
+    ],
+    "trump_2026:0032": [
+      {
+        "source_url": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=EMM_EPMR_PTE_SCA_DPG",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "EIA primary series directly confirms California regular gasoline peaked above $6/gallon in June 2022, matching the claim's assertion of some states exceeding $6."
+      },
+      {
+        "source_url": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=w&n=pet&s=emm_epm0r_pte_sca_dpg",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "EIA weekly state series provides specific data points (6.364 on 2022-06-13, 6.315 on 2022-10-03) showing California exceeded $6/gallon, directly supporting the claim."
+      },
+      {
+        "source_url": "https://www.eia.gov/dnav/pet/pet_pri_gnd_dcus_sca_w.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "EIA California retail gasoline price hub with historical weekly averages documenting 2022 record above $6/gallon corroborates the claim's core assertion."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=61162",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "EIA national average of $5.01 in June 2022 provides context but does not address the claim's specific assertion about some states reaching over $6; national average differs from state peaks."
+      },
+      {
+        "source_url": "https://apnews.com/article/e2e3e79cc374ca09afd6867351fe6d35",
+        "relevance_score": 0.65,
+        "supports_claim": true,
+        "one_line_why": "AP article discusses California's 2022 price spikes and state action, supporting the general claim about high prices in some states, though it does not cite the specific $6+ figure."
+      },
+      {
+        "source_url": "https://gasprices.aaa.com/state-gas-price-averages/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "AAA official state-by-state averages cite $6.44 California daily peak on June 14, 2022, directly confirming the claim that gasoline reached over $6 in some states."
+      },
+      {
+        "source_url": "https://apnews.com/article/bbea1826c0d5d472273f97ad86b870f8",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "AP reporting recounts 2022 California spikes noting prices rose to more than about $6.40 per gallon at peak, directly supporting the claim's assertion."
+      },
+      {
+        "source_url": "https://newsroom.aaa.com/2026/02/gas-prices-edge-higher-as-february-kicks-off/",
+        "relevance_score": 0.1,
+        "supports_claim": null,
+        "one_line_why": "AAA early-Feb 2026 national average of $2.89 provides current context but does not address the historical peak claim about some states exceeding $6."
+      },
+      {
+        "source_url": "https://www.eia.gov/petroleum/gasdiesel/",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Generic EIA weekly gasoline update description is too general to confirm or refute the specific claim about some states reaching over $6/gallon."
+      }
+    ],
+    "trump_2026:0043": [
+      {
+        "source_url": "https://www.bea.gov/news/2025/new-foreign-direct-investment-united-states-2024",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim says 'less than $1 trillion in four long years'; snippet shows 2024 FDI was $151B, and notes it was below the 2014–2023 average, implying annual figures in that range—summing four years of ~$150B each yields ~$600B, well below $1T, bu",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2024/new-foreign-direct-investment-united-states-2023",
+        "relevance_score": 0.85,
+        "supports_claim": null,
+        "one_line_why": "Official BEA data showing 2023 FDI of $148.8B is a component of a potential four-year sum but does not itself state or contradict the claim's four-year total."
+      },
+      {
+        "source_url": "https://bidenwhitehouse.archives.gov/briefing-room/blog/2024/11/26/the-biden-harris-administration-has-catalyzed-1-trillion-in-new-u-s-private-sector-clean-energy-semiconductor-and-other-advanced-manufacturing-investment/",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Snippet reports Biden administration's own claim of $1 trillion in catalyzed private-sector investment, which directly contradicts the claim that the administration 'got less than $1 trillion'."
+      },
+      {
+        "source_url": "https://www.bea.gov/data/intl-trade-investment/new-foreign-direct-investment-united-states/supplemental-data",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Reference to downloadable BEA data tables covering 2014–2025 is a pointer to primary data but does not itself contain or state the four-year total at issue."
+      },
+      {
+        "source_url": "https://apps.bea.gov/scb/issues/2024/08-august/pdf/0824-foreign-direct-investment.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "BEA visual essay with charts and corrections is background context on FDI measurement but does not state the four-year Biden-era total."
+      },
+      {
+        "source_url": "https://www.piie.com/blogs/realtime-economics/2026/america-first-investment-pledges-big-numbers-uncertain-results",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Peterson Institute comparison of Biden vs. Trump investment pledges is commentary on the topic but does not provide the specific four-year figure needed to verify the claim."
+      },
+      {
+        "source_url": "https://apps.bea.gov/scb/issues/2025/08-august/0825-foreign-direct-investment.htm",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "BEA visual essay summarizing 2024 FDI ($151.0B) and multi-year context (2014–2024 series) is a pointer to data but does not itself state the four-year Biden total."
+      },
+      {
+        "source_url": "https://www.cato.org/commentary/trumps-18-trillion-fantasy",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Cato Institute scrutiny of how 'new investment' is counted is methodological background relevant to interpreting figures but does not provide the four-year total."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2024/direct-investment-country-and-industry-2023",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "BEA release on direct investment positions and revisions provides broader FDI context but does not state the four-year new investment total."
+      },
+      {
+        "source_url": "https://apps.bea.gov/iTable/?isuri=1&reqid=2&step=3&step1prompt1=1&step1prompt2=3&step2prompt3=1",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "BEA iTable reference to primary time-series data for new FDI by year is a pointer to the underlying data but does not itself state the four-year sum."
+      }
+    ],
+    "trump_2026:0046": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official Congressional Record confirms the speaker made the exact $18 trillion / <$1 trillion comparison in the State of the Union."
+      },
+      {
+        "source_url": "https://www.bloomberg.com/graphics/2025-trump-investment-boom-trillions/",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Bloomberg audit finds only ~$7T real of $9.6T claimed by White House, contradicting the $18 trillion figure cited in the claim."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/investments/",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Identifies the White House running list as the source behind the figures but does not itself state the $18 trillion or <$1 trillion amounts."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/releases/2026/03/trump-effect-a-running-list-of-new-u-s-investment-in-president-trumps-second-term/",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Identifies the White House running list as the primary source behind the cited figure but does not state the actual dollar amounts."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2025/new-foreign-direct-investment-united-states-2024",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "BEA reports 2024 foreign direct investment was $151.0 billion annually, far below the $18 trillion annual figure claimed."
+      },
+      {
+        "source_url": "https://www.cato.org/commentary/trumps-18-trillion-fantasy",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Cato reports the $18 trillion figure is roughly double the White House's own $9.6 trillion tracker and consists largely of unenforceable pledges."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2024/new-foreign-direct-investment-united-states-2023",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "BEA data for 2021–2023 shows cumulative FDI under $1 trillion, contradicting the claim's assertion of 'much more than $18 trillion for one year.'",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://apnews.com/article/c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Associated Press transcript confirms the speaker made the $18 trillion / <$1 trillion comparison in the Feb 24, 2026 State of the Union."
+      },
+      {
+        "source_url": "https://apps.bea.gov/scb/issues/2025/11-november/1125-nea-annual-update.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "General macro data on gross private domestic investment does not address the specific $18 trillion or <$1 trillion figures in the claim."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/miami/news/trump-20-trillion-new-us-investments-numbers-dont-add-up/",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "CBS News finds no evidence total commitments approach $18–20 trillion; actual 2025 new foreign direct investment was ~$232 billion."
+      }
+    ],
+    "trump_2026:0049": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.htm",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 70,000 new construction jobs in a short period; BLS January 2026 data shows only 33,000 added in that month and 44,000 year-over-year."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2026/total-nonfarm-payroll-employment-up-by-130000-in-january-2026.htm",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "BLS Economics Daily confirms January 2026 construction gain of 33,000 jobs, directly contradicting the 70,000 claim."
+      },
+      {
+        "source_url": "https://www.agc.org/sites/default/files/users/user21902/datadigest20260213.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "AGC analysis of BLS data reports +33,000 construction jobs in January 2026 and +44,000 year-over-year, both far below 70,000."
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/economicdata/empsit_02112026.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Official DOL/BLS release shows construction +33,000 in January, well below the claimed 70,000."
+      },
+      {
+        "source_url": "https://apnews.com/article/donald-trump-transcript-state-of-union-2026-c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Confirms the claim was made in the State of the Union transcript but does not provide employment data to verify or refute the 70,000 figure."
+      },
+      {
+        "source_url": "https://www.enr.com/articles/62507-bls-construction-jobs-up-in-january",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Established construction outlet reports BLS January construction gain of 33,000 jobs, contradicting the 70,000 assertion."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600165/pdf/DCPD-202600165.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Official White House transcript confirms the 70,000 claim was stated but provides no employment data to verify the assertion."
+      },
+      {
+        "source_url": "https://www.bls.gov/iag/tgs/iag23.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Generic reference to BLS construction employment data through mid-2026 without specific figures provided to compare against the 70,000 claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/ces/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Reference to BLS Current Employment Statistics landing page for construction payroll series without specific data points stated to evaluate the claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01092026.htm",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "December 2025 construction employment was essentially flat, providing context that undermines a claim of a sudden 70,000-job surge in the following short period."
+      }
+    ],
+    "trump_2026:0052": [
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=67045",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "EIA reports U.S. crude at 13.6M b/d record but does not attribute or confirm a >600k b/d jump; absence of the claimed increase in the primary production data."
+      },
+      {
+        "source_url": "https://www.washingtontimes.com/news/2026/feb/24/trump-says-us-received-80-million-barrels-oil-venezuela/",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Reports the exact SOTU claim verbatim but does not itself verify or fact-check the 80M barrels figure; repeats the assertion without independent measurement."
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/fact-sheet-president-trump-restoring-prosperity-safety-and-security-united-states-and",
+        "relevance_score": 0.75,
+        "supports_claim": false,
+        "one_line_why": "Official DOE fact sheet cites ~380k bpd early flow rate; if sustained over six weeks (42 days) yields ~16M barrels, far short of 80M claimed received by late February.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.cnn.com/2026/01/06/business/venezuela-turning-over-oil-trump",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Original deal framework was 30–50M barrels total to be sold over time; claim of 80M already received by late February contradicts the total deal size announced six weeks prior."
+      },
+      {
+        "source_url": "https://www.reuters.com/business/energy/trump-says-venezuela-turn-over-30-50-million-barrels-oil-us-2026-01-06/",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Reuters (Jan 6, 2026) reports administration stated Venezuela would 'turn over' about 30–50M barrels, not 80M+; contradicts the claim's 80M figure."
+      },
+      {
+        "source_url": "https://www.reuters.com/business/energy/venezuelan-oil-exports-under-supply-deal-with-us-progressing-slowly-documents-data-2026-01-21/",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Vessel tracking and PDVSA documents show only ~7.8M barrels exported under the U.S. deal by Jan 21, 2026; claim of 80M received by late February is unsupported by actual shipment data."
+      },
+      {
+        "source_url": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=WCRFPUS2",
+        "relevance_score": 0.85,
+        "supports_claim": null,
+        "one_line_why": "Primary EIA weekly crude production series is the measurement tool for testing the +600k b/d claim but snippet does not state the series values themselves."
+      },
+      {
+        "source_url": "https://apnews.com/article/c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "AP transcript confirms the claim was made in the SOTU address but does not verify the factual accuracy of either the 600k b/d or 80M barrel figures."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=66844",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "EIA forecast shows U.S. crude output to decrease slightly in 2026, contradicting the framing of a major production surge implied by the +600k b/d claim."
+      },
+      {
+        "source_url": "https://www.energy.gov/articles/fact-sheet-delivering-us-oil-and-natural-gas-production",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "DOE fact sheet touts production gains but snippet does not specify the figures or time periods; background context rather than a measurement against the claim's specific quantities."
+      }
+    ],
+    "trump_2026:0053": [
+      {
+        "source_url": "https://www.eia.gov/outlooks/steo/archives/Feb26.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts all-time high production; source reports 2025 US dry gas production was a record 107.6 Bcf/d."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=67166",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts all-time high; source confirms marketed natural gas production hit new record highs in 2026 outlook."
+      },
+      {
+        "source_url": "https://energynow.com/2026/02/us-natgas-output-to-hit-record-high-in-2026-while-demand-holds-steady-eia-says/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts all-time high production; source reports 2025 record 107.6 Bcf/d rising to projected 2026 record 110.0 Bcf/d."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=67345",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim attributes record to 'drill baby drill' policy; source explicitly states 2025 record 118.5 Bcf/d reflects Appalachia/Permian/Haynesville shale development, not new drilling policy."
+      },
+      {
+        "source_url": "https://www.eia.gov/about/new/index.php?r=130",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Source identifies the primary dataset location but does not itself state production figures or causation."
+      },
+      {
+        "source_url": "https://www.eia.gov/naturalgas/monthly/",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Source confirms EIA Natural Gas Monthly shows record 2025 US natural gas production, corroborating the all-time high claim."
+      },
+      {
+        "source_url": "https://www.sahmcapital.com/news/content/us-natgas-output-to-hit-record-high-in-2026-while-demand-holds-steady-eia-says-2026-02-10",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Claim asserts all-time high; source reports 2025 as record ~107.6 Bcf/d with further increases projected."
+      },
+      {
+        "source_url": "https://www.eia.gov/todayinenergy/detail.php?id=67684",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Claim attributes record to specific policy ('drill baby drill'); source notes records were set in prior years too, undermining single-cause attribution to recent policy."
+      }
+    ],
+    "trump_2026:0054": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.htm",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "Primary BLS Employment Situation for January 2026 is the official source for the employment level needed to evaluate the claim, but snippet does not state the actual figure."
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/LNS12000000",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "BLS time-series for employed persons 16+ back to 1948 is the authoritative historical record needed to judge whether January 2026 represents an all-time high, but snippet does not state the figures."
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/economicdata/empsit_02112026.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "Official BLS/DOL Employment Situation for January 2026 contains the household-survey employment total the claim rests on, but snippet does not provide the actual number."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/CE16OV",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "FRED series CE16OV is the standard monthly household-survey employment series needed for historical comparison, but snippet does not state the January 2026 or prior peak values."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "Archived primary BLS release for January 2026 contains the employment counts needed to test the record-high assertion, but snippet does not provide the actual figures."
+      },
+      {
+        "source_url": "https://alfred.stlouisfed.org/series?seid=LNU02000000",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts record employment 'today'; source states all-time high was 163,992K in December 2025 with declines in January/February 2026, directly contradicting a current record."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/PAYEMS",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "PAYEMS is the nonfarm payroll series (establishment survey), not the household-survey employed-persons series the claim addresses; different measurement with different historical patterns."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/LNS12000000",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "FRED series LNS12000000 is the official BLS employed-persons series needed for historical comparison, but snippet does not state the January 2026 level or prior peak."
+      },
+      {
+        "source_url": "https://www.cnbc.com/2026/02/11/jobs-report-january-2026-.html",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "News coverage of January 2026 jobs report may discuss employment levels and gains, but snippet does not state whether the total was at an all-time high."
+      },
+      {
+        "source_url": "https://tradingeconomics.com/united-states/employed-persons",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts record employment 'today'; source states all-time high of 163,992K was reached in December 2025, not in the present (January 2026 or later)."
+      }
+    ],
+    "trump_2026:0055": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.pdf?_hsmi=403675885",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Official BLS data confirming federal government employment declines is consistent with the claim that all net job growth was private-sector."
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/economicdata/empsit_02112026.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "BLS January 2026 report shows private sector +172k, government −42k, directly supporting the claim that job growth was entirely private-sector."
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES0500000001",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "BLS CES private payroll series shows net increase from 134,711k (Jan 2025) to 135,263k (Jan 2026), confirming private-sector job growth."
+      },
+      {
+        "source_url": "https://www.cnbc.com/2026/02/11/jobs-report-january-2026-.html",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Wire coverage of Jan 2026 report confirms private +172k and government −42k, with federal workforce down 327k since Oct 2024, supporting private-sector-only growth."
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/CES0000000001",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "BLS CES total nonfarm series shows net increase from 158,268k (Jan 2025) to 158,592k (Jan 2026); combined with item 3, implies government employment declined, consistent with claim.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.foxbusiness.com/economy/us-jobs-report-january-2026",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Generic reference to jobs report detail without specific figures; provides context but does not itself carry the measurement needed to verify the claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "HTML version of BLS release with explanatory text on methodology; background material that does not itself present the employment figures or comparison."
+      },
+      {
+        "source_url": "https://waysandmeans.house.gov/2026/02/11/trump-economy-private-sector-job-growth-higher-wages",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Congressional GOP assertion is the political source of the claim, not independent evidence; does not measure employment itself."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/LNS12000000",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "CPS household employment series showing January 2026 as a peak on record supports the claim that more people are working than ever before."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/releases/2025/12/private-sector-job-growth-fuels-president-trumps-economy",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "White House claim statement is the source of the assertion itself, not independent verification; does not provide underlying employment data."
+      }
+    ],
+    "trump_2026:0057": [
+      {
+        "source_url": "https://apnews.com/article/c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Transcript confirms the claim was made on Feb 24, 2026, but does not itself verify the factual assertions (2.4M food stamp reduction or record deregulation)."
+      },
+      {
+        "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-persons-1.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Primary USDA/FNS data series on SNAP participation is the measurement needed to verify the 2.4M reduction claim, but snippet does not state the actual figures or change.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-households-1.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "Primary USDA/FNS household caseload data is relevant to SNAP trends but measures households rather than persons; snippet does not provide the figures needed to verify the 2.4M persons claim.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-20-Guidance-Implementing-Section-3-of-Executive-Order-14192-Titled-Unleashing-Prosperity-Through-Deregulation.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Documents a deregulatory directive and 10-for-1 requirement but does not quantify total rules cut or establish whether the number is a record."
+      },
+      {
+        "source_url": "https://www.federalregister.gov/documents/2025/08/01/2025-14572/reconsideration-of-2009-endangerment-finding-and-greenhouse-gas-vehicle-standards",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Example of one proposed deregulatory action but does not address the aggregate count of rules cut or whether it constitutes a record."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2026-02-18/pdf/2026-03157.pdf",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Example of one finalized deregulatory action but does not address the aggregate count of rules cut or whether it constitutes a record."
+      }
+    ],
+    "trump_2026:0099": [
+      {
+        "source_url": "https://www.va.gov/records/get-military-service-records/",
+        "relevance_score": 0.0,
+        "supports_claim": null,
+        "one_line_why": "Guide on requesting service records is procedural background unrelated to whether Taggart fought in Manila or worked hard."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House transcript directly states Taggart 'fought bravely in the famous Battle of Manila,' matching the claim's core assertion."
+      },
+      {
+        "source_url": "https://vermontdailychronicle.com/castleton-wwii-veteran-braved-japanese-machine-guns-at-battle-of-luzon-trump-tells-sotu-audience/",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Biographical profile confirms Taggart was shipped to Manila, received Purple Heart, and was wounded at Luzon, corroborating combat service and effort."
+      },
+      {
+        "source_url": "https://www.wcax.com/2026/02/25/brave-man-president-honors-vt-wwii-veteran-state-union/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "CBS affiliate reports Taggart served under MacArthur and fought in Battle of Manila/Luzon, directly supporting the claim."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Congressional Record contains the President's statement that Taggart 'fought bravely in the famous Battle of Manila,' matching the claim verbatim."
+      },
+      {
+        "source_url": "https://www.defense.gov/News/Feature-Stories/Story/Article/4058939/battle-of-manila-foreshadowed-future-urban-warfare-provided-lessons-learned/",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "DoD feature on the Battle of Manila itself provides historical context but does not address whether Taggart specifically fought there."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/releases/2026/02/president-trump-delivers-his-2026-state-of-the-union-address/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House speech text contains the claim being fact-checked, confirming it was made."
+      },
+      {
+        "source_url": "https://www.dpaa.mil/news-stories/our-stories/article/4118226/dpaa-disinterment-team-attends-liberation-of-manila-80th-anniversary-ceremony/",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "DPAA report on Battle of Manila anniversary provides historical background but does not address Taggart's individual participation."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/state-of-the-union-2026-transcript/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "CBS News transcript directly quotes the President saying Taggart 'fought bravely in the famous Battle of Manila,' corroborating the claim."
+      },
+      {
+        "source_url": "https://www.army.mil/article/282914/80_years_later_1st_cavalry_division_returns_to_the_philippines_to_commemorate_the_battle_of_manila",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "U.S. Army article on the Battle of Manila provides historical context but does not address Taggart's specific participation."
+      }
+    ],
+    "trump_2026:0130": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official Congressional Record confirms the president made this exact statement in the Feb 24, 2026 State of the Union."
+      },
+      {
+        "source_url": "https://taxfoundation.org/blog/obbba-largest-tax-cut-in-american-history/",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Nonpartisan analysis ranks the tax law roughly sixth to eighth largest in history, directly contradicting the claim of 'largest tax cuts in American history.'"
+      },
+      {
+        "source_url": "https://taxfoundation.org/research/all/federal/big-beautiful-bill-senate-gop-tax-plan/",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Provides sizing of the actual tax cut ($5T conventional, $2.6T net with tariffs) but does not itself compare to historical precedent or rank it."
+      },
+      {
+        "source_url": "https://apnews.com/article/c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "AP transcript confirms the president made this statement, corroborating that the claim was indeed urged and stated."
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/1/text",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Enrolled text of the law itself does not address whether it is the largest in history; it is the legislative vehicle but not a measurement of historical rank."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/61570",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "CBO reports $4.5 trillion revenue decrease (2025–2034) but does not compare this to historical tax cuts or rank it as largest."
+      },
+      {
+        "source_url": "https://www.jct.gov/publications/2025/jcx-26-25r/",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "JCT revenue estimate provides the magnitude of tax provisions but does not itself rank the law against historical precedent."
+      },
+      {
+        "source_url": "https://www.jct.gov/publications/2025/jcx-27-25/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Distributional analysis shows who benefits and revenue effects but does not address whether this is the largest tax cut in history."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/61461",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Pre-enactment CBO cost estimate provides budgetary magnitudes but does not compare to or rank against historical tax cuts."
+      }
+    ],
+    "trump_2026:0132": [
+      {
+        "source_url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00372.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Official Senate roll call shows all 47 Democrats voted nay on H.R.1 tax bill."
+      },
+      {
+        "source_url": "https://clerk.house.gov/Votes/2025190",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Official House roll call shows 0 House Democrats voted Aye on final passage of tax bill."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/PLAW-119publ21/html/PLAW-119publ21.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Confirms the law exists and contains tax provisions but does not address Democratic voting behavior."
+      },
+      {
+        "source_url": "https://www.govtrack.us/congress/votes/119-2025/s372",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "GovTrack party breakdown confirms all Democrats/independents opposed the Senate vote."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/61486",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "CBO analysis of bill's fiscal effects is background on the bill's substance, not on Democratic voting."
+      },
+      {
+        "source_url": "https://ballotpedia.org/One_Big_Beautiful_Bill_Act",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Ballotpedia confirms unanimous Democratic opposition in both chambers to the tax-and-spending law."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/house-vote-big-beautiful-bill-rules-committee/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "CBS reports House passed 218-214 with all Democrats opposing and two Republicans also opposing."
+      },
+      {
+        "source_url": "https://www.npr.org/2025/07/01/nx-s1-5450367/senate-republicans-trump-tax-bill-medicaid",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "NPR confirms Democrats united against the bill in Senate, though frames it with context about paired spending cuts."
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/congress/house-final-vote-trump-big-beautiful-bill-republicans-rcna216626",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "NBC confirms all Democrats and two Republicans voted no on final House passage."
+      }
+    ],
+    "trump_2026:0137": [
+      {
+        "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/1/text",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Statutory text establishes that tip, overtime, and child tax credit provisions exist, but does not quantify individual tax savings or verify the $5,000 figure."
+      },
+      {
+        "source_url": "https://www.npr.org/2026/02/25/nx-s1-5684227/trump-tax-tips-state-union",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "NPR piece features Megan and the relief claim but notes it is temporary, which bears on the claim's permanence assertion but does not directly confirm or deny the $5,000 annual savings figure."
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R48611",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "CRS summary explains caps, phaseouts, and applicability rules needed to evaluate whether $5,000 is achievable for Megan's household, but does not state the figure itself."
+      },
+      {
+        "source_url": "https://www.irs.gov/newsroom/working-families-tax-cuts-individuals-and-workers",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Official IRS overview permits computation of whether $5,000 is plausible, but snippet does not itself state Megan's tax savings or confirm the claim's magnitude.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.irs.gov/newsroom/what-to-know-about-the-no-tax-on-overtime-deduction",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "IRS specifics on overtime deduction caps ($12,500 single/$25,000 joint) and phaseouts are essential to sizing the tax benefit but do not directly state Megan's $5,000 savings.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.irs.gov/newsroom/one-big-beautiful-bill-how-to-take-advantage-of-no-tax-on-tips-and-overtime",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "IRS guidance on tip ($25,000) and overtime deduction mechanics establishes the structure but does not quantify Megan's individual tax relief."
+      },
+      {
+        "source_url": "https://www.inquirer.com/politics/nation/trump-pennsylvania-sotu-union-250th-20260225.html",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "Philadelphia Inquirer coverage of Megan Hemhauser's feature in the SOTU context is relevant to the claim's origin but does not verify the $5,000 savings figure."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Congressional Record transcript of the speaker's remarks mentioning Megan and the specific claim is the primary source of the assertion but does not independently verify the $5,000 figure."
+      },
+      {
+        "source_url": "https://www.epi.org/publication/everything-you-need-to-know-about-no-tax-on-tips/",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "EPI analysis argues no-tax-on-tips delivers limited benefit to most tipped workers, which contradicts the claim's assertion of substantial ($5,000+) savings."
+      }
+    ],
+    "trump_2026:0161": [
+      {
+        "source_url": "https://www.newsweek.com/a-1k-investment-in-trump-accounts-could-be-worth-5560-in-18-years-12160969",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim says modest contributions yield >$100k by 18; source states $1,000 seed alone grows to ~$5,560 by 18, contradicting the claim's assertion about modest contributions reaching six figures."
+      },
+      {
+        "source_url": "https://www.presidency.ucsb.edu/documents/remarks-the-trump-accounts-childrens-savings-program",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official transcript quotes nearly identical claim about $100k+ growth with modest/slightly greater contributions by age 18, directly corroborating the claim's wording and assertion."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/research/2025/08/trump-accounts-give-the-next-generation-a-jump-start-on-saving/",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Shows $303,800 is possible by age 18 with maximum contributions, confirming >$100k is achievable but does not address whether modest contributions suffice."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/wp-content/uploads/2025/08/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Official CEA projections show minimal contributions yield ~$5,800 by 18 while six figures ($187k–$303k) require near-maximum $5,000/yr contributions, directly contradicting the claim that modest contributions reach >$100k."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/wp-content/uploads/2025/03/Trump-Accounts-Give-the-Next-Generation-a-Jump-Start-on-Saving.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "CEA projections show $303,800 at $5,000/yr (maximum), $154,800 at half-max ($2,500/yr), and $5,800 with no contributions; half-max is not modest and still required to exceed $100k.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://npr.org/2025/07/08/nx-s1-5455647/trump-accounts-babies-what-to-know",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Explains that large sustained contributions are required to reach six figures by 18, contradicting the claim's characterization of contributions as modest."
+      },
+      {
+        "source_url": "https://apnews.com/article/donald-trump-transcript-state-of-union-2026-c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "AP transcript contains the exact State of the Union wording of the claim itself, confirming it was stated but providing no independent evidence of whether the claim is accurate."
+      },
+      {
+        "source_url": "https://www.irs.gov/trumpaccounts",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Provides program parameters ($1,000 seed, $5,000/yr cap) needed to test the math but does not itself project growth outcomes or address the modesty of contributions."
+      }
+    ],
+    "trump_2026:0172": [
+      {
+        "source_url": "https://www.washingtontimes.com/news/2026/feb/11/dow-crosses-50k-means-matters/",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Confirms Dow crossed 50,000 but explicitly attributes rally to blue-chip/industrial strength and AI, not tariffs, directly contradicting the claim's causal assertion."
+      },
+      {
+        "source_url": "https://www.investing.com/news/stock-market-news/dow-jones-industrial-average-hits-record-50000-points-4491728",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Confirms Dow closed above 50,000 on Feb 6, 2026 but attributes drivers to earnings, AI, and Fed hopes—not tariffs—contradicting the primary-driver claim."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/61697",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "CBO finding that increased 2025 tariffs reduce economic size, raise prices, and cut investment directly contradicts the claim that tariffs drove an economic turnaround."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/62105",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "CBO Feb 2026 report finds higher 2025 tariffs lowered real GDP, reduced investment and employment—contradicting tariffs as a primary driver of economic strength."
+      },
+      {
+        "source_url": "https://abcnews.go.com/Business/dow-crosses-50000-time/story?id=129930238",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Confirms Dow's first close above 50,000 but cites tech, earnings, and sentiment as market drivers, not tariffs."
+      },
+      {
+        "source_url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/march/op-ed-ambassador-jamieson-greer-and-secretary-brooke-rollins-us-agriculture-back-top-and-world",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "USTR credits tariff leverage and reciprocal deals with opening export markets and helping agriculture, offering some support for tariffs as a positive economic factor, though not directly addressing stock market gains."
+      },
+      {
+        "source_url": "https://fiscal.treasury.gov/files/reports-statements/mts/mts0925.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Primary source listing tariff revenue receipts is background data on tariff collection, not evidence bearing on whether tariffs were a primary driver of stock market gains or economic turnaround."
+      }
+    ],
+    "trump_2026:0181": [
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2026-02/gdp4q25-adv.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'tremendous growth'; BEA reports full-year 2025 real GDP +2.2%, explicitly characterized as 'modest, not tremendous'."
+      },
+      {
+        "source_url": "https://www.bea.gov/sites/default/files/2026-02/pi1225.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'no inflation'; BEA PCE price index shows +2.9% YoY and core PCE +3.0% YoY, directly contradicting the assertion."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'no inflation'; BLS CPI-U rose 2.4% year-over-year in Jan 2026, directly contradicting the assertion."
+      },
+      {
+        "source_url": "https://www.bls.gov/cpi/notices/2025/2025-federal-government-shutdown-impact-on-cpi.htm",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "Documents a data gap and methodological caveat for Oct–Nov 2025 CPI; does not itself measure inflation or growth, only flags measurement uncertainty."
+      }
+    ],
+    "trump_2026:0182": [
+      {
+        "source_url": "https://www.npr.org/2026/02/25/nx-s1-5716159/trump-congress-state-union-read",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Direct quote of the claim itself from Trump's Feb 2026 SOTU; establishes he made the statement but does not evaluate its truth."
+      },
+      {
+        "source_url": "https://www.cnbc.com/2024/10/23/nobel-prize-winning-economists-donald-trump-agenda-endorse-harris.html",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Oct 2024 letter signed by 23 Nobel economists (not 22) warning of higher prices and deficits; Trump's prediction of inflation did not materialize (Jan 2026 CPI 2.4%, Q4 2025 GDP +1.4%, PCE inflation present but modest)."
+      },
+      {
+        "source_url": "https://s3.documentcloud.org/documents/24777566/nobel-letter-final.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "June 2024 letter shows 16 Nobel signatories, not 22; undermines the '22 Nobel Prize winners' figure in the claim."
+      },
+      {
+        "source_url": "https://waysandmeans.house.gov/2026/02/13/smith-on-cpi-report-trump-economy-delivering-on-all-fronts-and-just-getting-started/",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "House committee statement touting Trump-economy growth is political commentary, not an independent measure of whether Trump's call was correct or the economists' was wrong."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Jan 2026 CPI shows 12-month inflation at ~2.4%, indicating inflation did occur; contradicts any narrative that Trump was right and Nobel economists (who warned of inflation) were 'totally wrong.'"
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Q4 2025 real GDP +1.4% annualized and 2025 full-year +2.2% with PCE inflation present; modest growth and persistent inflation undermine a stark claim that Trump 'called it correctly' while economists were 'totally wrong.'"
+      },
+      {
+        "source_url": "https://www.reuters.com/world/us/16-nobel-prize-winning-economists-say-trump-policies-will-fuel-inflation-2024-06-25/",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "June 2024 Nobel economists' letter warned Trump's policies would reignite inflation; inflation did occur (2.4% Jan 2026 CPI), so their core prediction was not 'totally wrong.'"
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Jan 2026 employment data (payrolls +130K, unemployment 4.3%) provides labor-market context but does not directly address whether Trump's economic call was correct or economists' was wrong."
+      },
+      {
+        "source_url": "https://apnews.com/article/c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 1.0,
+        "supports_claim": null,
+        "one_line_why": "Verbatim transcript of Trump's Feb 24, 2026 SOTU statement; confirms he made the claim but does not evaluate its factual accuracy."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/trump-economy-nobel-prize-winners-letter-inflation-warning/",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "CBS coverage identifies 16 June signatories (not 22) and their inflation warning; the warning proved partially correct (inflation did occur at 2.4% in Jan 2026), so economists were not 'totally wrong.'"
+      }
+    ],
+    "trump_2026:0186": [
+      {
+        "source_url": "https://www.cnbc.com/2026/02/26/trump-state-of-the-union-supreme-court-tariffs-trade-deals-ieepa-section-301-232-122.html",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Directly assesses the claim and reports India and EU are NOT committed to keeping deals, contradicting the assertion that almost all countries want to keep them."
+      },
+      {
+        "source_url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/february/ambassador-greer-issues-statement-supreme-court-ieepa-decision",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "White House expects partners to stand by deals, supporting the claim's assertion, but this is US expectation rather than evidence of what partners actually want."
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Provides context for the ruling that prompted the remark but does not address whether countries and corporations want to keep deals."
+      },
+      {
+        "source_url": "https://www.cfr.org/articles/countries-react-to-scotus-tariff-ruling",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Compiles individual country responses to the ruling and their stance on deals; if it shows mixed or negative stances, it contradicts 'almost all countries want to keep' the deals."
+      },
+      {
+        "source_url": "https://www.reuters.com/business/eu-says-it-will-accept-no-increase-us-tariffs-after-supreme-court-ruling-a-deal-2026-02-22/",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "European Commission demanded the US honour the trade deal with the phrase 'a deal is a deal,' indicating EU commitment to keeping the agreement."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/amp/news/us-trade-representative-jamieson-greer-trade-deals-tariff-decision/",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "USTR official states the administration expects to stand by agreements, supporting the claim, but again reflects US position rather than direct evidence of partner intent."
+      },
+      {
+        "source_url": "https://apnews.com/article/36c6951422ccd24f475429d4683e7e15",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "USTR and Treasury officials report partners have not signalled they will abandon deals, supporting the claim that countries want to keep them."
+      },
+      {
+        "source_url": "https://www.reuters.com/world/us/us-trade-rep-says-no-countries-have-said-they-will-withdraw-tariff-deals-2026-02-22/",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Reuters reports no partner had told the US it would withdraw from recently struck tariff deals, supporting the claim that countries want to keep the agreements."
+      }
+    ],
+    "trump_2026:0191": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official Congressional Record containing the exact tariff/war remark directly corroborates the claim's core assertion."
+      },
+      {
+        "source_url": "https://www.pbs.org/newshour/world/india-disputes-trumps-claim-that-u-s-trade-incentives-led-to-ceasefire-with-pakistan",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "India's foreign ministry states ceasefire came via military channels with no trade/tariff talks, contradicting the tariff-settlement mechanism for at least one conflict."
+      },
+      {
+        "source_url": "https://en.wikipedia.org/wiki/Tariffs_in_the_second_Trump_administration",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Greenland Crisis example from Jan 2026 shows tariff threat leading to NATO deal/framework, supporting the claim's mechanism."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/videos/president-trump-you-can-stop-wars-with-tariffs/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Primary White House video of Trump asserting tariffs can stop wars directly corroborates the claim."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/past-events/president-trump-you-can-stop-wars-with-tariffs/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House page presenting Trump's own claim that tariffs stopped wars is a primary source directly supporting the assertion."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/presidential-actions/2026/02/imposing-a-temporary-import-surcharge-to-address-fundamental-international-payments-problems/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "White House proclamation of Feb 2026 tariffs/surcharge policy is background on tariff authority but does not address whether tariffs settled wars."
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "SCOTUS opinion on IEEPA tariff authority for emergencies is legal background; contains no war-settlement examples or evidence bearing on the claim."
+      },
+      {
+        "source_url": "https://www.reuters.com/this-video/trump-chides-supreme-court-striking-down-his-global-tariffs-vows-pursue-alternatives-2026-02-24/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Reuters coverage quoting the president's exact words 'many of the wars I settled was because of the threat of tariffs' directly corroborates the claim."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/world/2025/12/11/trump-peace-deals-rwanda-congo-cambodmia-thailand/",
+        "relevance_score": 0.6,
+        "supports_claim": false,
+        "one_line_why": "Washington Post reporting that post-2025 peace deals remained fragile and questions U.S. tariff leverage undermines the claim's implication that tariff threats effectively settled wars."
+      },
+      {
+        "source_url": "https://www.nbcnews.com/politics/supreme-court/live-blog/-trump-tariffs-ruling-supreme-court-live-updates-rcna252655",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "NBC coverage establishing the setting and context of Feb 2026 remarks is background; does not directly address whether tariffs settled wars."
+      }
+    ],
+    "trump_2026:0208": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Congressional Record contains the exact claim being fact-checked; it is the primary source of the assertion itself."
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/_cache/files/c5ca6804-f0a0-427d-b163-567a42484942/jec-state-inflation-costs-fact-sheet.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "JEC fact sheet quantifies cumulative household inflation costs since Jan 2021 and is cited as the basis for the ~$30k+ per-family figures underlying the $34,000 claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_01132026.htm",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "BLS 12-month CPI of 2.7% in Dec 2025 does not support a simple $34,000 per-family inflation charge; the claim requires cumulative calculation, not a single-year rate.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/index.cfm/republicans/2026/1/state-inflation-data-families-monthly-costs-rose-700-more-under-biden-than-over-the-same-period-under-trump",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "JEC release quantifying cumulative family inflation costs under Biden is the direct source document for the tens-of-thousands-of-dollars per-household claim."
+      },
+      {
+        "source_url": "https://www.bls.gov/opub/ted/2026/consumer-price-index-2025-in-review.htm",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "Official BLS CPI documents provide the raw price-change data needed to verify whether inflation was 'record-setting' and to size cumulative burden, but snippet does not state the figures themselves.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.bea.gov/index.php/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+        "relevance_score": 0.6,
+        "supports_claim": false,
+        "one_line_why": "BEA PCE price index of 2.9% in Q4 2025 is a recent quarterly rate; BEA does not report a $34,000 per-family inflation cost figure."
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/releases/z1/20250313/html/introductory_text.htm",
+        "relevance_score": 0.5,
+        "supports_claim": false,
+        "one_line_why": "FRB Z.1 showing aggregate household net worth rose contradicts the premise of a uniform $34,000 loss per typical family."
+      },
+      {
+        "source_url": "https://www.jec.senate.gov/public/_cache/files/71577dd2-5298-4cfe-8a6c-8059e8afd261/inflation-tracker-comparison-dec-2025.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "JEC inflation-tracker through Dec 2025 provides cumulative per-household dollar costs since Jan 2021, the direct measurement underlying the $34,000 claim."
+      },
+      {
+        "source_url": "https://www.stlouisfed.org/open-vault/2025/june/the-state-of-us-household-wealth",
+        "relevance_score": 0.4,
+        "supports_claim": false,
+        "one_line_why": "St. Louis Fed shows wealth changes vary widely across households, undermining the claim of a uniform $34,000 cost to 'the typical family.'"
+      },
+      {
+        "source_url": "https://punchbowl.news/article/finance/economy/trump-economy/",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Political reporting summarizing the Feb 24, 2026 claim provides context but does not itself verify or refute the $34,000 figure."
+      }
+    ],
+    "trump_2026:0215": [
+      {
+        "source_url": "https://www.cbo.gov/publication/61389",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "CBO explicitly documents that 2025 tariff policy increases inflation by ~0.4 percentage points, directly showing a policy mechanism raising prices."
+      },
+      {
+        "source_url": "https://www.nber.org/digest/202404/supply-chain-disruptions-and-pandemic-era-inflation",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "NBER research attributes post-pandemic price surge mainly to supply-chain shocks rather than administration policy, contradicting the claim that policies created high prices."
+      },
+      {
+        "source_url": "https://www.cnbc.com/2024/07/11/high-inflation-is-largely-not-bidens-or-trumps-fault-economists-say.html",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Economist survey concludes high inflation is largely not attributable to either president's policies, directly contradicting the claim."
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/econres/feds/files/2025070pap.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Fed staff review provides authoritative causal breakdown of pandemic inflation drivers but snippet does not state which factors dominated or whether policy was primary."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "BLS CPI data measures the price level itself but contains no causal attribution to policy versus other factors; background on what 'high prices' means, not whether policies caused them."
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/econres/notes/feds-notes/supply-vs-demand-factors-influencing-prices-of-manufactured-goods-20240223.htm",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "FRB FEDS note documents strong role for supply-side shocks in goods-price movements during 2021–23, suggesting non-policy drivers dominated that period."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 0.1,
+        "supports_claim": null,
+        "one_line_why": "Congressional Record transcript of the claim itself is not evidence for or against its truth; it is the statement being fact-checked."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/politics/2026/02/25/trump-state-union-analysis/",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Post-speech political analysis and polling context does not address the factual question of whether policies caused high prices."
+      },
+      {
+        "source_url": "https://www.republicanleader.senate.gov/newsroom/research/inflation-remains-well-above-normal-levels-because-of-bidens-economic-policies",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Senate GOP research argues Biden policies kept inflation and prices elevated, supporting the claim, though it is partisan advocacy rather than independent economic analysis."
+      }
+    ],
+    "trump_2026:0219": [
+      {
+        "source_url": "https://fred.stlouisfed.org/series/APU0000708111",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Describes the BLS series but does not state the actual price figures or decline percentage."
+      },
+      {
+        "source_url": "https://data.bls.gov/timeseries/APU0000708111",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "BLS data shows Mar 2025 peak $6.227/doz and Jan 2026 $2.577/doz, which equals a 59–60% decline, directly matching the claim.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://ers.usda.gov/sites/default/files/_laserfiche/outlooks/113689/LDP-M-379.pdf?v=99408",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "USDA ERS documents retail peak of $6.23/doz in Mar 2025 and subsequent sharp declines, consistent with a 60% drop claim."
+      },
+      {
+        "source_url": "https://www.cnbc.com/2026/02/13/egg-prices-falling-in-us.html",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Published Feb 13, 2026, reports retail eggs down 34% year-over-year, contradicting the 60% claim."
+      },
+      {
+        "source_url": "http://www.ers.usda.gov/data-products/charts-of-note/chart-detail?chartId=112677",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Confirms a chart exists showing declines but does not state the magnitude of the decline."
+      },
+      {
+        "source_url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/3725/2026-02-27/1307445/ams_3725_00120.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Confirms prices were markedly lower by late Feb 2026 but does not quantify the percentage decline."
+      },
+      {
+        "source_url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2847/2026-02-02/1301528/ams_2847_00071.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Reports cage-free egg price declines in early 2026 but does not specify the magnitude or compare to a baseline."
+      },
+      {
+        "source_url": "https://fb.org/market-intel/declining-egg-prices-squeeze-farmers",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "References Farm Bureau documentation of the decline from 2025 peak but does not state the percentage."
+      },
+      {
+        "source_url": "https://www.ams.usda.gov/mnreports/ams_3725.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Notes that magnitude depends on baseline choice (peak vs YoY) but does not resolve which applies to the claim."
+      },
+      {
+        "source_url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2757/2026-01-31/1302752/ams_2757_00311.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Lists advertised retail prices supporting lower consumer prices but does not quantify the overall decline percentage."
+      }
+    ],
+    "trump_2026:0221": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim says costs are lower; BLS data shows rent +5.1% YoY, lodging -3.0%, used cars -1.8%, new vehicles +0.1%—most items up, not down by a lot."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim says costs lower by a lot; BLS January 2026 CPI tables show food, shelter and indexed items flat or higher versus Jan 2025, contradicting the assertion."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02122025.pdf",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Provides baseline CPI data from January 2025 (likely office-taking date) but does not itself compare to January 2026 or state whether costs are lower."
+      },
+      {
+        "source_url": "https://www.dol.gov/newsroom/economicdata/cpi_02132026.pdf",
+        "relevance_score": 0.85,
+        "supports_claim": null,
+        "one_line_why": "Full BLS January 2026 CPI release with detailed category tables is the primary data source needed to verify the claim, but snippet does not state the actual figures or comparison."
+      },
+      {
+        "source_url": "https://apnews.com/article/donald-trump-transcript-state-of-union-2026-c13e2a07df999b464b733f4a6e84dbd4",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Confirms the claim was made on Feb 24, 2026, but does not provide evidence about whether the underlying assertion about prices is true or false."
+      },
+      {
+        "source_url": "https://www.cnbc.com/2026/02/13/cpi-inflation-report-january-2026.html",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Claim says costs lower by a lot; BLS January 2026 report shows shelter and food categories still rising over the year, contradicting the assertion."
+      },
+      {
+        "source_url": "https://www.advisorperspectives.com/dshort/updates/2026/02/20/inside-the-consumer-price-index-january-2026",
+        "relevance_score": 0.85,
+        "supports_claim": null,
+        "one_line_why": "Promises detailed category breakdown for chicken, butter, fruit, rent but snippet does not provide the actual figures or direction of change."
+      },
+      {
+        "source_url": "https://www.nbcnews.com/data-graphics/grocery-price-tracker-inflation-trends-eggs-bread-trump-administration-rcna191508",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Claim says costs lower by a lot; NBC grocery tracker shows chicken and butter rose since Trump took office January 2025, with eggs as main exception."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/CUUR0000SAF112",
+        "relevance_score": 0.85,
+        "supports_claim": null,
+        "one_line_why": "FRED CPI series for poultry is the primary data needed to compare chicken prices Jan 2025 vs early 2026, but snippet does not state the actual index values or direction."
+      }
+    ],
+    "trump_2026:0222": [
+      {
+        "source_url": "https://fred.stlouisfed.org/series/APU0000703112",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim says beef is 'starting to come down significantly'; source shows record ~$6.75/lb in Jan 2026 'still climbing not falling'—directly contradicts the downward movement assertion."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts significant decline; source shows beef & veal down only 0.9% month-over-month but still ~15% higher year-over-year—a minor dip does not constitute 'coming down significantly' when annual trend remains sharply elevated."
+      },
+      {
+        "source_url": "https://www.ers.usda.gov/data-products/food-price-outlook/summary-findings",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim says beef is 'starting to come down'; USDA ERS forecasts beef & veal prices to rise 10.7% in 2026—directly contradicts the downward direction."
+      },
+      {
+        "source_url": "https://www.supermarketnews.com/grocery-categories/grocery-prices-will-continue-to-increase-in-2026-usda",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts significant decline; source confirms beef & veal fell 0.9% Dec→Jan but remained ~15% above prior year—minor monthly dip contradicts 'coming down significantly' when year-over-year elevation persists."
+      },
+      {
+        "source_url": "https://www.nass.usda.gov/Newsroom/2026/01-30-2026.php",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Explains structural reason for sustained high beef prices (smallest herd since 1951), which supports the premise that prices remain elevated and contradicts the claim of significant recent decline."
+      },
+      {
+        "source_url": "https://www.bloomberg.com/news/features/2026-02-14/beef-prices-are-rising-more-than-inflation-this-year-with-no-relief-seen",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Dated Feb 14, 2026 (days before the claim), states 'beef prices rising faster than inflation in 2026 with no relief in sight'—directly contradicts the assertion of significant downward movement."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/ppi_02272026.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "References PPI data relevant to beef price dynamics but does not provide specific figures or direction of movement to evaluate the claim."
+      },
+      {
+        "source_url": "https://fred.stlouisfed.org/series/APU0000FC1101",
+        "relevance_score": 1.0,
+        "supports_claim": false,
+        "one_line_why": "Claim says beef is 'starting to come down significantly'; source confirms 'record prices persisting through early 2026'—persistence contradicts significant decline."
+      },
+      {
+        "source_url": "https://www.ers.usda.gov/topics/animal-products/cattle-beef/market-outlook",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "Explains tight supply from 40-year-low herd driving 'elevated prices,' which contextually supports that prices remain high and contradicts the claim of significant recent decline."
+      },
+      {
+        "source_url": "https://esmis.nal.usda.gov/sites/default/release-files/795748/catl0126.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Herd at 86.2M head (smallest since 1951) 'underpinning high prices' indicates structural constraint preventing significant price decline, contradicting the claim."
+      }
+    ],
+    "trump_2026:0228": [
+      {
+        "source_url": "http://www.healthaffairs.org/doi/10.1377/hlthaff.2025.01683",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "CMS analysis attributes 2023–24 spending growth to utilization rebound and hospital care, explicitly not to ACA enactment alone, contradicting the claim that ACA caused the crushing cost."
+      },
+      {
+        "source_url": "https://healthcostinstitute.org/wp-content/uploads/images/pdfs/HCCI_2022_Health_Care_Cost_and_Utilization_Report.pdf",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "HCCI data show price growth (~14%) vastly outpaced utilization growth (~4%) from 2018–2022, implicating price as the main driver, not ACA policy per se."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/60133",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "CBO explicitly identifies provider prices and market power—not the ACA itself—as key cost drivers, directly contradicting the claim's attribution."
+      },
+      {
+        "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK611354/",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "ASPE documents that ACA coverage expansions raise utilization but do not by themselves explain overall price-driven cost growth, refuting sole ACA causation."
+      },
+      {
+        "source_url": "https://www.bls.gov/cpi/factsheets/medical-care.htm",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "BLS CPI factsheet on medical-price indexing methods is background on measurement; it does not address whether ACA caused cost growth."
+      },
+      {
+        "source_url": "https://www.cms.gov/files/document/highlights.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "CMS NHE attributes 2023 spending surge to nonprice factors and hospital/drug spending, not solely to ACA enactment, contradicting the claim."
+      }
+    ],
+    "trump_2026:0229": [
+      {
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1156039/000115603926000013/elv-20251231.htm",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Elevance Health reported $5.66B net income for 2025, a multibillion-dollar profit directly supporting the claim that big insurers got rich."
+      },
+      {
+        "source_url": "https://www.kff.org/medicare/health-insurer-financial-performance/",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "KFF/NAIC analysis of margins and financial performance is relevant background on insurer profitability but does not itself state a profit figure or assertion about whether insurers 'got rich'."
+      },
+      {
+        "source_url": "https://content.naic.org/sites/default/files/topics-industry-snapshot-analysis-reports-2023-annual-report-health.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "NAIC 2023 report shows aggregate net income of ~$24.8B and rising capital/surplus, directly demonstrating large industry profitability consistent with the claim."
+      },
+      {
+        "source_url": "https://www.medpac.gov/document/march-2025-report-to-the-congress-medicare-payment-policy/",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "MedPAC estimate of $70–84B in Medicare Advantage overpayments indicates substantial extra payments flowing to private insurers, supporting the claim they benefited financially."
+      },
+      {
+        "source_url": "https://www.sec.gov/Archives/edgar/data/731766/000073176626000062/unh-20251231.htm",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "UnitedHealth Group reported $14.4B profit for 2024, a multibillion-dollar figure directly supporting the claim that big insurers got rich."
+      },
+      {
+        "source_url": "https://edit.cms.gov/files/document/highlights.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "CMS data on private health insurance spending (~$1.6 trillion) provides context on the revenue base available to insurers but does not itself measure insurer profitability or wealth accumulation."
+      },
+      {
+        "source_url": "https://apnews.com/article/8ac445eb083e41d4f2e25b5d3ed80dc5",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "AP report of UnitedHealth's 2024 profit of $14.4 billion directly corroborates the claim that big insurers got rich."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-25-106798",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "GAO note on private plan spending projected to exceed $1.5 trillion is background on market size but does not measure insurer profits or wealth."
+      },
+      {
+        "source_url": "https://home.treasury.gov/system/files/311/Final%20FIO%202025%20Annual%20Report.pdf",
+        "relevance_score": 0.1,
+        "supports_claim": null,
+        "one_line_why": "Treasury FIO report on premiums and sector financials is mentioned without specific figures; cannot assess whether it supports the claim without the actual data."
+      }
+    ],
+    "trump_2026:0279": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official Congressional Record reproduces the exact claim about Wiggins' 20 bids, confirming the statement was made in the State of the Union."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Official White House transcript confirms the president stated the exact claim about Wiggins' 20 bids in the State of the Union address."
+      },
+      {
+        "source_url": "https://finance.yahoo.com/news/houston-mom-reveals-she-outbid-100000327.html",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "Direct profile of Rachel Wiggins confirms she was outbid 20 times by institutional investors paying all cash, matching the core assertion."
+      },
+      {
+        "source_url": "https://www.click2houston.com/news/local/2026/02/26/president-trump-cited-a-houston-womans-home-ownership-crisis-in-state-of-the-union-address-heres-what-data-says/",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Local outlet examines Wiggins' story against Harris County investor-ownership data; relevance is high but snippet does not state whether the data corroborates or contradicts the claim."
+      },
+      {
+        "source_url": "https://www.gao.gov/assets/gao-24-106643.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "GAO review on institutional investor market share nationally is background context on the broader issue but does not address Wiggins' specific 20 bids or whether she lost them to such firms."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/trump-state-of-the-union-institutional-investor-ban-housing-affordability/",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "CBS report repeats the anecdote and provides expert data on investor market shares; the market-share context is background and does not verify or refute the specific claim about Wiggins' 20 bids."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/amp/news/trump-state-of-the-union-institutional-investor-ban-housing-affordability/",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "CBS News report repeats the president's anecdote with expert context on investor market shares; the contextual data on market share does not directly address whether Wiggins lost 20 specific bids."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/presidential-actions/2026/01/stopping-wall-street-from-competing-with-main-street-homebuyers/",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Executive Order on institutional buying concerns is policy context for the anecdote but does not verify or contradict the specific claim about Wiggins' 20 bids."
+      }
+    ],
+    "trump_2026:0293": [
+      {
+        "source_url": "https://www.federalreserve.gov/releases/z1/20260109/html/recent_developments.htm",
+        "relevance_score": 0.6,
+        "supports_claim": true,
+        "one_line_why": "Confirms household net worth rose in 2025 driven by equity revaluations, supporting the stock market gains claim, but does not quantify 'millions and millions of people' benefiting."
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/releases/z1/current/",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Directly states U.S. household net worth reached record highs with corporate equity revaluations driving gains, corroborating stock market records boosting wealth, but lacks specific count of people affected."
+      },
+      {
+        "source_url": "https://www.cnn.com/2026/02/06/investing/dow-index-us-stocks-50k",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Dow closing above 50,000 for first time is a concrete record milestone confirming 'stock market has done so well, setting all those records,' the factual basis of the claim."
+      },
+      {
+        "source_url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-01-06-2026",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "WSJ report of Dow at new record above 49,000 confirms stock market setting records, supporting that prong of the claim."
+      },
+      {
+        "source_url": "https://www.federalreserve.gov/releases/z1/dataviz/dfa/",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "Wealth and equity gains are highly concentrated among top deciles, contradicting the implication that 'millions and millions of people' broadly benefited from market gains."
+      },
+      {
+        "source_url": "https://www.dol.gov/sites/dolgov/files/ebsa/researchers/statistics/retirement-bulletins/private-pension-plan-bulletins-abstract-2022.pdf",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Abstract reference to pension plan data does not address the claim's assertion about millions benefiting from stock market records."
+      },
+      {
+        "source_url": "https://apnews.com/article/investors-401k-what-to-do-bb0663da4643e8c3dbe08a4092482aa5",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "AP report confirms stock indexes setting all-time highs and boosting 401(k)s, supporting both the record-setting market and wealth-building claims."
+      },
+      {
+        "source_url": "https://www.irs.gov/pub/irs-drop/n-25-67.pdf",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "IRS contribution limits notice is administrative background unrelated to the claim's assertion about market records or millions benefiting."
+      }
+    ],
+    "trump_2026:0295": [
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/ebs2_09192024.htm",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "BLS reports 75% of workers had access to employer retirement benefits (March 2024), which contradicts the claim that half lack access to any retirement plan."
+      },
+      {
+        "source_url": "https://eig.org/whos-left-out-of-americas-retirement-savings-system/",
+        "relevance_score": 1.0,
+        "supports_claim": true,
+        "one_line_why": "EIG analysis of Census SIPP directly states 50.5% of full-time workers get no employer match, precisely matching the 'half' claim about matching contributions."
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R48091",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "CRS report describes access to DC plans (63% in 2023) and employer matching mechanics but does not isolate the percentage lacking matching contributions."
+      },
+      {
+        "source_url": "https://401kspecialistmag.com/4-in-10-working-americans-lack-retirement-plan-access-census-bureau-data-shows/",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Census-based figure of ~42% of full-time workers lacking any workplace plan is adjacent to but distinct from the claim about matching contributions specifically."
+      },
+      {
+        "source_url": "https://www.bls.gov/news.release/archives/ebs2_09252025.htm",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "BLS reports 72% of private workers had access to retirement benefits (March 2025), implying 28% lack access to any plan, which contradicts 'half lack access.'"
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/IF13274",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "CRS overview of coverage gaps is background context on the topic but does not provide a specific figure to compare against the claim."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/retirement-half-of-american-workers-lack-401k-access-crisis-pew/",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "CBS News/Pew study states half of private-sector workers have no access to any workplace retirement plan, not specifically about matching contributions."
+      },
+      {
+        "source_url": "https://www.congress.gov/event/118th-congress/senate-event/LC73084/text",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "Senate HELP materials cite roughly 50+ million workers not offered workplace plans, which at typical workforce size (~160M) implies ~31% lack access, not 50%.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.bls.gov/ebs/publications/employee-benefits-in-the-united-states-march-2024.htm",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "BLS primary data shows 72% of private workers have retirement-plan access (28% lack any access), contradicting the 'half lack access' assertion."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2026/02/25/private-sector-workers-retirement-benefit/",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Washington Post coverage quotes the claim itself but does not provide independent data to verify or refute it."
+      }
+    ],
+    "trump_2026:0334": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-25/html/CREC-2026-02-25-pt1-PgS683-3.htm",
+        "relevance_score": 0.0,
+        "supports_claim": null,
+        "one_line_why": "Congressional Record echo is hearsay about the claim, not evidence; does not cite or present data on English proficiency or road-sign literacy."
+      },
+      {
+        "source_url": "https://www.migrationpolicy.org/sites/default/files/publications/mpi-unauthorized-immigrants-fact-sheet-2025_FINAL.pdf",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "MPI 2025 fact sheet on unauthorized immigrants' English proficiency is directly on topic and likely contains the share needed to test 'most' claim, but snippet does not state the figure."
+      },
+      {
+        "source_url": "https://platform.migrationpolicy.org/data/unauthorized-immigrant-population/state/US",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Claim asserts 'many, if not most' cannot speak English; MPI data shows 44% speak English 'not well/not at all'—less than a majority, contradicting 'most'."
+      },
+      {
+        "source_url": "https://www.census.gov/library/visualizations/interactive/people-that-speak-english-less-than-very-well.html",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "Census ACS interactive on English-proficiency definitions is relevant background but snippet does not present the actual counts or percentages for unauthorized immigrants."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/presidential-actions/2025/04/enforcing-commonsense-rules-of-the-road-for-americas-truck-drivers/",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Executive order on commercial drivers' road-sign reading ability is narrowly scoped to CDL holders, not 'all illegal aliens'; does not address the broader population claim."
+      },
+      {
+        "source_url": "https://opportunity.lacounty.gov/wp-content/uploads/2026/02/LAEDCxDEO_Immigration-Enforcment-Report-2026.02.01.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "LA County official report states 72% of undocumented immigrants are limited English proficient, which supports the claim that 'many, if not most' lack English proficiency."
+      },
+      {
+        "source_url": "https://api.census.gov/data/2023/acs/acs1/subject/groups/S0501.html",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Census ACS S0501 is the primary data source for immigrant English-proficiency measures but snippet identifies only the source, not the figures themselves."
+      },
+      {
+        "source_url": "https://data.census.gov/table/ACSDT1Y2024.B16008",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "ACS table B16008 covers English ability by citizenship/noncitizen status but does not directly identify unauthorized status, limiting its applicability to the claim about 'illegal aliens'."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/FR-2026-02-13/html/2026-02965.htm",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Federal Register on CDL rules discusses undocumented immigrants and road-sign proficiency but is limited to commercial drivers, not the general population of illegal aliens."
+      },
+      {
+        "source_url": "https://mutcd.fhwa.dot.gov/kno-shs_2024-release-status/",
+        "relevance_score": 0.1,
+        "supports_claim": false,
+        "one_line_why": "MUTCD documents showing road signs rely on symbols and numbers rather than English prose undercuts the claim that inability to read English prevents understanding of 'basic road signs'."
+      }
+    ],
+    "trump_2026:0356": [
+      {
+        "source_url": "https://www.cbo.gov/publication/61823",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "CBO pre-shutdown estimate of 1.0–2.0 ppt Q4 GDP reduction directly supports the '2 points' figure cited in the claim."
+      },
+      {
+        "source_url": "https://www.bea.gov/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official BEA Q4 2025 advance estimate attributes 1.15 ppt drag to the 2025 shutdown, corroborating material GDP impact in the 1–2 ppt range."
+      },
+      {
+        "source_url": "https://www.cbo.gov/system/files/2025-10/61823-Shutdown.pdf",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Full CBO analysis PDF provides the 1.0–2.0 ppt Q4 GDP-growth reduction range underlying the '2 points' claim."
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/R48832",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "CRS analysis estimates ~0.13 ppt per week and total long-term effect <1% cumulative, substantially lower than the 2 ppt claim."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/62105",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "CBO Dec 2025 Outlook confirms output fell and cites shutdown's drag on Q4 2025 growth, consistent with the 2 ppt impact."
+      },
+      {
+        "source_url": "https://www.everycrsreport.com/reports/R48832.html",
+        "relevance_score": 0.7,
+        "supports_claim": false,
+        "one_line_why": "CRS synthesis characterizes the 2025 shutdown's GDP effects as 'modest,' contradicting the significance of a 2 ppt loss."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/61822",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Qualitative pre-shutdown letter describes negative effects on employment and GDP but does not quantify the magnitude."
+      },
+      {
+        "source_url": "https://www.congress.gov/crs_external_products/R/PDF/R48832/R48832.2.pdf",
+        "relevance_score": 0.75,
+        "supports_claim": true,
+        "one_line_why": "CRS report details quarterly GDP-growth reduction from the 2025 shutdown, providing empirical measurement consistent with the 1–2 ppt range."
+      },
+      {
+        "source_url": "https://apnews.com/article/food-aid-snap-shutdown-congress-cbo-0e5ad2f6f6f4f9b9a8a8f2d6d7b1d3b8",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "AP report of CBO's Oct 29 estimate of 1–2 ppt Q4 growth reduction directly supports the '2 points' claim."
+      },
+      {
+        "source_url": "https://www.washingtonpost.com/business/2025/10/29/government-shutdown-economic-impact/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Washington Post coverage of CBO's Oct 29 quantitative estimates notes up to 2.0 ppt Q4 GDP effect, directly supporting the claim."
+      }
+    ],
+    "trump_2026:0374": [
+      {
+        "source_url": "https://www.congress.gov/crs-product/IF12902",
+        "relevance_score": 0.3,
+        "supports_claim": null,
+        "one_line_why": "Describes existing law against noncitizen voting but does not measure actual cheating prevalence or rampancy."
+      },
+      {
+        "source_url": "https://www.brennancenter.org/our-work/analysis-opinion/noncitizen-voting-already-illegal-and-vanishingly-rare",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "Directly states noncitizen voting is 'vanishingly rare,' contradicting the claim that cheating is rampant."
+      },
+      {
+        "source_url": "https://electioninnovation.org/research/claims-noncitizen-registration-voting-analysis-tracker/",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Nationwide tracker shows ~0.04% noncitizen registration/voting rate, explicitly contradicting 'rampant' characterization."
+      },
+      {
+        "source_url": "https://sos.iowa.gov/news-resources/iowa-secretary-states-audit-voter-registration-lists-finds-277-confirmed-noncitizens",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Iowa audit: 35 noncitizen ballots of ~1.7M cast (0.002%), orders of magnitude below rampant."
+      },
+      {
+        "source_url": "https://www.cisa.gov/news-events/news/statement-cisa-director-easterly-security-2024-elections",
+        "relevance_score": 0.85,
+        "supports_claim": false,
+        "one_line_why": "CISA official statement finds no malicious activity with material impact on 2024 election, contradicting rampant cheating claim."
+      },
+      {
+        "source_url": "https://www.congress.gov/committee-report/118th-congress/house-report/964/1",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Official House Administration Committee report explicitly states 'no evidence of widespread voter fraud,' directly contradicting rampant cheating."
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/7296",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Describes proposed legislation to prevent noncitizen voting but does not measure actual cheating prevalence."
+      },
+      {
+        "source_url": "https://www.michigan.gov/sos/resources/news/2025/04/03/michigan-department-of-state-review-confirms-instances-of-noncitizen-voting-are-extremely-rare",
+        "relevance_score": 0.95,
+        "supports_claim": false,
+        "one_line_why": "Michigan SOS review: 15 noncitizen votes of 5.7M ballots (0.00028%), explicitly states cheating is not rampant."
+      },
+      {
+        "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/22",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "Describes bill text requiring citizenship proof but does not measure actual cheating prevalence."
+      },
+      {
+        "source_url": "https://apnews.com/article/5c92a9b2530232fc8ac80968a1362518",
+        "relevance_score": 0.9,
+        "supports_claim": false,
+        "one_line_why": "AP reports no evidence of widespread fraud in 2024 and cites prior investigations finding very few confirmed cases, contradicting rampant cheating."
+      }
+    ],
+    "trump_2026:0403": [
+      {
+        "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Confirms a public statement was made about Sage and a Maryland judge, but does not itself contain the factual details needed to verify the claim's specific allegations about the judge's reasoning or the parents' statement."
+      },
+      {
+        "source_url": "https://foxbaltimore.com/news/local/president-trump-cites-maryland-juvenile-case-sage-blair-state-of-the-union",
+        "relevance_score": 0.8,
+        "supports_claim": null,
+        "one_line_why": "Directly addresses the Maryland custody case and judge's withholding of custody, but snippet does not specify the judge's stated reason (whether it was the parents' failure to affirm gender identity) or contradict it."
+      },
+      {
+        "source_url": "https://www.yahoo.com/news/articles/trump-cites-maryland-juvenile-case-202100694.html",
+        "relevance_score": 0.7,
+        "supports_claim": null,
+        "one_line_why": "Reports on the Maryland judge's custody order and court documents, but snippet does not disclose the judge's reasoning or whether it involved the parents' statement about their daughter's gender identity."
+      },
+      {
+        "source_url": "https://www.ca4.uscourts.gov/opinions/241682.P.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Primary Fourth Circuit opinion on the Sage Blair case documenting underlying facts; this is the authoritative source most likely to contain the judge's actual reasoning, but snippet text does not reveal what those facts or reasoning were."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/state-of-the-union-2026-transcript/",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "Confirms the claim was publicly stated by the President in February 2026, but does not verify the factual accuracy of the claim's specific allegations about the judge's reasoning."
+      },
+      {
+        "source_url": "https://www.govinfo.gov/app/details/USCOURTS-ca4-24-01682",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "Primary official court docket for the underlying case; most authoritative source for the judge's actual reasoning and facts, but snippet text does not disclose what the court record shows."
+      }
+    ],
+    "trump_2026:0404": [
+      {
+        "source_url": "https://foxbaltimore.com/news/local/president-trump-cites-maryland-juvenile-case-sage-blair-state-of-the-union",
+        "relevance_score": 0.7,
+        "supports_claim": true,
+        "one_line_why": "Local outlet details state-facility placement and custody dispute involving Sage Blair, corroborating the all-boys home placement claim."
+      },
+      {
+        "source_url": "https://law.justia.com/cases/federal/appellate-courts/ca4/24-1682/24-1682-2025-08-07.html",
+        "relevance_score": 0.8,
+        "supports_claim": true,
+        "one_line_why": "Fourth Circuit opinion states S.B. was placed in a boys' group home and victimized, directly supporting both placement and suffering elements."
+      },
+      {
+        "source_url": "https://www.ca4.uscourts.gov/opinions/241682.P.pdf",
+        "relevance_score": 0.5,
+        "supports_claim": null,
+        "one_line_why": "References custody and facility placement allegations but snippet does not detail what those allegations contain or whether victimization is confirmed."
+      },
+      {
+        "source_url": "https://www.cbsnews.com/news/state-of-the-union-2026-transcript/",
+        "relevance_score": 0.0,
+        "supports_claim": null,
+        "one_line_why": "Wire-service transcript of the claim itself is not independent verification; it merely repeats the utterance without corroborating the underlying facts."
+      },
+      {
+        "source_url": "https://www.whitehouse.gov/releases/2026/02/president-trump-delivers-his-2026-state-of-the-union-address",
+        "relevance_score": 0.0,
+        "supports_claim": null,
+        "one_line_why": "Primary transcript of the address where the claim originated is the source of the utterance, not independent evidence corroborating the claim's factual assertions."
+      }
+    ],
+    "trump_2026:0409": [
+      {
+        "source_url": "https://www.supremecourt.gov/opinions/slipopinions.aspx?Term=23",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Supreme Court case directly addresses CA policies that kept students' gender transitions from parents, corroborating the claim's core assertion."
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/LSB11422",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "CRS report documents multiple states/districts allowing social gender transitions without parental notification, directly supporting the claim of widespread practice."
+      },
+      {
+        "source_url": "https://www.ed.gov/about/news/press-release/us-department-of-education-finds-california-department-of-education-violated-federal-law-hiding-students-gender-transitions-parents",
+        "relevance_score": 0.85,
+        "supports_claim": true,
+        "one_line_why": "Official DOE finding documents the practice of concealing gender transitions from parents exists, supporting the claim's core assertion."
+      },
+      {
+        "source_url": "https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202320240AB1955&os=vb",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "California law explicitly bars schools from requiring staff to disclose gender identity without student consent, confirming the practice of not telling parents."
+      },
+      {
+        "source_url": "http://www.ed.gov/about/news/press-release/us-department-of-education-finds-california-department-of-education-violated-federal-law-hiding-students-gender-transitions-parents",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "US DOE official finding documents CA policies coerce schools to withhold gender identity information from parents, directly supporting the claim."
+      },
+      {
+        "source_url": "https://www.chalkbeat.org/2025/03/28/schools-must-share-child-gender-identity-info-with-parents-trump-education-department-says/",
+        "relevance_score": 0.95,
+        "supports_claim": true,
+        "one_line_why": "Federal position lists multiple states (CA, WA, ME, Kansas) accused of withholding gender identity info from parents, supporting the claim of widespread practice."
+      },
+      {
+        "source_url": "https://calmatters.org/education/k-12-education/2024/12/california-forced-outing-lgbtq-new-laws-2025/",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "California law explicitly bars schools from disclosing gender identity to parents without consent, confirming the practice of not telling parents."
+      },
+      {
+        "source_url": "https://www.npr.org/2024/07/16/nx-s1-5041437/california-bans-school-rules-requiring-parents-notification-of-childs-pronoun-change",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "AB 1955 bars schools from requiring parental notification of gender-identity changes, directly supporting the claim's assertion about not telling parents."
+      },
+      {
+        "source_url": "https://www.supremecourt.gov/opinions/25pdf/25a810_b97d.pdf",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "SCOTUS emergency order blocks CA policies prohibiting schools from informing parents of gender transitions, confirming the practice existed."
+      },
+      {
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/38646698/",
+        "relevance_score": 0.4,
+        "supports_claim": null,
+        "one_line_why": "AAP report discusses adolescent confidentiality and medical support for confidential care; background on professional context but does not address the specific claim about widespread state policies withholding information from parents."
+      }
+    ],
+    "trump_2026:0583": [
+      {
+        "source_url": "https://www.govinfo.gov/app/details/PLAW-119publ75",
+        "relevance_score": 0.9,
+        "supports_claim": true,
+        "one_line_why": "Official appropriations law is the primary record of enacted defense funding; Public Law 119-75 contains the actual FY2026 DoD budget figure needed to verify 'record number of dollars' claim."
+      },
+      {
+        "source_url": "https://www.military.com/feature/2026/02/24/trumps-2026-state-of-union-1-trillion-defense-budget-warrior-dividend-and-what-it-means-troops.html",
+        "relevance_score": 0.85,
+        "supports_claim": null,
+        "one_line_why": "Same-day SOTU coverage reporting Trump's ~$1 trillion defense budget claim is contemporaneous but is commentary/reporting of the claim itself, not independent verification of whether the figure is actually record or accurate."
+      },
+      {
+        "source_url": "https://usafacts.org/reports/state-of-the-union/defense/",
+        "relevance_score": 0.95,
+        "supports_claim": null,
+        "one_line_why": "USAFacts fact sheet compiling historical defense spending trends is directly relevant to judging whether FY2026 is 'record,' but snippet does not state the actual comparison or conclusion.",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.congress.gov/crs-product/IN12641",
+        "relevance_score": 0.9,
+        "supports_claim": null,
+        "one_line_why": "CRS NDAA authorization figure (~$890.6B) is a primary data series for national defense, but snippet does not clarify whether this is the total defense outlay, how it compares historically, or whether it constitutes a 'record.'",
+        "arithmetic_hinge": true
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/62301",
+        "relevance_score": 0.8,
+        "supports_claim": false,
+        "one_line_why": "CBO states FY2026 defense request is 'one of largest in 50 years but below 2010 peak,' directly contradicting the 'record' assertion in nominal or inflation-adjusted terms."
+      },
+      {
+        "source_url": "https://www.cbo.gov/publication/62105",
+        "relevance_score": 0.6,
+        "supports_claim": null,
+        "one_line_why": "CBO 10-year outlook provides fiscal context and baseline projections but does not directly address whether FY2026 is a record or compare it to prior years."
+      },
+      {
+        "source_url": "https://www.gao.gov/products/gao-26-107065",
+        "relevance_score": 0.2,
+        "supports_claim": null,
+        "one_line_why": "GAO report on continuing resolutions' effects on readiness and costs is tangential to the claim's assertion about record defense investment levels."
+      }
+    ]
+  },
+  "soft_failures": []
+}

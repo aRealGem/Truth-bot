@@ -33,10 +33,21 @@ sys.path.insert(0, str(REPO))
 
 from truthbot.models import SourceTier
 from truthbot.publish.corrections import (apply_to_artifact, load_corrections,
-                                          load_notes)
+                                          load_notes, load_resolution_changes)
 from truthbot.publish.site import SitePublisher, SiteReport
 from truthbot.verdict import bridge as bridge_mod
 from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
+
+
+PCA_RUNS_DIR = REPO / "metrics" / "pca_runs"
+
+
+# F4: head resolution is single-sourced in ``truthbot.publish.heads`` so the
+# renderer, the score-propagation merge, the DC-6 packager, the audits and the
+# tests cannot disagree about which run is the head — and it is deterministic on
+# a fresh clone (the rebuild_of DAG leaf, not the newest mtime). Re-exported
+# here for back-compat with ``from rerender_pca_site import publishing_heads``.
+from truthbot.publish.heads import publishing_heads  # noqa: E402,F401
 
 
 def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
@@ -71,14 +82,78 @@ def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
     return EvidencePack(sid=sid, window=None, items=items)
 
 
+def stance_coverage(evidence: dict) -> dict:
+    """Per-speech stance-scored coverage for the D-B disclosure block — how much
+    of the evidence the scorer took a stance on, plus the tier breakdown of what
+    it did not. $0, read from the artifact's own scored evidence.
+
+    stance-null = an item the B1a/B2 scorer returned with no support/refute
+    signal. Those items cannot credit the evidence quota, so a high null rate is
+    disclosed rather than hidden: the block states it against the 15% ceiling and
+    (for the one speech over it) decomposes the nulls by source tier."""
+    from collections import Counter
+    tiers: Counter = Counter()
+    items = null = packs_with_null = total_packs = 0
+    for _sid, pack in (evidence or {}).items():
+        total_packs += 1
+        has_null = False
+        for e in pack or []:
+            items += 1
+            if e.get("supports_claim") is None:
+                null += 1
+                has_null = True
+                tiers[str(e.get("source_tier"))] += 1
+        if has_null:
+            packs_with_null += 1
+    rate = (null / items) if items else 0.0
+    return {
+        "stance_null": null, "items": items,
+        "rate_pct": round(rate * 100, 1), "ceiling_pct": 15.0,
+        "over_ceiling": rate * 100 > 15.0,
+        "tier_breakdown": dict(tiers.most_common()),
+        "packs_with_null": packs_with_null, "total_packs": total_packs,
+    }
+
+
 def render_artifact(path: Path, publisher: SitePublisher, role: str,
-                    corrections: list[dict] | None = None) -> None:
+                    corrections: list[dict] | None = None,
+                    require_fit: bool = True, mode: str = "skip",
+                    resolution: list[dict] | None = None) -> None:
     d = json.loads(path.read_text(encoding="utf-8"))
     meta = d["meta"]
-    if corrections:
+    label = str(meta.get("speech_id") or path.stem)
+    # Phase A (A1) HARD publish gate: a run whose evidence was never scored must
+    # not be published. Its Unverifiables come from the T2.4 quota gate finding no
+    # stance-bearing Tier-1..3 item — retrieval silence, not evidence. F13: a
+    # speech with an owner-ratified, registry-keyed stance-null exception (D-B)
+    # publishes anyway, with the exception disclosed; every other unfit speech
+    # still refuses on a real publish. ``require_fit=False`` (--allow-unfit-gate)
+    # is a STAGED REVIEW escape only and waives nothing on a publish.
+    from truthbot.publish.consistency import (check_publish_gate,
+                                              publish_gate_notice)
+    gate = check_publish_gate(d, label=label)
+    if gate:
+        if require_fit:
+            raise SystemExit("PUBLISH GATE FAILED — " + "; ".join(gate))
+        print("  ! staged review render of an UNFIT-TO-GATE run: "
+              + "; ".join(gate))
+    notice = publish_gate_notice(d, label=label)
+    if notice:
+        print("  * " + notice)
+    if corrections and mode == "apply":
+        # Historical replay against PRE-ruling artifacts: rewrite the verdict and
+        # stamp the note. Fails closed on an old-verdict mismatch.
         n = apply_to_artifact(d, corrections)
         if n:
             print(f"{meta.get('speech_id')}: applied {n} correction(s)")
+    elif corrections and mode == "skip":
+        # F12: the staged head already carries the verdict, so annotate the strip
+        # (old→new + date) without rewriting — the note the corrections page
+        # promises, joined by sid. Includes the F9 resolution-state changes.
+        from truthbot.publish.corrections import annotate_to_artifact
+        n = annotate_to_artifact(d, corrections, resolution)
+        if n:
+            print(f"{meta.get('speech_id')}: annotated {n} correction note(s)")
     rows, claims = d["rows"], d["claims"]
     packs = {sid: pack_from_evidence(sid, evs)
              for sid, evs in (d.get("evidence") or {}).items()}
@@ -101,6 +176,8 @@ def render_artifact(path: Path, publisher: SitePublisher, role: str,
         bundles=out.bundles,
         characterization=list(d.get("characterization") or []),
         panel_roster=dict(d.get("roster") or {}),
+        speech_id=str(meta.get("speech_id") or ""),
+        stance_coverage=stance_coverage(d.get("evidence") or {}),
     )
     report_path = publisher.publish(site_report)
     print(f"{meta.get('speech_id')}: {len(out.bundles)} bundles → {report_path}")
@@ -112,48 +189,76 @@ def main() -> None:
                     help="pca_runs artifact paths (default: latest evidence-bearing artifact per speech)")
     ap.add_argument("--site-root", required=True)
     ap.add_argument("--role", default="President")
-    ap.add_argument("--corrections", choices=("apply", "skip"), default="apply",
+    ap.add_argument("--corrections", choices=("apply", "skip"), default="skip",
                     help=(
-                        "'apply' (default) patches artifact rows with the "
-                        "data/corrections.json ledger and renders per-claim "
-                        "banners — the pre-Phase-3 behavior. 'skip' is for "
-                        "POST-remediation artifacts whose verdicts were "
-                        "re-adjudicated from scratch and SUPERSEDE the ledger "
-                        "(applying would fail closed on old_verdict "
-                        "mismatches); the historical corrections/changelog "
-                        "page still renders from the ledger notes."))
+                        "'skip' (default, F12): the staged heads already carry "
+                        "their re-adjudicated verdicts, so the verdict is NOT "
+                        "rewritten; instead each corrected claim's provenance "
+                        "strip is ANNOTATED with the old->new + date note by "
+                        "joining data/corrections.json (and the resolution-state "
+                        "changes) by sid. 'apply' is reserved for HISTORICAL "
+                        "REPLAY against PRE-ruling artifacts: it rewrites the "
+                        "verdict and fails closed on an old_verdict mismatch."))
+    ap.add_argument("--allow-unfit-gate", action="store_true",
+                    help=(
+                        "render runs that fail the Phase-A fitness gate. REVIEW "
+                        "ONLY — it waives NOTHING on a publish: an owner-ratified "
+                        "stance-null exception (D-B) is data in the gate, not "
+                        "this flag, so a real publish never needs it and output "
+                        "produced with it must not be published."))
     args = ap.parse_args()
 
     paths = [Path(p) for p in args.artifacts]
     if not paths:
-        candidates = sorted((REPO / "metrics" / "pca_runs").glob("*.json"),
-                            key=lambda p: p.stat().st_mtime)
-        # LATEST artifact per speech_id — a superseded run of the same speech
-        # must not resurrect its stale report alongside the current one (this
-        # bit as soon as a re-publish left two evidence-bearing artifacts per
-        # speech, 2026-07-20). Pass paths explicitly to render an older run.
-        latest: dict[str, Path] = {}
-        for p in candidates:
-            d = json.loads(p.read_text(encoding="utf-8"))
-            if "evidence" not in d:
-                continue
-            sid = (d.get("meta") or {}).get("speech_id") or p.stem
-            latest[sid] = p          # candidates are mtime-ascending; last wins
-        paths = list(latest.values())
+        # LATEST artifact per speech_id. Pass paths explicitly to render an
+        # older run.
+        paths = list(publishing_heads().values())
         if not paths:
             sys.exit("no artifacts with persisted evidence found under metrics/pca_runs/")
         print(f"rendering {len(paths)} artifact(s): {', '.join(p.stem[:8] for p in paths)}")
 
     corrections = load_corrections(REPO / "data" / "corrections.json")
+    resolution = load_resolution_changes(REPO / "data" / "corrections.json")
     if corrections:
-        print(f"corrections on file: {len(corrections)}"
-              + (" (SKIPPED — superseded by re-adjudicated artifacts)"
-                 if args.corrections == "skip" else ""))
-    apply_corr = corrections if args.corrections == "apply" else None
-    publisher = SitePublisher(site_root=args.site_root, corrections=apply_corr,
-                              correction_notes=load_notes(REPO / "data" / "corrections.json"))
+        print(f"corrections on file: {len(corrections)} entries + "
+              f"{len(resolution)} resolution-state changes"
+              + (" (skip: annotate strips, do not rewrite verdicts)"
+                 if args.corrections == "skip" else " (apply: historical replay)"))
+
+    # F6: corpus-wide corrections-ledger completeness — publish-blocking. On a
+    # full head render (no explicit artifact paths, i.e. a publish) the DC-6' net
+    # ledger must account for every changed verdict and be exactly the set the
+    # changelog publishes, or this is not a publish. A silent drop here would
+    # understate what changed, which is the one thing a corrections record may
+    # not do.
+    if not args.artifacts:
+        from truthbot.publish.consistency import check_ledger_completeness
+        net_path = REPO / "metrics" / "remediation_v2" / "dc6_net_ledger.json"
+        if net_path.exists():
+            net = json.loads(net_path.read_text(encoding="utf-8"))
+            gaps = check_ledger_completeness(net, corrections, resolution)
+            if gaps:
+                raise SystemExit("LEDGER COMPLETENESS GATE FAILED — "
+                                 + "; ".join(gaps))
+            print(f"ledger completeness: {net['ledger_eligible']} entries, "
+                  f"all {net['changed_total']} changed sids accounted for")
+        else:
+            raise SystemExit(
+                "LEDGER COMPLETENESS GATE FAILED — no dc6_net_ledger.json; run "
+                "scripts/build_net_ledger.py --write before publishing")
+    # The corrections PAGE always renders the full ledger + the resolution-state
+    # changes (F9). --corrections governs only whether each claim's strip is
+    # annotated in place (skip, default) or the verdict is rewritten (apply,
+    # historical replay). Both modes feed render_artifact the ledger; the mode
+    # selects the behaviour.
+    publisher = SitePublisher(
+        site_root=args.site_root, corrections=corrections,
+        correction_notes=load_notes(REPO / "data" / "corrections.json"),
+        resolution_changes=resolution)
     for p in paths:
-        render_artifact(p, publisher, args.role, corrections=apply_corr)
+        render_artifact(p, publisher, args.role, corrections=corrections,
+                        require_fit=not args.allow_unfit_gate,
+                        mode=args.corrections, resolution=resolution)
     stats = publisher.summary()
     print(f"site: {stats['root']} — {stats['reports']} report(s), "
           f"{stats['claims']} claim(s), {stats['total_kb']} KB")

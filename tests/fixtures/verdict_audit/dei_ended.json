@@ -1,0 +1,91 @@
+{
+ "_frozen_from": "metrics/pca_runs/23939712… (published artifact, run prefix 23939712)",
+ "speech_id": "trump_2026",
+ "utterance": "2026-02-24",
+ "claim": {
+  "sid": "trump_2026:0056",
+  "text": "We ended DEI in America.",
+  "context": "Think about that, any time in the history of our country, more working today and 100 percent of all jobs created under my administration have been in the private sector. || We ended DEI in America. || We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps."
+ },
+ "row": {
+  "sid": "trump_2026:0056",
+  "status": "resolved",
+  "verdict": "FALSE",
+  "confidence": 0.9,
+  "citations": [
+   "E2",
+   "E4",
+   "E6"
+  ],
+  "reasoning": "absolute 'ended DEI' is contradicted by evidence that DEI persists under rebranding and that courts largely blocked the EOs, despite real federal rollback actions",
+  "votes": {
+   "FALSE": 2
+  },
+  "by_role": {
+   "proposer": [
+    "FALSE"
+   ],
+   "critic": [
+    "FALSE"
+   ]
+  },
+  "split": false,
+  "escalated": false
+ },
+ "evidence": [
+  {
+   "snippet": "[2025-01-20] Presidential Executive Order directing termination of federal DEI/DEIA offices, grants, mandates, and related policies.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.whitehouse.gov/presidential-actions/2025/01/ending-radical-and-wasteful-government-dei-programs-and-preferencing/",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-02-20] One year on, companies are rebranding rather than ending DEI; efforts continue under new labels, contradicting 'ended.'",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://spectrumlocalnews.com/us/snplus/news/2026/02/20/dei--business--black--history--one-year",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-01-29] Official Federal Register publication of EO 14151, text requiring agencies to end federal DEI programs and preferences.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.federalregister.gov/documents/2025/01/29/2025-01953/ending-radical-and-wasteful-government-dei-programs-and-preferencing",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2026-02-20] Reports companies quietly rebranding, not eliminating, DEI work — diversity efforts persist under different terminology.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.marketplace.org/story/2026/02/20/more-companies-are-quietly-rebranding-dei-efforts",
+   "source_tier": "Other"
+  },
+  {
+   "snippet": "[2025-02-05] OPM memorandum to agency heads instructing elimination of DEIA offices, programs, ERG limits, and related actions.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.opm.gov/chcoc/transmittals/2025/OPM%20Memo%20Further%20Guidance%20Regarding%20Ending%20DEIA%20Offices%20Programs%20and%20Initiatives%202-5-2025%20FINAL.pdf",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-02-21] Federal judge largely blocked Trump's DEI executive orders as likely unconstitutional, limiting their enforcement.",
+   "source_name": "R1-opus-worker",
+   "source_url": "https://www.npr.org/2025/02/21/nx-s1-5305287/trump-dei-programs-executive-order-judge",
+   "source_tier": "Established"
+  },
+  {
+   "snippet": "[2025-02-05] Attorney General memo directing DOJ Civil Rights Division to investigate and recommend enforcement against \"illegal\" DEI in private sector and education.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.justice.gov/ag/media/1388501/dl",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-02-14] Department of Education \"Dear Colleague\" letter interpreting Title VI to limit many DEI practices at federally funded institutions.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.ed.gov/media/document/dear-colleague-letter-sffa-v-harvard-109506.pdf?i7hc2l786n=",
+   "source_tier": "Government"
+  },
+  {
+   "snippet": "[2025-01-23] GSA directive implementing EOs by rescinding internal DEI plans and instructing removal of DEI references from GSA materials.",
+   "source_name": "R2-gpt-browsing",
+   "source_url": "https://www.gsa.gov/directives-library/termination-of-dei-policies-and-directives-at-us-general-services-administration-gsa-in-accordance-with-executive-orders",
+   "source_tier": "Government"
+  }
+ ]
+}
