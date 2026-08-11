@@ -92,8 +92,12 @@ def collect_appearances() -> tuple[dict[str, list[dict]], set[str], list[dict], 
                 if hop == "rulings":
                     mech = rul_mech.get(sid, family)
                 if hop == "r3" and sid == "trump_2026:0462":
-                    # D-A: the arbiter seat resolved the persistent split 2-1.
-                    mech = "panel ruling — adopted from the arbiter seat (D-A, 2-1)"
+                    # F10: 0462 was resolved by a FRESH R-3 escape panel call
+                    # (2026-08-10) and the outcome owner-ratified (D-A, 2-1). It
+                    # is NOT adopted from another run — run 4ee5a251 is
+                    # trump_2026:0023's adopted-rationale source, not this one.
+                    mech = ("fresh R-3 escape panel (2026-08-10); "
+                            "owner-ratified adoption (D-A, 2-1)")
                 by_sid.setdefault(sid, []).append({
                     "hop": hop, "order": idx, "section": section,
                     "old": e.get("old_verdict"), "new": e.get("new_verdict"),
@@ -173,6 +177,10 @@ def build() -> dict:
     changed = set(by_sid) | dropped_sids
     ledgered = ({e["sid"] for e in ledger} | {e["sid"] for e in non_ledger}
                 | dropped_sids)
+    # F9: the set that must appear on corrections.html — ledger-eligible entries
+    # plus the net-VISIBLE non-ledger moves (verdict crossed a split boundary).
+    net_visible = [e["sid"] for e in non_ledger if not e.get("net_unchanged")]
+    published_expected = sorted({e["sid"] for e in ledger} | set(net_visible))
     return {
         "schema": "truthbot-dc6-net-ledger v1",
         "generated": PUBLISH_DATE,
@@ -187,6 +195,8 @@ def build() -> dict:
         "changed_total": len(changed),
         "ledger_eligible": len(ledger),
         "non_ledger_total": len(non_ledger),
+        "net_visible_total": len(net_visible),
+        "published_expected": published_expected,
         "dropped_total": len(dropped_rows),
         "provenance_shape_total": len(prov_shape),
         "completeness_ok": changed == ledgered,
@@ -201,29 +211,49 @@ def build() -> dict:
     }
 
 
+def net_visible_changes(net: dict) -> list[dict]:
+    """F9: the non-ledger changes whose net verdict actually moved (old != new) —
+    the Models-split boundary crossings the reader would see change on the page.
+    The net-UNCHANGED non-ledger churn (30) stays prose-only, off the table."""
+    return [{"sid": e["sid"], "speech_id": e["speech_id"],
+             "old_verdict": e["old_verdict"], "new_verdict": e["new_verdict"],
+             "reason": e["reason"], "date": e.get("date", PUBLISH_DATE)}
+            for e in net["non_ledger_changes"] if not e.get("net_unchanged")]
+
+
 def public_ledger(net: dict, framing_draft: str | None = None) -> dict:
-    """The superseded data/corrections.json — ledger-eligible net entries only,
-    in the strict truthbot-corrections v1 schema the loader validates."""
+    """The superseded data/corrections.json.
+
+    ``entries``: the ledger-eligible net corrections (valid old != new verdict),
+    strict truthbot-corrections v1 schema. ``resolution_state_changes`` (F9): the
+    net-visible non-ledger moves whose verdict crossed into or out of a
+    Models-split state — rendered on corrections.html as their own section.
+    Both editorial notes ship draft=true (F11): nothing ccagent-authored renders
+    as final framing prose; the owner's approved wording replaces them, flagged
+    final."""
     entries = [{"sid": e["sid"], "speech_id": e["speech_id"],
                 "old_verdict": e["old_verdict"], "new_verdict": e["new_verdict"],
                 "reason": e["reason"], "date": e["date"], "source": e["source"]}
                for e in net["entries"]]
+    resolution = net_visible_changes(net)
     note = (
         f"On {PUBLISH_DATE} the five-speech corpus finished re-adjudication on "
         f"the unified {GENERATION} pipeline across five recorded hops "
         f"(re-score/rebuild, the D16(alpha) release wave, the D15/D16 rulings, "
         f"the R-1 shape correction and the R-3 escape run). {len(entries)} "
         f"claims now publish a verdict that differs from the previously "
-        f"published run and are listed below; a further "
-        f"{net['non_ledger_total']} changed in ways this ledger's vocabulary "
-        f"cannot express (model-split transitions and gate-withheld claims) and "
-        f"are itemised in the DC-6 net ledger. Prior entries described the "
-        f"superseded runs and are archived verbatim.")
-    notes = [{"date": PUBLISH_DATE, "text": note}]
+        f"published run; a further {len(resolution)} crossed into or out of a "
+        f"models-split state and are listed separately. Prior entries described "
+        f"the superseded runs and are archived verbatim.")
+    # F11: the factual note is ccagent-authored, so it too ships as a draft
+    # (HTML comment) until the owner supplies approved wording.
+    notes = [{"date": PUBLISH_DATE, "draft": True,
+              "text": "DRAFT - OWNER RED-PEN REQUIRED: " + note}]
     if framing_draft:
         notes.append({"date": PUBLISH_DATE, "draft": True,
                       "text": "DRAFT - OWNER RED-PEN REQUIRED: " + framing_draft})
-    return {"schema": "truthbot-corrections v1", "notes": notes, "entries": entries}
+    return {"schema": "truthbot-corrections v1", "notes": notes,
+            "entries": entries, "resolution_state_changes": resolution}
 
 
 def main() -> None:

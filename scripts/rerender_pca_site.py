@@ -33,7 +33,7 @@ sys.path.insert(0, str(REPO))
 
 from truthbot.models import SourceTier
 from truthbot.publish.corrections import (apply_to_artifact, load_corrections,
-                                          load_notes)
+                                          load_notes, load_resolution_changes)
 from truthbot.publish.site import SitePublisher, SiteReport
 from truthbot.verdict import bridge as bridge_mod
 from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
@@ -117,28 +117,43 @@ def stance_coverage(evidence: dict) -> dict:
 
 def render_artifact(path: Path, publisher: SitePublisher, role: str,
                     corrections: list[dict] | None = None,
-                    require_fit: bool = True) -> None:
+                    require_fit: bool = True, mode: str = "skip",
+                    resolution: list[dict] | None = None) -> None:
     d = json.loads(path.read_text(encoding="utf-8"))
     meta = d["meta"]
-    # Phase A (A1) HARD publish gate: a run whose evidence was never scored
-    # must not be published. Its Unverifiables come from the T2.4 quota gate
-    # finding no stance-bearing Tier-1..3 item — which, with no relevance or
-    # stance layer anywhere on the v2 pack path, measures retrieval silence
-    # rather than the evidence. Storing such a run is fine and necessary (it
-    # IS the finding); publishing its verdicts as fact-check results is not.
-    # ``require_fit=False`` (CLI --allow-unfit-gate) exists for STAGED REVIEW
-    # renders only — that is not a publish.
-    from truthbot.publish.consistency import check_publish_gate
-    gate = check_publish_gate(d, label=str(meta.get("speech_id") or path.stem))
+    label = str(meta.get("speech_id") or path.stem)
+    # Phase A (A1) HARD publish gate: a run whose evidence was never scored must
+    # not be published. Its Unverifiables come from the T2.4 quota gate finding no
+    # stance-bearing Tier-1..3 item — retrieval silence, not evidence. F13: a
+    # speech with an owner-ratified, registry-keyed stance-null exception (D-B)
+    # publishes anyway, with the exception disclosed; every other unfit speech
+    # still refuses on a real publish. ``require_fit=False`` (--allow-unfit-gate)
+    # is a STAGED REVIEW escape only and waives nothing on a publish.
+    from truthbot.publish.consistency import (check_publish_gate,
+                                              publish_gate_notice)
+    gate = check_publish_gate(d, label=label)
     if gate:
         if require_fit:
             raise SystemExit("PUBLISH GATE FAILED — " + "; ".join(gate))
         print("  ! staged review render of an UNFIT-TO-GATE run: "
               + "; ".join(gate))
-    if corrections:
+    notice = publish_gate_notice(d, label=label)
+    if notice:
+        print("  * " + notice)
+    if corrections and mode == "apply":
+        # Historical replay against PRE-ruling artifacts: rewrite the verdict and
+        # stamp the note. Fails closed on an old-verdict mismatch.
         n = apply_to_artifact(d, corrections)
         if n:
             print(f"{meta.get('speech_id')}: applied {n} correction(s)")
+    elif corrections and mode == "skip":
+        # F12: the staged head already carries the verdict, so annotate the strip
+        # (old→new + date) without rewriting — the note the corrections page
+        # promises, joined by sid. Includes the F9 resolution-state changes.
+        from truthbot.publish.corrections import annotate_to_artifact
+        n = annotate_to_artifact(d, corrections, resolution)
+        if n:
+            print(f"{meta.get('speech_id')}: annotated {n} correction note(s)")
     rows, claims = d["rows"], d["claims"]
     packs = {sid: pack_from_evidence(sid, evs)
              for sid, evs in (d.get("evidence") or {}).items()}
@@ -174,23 +189,23 @@ def main() -> None:
                     help="pca_runs artifact paths (default: latest evidence-bearing artifact per speech)")
     ap.add_argument("--site-root", required=True)
     ap.add_argument("--role", default="President")
-    ap.add_argument("--corrections", choices=("apply", "skip"), default="apply",
+    ap.add_argument("--corrections", choices=("apply", "skip"), default="skip",
                     help=(
-                        "'apply' (default) patches artifact rows with the "
-                        "data/corrections.json ledger and renders per-claim "
-                        "banners — the pre-Phase-3 behavior. 'skip' is for "
-                        "POST-remediation artifacts whose verdicts were "
-                        "re-adjudicated from scratch and SUPERSEDE the ledger "
-                        "(applying would fail closed on old_verdict "
-                        "mismatches); the historical corrections/changelog "
-                        "page still renders from the ledger notes."))
+                        "'skip' (default, F12): the staged heads already carry "
+                        "their re-adjudicated verdicts, so the verdict is NOT "
+                        "rewritten; instead each corrected claim's provenance "
+                        "strip is ANNOTATED with the old->new + date note by "
+                        "joining data/corrections.json (and the resolution-state "
+                        "changes) by sid. 'apply' is reserved for HISTORICAL "
+                        "REPLAY against PRE-ruling artifacts: it rewrites the "
+                        "verdict and fails closed on an old_verdict mismatch."))
     ap.add_argument("--allow-unfit-gate", action="store_true",
                     help=(
-                        "render runs that fail the Phase-A fitness gate "
-                        "(evidence never relevance/stance-scored, so the "
-                        "forced-Unverifiable gate is not measuring evidence). "
-                        "STAGED REVIEW RENDERS ONLY — output produced with "
-                        "this flag must not be published."))
+                        "render runs that fail the Phase-A fitness gate. REVIEW "
+                        "ONLY — it waives NOTHING on a publish: an owner-ratified "
+                        "stance-null exception (D-B) is data in the gate, not "
+                        "this flag, so a real publish never needs it and output "
+                        "produced with it must not be published."))
     args = ap.parse_args()
 
     paths = [Path(p) for p in args.artifacts]
@@ -203,10 +218,12 @@ def main() -> None:
         print(f"rendering {len(paths)} artifact(s): {', '.join(p.stem[:8] for p in paths)}")
 
     corrections = load_corrections(REPO / "data" / "corrections.json")
+    resolution = load_resolution_changes(REPO / "data" / "corrections.json")
     if corrections:
-        print(f"corrections on file: {len(corrections)}"
-              + (" (SKIPPED — superseded by re-adjudicated artifacts)"
-                 if args.corrections == "skip" else ""))
+        print(f"corrections on file: {len(corrections)} entries + "
+              f"{len(resolution)} resolution-state changes"
+              + (" (skip: annotate strips, do not rewrite verdicts)"
+                 if args.corrections == "skip" else " (apply: historical replay)"))
 
     # F6: corpus-wide corrections-ledger completeness — publish-blocking. On a
     # full head render (no explicit artifact paths, i.e. a publish) the DC-6' net
@@ -219,7 +236,7 @@ def main() -> None:
         net_path = REPO / "metrics" / "remediation_v2" / "dc6_net_ledger.json"
         if net_path.exists():
             net = json.loads(net_path.read_text(encoding="utf-8"))
-            gaps = check_ledger_completeness(net, corrections)
+            gaps = check_ledger_completeness(net, corrections, resolution)
             if gaps:
                 raise SystemExit("LEDGER COMPLETENESS GATE FAILED — "
                                  + "; ".join(gaps))
@@ -229,18 +246,19 @@ def main() -> None:
             raise SystemExit(
                 "LEDGER COMPLETENESS GATE FAILED — no dc6_net_ledger.json; run "
                 "scripts/build_net_ledger.py --write before publishing")
-    # --corrections governs apply_to_artifact ONLY. The corrections PAGE
-    # always renders the full ledger (remediation v2, 1.11): with 'skip' the
-    # old code passed corrections=None to the publisher while still passing
-    # notes, so corrections.html showed the 2026-07-21 audit note AND the
-    # "No corrections have been issued" empty state at once. The empty
-    # state must appear only when the ledger itself is empty.
-    apply_corr = corrections if args.corrections == "apply" else None
-    publisher = SitePublisher(site_root=args.site_root, corrections=corrections,
-                              correction_notes=load_notes(REPO / "data" / "corrections.json"))
+    # The corrections PAGE always renders the full ledger + the resolution-state
+    # changes (F9). --corrections governs only whether each claim's strip is
+    # annotated in place (skip, default) or the verdict is rewritten (apply,
+    # historical replay). Both modes feed render_artifact the ledger; the mode
+    # selects the behaviour.
+    publisher = SitePublisher(
+        site_root=args.site_root, corrections=corrections,
+        correction_notes=load_notes(REPO / "data" / "corrections.json"),
+        resolution_changes=resolution)
     for p in paths:
-        render_artifact(p, publisher, args.role, corrections=apply_corr,
-                        require_fit=not args.allow_unfit_gate)
+        render_artifact(p, publisher, args.role, corrections=corrections,
+                        require_fit=not args.allow_unfit_gate,
+                        mode=args.corrections, resolution=resolution)
     stats = publisher.summary()
     print(f"site: {stats['root']} — {stats['reports']} report(s), "
           f"{stats['claims']} claim(s), {stats['total_kb']} KB")

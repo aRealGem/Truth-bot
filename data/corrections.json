@@ -3,7 +3,8 @@
   "notes": [
     {
       "date": "2026-08-10",
-      "text": "On 2026-08-10 the five-speech corpus finished re-adjudication on the unified v2.3-role-axis-s5cap pipeline across five recorded hops (re-score/rebuild, the D16(alpha) release wave, the D15/D16 rulings, the R-1 shape correction and the R-3 escape run). 148 claims now publish a verdict that differs from the previously published run and are listed below; a further 42 changed in ways this ledger's vocabulary cannot express (model-split transitions and gate-withheld claims) and are itemised in the DC-6 net ledger. Prior entries described the superseded runs and are archived verbatim."
+      "draft": true,
+      "text": "DRAFT - OWNER RED-PEN REQUIRED: On 2026-08-10 the five-speech corpus finished re-adjudication on the unified v2.3-role-axis-s5cap pipeline across five recorded hops (re-score/rebuild, the D16(alpha) release wave, the D15/D16 rulings, the R-1 shape correction and the R-3 escape run). 148 claims now publish a verdict that differs from the previously published run; a further 12 crossed into or out of a models-split state and are listed separately. Prior entries described the superseded runs and are archived verbatim."
     },
     {
       "date": "2026-08-10",
@@ -1343,6 +1344,104 @@
       "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
       "date": "2026-08-10",
       "source": "dc6-net-ledger-2026-08-10 (v2.3-role-axis-s5cap)"
+    }
+  ],
+  "resolution_state_changes": [
+    {
+      "sid": "biden_2022:0127",
+      "speech_id": "biden_2022",
+      "old_verdict": "Models split",
+      "new_verdict": "Misleading",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one; the Phase-2 dry run projected the prior pack losing 2 evidence item(s) under the corrected rules (2 over-cap political).",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "biden_2022:0366",
+      "speech_id": "biden_2022",
+      "old_verdict": "Models split",
+      "new_verdict": "Unverifiable",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "biden_2022:0385",
+      "speech_id": "biden_2022",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the panel's model votes changed split status on the rebuilt pack.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "biden_2022:0397",
+      "speech_id": "biden_2022",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the panel's model votes changed split status on the rebuilt pack.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "obama_2014:0034",
+      "speech_id": "obama_2014",
+      "old_verdict": "False",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the panel's model votes changed split status on the rebuilt pack.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "obama_2014:0086",
+      "speech_id": "obama_2014",
+      "old_verdict": "Models split",
+      "new_verdict": "True",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "obama_2014:0285",
+      "speech_id": "obama_2014",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the panel's model votes changed split status on the rebuilt pack.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "trump_2026:0015",
+      "speech_id": "trump_2026",
+      "old_verdict": "Misleading",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the panel's model votes changed split status on the rebuilt pack; the Phase-2 dry run projected the prior pack losing 2 evidence item(s) under the corrected rules (2 mutable live-endpoint).",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "trump_2026:0030",
+      "speech_id": "trump_2026",
+      "old_verdict": "Models split",
+      "new_verdict": "False",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the rebuilt pack cleared the evidence gate, so the panel returned a substantive verdict where the prior run withheld one; the Phase-2 dry run projected the prior pack losing 1 evidence item(s) under the corrected rules (1 mutable live-endpoint).",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "trump_2026:0257",
+      "speech_id": "trump_2026",
+      "old_verdict": "True",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-06): the panel's model votes changed split status on the rebuilt pack.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "trump_2026:0553",
+      "speech_id": "trump_2026",
+      "old_verdict": "MISLEADING",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the panel's model votes changed split status on the rebuilt pack.",
+      "date": "2026-08-10"
+    },
+    {
+      "sid": "trump_2026:0554",
+      "speech_id": "trump_2026",
+      "old_verdict": "Unverifiable",
+      "new_verdict": "Models split",
+      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-09): released from the evidence gate by the D16(alpha) statistical-release and D15 utterance-record rules ratified 2026-08-09, applied to the B1a+B2 stance re-score of the stored evidence pack; re-adjudicated on the unified pipeline with no new retrieval; the panel's model votes changed split status on the rebuilt pack.",
+      "date": "2026-08-10"
     }
   ]
 }

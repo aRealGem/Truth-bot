@@ -304,6 +304,24 @@ _MAX_S5_PER_SID = 3
 #: existing run failing this is the CORRECT outcome: they are all unfit.
 UNFIT_STANCE_NULL_RATE = 0.15
 
+#: F13 (D-B): owner-ratified, registry-keyed exceptions to the stance-null
+#: publish gate. A speech listed here PUBLISHES despite being unfit, with its
+#: exception version and expiry disclosed on the report and printed by the gate.
+#: This is DATA, not a CLI bypass: the four unlisted speeches keep hard
+#: enforcement, a second unfit speech that is not listed still refuses, and
+#: --allow-unfit-gate waives nothing on a real publish. The threshold
+#: (:data:`UNFIT_STANCE_NULL_RATE`) is untouched — an exception discloses that a
+#: speech is over the line, it does not move the line. Expiry is a condition, not
+#: a date: when it is met the entry must be removed and the speech must clear the
+#: ceiling or stop publishing.
+STANCE_NULL_GATE_EXCEPTIONS: dict[str, dict] = {
+    "trump_2026": {
+        "version": "dc6'-2026-08-10",
+        "expiry": "the D17 retrieval-contract fix lands and trump_2026 is "
+                  "re-rendered on the repaired retrieval",
+    },
+}
+
 #: Cohort → the one-phrase gloss that says what that cohort IS. The fitness
 #: finding is stated over 17 stored run artifacts, and 17 is a number nobody
 #: can interpret on its own: read against the five published reports it looks
@@ -503,22 +521,51 @@ def check_publish_gate(artifact, label: str = "") -> list[str]:
     fit, reason = is_fit_to_gate(artifact)
     if fit:
         return []
+    # F13: a speech with a ratified, registry-keyed exception publishes despite
+    # being unfit — the notice is surfaced via :func:`publish_gate_notice`, not as
+    # a violation. Every other unfit speech still refuses.
+    if _gate_exception(artifact):
+        return []
     name = label or (artifact.get("meta") or {}).get("speech_id") or "artifact"
     return [f"{name}: unfit-to-gate, refusing to publish — {reason}"]
 
 
+def _gate_exception(artifact) -> dict | None:
+    sid = (artifact.get("meta") or {}).get("speech_id") or ""
+    return STANCE_NULL_GATE_EXCEPTIONS.get(sid)
+
+
+def publish_gate_notice(artifact, label: str = "") -> str:
+    """F13: the disclosure the gate PRINTS instead of refusing, when a speech is
+    unfit but publishes under a ratified exception. Empty for a fit speech or an
+    unfit speech with no exception (which :func:`check_publish_gate` refuses)."""
+    fit, reason = is_fit_to_gate(artifact)
+    if fit:
+        return ""
+    exc = _gate_exception(artifact)
+    if not exc:
+        return ""
+    name = label or (artifact.get("meta") or {}).get("speech_id") or "artifact"
+    return (f"{name}: PUBLISHED UNDER RATIFIED EXCEPTION {exc['version']} "
+            f"(expires when {exc['expiry']}) — {reason}")
+
+
 def check_ledger_completeness(net_ledger: dict,
-                             published_entries: list[dict]) -> list[str]:
-    """HARD publish-time gate (F6): the corrections ledger accounts for every
-    changed verdict, and the published changelog is exactly its ledger-eligible
-    subset.
+                             published_entries: list[dict],
+                             published_resolution: list[dict] | None = None
+                             ) -> list[str]:
+    """HARD publish-time gate (F6, extended F9): the corrections ledger accounts
+    for every changed verdict, and the published changelog is exactly the
+    net-VISIBLE set — the ledger-eligible entries UNION the non-ledger moves whose
+    verdict actually crossed a models-split boundary (old != new). The
+    net-UNCHANGED non-ledger churn stays prose-only and is deliberately NOT on the
+    page.
 
     Returns violations (empty = publishable). ``net_ledger`` is the DC-6' net
-    record (``metrics/remediation_v2/dc6_net_ledger.json``); ``published_entries``
-    is ``data/corrections.json``'s ``entries``. The failure this blocks is a
-    silent drop — a claim whose verdict moved between the live run and the staged
-    head but which appears in neither the ledger nor the itemised non-ledger
-    changes, so the public record understates what changed.
+    record; ``published_entries`` and ``published_resolution`` are
+    ``data/corrections.json``'s ``entries`` and ``resolution_state_changes``. The
+    failure this blocks is a silent drop — a claim whose verdict moved but which
+    the public record fails to show — and its inverse, a phantom correction.
     """
     v: list[str] = []
     missing = net_ledger.get("completeness_missing") or []
@@ -531,15 +578,19 @@ def check_ledger_completeness(net_ledger: dict,
     mism = net_ledger.get("head_mismatches") or []
     if mism:
         v.append(f"corrections ledger disagrees with the publishing heads: {mism}")
-    # The public changelog must be exactly the ledger-eligible net entries — no
-    # more (a phantom correction), no fewer (an omitted one).
-    ledger_sids = {e.get("sid") for e in (net_ledger.get("entries") or [])}
-    published_sids = {e.get("sid") for e in (published_entries or [])}
-    if ledger_sids != published_sids:
-        only_net = sorted(ledger_sids - published_sids)
-        only_pub = sorted(published_sids - ledger_sids)
+    # The published set must be EXACTLY entries UNION net-visible non-ledger — no
+    # more (a phantom), no fewer (an omitted change), and the net-unchanged churn
+    # must NOT leak onto the page.
+    expected = set(net_ledger.get("published_expected")
+                   or [e.get("sid") for e in (net_ledger.get("entries") or [])])
+    published_sids = ({e.get("sid") for e in (published_entries or [])}
+                      | {e.get("sid") for e in (published_resolution or [])})
+    if expected != published_sids:
+        only_net = sorted(expected - published_sids)
+        only_pub = sorted(published_sids - expected)
         v.append(
-            "data/corrections.json does not match the net ledger's eligible set"
+            "data/corrections.json does not match the net ledger's published set "
+            "(entries UNION net-visible non-ledger)"
             + (f" — missing from changelog: {only_net}" if only_net else "")
             + (f" — extra in changelog: {only_pub}" if only_pub else ""))
     return v

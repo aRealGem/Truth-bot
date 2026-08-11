@@ -252,20 +252,24 @@ def test_check_site_flags_page_with_both_table_and_empty_state(tmp_path: Path) -
 
 
 def test_rerender_script_passes_full_ledger_for_display_on_skip() -> None:
-    """The script wires the FULL ledger into SitePublisher regardless of
-    --corrections apply|skip; only apply_to_artifact consumes the gated
-    list. Pin the wiring at source level (running main() needs artifacts)."""
+    """The script wires the FULL ledger + resolution-state changes into
+    SitePublisher for display, and (F12) passes the mode to render_artifact so
+    'skip' annotates strips in place while 'apply' rewrites verdicts. Default is
+    'skip'. Pin the wiring at source level (running main() needs artifacts)."""
     import re
     from pathlib import Path as _P
 
     src = (_P(__file__).resolve().parents[2] /
            "scripts" / "rerender_pca_site.py").read_text(encoding="utf-8")
+    # Publisher receives the full ledger AND the F9 resolution-state changes.
+    assert re.search(r"SitePublisher\(\s*site_root=args\.site_root,\s*"
+                     r"corrections=corrections", src), \
+        "publisher must receive the full ledger for display"
+    assert "resolution_changes=resolution" in src
+    # render_artifact receives the ledger + the mode + the resolution set.
     assert re.search(
-        r"SitePublisher\(site_root=args\.site_root,\s*corrections=corrections",
-        src), "publisher must receive the full ledger for display"
-    # Trailing bracket OR comma: the call grew a require_fit kwarg with the
-    # Phase-A publish gate; what this pins is that apply_corr is what reaches
-    # apply_to_artifact.
-    assert re.search(
-        r"render_artifact\(p, publisher, args\.role, corrections=apply_corr[,)]",
+        r"render_artifact\(p, publisher, args\.role, corrections=corrections",
         src)
+    assert "mode=args.corrections" in src and "resolution=resolution" in src
+    # F12: default is skip (annotate, do not rewrite).
+    assert re.search(r'--corrections".*?default="skip"', src, re.S)

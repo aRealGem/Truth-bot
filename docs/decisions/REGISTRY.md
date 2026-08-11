@@ -266,13 +266,18 @@ corpus row `combined gated = 65`.
 [0462 — persistent-split-after-2 PUBLISHES as Models-Split](#0462--persistent-split-after-2-publishes-as-models-split).
 
 The R-3 escape run made the third panel call the earlier disposition
-anticipated, and the arbiter seat resolved the persistent split to
-**UNVERIFIABLE (2-1)**. Per **D-A**, trump_2026:0462 ADOPTS that resolved
-UNVERIFIABLE: there is no revert path and the prepared models-split pair is
-dropped. The publishing head (91dd7a34) carries verdict UNVERIFIABLE, and the
-DC-6' net ledger records it as a SINGLE resolved-UNVERIFIABLE entry
-(TRUE → UNVERIFIABLE), attributed to the panel ruling **adopted from the arbiter
-seat of run 4ee5a251**.
+anticipated: a **fresh R-3 escape panel (2026-08-10)** re-adjudicated 0462 on its
+stored evidence pack and resolved the persistent split to **UNVERIFIABLE (2-1)**.
+Per **D-A**, trump_2026:0462 ADOPTS that resolved UNVERIFIABLE: there is no revert
+path and the prepared models-split pair is dropped. The publishing head
+(91dd7a34) carries verdict UNVERIFIABLE, and the DC-6' net ledger records it as a
+SINGLE resolved-UNVERIFIABLE entry (TRUE → UNVERIFIABLE), attributed to that
+fresh escape-panel ruling.
+
+**Provenance note (F10):** 0462's rationale is the fresh R-3 escape panel's own
+output, NOT an adoption from another run. Run `4ee5a251` is trump_2026:0023's
+adopted-rationale source (see F5); it has nothing to do with 0462. An earlier
+draft of this entry wrongly attributed 0462 to run 4ee5a251 — struck.
 
 **D-A adoption logged:** 2026-08-10, owner-ratified 2-1, no revert path.
 

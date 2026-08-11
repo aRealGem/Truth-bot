@@ -4168,6 +4168,15 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
 .corrections-note { color: var(--ink-muted); }
+/* F9: models-split resolution-state badge — neutral, not a verdict colour. */
+.vt-split {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  color: var(--ink-muted);
+  border: 1px dashed var(--rule, #d8d4ca);
+  border-radius: 3px;
+  padding: 0 0.3em;
+}
 /* D-B: per-speech stance-scored coverage disclosure block. */
 .stance-coverage {
   margin: 1.25rem 0;
@@ -7114,19 +7123,33 @@ def _render_model_insights_v2(reports: list[dict], claims: list[dict]) -> str:
     )
 
 
-def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None) -> str:
+def _corrections_verdict_span(v: str) -> str:
+    """A verdict badge for the corrections tables. A standard verdict gets its
+    colour; a models-split STATE (F9) gets a neutral badge so it reads as a
+    resolution state, not a verdict."""
+    vv = (v or "").strip()
+    if vv.upper() in ("TRUE", "FALSE", "MISLEADING", "UNVERIFIABLE"):
+        return (f'<span class="vt-{_verdict_css(vv.capitalize())}">'
+                f'{_esc(vv.upper())}</span>')
+    return f'<span class="vt-split">{_esc(vv)}</span>'
+
+
+def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
+                        resolution_changes: Optional[list[dict]] = None) -> str:
     """The public Corrections page (P67.6 / T1.5) — a fact-checking-norm
     changelog: claim id, old → new verdict, reason, date. Rendered on every
     publish (empty state included) so the page exists before its first entry
-    and readers can always find the correction policy."""
+    and readers can always find the correction policy.
+
+    ``resolution_changes`` (F9): the net-visible non-ledger moves whose verdict
+    crossed a models-split boundary, shown in their own section so a change of
+    resolution state is disclosed as clearly as a change of verdict."""
     if entries:
         rows = "".join(
             f'<tr><td class="mono">{_esc(e["sid"])}</td>'
             f'<td>{_esc(e["speech_id"])}</td>'
-            f'<td><span class="vt-{_verdict_css(e["old_verdict"].capitalize())}">'
-            f'{_esc(e["old_verdict"].upper())}</span> → '
-            f'<span class="vt-{_verdict_css(e["new_verdict"].capitalize())}">'
-            f'{_esc(e["new_verdict"].upper())}</span></td>'
+            f'<td>{_corrections_verdict_span(e["old_verdict"])} → '
+            f'{_corrections_verdict_span(e["new_verdict"])}</td>'
             f'<td>{_esc(e["reason"])}</td>'
             f'<td>{_esc(e["date"])}</td></tr>'
             for e in entries
@@ -7140,6 +7163,29 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
     else:
         table = ('<p class="dim">No corrections have been issued for the '
                  'currently published reports.</p>')
+    resolution_html = ""
+    if resolution_changes:
+        rrows = "".join(
+            f'<tr><td class="mono">{_esc(e["sid"])}</td>'
+            f'<td>{_esc(e["speech_id"])}</td>'
+            f'<td>{_corrections_verdict_span(e["old_verdict"])} → '
+            f'{_corrections_verdict_span(e["new_verdict"])}</td>'
+            f'<td>{_esc(e.get("reason", ""))}</td>'
+            f'<td>{_esc(e.get("date", ""))}</td></tr>'
+            for e in resolution_changes
+        )
+        resolution_html = (
+            '<h3>Resolution-state changes</h3>'
+            '<p>These claims did not change from one verdict to another; they '
+            'crossed into or out of a <em>models-split</em> state — the panel '
+            'reaching, or ceasing to reach, a consensus — between the previously '
+            'published run and this one. Shown here for the same reason a verdict '
+            'change is: the published outcome moved.</p>'
+            '<table class="tier-table corrections-table">'
+            '<tr><th>Claim</th><th>Report</th><th>Resolution state</th>'
+            '<th>Reason</th><th>Date</th></tr>'
+            f'{rrows}</table>'
+        )
     # A note flagged ``draft`` is framing prose awaiting owner red-pen (S-8): it
     # is carried in data/corrections.json so the owner can review it against the
     # staged site, but it MUST NOT render as final published prose. It is emitted
@@ -7167,6 +7213,7 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
         + notes_html
         + draft_html
         + table
+        + resolution_html
     )
     footer = (
         f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
@@ -7586,7 +7633,8 @@ class SitePublisher:
     def __init__(self, site_root: Optional[str | Path] = None,
                  corrections: Optional[list[dict]] = None,
                  correction_notes: Optional[list[dict]] = None,
-                 report_aliases: Optional[dict[str, str]] = None) -> None:
+                 report_aliases: Optional[dict[str, str]] = None,
+                 resolution_changes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
@@ -7596,6 +7644,9 @@ class SitePublisher:
         # rendered on corrections.html each publish. Empty → empty-state page.
         self._corrections: list[dict] = list(corrections or [])
         self._correction_notes: list[dict] = list(correction_notes or [])
+        # F9: net-visible resolution-state changes (verdict crossed a models-split
+        # boundary) — their own section on corrections.html.
+        self._resolution_changes: list[dict] = list(resolution_changes or [])
         # Dead-URL → stable-slug redirect ledger (DC-3'). Defaults to the
         # repo's data/report_aliases.json; stubs are only ever emitted for
         # aliases whose TARGET page exists in this site root, so synthetic /
@@ -7703,7 +7754,8 @@ class SitePublisher:
         )
         self._write(self._root / "corrections.html",
                     _render_corrections(self._corrections,
-                                        self._correction_notes))
+                                        self._correction_notes,
+                                        self._resolution_changes))
 
         # Redirect stubs for dead report URLs (DC-3'): whenever a stable
         # target page exists in this render, every aliased old filename gets

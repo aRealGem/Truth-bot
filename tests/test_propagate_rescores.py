@@ -311,11 +311,17 @@ def test_four_of_the_five_heads_now_pass_the_publish_gate(heads):
     """The measured state, asserted rather than described. trump_2026 is the
     one speech the honest merge does NOT rescue: 309 of its 1,472 items came
     back stance-null from the scorer itself, 21.0% against a 15% ceiling. The
-    ceiling is not moved to accommodate it — this test is the record that it
-    was not, and it fails if someone quietly lowers the bar or forces the run
-    through.
+    ceiling is not moved to accommodate it — is_fit_to_gate still returns False,
+    and this test fails if someone quietly lowers the bar.
+
+    F13: trump publishes anyway, but through an owner-ratified, registry-keyed
+    exception (D-B) that DISCLOSES it is over the line — not by lowering the
+    ceiling and not via a CLI bypass. The exception is data; every other speech
+    keeps hard enforcement, so a second unfit speech would still refuse.
     """
-    from truthbot.publish.consistency import check_publish_gate, is_fit_to_gate
+    from truthbot.publish.consistency import (
+        STANCE_NULL_GATE_EXCEPTIONS, check_publish_gate, is_fit_to_gate,
+        publish_gate_notice)
 
     fit = {}
     for speech in SPEECHES:
@@ -324,11 +330,58 @@ def test_four_of_the_five_heads_now_pass_the_publish_gate(heads):
             pytest.skip(f"{speech}: no artifact in this checkout")
         doc = json.loads(path.read_text(encoding="utf-8"))
         fit[speech] = is_fit_to_gate(doc)[0]
-        assert (check_publish_gate(doc) == []) is fit[speech]
+        excepted = speech in STANCE_NULL_GATE_EXCEPTIONS
+        # publishable = fit OR excepted; the notice appears iff excepted-unfit.
+        assert (check_publish_gate(doc) == []) is (fit[speech] or excepted)
+        assert bool(publish_gate_notice(doc)) is (excepted and not fit[speech])
 
+    # The ceiling is untouched: trump is still measured UNFIT.
     assert fit == {"gwbush_2006": True, "clinton_1998": True,
                    "obama_2014": True, "biden_2022": True,
                    "trump_2026": False}
+    # …and it is the ONLY speech carrying an exception.
+    assert set(STANCE_NULL_GATE_EXCEPTIONS) == {"trump_2026"}
+
+
+def test_default_invocation_renders_end_to_end(tmp_path, monkeypatch):
+    """F12: the DEFAULT invocation (no flags — ``--corrections skip`` and NO
+    unfit bypass) renders the whole corpus end-to-end on a fresh clone. This is
+    the regression that the publish PATH works, not just its parts: the ledger
+    completeness gate passes, trump publishes under the keyed D-B exception, the
+    strips are annotated, and the resolution-state section reaches the page.
+    """
+    import importlib.util
+
+    if not any((RUNS_DIR).glob("*.json")):
+        pytest.skip("no pca_runs artifacts in this checkout")
+    spec = importlib.util.spec_from_file_location(
+        "rerender_pca_site", REPO / "scripts" / "rerender_pca_site.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    site = tmp_path / "site"
+    monkeypatch.setattr(
+        "sys.argv", ["rerender_pca_site.py", "--site-root", str(site)])
+    mod.main()  # default flags; raises SystemExit on any gate failure
+
+    corr = (site / "corrections.html").read_text(encoding="utf-8")
+    assert "Resolution-state changes" in corr           # F9 section
+    assert corr.count("vt-split") == 12                  # the 12 net-visible
+    assert list(site.glob("reports/*donald-trump*.html"))  # trump published
+
+
+def test_a_second_unfit_speech_still_refuses_despite_the_trump_exception():
+    """F13 guard: the D-B exception is keyed to trump_2026 alone. A different
+    speech at the same unfitness gets no free pass — the gate refuses it and
+    emits no exception notice."""
+    from truthbot.publish.consistency import check_publish_gate, publish_gate_notice
+
+    unfit = {"meta": {"speech_id": "gwbush_2006"},
+             "evidence": {"gwbush_2006:9001": [
+                 {"source_url": "https://a.gov/x", "relevance_score": 0.7,
+                  "supports_claim": None} for _ in range(20)]}}
+    assert check_publish_gate(unfit) != []          # refuses
+    assert publish_gate_notice(unfit) == ""         # no exception notice
 
 
 # ── 6. the head is data, not a timestamp (F4) ────────────────────────────────

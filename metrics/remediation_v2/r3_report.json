@@ -124,5 +124,20 @@
   "exhibit_decisions": {},
   "halted": "",
   "spend_usd": 0.0602,
-  "cap_usd": 0.25
+  "cap_usd": 0.25,
+  "spend_measurement": {
+    "method": "LiteLLM proxy key spend ledger, read after the escape run settled.",
+    "authoritative": "proxy",
+    "proxy_settled_usd": 0.0602,
+    "journal_reconciliation": {
+      "journals": ["metrics/journals/biden_2022_r3.jsonl", "metrics/journals/trump_2026_r3.jsonl"],
+      "journal_logged_usd": 0.008,
+      "proxy_settled_usd": 0.0602,
+      "delta_usd": 0.0522,
+      "cause": "async proxy-counter lag at reduce time — same class as the R-1 reshape (see r1_reshape_rerun_report.json). The chunk journals banked the pre-settle figure; the proxy ledger is the settled truth.",
+      "authoritative": "proxy",
+      "totals_effect": "the R-3 escape's contribution to spend accounting is $0.0602, not the journaled $0.0080."
+    },
+    "dc_b1_scope_restatement": "With the proxy figure authoritative, the R-3 escape run cost $0.0602 (2 claims, 4 panel calls — trump_2026:0462 took three to break the persistent split). This is the figure carried against the DC-B1 authorized ceiling; the journaled $0.0080 understated it by an async-lag artifact and must not be used for carry-forward accounting. Per-claim this is $0.0301, above the clean single-adjudication pack-reuse band (costs.PACK_REUSE_USD_MEASURED 0.0036-0.0132) precisely because of 0462's triple call, so it stays an OUTLIER outside that band rather than widening it."
+  }
 }

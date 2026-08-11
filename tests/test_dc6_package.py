@@ -734,16 +734,20 @@ def test_committed_net_ledger_supersedes_and_archives_the_prior_ledger():
     net = json.loads((_PKG / "dc6_net_ledger.json").read_text("utf-8"))
     archive = REPO / "data" / "corrections-archive-2026-08-10.json"
     live = REPO / "data" / "corrections.json"
+    doc = json.loads(live.read_text("utf-8"))
     assert archive.exists(), "the clean-slate reset must archive, never delete"
     assert load_corrections(archive)                      # archived copy loads clean
     current = load_corrections(live)
     # the changelog is exactly the net ledger's ledger-eligible entries.
     assert {e["sid"] for e in current} == {e["sid"] for e in net["entries"]}
     assert net["completeness_ok"] and not net["head_mismatches"]
-    # exactly one factual note; the framing note is draft-flagged (S-8).
-    notes = json.loads(live.read_text("utf-8"))["notes"]
-    assert sum(1 for n in notes if not n.get("draft")) == 1
-    assert any(n.get("draft") for n in notes)
+    # F9: the resolution-state section is exactly the net-visible non-ledger set.
+    assert ({e["sid"] for e in doc.get("resolution_state_changes", [])}
+            == {e["sid"] for e in net["non_ledger_changes"]
+                if not e.get("net_unchanged")})
+    # F11: NOTHING ccagent-authored renders as final — EVERY note is draft.
+    notes = doc["notes"]
+    assert notes and all(n.get("draft") for n in notes)
 
 
 @pytest.mark.skipif(not (_PKG / "dc6_review.json").exists(),
