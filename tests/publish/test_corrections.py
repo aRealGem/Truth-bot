@@ -99,7 +99,7 @@ def test_apply_ignores_other_speeches() -> None:
                                          "sid": "trump_2026:0001"}]) == 0
 
 
-def test_correction_note_threads_into_provenance_and_strip() -> None:
+def test_correction_note_threads_into_provenance_and_renders_via_one_path() -> None:
     from truthbot.verdict.bridge import _build_provenance
     from truthbot.models import VerdictProvenance
 
@@ -108,18 +108,28 @@ def test_correction_note_threads_into_provenance_and_strip() -> None:
     prov = _build_provenance(row, {"layer_a": {"label": "check-worthy"}})
     assert "Corrected FALSE → TRUE" in prov.correction_note
 
+    from truthbot.publish.site import (_correction_provenance_html,
+                                       _pca_provenance_strip)
     from tests.test_site_render_aggregates import _make_bundle
     from truthbot.models import VerdictLabel
-    from truthbot.publish.site import _pca_provenance_strip
 
-    b = _make_bundle(VerdictLabel.TRUE, coarse_lenient="True", coarse_strict="True")
-    b.consensus.provenance = VerdictProvenance(
-        layer_a_label="check-worthy", panel_votes={"True": 2},
-        correction_note=note_for(ENTRY))
-    html = _pca_provenance_strip(b)
-    assert "pca-correction" in html
-    assert "Corrected FALSE" in html
+    # F14: the note is emitted by the ONE shared helper, NOT by the provenance
+    # chain strip — so it survives when the strip renders nothing.
+    full = VerdictProvenance(layer_a_label="check-worthy", panel_votes={"True": 2},
+                             correction_note=note_for(ENTRY))
+    html = _correction_provenance_html(full)
+    assert "pca-correction" in html and "Corrected FALSE" in html
     assert 'href="../corrections.html"' in html
+    # The chain strip no longer carries the note (single path, no drift).
+    b = _make_bundle(VerdictLabel.TRUE, coarse_lenient="True", coarse_strict="True")
+    b.consensus.provenance = full
+    assert "pca-correction" not in _pca_provenance_strip(b)
+
+    # The gated/minimal case: an EMPTY provenance chain still renders the note.
+    gated = VerdictProvenance(correction_note=note_for(ENTRY))
+    assert _pca_provenance_strip(
+        _make_bundle(VerdictLabel.UNVERIFIABLE)) is not None  # smoke
+    assert "Corrected FALSE" in _correction_provenance_html(gated)
 
 
 def test_corrections_page_renders_entries_and_empty_state() -> None:

@@ -369,6 +369,19 @@ def test_default_invocation_renders_end_to_end(tmp_path, monkeypatch):
     assert corr.count("vt-split") == 12                  # the 12 net-visible
     assert list(site.glob("reports/*donald-trump*.html"))  # trump published
 
+    # F14 count gate: EVERY stamped correction note reaches the page — including
+    # the gated-UNVERIFIABLE claims whose provenance strip is empty. The number
+    # rendered on the claim permalinks (one page per claim, no aliases) must equal
+    # the number stamped (entries + resolution-state changes); a template that
+    # drops the note fails HERE, in CI, not in review.
+    ledger = json.loads((REPO / "data" / "corrections.json").read_text("utf-8"))
+    stamped = len(ledger["entries"]) + len(ledger.get("resolution_state_changes", []))
+    rendered = sum(p.read_text(encoding="utf-8").count('class="pca-correction"')
+                   for p in (site / "claims").glob("*.html"))
+    assert rendered == stamped, (
+        f"{rendered} correction notes rendered on claim pages but {stamped} were "
+        "stamped — a template is dropping the note")
+
 
 def test_a_second_unfit_speech_still_refuses_despite_the_trump_exception():
     """F13 guard: the D-B exception is keyed to trump_2026 alone. A different

@@ -2348,6 +2348,27 @@ def _is_self_sourced_unverified(bundle: VerdictBundle) -> bool:
     return has_bearing_self
 
 
+def _correction_provenance_html(prov, rel: str = "../") -> str:
+    """The post-publication correction note (T1.5) and the D14 coherence
+    annotation (A7) for a claim — the ONE emit path (F14).
+
+    Emitted on the claim card independently of the provenance CHAIN, so a
+    corrected claim keeps its "⚠ Corrected OLD → NEW (date) · reason" line even on
+    a gated/minimal page whose provenance strip has no chain parts and renders
+    empty. Both the full and the minimal template call THIS, so the note cannot be
+    silently dropped by one of them again. A correction is never silent."""
+    html = ""
+    if getattr(prov, "correction_note", ""):
+        html += (f'<div class="pca-correction">⚠ {_esc(prov.correction_note)} '
+                 f'· <a href="{rel}corrections.html">Corrections</a></div>')
+    coherence_note = str(getattr(prov, "coherence_note", "") or "")
+    if coherence_note:
+        html += ('<div class="pca-coherence">'
+                 '<span class="coherence-label">Adjacent-claim coherence</span>'
+                 f'{_esc(coherence_note)}</div>')
+    return html
+
+
 def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
                           rel: str = "../") -> str:
     """The Layer A → PCA panel → CRM-114 chain, rendered as a compact strip.
@@ -2394,30 +2415,16 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     seat_html = (
         f'<div class="pca-seats">{_esc(seat_line)}</div>' if seat_line else ""
     )
-    # Post-publication correction (T1.5): shown wherever the verdict is,
-    # linked to the public changelog — a correction is never silent.
-    corr_html = ""
-    if getattr(prov, "correction_note", ""):
-        corr_html = (
-            f'<div class="pca-correction">⚠ {_esc(prov.correction_note)} '
-            f'· <a href="{rel}corrections.html">Corrections</a></div>'
-        )
-    # D14 (A7): adjacent-claim coherence annotation, shown in full where the
-    # verdict lives so the disclosed disagreement travels with the claim.
-    coherence_html = ""
-    coherence_note = str(getattr(prov, "coherence_note", "") or "")
-    if coherence_note:
-        coherence_html = (
-            '<div class="pca-coherence">'
-            '<span class="coherence-label">Adjacent-claim coherence</span>'
-            f'{_esc(coherence_note)}</div>'
-        )
+    # The correction and coherence notes are NOT emitted here: they ride on the
+    # claim card via :func:`_correction_provenance_html` (F14), so they survive on
+    # a gated/minimal claim whose provenance chain is empty and this strip renders
+    # nothing. One emit path, two templates — they cannot drift.
     return (
         '<div class="pca-provenance" '
         'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
         'tally, each seat&#39;s own prediction, and any Severity Classifier '
         'stage-2 override.">'
-        f'{chain}{seat_html}{corr_html}{coherence_html}</div>'
+        f'{chain}{seat_html}</div>'
     )
 
 
@@ -2739,6 +2746,10 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  {caveat_html}'
         f'  {computed_exhibit_html}'
         f'  {models_block}'
+        # F14: correction + coherence notes, emitted here (one path) so they
+        # render on EVERY claim — including a gated/minimal claim whose
+        # ``models_block`` provenance strip is empty.
+        f'  {_correction_provenance_html(consensus.provenance, rel)}'
         f'  {evidence_html}'
         f'  {consulted_html}'
         '  <div class="claim-foot">'
