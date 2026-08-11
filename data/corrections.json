@@ -3,13 +3,13 @@
   "notes": [
     {
       "date": "2026-08-10",
-      "draft": true,
-      "text": "DRAFT - OWNER RED-PEN REQUIRED: On 2026-08-10 the five-speech corpus finished re-adjudication on the unified v2.3-role-axis-s5cap pipeline across five recorded hops (re-score/rebuild, the D16(alpha) release wave, the D15/D16 rulings, the R-1 shape correction and the R-3 escape run). 148 claims now publish a verdict that differs from the previously published run; a further 12 crossed into or out of a models-split state and are listed separately. Prior entries described the superseded runs and are archived verbatim."
+      "owner_approved": "2026-08-11",
+      "text": "On 2026-08-10 the five-speech corpus finished re-adjudication on the unified v2.3-role-axis-s5cap pipeline across five recorded hops (re-score/rebuild, the D16(alpha) release wave, the D15/D16 rulings, the R-1 shape correction and the R-3 escape run). 148 claims now publish a verdict that differs from the previously published run and are listed below; a further 42 changed in ways the verdict table cannot express — the 12 that crossed into or out of a models-split state are shown in the Resolution-state section below, and all 42 are itemised in the DC-6 net ledger. Prior entries described the superseded runs and are archived verbatim."
     },
     {
       "date": "2026-08-10",
-      "draft": true,
-      "text": "DRAFT - OWNER RED-PEN REQUIRED: This page lists every published fact-check verdict that changed when the five-speech corpus was re-adjudicated on the v2.3 pipeline, showing each claim's previously published verdict next to the verdict this site now serves. Where a verdict moved through more than one step, only the net change is shown here; the step-by-step mechanism behind each move is recorded in the DC-6 net ledger."
+      "owner_approved": "2026-08-11",
+      "text": "This page lists every published fact-check verdict that changed when the five-speech corpus was re-adjudicated on the v2.3 pipeline, showing each claim's previously published verdict next to the verdict this site now serves. Where a verdict moved through more than one step, only the net change is shown here; the step-by-step mechanism behind each move is recorded in the DC-6 net ledger."
     }
   ],
   "entries": [

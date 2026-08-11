@@ -221,37 +221,67 @@ def net_visible_changes(net: dict) -> list[dict]:
             for e in net["non_ledger_changes"] if not e.get("net_unchanged")]
 
 
+#: Owner approval date for the two corrections-page notes (rev 5, Fable
+#: 2026-08-11). Both were carried draft (HTML-comment) until this approval; they
+#: now ship FINAL and render visibly. Recorded on each note as ``owner_approved``.
+OWNER_APPROVED = "2026-08-11"
+
+#: Paragraph 1 — the factual note, EXACTLY as the owner approved it (rev 5). The
+#: one accuracy amendment over the draft: it now names the Resolution-state
+#: section that exists on the page. Verbatim, not templated, so it cannot drift
+#: from the approved wording; the counts it states (148 / 42 / 12) are guarded
+#: against the data in :func:`public_ledger`.
+NOTE_FACTUAL = (
+    "On 2026-08-10 the five-speech corpus finished re-adjudication on the "
+    "unified v2.3-role-axis-s5cap pipeline across five recorded hops "
+    "(re-score/rebuild, the D16(alpha) release wave, the D15/D16 rulings, the "
+    "R-1 shape correction and the R-3 escape run). 148 claims now publish a "
+    "verdict that differs from the previously published run and are listed "
+    "below; a further 42 changed in ways the verdict table cannot express — "
+    "the 12 that crossed into or out of a models-split state are shown in the "
+    "Resolution-state section below, and all 42 are itemised in the DC-6 net "
+    "ledger. Prior entries described the superseded runs and are archived "
+    "verbatim.")
+
+#: Paragraph 2 — the framing note, shipped verbatim as drafted and owner-approved.
+NOTE_FRAMING = (
+    "This page lists every published fact-check verdict that changed when the "
+    "five-speech corpus was re-adjudicated on the v2.3 pipeline, showing each "
+    "claim's previously published verdict next to the verdict this site now "
+    "serves. Where a verdict moved through more than one step, only the net "
+    "change is shown here; the step-by-step mechanism behind each move is "
+    "recorded in the DC-6 net ledger.")
+
+
 def public_ledger(net: dict, framing_draft: str | None = None) -> dict:
     """The superseded data/corrections.json.
 
     ``entries``: the ledger-eligible net corrections (valid old != new verdict),
     strict truthbot-corrections v1 schema. ``resolution_state_changes`` (F9): the
     net-visible non-ledger moves whose verdict crossed into or out of a
-    Models-split state — rendered on corrections.html as their own section.
-    Both editorial notes ship draft=true (F11): nothing ccagent-authored renders
-    as final framing prose; the owner's approved wording replaces them, flagged
-    final."""
+    Models-split state — rendered on corrections.html as their own section. Both
+    notes are FINAL (rev 5, owner-approved 2026-08-11) and render visibly; the
+    factual note's stated counts are guarded against the data so the approved
+    wording can never silently lie."""
     entries = [{"sid": e["sid"], "speech_id": e["speech_id"],
                 "old_verdict": e["old_verdict"], "new_verdict": e["new_verdict"],
                 "reason": e["reason"], "date": e["date"], "source": e["source"]}
                for e in net["entries"]]
     resolution = net_visible_changes(net)
-    note = (
-        f"On {PUBLISH_DATE} the five-speech corpus finished re-adjudication on "
-        f"the unified {GENERATION} pipeline across five recorded hops "
-        f"(re-score/rebuild, the D16(alpha) release wave, the D15/D16 rulings, "
-        f"the R-1 shape correction and the R-3 escape run). {len(entries)} "
-        f"claims now publish a verdict that differs from the previously "
-        f"published run; a further {len(resolution)} crossed into or out of a "
-        f"models-split state and are listed separately. Prior entries described "
-        f"the superseded runs and are archived verbatim.")
-    # F11: the factual note is ccagent-authored, so it too ships as a draft
-    # (HTML comment) until the owner supplies approved wording.
-    notes = [{"date": PUBLISH_DATE, "draft": True,
-              "text": "DRAFT - OWNER RED-PEN REQUIRED: " + note}]
-    if framing_draft:
-        notes.append({"date": PUBLISH_DATE, "draft": True,
-                      "text": "DRAFT - OWNER RED-PEN REQUIRED: " + framing_draft})
+    # The approved paragraph 1 states 148 / 42 / 12 verbatim. Fail the build if
+    # the data ever diverges, so the owner-approved wording cannot outlive the
+    # facts it describes.
+    if not (len(entries) == 148 and net["non_ledger_total"] == 42
+            and len(resolution) == 12):
+        raise SystemExit(
+            "approved note counts (148 corrected / 42 non-ledger / 12 net-visible)"
+            f" != data ({len(entries)} / {net['non_ledger_total']} / "
+            f"{len(resolution)}) — the wording needs owner re-approval, not a "
+            "silent number change")
+    notes = [
+        {"date": PUBLISH_DATE, "owner_approved": OWNER_APPROVED, "text": NOTE_FACTUAL},
+        {"date": PUBLISH_DATE, "owner_approved": OWNER_APPROVED, "text": NOTE_FRAMING},
+    ]
     return {"schema": "truthbot-corrections v1", "notes": notes,
             "entries": entries, "resolution_state_changes": resolution}
 

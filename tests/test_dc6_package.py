@@ -729,8 +729,8 @@ def test_committed_entries_are_loadable_and_complete(tmp_path):
                     reason="DC-6' net ledger not generated in this tree")
 def test_committed_net_ledger_supersedes_and_archives_the_prior_ledger():
     """F6 supersede: the live ledger is exactly the DC-6' net ledger's eligible
-    set, the prior ledger is archived (never deleted), and the framing prose is
-    a draft-flagged note that cannot render as final."""
+    set, the prior ledger is archived (never deleted), and (rev 5) both notes are
+    owner-approved final prose."""
     net = json.loads((_PKG / "dc6_net_ledger.json").read_text("utf-8"))
     archive = REPO / "data" / "corrections-archive-2026-08-10.json"
     live = REPO / "data" / "corrections.json"
@@ -745,9 +745,14 @@ def test_committed_net_ledger_supersedes_and_archives_the_prior_ledger():
     assert ({e["sid"] for e in doc.get("resolution_state_changes", [])}
             == {e["sid"] for e in net["non_ledger_changes"]
                 if not e.get("net_unchanged")})
-    # F11: NOTHING ccagent-authored renders as final — EVERY note is draft.
+    # Rev 5: both notes are owner-approved FINAL (no draft flag, dated approval),
+    # so they render visibly on the corrections page.
     notes = doc["notes"]
-    assert notes and all(n.get("draft") for n in notes)
+    assert len(notes) == 2
+    assert all(not n.get("draft") for n in notes)
+    assert all(n.get("owner_approved") == "2026-08-11" for n in notes)
+    # the amended paragraph 1 names the Resolution-state section that now exists.
+    assert "Resolution-state section below" in notes[0]["text"]
 
 
 @pytest.mark.skipif(not (_PKG / "dc6_review.json").exists(),
