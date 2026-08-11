@@ -1,9 +1,8 @@
 # D15 + D16(α) — era breakdown (the M-6 evenhandedness check)
 
-*Generated 2026-08-10T18:24:41.102558+00:00 · $0, no model calls. Stance vintage: **rescored** (the B1a re-score overlaid — the live state of the corpus, and the vintage the "measured 50" came from).*
+*Generated 2026-08-11T01:02:19.227174+00:00 · $0, no model calls. Stance vintage: **rescored** (the B1a re-score overlaid — the live state of the corpus, and the vintage the "measured 50" came from).*
 
-- **D15** `TRUTHBOT_D15_UTTERANCE_RECORD (default OFF — NOT enabled)`
-- **D16(α)** `TRUTHBOT_D16_STATISTICAL_RELEASE (default OFF — NOT enabled)`
+- **measurement-harness flags** — the configuration THIS breakdown ran under, not the production gate default: D15 `TRUTHBOT_D15_UTTERANCE_RECORD (default OFF — NOT enabled)`, D16(α) `TRUTHBOT_D16_STATISTICAL_RELEASE (default OFF — NOT enabled)`. The harness sweeps the rules to measure what each would do; what production ships is set by the ratified gate config, not by these switches.
 
 - **source artifacts** `wave` `biden_2022`=8577979b, `clinton_1998`=fcbc8db2, `gwbush_2006`=0ae0f3b8, `obama_2014`=91d400ba, `trump_2026`=9c4262a7
 - **baseline** `shipped` — movement measured against the gate outcome the source artifact RECORDED — nothing cancels, so the numbers are what the corpus loses relative to what was on the page, the re-score's own withholdings included

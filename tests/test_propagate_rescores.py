@@ -329,3 +329,67 @@ def test_four_of_the_five_heads_now_pass_the_publish_gate(heads):
     assert fit == {"gwbush_2006": True, "clinton_1998": True,
                    "obama_2014": True, "biden_2022": True,
                    "trump_2026": False}
+
+
+# ── 6. the head is data, not a timestamp (F4) ────────────────────────────────
+
+def test_head_resolution_is_deterministic_not_mtime(tmp_path):
+    """The head is the leaf of the ``rebuild_of`` DAG at the current generation,
+    resolved from data that travels with the repo — NOT the newest mtime. On a
+    fresh clone every file carries the checkout time, so the old mtime rule was
+    undefined and this suite was non-deterministic. This builds a tiny run tree,
+    stamps the ROOT as newest (what would have won the mtime rule) and the real
+    head as oldest, and asserts the leaf is chosen anyway — then repeats with the
+    uniform mtimes a clone actually produces.
+    """
+    import os
+
+    from truthbot.publish.heads import publishing_heads
+
+    def _write(rid, rebuild_of, gen="genX", mtime=None):
+        doc = {"meta": {"speech_id": "s1", "rebuild_of": rebuild_of,
+                        "generation": gen}, "evidence": {}, "rows": [],
+               "claims": []}
+        p = tmp_path / f"{rid}.json"
+        p.write_text(json.dumps(doc), encoding="utf-8")
+        if mtime is not None:
+            os.utime(p, (mtime, mtime))
+        return p
+
+    _write("root", None, mtime=3000)          # newest — would win "newest wins"
+    _write("mid", "root", mtime=2000)
+    leaf = _write("leaf", "mid", mtime=1000)   # oldest — but the real head
+    # A superseded, off-generation root of the same speech must not resurface.
+    _write("stale", None, gen="old-gen", mtime=9000)
+    (tmp_path / "methodology_manifest.json").write_text(json.dumps({
+        "current_generation": "genX",
+        "runs": {"root": {"generation": "genX"}, "mid": {"generation": "genX"},
+                 "leaf": {"generation": "genX"},
+                 "stale": {"generation": "old-gen"}},
+    }), encoding="utf-8")
+
+    assert publishing_heads(tmp_path) == {"s1": leaf}
+
+    for p in tmp_path.glob("*.json"):          # the fresh-clone condition
+        os.utime(p, (5000, 5000))
+    assert publishing_heads(tmp_path) == {"s1": leaf}
+
+
+def test_a_forked_lineage_is_a_build_fault_not_a_coin_flip(tmp_path):
+    """Two leaves for one speech at the current generation is ambiguous, and the
+    resolver refuses rather than picking one — the failure the mtime rule hid by
+    silently choosing whichever file was touched last."""
+    from truthbot.publish.heads import publishing_heads
+
+    for rid, ro in (("root", None), ("a", "root"), ("b", "root")):
+        (tmp_path / f"{rid}.json").write_text(json.dumps(
+            {"meta": {"speech_id": "s1", "rebuild_of": ro, "generation": "genX"},
+             "evidence": {}, "rows": [], "claims": []}), encoding="utf-8")
+    (tmp_path / "methodology_manifest.json").write_text(json.dumps({
+        "current_generation": "genX",
+        "runs": {"root": {"generation": "genX"}, "a": {"generation": "genX"},
+                 "b": {"generation": "genX"}},
+    }), encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="exactly one head"):
+        publishing_heads(tmp_path)

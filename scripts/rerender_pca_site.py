@@ -42,32 +42,12 @@ from truthbot.verdict.evidence_pack import EvidencePack, PackItem, _sha256
 PCA_RUNS_DIR = REPO / "metrics" / "pca_runs"
 
 
-def publishing_heads(runs_dir: Path | None = None) -> dict[str, Path]:
-    """``speech_id -> the artifact a publish would render`` — THE head selection.
-
-    The newest evidence-bearing artifact per speech, mtime-ascending so the last
-    one wins. A superseded run of the same speech must not resurrect its stale
-    report alongside the current one (this bit as soon as a re-publish left two
-    evidence-bearing artifacts per speech, 2026-07-20).
-
-    Factored out of :func:`main` so anything that has to write a NEW head — the
-    score-propagation merge (``scripts/propagate_rescores.py``) — derives from
-    the same artifact the publish would render, by calling this rather than by
-    re-deriving "newest" and hoping the two agree.
-    """
-    runs_dir = Path(runs_dir) if runs_dir is not None else PCA_RUNS_DIR
-    candidates = sorted(runs_dir.glob("*.json"), key=lambda p: p.stat().st_mtime)
-    latest: dict[str, Path] = {}
-    for p in candidates:
-        try:
-            d = json.loads(p.read_text(encoding="utf-8"))
-        except (ValueError, OSError):
-            continue
-        if "evidence" not in d:
-            continue
-        sid = (d.get("meta") or {}).get("speech_id") or p.stem
-        latest[sid] = p          # candidates are mtime-ascending; last wins
-    return latest
+# F4: head resolution is single-sourced in ``truthbot.publish.heads`` so the
+# renderer, the score-propagation merge, the DC-6 packager, the audits and the
+# tests cannot disagree about which run is the head — and it is deterministic on
+# a fresh clone (the rebuild_of DAG leaf, not the newest mtime). Re-exported
+# here for back-compat with ``from rerender_pca_site import publishing_heads``.
+from truthbot.publish.heads import publishing_heads  # noqa: E402,F401
 
 
 def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
@@ -100,6 +80,39 @@ def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
                           if ev.get("published_at") else None),
         ))
     return EvidencePack(sid=sid, window=None, items=items)
+
+
+def stance_coverage(evidence: dict) -> dict:
+    """Per-speech stance-scored coverage for the D-B disclosure block — how much
+    of the evidence the scorer took a stance on, plus the tier breakdown of what
+    it did not. $0, read from the artifact's own scored evidence.
+
+    stance-null = an item the B1a/B2 scorer returned with no support/refute
+    signal. Those items cannot credit the evidence quota, so a high null rate is
+    disclosed rather than hidden: the block states it against the 15% ceiling and
+    (for the one speech over it) decomposes the nulls by source tier."""
+    from collections import Counter
+    tiers: Counter = Counter()
+    items = null = packs_with_null = total_packs = 0
+    for _sid, pack in (evidence or {}).items():
+        total_packs += 1
+        has_null = False
+        for e in pack or []:
+            items += 1
+            if e.get("supports_claim") is None:
+                null += 1
+                has_null = True
+                tiers[str(e.get("source_tier"))] += 1
+        if has_null:
+            packs_with_null += 1
+    rate = (null / items) if items else 0.0
+    return {
+        "stance_null": null, "items": items,
+        "rate_pct": round(rate * 100, 1), "ceiling_pct": 15.0,
+        "over_ceiling": rate * 100 > 15.0,
+        "tier_breakdown": dict(tiers.most_common()),
+        "packs_with_null": packs_with_null, "total_packs": total_packs,
+    }
 
 
 def render_artifact(path: Path, publisher: SitePublisher, role: str,
@@ -149,6 +162,7 @@ def render_artifact(path: Path, publisher: SitePublisher, role: str,
         characterization=list(d.get("characterization") or []),
         panel_roster=dict(d.get("roster") or {}),
         speech_id=str(meta.get("speech_id") or ""),
+        stance_coverage=stance_coverage(d.get("evidence") or {}),
     )
     report_path = publisher.publish(site_report)
     print(f"{meta.get('speech_id')}: {len(out.bundles)} bundles → {report_path}")
@@ -193,6 +207,28 @@ def main() -> None:
         print(f"corrections on file: {len(corrections)}"
               + (" (SKIPPED — superseded by re-adjudicated artifacts)"
                  if args.corrections == "skip" else ""))
+
+    # F6: corpus-wide corrections-ledger completeness — publish-blocking. On a
+    # full head render (no explicit artifact paths, i.e. a publish) the DC-6' net
+    # ledger must account for every changed verdict and be exactly the set the
+    # changelog publishes, or this is not a publish. A silent drop here would
+    # understate what changed, which is the one thing a corrections record may
+    # not do.
+    if not args.artifacts:
+        from truthbot.publish.consistency import check_ledger_completeness
+        net_path = REPO / "metrics" / "remediation_v2" / "dc6_net_ledger.json"
+        if net_path.exists():
+            net = json.loads(net_path.read_text(encoding="utf-8"))
+            gaps = check_ledger_completeness(net, corrections)
+            if gaps:
+                raise SystemExit("LEDGER COMPLETENESS GATE FAILED — "
+                                 + "; ".join(gaps))
+            print(f"ledger completeness: {net['ledger_eligible']} entries, "
+                  f"all {net['changed_total']} changed sids accounted for")
+        else:
+            raise SystemExit(
+                "LEDGER COMPLETENESS GATE FAILED — no dc6_net_ledger.json; run "
+                "scripts/build_net_ledger.py --write before publishing")
     # --corrections governs apply_to_artifact ONLY. The corrections PAGE
     # always renders the full ledger (remediation v2, 1.11): with 'skip' the
     # old code passed corrections=None to the publisher while still passing

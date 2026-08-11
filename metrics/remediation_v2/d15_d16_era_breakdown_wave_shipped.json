@@ -1,6 +1,6 @@
 {
   "schema": "truthbot-d15-d16-era-breakdown v1",
-  "generated": "2026-08-10T18:24:41.102558+00:00",
+  "generated": "2026-08-11T01:02:19.227174+00:00",
   "flags": {
     "d15": "TRUTHBOT_D15_UTTERANCE_RECORD (default OFF \u2014 NOT enabled)",
     "d16": "TRUTHBOT_D16_STATISTICAL_RELEASE (default OFF \u2014 NOT enabled)"

@@ -92,15 +92,9 @@ Respond with STRICT JSON, no prose outside it:
 
 
 def latest_artifacts() -> list[Path]:
-    candidates = sorted((REPO / "metrics" / "pca_runs").glob("*.json"),
-                        key=lambda p: p.stat().st_mtime)
-    latest: dict[str, Path] = {}
-    for p in candidates:
-        d = json.loads(p.read_text(encoding="utf-8"))
-        if "evidence" not in d:
-            continue
-        latest[(d.get("meta") or {}).get("speech_id") or p.stem] = p
-    return list(latest.values())
+    # F4: single-sourced, deterministic head resolution (rebuild_of DAG leaf).
+    from truthbot.publish.heads import publishing_heads
+    return list(publishing_heads().values())
 
 
 def sid_index(sid: str) -> int:

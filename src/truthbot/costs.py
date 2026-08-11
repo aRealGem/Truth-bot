@@ -176,6 +176,21 @@ PER_CLAIM_USD_MEASURED: tuple[float, float] = (0.0642, 0.0748)
 #: OUTWARD for headroom. Deliberately wider than the measurement.
 PER_CLAIM_USD_PLANNING: tuple[float, float] = (0.065, 0.080)
 
+#: Cost per claim to RE-adjudicate on a STORED evidence pack — no new retrieval,
+#: just the panel call over evidence already on disk (F8). LEDGER-DERIVED from
+#: the three 2026-08 stored-pack reuse runs, measured off the LiteLLM proxy spend
+#: ledger (state basis, not a chars/4 estimate):
+#:   * R-1 reshape  — 1 claim,  $0.0036 total → $0.0036/claim  (band LOW)
+#:   * the wave     — 29 claims, $0.3815 total → $0.0132/claim  (band HIGH)
+#:   * R-3 escape   — 2 claims,  $0.0602 total → $0.0301/claim  (OUTLIER)
+#: The band is the two clean single-adjudication runs (R-1, wave); the R-3
+#: per-claim runs high because trump_2026:0462 took three panel calls to break a
+#: persistent split, so it is not a clean single reuse and is excluded from the
+#: band while recorded here for honesty. The retrieval-BEARING per-claim constant
+#: (PER_CLAIM_USD_MEASURED) is unaffected and stays pinned — pack reuse is the
+#: no-retrieval floor beneath it.
+PACK_REUSE_USD_MEASURED: tuple[float, float] = (0.0036, 0.0132)
+
 
 # ── rates ────────────────────────────────────────────────────────────────────
 

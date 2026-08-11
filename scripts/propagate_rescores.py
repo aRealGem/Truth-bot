@@ -82,7 +82,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from phase3_rebuild import update_manifest  # noqa: E402
 from regate_from_rescore import (load_rescore_sidecar,  # noqa: E402
                                  merge_sidecars, overlay_rescores)
-from rerender_pca_site import publishing_heads  # noqa: E402
+from truthbot.publish.heads import publishing_heads  # noqa: E402
 from rescore_stored_packs import (REBUILT_RUNS, b2_sidecar_path,  # noqa: E402
                                   load_artifact, sidecar_path)
 

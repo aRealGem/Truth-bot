@@ -90,6 +90,15 @@
     "in_run_reading": 0.0,
     "why_the_in_run_reading_was_wrong": "The proxy key's counter is written asynchronously. Read the instant the call returned it still showed the pre-call figure, so the runner reported $0.0000 and the chunk journal banked cost_usd 0.0. The runner now settles before re-reading and keeps the larger of the two figures; the journal's 0.0 for this run is a known under-report, recorded here rather than left to be discovered.",
     "cap_usd": 0.25,
-    "estimate_usd": 0.02
+    "estimate_usd": 0.02,
+    "journal_reconciliation": {
+      "journal": "metrics/journals/r1_0031_reshape.jsonl",
+      "journal_logged_usd": 0.0,
+      "ledger_true_usd": 0.0036,
+      "delta_usd": 0.0036,
+      "cause": "async proxy-counter lag at reduce time (F8)",
+      "authoritative": "ledger",
+      "totals_effect": "none — the journal's 0.0 never entered any published total; the ledger figure is the one carried in costs.py PACK_REUSE_USD_MEASURED and the spend accounting."
+    }
   }
 }

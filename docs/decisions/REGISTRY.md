@@ -239,3 +239,64 @@ because the shape did, and the shape moves the gate).
 
 **Deferred:** exhibits as non-dispositive context on c-eval claims — logged as
 **D17-e**, R-2 amendment territory, not this publish.
+
+---
+
+## S-15 — the review said 62, the corpus lost 65 (B1a-only overlay bug)
+
+**Corrected:** 2026-08-10. A prose correction, not a re-adjudication.
+
+An earlier review of the D15 + D16(α) era breakdown reported **62** combined
+newly-gated claims. The measured figure is **65**
+(`metrics/remediation_v2/d15_d16_era_breakdown_wave_shipped.md`, corpus net
+**-65**). The 62 was computed over a **B1a-only** stance overlay — the B2
+relevance layer was not yet applied — so three claims the full B1a+B2 re-score
+withholds went uncounted. What ships is **65**, measured on the live (B1a+B2)
+vintage; the review's 62 was arithmetic on a partial overlay and is corrected
+here.
+
+**Checked by:** the regenerated breakdown (`--source wave --baseline shipped`),
+corpus row `combined gated = 65`.
+
+---
+
+## S-19' — 0462 adopts the resolved UNVERIFIABLE (supersedes the split disposition)
+
+**Ruled:** 2026-08-10 — **D-A, owner-ratified 2-1.** Supersedes
+[0462 — persistent-split-after-2 PUBLISHES as Models-Split](#0462--persistent-split-after-2-publishes-as-models-split).
+
+The R-3 escape run made the third panel call the earlier disposition
+anticipated, and the arbiter seat resolved the persistent split to
+**UNVERIFIABLE (2-1)**. Per **D-A**, trump_2026:0462 ADOPTS that resolved
+UNVERIFIABLE: there is no revert path and the prepared models-split pair is
+dropped. The publishing head (91dd7a34) carries verdict UNVERIFIABLE, and the
+DC-6' net ledger records it as a SINGLE resolved-UNVERIFIABLE entry
+(TRUE → UNVERIFIABLE), attributed to the panel ruling **adopted from the arbiter
+seat of run 4ee5a251**.
+
+**D-A adoption logged:** 2026-08-10, owner-ratified 2-1, no revert path.
+
+**Checked by:** `test_beckstrom_0462_third_panel_broke_the_split_and_said_why`;
+the DC-6' net-ledger completeness gate (`check_ledger_completeness`).
+
+---
+
+## D-B — trump_2026 ships under a DISCLOSED exception to the 15% stance-null ceiling
+
+**Ruled:** 2026-08-10, owner-ratified. **Versioned; expiry-bound.**
+
+trump_2026's stance-null rate is **21.0% (309 of 1,472 items)**, above the 15%
+publication ceiling. The ceiling is **not moved**; instead trump_2026 ships under
+an owner-ratified DISCLOSED exception for this release, carrying a per-speech
+stance-coverage block on the report that states the rate, the 15% ceiling, and
+the tier decomposition of the nulls (Gov 144 / Political 57 / Other 48 /
+Established 40 / Wire 20, across 113 of 182 evidence packs).
+
+**Version:** `dc6'-2026-08-10`. **Expiry:** the exception lapses when the **D17
+retrieval-contract fix** lands AND trump_2026 is re-rendered on the repaired
+retrieval — at which point trump must clear 15% or not publish. The threshold in
+`consistency.UNFIT_STANCE_NULL_RATE` (0.15) is untouched.
+
+**Checked by:** `test_four_of_the_five_heads_now_pass_the_publish_gate` (asserts
+trump remains unfit and the ceiling is not lowered) and the D-B disclosure block
+rendered on all five reports.

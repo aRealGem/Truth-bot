@@ -176,24 +176,30 @@ def test_report_banner_derives_from_corrected_bundles(tmp_path: Path) -> None:
     assert "report-correction-banner" not in html2
 
 
-def test_repo_corrections_file_is_valid_and_matches_audit() -> None:
-    """The committed corrections must load cleanly and every entry must trace
-    to a flagged, conf>=0.8 audit record with matching verdict move."""
+def test_repo_corrections_file_is_valid_and_matches_net_ledger() -> None:
+    """The committed corrections must load cleanly and every entry must trace to
+    the DC-6' net ledger (F6) with a matching verdict move.
+
+    The 2026-07-21 agreed-verdict audit that used to back this ledger describes a
+    run that has since been re-adjudicated from scratch; the live ledger is now
+    the LIVE-vs-STAGED net across the five recorded hops, and its provenance is
+    ``metrics/remediation_v2/dc6_net_ledger.json`` (whose own gate cross-checks
+    every net verdict against the publishing head)."""
     import pytest
     repo = Path(__file__).resolve().parents[2]
     cpath = repo / "data" / "corrections.json"
-    apath = repo / "metrics" / "audits" / "agreed_verdicts_2026-07-21.jsonl"
-    if not (cpath.exists() and apath.exists()):
-        pytest.skip("corrections/audit artifacts not in this checkout")
+    npath = repo / "metrics" / "remediation_v2" / "dc6_net_ledger.json"
+    if not (cpath.exists() and npath.exists()):
+        pytest.skip("corrections/net-ledger artifacts not in this checkout")
     entries = load_corrections(cpath)
-    audit = {json.loads(l)["sid"]: json.loads(l) for l in apath.open()}
+    net = {e["sid"]: e for e in json.loads(npath.read_text())["entries"]}
+    # the changelog is exactly the net ledger's ledger-eligible set, no more.
+    assert {e["sid"] for e in entries} == set(net)
     for e in entries:
-        rec = audit.get(e["sid"])
+        rec = net.get(e["sid"])
         assert rec is not None, e["sid"]
-        assert rec["verdict_sound"] is False
-        assert rec["confidence"] >= 0.8
-        assert rec["shipped_verdict"] == e["old_verdict"]
-        assert rec["suggested_verdict"] == e["new_verdict"]
+        assert rec["old_verdict"] == e["old_verdict"]
+        assert rec["new_verdict"] == e["new_verdict"]
 
 
 # ── Empty-state vs ledger display (remediation v2, 1.11) ─────────────────────

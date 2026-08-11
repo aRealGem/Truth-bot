@@ -217,6 +217,11 @@ class SiteReport:
     # re-rendering the same speech reuses the same URL. Default empty →
     # legacy UUID-suffixed slugs.
     speech_id: str = ""
+    # D-B: per-speech stance-scored coverage for the disclosure block. Keys:
+    # {stance_null, items, rate_pct, ceiling_pct, over_ceiling, tier_breakdown,
+    # packs_with_null, total_packs}. Default empty → no coverage block (legacy
+    # renders and any run without scored evidence).
+    stance_coverage: dict = field(default_factory=dict)
 
     @property
     def date_str(self) -> str:
@@ -2375,6 +2380,13 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
         suffix = " · queued for review" if getattr(prov, "audit_queue",
                                                    False) else ""
         parts.append(f"audit: {', '.join(audit_flags)}{suffix}")
+    # Adopted-rationale attribution (F5 / R-3): when the published rationale was
+    # taken from a seat rather than authored by the resolver, name the source,
+    # run-qualified, so adopted text is never mistaken for the resolver's words.
+    rp = getattr(prov, "rationale_provenance", None) or {}
+    attribution = str(rp.get("attribution") or "")
+    if attribution:
+        parts.append(f"Rationale: {attribution}")
     if not parts:
         return ""
     chain = _esc(" → ".join(parts))
@@ -2390,12 +2402,22 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
             f'<div class="pca-correction">⚠ {_esc(prov.correction_note)} '
             f'· <a href="{rel}corrections.html">Corrections</a></div>'
         )
+    # D14 (A7): adjacent-claim coherence annotation, shown in full where the
+    # verdict lives so the disclosed disagreement travels with the claim.
+    coherence_html = ""
+    coherence_note = str(getattr(prov, "coherence_note", "") or "")
+    if coherence_note:
+        coherence_html = (
+            '<div class="pca-coherence">'
+            '<span class="coherence-label">Adjacent-claim coherence</span>'
+            f'{_esc(coherence_note)}</div>'
+        )
     return (
         '<div class="pca-provenance" '
         'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
         'tally, each seat&#39;s own prediction, and any Severity Classifier '
         'stage-2 override.">'
-        f'{chain}{seat_html}{corr_html}</div>'
+        f'{chain}{seat_html}{corr_html}{coherence_html}</div>'
     )
 
 
@@ -4127,8 +4149,50 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--v-exaggerated);
 }
 .pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
+/* D14 (A7) adjacent-claim coherence annotation — always visible, editorial. */
+.pca-coherence {
+  margin-top: 0.4rem;
+  background: #fefbf3;
+  border-left: 3px solid var(--v-exaggerated);
+  padding: 0.5rem 0.75rem;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+.pca-coherence .coherence-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  display: block;
+  margin-bottom: 0.15rem;
+}
 .corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
 .corrections-note { color: var(--ink-muted); }
+/* D-B: per-speech stance-scored coverage disclosure block. */
+.stance-coverage {
+  margin: 1.25rem 0;
+  background: var(--surface, #faf9f6);
+  border: 1px solid var(--rule, #e5e2da);
+  border-left: 3px solid var(--ink-muted);
+  padding: 0.9rem 1.1rem;
+  font-size: 0.9rem;
+}
+.stance-coverage-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.stance-coverage p { margin: 0.35rem 0; }
+.stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+.stance-coverage-exception {
+  border-left: 3px solid var(--v-exaggerated);
+  padding-left: 0.75rem;
+  background: #fefbf3;
+}
 /* Pipeline diagram (About, T4.2) — structural only, no figures. */
 .pipeline-diagram {
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
@@ -6192,6 +6256,49 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     )
 
 
+def _render_stance_coverage(site_report: SiteReport) -> str:
+    """D-B: the per-speech stance-scored coverage disclosure block.
+
+    One format on every report: how much of the evidence the scorer took a
+    stance on, stated against the 15% stance-null ceiling, plus the note that
+    government records are stance-free by nature. The one speech over the ceiling
+    (trump_2026, 21.0%) additionally carries the owner-ratified exception notice
+    and the tier decomposition of its nulls — shown, not hidden."""
+    cov = site_report.stance_coverage or {}
+    if not cov.get("items"):
+        return ""
+    rate = cov["rate_pct"]
+    ceiling = cov["ceiling_pct"]
+    scored = cov["items"] - cov["stance_null"]
+    body = (
+        '<aside class="stance-coverage">'
+        '<span class="stance-coverage-label">Evidence coverage</span>'
+        f'<p>The stance scorer took a support or refute position on '
+        f'{scored:,} of {cov["items"]:,} evidence items; '
+        f'<strong>{rate:.1f}%</strong> ({cov["stance_null"]:,} items) carried no '
+        f'stance. The threshold for publishing a speech is {ceiling:.0f}% '
+        f'stance-null.</p>'
+        '<p class="stance-coverage-note">Government records — statutes, official '
+        'statistics, transcripts — are frequently stance-free by nature: they '
+        'state facts without arguing for or against a claim, so a share of '
+        'null stance is expected and is not a retrieval failure.</p>'
+    )
+    if cov.get("over_ceiling"):
+        tiers = cov.get("tier_breakdown") or {}
+        parts = ", ".join(f"{t} {n}" for t, n in tiers.items())
+        body += (
+            '<p class="stance-coverage-exception"><strong>Published under an '
+            'exception.</strong> This report exceeds the '
+            f'{ceiling:.0f}% ceiling at {rate:.1f}% and is published under an '
+            'owner-ratified exception for this release; the exception expires '
+            'when the D17 retrieval-contract fix and a re-render land. The '
+            f'{cov["stance_null"]:,} stance-null items decompose by source tier '
+            f'as: {parts} — across {cov["packs_with_null"]} of '
+            f'{cov["total_packs"]} evidence packs.</p>'
+        )
+    return body + '</aside>'
+
+
 def _render_report(site_report: SiteReport) -> str:
     """Render a full per-speech report page."""
     src_link = ""
@@ -6326,6 +6433,7 @@ def _render_report(site_report: SiteReport) -> str:
         hero_html
         + _verdict_panel(site_report)
         + correction_banner
+        + _render_stance_coverage(site_report)
         + toc_section_head
         + toc_html
         + '<div class="section-head">'
@@ -7032,10 +7140,21 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
     else:
         table = ('<p class="dim">No corrections have been issued for the '
                  'currently published reports.</p>')
+    # A note flagged ``draft`` is framing prose awaiting owner red-pen (S-8): it
+    # is carried in data/corrections.json so the owner can review it against the
+    # staged site, but it MUST NOT render as final published prose. It is emitted
+    # as an HTML comment only — present in the template output for review, never
+    # visible on the page — so a staged render can never be mistaken for the
+    # approved wording.
     notes_html = "".join(
         f'<p class="corrections-note"><strong>{_esc(n["date"])}</strong> — '
         f'{_esc(n["text"])}</p>'
-        for n in (notes or [])
+        for n in (notes or []) if not n.get("draft")
+    )
+    draft_html = "".join(
+        f'<!-- DRAFT corrections framing (owner red-pen required, not published): '
+        f'{_esc(n["text"])} -->'
+        for n in (notes or []) if n.get("draft")
     )
     body = (
         '<h2>Corrections</h2><hr class="rule">'
@@ -7046,6 +7165,7 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None)
         'old and new verdict, the reason, and the date. Corrections are never '
         'applied silently.</p>'
         + notes_html
+        + draft_html
         + table
     )
     footer = (

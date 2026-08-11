@@ -313,6 +313,8 @@ def _build_provenance(row: dict, claim_src: Optional[dict]) -> VerdictProvenance
         # that says so. Both are pass-through; the bridge adds no words.
         panel_seat_rationales=_seat_rationales(row),
         rationale_provenance=dict(row.get("rationale_provenance") or {}),
+        # D14 (A7): adjacent-claim coherence annotation, pass-through.
+        coherence_note=str(row.get("coherence_note") or ""),
     )
     # Computed exhibit (A8 / R-2): the adjudication row is where it is stamped
     # (scripts/wave_adjudicate.py attaches the ratified exhibit to the claims

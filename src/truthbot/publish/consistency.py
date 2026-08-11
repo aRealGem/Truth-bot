@@ -507,6 +507,44 @@ def check_publish_gate(artifact, label: str = "") -> list[str]:
     return [f"{name}: unfit-to-gate, refusing to publish — {reason}"]
 
 
+def check_ledger_completeness(net_ledger: dict,
+                             published_entries: list[dict]) -> list[str]:
+    """HARD publish-time gate (F6): the corrections ledger accounts for every
+    changed verdict, and the published changelog is exactly its ledger-eligible
+    subset.
+
+    Returns violations (empty = publishable). ``net_ledger`` is the DC-6' net
+    record (``metrics/remediation_v2/dc6_net_ledger.json``); ``published_entries``
+    is ``data/corrections.json``'s ``entries``. The failure this blocks is a
+    silent drop — a claim whose verdict moved between the live run and the staged
+    head but which appears in neither the ledger nor the itemised non-ledger
+    changes, so the public record understates what changed.
+    """
+    v: list[str] = []
+    missing = net_ledger.get("completeness_missing") or []
+    phantom = net_ledger.get("completeness_phantom") or []
+    if not net_ledger.get("completeness_ok", False) or missing or phantom:
+        v.append(
+            "corrections ledger is incomplete: set(changed) != set(ledgered)"
+            + (f" — {len(missing)} changed sid(s) not ledgered: {missing}" if missing else "")
+            + (f" — {len(phantom)} ledgered sid(s) never changed: {phantom}" if phantom else ""))
+    mism = net_ledger.get("head_mismatches") or []
+    if mism:
+        v.append(f"corrections ledger disagrees with the publishing heads: {mism}")
+    # The public changelog must be exactly the ledger-eligible net entries — no
+    # more (a phantom correction), no fewer (an omitted one).
+    ledger_sids = {e.get("sid") for e in (net_ledger.get("entries") or [])}
+    published_sids = {e.get("sid") for e in (published_entries or [])}
+    if ledger_sids != published_sids:
+        only_net = sorted(ledger_sids - published_sids)
+        only_pub = sorted(published_sids - ledger_sids)
+        v.append(
+            "data/corrections.json does not match the net ledger's eligible set"
+            + (f" — missing from changelog: {only_net}" if only_net else "")
+            + (f" — extra in changelog: {only_pub}" if only_pub else ""))
+    return v
+
+
 def check_run_artifacts(repo_root) -> list[str]:
     """Assert the current-generation invariants over stored pca_runs artifacts.
 

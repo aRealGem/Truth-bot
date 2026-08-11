@@ -1522,21 +1522,13 @@ def badge_diff(old_claims: list[dict], new_claims: list[dict]) -> dict:
 def renderer_selection(runs_dir: Path = RUNS_DIR) -> dict[str, str]:
     """speech_id → run id the renderer WILL choose, by its own rule.
 
-    Mirrors ``scripts/rerender_pca_site.py``: newest-mtime evidence-bearing
-    artifact per speech_id. Recomputing it here is how we assert the staged
-    render actually consumed the five rebuilds rather than trusting the log."""
-    latest: dict[str, str] = {}
-    for path in sorted(Path(runs_dir).glob("*.json"),
-                       key=lambda p: p.stat().st_mtime):
-        try:
-            doc = _read_json(path)
-        except (ValueError, OSError):
-            continue
-        if "evidence" not in doc:
-            continue
-        speech = (doc.get("meta") or {}).get("speech_id") or path.stem
-        latest[speech] = path.stem
-    return latest
+    F4: this calls the single-sourced resolver in ``truthbot.publish.heads``
+    rather than re-deriving "newest". Asserting the staged render consumed the
+    five rebuilds is only meaningful if it asks the same function the renderer
+    does — and that resolver is the deterministic rebuild_of DAG leaf, so this
+    assertion holds on a fresh clone."""
+    from truthbot.publish.heads import renderer_selection as _renderer_selection
+    return _renderer_selection(runs_dir)
 
 
 def reconcile(badge: dict, agg: dict, entries_doc: dict) -> dict:

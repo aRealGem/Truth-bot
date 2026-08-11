@@ -500,6 +500,17 @@ class VerdictProvenance(BaseModel):
             "strip so adopted text is not mistaken for the resolver's words."
         ),
     )
+    coherence_note: str = Field(
+        default="",
+        description=(
+            "Adjacent-claim coherence annotation (D14, A7): non-empty when this "
+            "claim and a neighbour rate the same statistic with different "
+            "verdicts. Both are published as adjudicated and the disagreement is "
+            "DISCLOSED here rather than resolved by forcing the labels to agree. "
+            "Rendered as an editorial annotation on the claim; empty on rows "
+            "without an adjacent-coherence conflict."
+        ),
+    )
     computed_exhibit: dict = Field(
         default_factory=dict,
         description=(

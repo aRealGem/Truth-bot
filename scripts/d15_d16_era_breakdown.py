@@ -624,8 +624,11 @@ def render_markdown(report: dict) -> str:
       f"Stance vintage: **{v}** (the B1a re-score overlaid — the live state of "
       f"the corpus, and the vintage the \"measured 50\" came from).*")
     A("")
-    A(f"- **D15** `{report['flags']['d15']}`")
-    A(f"- **D16(α)** `{report['flags']['d16']}`")
+    A(f"- **measurement-harness flags** — the configuration THIS breakdown ran "
+      f"under, not the production gate default: D15 `{report['flags']['d15']}`, "
+      f"D16(α) `{report['flags']['d16']}`. The harness sweeps the rules to "
+      f"measure what each would do; what production ships is set by the ratified "
+      f"gate config, not by these switches.")
     A("")
     A(f"- **source artifacts** `{report.get('source_generation', 'rebuild')}` "
       + ", ".join(f"`{sp}`={rid[:8]}"

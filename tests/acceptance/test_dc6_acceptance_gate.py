@@ -181,12 +181,18 @@ RUNS_DIR = REPO / "metrics" / "pca_runs"
 #: ``wave_adjudicate.py --extra-sids`` (audited: reason recorded, own tag, wave
 #: set untouched). Both artifacts are ``rebuild_of`` the runs above, which are
 #: still on disk.
+#: F4: pinned to the score-propagation heads — the artifacts a publish actually
+#: renders (the deterministic rebuild_of DAG leaf per speech). Each is the direct
+#: rebuild_of child of the run that used to be pinned here
+#: (5c923c25←04738dd5, 49b2e3e8←393f7d06, 2cbda3e4←c8008f2a, ddb05ee3←f570d45c,
+#: 91dd7a34←2d90a74b); the merge moves evidence provenance only, so every verdict
+#: pinned below is byte-identical to its parent's.
 RUNS = {
-    "gwbush_2006": "04738dd5",
-    "clinton_1998": "393f7d06",
-    "obama_2014": "c8008f2a",
-    "biden_2022": "f570d45c",
-    "trump_2026": "2d90a74b",
+    "gwbush_2006": "5c923c25",
+    "clinton_1998": "49b2e3e8",
+    "obama_2014": "2cbda3e4",
+    "biden_2022": "ddb05ee3",
+    "trump_2026": "91dd7a34",
 }
 
 #: 0462's marker after the wave. The old reason said "flips when the wave makes
@@ -220,6 +226,15 @@ BECKSTROM_0469_RATIONALE = (
 _PURPOSIVE_RX = re.compile(
     r"\bin order to\b|\bto (?:protect|defend)\b|\bdefend(?:ing|ed)\b"
     r"|\bsacrific\w*|\bgave (?:her|his) life\b|\bdied for\b",
+    re.IGNORECASE)
+
+#: Language that reports the FACT of the death (the factual core), as distinct
+#: from the purposive clause above. Used to confirm the core on the scored head,
+#: where ``supports_claim`` is directional to the CLAIM (the purposive
+#: assertion) and so is stance-null on the death-fact sources by design — see
+#: the limb-2 comment.
+_DEATH_FACT_RX = re.compile(
+    r"\bdied\b|\bkilled\b|\bshot\b|\bfatally\b|\bdeath\b|\bslain\b",
     re.IGNORECASE)
 
 #: Tiers that can carry PROOF. "Political" is excluded on purpose — that
@@ -305,15 +320,28 @@ def test_beckstrom_0469_is_unverifiable_on_its_purposive_clause():
     assert verdict(sid) == "UNVERIFIABLE", BECKSTROM_0469_RATIONALE
     assert not is_decided(sid)
 
-    # Limb 2: the factual core is confirmed — more than one bearing supporter
-    # from a tier that can carry proof.
+    # Limb 2: the factual core is confirmed — more than one relevance-bearing
+    # source from a tier that can carry proof REPORTS the death itself.
+    #
+    # F4 note: the head is now the score-propagation artifact, which carries the
+    # scored stance vintage that adjudication actually used. On that vintage
+    # ``supports_claim`` is directional to the CLAIM — the purposive assertion
+    # "died IN ORDER TO defend" — so the death-fact reports come back stance-null
+    # (they confirm the death, not the purpose) and only the Political tribute
+    # scores as supporting. The old placeholder vintage marked every item True,
+    # which is the only reason ``supports_claim is True`` used to detect the
+    # core. The ratified FINDING is unchanged — the core is still confirmed by
+    # non-Political sources — so the core is detected here the way limb 3 detects
+    # purpose: by what the source reports, not by a claim-directional stance flag.
     core = [e for e in pack
-            if e.get("supports_claim") is True
-            and str(e.get("source_tier")) in _NON_POLITICAL_TIERS]
+            if str(e.get("source_tier")) in _NON_POLITICAL_TIERS
+            and (e.get("relevance_score") or 0) >= 0.5
+            and _DEATH_FACT_RX.search(e.get("snippet") or "")
+            and not _PURPOSIVE_RX.search(e.get("snippet") or "")]
     assert len(core) >= 2, (
         f"{sid}: factual core is NOT confirmed ({len(core)} non-Political "
-        f"supporters) — that would be a different finding than the ratified "
-        f"one")
+        f"sources report the death) — that would be a different finding than "
+        f"the ratified one")
 
     # Limb 3: the SOLE purposive support is Political-tier.
     purposive = [e for e in pack
