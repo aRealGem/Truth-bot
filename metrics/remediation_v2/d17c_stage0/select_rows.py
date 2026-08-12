@@ -15,6 +15,15 @@ scorer check both a level and a change without being handed the series.
 The predicate is a pure function of (fixture bytes, pin date), which is what
 makes item 5b's byte-determinism claim meaningful rather than incidental.
 
+KNOWN LIMITATION, open for Stage A: the window counts OBSERVATIONS, not
+time, so it means different things at different series frequencies. On the
+monthly series it is thirteen months, which is the intent. On FYFSD, an
+annual series, thirteen observations is thirteen YEARS (2009-09-30 to
+2021-09-30) -- defensible for a deficit claim, but it is not the
+year-over-year window the reasoning above describes, and it is wider than a
+reader would assume from the predicate's wording. A frequency-aware window
+should be ruled on before Stage A. Determinism is unaffected either way.
+
 Each excerpt ships the provenance Fable required: series id, the rows, the
 vintage/as-of stamp, the total row count of the full table, the window
 bounds, and a link back to the full table -- plus the predicate itself, so a

@@ -243,6 +243,15 @@ CBO/GAO/NCES publish tabled reports, not series. Owner-approved as a wording
 correction for the next wave, alongside the dropped-row note. **Do not edit the
 published sentence outside a corrections wave.**
 
+**Open for Stage A: the selection window is frequency-blind.** The predicate
+takes the 13 most recent observations at or before the utterance date, which is
+13 months on a monthly series and 13 *years* on an annual one — `FYFSD` selects
+2009-09-30 to 2021-09-30. Deterministic either way, and arguably right for a
+deficit claim, but it is not the year-over-year window the predicate's wording
+implies. Needs a ruling before Stage A; the three open questions carried out of
+Stage 0 are this, the `LNS12000000` dead link, and the unobtainable `units`
+field.
+
 **Closeout: the 448/445 census delta.** Reproduced exactly, and it is an
 artifact of the hand count rather than a defect in the code — see
 `d17c_stage0/delta_closeout.py`. Two mechanisms, together and only together
