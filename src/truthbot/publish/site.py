@@ -6310,11 +6310,30 @@ def _render_stance_coverage(site_report: SiteReport) -> str:
             '<p class="stance-coverage-exception"><strong>Published under an '
             'exception.</strong> This report exceeds the '
             f'{ceiling:.0f}% ceiling at {rate:.1f}% and is published under an '
-            'owner-ratified exception for this release; the exception expires '
-            'when the D17 retrieval-contract fix and a re-render land. The '
+            'owner-ratified exception for this release. The '
             f'{cov["stance_null"]:,} stance-null items decompose by source tier '
             f'as: {parts} — across {cov["packs_with_null"]} of '
             f'{cov["total_packs"]} evidence packs.</p>'
+        )
+        # What those items ARE, measured rather than asserted. This paragraph
+        # exists because the earlier wording promised the exception would lapse
+        # once a retrieval fix landed; measurement showed that fix can convert
+        # only the series items, which does not clear the ceiling. A disclosure
+        # may not promise more than the measurement supports.
+        body += (
+            '<p class="stance-coverage-exception">What those items are, measured '
+            f'rather than asserted: {cov.get("null_record", 0):,} are official '
+            'records (statutes, transcripts, budget documents) that state facts '
+            'without arguing for or against the claim. '
+            f'{cov.get("null_series", 0):,} are statistical series where the '
+            'pipeline retrieved the right source but scored it without fetching '
+            'the underlying data table — a known gap in our retrieval; closing it '
+            'would convert at most those, leaving the rate near '
+            f'{cov.get("best_case_pct", rate):.1f}%. The remaining '
+            f'{cov.get("null_other", 0):,} are largely claims no evidence can '
+            'settle: counterfactuals, predictions and rhetorical assertions. The '
+            'exception is therefore reviewed at each publish rather than expiring '
+            'on any single fix.</p>'
         )
     return body + '</aside>'
 

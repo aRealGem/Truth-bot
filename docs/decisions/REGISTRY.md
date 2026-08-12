@@ -297,10 +297,31 @@ stance-coverage block on the report that states the rate, the 15% ceiling, and
 the tier decomposition of the nulls (Gov 144 / Political 57 / Other 48 /
 Established 40 / Wire 20, across 113 of 182 evidence packs).
 
-**Version:** `dc6'-2026-08-10`. **Expiry:** the exception lapses when the **D17
-retrieval-contract fix** lands AND trump_2026 is re-rendered on the repaired
-retrieval — at which point trump must clear 15% or not publish. The threshold in
+**Version:** `dc6'-2026-08-11`. **Expiry:** reviewed at each publish against the
+measured stance-null rate. The threshold in
 `consistency.UNFIT_STANCE_NULL_RATE` (0.15) is untouched.
+
+**Amended 2026-08-11 — the original expiry condition was unreachable.** This
+entry first said the exception lapses when the **D17 retrieval-contract fix**
+(D17-c, series-row excerpting) lands and trump_2026 is re-rendered. Measuring the
+null population showed that is arithmetically impossible: of the 309 stance-null
+items, only **48 are statistical-agency series** — D17-c's entire target class.
+Converting *every* one of them leaves **261/1472 = 17.7%**, still above the 15%
+ceiling. The rest is **96 Government-tier records** (statutes, transcripts,
+budget documents) that are stance-free by nature and **165 non-Government items**
+attached largely to claims no evidence can settle (counterfactuals, predictions,
+rhetorical assertions).
+
+An expiry condition that cannot be met is worse than none: it tells a reader the
+disclosure is temporary when it is not. So the expiry is now a REVIEW condition,
+and the published report states the decomposition and the 17.7% floor instead of
+promising a fix will clear it. Whoever revisits this should decide the real
+question — whether a corpus whose evidence is one-fifth stance-free by nature
+should be gated on this metric at all, or on a metric that separates
+"unfalsifiable claim" from "unfetched table".
+
+**Measured by:** `stance_coverage()` in `scripts/rerender_pca_site.py`
+(series/record/other decomposition + best-case rate), rendered on the report.
 
 **Checked by:** `test_four_of_the_five_heads_now_pass_the_publish_gate` (asserts
 trump remains unfit and the ceiling is not lowered) and the D-B disclosure block
