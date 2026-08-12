@@ -131,7 +131,12 @@ false-positive risk of its own.
 ## D17-c — Retrieval-contract change: excerpt the series rows
 
 **Deferred from:** B2 (the scoring-prompt fix), 2026-08-08.
-**Evidence:** `metrics/remediation_v2/B2_FINDINGS.md`, `metrics/remediation_v2/b2_subset.json`.
+**Evidence:** `metrics/remediation_v2/B2_FINDINGS.md`;
+`metrics/remediation_v2/b2_subset.json` for the **design** (a truthful pre-run
+estimate, 2026-08-08, predating the `haiku-score-2026-08-09` calibration);
+`metrics/remediation_v2/d17c_stage0/b2_settlement.json` for the **measurement**
+($0.5405 actual, 2.35x the $0.2299 estimate). Cite the one that matches the
+question — the subset is not a cost figure.
 **Code:** `src/truthbot/verify/relevance.py` (`score_payload`).
 
 ### What was observed — with a number

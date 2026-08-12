@@ -1,0 +1,663 @@
+{
+  "goldens": [
+    {
+      "claim_sid": "biden_2022:0169",
+      "evidence_id": "E7",
+      "fixture_sha256": "29949f71233be4c107a654ba31aafd110a881aec9e99f17f34973caf5d670cc1",
+      "full_table": "https://fred.stlouisfed.org/series/MANEMP",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2021-01-01",
+          "value": "12184"
+        },
+        {
+          "period": "2021-02-01",
+          "value": "12222"
+        },
+        {
+          "period": "2021-03-01",
+          "value": "12268"
+        },
+        {
+          "period": "2021-04-01",
+          "value": "12240"
+        },
+        {
+          "period": "2021-05-01",
+          "value": "12268"
+        },
+        {
+          "period": "2021-06-01",
+          "value": "12288"
+        },
+        {
+          "period": "2021-07-01",
+          "value": "12350"
+        },
+        {
+          "period": "2021-08-01",
+          "value": "12391"
+        },
+        {
+          "period": "2021-09-01",
+          "value": "12413"
+        },
+        {
+          "period": "2021-10-01",
+          "value": "12466"
+        },
+        {
+          "period": "2021-11-01",
+          "value": "12514"
+        },
+        {
+          "period": "2021-12-01",
+          "value": "12546"
+        },
+        {
+          "period": "2022-01-01",
+          "value": "12559"
+        }
+      ],
+      "rows_eligible_at_vintage": 997,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2022-03-01 (the speech's registered utterance date)",
+      "series_id": "MANEMP",
+      "total_rows_in_full_table": 997,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2022-03-01",
+      "vintage_column": "MANEMP_20220301",
+      "window_end": "2022-01-01",
+      "window_start": "2021-01-01"
+    },
+    {
+      "claim_sid": "biden_2022:0245",
+      "evidence_id": "E7",
+      "fixture_sha256": "b98ab8518082199b9295d8a169d5cd0b1722a0e89c34a4fba5674bb57e5415cf",
+      "full_table": "https://fred.stlouisfed.org/series/FYFSD",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2009-09-30",
+          "value": "-1412688"
+        },
+        {
+          "period": "2010-09-30",
+          "value": "-1294373"
+        },
+        {
+          "period": "2011-09-30",
+          "value": "-1299599"
+        },
+        {
+          "period": "2012-09-30",
+          "value": "-1076573"
+        },
+        {
+          "period": "2013-09-30",
+          "value": "-679775"
+        },
+        {
+          "period": "2014-09-30",
+          "value": "-484793"
+        },
+        {
+          "period": "2015-09-30",
+          "value": "-441960"
+        },
+        {
+          "period": "2016-09-30",
+          "value": "-584651"
+        },
+        {
+          "period": "2017-09-30",
+          "value": "-665446"
+        },
+        {
+          "period": "2018-09-30",
+          "value": "-779137"
+        },
+        {
+          "period": "2019-09-30",
+          "value": "-983592"
+        },
+        {
+          "period": "2020-09-30",
+          "value": "-3131917"
+        },
+        {
+          "period": "2021-09-30",
+          "value": "-2772179"
+        }
+      ],
+      "rows_eligible_at_vintage": 121,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2022-03-01 (the speech's registered utterance date)",
+      "series_id": "FYFSD",
+      "total_rows_in_full_table": 121,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2022-03-01",
+      "vintage_column": "FYFSD_20220301",
+      "window_end": "2021-09-30",
+      "window_start": "2009-09-30"
+    },
+    {
+      "claim_sid": "gwbush_2006:0133",
+      "evidence_id": "E8",
+      "fixture_sha256": "9c564b9db2e03ad50a3c6418dcee60f9285486c6b2ceaaf52907e96c6a3ad3b3",
+      "full_table": "https://fred.stlouisfed.org/series/PAYEMS",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2004-12-01",
+          "value": "132449"
+        },
+        {
+          "period": "2005-01-01",
+          "value": "132573"
+        },
+        {
+          "period": "2005-02-01",
+          "value": "132873"
+        },
+        {
+          "period": "2005-03-01",
+          "value": "132995"
+        },
+        {
+          "period": "2005-04-01",
+          "value": "133287"
+        },
+        {
+          "period": "2005-05-01",
+          "value": "133413"
+        },
+        {
+          "period": "2005-06-01",
+          "value": "133588"
+        },
+        {
+          "period": "2005-07-01",
+          "value": "133865"
+        },
+        {
+          "period": "2005-08-01",
+          "value": "134013"
+        },
+        {
+          "period": "2005-09-01",
+          "value": "134030"
+        },
+        {
+          "period": "2005-10-01",
+          "value": "134055"
+        },
+        {
+          "period": "2005-11-01",
+          "value": "134360"
+        },
+        {
+          "period": "2005-12-01",
+          "value": "134468"
+        }
+      ],
+      "rows_eligible_at_vintage": 804,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2006-01-31 (the speech's registered utterance date)",
+      "series_id": "PAYEMS",
+      "total_rows_in_full_table": 804,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2006-01-31",
+      "vintage_column": "PAYEMS_20060131",
+      "window_end": "2005-12-01",
+      "window_start": "2004-12-01"
+    },
+    {
+      "claim_sid": "obama_2014:0189",
+      "evidence_id": "E4",
+      "fixture_sha256": "eda6988387ddd544458c46b18d03b334f58fb149edb3db2e3b0b391a8ede4d91",
+      "full_table": "https://fred.stlouisfed.org/series/CPIAUCSL",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2012-12-01",
+          "value": "231.137"
+        },
+        {
+          "period": "2013-01-01",
+          "value": "231.198"
+        },
+        {
+          "period": "2013-02-01",
+          "value": "232.770"
+        },
+        {
+          "period": "2013-03-01",
+          "value": "232.340"
+        },
+        {
+          "period": "2013-04-01",
+          "value": "231.485"
+        },
+        {
+          "period": "2013-05-01",
+          "value": "231.831"
+        },
+        {
+          "period": "2013-06-01",
+          "value": "232.944"
+        },
+        {
+          "period": "2013-07-01",
+          "value": "233.318"
+        },
+        {
+          "period": "2013-08-01",
+          "value": "233.526"
+        },
+        {
+          "period": "2013-09-01",
+          "value": "233.947"
+        },
+        {
+          "period": "2013-10-01",
+          "value": "233.808"
+        },
+        {
+          "period": "2013-11-01",
+          "value": "233.887"
+        },
+        {
+          "period": "2013-12-01",
+          "value": "234.582"
+        }
+      ],
+      "rows_eligible_at_vintage": 804,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2014-01-28 (the speech's registered utterance date)",
+      "series_id": "CPIAUCSL",
+      "total_rows_in_full_table": 804,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2014-01-28",
+      "vintage_column": "CPIAUCSL_20140128",
+      "window_end": "2013-12-01",
+      "window_start": "2012-12-01"
+    },
+    {
+      "claim_sid": "trump_2026:0054",
+      "evidence_id": "E4",
+      "fixture_sha256": "85d026a3a157b5d73d0dc0327e7a4a9a56d7e276c641ab93f52013400f4b7811",
+      "full_table": "https://fred.stlouisfed.org/series/CE16OV",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2024-12-01",
+          "value": "161586"
+        },
+        {
+          "period": "2025-01-01",
+          "value": "163831"
+        },
+        {
+          "period": "2025-02-01",
+          "value": "163338"
+        },
+        {
+          "period": "2025-03-01",
+          "value": "163509"
+        },
+        {
+          "period": "2025-04-01",
+          "value": "163898"
+        },
+        {
+          "period": "2025-05-01",
+          "value": "163244"
+        },
+        {
+          "period": "2025-06-01",
+          "value": "163327"
+        },
+        {
+          "period": "2025-07-01",
+          "value": "163140"
+        },
+        {
+          "period": "2025-08-01",
+          "value": "163370"
+        },
+        {
+          "period": "2025-09-01",
+          "value": "163656"
+        },
+        {
+          "period": "2025-11-01",
+          "value": "163760"
+        },
+        {
+          "period": "2025-12-01",
+          "value": "163992"
+        },
+        {
+          "period": "2026-01-01",
+          "value": "164520"
+        }
+      ],
+      "rows_eligible_at_vintage": 936,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2026-02-24 (the speech's registered utterance date)",
+      "series_id": "CE16OV",
+      "total_rows_in_full_table": 936,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2026-02-24",
+      "vintage_column": "CE16OV_20260224",
+      "window_end": "2026-01-01",
+      "window_start": "2024-12-01"
+    },
+    {
+      "claim_sid": "trump_2026:0054",
+      "evidence_id": "E7",
+      "fixture_sha256": "32be2ed3cc28ba313022b647165d34c2e79d52b32dae7e0eabf4297fade48b75",
+      "full_table": "https://fred.stlouisfed.org/series/PAYEMS",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2025-01-01",
+          "value": "158268"
+        },
+        {
+          "period": "2025-02-01",
+          "value": "158310"
+        },
+        {
+          "period": "2025-03-01",
+          "value": "158377"
+        },
+        {
+          "period": "2025-04-01",
+          "value": "158485"
+        },
+        {
+          "period": "2025-05-01",
+          "value": "158498"
+        },
+        {
+          "period": "2025-06-01",
+          "value": "158478"
+        },
+        {
+          "period": "2025-07-01",
+          "value": "158542"
+        },
+        {
+          "period": "2025-08-01",
+          "value": "158472"
+        },
+        {
+          "period": "2025-09-01",
+          "value": "158548"
+        },
+        {
+          "period": "2025-10-01",
+          "value": "158408"
+        },
+        {
+          "period": "2025-11-01",
+          "value": "158449"
+        },
+        {
+          "period": "2025-12-01",
+          "value": "158497"
+        },
+        {
+          "period": "2026-01-01",
+          "value": "158627"
+        }
+      ],
+      "rows_eligible_at_vintage": 1045,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2026-02-24 (the speech's registered utterance date)",
+      "series_id": "PAYEMS",
+      "total_rows_in_full_table": 1045,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2026-02-24",
+      "vintage_column": "PAYEMS_20260224",
+      "window_end": "2026-01-01",
+      "window_start": "2025-01-01"
+    },
+    {
+      "claim_sid": "trump_2026:0219",
+      "evidence_id": "E1",
+      "fixture_sha256": "3fa1eb36086e76a06f2c4c96316d403044207bbb62a9306f6aa9a2ec9ea002d4",
+      "full_table": "https://fred.stlouisfed.org/series/APU0000708111",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2024-12-01",
+          "value": "4.146"
+        },
+        {
+          "period": "2025-01-01",
+          "value": "4.953"
+        },
+        {
+          "period": "2025-02-01",
+          "value": "5.897"
+        },
+        {
+          "period": "2025-03-01",
+          "value": "6.227"
+        },
+        {
+          "period": "2025-04-01",
+          "value": "5.122"
+        },
+        {
+          "period": "2025-05-01",
+          "value": "4.548"
+        },
+        {
+          "period": "2025-06-01",
+          "value": "3.775"
+        },
+        {
+          "period": "2025-07-01",
+          "value": "3.599"
+        },
+        {
+          "period": "2025-08-01",
+          "value": "3.587"
+        },
+        {
+          "period": "2025-09-01",
+          "value": "3.488"
+        },
+        {
+          "period": "2025-11-01",
+          "value": "2.860"
+        },
+        {
+          "period": "2025-12-01",
+          "value": "2.712"
+        },
+        {
+          "period": "2026-01-01",
+          "value": "2.577"
+        }
+      ],
+      "rows_eligible_at_vintage": 552,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2026-02-24 (the speech's registered utterance date)",
+      "series_id": "APU0000708111",
+      "total_rows_in_full_table": 552,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2026-02-24",
+      "vintage_column": "APU0000708111_20260224",
+      "window_end": "2026-01-01",
+      "window_start": "2024-12-01"
+    },
+    {
+      "claim_sid": "trump_2026:0221",
+      "evidence_id": "E9",
+      "fixture_sha256": "7f231cf891bd0a6cafbd7373d8a54aed92afc600a0556a6e303af33bc99185fb",
+      "full_table": "https://fred.stlouisfed.org/series/CUUR0000SAF112",
+      "role": "wave1",
+      "rows": [
+        {
+          "period": "2024-12-01",
+          "value": "333.659"
+        },
+        {
+          "period": "2025-01-01",
+          "value": "339.169"
+        },
+        {
+          "period": "2025-02-01",
+          "value": "344.781"
+        },
+        {
+          "period": "2025-03-01",
+          "value": "348.179"
+        },
+        {
+          "period": "2025-04-01",
+          "value": "344.883"
+        },
+        {
+          "period": "2025-05-01",
+          "value": "343.032"
+        },
+        {
+          "period": "2025-06-01",
+          "value": "342.058"
+        },
+        {
+          "period": "2025-07-01",
+          "value": "344.155"
+        },
+        {
+          "period": "2025-08-01",
+          "value": "347.509"
+        },
+        {
+          "period": "2025-09-01",
+          "value": "349.716"
+        },
+        {
+          "period": "2025-11-01",
+          "value": "347.565"
+        },
+        {
+          "period": "2025-12-01",
+          "value": "346.815"
+        },
+        {
+          "period": "2026-01-01",
+          "value": "346.613"
+        }
+      ],
+      "rows_eligible_at_vintage": 708,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2026-02-24 (the speech's registered utterance date)",
+      "series_id": "CUUR0000SAF112",
+      "total_rows_in_full_table": 708,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2026-02-24",
+      "vintage_column": "CUUR0000SAF112_20260224",
+      "window_end": "2026-01-01",
+      "window_start": "2024-12-01"
+    },
+    {
+      "claim_sid": "trump_2026:0031",
+      "evidence_id": "E6",
+      "fixture_sha256": "c8a0a66702bf60a6dc36d4c3b89d1b6e7a77a96d6c5c8496447bf43f6cfcde88",
+      "full_table": "https://fred.stlouisfed.org/series/CPILFESL",
+      "role": "exemplar",
+      "rows": [
+        {
+          "period": "2024-12-01",
+          "value": "323.259"
+        },
+        {
+          "period": "2025-01-01",
+          "value": "324.638"
+        },
+        {
+          "period": "2025-02-01",
+          "value": "325.465"
+        },
+        {
+          "period": "2025-03-01",
+          "value": "325.690"
+        },
+        {
+          "period": "2025-04-01",
+          "value": "326.467"
+        },
+        {
+          "period": "2025-05-01",
+          "value": "326.893"
+        },
+        {
+          "period": "2025-06-01",
+          "value": "327.658"
+        },
+        {
+          "period": "2025-07-01",
+          "value": "328.682"
+        },
+        {
+          "period": "2025-08-01",
+          "value": "329.700"
+        },
+        {
+          "period": "2025-09-01",
+          "value": "330.418"
+        },
+        {
+          "period": "2025-11-01",
+          "value": "331.043"
+        },
+        {
+          "period": "2025-12-01",
+          "value": "331.814"
+        },
+        {
+          "period": "2026-01-01",
+          "value": "332.793"
+        }
+      ],
+      "rows_eligible_at_vintage": 828,
+      "rows_shown": 13,
+      "selection_predicate": "the 13 most recent observations with observation_date <= 2026-02-24 (the speech's registered utterance date)",
+      "series_id": "CPILFESL",
+      "total_rows_in_full_table": 828,
+      "units": null,
+      "units_unavailable_because": "the authorized CSV endpoint returns observation_date,SERIES_VINTAGE and carries no units field; a metadata endpoint is outside the current egress authorization",
+      "vintage_as_of": "2026-02-24",
+      "vintage_column": "CPILFESL_20260224",
+      "window_end": "2026-01-01",
+      "window_start": "2024-12-01"
+    }
+  ],
+  "schema": "truthbot-d17c-goldens v1",
+  "selection_predicate": "the 13 most recent observations with observation_date <= <utterance date> (the speech's registered utterance date)",
+  "unfetchable": [
+    {
+      "claim_sid": "trump_2026:0054",
+      "evidence_id": "E8",
+      "reason": "cited FRED URL uses a BLS series id; 404 on both endpoints",
+      "series": "LNS12000000"
+    }
+  ],
+  "window": 13
+}
