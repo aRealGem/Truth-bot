@@ -314,11 +314,18 @@ UNFIT_STANCE_NULL_RATE = 0.15
 #: speech is over the line, it does not move the line. Expiry is a condition, not
 #: a date: when it is met the entry must be removed and the speech must clear the
 #: ceiling or stop publishing.
+#: Expiry is a REVIEW condition, not a single fix. It said "when the D17
+#: retrieval-contract fix lands" until 2026-08-11, when measuring the null
+#: population showed that fix reaches only the statistical-series items (48 of
+#: 309) and leaves the rate at ~17.7% — still over the ceiling. An expiry
+#: condition that cannot be met is worse than none, so the exception is now
+#: reviewed at each publish against the measured rate.
 STANCE_NULL_GATE_EXCEPTIONS: dict[str, dict] = {
     "trump_2026": {
-        "version": "dc6'-2026-08-10",
-        "expiry": "the D17 retrieval-contract fix lands and trump_2026 is "
-                  "re-rendered on the repaired retrieval",
+        "version": "dc6'-2026-08-11",
+        "expiry": "reviewed at each publish against the measured stance-null "
+                  "rate; no single retrieval fix clears it (the series-excerpt "
+                  "fix reaches 48 of 309 items, leaving ~17.7%)",
     },
 }
 

@@ -92,8 +92,18 @@ def stance_coverage(evidence: dict) -> dict:
     disclosed rather than hidden: the block states it against the 15% ceiling and
     (for the one speech over it) decomposes the nulls by source tier."""
     from collections import Counter
+
+    from truthbot.verify.statistical_agency import is_statistical_agency
+
     tiers: Counter = Counter()
     items = null = packs_with_null = total_packs = 0
+    # The null population, decomposed by what would actually move it:
+    #   series  — statistical series the pipeline retrieved but scored without
+    #             fetching the data table (the known retrieval gap; fixable)
+    #   record  — Government-tier records (statutes, transcripts, budget docs)
+    #             that state facts without taking a side (stance-free by nature)
+    #   other   — everything else, largely claims no evidence can settle
+    series = record = other = 0
     for _sid, pack in (evidence or {}).items():
         total_packs += 1
         has_null = False
@@ -102,16 +112,34 @@ def stance_coverage(evidence: dict) -> dict:
             if e.get("supports_claim") is None:
                 null += 1
                 has_null = True
-                tiers[str(e.get("source_tier"))] += 1
+                tier = str(e.get("source_tier"))
+                tiers[tier] += 1
+                try:
+                    is_series = bool(is_statistical_agency(e.get("source_url") or ""))
+                except Exception:
+                    is_series = False
+                if is_series:
+                    series += 1
+                elif tier == "Government":
+                    record += 1
+                else:
+                    other += 1
         if has_null:
             packs_with_null += 1
     rate = (null / items) if items else 0.0
+    # The floor the retrieval fix could reach: even converting EVERY series item
+    # leaves this rate. Rendered so the disclosure cannot promise more than the
+    # measurement supports.
+    best_case = ((null - series) / items) if items else 0.0
     return {
         "stance_null": null, "items": items,
         "rate_pct": round(rate * 100, 1), "ceiling_pct": 15.0,
         "over_ceiling": rate * 100 > 15.0,
         "tier_breakdown": dict(tiers.most_common()),
         "packs_with_null": packs_with_null, "total_packs": total_packs,
+        "null_series": series, "null_record": record, "null_other": other,
+        "best_case_pct": round(best_case * 100, 1),
+        "best_case_clears": best_case * 100 <= 15.0,
     }
 
 
