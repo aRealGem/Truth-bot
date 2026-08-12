@@ -183,6 +183,81 @@ single lever left on the pipeline's accuracy for that class.
 - Does an excerpt need provenance of its own — the reader should be able to see
   which rows the verdict rested on, not just that a series was consulted.
 
+### Stage 0 findings (2026-08-12, $0 — no model calls)
+
+Scoping only. Stage 0 publishes nothing and re-adjudicates nothing.
+
+**Wave 1 = 84 items across 40 claims** — trump 35, biden 16, obama 15,
+clinton 10, gwbush 8. Derived from the shipped heads by
+`metrics/remediation_v2/d17c_stage0/wave1.py`, which asserts the split rather
+than restating it. That is the 124-item stance-null series population minus the
+document publishers (CBO/GAO/NCES/CRS publish tabled *reports*, not series) and
+minus NCHS/CDC.
+
+**The D17-c-reachable trump floor is 274/1472 = 18.61%.** Converting every
+wave-1 trump item still leaves that residual, against a 15% ceiling — so D17-c
+alone does not clear it. The earlier 17.73% figure assumed the document
+publishers were in scope; they are not.
+
+**NCHS/CDC is out of wave 1, logged not dropped.** Three stance-null items
+corpus-wide fails the ten-item coverage floor. The family is product-scoped:
+`wonder.`/`data.cdc.gov` are series-like, `cdc.gov/nchs` and `stacks.cdc.gov`
+are documents, and MMWR is a document-with-tables.
+
+**Pilot handler: FRED + ALFRED.** ALFRED is the *vintage axis* of the FRED
+handler, not a separate format, so the floor governs the handler — 23 corpus
+items between them, which clears it. It covers 9 of the 84 wave-1 items.
+
+**Cost.** An excerpt inflates the scoring prompt only; item count and reply
+schema are untouched, so the marginal cost is one term. Against a measured
+conservative prompt volume, a whole-pack re-score of the 40 claims with
+4,000-character excerpts projects **$0.2992** versus the $0.75 ceiling. The
+input side cannot threaten that ceiling: $0.75 would buy ~28,000 characters per
+excerpt. The mean/max token delta per item remains a *measurement* pending real
+payloads.
+
+**Head lineage (S-9).** The five publishing heads this record is derived from,
+so the lineage is greppable:
+
+| speech | run id |
+|---|---|
+| trump_2026 | `91dd7a34-7a3c-4f40-bcdc-276b2cb15d26` |
+| biden_2022 | `ddb05ee3-7d9c-4b2c-beaf-e197b9354379` |
+| obama_2014 | `2cbda3e4-c578-442a-aee7-c5c28a388048` |
+| clinton_1998 | `49b2e3e8-1667-4460-8989-b265914d4450` |
+| gwbush_2006 | `5c923c25-b065-4a9f-80bf-d23db4f9bcd1` |
+
+No heads have been moved to the gitignored `_quarantine/` yet, so there are no
+*quarantined*-head run ids to record; these are the live heads. Revisit when
+S-9 executes.
+
+**Ledger entry for the next corrections wave (not applied here).** The PR #105
+banner's "at most those" is an upper bound and is true, so the published prose
+stands. But its "48 are statistical series" is wrong for 12 items —
+CBO/GAO/NCES publish tabled reports, not series. Owner-approved as a wording
+correction for the next wave, alongside the dropped-row note. **Do not edit the
+published sentence outside a corrections wave.**
+
+**Closeout: the 448/445 census delta.** Reproduced exactly, and it is an
+artifact of the hand count rather than a defect in the code — see
+`d17c_stage0/delta_closeout.py`. Two mechanisms, together and only together
+giving 448 with Census +3, USDA-NASS +1, NCHS −1:
+
+1. *Press-prefix breadth.* The registry's own `press_prefixes` list is five,
+   but it is **additive** to `tier_registry.yaml`'s six `stat_press_prefixes`,
+   so the shipped `classify_ex` applies nine. The inherited `/newsroom` denies
+   three `census.gov` items. This is documented intent, not drift.
+2. *Path case-folding.* `statistical_agency._url_path` lowercases. Two items
+   turn on it, in opposite directions: `nass.usda.gov/Newsroom/...` is denied
+   as press (a hand count matching case-sensitively would admit it), and
+   `cdc.gov/MMWR/...` is admitted (a case-sensitive count would deny it).
+
+The shipped behaviour is correct on both counts — a `/Newsroom` press page
+*should* be denied and an `/MMWR` document *should* be admitted. Fable's
+hypothesis (b), that `quickstats.nass.usda.gov` might not resolve from entry
+`nass.usda.gov` by suffix, is **refuted**: it resolves, and the registry
+rationale and the code agree.
+
 ---
 
 ## D17-d — Re-attributing a rationale after a severity flip
