@@ -63,6 +63,7 @@ from truthbot.models import (
     VerdictBundle,
     VerdictLabel,
     VerdictProvenance,
+    stable_claim_id,
 )
 from truthbot.verdict.evidence_pack import EvidencePack
 from truthbot.verify.engine import LENIENT_PROJECTION, STRICT_PROJECTION
@@ -195,10 +196,18 @@ def _build_claim(sid: str, claim_src: Optional[dict]) -> Claim:
 
     ``transcript_id`` is the sid prefix before the first ':' (the same convention
     ``evidence_pack.build_evidence_pack`` uses). Falls back to a minimal claim if
-    the source dict is missing (keeps the bridge total)."""
+    the source dict is missing (keeps the bridge total).
+
+    The ``id`` is DERIVED FROM THE SID rather than left to the model's ``uuid4``
+    default. This is the publish path: a claim rebuilt here gets rendered, and
+    ``site.py`` builds its evidence anchors as ``#ev-{claim.id}-E5``. With a
+    fresh uuid per rebuild, every republish rotated every deep link into every
+    evidence pack. Deriving from the sid means the same claim keeps the same URL
+    across renders — one rotation when this lands, none afterwards."""
     src = claim_src or {}
     text = (src.get("text") or "").strip() or "(claim text unavailable)"
     return Claim(
+        id=stable_claim_id(sid),
         transcript_id=sid.split(":", 1)[0],
         text=text,
         speaker=src.get("speaker") or "Unknown",

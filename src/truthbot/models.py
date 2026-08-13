@@ -8,10 +8,11 @@ Keeping models centralized prevents circular imports and makes serialization
 
 from __future__ import annotations
 
+import re
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -82,6 +83,57 @@ class Transcript(BaseModel):
     def model_post_init(self, __context: Any) -> None:
         if self.word_count == 0:
             self.word_count = len(self.text.split())
+
+
+#: Characters a claim id may contain. It becomes both a URL fragment
+#: (``#ev-{id}-E5``) and a filename (``claims/{id}.html``), so the safe set is
+#: the intersection of what both tolerate.
+_CLAIM_ID_UNSAFE = re.compile(r"[^A-Za-z0-9_-]")
+
+
+def stable_claim_id(sid: str) -> str:
+    """A deterministic claim id derived from the sid (``trump_2026:0054``).
+
+    Claim ids default to a fresh ``uuid4`` per construction, which is right for
+    a claim being extracted for the first time and wrong for one being REBUILT
+    from a stored artifact: the same claim gets a new id on every render, so
+    ``#ev-{id}-E5`` deep links rotate every time a report is republished. The
+    sid is already the stable key — artifacts store evidence under it and
+    ``rows`` are keyed by it — so the id derives from the sid rather than being
+    minted again.
+
+    Sanitised because the id is a filename as well as a URL fragment:
+    ``trump_2026:0054`` -> ``trump_2026-0054``.
+
+    The mapping is not injective in general (``a:b`` and ``a-b`` both collapse
+    to ``a-b``), and a collision would silently merge two claims' deep links —
+    the exact failure this exists to prevent. Callers building a whole corpus
+    should assert uniqueness; see ``assert_stable_ids_unique``.
+    """
+    cleaned = _CLAIM_ID_UNSAFE.sub("-", (sid or "").strip())
+    if not cleaned or set(cleaned) <= {"-"}:
+        raise ValueError(f"sid {sid!r} yields no usable stable claim id")
+    return cleaned
+
+
+def assert_stable_ids_unique(sids: Iterable[str]) -> dict[str, str]:
+    """``{sid: stable id}``, raising if two sids collapse to the same id.
+
+    Cheap insurance against a silent deep-link merge: run it over a corpus
+    before trusting the ids, rather than discovering the collision as two
+    claims sharing an anchor on an already-published page.
+    """
+    out: dict[str, str] = {}
+    seen: dict[str, str] = {}
+    for sid in sids:
+        cid = stable_claim_id(sid)
+        if cid in seen and seen[cid] != sid:
+            raise ValueError(
+                f"stable claim id collision: {sid!r} and {seen[cid]!r} both "
+                f"yield {cid!r} — deep links would merge")
+        seen[cid] = sid
+        out[sid] = cid
+    return out
 
 
 class Claim(BaseModel):
