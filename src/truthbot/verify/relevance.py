@@ -85,8 +85,16 @@ _SCORE_SYSTEM = (
     '"supports": null, "one_line_why": "", "arithmetic_hinge": false}, ...]}.'
 )
 
-#: Longest snippet (characters) sent per item in the scoring payload.
+#: Longest snippet (characters) sent per item in the scoring payload. This is
+#: the DEFAULT for ``max_snippet_chars``; callers may raise it per call (D17-c
+#: series excerpts) but the shared constant does not move for one experiment.
 SCORE_SNIPPET_CHARS = 400
+
+#: Appended in place of the characters a cap removed, so a clipped snippet is
+#: visibly clipped rather than silently short. Nothing in the corpus has ever
+#: hit the 400 cap (n=4,344, max 207), so this marks a failure mode that has
+#: not yet occurred — which is exactly when it is cheap to install.
+TRUNCATION_MARKER = "… [truncated {n} chars]"
 
 #: Longest stored ``one_line_why``. The pack payload truncates at 200, so this
 #: keeps the stored comparison a little richer than the rendered one without
@@ -199,19 +207,59 @@ def generate_queries(llm: LlmFn, claim_text: str, *, context: str = "",
     return queries[:n]
 
 
-def score_payload(claim_text: str, evidence: list[Evidence]) -> str:
+def _clip(text: str, cap: "int | None") -> tuple[str, int]:
+    """(snippet as sent, characters removed). ``cap=None`` means no limit.
+
+    A clip is always visible: the marker states how much went missing, so a
+    downstream reader can tell a short source from a truncated one."""
+    if cap is None or len(text) <= cap:
+        return text, 0
+    removed = len(text) - cap
+    return text[:cap] + TRUNCATION_MARKER.format(n=removed), removed
+
+
+def score_payload_ex(
+    claim_text: str,
+    evidence: list[Evidence],
+    max_snippet_chars: "int | None" = SCORE_SNIPPET_CHARS,
+) -> tuple[str, list[dict]]:
+    """``(payload, per-item {chars_sent, chars_truncated})``.
+
+    The machine-readable half of the truncation contract: callers that must
+    prove nothing was clipped (D17-c Stage A asserts ``chars_truncated == 0``)
+    read it here rather than re-deriving it from the payload string."""
+    items, meta = [], []
+    for i, ev in enumerate(evidence, start=1):
+        sent, removed = _clip(ev.snippet or "", max_snippet_chars)
+        items.append({"i": i, "source": ev.source_name, "snippet": sent})
+        meta.append({"i": i, "chars_sent": len(sent), "chars_truncated": removed})
+    return json.dumps({"claim": claim_text, "items": items}), meta
+
+
+def score_payload(
+    claim_text: str,
+    evidence: list[Evidence],
+    max_snippet_chars: "int | None" = SCORE_SNIPPET_CHARS,
+) -> str:
     """The EXACT user payload ``score_evidence`` sends for these items.
 
     Factored out so a $0 cost estimator can measure the real prompt volume of a
     stored pack (scripts/rescore_stored_packs.py --estimate) instead of guessing
-    at it — the estimate prices the same bytes the funded run would send."""
-    items = [{"i": i, "source": ev.source_name,
-              "snippet": (ev.snippet or "")[:SCORE_SNIPPET_CHARS]}
-             for i, ev in enumerate(evidence, start=1)]
-    return json.dumps({"claim": claim_text, "items": items})
+    at it — the estimate prices the same bytes the funded run would send.
+
+    ``max_snippet_chars`` defaults to ``SCORE_SNIPPET_CHARS``, so every existing
+    caller is byte-unchanged; ``tests/test_score_payload_default_identity.py``
+    holds that. D17-c raises it per call to carry series excerpts, which run to
+    ~22,000 characters — the shared constant stays at 400."""
+    return score_payload_ex(claim_text, evidence, max_snippet_chars)[0]
 
 
-def score_evidence(llm: LlmFn, claim_text: str, evidence: list[Evidence]) -> None:
+def score_evidence(
+    llm: LlmFn,
+    claim_text: str,
+    evidence: list[Evidence],
+    max_snippet_chars: "int | None" = SCORE_SNIPPET_CHARS,
+) -> None:
     """Cheap-model relevance / supports-refutes scoring, IN PLACE.
 
     Populates ``relevance_score``, ``supports_claim`` and — under the B2
@@ -227,7 +275,7 @@ def score_evidence(llm: LlmFn, claim_text: str, evidence: list[Evidence]) -> Non
     must never cost us the stance we paid for."""
     if not evidence:
         return
-    payload = score_payload(claim_text, evidence)
+    payload = score_payload(claim_text, evidence, max_snippet_chars)
     try:
         out = llm(_SCORE_SYSTEM, payload)
         scores = out.get("scores", [])
