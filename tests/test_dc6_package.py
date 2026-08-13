@@ -747,12 +747,23 @@ def test_committed_net_ledger_supersedes_and_archives_the_prior_ledger():
                 if not e.get("net_unchanged")})
     # Rev 5: both notes are owner-approved FINAL (no draft flag, dated approval),
     # so they render visibly on the corrections page.
-    notes = doc["notes"]
+    #
+    # Scoped to the DC-6' notes by their approval date. This used to read
+    # ``notes = doc["notes"]; assert len(notes) == 2``, which also asserted
+    # that no correction would ever be issued again — it broke the moment
+    # wave 2 issued one. The intent was that DC-6''s OWN notes are final
+    # prose, so that is what is pinned; later notes are checked below rather
+    # than forbidden.
+    notes = [n for n in doc["notes"] if n.get("owner_approved") == "2026-08-11"]
     assert len(notes) == 2
     assert all(not n.get("draft") for n in notes)
-    assert all(n.get("owner_approved") == "2026-08-11" for n in notes)
     # the amended paragraph 1 names the Resolution-state section that now exists.
     assert "Resolution-state section below" in notes[0]["text"]
+    # Every note on the live page, DC-6' or later, must be owner-approved and
+    # non-draft: an unapproved note must never render as published prose.
+    for n in doc["notes"]:
+        assert not n.get("draft"), f"draft note would render: {n['text'][:60]}"
+        assert n.get("owner_approved"), f"unapproved note: {n['text'][:60]}"
 
 
 @pytest.mark.skipif(not (_PKG / "dc6_review.json").exists(),

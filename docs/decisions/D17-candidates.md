@@ -342,6 +342,28 @@ claimed 60%". Both carry `arithmetic_hinge=True`, so the B2 contract already
 treats them as hypotheses for the panel rather than proof — the flag names the
 specific tension so no Stage B reads them as settled.
 
+**CLARIFICATION (2026-08-13): wave-2 flips land as successor artifacts, not as
+pack mutations.** An earlier wave-2 instruction read "packs change only per the
+flip lanes", which could be taken as authorising in-place rewrites of stored
+packs. That reading is **retracted**; it would have contradicted the standing
+rule stated at the top of `scripts/rescore_stored_packs.py` — *"Never mutates
+the stored artifact. Results land in a SIDECAR … because artifacts are the
+record: archive-never-delete."*
+
+Flips and `series_rows` land by **minting successor run artifacts per speech**
+through the existing `rebuild_of` DAG (`src/truthbot/publish/heads.py`): each
+rebuild writes a new run whose `meta.rebuild_of` names its parent, and
+publishing resolves the unique current-generation leaf — the artifact no other
+names as parent. Shipped heads stay byte-frozen as the record, render already
+resolves the leaf, and no join logic is needed. `heads.py` raises if a speech
+ever has more than one leaf, so the DAG is self-checking.
+
+All five speeches mint successors — `clinton_1998` id-only — so the stable-id
+deep-link rotation completes site-wide in **one** event rather than trickling.
+`series_rows` is uniform across all 8 excerpted items; `obama_2014:0189`'s
+`window_period_mismatch` renders visibly; stances change only per the flip
+lanes.
+
 **Wave-2 REQUIRED-recommended: publish badges go fail-closed.** Today
 `_classify_source_for_render` returns `"verified"` when no classification map
 exists *and* when a URL is simply absent from one — both branches fail OPEN, so

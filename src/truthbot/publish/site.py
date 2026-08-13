@@ -773,20 +773,55 @@ def _classify_source_for_render(
 ) -> str:
     """Return one of ``"verified"``, ``"unverified"``, or ``"broken"``.
 
-    Defaults to ``"verified"`` when no classification map is provided —
-    preserving pre-Layer-4 rendering behavior on reports generated
-    before the URL filter ran.
+    FAILS CLOSED (wave 2): a URL earns ``"verified"`` only by having a
+    classification that says so. Absence of a record — no map at all, or a map
+    that does not mention this URL — renders ``"unverified"``.
+
+    This reverses the original behaviour, which returned ``"verified"`` in both
+    of those cases to preserve pre-Layer-4 rendering on reports generated before
+    the URL filter ran. That compatibility is what let absence of evidence
+    render as evidence of verification: ``fred.stlouisfed.org/series/LNS12000000``
+    returns 404 on FRED and on ALFRED, was never fetched, and carried the
+    ``source-verified`` badge on the published site — twice — because the run
+    artifact had no classification map at all and every branch defaulted to
+    verified.
+
+    The cost is deliberate and visible: a legacy report rendered without a
+    classification map now shows its sources as unverified until it is
+    re-rendered with one. Under-claiming on an old report is recoverable;
+    over-claiming on a dead link is what we published.
     """
     if not classifications:
-        return "verified"
+        return "unverified"
     cls = classifications.get(url)
     if cls is None:
-        return "verified"
+        return "unverified"
     if cls in _RENDER_AS_BROKEN:
         return "broken"
     if cls in _RENDER_AS_UNVERIFIED:
         return "unverified"
     return "verified"
+
+
+#: Two different things now render as "unverified", and they warrant different
+#: claims. A checked-but-blocked URL really is most likely real. An UNCHECKED
+#: one carries no such evidence, and saying it does would just relocate the
+#: over-claim that fail-closed exists to remove.
+_UNVERIFIED_CHECKED = (
+    "Could not be auto-verified at publish time (bot-blocked or transient "
+    "error). The URL is most likely real but you should confirm before "
+    "relying on it.")
+_UNVERIFIED_UNCHECKED = (
+    "Not checked at publish time — no verification record exists for this "
+    "URL. We are not vouching for it. Follow the link and confirm before "
+    "relying on it.")
+
+
+def _unverified_title(url: str, classifications: "dict[str, str] | None") -> str:
+    """Tooltip for the unverified badge, honest about which case this is."""
+    if not classifications or classifications.get(url) is None:
+        return _UNVERIFIED_UNCHECKED
+    return _UNVERIFIED_CHECKED
 
 
 def _evidence_list_html(
@@ -803,8 +838,9 @@ def _evidence_list_html(
     three CSS classes (``source-verified`` / ``source-unverified`` /
     skipped-as-broken) so the static site can visually distinguish them.
 
-    Without ``classifications`` every URL renders as verified (the
-    pre-Layer-4 behavior), so older publish runs still look identical.
+    Without ``classifications`` every URL renders as UNVERIFIED (wave-2
+    fail-closed). Older publish runs therefore no longer look identical —
+    that is the point: the old behaviour rendered unchecked URLs as verified.
 
     ``tier_index`` (A5 / C-3(a)) is the claim's ``stored_tier_index`` — these
     URLs come from ``ModelVerdict.web_sources`` and carry no tier of their
@@ -829,10 +865,8 @@ def _evidence_list_html(
         if render_cls == "unverified":
             unverified_badge = (
                 ' <span class="source-unverified-badge" '
-                'title="Could not be auto-verified at publish time '
-                '(bot-blocked or transient error). The URL is most '
-                'likely real but you should confirm before relying on '
-                'it.">unverified</span>'
+                f'title="{_esc(_unverified_title(url, classifications))}"'
+                '>unverified</span>'
             )
         items.append(
             f'<li class="source-{render_cls}"><span class="ev-mark">→</span>{badge}'

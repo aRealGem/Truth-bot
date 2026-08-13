@@ -5,7 +5,12 @@ correctly distinguish verified / unverified / broken sources.
 
 Six tests:
 
-1. No classification map → every URL renders verified (backward compat).
+1. No classification map → every URL renders UNVERIFIED. This REVERSED in
+   wave 2. It previously rendered verified, for backward compatibility with
+   pre-Layer-4 reports — and that compatibility is precisely what let a URL
+   returning 404 on both FRED and ALFRED wear the source-verified badge on the
+   published site, because the run artifact carried no classification map and
+   every branch defaulted to verified.
 2. ``ok`` classification → verified.
 3. ``bot-blocked`` / ``transient`` → unverified, with badge.
 4. ``dead-4xx`` / ``malformed`` / ``dns`` / ``cert-error`` → broken,
@@ -22,9 +27,20 @@ from truthbot.publish.site import (
 )
 
 
-def test_classify_no_map_defaults_verified():
-    assert _classify_source_for_render("https://x.gov/a", None) == "verified"
-    assert _classify_source_for_render("https://x.gov/a", {}) == "verified"
+def test_classify_no_map_fails_closed_to_unverified():
+    """Wave 2: absence of a record is not evidence of verification."""
+    assert _classify_source_for_render("https://x.gov/a", None) == "unverified"
+    assert _classify_source_for_render("https://x.gov/a", {}) == "unverified"
+
+
+def test_classify_url_absent_from_an_existing_map_fails_closed():
+    """The second fail-open branch: a map exists, this URL is not in it.
+
+    This is the branch that would have caught LNS12000000 had a map been
+    present, so it has to fail closed too — otherwise adding classifications
+    for *some* URLs silently vouches for the rest."""
+    m = {"https://other.gov/x": "ok"}
+    assert _classify_source_for_render("https://x.gov/a", m) == "unverified"
 
 
 def test_classify_ok_is_verified():
@@ -86,15 +102,32 @@ def test_evidence_list_all_broken_shows_empty_message():
     assert dead2 not in html
 
 
-def test_evidence_list_no_classifications_renders_as_before():
-    """Backward-compatibility — pre-Layer-4 callers don't pass
-    ``classifications`` and must get the original verified rendering
-    for every URL with no extra badges."""
+def test_evidence_list_no_classifications_fails_closed():
+    """Wave 2 reversal, stated as the behaviour change it is.
+
+    A caller that passes no ``classifications`` used to get every URL rendered
+    verified. It now gets every URL rendered unverified. The URLs are still
+    SHOWN — failing closed means declining to vouch for them, not hiding them,
+    since a reader can still follow a citation we could not confirm."""
     urls = ["https://www.bls.gov/cps/", "https://www.bea.gov/data/"]
     html = _evidence_list_html(urls)
     for u in urls:
-        assert u in html
-    # No unverified badge should be emitted in the legacy path.
-    assert "source-unverified-badge" not in html
-    # Every list item should render in the verified bucket by default.
-    assert html.count("source-verified") == len(urls)
+        assert u in html, "failing closed must not drop the citation"
+    assert html.count('class="source-unverified"') == len(urls)
+    assert 'class="source-verified"' not in html
+
+
+def test_unverified_tooltip_does_not_vouch_for_an_unchecked_url():
+    """Failing closed must not relocate the over-claim into the tooltip.
+
+    The badge copy asserts a URL is "most likely real" — true of one we
+    checked and found bot-blocked, and unsupported for one we never checked
+    at all."""
+    unchecked = _evidence_list_html(["https://www.bls.gov/cps/"])
+    assert "not checked at publish time" in unchecked.lower()
+    assert "most likely real" not in unchecked
+
+    checked = _evidence_list_html(["https://www.bls.gov/cps/"],
+                                  classifications={"https://www.bls.gov/cps/":
+                                                   "bot-blocked"})
+    assert "most likely real" in checked

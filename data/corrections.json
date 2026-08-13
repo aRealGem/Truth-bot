@@ -10,6 +10,21 @@
       "date": "2026-08-10",
       "owner_approved": "2026-08-11",
       "text": "This page lists every published fact-check verdict that changed when the five-speech corpus was re-adjudicated on the v2.3 pipeline, showing each claim's previously published verdict next to the verdict this site now serves. Where a verdict moved through more than one step, only the net change is shown here; the step-by-step mechanism behind each move is recorded in the DC-6 net ledger."
+    },
+    {
+      "date": "2026-08-13",
+      "owner_approved": "2026-08-13",
+      "text": "In the note published with the source-audit banner, I wrote that 48 of the flagged items are statistical series. That is wrong for 12 of them. The Congressional Budget Office, the Government Accountability Office and the National Center for Education Statistics publish tabled reports, not series. The banner's \"at most those\" is an upper bound and remains true; what was inaccurate was the description of what the items are."
+    },
+    {
+      "date": "2026-08-13",
+      "owner_approved": "2026-08-13",
+      "text": "Two pieces of evidence cited a Federal Reserve Economic Data (FRED) address built from a Bureau of Labor Statistics series number: fred.stlouisfed.org/series/LNS12000000. That address does not resolve and never did. It returns \"not found\" on FRED and on ALFRED, FRED's archive of earlier data vintages. It appeared twice: on the claim that more Americans are working today than at any time in the country's history, and on the claim immediately following it, where it was additionally recorded as SUPPORTING that claim. No position should have been recorded for or against a claim on the strength of a source that was not retrieved before publication. Both citations are withdrawn. For context, and with no correction implied for either: the same underlying Bureau of Labor Statistics series is cited elsewhere in the same report at its working address, data.bls.gov/timeseries/LNS12000000. Those citations stand. The fault was one malformed FRED address, not a bad series."
+    },
+    {
+      "date": "2026-08-13",
+      "owner_approved": "2026-08-13",
+      "text": "The previously noted dropped-row correction stands as issued."
     }
   ],
   "entries": [
