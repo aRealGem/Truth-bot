@@ -111,10 +111,16 @@ the current design cannot distinguish them at item level.
    absent from one — absence of evidence rendering as evidence of
    verification. Invert: no classification record → no `"verified"`; known-dead
    URLs render broken. Rides the stable-ids re-render.
-4. **Corrections ledger.** Three items, drafted and awaiting owner red-pen:
-   the PR #105 "48 are statistical series" wording; the `LNS12000000` dead link
-   (both occurrences, with the live siblings cited as context only, no
-   correction implied for them); the pre-existing dropped-row note.
+4. **Corrections ledger — OWNER-APPROVED 2026-08-13**, text final at
+   `D17-c-corrections-ledger.md`. Three items: the PR #105 "48 are statistical
+   series" wording; the `LNS12000000` dead link (both occurrences, with the
+   working siblings cited as context only, no correction implied for them); the
+   pre-existing dropped-row note. Item 2 says "not retrieved before
+   publication" rather than "never retrieved" — the owner chose the weaker,
+   equally true form, since the stronger one rests on inference about our own
+   pipeline. Browsing-model provenance is deliberately out of the published
+   text and stays in the D17 record. **No dependency on stable ids** — this can
+   ship ahead of the re-render or alongside it.
 
 ---
 
