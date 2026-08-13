@@ -878,6 +878,81 @@ def _evidence_list_html(
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
 
 
+#: Rows shown inline before the table collapses. A reader checking an
+#: arithmetic claim needs the endpoints and enough around them to see the
+#: shape; 1,045 rows of PAYEMS in an open table is not disclosure, it is noise.
+_SERIES_ROWS_INLINE = 14
+
+
+def _series_rows_html(rows: "dict | None") -> str:
+    """Render a D17-c series excerpt as a table a reader can check the claim against.
+
+    The point of series excerpting is that arithmetic claims become checkable by
+    the reader, not only by the scorer — so the observations render, with the
+    window that produced them, the rule that chose it, and how many rows of the
+    full table are NOT shown. A window is only honest if what it excluded is
+    visible next to what it included.
+
+    ``window_period_mismatch`` renders as a warning rather than a footnote: it
+    means these rows cannot settle this claim, and a reader who takes the table
+    at face value would be misled by our own exhibit.
+    """
+    if not rows or not rows.get("rows"):
+        return ""
+    obs = rows["rows"]
+    shown = obs[:_SERIES_ROWS_INLINE]
+    body = "".join(
+        f'<tr><td class="mono">{_esc(str(r.get("period", "")))}</td>'
+        f'<td class="mono">{_esc(str(r.get("value", "")))}</td></tr>'
+        for r in shown)
+    more = ""
+    if len(obs) > len(shown):
+        more = (f'<p class="dim series-more">+{len(obs) - len(shown):,} more '
+                f'observations in this window, not shown here.</p>')
+
+    total = rows.get("total_rows_in_full_table")
+    scope = (f'{rows.get("rows_shown", len(obs)):,} of {total:,} rows in the '
+             f'full table' if isinstance(total, int)
+             else f'{rows.get("rows_shown", len(obs)):,} rows')
+    window = ""
+    if rows.get("window_start") and rows.get("window_end"):
+        window = f' · {_esc(rows["window_start"])} to {_esc(rows["window_end"])}'
+
+    units = rows.get("units")
+    units_html = (f'<p class="dim series-units">Units: {_esc(str(units))}</p>'
+                  if units else "")
+    if not units and rows.get("units_unavailable_because"):
+        units_html = ('<p class="dim series-units">Units unavailable: '
+                      f'{_esc(str(rows["units_unavailable_because"]))}</p>')
+
+    mismatch = ""
+    if rows.get("window_period_mismatch"):
+        note = rows.get("window_period_mismatch_note") or (
+            "This window does not reach the period the claim compares against.")
+        mismatch = (f'<p class="series-mismatch">⚠ {_esc(str(note))}</p>')
+
+    predicate = rows.get("selection_predicate")
+    predicate_html = (f'<p class="dim series-predicate">Selected by: '
+                      f'{_esc(str(predicate))}</p>' if predicate else "")
+    full = rows.get("full_table")
+    full_html = (f'<p class="dim series-full"><a href="{_esc(str(full))}" '
+                 f'target="_blank" rel="noopener">Full table</a></p>'
+                 if full else "")
+    vintage = rows.get("vintage_as_of")
+    head = (f'{_esc(str(rows.get("series_id", "")))} · as of '
+            f'{_esc(str(vintage))}' if vintage
+            else _esc(str(rows.get("series_id", ""))))
+
+    return (
+        '<details class="series-rows"><summary class="series-summary">'
+        f'{head} — {scope}{window}</summary>'
+        f'{mismatch}'
+        '<table class="series-table"><tr><th>Period</th><th>Value</th></tr>'
+        f'{body}</table>{more}{units_html}{predicate_html}{full_html}'
+        '</details>'
+    )
+
+
 def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
                             self_ids: Optional[set[str]] = None,
                             tally: "dict[str, int] | None" = None) -> str:
@@ -925,6 +1000,7 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
         snippet_html = (
             f'<div class="source-snippet">{_esc(snippet)}</div>' if snippet else ""
         )
+        series_html = _series_rows_html(src.get("series_rows"))
         # The pack id (E1, E2, …) is what model reasoning cites — render it so
         # "E5 confirms…" in the write-up is traceable to a concrete source
         # (2026-07-19 review: the ids were captured but never displayed).
@@ -936,7 +1012,7 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
             f'<li class="source-verified"{li_anchor}{stored_attr}>'
             f'<span class="ev-mark">→</span>{id_html}{badge}'
             f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
-            f'{name_html}{tier_html}{snippet_html}</li>'
+            f'{name_html}{tier_html}{snippet_html}{series_html}</li>'
         )
     if not items:
         return ""
@@ -4188,6 +4264,42 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
 }
 .computed-exhibit .ce-note { margin-top: 0.3rem; }
+/* D17-c series excerpt (wave 2) — the observations behind an arithmetic
+   claim, collapsed by default: audit detail, one click away, not in the way.
+   Same posture as the sources-consulted block it sits inside. */
+.series-rows { margin: 0.4rem 0 0.2rem; }
+.series-summary {
+  cursor: pointer;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+.series-summary:hover { color: var(--ink); }
+.series-table {
+  border-collapse: collapse;
+  margin: 0.45rem 0 0.3rem;
+  font-size: 0.72rem;
+}
+.series-table th,
+.series-table td {
+  padding: 0.12rem 0.75rem 0.12rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+.series-table th { color: var(--ink-muted); font-weight: 600; }
+.series-more, .series-units, .series-predicate, .series-full {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+}
+/* The window does not reach the period the claim is about. Amber, because a
+   reader taking the table at face value would be misled by our own exhibit. */
+.series-mismatch {
+  margin: 0.35rem 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.7rem;
+  border-left: 3px solid var(--amber, #b26a00);
+  background: rgba(178, 106, 0, 0.07);
+}
 /* Post-publication correction note (T1.5) — amber, can't be missed. */
 .pca-correction {
   margin-top: 0.25rem;

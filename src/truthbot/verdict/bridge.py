@@ -159,7 +159,10 @@ def _pack_sources(pack: Optional[EvidencePack]) -> list[dict]:
         {"id": it.pack_id, "source": it.source_name, "url": it.source_url,
          "tier": it.tier.value, "snippet": it.snippet,
          "supports_claim": it.supports_claim, "relevance_score": it.relevance_score,
-         "role": getattr(it, "role", "") or ""}
+         "role": getattr(it, "role", "") or "",
+         # D17-c: the rows travel to the renderer, so a reader can check the
+         # arithmetic against the same observations the panel saw.
+         "series_rows": getattr(it, "series_rows", None)}
         for it in pack.items
     ]
 

@@ -95,6 +95,13 @@ class PackItem:
     # dated after the utterance but within fair-game. Display + payload
     # metadata; such items never credit the quota. NOT part of the I5 quad.
     era_note: str = ""
+    # D17-c series excerpt (wave 2): the observations behind an arithmetic
+    # claim, carried structurally so the panel AND the reader get the rows, the
+    # window that produced them, and what the window left out. None for every
+    # non-series item. Display + payload metadata; NOT part of the I5 quad —
+    # that quad attests to the SOURCE, and these rows are a view of it, so
+    # folding them in would blur what the hash covers.
+    series_rows: Optional[dict] = None
 
     def provenance(self) -> dict:
         """The I5 provenance record (``url/retrieved_at/sha256/tier`` required)."""

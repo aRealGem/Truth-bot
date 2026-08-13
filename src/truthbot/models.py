@@ -183,6 +183,24 @@ class Evidence(BaseModel):
     source_url: str = Field(..., description="Direct URL to the evidence")
     source_tier: SourceTier = Field(SourceTier.OTHER)
     snippet: str = Field(..., description="Relevant excerpt or summary")
+    series_rows: Optional[dict] = Field(
+        None,
+        description=(
+            "D17-c series excerpt: the actual observations from a statistical "
+            "series, carried STRUCTURALLY rather than flattened into the "
+            "snippet. Keys: series_id, rows [{period, value}], window_start, "
+            "window_end, rows_shown, total_rows_in_full_table, vintage_as_of, "
+            "units (may be null with units_unavailable_because), full_table, "
+            "selection_predicate, window_selection, and the optional "
+            "window_period_mismatch flag. None for every non-series item.\n\n"
+            "Structured because Stage A appended the rows to the snippet only "
+            "so the flip census could measure against the shipped baseline; "
+            "one variable at a time. For the production path the rows are "
+            "data, not prose the scorer has to parse back out — and provenance "
+            "a reader can see (which rows, which window, chosen by which rule, "
+            "and what was NOT shown) survives only if it stays structured."
+        ),
+    )
     retrieved_at: datetime = Field(default_factory=datetime.utcnow)
     published_at: Optional[datetime] = Field(
         None,

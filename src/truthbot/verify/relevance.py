@@ -218,6 +218,27 @@ def _clip(text: str, cap: "int | None") -> tuple[str, int]:
     return text[:cap] + TRUNCATION_MARKER.format(n=removed), removed
 
 
+#: What a series excerpt contributes to the scoring payload. Deliberately a
+#: WHITELIST: the golden carries provenance a reader needs (fixture sha, role,
+#: claim_sid) that the scorer does not, and shipping the whole record would
+#: quietly grow the prompt every time the golden schema gained a field.
+_SERIES_ROWS_KEYS = (
+    "series_id", "rows", "window_start", "window_end", "rows_shown",
+    "total_rows_in_full_table", "vintage_as_of", "units",
+    "units_unavailable_because", "full_table", "selection_predicate",
+    "window_period_mismatch", "window_period_mismatch_note",
+)
+
+
+def _series_rows_payload(rows: dict) -> dict:
+    """The scorer's view of a series excerpt: the rows plus what bounds them.
+
+    ``rows_shown`` of ``total_rows_in_full_table`` and the predicate travel WITH
+    the data on purpose — a window is only honest if the reader can see what was
+    left out and why it was left out."""
+    return {k: rows[k] for k in _SERIES_ROWS_KEYS if rows.get(k) is not None}
+
+
 def score_payload_ex(
     claim_text: str,
     evidence: list[Evidence],
@@ -231,8 +252,16 @@ def score_payload_ex(
     items, meta = [], []
     for i, ev in enumerate(evidence, start=1):
         sent, removed = _clip(ev.snippet or "", max_snippet_chars)
-        items.append({"i": i, "source": ev.source_name, "snippet": sent})
-        meta.append({"i": i, "chars_sent": len(sent), "chars_truncated": removed})
+        item = {"i": i, "source": ev.source_name, "snippet": sent}
+        rows = getattr(ev, "series_rows", None)
+        if rows:
+            # Structured, NOT folded into the snippet: the rows are data, and
+            # the cap governs prose. Clipping a series mid-table would leave a
+            # payload that still parses and quietly means something else.
+            item["series_rows"] = _series_rows_payload(rows)
+        items.append(item)
+        meta.append({"i": i, "chars_sent": len(sent), "chars_truncated": removed,
+                     "has_series_rows": bool(rows)})
     return json.dumps({"claim": claim_text, "items": items}), meta
 
 

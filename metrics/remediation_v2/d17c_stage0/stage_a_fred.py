@@ -80,13 +80,19 @@ REASON_TENSION = {("biden_2022:0169", "E7"), ("trump_2026:0219", "E1")}
 SEP = "\n---\n"
 
 
-def augmented_packs(augment: bool = True) -> tuple[dict, dict, dict]:
+def augmented_packs(augment: bool = True,
+                    structured: bool = False) -> tuple[dict, dict, dict]:
     """(sid -> [Evidence], sid -> claim text, aug index).
 
     ``augment=False`` is the CONTROL: same 7 claims, same packs, same payload
     path, same cap — and no excerpt appended to anything. It isolates what a
     rescore does on its own, so a stance that moves in both arms is rescore
     behaviour rather than evidence of what the rows did.
+
+    ``structured=True`` is the LANE-2 production representation: the rows ride
+    on ``Evidence.series_rows`` instead of being flattened into the snippet.
+    Both forms are kept because they answer different questions — the flattened
+    one reproduces the committed census, the structured one is what ships.
 
     Works on deep copies of the stored evidence. The artifacts on disk are the
     record and are not touched.
@@ -116,12 +122,40 @@ def augmented_packs(augment: bool = True) -> tuple[dict, dict, dict]:
             in item.source_url, f"{sid} {eid}: excerpt joined to the wrong item"
         stored = item.snippet or ""
         if augment:
-            item.snippet = stored + SEP + S.render(g)
+            if structured:
+                # Lane 2 / production path: the rows are DATA on the item.
+                item.series_rows = series_rows_for(g, (sid, eid))
+            else:
+                # Stage A measurement path, kept so the census stays
+                # reproducible: rows flattened into the snippet, because the
+                # census had to change one variable against the shipped
+                # baseline and the wire shape was not that variable.
+                item.snippet = stored + SEP + S.render(g)
         aug[(sid, eid)] = {"stored_chars": len(stored),
                            "excerpt_chars": len(S.render(g)) if augment else 0,
                            "rows_shown": g["rows_shown"],
-                           "series_id": g["series_id"]}
+                           "series_id": g["series_id"],
+                           "structured": bool(augment and structured)}
     return packs, texts, aug
+
+
+def series_rows_for(golden: dict, key: tuple) -> dict:
+    """The golden as it rides on an Evidence item, plus the R2 mismatch flag.
+
+    ``window_period_mismatch`` is attached HERE rather than left in the census
+    because it has to be renderable: obama_2014:0189's window does not reach the
+    period its claim is about, and a reader looking at those rows deserves to be
+    told that by the rows themselves, not by a sidecar they will never open.
+    """
+    out = dict(golden)
+    if key in PERIOD_MISMATCH:
+        out["window_period_mismatch"] = True
+        out["window_period_mismatch_note"] = (
+            "This window does not reach the period the claim compares against. "
+            "The claim's reference point is named rather than dated, so the "
+            "selection rules did not extend the window to cover it. Shown for "
+            "transparency; it cannot settle the claim.")
+    return out
 
 
 def item_payload_shas(texts: dict, packs: dict) -> tuple[dict, list]:
