@@ -267,13 +267,50 @@ The other two questions carried out of Stage 0 are also closed: the
 `LNS12000000` dead link is a ledger entry (no substitution), and `units` ships
 null with a machine-readable reason at six-of-seven provenance fields.
 
+**Ruled (R1 = (b)): the superlative rule reads the claim's own words.**
+`record|ever|history|all-time|never` matches claim TEXT only; the other three
+rules stay on text + context. Under text+context it fired on
+`biden_2022:0169` — *"369,000 new manufacturing jobs just last year"*, a claim
+with no superlative of its own — because a neighbouring sentence carried one,
+pulling 997 rows of `MANEMP` for a claim about a single year. A rule keying on
+a claim's own assertion should read the claim's own words; the other three
+describe a period rather than assert a superlative, so context legitimately
+informs them. Only `0169` changed (997 → 25 rows); the other eight goldens are
+byte-identical. Matched Fable's pre-registered simulation on every value.
+
+**Two D17 candidates LOGGED, not implemented (R2).**
+
+1. *Named-era / named-person anchor map.* A deterministic mapping from
+   proper-noun temporal anchors ("when Reagan first stood here") to dates. Real
+   scope and a new determinism surface; not to be smuggled in under a spend
+   ceiling.
+2. *`gap_periods` annotation in window provenance.* `CE16OV`, `CPILFESL`,
+   `CUUR0000SAF112` and `APU0000708111` each hole at 2025-10 (the shutdown data
+   gap); `PAYEMS` is complete. Fable-verified. Deferred so the pre-registered
+   run-sha stays binding — annotating provenance would change it.
+
 **Carried limitation: a proper-noun comparison anchor escapes all four rules.**
 `obama_2014:0189` compares the minimum wage to *"when Ronald Reagan first stood
 here"* (circa 1982). No rule fires, so it takes the default 25-month window
 (2011-12-01 to 2013-12-01), which does not reach the period the claim is
 actually about. This is the same claim-period mismatch that motivated rejecting
 13/5/2, surviving in the ruled ruleset because the anchor is a name rather than
-a date. Recorded, not papered over; closing it needs a new rule and a ruling.
+a date. Ruled (R2 = (a) amended): `0189` STAYS in wave 1, the mismatch is
+recorded as-is, and no named-anchor rule is implemented. Its census row must
+carry `window_period_mismatch=true` and is **NON-ACTIONABLE for any Stage B
+consideration**. The flag rides on the census row and deliberately NOT on the
+golden payload — adding a field there would change the pre-registered run-sha.
+
+**Stage A is BLOCKED on a payload-shape question, halted before spend.** The
+excerpt has no channel to the model. `relevance.score_payload` sends only
+`{i, source, snippet}` and truncates `snippet` at `SCORE_SNIPPET_CHARS = 400`;
+`Evidence` has no excerpt field and no insertion path exists in `src/`. Routing
+the excerpts through `snippet` unchanged would ship 3,200 of 49,655 characters
+— **93.6% of every excerpt truncated away** — and would still produce a
+complete, plausible-looking flip census measuring 400-character stubs. The
+pre-registered $0.0511 projection assumes the full 49,655 characters reach the
+model, so the cost model and the committed code disagree. Not resolvable
+without a ruling on how excerpts enter the payload; see the report for options.
 
 **Context widens more than claim text alone would.** Running the rules over
 `text + context` — as ruled — makes `record|ever|history` fire on
