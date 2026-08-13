@@ -75,7 +75,11 @@ checks = {
         abs(measured - FINDINGS_TOTAL_SPEND) < 0.0005,
     "items == b2_subset estimate items (1028)": items == 1028,
     "calls == b2_subset estimate calls (115)": calls == 115,
-    "measured freetext/item == calibration constant":
+    # IDENTITY BY CONSTRUCTION, not independent corroboration: costs.py defines
+    # FREETEXT_CHARS_PER_ITEM as the mean one_line_why length over these exact
+    # 1,028 B2 replies, so recomputing it from the same population cannot fail.
+    # Retained only because it would catch a corpus swap under the constant.
+    "measured freetext/item == calibration constant (identity by construction)":
         abs(freetext / items - FREETEXT_CHARS_PER_ITEM) < 0.05,
 }
 for label, ok in checks.items():
@@ -91,12 +95,25 @@ print(f"  within rounding of 0.5389/0.5404? {within}")
 print(f"\n=== estimate-vs-actual factor ===")
 print(f"  measured {measured:.4f} / cited pre-run estimate {CITED_ESTIMATE} "
       f"= {factor:.2f}x")
-print(f"  Stage A projection $0.2063 (measured excerpts) x {factor:.2f} "
-      f"= ${0.2063 * factor:.4f}")
-print(f"  Stage A projection $0.2992 (4,000-char model) x {factor:.2f} "
-      f"= ${0.2992 * factor:.4f}")
-print(f"  ceiling $0.75 -> {'UNDER' if 0.2992 * factor < 0.75 else 'OVER'} "
-      f"on both bounds")
+
+# SCOPE CORRECTION (Fable's D17-c ruling). The figures previously stressed here
+# -- $0.2063 measured / $0.2992 modelled against the $0.75 whole-programme bound
+# -- were the 84-item wave-1 projection. Stage A-FRED is a whole-pack rescore of
+# 7 claims / 67 pack items against a $0.15 ceiling; select_rows.py computes it
+# under the frequency-aware windows. Stressing the old number against the new
+# ceiling would compare two different runs.
+STAGE_A_PROJECTION = 0.0573
+STAGE_A_CEILING = 0.15
+stressed = STAGE_A_PROJECTION * factor
+print(f"  Stage A-FRED projection ${STAGE_A_PROJECTION:.4f} "
+      f"(7 claims / 67 pack items, frequency-aware excerpts)")
+print(f"  stressed at B2's realized {factor:.3f}x            = ${stressed:.4f}")
+print(f"  ceiling ${STAGE_A_CEILING:.2f} -> "
+      f"{'UNDER' if stressed < STAGE_A_CEILING else 'OVER'}, "
+      f"headroom ${STAGE_A_CEILING - stressed:.4f} "
+      f"({stressed / STAGE_A_CEILING * 100:.0f}% of ceiling)")
+print("  NOTE: the realized-factor case consumes most of the ceiling. Halt and")
+print("  report on the first sign of overrun; do not trim windows to fit.")
 
 out = HERE / "b2_settlement.json"
 out.write_text(json.dumps({

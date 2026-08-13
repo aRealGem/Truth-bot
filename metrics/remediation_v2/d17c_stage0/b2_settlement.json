@@ -11,7 +11,7 @@
   "crosschecks": {
     "calls == b2_subset estimate calls (115)": true,
     "items == b2_subset estimate items (1028)": true,
-    "measured freetext/item == calibration constant": true,
+    "measured freetext/item == calibration constant (identity by construction)": true,
     "measured total vs B2_FINDINGS table": true
   },
   "estimate_vs_actual_factor": 2.351,

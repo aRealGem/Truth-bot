@@ -243,14 +243,44 @@ CBO/GAO/NCES publish tabled reports, not series. Owner-approved as a wording
 correction for the next wave, alongside the dropped-row note. **Do not edit the
 published sentence outside a corrections wave.**
 
-**Open for Stage A: the selection window is frequency-blind.** The predicate
-takes the 13 most recent observations at or before the utterance date, which is
-13 months on a monthly series and 13 *years* on an annual one — `FYFSD` selects
-2009-09-30 to 2021-09-30. Deterministic either way, and arguably right for a
-deficit claim, but it is not the year-over-year window the predicate's wording
-implies. Needs a ruling before Stage A; the three open questions carried out of
-Stage 0 are this, the `LNS12000000` dead link, and the unobtainable `units`
-field.
+**CLOSED by ruling: the selection window is now frequency-aware.** The Stage 0
+predicate took the 13 most recent observations at or before the utterance date,
+which was 13 months on a monthly series and 13 *years* on an annual one —
+`FYFSD` selected 2009-09-30 to 2021-09-30. Deterministic either way, but not
+the year-over-year window the wording implied. Ruled: trailing K at the series'
+native frequency, **K = 25 monthly / 9 quarterly / 13 annual**, frequency taken
+as the median spacing of the last four eligible observations and recorded in
+the predicate. A flat 13/5/2 was rejected — annual=2 guts the `FYFSD`
+cross-administration window, and frequency alone does not fix the `0054`
+claim-period mismatch.
+
+Four fixed committed regex rules run against claim text **and context** and
+propose an earlier start; the widest proposal wins and every fired rule is
+named per item: explicit years → Jan 1 of (min_year − 1); last/past N years →
+N+1 years; `record|ever|history|all-time|never` → full eligible history;
+`took office|administration|inherited` → trailing 5 years. Excerpts assert at
+most 1,500 rows and **halt rather than truncate**. Deepest fixture is
+`PAYEMS_current` at 1,051 observations, so the assert does not fire on the
+committed set.
+
+The other two questions carried out of Stage 0 are also closed: the
+`LNS12000000` dead link is a ledger entry (no substitution), and `units` ships
+null with a machine-readable reason at six-of-seven provenance fields.
+
+**Carried limitation: a proper-noun comparison anchor escapes all four rules.**
+`obama_2014:0189` compares the minimum wage to *"when Ronald Reagan first stood
+here"* (circa 1982). No rule fires, so it takes the default 25-month window
+(2011-12-01 to 2013-12-01), which does not reach the period the claim is
+actually about. This is the same claim-period mismatch that motivated rejecting
+13/5/2, surviving in the ruled ruleset because the anchor is a name rather than
+a date. Recorded, not papered over; closing it needs a new rule and a ruling.
+
+**Context widens more than claim text alone would.** Running the rules over
+`text + context` — as ruled — makes `record|ever|history` fire on
+`biden_2022:0169` (*"369,000 new manufacturing jobs just last year"*), whose own
+text carries no superlative, pulling the full 997-row `MANEMP` history for a
+claim about a single year. Deterministic and within the row cap, but it is
+breadth bought from the neighbouring sentences, not from the claim.
 
 **Closeout: the 448/445 census delta.** Reproduced exactly, and it is an
 artifact of the hand count rather than a defect in the code — see
