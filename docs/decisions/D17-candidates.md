@@ -278,6 +278,33 @@ describe a period rather than assert a superlative, so context legitimately
 informs them. Only `0169` changed (997 → 25 rows); the other eight goldens are
 byte-identical. Matched Fable's pre-registered simulation on every value.
 
+**Wave-2 REQUIRED-recommended: publish badges go fail-closed.** Today
+`_classify_source_for_render` returns `"verified"` when no classification map
+exists *and* when a URL is simply absent from one — both branches fail OPEN, so
+absence of evidence renders as evidence of verification. That is how a URL
+returning 404 on both FRED and ALFRED carried the `source-verified` badge on the
+published site, twice. Wave 2 should invert it: no classification record → no
+`"verified"` badge, and a known-dead URL renders broken. Rides the stable-ids
+re-render so deep links rotate once; owner ratification at the Stage B gate.
+
+**Priority bumped: URL-liveness audit and the retrieval contract.** Both were
+logged D17 candidates; the Stage A diagnostic raised their priority with
+evidence rather than suspicion. `retrieved_at` is an *assembly stamp*, not a
+retrieval time — all 20 items across the `0054` and `0055` packs are stamped
+inside 309 microseconds, rising ~13µs per item in list order, which is a
+serialization loop, not 20 HTTP round-trips. And `metrics/url_cache.jsonl`, the
+persistence path named in `url_validation.py`, has never existed on disk or in
+git. So nothing in the pipeline ever fetched these URLs, and nothing recorded
+that it hadn't. A stance (`supports_claim=True`) was attached to a
+browsing-model-authored snippet describing a page that never resolved.
+
+**Production-path candidate: a structured `series_rows` key.** Stage A appends
+the excerpt to `snippet` because the census had to measure against the shipped
+baseline, and changing the wire shape would have changed both variables at once.
+For the production path a dedicated `series_rows` key is cleaner provenance —
+the rows stop being prose the scorer has to parse out of a snippet. Logged, not
+scheduled.
+
 **Two D17 candidates LOGGED, not implemented (R2).**
 
 1. *Named-era / named-person anchor map.* A deterministic mapping from
