@@ -1,4 +1,5 @@
 {
+  "attribution_scope": "CAUSAL at claim level, DESCRIPTIVE at item level. Scoring is whole-pack: one call per claim, so an unexcerpted item still shares a prompt with its pack's excerpts (see shared_call). Which item within a pack a stance change belongs to is not identified by this design.",
   "excerpt_attributable_on_excerpted_items": 6,
   "method": "per-item stored/control/treatment triple; control is the same 7 claims through the same payload path at the same cap with zero augmentation",
   "rows": [
@@ -10,6 +11,11 @@
       "payload_sha256_control": "198de0bd49746761883f63e32762d9280e87869d0ae7992cf826e9d6d7c26b36",
       "payload_sha256_treatment": "198de0bd49746761883f63e32762d9280e87869d0ae7992cf826e9d6d7c26b36",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -24,6 +30,11 @@
       "payload_sha256_control": "ec5f0433b4765e6f3726fd3340268e8f4016b6123ce72e44f6e2a2cfd4dd0a0b",
       "payload_sha256_treatment": "ec5f0433b4765e6f3726fd3340268e8f4016b6123ce72e44f6e2a2cfd4dd0a0b",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -38,6 +49,11 @@
       "payload_sha256_control": "5ae17e9933d14b65d9991ff0e54fba84401133692c3b6807bc77819207791aab",
       "payload_sha256_treatment": "5ae17e9933d14b65d9991ff0e54fba84401133692c3b6807bc77819207791aab",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -52,6 +68,11 @@
       "payload_sha256_control": "44c9d9cefe88ad399aa9c65dcf75e7c0ae37c5db0b8d311a28e0947c565fc76e",
       "payload_sha256_treatment": "44c9d9cefe88ad399aa9c65dcf75e7c0ae37c5db0b8d311a28e0947c565fc76e",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -66,6 +87,11 @@
       "payload_sha256_control": "b27e0a222746ea6762bc20b96e7da59e2155eb2606b65a7d440b7ad42d62b38b",
       "payload_sha256_treatment": "b27e0a222746ea6762bc20b96e7da59e2155eb2606b65a7d440b7ad42d62b38b",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -80,6 +106,11 @@
       "payload_sha256_control": "5583f0fac06d615bb991b25b1943e18576422d3d3907368cd3391705dc03713b",
       "payload_sha256_treatment": "5583f0fac06d615bb991b25b1943e18576422d3d3907368cd3391705dc03713b",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -94,6 +125,9 @@
       "payload_sha256_control": "1d83cd6af795f143bf88483eeeeadc019039ec177c1ee9dcbaf84a2a1725ae7d",
       "payload_sha256_treatment": "ac3337f576ffd379651422fd65517001daea737aeac655ad824b51d13df3b375",
       "series_id": "MANEMP",
+      "shared_call": [],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": true,
       "stance_stored": null,
@@ -108,6 +142,11 @@
       "payload_sha256_control": "eb9389ab50965cd57f8839b62770d943506a04a70db0231b8345117f99bebe6f",
       "payload_sha256_treatment": "eb9389ab50965cd57f8839b62770d943506a04a70db0231b8345117f99bebe6f",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -122,6 +161,11 @@
       "payload_sha256_control": "2524c2c0c47a38b7f27a7a84c3b0138176f00ccd6b89b904797e248caf7116cc",
       "payload_sha256_treatment": "2524c2c0c47a38b7f27a7a84c3b0138176f00ccd6b89b904797e248caf7116cc",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -136,6 +180,11 @@
       "payload_sha256_control": "f4bd36d67e0ec603c3bee2b0077129674d478a1dafa675c861455bc7e32f9b90",
       "payload_sha256_treatment": "f4bd36d67e0ec603c3bee2b0077129674d478a1dafa675c861455bc7e32f9b90",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -150,6 +199,11 @@
       "payload_sha256_control": "a4aebdddc204c3cd6805b69ccf31085045be6e30f9f6d5ee0b584b9c022fa72f",
       "payload_sha256_treatment": "a4aebdddc204c3cd6805b69ccf31085045be6e30f9f6d5ee0b584b9c022fa72f",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -164,6 +218,11 @@
       "payload_sha256_control": "7af8064a388df0a68168abcffa9d4a33c7278f82f9a274ae97c58723c34f8ec6",
       "payload_sha256_treatment": "7af8064a388df0a68168abcffa9d4a33c7278f82f9a274ae97c58723c34f8ec6",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -178,6 +237,11 @@
       "payload_sha256_control": "72185e47eb0652314ab416f9974bd32dc71c34d155e306de018a8b2098e9bb42",
       "payload_sha256_treatment": "72185e47eb0652314ab416f9974bd32dc71c34d155e306de018a8b2098e9bb42",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -192,6 +256,11 @@
       "payload_sha256_control": "7c44b5be332ed34ca28ef5d25960da6ac368e7e8498128dbb301407ad1a34639",
       "payload_sha256_treatment": "7c44b5be332ed34ca28ef5d25960da6ac368e7e8498128dbb301407ad1a34639",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -206,6 +275,11 @@
       "payload_sha256_control": "8070706ad0057398d9f1708a82232d94d6af57d9f189ff6afe63657dccbbe9e4",
       "payload_sha256_treatment": "8070706ad0057398d9f1708a82232d94d6af57d9f189ff6afe63657dccbbe9e4",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -220,6 +294,11 @@
       "payload_sha256_control": "3e0cc4f9a743d93addf796c8892f3d4b6ee860ff500b8fe6ae5bdb874d565268",
       "payload_sha256_treatment": "3e0cc4f9a743d93addf796c8892f3d4b6ee860ff500b8fe6ae5bdb874d565268",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -234,6 +313,9 @@
       "payload_sha256_control": "72f1417a3a3e95134da9ffdc180ea85bfbe195ccd0bac5ad6037d3481c2a8a48",
       "payload_sha256_treatment": "5d9cf0451fe0575faa7a4884db06480f1336cdc42a3ff7c688cfa6b3fb391039",
       "series_id": "FYFSD",
+      "shared_call": [],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -248,6 +330,11 @@
       "payload_sha256_control": "f8b0cb7f089f2965e3fe9deeb20b239b1b144cf46d0148bcdebee662184d12f1",
       "payload_sha256_treatment": "f8b0cb7f089f2965e3fe9deeb20b239b1b144cf46d0148bcdebee662184d12f1",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -262,6 +349,11 @@
       "payload_sha256_control": "5035e721ff6b0f6f4f8e434b0d56cc18c79a4aa884ffc9d7bb4ea363e064e361",
       "payload_sha256_treatment": "5035e721ff6b0f6f4f8e434b0d56cc18c79a4aa884ffc9d7bb4ea363e064e361",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -276,6 +368,11 @@
       "payload_sha256_control": "0f691dedc94586cccbb21d4fd75dccf68044c8fafe99d5ee0fb506f25b5a3c0d",
       "payload_sha256_treatment": "0f691dedc94586cccbb21d4fd75dccf68044c8fafe99d5ee0fb506f25b5a3c0d",
       "series_id": null,
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -290,6 +387,11 @@
       "payload_sha256_control": "452783f6cc6ae2eaaaf7fd685f805f1dc11452c165156ca4b1cfb6795c7916df",
       "payload_sha256_treatment": "452783f6cc6ae2eaaaf7fd685f805f1dc11452c165156ca4b1cfb6795c7916df",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -304,6 +406,11 @@
       "payload_sha256_control": "a3c93d79f4c0c2e519abd592023043f568a0b59070c52599f649d55493020754",
       "payload_sha256_treatment": "a3c93d79f4c0c2e519abd592023043f568a0b59070c52599f649d55493020754",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -318,6 +425,11 @@
       "payload_sha256_control": "b42a3f476b0e7b74764479c0f6fe4538653d2ae496c57588ecba1a8f8144984f",
       "payload_sha256_treatment": "b42a3f476b0e7b74764479c0f6fe4538653d2ae496c57588ecba1a8f8144984f",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -332,6 +444,11 @@
       "payload_sha256_control": "a1ff224c02aa1166553a2bd3dd97d05c48066b6e408beddf2742532183b87c02",
       "payload_sha256_treatment": "a1ff224c02aa1166553a2bd3dd97d05c48066b6e408beddf2742532183b87c02",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -346,6 +463,11 @@
       "payload_sha256_control": "20fbf398f7da0784b6f1929fdef87eb84a67ad641bc8ddf7df38720a5eb5c6dd",
       "payload_sha256_treatment": "20fbf398f7da0784b6f1929fdef87eb84a67ad641bc8ddf7df38720a5eb5c6dd",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -360,6 +482,11 @@
       "payload_sha256_control": "ebbfaa95e78fce9357ef0ae16d106034843d203643755e1661028bd96dede6a2",
       "payload_sha256_treatment": "ebbfaa95e78fce9357ef0ae16d106034843d203643755e1661028bd96dede6a2",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -374,6 +501,11 @@
       "payload_sha256_control": "9e0294fe3b04cb133e8f59e9be6c6c7e490ce8eda2f970cdca0d4c219351d86b",
       "payload_sha256_treatment": "9e0294fe3b04cb133e8f59e9be6c6c7e490ce8eda2f970cdca0d4c219351d86b",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -388,6 +520,9 @@
       "payload_sha256_control": "f8ca3627313eb24ee6d3064bf3a7d11723d7b043d2ee4915470c3be1a54cd2a3",
       "payload_sha256_treatment": "2d8e3a629c8cdcff2129b8e5deba3f91f5484293dbdbcfa0ff0b1e3926a46674",
       "series_id": "PAYEMS",
+      "shared_call": [],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -402,6 +537,11 @@
       "payload_sha256_control": "cc3a5623245978c9cc4ffe081b9e088af6ad524a90b5490540784dfbc57c04d2",
       "payload_sha256_treatment": "cc3a5623245978c9cc4ffe081b9e088af6ad524a90b5490540784dfbc57c04d2",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -416,6 +556,11 @@
       "payload_sha256_control": "03e1ab21ae058f931016934d42d7a25e0ccdf84d2388a37285a67346534a9408",
       "payload_sha256_treatment": "03e1ab21ae058f931016934d42d7a25e0ccdf84d2388a37285a67346534a9408",
       "series_id": null,
+      "shared_call": [
+        "E8"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -430,6 +575,11 @@
       "payload_sha256_control": "fb808617dfcd5b9660f799f83f0fd4066ad1902dbf6efdef443600d6bf0f859f",
       "payload_sha256_treatment": "fb808617dfcd5b9660f799f83f0fd4066ad1902dbf6efdef443600d6bf0f859f",
       "series_id": null,
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -444,6 +594,11 @@
       "payload_sha256_control": "e27a845f97d894c417c59997164c6ffe4b5935f3bf3629cfa259eb46864e8bb9",
       "payload_sha256_treatment": "e27a845f97d894c417c59997164c6ffe4b5935f3bf3629cfa259eb46864e8bb9",
       "series_id": null,
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -458,6 +613,11 @@
       "payload_sha256_control": "a253a253be91223fe0c2c847db83c3e24590e623da5da7c3592f288ade3b3f18",
       "payload_sha256_treatment": "a253a253be91223fe0c2c847db83c3e24590e623da5da7c3592f288ade3b3f18",
       "series_id": null,
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -472,6 +632,9 @@
       "payload_sha256_control": "3b130630d011fcbd9c67bad81dd8647439f117f95b4cdf5294aad9c1445d67ca",
       "payload_sha256_treatment": "69edd34066d54d650ef11911ea28d896427b31c632898e05afd7871548d35ba6",
       "series_id": "CPIAUCSL",
+      "shared_call": [],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -486,6 +649,11 @@
       "payload_sha256_control": "8085312e4eedf8c2653811466fd2bc579de01abba258e350170b14dc2814b6be",
       "payload_sha256_treatment": "8085312e4eedf8c2653811466fd2bc579de01abba258e350170b14dc2814b6be",
       "series_id": null,
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -500,6 +668,11 @@
       "payload_sha256_control": "7b71dcf2d8c4ce432f8d460e53d6862be8f9221793893dd2907309aa67f21983",
       "payload_sha256_treatment": "7b71dcf2d8c4ce432f8d460e53d6862be8f9221793893dd2907309aa67f21983",
       "series_id": null,
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -514,6 +687,11 @@
       "payload_sha256_control": "a097e125d1c1156c5133f7b020a653208f5b1dfd57cc84de55ff962691ada657",
       "payload_sha256_treatment": "a097e125d1c1156c5133f7b020a653208f5b1dfd57cc84de55ff962691ada657",
       "series_id": null,
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -528,6 +706,11 @@
       "payload_sha256_control": "fd539bbd2d839ecb44f71ebc2ce4d3ac14f8b8567c5b3c5207874104d1aceaea",
       "payload_sha256_treatment": "fd539bbd2d839ecb44f71ebc2ce4d3ac14f8b8567c5b3c5207874104d1aceaea",
       "series_id": null,
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -542,6 +725,12 @@
       "payload_sha256_control": "91ee7ef30a1f839ec0064fbf48db04a3917d8717a49e83e50f704580f4a21de5",
       "payload_sha256_treatment": "91ee7ef30a1f839ec0064fbf48db04a3917d8717a49e83e50f704580f4a21de5",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -556,6 +745,12 @@
       "payload_sha256_control": "5c67e035bf3dcba36b9448c0c16d44c6c4b965e69a593396dc8b48253da5a411",
       "payload_sha256_treatment": "5c67e035bf3dcba36b9448c0c16d44c6c4b965e69a593396dc8b48253da5a411",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": true,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -570,6 +765,12 @@
       "payload_sha256_control": "e6a8e058c30b86cf5a37cdb4aa4adfbb273d12c349cf5c24c6423524e953e37a",
       "payload_sha256_treatment": "e6a8e058c30b86cf5a37cdb4aa4adfbb273d12c349cf5c24c6423524e953e37a",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -584,6 +785,11 @@
       "payload_sha256_control": "b6aba153b48b9903a8dd33a6b68d1fc82c0de90f9bb4ab0173c7c378735687c7",
       "payload_sha256_treatment": "0033f719870ef37f97fb4f1b8c46ec886d5456249177e794194747842deb3b47",
       "series_id": "CE16OV",
+      "shared_call": [
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -598,6 +804,12 @@
       "payload_sha256_control": "f35fb256183d04c53e4f9008c0750ae3ecce383fca9278363288456edb4921cf",
       "payload_sha256_treatment": "f35fb256183d04c53e4f9008c0750ae3ecce383fca9278363288456edb4921cf",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -612,6 +824,12 @@
       "payload_sha256_control": "7a17cddb2d4e94996588e7863960ac10871eefa9038fef6eb55cc35212fe00c3",
       "payload_sha256_treatment": "7a17cddb2d4e94996588e7863960ac10871eefa9038fef6eb55cc35212fe00c3",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -626,6 +844,11 @@
       "payload_sha256_control": "95d78cd447865f2081f65862e0468e5e034c1c95073b78bef048b58ed7676f65",
       "payload_sha256_treatment": "601aec6d92e3e682d8ff2bde08251ac86ddbab4786768b4ec2df6af10cecf87c",
       "series_id": "PAYEMS",
+      "shared_call": [
+        "E4"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -640,6 +863,12 @@
       "payload_sha256_control": "20c1030d6f03552ea5f22ac7b406e026348c609f3822b2d9c0e7c6a0f0336dc4",
       "payload_sha256_treatment": "20c1030d6f03552ea5f22ac7b406e026348c609f3822b2d9c0e7c6a0f0336dc4",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -654,6 +883,12 @@
       "payload_sha256_control": "6a7dae991ed163a3fb46379cc643287db2f94ae2506e1e885bbfdaf154386a74",
       "payload_sha256_treatment": "6a7dae991ed163a3fb46379cc643287db2f94ae2506e1e885bbfdaf154386a74",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -668,6 +903,12 @@
       "payload_sha256_control": "f01638a2b0940e7736d6a9f2d5aa23e244e82d8af92cbcaa4829cbd57c2cef04",
       "payload_sha256_treatment": "f01638a2b0940e7736d6a9f2d5aa23e244e82d8af92cbcaa4829cbd57c2cef04",
       "series_id": null,
+      "shared_call": [
+        "E4",
+        "E7"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": true,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -682,6 +923,9 @@
       "payload_sha256_control": "3300d9ba21f105f13c6659c67d5190f809dfcc01706933b9537062c949ff0406",
       "payload_sha256_treatment": "5d9d411e8e8d5e649f655884d57044885bf8a7840f6722d971ba19fcf1fa31d8",
       "series_id": "APU0000708111",
+      "shared_call": [],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": true,
       "stance_stored": null,
@@ -696,6 +940,11 @@
       "payload_sha256_control": "ad66891385bda94b28d8de9ca851cb866f08414c6afe589340ba682b7b588be3",
       "payload_sha256_treatment": "ad66891385bda94b28d8de9ca851cb866f08414c6afe589340ba682b7b588be3",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -710,6 +959,11 @@
       "payload_sha256_control": "0ab91632e75c6cc119b5b8e665e23b098be16d6ac5590003af623e1544c8bba9",
       "payload_sha256_treatment": "0ab91632e75c6cc119b5b8e665e23b098be16d6ac5590003af623e1544c8bba9",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": true,
       "stance_reason_tension": false,
       "stance_stored": true,
@@ -724,6 +978,11 @@
       "payload_sha256_control": "4d07ff748a4aa2d02201b554728654515104b804d400bb0d0b6b7c755bdad492",
       "payload_sha256_treatment": "4d07ff748a4aa2d02201b554728654515104b804d400bb0d0b6b7c755bdad492",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -738,6 +997,11 @@
       "payload_sha256_control": "fc091f589b5707fbad998d5ceb88eacacf135c34fed106c3a66268b414f2cda5",
       "payload_sha256_treatment": "fc091f589b5707fbad998d5ceb88eacacf135c34fed106c3a66268b414f2cda5",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -752,6 +1016,11 @@
       "payload_sha256_control": "a20044e86558681c85acb521f9fb5336a0af722813a23b7adf0a572ede6d0f09",
       "payload_sha256_treatment": "a20044e86558681c85acb521f9fb5336a0af722813a23b7adf0a572ede6d0f09",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -766,6 +1035,11 @@
       "payload_sha256_control": "1202eb4d886dade7e3c965626afbd19fbbce06180f6c7698e0d17e114904a41d",
       "payload_sha256_treatment": "1202eb4d886dade7e3c965626afbd19fbbce06180f6c7698e0d17e114904a41d",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -780,6 +1054,11 @@
       "payload_sha256_control": "42efb624517fedf8a16d20ed93c826909a1947c09a7f60bc1d3b1f1675b57cc5",
       "payload_sha256_treatment": "42efb624517fedf8a16d20ed93c826909a1947c09a7f60bc1d3b1f1675b57cc5",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -794,6 +1073,11 @@
       "payload_sha256_control": "bcb4266344f38551fafbf0dac492d79c9b412d3e7216e420e3faa7c6ca0a4e14",
       "payload_sha256_treatment": "bcb4266344f38551fafbf0dac492d79c9b412d3e7216e420e3faa7c6ca0a4e14",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -808,6 +1092,11 @@
       "payload_sha256_control": "144ebaa5d9bbf701c2548bae0e184df4a75e7c286343bc2e55f804f8d7dc292f",
       "payload_sha256_treatment": "144ebaa5d9bbf701c2548bae0e184df4a75e7c286343bc2e55f804f8d7dc292f",
       "series_id": null,
+      "shared_call": [
+        "E1"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -822,6 +1111,11 @@
       "payload_sha256_control": "3e6ba6d2ee10ab5cdcfe023483692b30699cb6539422b79efb3ec4b16f6862b8",
       "payload_sha256_treatment": "3e6ba6d2ee10ab5cdcfe023483692b30699cb6539422b79efb3ec4b16f6862b8",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -836,6 +1130,11 @@
       "payload_sha256_control": "8fae50ae93cc84d21345c8a25a738cf000f34745b9c3c153c9bb3a0a788b0b7b",
       "payload_sha256_treatment": "8fae50ae93cc84d21345c8a25a738cf000f34745b9c3c153c9bb3a0a788b0b7b",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -850,6 +1149,11 @@
       "payload_sha256_control": "b392a9ac6733752a3ad9575882b69375ef8a066ed405d3c1a1a601b128755368",
       "payload_sha256_treatment": "b392a9ac6733752a3ad9575882b69375ef8a066ed405d3c1a1a601b128755368",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -864,6 +1168,11 @@
       "payload_sha256_control": "aa5567444e88f8f04ff11c68e597ebf4e8a886a288ba6aa67d18b41bb3718edd",
       "payload_sha256_treatment": "aa5567444e88f8f04ff11c68e597ebf4e8a886a288ba6aa67d18b41bb3718edd",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -878,6 +1187,11 @@
       "payload_sha256_control": "69be8481e8352e6a685bf09661e5cc299f09fbe346ab399b2dc69ae6ae5d56a9",
       "payload_sha256_treatment": "69be8481e8352e6a685bf09661e5cc299f09fbe346ab399b2dc69ae6ae5d56a9",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -892,6 +1206,11 @@
       "payload_sha256_control": "da84277697adf5e9e425f12990f2492e2d057f70a4868c678dac813051531789",
       "payload_sha256_treatment": "da84277697adf5e9e425f12990f2492e2d057f70a4868c678dac813051531789",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -906,6 +1225,11 @@
       "payload_sha256_control": "336eeca08d74b00fbf0130354e927d6b987860f84ffba007378ca573ef2020b7",
       "payload_sha256_treatment": "336eeca08d74b00fbf0130354e927d6b987860f84ffba007378ca573ef2020b7",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -920,6 +1244,11 @@
       "payload_sha256_control": "d5ee4722bc01b54e5d005293579ef92de95b50cd88446d10c082d6c24590a920",
       "payload_sha256_treatment": "d5ee4722bc01b54e5d005293579ef92de95b50cd88446d10c082d6c24590a920",
       "series_id": null,
+      "shared_call": [
+        "E9"
+      ],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": false,
       "stance_reason_tension": false,
       "stance_stored": false,
@@ -934,6 +1263,9 @@
       "payload_sha256_control": "b23782fe6f3415d00809fa8f27babaf00ffb95d4cfb3579de2d11c0bbd9bc5a8",
       "payload_sha256_treatment": "cad70308f05b2f706b0f53b688cb8ba4b36dafe821851c985437862f5dea2900",
       "series_id": "CUUR0000SAF112",
+      "shared_call": [],
+      "spillover_anomaly": false,
+      "spillover_correction": false,
       "stance_control": null,
       "stance_reason_tension": false,
       "stance_stored": null,
@@ -941,7 +1273,7 @@
       "window_period_mismatch": false
     }
   ],
-  "schema": "truthbot-d17c-stage-a-attribution v1",
+  "schema": "truthbot-d17c-stage-a-attribution v2",
   "tally": {
     "excerpt_attributable": 8,
     "unmoved": 59

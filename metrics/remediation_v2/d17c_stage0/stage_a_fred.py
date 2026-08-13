@@ -54,6 +54,21 @@ CEILING = 0.15
 #: R2: recorded, non-actionable for any Stage B consideration.
 PERIOD_MISMATCH = {("obama_2014:0189", "E4")}
 
+#: Items the rows moved through a pack-mate rather than directly, where the
+#: resulting stance contradicts both the item's own snippet and the rows.
+#: 0054:E2's snippet asserts the January-2026 peak and the excerpt confirms it
+#: (164,520 IS the window maximum at vintage 2026-02-24) — yet the treatment
+#: stance came back refuting. Attribution is causal at CLAIM level and only
+#: descriptive at item level, so this is named, not explained.
+SPILLOVER_ANOMALY = {("trump_2026:0054", "E2")}
+
+#: The mirror case, and the reason spillover is not simply a hazard.
+#: 0054:E10's snippet cites Dec-2025 at 163,992, which matches the rows
+#: exactly; its STORED stance of False was the incoherent one. The excerpt
+#: moving it to True reads as a CORRECTION of an incoherent stored stance,
+#: not as contamination.
+SPILLOVER_CORRECTION = {("trump_2026:0054", "E10")}
+
 #: Items whose flipped stance disagrees with its own stated comparison. Both
 #: are ``arithmetic_hinge=True``, so the B2 contract already marks them as
 #: hypotheses — this names the specific tension so Stage B cannot read them as
@@ -257,6 +272,14 @@ def attribution(census_doc: dict, control_doc: dict) -> dict:
     excerpt-attributable even if the treatment moved it further.
     """
     ctrl = {(r["claim_sid"], r["evidence_id"]): r for r in control_doc["rows"]}
+    # One score_evidence call per claim, so the "shared call" is the claim's
+    # pack. This is what makes item-level attribution descriptive only: an
+    # item with no excerpt still shared a prompt with these.
+    excerpted_by_claim: dict[str, list[str]] = {}
+    for r in census_doc["rows"]:
+        if r["excerpted"]:
+            excerpted_by_claim.setdefault(r["claim_sid"], []).append(
+                r["evidence_id"])
     rows = []
     for r in census_doc["rows"]:
         key = (r["claim_sid"], r["evidence_id"])
@@ -281,15 +304,26 @@ def attribution(census_doc: dict, control_doc: dict) -> dict:
                      "payload_sha256_treatment": r["payload_sha256"],
                      "payload_sha256_control": c["payload_sha256"] if c else None,
                      "stance_reason_tension": key in REASON_TENSION,
-                     "window_period_mismatch": key in PERIOD_MISMATCH})
+                     "window_period_mismatch": key in PERIOD_MISMATCH,
+                     "shared_call": sorted(
+                         e for e in excerpted_by_claim.get(r["claim_sid"], [])
+                         if e != r["evidence_id"]),
+                     "spillover_anomaly": key in SPILLOVER_ANOMALY,
+                     "spillover_correction": key in SPILLOVER_CORRECTION})
     tally: dict[str, int] = {}
     for r in rows:
         tally[r["attribution"]] = tally.get(r["attribution"], 0) + 1
     return {
-        "schema": "truthbot-d17c-stage-a-attribution v1",
+        "schema": "truthbot-d17c-stage-a-attribution v2",
         "method": ("per-item stored/control/treatment triple; control is the "
                    "same 7 claims through the same payload path at the same "
                    "cap with zero augmentation"),
+        "attribution_scope": (
+            "CAUSAL at claim level, DESCRIPTIVE at item level. Scoring is "
+            "whole-pack: one call per claim, so an unexcerpted item still "
+            "shares a prompt with its pack's excerpts (see shared_call). "
+            "Which item within a pack a stance change belongs to is not "
+            "identified by this design."),
         "tally": tally,
         "excerpt_attributable_on_excerpted_items": sum(
             1 for r in rows

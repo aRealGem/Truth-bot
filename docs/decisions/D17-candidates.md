@@ -300,6 +300,32 @@ scoring call with an excerpted item, so the rows changed how the scorer read
 means an excerpt's blast radius is the pack and not the item — worth knowing
 before per-item attribution is trusted anywhere downstream.
 
+**Attribution is causal at CLAIM level, descriptive at ITEM level (ruled).**
+Scoring is whole-pack — one `score_evidence` call per claim — so an unexcerpted
+item still shares a prompt with its pack's excerpts. The control licenses "the
+rows caused these claims to move"; it does not license "the rows caused *this
+item* to move". `stage_a_attribution.json` carries `shared_call` per row so the
+distinction is legible rather than assumed.
+
+Two named cases inside `trump_2026:0054`, which cut opposite ways:
+
+* `E2` — `spillover_anomaly=true`. Its own snippet asserts the January-2026
+  peak, and the excerpt confirms it (164,520 **is** the window maximum at
+  vintage 2026-02-24, and is also the last observation). The treatment stance
+  nonetheless came back *refuting*, contradicting both its snippet and the
+  rows. Named, not explained — item-level attribution cannot say why.
+* `E10` — `spillover_correction=true`, the mirror case. Its snippet cites
+  Dec-2025 at 163,992, which matches the rows exactly; the **stored** `False`
+  was the incoherent stance. The excerpt moving it to `True` reads as a
+  correction, not contamination. Spillover is therefore not simply a hazard.
+
+**D17 candidate: per-item-isolation scoring ablation.** Score each item alone
+against the claim and compare with its whole-pack stance; the divergence
+measures how much of any stance is pack context rather than the item. Priced
+before it runs. `series_rows` inherits whole-pack semantics until this is
+measured, so the production path should not assume item-level attribution
+either.
+
 **2.351× retired for measured-byte projections.** It came from
 `b2_subset.json`, a pre-run *estimate* that under-counted free-text volume, so
 it prices estimate error rather than measurement error. Stage A projected from
