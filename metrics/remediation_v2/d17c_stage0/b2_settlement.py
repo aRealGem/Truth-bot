@@ -104,16 +104,32 @@ print(f"  measured {measured:.4f} / cited pre-run estimate {CITED_ESTIMATE} "
 # ceiling would compare two different runs.
 STAGE_A_PROJECTION = 0.0511
 STAGE_A_CEILING = 0.15
-stressed = STAGE_A_PROJECTION * factor
+STAGE_A_ACTUAL = 0.053984          # ledger truth, treatment arm
+STAGE_A_CONTROL_ACTUAL = 0.026926  # ledger truth, control arm
+
+# 2.351x IS RETIRED FOR MEASURED-BYTE PROJECTIONS (Fable, post-Stage-A).
+# It was derived from b2_subset.json, a PRE-RUN ESTIMATE that under-counted
+# free-text volume — so it prices the error in an estimate, not the error in a
+# measurement. Stage A projected from measured excerpt bytes and realized
+# 1.056x. Estimate-based projections KEEP 2.351x; measured-byte projections use
+# 1.25x until three realized factors are in hand (this is the first).
+MEASURED_BYTE_FACTOR = 1.25
+MEASURED_BYTE_REALIZED = [STAGE_A_ACTUAL / STAGE_A_PROJECTION]
+
 print(f"  Stage A-FRED projection ${STAGE_A_PROJECTION:.4f} "
       f"(7 claims / 67 pack items, frequency-aware excerpts)")
-print(f"  stressed at B2's realized {factor:.3f}x            = ${stressed:.4f}")
-print(f"  ceiling ${STAGE_A_CEILING:.2f} -> "
-      f"{'UNDER' if stressed < STAGE_A_CEILING else 'OVER'}, "
-      f"headroom ${STAGE_A_CEILING - stressed:.4f} "
-      f"({stressed / STAGE_A_CEILING * 100:.0f}% of ceiling)")
-print("  NOTE: the realized-factor case consumes most of the ceiling. Halt and")
-print("  report on the first sign of overrun; do not trim windows to fit.")
+print(f"  ACTUAL (ledger) treatment ${STAGE_A_ACTUAL:.6f} + control "
+      f"${STAGE_A_CONTROL_ACTUAL:.6f} = "
+      f"${STAGE_A_ACTUAL + STAGE_A_CONTROL_ACTUAL:.6f}")
+print(f"  realized factor on the treatment arm: "
+      f"{MEASURED_BYTE_REALIZED[0]:.3f}x")
+print(f"  vs B2's estimate-derived {factor:.3f}x -> RETIRED for measured-byte "
+      f"projections")
+print(f"  planning factor for measured-byte work: {MEASURED_BYTE_FACTOR:.2f}x "
+      f"({len(MEASURED_BYTE_REALIZED)} of 3 realized factors banked)")
+print(f"  ceiling ${STAGE_A_CEILING:.2f} -> cumulative actual is "
+      f"{(STAGE_A_ACTUAL + STAGE_A_CONTROL_ACTUAL) / STAGE_A_CEILING * 100:.0f}"
+      f"% of it")
 
 out = HERE / "b2_settlement.json"
 out.write_text(json.dumps({

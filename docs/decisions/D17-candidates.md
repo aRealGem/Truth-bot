@@ -278,6 +278,44 @@ describe a period rather than assert a superlative, so context legitimately
 informs them. Only `0169` changed (997 → 25 rows); the other eight goldens are
 byte-identical. Matched Fable's pre-registered simulation on every value.
 
+**Stage A result: the rows move the scorer, and a control proves it was the
+rows.** Treatment (excerpts appended) produced 8 stance flips; the control —
+same 7 claims, same payload path, same cap, zero augmentation — produced
+**zero**. So all 8 flips are excerpt-attributable and none is rescore noise.
+Six landed on excerpted items, all null → definite. `trump_2026:0054` crossed
+the T2.4 bearing quota (1 → 3 Tier-1..3 bearing items, forced-Unverifiable →
+pass); claims clearing 5 → 6 of 7, **computed not applied**.
+
+Two of the six **refute** their claim — `biden_2022:0245` (FYFSD shows ~$360B
+of deficit improvement against a claimed "more than one trillion") and
+`trump_2026:0221` (poultry CPI +2.2% against "lower today"). The rows decide
+against the speaker as readily as for, which is the property that makes the
+mechanism worth shipping.
+
+**Excerpts have a spillover effect on their pack-mates.** `trump_2026:0054` E2
+and E10 carry no excerpt and their own payload bytes were unchanged, yet both
+moved in the treatment arm and neither moved in the control. They share a
+scoring call with an excerpted item, so the rows changed how the scorer read
+*neighbouring* evidence. Deterministic-path consequence, not a defect, but it
+means an excerpt's blast radius is the pack and not the item — worth knowing
+before per-item attribution is trusted anywhere downstream.
+
+**2.351× retired for measured-byte projections.** It came from
+`b2_subset.json`, a pre-run *estimate* that under-counted free-text volume, so
+it prices estimate error rather than measurement error. Stage A projected from
+measured excerpt bytes and realized **1.056×**. Estimate-based projections keep
+2.351×; measured-byte projections use **1.25×** until three realized factors
+are banked (this is the first). Cumulative Stage A spend $0.080910 = 54% of the
+$0.15 ceiling.
+
+**Two flipped stances disagree with their own stated reasoning**, now marked
+`stance_reason_tension=true`: `biden_2022:0169` E7 flipped to *supports* while
+its `one_line_why` reads "a gain of 356,000 — not 369,000", and
+`trump_2026:0219` E1 flipped to *supports* on 58.6% "which rounds to the
+claimed 60%". Both carry `arithmetic_hinge=True`, so the B2 contract already
+treats them as hypotheses for the panel rather than proof — the flag names the
+specific tension so no Stage B reads them as settled.
+
 **Wave-2 REQUIRED-recommended: publish badges go fail-closed.** Today
 `_classify_source_for_render` returns `"verified"` when no classification map
 exists *and* when a URL is simply absent from one — both branches fail OPEN, so

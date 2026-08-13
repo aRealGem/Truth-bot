@@ -54,11 +54,24 @@ CEILING = 0.15
 #: R2: recorded, non-actionable for any Stage B consideration.
 PERIOD_MISMATCH = {("obama_2014:0189", "E4")}
 
+#: Items whose flipped stance disagrees with its own stated comparison. Both
+#: are ``arithmetic_hinge=True``, so the B2 contract already marks them as
+#: hypotheses — this names the specific tension so Stage B cannot read them as
+#: settled. 0169:E7 flipped to SUPPORTS while its one_line_why says "a gain of
+#: 356,000 — not 369,000"; 0219:E1 flipped to SUPPORTS on 58.6% "which rounds
+#: to the claimed 60%".
+REASON_TENSION = {("biden_2022:0169", "E7"), ("trump_2026:0219", "E1")}
+
 SEP = "\n---\n"
 
 
-def augmented_packs() -> tuple[dict, dict, dict]:
-    """(sid -> [Evidence] with excerpts appended, sid -> claim text, aug index).
+def augmented_packs(augment: bool = True) -> tuple[dict, dict, dict]:
+    """(sid -> [Evidence], sid -> claim text, aug index).
+
+    ``augment=False`` is the CONTROL: same 7 claims, same packs, same payload
+    path, same cap — and no excerpt appended to anything. It isolates what a
+    rescore does on its own, so a stance that moves in both arms is rescore
+    behaviour rather than evidence of what the rows did.
 
     Works on deep copies of the stored evidence. The artifacts on disk are the
     record and are not touched.
@@ -87,9 +100,10 @@ def augmented_packs() -> tuple[dict, dict, dict]:
         assert item.source_url == g["full_table"] or "fred.stlouisfed.org" \
             in item.source_url, f"{sid} {eid}: excerpt joined to the wrong item"
         stored = item.snippet or ""
-        item.snippet = stored + SEP + S.render(g)
+        if augment:
+            item.snippet = stored + SEP + S.render(g)
         aug[(sid, eid)] = {"stored_chars": len(stored),
-                           "excerpt_chars": len(S.render(g)),
+                           "excerpt_chars": len(S.render(g)) if augment else 0,
                            "rows_shown": g["rows_shown"],
                            "series_id": g["series_id"]}
     return packs, texts, aug
@@ -223,6 +237,67 @@ def census(packs, texts, aug, per_item, before, spend) -> dict:
     }
 
 
+def attribution(census_doc: dict, control_doc: dict) -> dict:
+    """Per-item stored/control/treatment triple, and what each one licenses.
+
+    The census alone cannot separate "the rows moved the scorer" from "a
+    rescore moves things". The control arm is the same packs with no excerpt,
+    so:
+
+      excerpt_attributable  control == stored AND treatment moved
+                            -- the rescore left it alone and the rows did not
+      rescore_noise         control moved
+                            -- it moves without any excerpt, so the treatment
+                               flip cannot be credited to the rows
+      unmoved               neither arm moved
+      ambiguous             anything else (e.g. both moved to DIFFERENT values)
+
+    Deliberately conservative: ``rescore_noise`` is tested before anything
+    else, so an item that moves in the control can never be counted as
+    excerpt-attributable even if the treatment moved it further.
+    """
+    ctrl = {(r["claim_sid"], r["evidence_id"]): r for r in control_doc["rows"]}
+    rows = []
+    for r in census_doc["rows"]:
+        key = (r["claim_sid"], r["evidence_id"])
+        c = ctrl.get(key)
+        stored, control, treat = (r["stance_before"],
+                                  c["stance_after"] if c else None,
+                                  r["stance_after"])
+        if c is None:
+            verdict = "no_control"
+        elif control != stored:
+            verdict = "rescore_noise"
+        elif treat != stored:
+            verdict = "excerpt_attributable"
+        elif treat == stored:
+            verdict = "unmoved"
+        else:
+            verdict = "ambiguous"
+        rows.append({**{k: r[k] for k in ("claim_sid", "evidence_id",
+                                          "excerpted", "series_id")},
+                     "stance_stored": stored, "stance_control": control,
+                     "stance_treatment": treat, "attribution": verdict,
+                     "payload_sha256_treatment": r["payload_sha256"],
+                     "payload_sha256_control": c["payload_sha256"] if c else None,
+                     "stance_reason_tension": key in REASON_TENSION,
+                     "window_period_mismatch": key in PERIOD_MISMATCH})
+    tally: dict[str, int] = {}
+    for r in rows:
+        tally[r["attribution"]] = tally.get(r["attribution"], 0) + 1
+    return {
+        "schema": "truthbot-d17c-stage-a-attribution v1",
+        "method": ("per-item stored/control/treatment triple; control is the "
+                   "same 7 claims through the same payload path at the same "
+                   "cap with zero augmentation"),
+        "tally": tally,
+        "excerpt_attributable_on_excerpted_items": sum(
+            1 for r in rows
+            if r["attribution"] == "excerpt_attributable" and r["excerpted"]),
+        "rows": rows,
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--go", action="store_true", help="actually spend")
@@ -231,7 +306,39 @@ def main() -> int:
     ap.add_argument("--recompute-gate", action="store_true",
                     help="$0: recompute the gate block from the saved census "
                          "and rewrite it, without re-scoring anything")
+    ap.add_argument("--control", action="store_true",
+                    help="CONTROL arm: identical path, zero augmentation")
+    ap.add_argument("--analyze", action="store_true",
+                    help="$0: stored/control/treatment attribution triple")
     args = ap.parse_args()
+
+    if args.analyze:
+        cen = json.loads((HERE / "stage_a_census.json").read_text())
+        con = json.loads((HERE / "stage_a_control.json").read_text())
+        doc = attribution(cen, con)
+        # Fable: name the reason-tension items on the census rows too.
+        for r in cen["rows"]:
+            r["stance_reason_tension"] = (
+                (r["claim_sid"], r["evidence_id"]) in REASON_TENSION)
+        (HERE / "stage_a_census.json").write_text(
+            json.dumps(cen, indent=2, sort_keys=True) + "\n")
+        out = HERE / "stage_a_attribution.json"
+        out.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
+        print("=== attribution: stored / control / treatment ===")
+        for r in doc["rows"]:
+            if r["attribution"] in ("unmoved", "no_control"):
+                continue
+            t = "  TENSION" if r["stance_reason_tension"] else ""
+            print(f"  {r['claim_sid']:<18}{r['evidence_id']:<4}"
+                  f"exc={str(r['excerpted']):<5}"
+                  f"{str(r['stance_stored']):<6}| ctrl {str(r['stance_control']):<6}"
+                  f"| treat {str(r['stance_treatment']):<6} -> "
+                  f"{r['attribution']}{t}")
+        print(f"\ntally {doc['tally']}")
+        print("excerpt-attributable on excerpted items: "
+              f"{doc['excerpt_attributable_on_excerpted_items']}")
+        print(f"attribution -> {out.name}")
+        return 0
 
     if args.recompute_gate:
         out = HERE / "stage_a_census.json"
@@ -249,10 +356,11 @@ def main() -> int:
         print(f"{g['note']}\ncensus -> {out.name}")
         return 0
 
-    packs, texts, aug = augmented_packs()
+    packs, texts, aug = augmented_packs(augment=not args.control)
     per_item, violations = item_payload_shas(texts, packs)
 
-    print("=== STAGE A-FRED: plan ===")
+    print(f"=== STAGE A-FRED: plan "
+          f"({'CONTROL, zero augmentation' if args.control else 'treatment'}) ===")
     plan(packs, texts, aug, per_item)
 
     if violations:
@@ -298,7 +406,9 @@ def main() -> int:
           f"{'OK' if spend <= CEILING else 'BREACH'}")
 
     doc = census(packs, texts, aug, per_item, before, spend)
-    out = HERE / "stage_a_census.json"
+    doc["arm"] = "control" if args.control else "treatment"
+    out = HERE / ("stage_a_control.json" if args.control
+                  else "stage_a_census.json")
     out.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
     print(f"\nflips {doc['flips']['total']} "
           f"(excerpted {doc['flips']['on_excerpted_items']}, "
