@@ -12,14 +12,24 @@ THE SELECTION PREDICATE, stated once so it can be argued with:
     eligible observations, and is recorded in the predicate rather than
     assumed.
 
-    EXTENSIONS -- four fixed regex rules run against claim text AND its
-    context. Each rule that fires proposes a start date; the WIDEST proposal
-    wins, and every fired rule is named in the predicate so a reader can see
-    which one set the window:
+    EXTENSIONS -- four fixed regex rules. Each rule that fires proposes a
+    start date; the WIDEST proposal wins, ties broken on (date, name), and
+    every fired rule is named in the predicate so a reader can see which one
+    set the window:
         explicit years              -> start Jan 1 of (min_year - 1)
         last/past N years           -> N+1 years back from the pin
         record|ever|history|never   -> the full eligible history
         took office|administration  -> trailing 5 years
+
+    RULE SCOPE IS NOT UNIFORM (R1 = (b)). Three of the four read claim text
+    + " || " + context. ``record|ever|history|all-time|never`` reads the
+    CLAIM TEXT ONLY. Under text+context it fired on biden_2022:0169 -- "we
+    created 369,000 new manufacturing jobs just last year", a claim with no
+    superlative of its own -- because a NEIGHBOURING sentence carried one,
+    pulling the full 997-row MANEMP history for a claim about a single year.
+    A rule that keys on a claim's own assertion should read the claim's own
+    words. The other three describe a period rather than assert a
+    superlative, so context legitimately informs them.
 
 An excerpt asserts at most MAX_ROWS rows and halts rather than truncating,
 so a runaway window is a stop, not a silent trim. The predicate is a pure
@@ -173,6 +183,9 @@ def resolve_window(claim_sid: str, series: str, pin: str,
     """
     rec = claim_record(claim_sid)
     haystack = f"{rec['text']} || {rec.get('context', '')}"
+    # R1 = (b): the superlative rule reads the CLAIM'S OWN WORDS. The other
+    # three rules stay on text + context. See the docstring for why.
+    text_only = rec["text"]
     pin_date = dt.date.fromisoformat(pin)
     label, spacing = frequency(eligible)
 
@@ -190,7 +203,7 @@ def resolve_window(claim_sid: str, series: str, pin: str,
         n = int(raw) if raw.isdigit() else WORD_NUMBERS[raw]
         proposals["last_past_n_years"] = pin_date.replace(year=pin_date.year - (n + 1))
 
-    if RE_RECORD_EVER.search(haystack):
+    if RE_RECORD_EVER.search(text_only):
         proposals["record_ever_history"] = dt.date.fromisoformat(eligible[0][0])
 
     if RE_TOOK_OFFICE.search(haystack):
@@ -350,10 +363,20 @@ def main() -> int:
          "window_by_frequency": WINDOW_BY_FREQ,
          "max_rows": MAX_ROWS,
          "extension_rules": {
-             "explicit_years": "start Jan 1 of (min_year - 1)",
-             "last_past_n_years": "N+1 years back from the pin",
-             "record_ever_history": "the full eligible history",
-             "took_office": "trailing 5 years"},
+             "explicit_years": {
+                 "start": "Jan 1 of (min_year - 1)",
+                 "scope": "claim text + ' || ' + context"},
+             "last_past_n_years": {
+                 "start": "N+1 years back from the pin",
+                 "scope": "claim text + ' || ' + context"},
+             "record_ever_history": {
+                 "start": "the full eligible history",
+                 "scope": "claim TEXT ONLY (R1=(b)); a rule keying on a "
+                          "claim's own superlative reads the claim's own words"},
+             "took_office": {
+                 "start": "trailing 5 years",
+                 "scope": "claim text + ' || ' + context"}},
+         "precedence": "widest proposal wins, ties broken on (date, name)",
          "unfetchable": [dict(zip(("claim_sid", "evidence_id", "series", "reason"), u))
                          for u in UNFETCHABLE],
          "goldens": goldens}, indent=2, sort_keys=True) + "\n")

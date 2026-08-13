@@ -102,7 +102,7 @@ print(f"  measured {measured:.4f} / cited pre-run estimate {CITED_ESTIMATE} "
 # 7 claims / 67 pack items against a $0.15 ceiling; select_rows.py computes it
 # under the frequency-aware windows. Stressing the old number against the new
 # ceiling would compare two different runs.
-STAGE_A_PROJECTION = 0.0573
+STAGE_A_PROJECTION = 0.0511
 STAGE_A_CEILING = 0.15
 stressed = STAGE_A_PROJECTION * factor
 print(f"  Stage A-FRED projection ${STAGE_A_PROJECTION:.4f} "
