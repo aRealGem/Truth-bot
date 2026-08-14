@@ -104,15 +104,21 @@ gwbush_2006 only), so this signal cannot fire at all on three of five speeches.
 
 ### The polarity that governs the decision
 
-**All 30 committed errors run in one direction: predicted `substantive` for a
-claim the desk found documentable. Zero run the other way** — the probe never
-once called a genuinely-undecidable claim checkable.
-
-That asymmetry is not reassuring; it is the dangerous polarity. A render keyed on
-these fields would not under-claim. It would **stamp "cannot be verified" on 30
-documentable claims** — the exact defect D17-d exists to remove, relocated into a
-new mechanism. The two rules a render would lean on have precision **0.235** and
+**At the commit layer, all 30 errors run one direction: predicted `substantive`
+for a claim the desk found documentable.** A render keyed on these fields would
+not under-claim. It would **stamp "cannot be verified" on 30 documentable
+claims** — the exact defect D17-d exists to remove, relocated into a new
+mechanism. The two rules a render would lean on have precision **0.235** and
 **0.105** against the fixture.
+
+**One caveat, against my own first framing.** I originally wrote that the probe
+"never once called a genuinely-undecidable claim checkable." That is false at the
+abstain layer. `trump_2026:0334` ("many, if not most, illegal aliens do not speak
+English…") is desk-`substantive`, and R4 narrows it to
+{series-core, web-tier1} — a residual range that **excludes** `substantive`. One
+case in 91, but it kills the blanket claim, and it warns against reading a
+residual range as a genuine narrowing: for step 5 the safe reading is "structure
+failed here", not "we know it is at least one of these."
 
 **Consequence for step 5.** Neither `attribution` nor `c-eval` can drive a render
 that says "cannot be verified."

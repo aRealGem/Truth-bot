@@ -164,15 +164,45 @@ documented fact cannot be verified.
 
 ## The finding that governs step 5
 
-**All 30 committed errors run in one direction: predicted `substantive` when the
-desk found the claim documentable. Zero errors run the other way.** The probe
-never once called a genuinely-undecidable claim checkable.
+**At the commit layer, all 30 errors run one direction: predicted `substantive`
+when the desk found the claim documentable.** A render keyed on these signals
+would not under-claim; it would **stamp "cannot be verified" on 30 documentable
+claims**, which is precisely the defect D17-d exists to remove, relocated into a
+new mechanism. The two commit rules that produce it (R2, R3) have precision
+0.235 and 0.105 against the fixture.
 
-That asymmetry is not reassuring — it is the dangerous polarity. A render keyed
-on these signals would not under-claim; it would **stamp "cannot be verified" on
-30 documentable claims**, which is precisely the defect D17-d exists to remove,
-relocated into a new mechanism. The two commit rules that produce it (R2, R3)
-have precision 0.235 and 0.105 against the fixture.
+**Scope correction — one-directionality is a COMMIT-LAYER property only.** An
+earlier draft of this finding said "zero errors run the other way" and glossed it
+as "the probe never once called a genuinely-undecidable claim checkable." That
+second sentence is **false**, and the counterexample is recorded here rather than
+dropped:
+
+> **`trump_2026:0334`** — *"Many, if not most, illegal aliens do not speak
+> English…"* — an unmeasured-population quantifier the desk classed
+> `substantive`. R4 reads it as a plain statistic and narrows to
+> **{series-core, web-tier1}**, a residual range that **excludes `substantive`
+> entirely**. The abstain layer therefore does run the reverse direction: it
+> ruled out "undecidable" for a claim that is undecidable.
+
+It is the only such case (1 of 91 abstentions), but it matters for step 5,
+because a render that treats an abstention's residual range as a *narrowing* —
+"we know it is at least one of these" — would inherit that error and present a
+permanently-undecidable claim as merely unretrieved. The safe reading of a
+residual range is "structure failed here", not "structure narrowed it".
+
+Both layers are pinned in `tests/test_d17d_structural_probe.py`
+(`test_every_committed_error_runs_one_direction`,
+`test_residual_layer_has_one_reverse_miss`).
+
+### Denominator note — the anecdote figures
+
+The 47 in the overlap table is **anecdotes that reach R5**, not anecdotes.
+Population-wide there are **48** `personal-anecdote` claims; `clinton_1998:0225`
+never reaches R5 because it also carries `claim_shape = c-eval` and is consumed
+by R3 first. Rule precedence changes the denominator, so the two numbers must not
+be quoted interchangeably — 22/47 is an R5-scoped precision, and a
+population-wide anecdote statistic would have 48 as its base. Pinned in
+`test_anecdote_denominator_is_r5_scoped_not_population_wide`.
 
 **Structurally inexpressible desk classes:**
 - `compound-split` — 5 desk claims, **0 recovered**. No segmentation signal
