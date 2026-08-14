@@ -1,0 +1,3216 @@
+{
+  "schema": "truthbot-d17d-pack-anatomy-probe v1",
+  "generated_from": {
+    "biden_2022": "c156d8f9-be85-5263-92a1-c08949afdedd",
+    "clinton_1998": "d7ee7340-c07d-55da-b9db-9397d7141c35",
+    "gwbush_2006": "6df77093-e328-596e-bfd5-afabd08a1679",
+    "obama_2014": "70748500-315a-5664-8474-c6632de57816",
+    "trump_2026": "799e71b6-2480-50ca-870e-1a95f0d0d5fe"
+  },
+  "audit_fixture": "metrics/remediation_v2/d17d_triage.json",
+  "method": "R7 reads ONLY stored pack fields (item count, per-tier counts, bearing flags, series_rows presence, relevance). No claim text as prose, no model, no network. NO THRESHOLD IS TUNED TO THE DESK PASS: a cut fitted to maximise agreement would launder the fixture into the classifier. The probe reports the anatomy distribution per desk class and lets the separation speak.",
+  "totals": {
+    "claims": 128,
+    "evidence_items": 969
+  },
+  "field_inventory": {
+    "source_tier": {
+      "items_carrying": 969,
+      "present": true
+    },
+    "supports_claim": {
+      "items_carrying": 668,
+      "present": true
+    },
+    "series_rows": {
+      "items_carrying": 1,
+      "present": true
+    },
+    "one_line_why": {
+      "items_carrying": 287,
+      "present": true
+    },
+    "arithmetic_hinge": {
+      "items_carrying": 20,
+      "present": true
+    },
+    "role": {
+      "items_carrying": 0,
+      "present": false
+    },
+    "era_note": {
+      "items_carrying": 0,
+      "present": false
+    },
+    "utterance_rule": {
+      "items_carrying": 0,
+      "present": false
+    },
+    "quota_credit": {
+      "items_carrying": 0,
+      "present": false
+    },
+    "disqualification_code": {
+      "items_carrying": 0,
+      "present": false
+    },
+    "gate_code": {
+      "items_carrying": 0,
+      "present": false
+    }
+  },
+  "absent_fields": [
+    "role",
+    "era_note",
+    "utterance_rule",
+    "quota_credit",
+    "disqualification_code",
+    "gate_code"
+  ],
+  "gate_reproduction_check": {
+    "packs": 128,
+    "all_were_rejected_by_the_real_gate": true,
+    "proxy_says_quota_met": 78,
+    "proxy_disagreement_rate": 0.6094,
+    "finding": "78 of 128 packs score >=2 quota credits under a reconstruction built from the stored fields, yet the real gate rejected all of them. The stored artifact CANNOT reproduce the gate it is a record of.",
+    "why": "consolidator._quota_credit also consults role (D11.2 role-aware credit), utterance_rule (D15: credits 0), the post-speech band, and era mode. None of those survive into the stored evidence item, so the tier+bearing reconstruction is a PROXY, not the gate."
+  },
+  "per_desk_class_anatomy": {
+    "compound-split": {
+      "n_claims": 5,
+      "n_items": {
+        "mean": 8.0,
+        "distribution": {
+          "6": 2,
+          "9": 2,
+          "10": 1
+        }
+      },
+      "n_tier13_mean": 4.6,
+      "n_bearing_mean": 3.4,
+      "proxy_quota_credits_mean": 1.8,
+      "proxy_quota_credits_distribution": {
+        "0": 2,
+        "2": 1,
+        "3": 1,
+        "4": 1
+      },
+      "mean_relevance": 0.812
+    },
+    "series-core": {
+      "n_claims": 7,
+      "n_items": {
+        "mean": 7.571,
+        "distribution": {
+          "2": 1,
+          "6": 1,
+          "7": 1,
+          "8": 1,
+          "10": 3
+        }
+      },
+      "n_tier13_mean": 4.286,
+      "n_bearing_mean": 4.286,
+      "proxy_quota_credits_mean": 2.143,
+      "proxy_quota_credits_distribution": {
+        "0": 2,
+        "1": 1,
+        "2": 1,
+        "3": 2,
+        "6": 1
+      },
+      "mean_relevance": 0.777
+    },
+    "substantive": {
+      "n_claims": 35,
+      "n_items": {
+        "mean": 7.6,
+        "distribution": {
+          "3": 1,
+          "4": 2,
+          "5": 6,
+          "6": 4,
+          "7": 3,
+          "8": 2,
+          "9": 6,
+          "10": 11
+        }
+      },
+      "n_tier13_mean": 3.886,
+      "n_bearing_mean": 5.114,
+      "proxy_quota_credits_mean": 2.343,
+      "proxy_quota_credits_distribution": {
+        "0": 7,
+        "1": 7,
+        "2": 7,
+        "3": 5,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 1
+      },
+      "mean_relevance": 0.754
+    },
+    "web-tier1": {
+      "n_claims": 81,
+      "n_items": {
+        "mean": 7.531,
+        "distribution": {
+          "3": 3,
+          "4": 6,
+          "5": 7,
+          "6": 9,
+          "7": 16,
+          "8": 8,
+          "9": 8,
+          "10": 24
+        }
+      },
+      "n_tier13_mean": 3.827,
+      "n_bearing_mean": 5.457,
+      "proxy_quota_credits_mean": 2.432,
+      "proxy_quota_credits_distribution": {
+        "0": 13,
+        "1": 18,
+        "2": 12,
+        "3": 16,
+        "4": 10,
+        "5": 6,
+        "6": 5,
+        "7": 1
+      },
+      "mean_relevance": 0.8
+    }
+  },
+  "separation": {
+    "question": "Does pack anatomy separate web-tier1 (a retrieval backlog) from substantive (permanent abstention)? These are the two classes a render must not confuse.",
+    "web_tier1": {
+      "n_claims": 81,
+      "n_tier13_mean": 3.827,
+      "n_bearing_mean": 5.457,
+      "proxy_quota_credits_mean": 2.432,
+      "mean_relevance": 0.8
+    },
+    "substantive": {
+      "n_claims": 35,
+      "n_tier13_mean": 3.886,
+      "n_bearing_mean": 5.114,
+      "proxy_quota_credits_mean": 2.343,
+      "mean_relevance": 0.754
+    }
+  },
+  "claims": [
+    {
+      "sid": "biden_2022:0017",
+      "speech": "biden_2022",
+      "text": "Groups of citizens blocking tanks with their bodies.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 2,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Other": 2
+        },
+        "mean_relevance": 0.912
+      }
+    },
+    {
+      "sid": "biden_2022:0019",
+      "speech": "biden_2022",
+      "text": "In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” The Ukrainian Ambassador to the United States is here tonight.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2
+        },
+        "mean_relevance": 0.91
+      }
+    },
+    {
+      "sid": "biden_2022:0045",
+      "speech": "biden_2022",
+      "text": "Putin is now isolated from the world more than ever.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.81
+      }
+    },
+    {
+      "sid": "biden_2022:0051",
+      "speech": "biden_2022",
+      "text": "The US Department of Justice is assembling a dedicated task force to go after the crimes of Russian oligarchs.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 1
+        },
+        "mean_relevance": 0.981
+      }
+    },
+    {
+      "sid": "biden_2022:0100",
+      "speech": "biden_2022",
+      "text": "I remember when my dad had to leave our home in Scranton, Pennsylvania to find work.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 6,
+        "n_bearing": 2,
+        "n_supports": 2,
+        "n_refutes": 0,
+        "n_neutral": 7,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 6,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.556
+      }
+    },
+    {
+      "sid": "biden_2022:0124",
+      "speech": "biden_2022",
+      "text": "America used to have the best roads, bridges, and airports on Earth.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 2,
+        "n_bearing": 2,
+        "n_supports": 0,
+        "n_refutes": 2,
+        "n_neutral": 3,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.7
+      }
+    },
+    {
+      "sid": "biden_2022:0137",
+      "speech": "biden_2022",
+      "text": "And tonight, I’m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrepair.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 3,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.8
+      }
+    },
+    {
+      "sid": "biden_2022:0146",
+      "speech": "biden_2022",
+      "text": "If you travel 20 miles east of Columbus, Ohio, you’ll find 1,000 empty acres of land.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 2,
+        "n_bearing": 6,
+        "n_supports": 2,
+        "n_refutes": 4,
+        "n_neutral": 1,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 1,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.743
+      }
+    },
+    {
+      "sid": "biden_2022:0154",
+      "speech": "biden_2022",
+      "text": "Intel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to $100 billion.",
+      "desk_class": "compound-split",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 4,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.943
+      }
+    },
+    {
+      "sid": "biden_2022:0168",
+      "speech": "biden_2022",
+      "text": "GM is making the largest investment in its history—$7 billion to build electric vehicles, creating 4,000 jobs in Michigan.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 3,
+        "n_tier13": 0,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 1.0
+      }
+    },
+    {
+      "sid": "biden_2022:0171",
+      "speech": "biden_2022",
+      "text": "As Ohio Senator Sherrod Brown says, “It’s time to bury the label “Rust Belt.” It’s time.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.929
+      }
+    },
+    {
+      "sid": "biden_2022:0194",
+      "speech": "biden_2022",
+      "text": "Top business leaders and most Americans support my plan.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 1,
+        "n_bearing": 2,
+        "n_supports": 2,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 1,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.575
+      }
+    },
+    {
+      "sid": "biden_2022:0200",
+      "speech": "biden_2022",
+      "text": "Insulin costs about $10 a vial to make.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 1,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.719
+      }
+    },
+    {
+      "sid": "biden_2022:0211",
+      "speech": "biden_2022",
+      "text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their health care premiums.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 3,
+        "n_supports": 0,
+        "n_refutes": 3,
+        "n_neutral": 7,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.86
+      }
+    },
+    {
+      "sid": "biden_2022:0284",
+      "speech": "biden_2022",
+      "text": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 4,
+        "n_bearing": 7,
+        "n_supports": 6,
+        "n_refutes": 1,
+        "n_neutral": 1,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 3,
+          "Government": 1,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.887
+      }
+    },
+    {
+      "sid": "biden_2022:0285",
+      "speech": "biden_2022",
+      "text": "And we’re launching the “Test to Treat” initiative so people can get tested at a pharmacy, and if they’re positive, receive antiviral pills on the spot at no cost.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 3,
+          "Government": 1,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 1
+        },
+        "mean_relevance": 0.935
+      }
+    },
+    {
+      "sid": "biden_2022:0362",
+      "speech": "biden_2022",
+      "text": "Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.894
+      }
+    },
+    {
+      "sid": "biden_2022:0366",
+      "speech": "biden_2022",
+      "text": "We’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 3,
+        "n_supports": 2,
+        "n_refutes": 1,
+        "n_neutral": 7,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.66
+      }
+    },
+    {
+      "sid": "biden_2022:0373",
+      "speech": "biden_2022",
+      "text": "That’s why immigration reform is supported by everyone from labor unions to religious leaders to the US Chamber of Commerce.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 3,
+        "n_tier13": 0,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.8
+      }
+    },
+    {
+      "sid": "biden_2022:0376",
+      "speech": "biden_2022",
+      "text": "The constitutional right affirmed in Roe v.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 5,
+        "n_bearing": 0,
+        "n_supports": 0,
+        "n_refutes": 0,
+        "n_neutral": 7,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2
+        },
+        "mean_relevance": 0.243
+      }
+    },
+    {
+      "sid": "biden_2022:0420",
+      "speech": "biden_2022",
+      "text": "One of those soldiers was my son Major Beau Biden.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 1,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.85
+      }
+    },
+    {
+      "sid": "biden_2022:0427",
+      "speech": "biden_2022",
+      "text": "Combat medic in Kosovo and Iraq.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 3,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.75
+      }
+    },
+    {
+      "sid": "biden_2022:0431",
+      "speech": "biden_2022",
+      "text": "He loved building Legos with their daughter.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 3,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2
+        },
+        "mean_relevance": 0.79
+      }
+    },
+    {
+      "sid": "biden_2022:0437",
+      "speech": "biden_2022",
+      "text": "The VA is pioneering new ways of linking toxic exposures to diseases, already helping more veterans get benefits.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 4,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.756
+      }
+    },
+    {
+      "sid": "clinton_1998:0027",
+      "speech": "clinton_1998",
+      "text": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 5,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 4,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.75
+      }
+    },
+    {
+      "sid": "clinton_1998:0029",
+      "speech": "clinton_1998",
+      "text": "I will submit to Congress for 1999 the first balanced budget in 30 years.",
+      "desk_class": "series-core",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 10,
+        "n_supports": 9,
+        "n_refutes": 1,
+        "n_neutral": 0,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 5,
+          "Other": 1,
+          "Political": 3
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "speech": "clinton_1998",
+      "text": "Now, with these teachers—listen—with these teachers, we will actually be able to reduce class size in the first, second, and third grades to an average of 18 students a class, all across America.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 5,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "clinton_1998:0090",
+      "speech": "clinton_1998",
+      "text": "In the last five years, we have led the way in opening new markets, with 240 trade agreements that remove foreign barriers to products bearing the proud stamp \"Made in the USA.\"",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.94
+      }
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "speech": "clinton_1998",
+      "text": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 2,
+        "n_supports": 2,
+        "n_refutes": 0,
+        "n_neutral": 8,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 7,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.67
+      }
+    },
+    {
+      "sid": "clinton_1998:0107",
+      "speech": "clinton_1998",
+      "text": "And remember the big picture here: While we've been entering into hundreds of new trade agreements, we've been creating millions of new jobs.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 2,
+        "n_bearing": 0,
+        "n_supports": 0,
+        "n_refutes": 0,
+        "n_neutral": 5,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.84
+      }
+    },
+    {
+      "sid": "clinton_1998:0132",
+      "speech": "clinton_1998",
+      "text": "I'm pleased to report we have also met that goal, two full years ahead of schedule.",
+      "desk_class": "compound-split",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 1,
+        "n_supports": 1,
+        "n_refutes": 0,
+        "n_neutral": 8,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.833
+      }
+    },
+    {
+      "sid": "clinton_1998:0134",
+      "speech": "clinton_1998",
+      "text": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.985
+      }
+    },
+    {
+      "sid": "clinton_1998:0135",
+      "speech": "clinton_1998",
+      "text": "Today, she's a dispatcher with a van company.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.814
+      }
+    },
+    {
+      "sid": "clinton_1998:0195",
+      "speech": "clinton_1998",
+      "text": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in history.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 6,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 5,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.928
+      }
+    },
+    {
+      "sid": "clinton_1998:0210",
+      "speech": "clinton_1998",
+      "text": "For 50 years, NATO contained communism and kept America and Europe secure.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 7,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 5,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.5
+      }
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "speech": "clinton_1998",
+      "text": "Now these three formerly Communist countries have said yes to democracy.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 4,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2
+        },
+        "mean_relevance": 0.517
+      }
+    },
+    {
+      "sid": "clinton_1998:0225",
+      "speech": "clinton_1998",
+      "text": "One of those— —thank you—one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbert.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.915
+      }
+    },
+    {
+      "sid": "clinton_1998:0226",
+      "speech": "clinton_1998",
+      "text": "His father was a decorated Vietnam vet.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.839
+      }
+    },
+    {
+      "sid": "clinton_1998:0227",
+      "speech": "clinton_1998",
+      "text": "After college in Colorado, he joined the Army.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.785
+      }
+    },
+    {
+      "sid": "clinton_1998:0236",
+      "speech": "clinton_1998",
+      "text": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff—Generals John Shalikashvili, Colin Powell, and David Jones and Admiral William Crowe—have endorsed this treaty.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.938
+      }
+    },
+    {
+      "sid": "clinton_1998:0240",
+      "speech": "clinton_1998",
+      "text": "Saddam Hussein has spent the better part of this decade and much of his nation's wealth not on providing for the Iraqi people but on developing nuclear, chemical, and biological weapons and the missiles to deliver them.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 0,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.65
+      }
+    },
+    {
+      "sid": "clinton_1998:0241",
+      "speech": "clinton_1998",
+      "text": "The United Nations weapons inspectors have done a truly remarkable job finding and destroying more of Iraq's arsenal than was destroyed during the entire Gulf War.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 1,
+        "n_bearing": 4,
+        "n_supports": 3,
+        "n_refutes": 1,
+        "n_neutral": 0,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.875
+      }
+    },
+    {
+      "sid": "clinton_1998:0243",
+      "speech": "clinton_1998",
+      "text": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy the will of the world,\" and when I say to him, \"You have used weapons of mass destruction before.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.867
+      }
+    },
+    {
+      "sid": "clinton_1998:0350",
+      "speech": "clinton_1998",
+      "text": "Think of this: The first time I made a State of the Union speech to you, only a handful of physicists used the World Wide Web—literally, just a handful of people.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 3,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.829
+      }
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "speech": "clinton_1998",
+      "text": "Beginning this year, 1998, men and women from 16 countries will build a foothold in the heavens, the international space station.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 5,
+        "n_supports": 2,
+        "n_refutes": 3,
+        "n_neutral": 5,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 6,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.86
+      }
+    },
+    {
+      "sid": "gwbush_2006:0024",
+      "speech": "gwbush_2006",
+      "text": "In 1945, there were about two dozen lonely democracies in the world.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 3,
+        "n_bearing": 1,
+        "n_supports": 1,
+        "n_refutes": 0,
+        "n_neutral": 6,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.386
+      }
+    },
+    {
+      "sid": "gwbush_2006:0025",
+      "speech": "gwbush_2006",
+      "text": "Today, there are 122.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 1,
+        "n_bearing": 4,
+        "n_supports": 3,
+        "n_refutes": 1,
+        "n_neutral": 0,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 1,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.925
+      }
+    },
+    {
+      "sid": "gwbush_2006:0027",
+      "speech": "gwbush_2006",
+      "text": "At the start of 2006, more than half the people of our world live in democratic nations.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 1,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.75
+      }
+    },
+    {
+      "sid": "gwbush_2006:0033",
+      "speech": "gwbush_2006",
+      "text": "Their aim is to seize power in Iraq and use it as a safe haven to launch attacks against America and the world.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 5,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.79
+      }
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "speech": "gwbush_2006",
+      "text": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combined.",
+      "desk_class": "series-core",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 5,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 6,
+          "Other": 1,
+          "Political": 3
+        },
+        "mean_relevance": 0.895
+      }
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "speech": "gwbush_2006",
+      "text": "In the last five years, the tax relief you passed has left $880 billion in the hands of American workers, investors, small businesses, and families.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 6,
+          "Other": 1,
+          "Political": 3
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "gwbush_2006:0155",
+      "speech": "gwbush_2006",
+      "text": "This year my budget will cut it again, and reduce or eliminate more than 140 programs that are performing poorly or not fulfilling essential priorities.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.915
+      }
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "speech": "gwbush_2006",
+      "text": "By passing these reforms, we will save the American taxpayer another $14 billion next year and stay on track to cut the deficit in half by 2009.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 6,
+          "Political": 3
+        },
+        "mean_relevance": 0.78
+      }
+    },
+    {
+      "sid": "gwbush_2006:0189",
+      "speech": "gwbush_2006",
+      "text": "So tonight I announce the Advanced Energy Initiative—a 22-percent increase in clean-energy research—at the Department of Energy, to push for breakthroughs in two vital areas.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.938
+      }
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "speech": "gwbush_2006",
+      "text": "Drug use among youth is down 19 percent since 2001.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 5,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 5,
+          "Other": 2
+        },
+        "mean_relevance": 0.814
+      }
+    },
+    {
+      "sid": "obama_2014:0001",
+      "speech": "obama_2014",
+      "text": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jobs our businesses have created over the past four years.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 6,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 7,
+          "Political": 3
+        },
+        "mean_relevance": 0.85
+      }
+    },
+    {
+      "sid": "obama_2014:0004",
+      "speech": "obama_2014",
+      "text": "A rural doctor gave a young child the first prescription to treat asthma that his mother could afford.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 2,
+        "n_supports": 0,
+        "n_refutes": 2,
+        "n_neutral": 8,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 4,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "obama_2014:0013",
+      "speech": "obama_2014",
+      "text": "And for the first time in over a decade, business leaders around the world have declared that China is no longer the world’s number one place to invest; America is.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 1,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.825
+      }
+    },
+    {
+      "sid": "obama_2014:0045",
+      "speech": "obama_2014",
+      "text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans and military spouses.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 3,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Political": 3
+        },
+        "mean_relevance": 0.842
+      }
+    },
+    {
+      "sid": "obama_2014:0055",
+      "speech": "obama_2014",
+      "text": "With the economy picking up speed, companies say they intend to hire more people this year.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 3,
+        "n_tier13": 1,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 1,
+          "Other": 2
+        },
+        "mean_relevance": 0.717
+      }
+    },
+    {
+      "sid": "obama_2014:0070",
+      "speech": "obama_2014",
+      "text": "Over the past five years, my administration has made more loans to small business owners than any other.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 8,
+        "n_bearing": 0,
+        "n_supports": 0,
+        "n_refutes": 0,
+        "n_neutral": 10,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 7,
+          "Other": 1,
+          "Political": 1
+        },
+        "mean_relevance": 0.71
+      }
+    },
+    {
+      "sid": "obama_2014:0082",
+      "speech": "obama_2014",
+      "text": "Businesses plan to invest almost $100 billion in new factories that use natural gas.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 1,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.8
+      }
+    },
+    {
+      "sid": "obama_2014:0114",
+      "speech": "obama_2014",
+      "text": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 2,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.929
+      }
+    },
+    {
+      "sid": "obama_2014:0121",
+      "speech": "obama_2014",
+      "text": "But first, this Congress needs to restore the unemployment insurance you just let expire for 1.6 million people.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 2,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.879
+      }
+    },
+    {
+      "sid": "obama_2014:0123",
+      "speech": "obama_2014",
+      "text": "Misty DeMars is a mother of two young boys.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 2,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 1,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.867
+      }
+    },
+    {
+      "sid": "obama_2014:0125",
+      "speech": "obama_2014",
+      "text": "She put herself through college.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.889
+      }
+    },
+    {
+      "sid": "obama_2014:0126",
+      "speech": "obama_2014",
+      "text": "She’d never collected unemployment benefits.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 5,
+        "n_supports": 4,
+        "n_refutes": 1,
+        "n_neutral": 4,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.644
+      }
+    },
+    {
+      "sid": "obama_2014:0153",
+      "speech": "obama_2014",
+      "text": "But in the meantime, thirty states have raised pre-k funding on their own.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 3,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 1,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.879
+      }
+    },
+    {
+      "sid": "obama_2014:0158",
+      "speech": "obama_2014",
+      "text": "Tonight, I can announce that with the support of the FCC and companies like Apple, Microsoft, Sprint, and Verizon, we’ve got a down payment to start connecting more than 15,000 schools and twenty million students over the next two years, without adding a dime to the deficit.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 2,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.907
+      }
+    },
+    {
+      "sid": "obama_2014:0189",
+      "speech": "obama_2014",
+      "text": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+      "desk_class": "series-core",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 2,
+        "n_supports": 0,
+        "n_refutes": 2,
+        "n_neutral": 6,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": true,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.5
+      }
+    },
+    {
+      "sid": "obama_2014:0198",
+      "speech": "obama_2014",
+      "text": "Right now, it helps about half of all parents at some point.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 7,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 5,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.79
+      }
+    },
+    {
+      "sid": "obama_2014:0207",
+      "speech": "obama_2014",
+      "text": "MyRA guarantees a decent return with no risk of losing what you put in.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 2,
+        "n_bearing": 6,
+        "n_supports": 5,
+        "n_refutes": 1,
+        "n_neutral": 1,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.836
+      }
+    },
+    {
+      "sid": "obama_2014:0255",
+      "speech": "obama_2014",
+      "text": "When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.806
+      }
+    },
+    {
+      "sid": "obama_2014:0283",
+      "speech": "obama_2014",
+      "text": "As we gather here tonight, Iran has begun to eliminate its stockpile of higher levels of enriched uranium.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 1,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 1,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.8
+      }
+    },
+    {
+      "sid": "trump_2026:0035",
+      "speech": "trump_2026",
+      "text": "Mortgage rates are the lowest in four years and falling fast, and the annual cost of a typical new mortgage is down almost $5,000 just since I took office, one year.",
+      "desk_class": "series-core",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 4,
+        "n_bearing": 5,
+        "n_supports": 0,
+        "n_refutes": 5,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 1
+        },
+        "mean_relevance": 0.807
+      }
+    },
+    {
+      "sid": "trump_2026:0040",
+      "speech": "trump_2026",
+      "text": "The stock market has set 53 all-time record highs since the election.",
+      "desk_class": "series-core",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 4,
+        "n_bearing": 4,
+        "n_supports": 3,
+        "n_refutes": 1,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 1,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.775
+      }
+    },
+    {
+      "sid": "trump_2026:0043",
+      "speech": "trump_2026",
+      "text": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+      "desk_class": "series-core",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 2,
+        "n_supports": 0,
+        "n_refutes": 2,
+        "n_neutral": 8,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 7,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.64
+      }
+    },
+    {
+      "sid": "trump_2026:0057",
+      "speech": "trump_2026",
+      "text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps.",
+      "desk_class": "compound-split",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 3,
+        "n_bearing": 0,
+        "n_supports": 0,
+        "n_refutes": 0,
+        "n_neutral": 6,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 1
+        },
+        "mean_relevance": 0.7
+      }
+    },
+    {
+      "sid": "trump_2026:0090",
+      "speech": "trump_2026",
+      "text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer version right in Los Angeles.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 3,
+        "n_tier13": 1,
+        "n_bearing": 2,
+        "n_supports": 2,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Other": 2
+        },
+        "mean_relevance": 0.65
+      }
+    },
+    {
+      "sid": "trump_2026:0098",
+      "speech": "trump_2026",
+      "text": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas MacArthur.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 5,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 4,
+          "Other": 2,
+          "Political": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.722
+      }
+    },
+    {
+      "sid": "trump_2026:0099",
+      "speech": "trump_2026",
+      "text": "He fought bravely in the famous Battle of Manila, worked so hard.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 4,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.685
+      }
+    },
+    {
+      "sid": "trump_2026:0100",
+      "speech": "trump_2026",
+      "text": "He was badly wounded and almost killed by enemy machine guns in Luzon.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 2,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2
+        },
+        "mean_relevance": 0.812
+      }
+    },
+    {
+      "sid": "trump_2026:0102",
+      "speech": "trump_2026",
+      "text": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in the gallery looking forward to July 4th, 2026, his 100th birthday.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.93
+      }
+    },
+    {
+      "sid": "trump_2026:0106",
+      "speech": "trump_2026",
+      "text": "I was there.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 7,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 2
+        },
+        "mean_relevance": 0.385
+      }
+    },
+    {
+      "sid": "trump_2026:0110",
+      "speech": "trump_2026",
+      "text": "She thought she was going to die.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 3,
+          "Government": 1,
+          "Other": 2,
+          "Political": 2,
+          "Wire": 2
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "trump_2026:0111",
+      "speech": "trump_2026",
+      "text": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 5,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 3,
+          "Government": 2,
+          "Other": 2
+        },
+        "mean_relevance": 0.879
+      }
+    },
+    {
+      "sid": "trump_2026:0130",
+      "speech": "trump_2026",
+      "text": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republican majorities delivered so beautifully.",
+      "desk_class": "compound-split",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 7,
+        "n_bearing": 3,
+        "n_supports": 2,
+        "n_refutes": 1,
+        "n_neutral": 6,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 6,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.811
+      }
+    },
+    {
+      "sid": "trump_2026:0137",
+      "speech": "trump_2026",
+      "text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no tax on overtime and our expanded child tax credit done again by Republicans, Megan and her husband will take home more than $5,000 extra just for the year cutting her tax bill in more than half.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 1,
+        "n_supports": 0,
+        "n_refutes": 1,
+        "n_neutral": 8,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.856
+      }
+    },
+    {
+      "sid": "trump_2026:0153",
+      "speech": "trump_2026",
+      "text": "You know, I asked Michael Dell, how do you make all that money?",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 4,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 1
+        },
+        "mean_relevance": 0.786
+      }
+    },
+    {
+      "sid": "trump_2026:0161",
+      "speech": "trump_2026",
+      "text": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time they turn 18.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 1,
+        "n_refutes": 4,
+        "n_neutral": 3,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 1,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 1
+        },
+        "mean_relevance": 0.744
+      }
+    },
+    {
+      "sid": "trump_2026:0255",
+      "speech": "trump_2026",
+      "text": "For five years, she and her husband have struggled with infertility and they turned to IVF.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2
+        },
+        "mean_relevance": 0.91
+      }
+    },
+    {
+      "sid": "trump_2026:0256",
+      "speech": "trump_2026",
+      "text": "One drug has been costing Catherine $4,000 to purchase.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 4,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 1
+        },
+        "mean_relevance": 0.879
+      }
+    },
+    {
+      "sid": "trump_2026:0279",
+      "speech": "trump_2026",
+      "text": "She placed bids on 20 homes and lost all of those bids to gigantic investment firms that bypassed inspection, paid all cash and turned those houses into rentals, stealing away her American dream.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 5,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 5,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.65
+      }
+    },
+    {
+      "sid": "trump_2026:0291",
+      "speech": "trump_2026",
+      "text": "Since I took office, the typical 401-K balance is up by at least $30,000.",
+      "desk_class": "series-core",
+      "anatomy": {
+        "n_items": 2,
+        "n_tier13": 0,
+        "n_bearing": 2,
+        "n_supports": 0,
+        "n_refutes": 2,
+        "n_neutral": 0,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Other": 2
+        },
+        "mean_relevance": 0.925
+      }
+    },
+    {
+      "sid": "trump_2026:0325",
+      "speech": "trump_2026",
+      "text": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car traveling at 60 miles an hour or more.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 2,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 1,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.729
+      }
+    },
+    {
+      "sid": "trump_2026:0326",
+      "speech": "trump_2026",
+      "text": "The driver was an illegal alien let in by Joe Biden and given a commercial driver's license by open borders politicians in California.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 3,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.719
+      }
+    },
+    {
+      "sid": "trump_2026:0327",
+      "speech": "trump_2026",
+      "text": "Doctors said Delilah would never be able to walk or talk, have a good life.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 1
+        },
+        "mean_relevance": 0.872
+      }
+    },
+    {
+      "sid": "trump_2026:0328",
+      "speech": "trump_2026",
+      "text": "She wouldn't even be able to eat again.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 2,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 1,
+          "Other": 2,
+          "Political": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "trump_2026:0329",
+      "speech": "trump_2026",
+      "text": "But against all odds, she is now in the first grade, learning to walk.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 2
+        },
+        "mean_relevance": 0.935
+      }
+    },
+    {
+      "sid": "trump_2026:0334",
+      "speech": "trump_2026",
+      "text": "Many, if not most, illegal aliens do not speak English and cannot read even the most basic road signs as to direction, speed, danger or location.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 3,
+        "n_supports": 1,
+        "n_refutes": 2,
+        "n_neutral": 7,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 6,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.505
+      }
+    },
+    {
+      "sid": "trump_2026:0340",
+      "speech": "trump_2026",
+      "text": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas parade, but she never arrived.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 5,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 4,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.764
+      }
+    },
+    {
+      "sid": "trump_2026:0341",
+      "speech": "trump_2026",
+      "text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being stabbed 25 times.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 3,
+        "n_bearing": 2,
+        "n_supports": 2,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.5
+      }
+    },
+    {
+      "sid": "trump_2026:0342",
+      "speech": "trump_2026",
+      "text": "Lizbeth's killer was a previously arrested illegal alien who had broken in and brutally, just brutally extinguished the brightest light in her family's life, violently and viciously.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 2,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2
+        },
+        "mean_relevance": 0.688
+      }
+    },
+    {
+      "sid": "trump_2026:0343",
+      "speech": "trump_2026",
+      "text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our country at record numbers and we're getting them the hell out of here fast.",
+      "desk_class": "compound-split",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 4,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 1
+        },
+        "mean_relevance": 0.775
+      }
+    },
+    {
+      "sid": "trump_2026:0379",
+      "speech": "trump_2026",
+      "text": "And this should be an easy one, and by the way, it's polling at 89 percent, including Democrats, 89 percent.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 3,
+        "n_bearing": 4,
+        "n_supports": 3,
+        "n_refutes": 1,
+        "n_neutral": 1,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2
+        },
+        "mean_relevance": 0.78
+      }
+    },
+    {
+      "sid": "trump_2026:0400",
+      "speech": "trump_2026",
+      "text": "In 2021, Sage was 14 when school officials in Virginia sought to socially transition her to a new gender, treating her as a boy and hiding it from her parents.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 2,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 1,
+          "Other": 2
+        },
+        "mean_relevance": 0.887
+      }
+    },
+    {
+      "sid": "trump_2026:0402",
+      "speech": "trump_2026",
+      "text": "Before long, a confused Sage ran away from home.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 8,
+        "n_tier13": 6,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2,
+          "Wire": 2
+        },
+        "mean_relevance": 0.925
+      }
+    },
+    {
+      "sid": "trump_2026:0403",
+      "speech": "trump_2026",
+      "text": "After she was found in a horrific situation in Maryland, a left-wing judge refused to return sage to her parents because they did not immediately state that their daughter was their son.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 4,
+        "n_bearing": 0,
+        "n_supports": 0,
+        "n_refutes": 0,
+        "n_neutral": 6,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2
+        },
+        "mean_relevance": 0.717
+      }
+    },
+    {
+      "sid": "trump_2026:0404",
+      "speech": "trump_2026",
+      "text": "Sage was thrown into an all-boys state home and suffered terribly for a long time.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 2,
+        "n_bearing": 2,
+        "n_supports": 2,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 1,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.4
+      }
+    },
+    {
+      "sid": "trump_2026:0405",
+      "speech": "trump_2026",
+      "text": "But today, all of that is behind them because Sage is a proud and wonderful young woman with a full ride scholarship to Liberty University.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 6,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 1
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "trump_2026:0450",
+      "speech": "trump_2026",
+      "text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's face as she looked up at her attacker in the last seconds of her life.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 3,
+        "n_bearing": 3,
+        "n_supports": 1,
+        "n_refutes": 2,
+        "n_neutral": 3,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 1,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.533
+      }
+    },
+    {
+      "sid": "trump_2026:0469",
+      "speech": "trump_2026",
+      "text": "Sarah Beckstrom died in order to defend our capital.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 5,
+        "n_bearing": 1,
+        "n_supports": 1,
+        "n_refutes": 0,
+        "n_neutral": 9,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 1
+        },
+        "mean_relevance": 0.63
+      }
+    },
+    {
+      "sid": "trump_2026:0482",
+      "speech": "trump_2026",
+      "text": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 8,
+        "n_supports": 8,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 3,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 2
+        },
+        "mean_relevance": 0.8
+      }
+    },
+    {
+      "sid": "trump_2026:0487",
+      "speech": "trump_2026",
+      "text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 2,
+        "n_bearing": 3,
+        "n_supports": 3,
+        "n_refutes": 0,
+        "n_neutral": 2,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Political": 1
+        },
+        "mean_relevance": 0.46
+      }
+    },
+    {
+      "sid": "trump_2026:0514",
+      "speech": "trump_2026",
+      "text": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 4,
+        "n_tier13": 2,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2
+        },
+        "mean_relevance": 0.9
+      }
+    },
+    {
+      "sid": "trump_2026:0569",
+      "speech": "trump_2026",
+      "text": "After Midnight Hammer, they were warned to make no future attempts to rebuild their weapons program in a particular, nuclear weapons, yet they continue starting it all over.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 2,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 3,
+        "proxy_quota_credits": 1,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Political": 3
+        },
+        "mean_relevance": 0.736
+      }
+    },
+    {
+      "sid": "trump_2026:0638",
+      "speech": "trump_2026",
+      "text": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 5,
+        "n_tier13": 3,
+        "n_bearing": 4,
+        "n_supports": 4,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 2,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 1,
+          "Other": 2
+        },
+        "mean_relevance": 0.76
+      }
+    },
+    {
+      "sid": "trump_2026:0643",
+      "speech": "trump_2026",
+      "text": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 4,
+        "n_bearing": 5,
+        "n_supports": 5,
+        "n_refutes": 0,
+        "n_neutral": 1,
+        "proxy_quota_credits": 3,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 1,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.8
+      }
+    },
+    {
+      "sid": "trump_2026:0652",
+      "speech": "trump_2026",
+      "text": "But the deeds of one warrior that night will live forever in the eternal chronicles of military valor, Chief Warrant Officer Five, Eric Slover, planned the mission and was the flight lead in the cockpit of the first helicopter.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 7,
+        "n_tier13": 4,
+        "n_bearing": 7,
+        "n_supports": 7,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 2,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 2
+        },
+        "mean_relevance": 0.943
+      }
+    },
+    {
+      "sid": "trump_2026:0659",
+      "speech": "trump_2026",
+      "text": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one bullet after another.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.8
+      }
+    },
+    {
+      "sid": "trump_2026:0660",
+      "speech": "trump_2026",
+      "text": "He absorbed four agonizing shots, shredding his leg into numerous pieces.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 6,
+        "n_supports": 6,
+        "n_refutes": 0,
+        "n_neutral": 4,
+        "proxy_quota_credits": 5,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 2
+        },
+        "mean_relevance": 0.78
+      }
+    },
+    {
+      "sid": "trump_2026:0664",
+      "speech": "trump_2026",
+      "text": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the threat—turned the helicopter around so the gunners could take care of business, saving the lives of his fellow warriors from what could have been a catastrophic crash deep in enemy territory.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 7,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 5,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 1
+        },
+        "mean_relevance": 0.75
+      }
+    },
+    {
+      "sid": "trump_2026:0665",
+      "speech": "trump_2026",
+      "text": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mission, we probably would have had maybe cancel the mission if that didn't happen, Eric told his copilot, also wounded but not as gravely, to take over, I'm about ready to pass out.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 0,
+        "n_supports": 0,
+        "n_refutes": 0,
+        "n_neutral": 10,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 2,
+          "Government": 4,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 1
+        },
+        "mean_relevance": 0.77
+      }
+    },
+    {
+      "sid": "trump_2026:0666",
+      "speech": "trump_2026",
+      "text": "The success of the entire mission and the lives of his fellow warriors hinge on Eric's ability to take the searing pain, it was unbelievable what's happened to his legs, of the bullets and keep on flying and landing and people knew what was happening.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 7,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 7,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 3,
+          "Other": 2,
+          "Political": 1,
+          "Wire": 3
+        },
+        "mean_relevance": 0.895
+      }
+    },
+    {
+      "sid": "trump_2026:0667",
+      "speech": "trump_2026",
+      "text": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle.",
+      "desk_class": "substantive",
+      "anatomy": {
+        "n_items": 6,
+        "n_tier13": 4,
+        "n_bearing": 2,
+        "n_supports": 2,
+        "n_refutes": 0,
+        "n_neutral": 4,
+        "proxy_quota_credits": 0,
+        "proxy_says_quota_met": false,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 3,
+          "Other": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.617
+      }
+    },
+    {
+      "sid": "trump_2026:0683",
+      "speech": "trump_2026",
+      "text": "In the skies over Korea in 1952, Royce was in the dogfight of a lifetime, legendary dogfight.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 10,
+        "n_supports": 10,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 6,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Government": 6,
+          "Other": 2,
+          "Political": 2
+        },
+        "mean_relevance": 0.885
+      }
+    },
+    {
+      "sid": "trump_2026:0685",
+      "speech": "trump_2026",
+      "text": "It was his first aerial combat of the war and despite being massively outnumbered and outgunned, Royce led the takedown of four enemy jets and almost destroyed the others, vanquishing his adversaries while taking 263 bullets to his own plane and being seriously hurt.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 10,
+        "n_tier13": 6,
+        "n_bearing": 8,
+        "n_supports": 6,
+        "n_refutes": 2,
+        "n_neutral": 2,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 4,
+          "Other": 2,
+          "Political": 2,
+          "Wire": 1
+        },
+        "mean_relevance": 0.79
+      }
+    },
+    {
+      "sid": "trump_2026:0686",
+      "speech": "trump_2026",
+      "text": "His story was secret for over 50 years.",
+      "desk_class": "web-tier1",
+      "anatomy": {
+        "n_items": 9,
+        "n_tier13": 4,
+        "n_bearing": 9,
+        "n_supports": 9,
+        "n_refutes": 0,
+        "n_neutral": 0,
+        "proxy_quota_credits": 4,
+        "proxy_says_quota_met": true,
+        "has_series_rows": false,
+        "tier_counts": {
+          "Established": 1,
+          "Government": 2,
+          "Other": 2,
+          "Political": 3,
+          "Wire": 1
+        },
+        "mean_relevance": 0.789
+      }
+    }
+  ]
+}

@@ -215,3 +215,97 @@ population-wide anecdote statistic would have 48 as its base. Pinned in
 "cannot be verified" label. The pipeline needs a **public/private (retrievable
 vs undecidable) axis** it does not have, and `attribution` and `c-eval` each want
 splitting before either can carry weight.
+
+---
+
+# R7 — pack anatomy
+
+R1–R6 used only claim-level fields and never looked at the **pack**. R7 asks
+whether that was a miss: does pack anatomy — how much was retrieved, at what
+tiers, how much bore on the claim — carry a decidability signal the claim fields
+do not? Artifact: `d17d_pack_anatomy_probe.json`, from
+`scripts/d17d_pack_anatomy_probe.py`. 128 packs, 969 evidence items.
+
+**No threshold was fitted to the desk pass.** A cut chosen to maximise agreement
+would launder the fixture into the classifier and report its own reflection as a
+finding. R7 reports distributions and lets the separation speak.
+
+## Which per-item fields survive into the artifact
+
+| field | items carrying | present |
+|---|---:|:--:|
+| `source_tier` | 969 | yes |
+| `supports_claim` (bearing flag) | 668 | yes |
+| `one_line_why` | 287 | yes |
+| `arithmetic_hinge` | 20 | yes |
+| `series_rows` | 1 | yes |
+| `role` | 0 | **no** |
+| `era_note` | 0 | **no** |
+| `utterance_rule` | 0 | **no** |
+| `quota_credit` | 0 | **no** |
+| `disqualification_code` | 0 | **no** |
+| `gate_code` | 0 | **no** |
+
+**There are no per-item disqualification codes.** Nothing in a stored item
+records why it failed to count. Tier and bearing survive; the gate's own
+reasoning does not.
+
+## The stored artifact cannot reproduce the gate it is a record of
+
+All 128 packs were rejected by the real gate. Reconstructing quota credit from
+the surviving fields (`source_tier ∈ {Government, Wire, Established}` **and**
+`supports_claim is not None`) scores **78 of 128 packs at ≥2 credits — 61% would
+"have passed."**
+
+The reconstruction is a **proxy, not the gate**: `consolidator._quota_credit`
+also consults `role` (D11.2 role-aware credit), `utterance_rule` (D15 — credits
+0), the post-speech band, and era mode. **None of those survive into the stored
+evidence item.** Any pack-anatomy feature is therefore computed over a strictly
+poorer field set than the decision it is trying to explain.
+
+## Anatomy by desk class — no separation
+
+| desk class | n | items (mean) | Tier-1..3 | bearing | proxy credits |
+|---|---:|---:|---:|---:|---:|
+| web-tier1 | 81 | 7.53 | 3.83 | 5.46 | 2.43 |
+| substantive | 35 | 7.60 | 3.89 | 5.11 | 2.34 |
+| series-core | 7 | 7.57 | 4.29 | 4.29 | 2.14 |
+| compound-split | 5 | 8.00 | 4.60 | 3.40 | 1.80 |
+
+**The two classes a render must never confuse are indistinguishable.**
+`web-tier1` (a retrieval backlog) and `substantive` (permanent abstention) differ
+by 0.07 items, 0.06 Tier-1..3 sources, and 0.09 proxy credits. The tier
+difference even runs mildly *backwards*: substantive packs carry marginally
+**more** Tier-1..3 sources than documentable ones, so the intuition "more
+qualifying evidence ⇒ more checkable" is not merely weak here, it is faintly
+inverted.
+
+**Answer to "was ignoring pack anatomy a miss?" — no.** Pack anatomy adds no
+usable decidability signal on this corpus. That is not because the packs are
+uninformative, but because they are all *failures of the same gate*: the corpus
+is conditioned on rejection, so the anatomy that would discriminate has already
+been flattened by the selection.
+
+## Egress note — the generational assumption (S-12)
+
+Every figure above is measured on packs from a single methodology generation:
+**`v2.3-role-axis-s5cap`** (S5 political tier, ≤3 saturation cap, role axis, era
+fail-closed), which is the generation of all five heads and the current one.
+
+S-12 exists because a constant measured on one payload was applied to another and
+ran the escalation 8.2× over ($0.3266 against $0.0396). The same failure mode is
+available here in non-monetary form: **these anatomy numbers are a property of
+this generation's retrieval, not of the pipeline.** The tier mix in particular is
+generation-specific — `pre-s5-tiering` runs classified every `.gov` host as
+top-tier Government, and `pre-s5-cap` runs had no per-claim political saturation
+cap, so both would yield materially different Tier-1..3 counts on the same
+claims. A threshold derived from the table above and carried across a generation
+boundary would be exactly the S-12 error: a number that cannot name the payload
+it measured.
+
+Accordingly, **no R7 figure may be used as a constant, a threshold, or a cost
+basis outside `v2.3-role-axis-s5cap`.** If retrieval changes — a new retriever,
+a widened tier set, re-retrieval of the backlog — this probe must be re-run
+before any of its numbers are quoted again. The 61% gate-reproduction gap should
+be treated as the floor on how much the artifact under-describes the decision,
+not as a measured constant.
