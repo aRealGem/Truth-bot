@@ -1,0 +1,56 @@
+{
+  "speech_id": "trump_2026",
+  "rebuild_of": "91dd7a34-7a3c-4f40-bcdc-276b2cb15d26",
+  "new_run_id": "5d3d54f0-e3fd-4fd2-85d2-0e9b2215d61a",
+  "wave": false,
+  "escape": {
+    "kind": "extra-sid escape",
+    "reason": "D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a)).",
+    "sids": [
+      "biden_2022:0169",
+      "trump_2026:0054",
+      "trump_2026:0219"
+    ],
+    "tag": "d17c-wave2",
+    "wave_set_widened": false,
+    "wave_set_size": 29,
+    "source_artifact": "current publishing head (post-wave, post-rulings)",
+    "note": "--extra-sids admits claims the flip set never released. It is for a publish-blocking defect outside the flip set; the wave's own claim set, report and diffs are untouched."
+  },
+  "tag": "d17c-wave2",
+  "wave_sids": [
+    "trump_2026:0054",
+    "trump_2026:0219"
+  ],
+  "reasons": {
+    "biden_2022:0169": "extra-sid escape: D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a)).",
+    "trump_2026:0054": "extra-sid escape: D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a)).",
+    "trump_2026:0219": "extra-sid escape: D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a))."
+  },
+  "n_compared": 2,
+  "counts": {
+    "unchanged": 1,
+    "decided_to_decided_changed": 0,
+    "newly_gated": 0,
+    "newly_decided": 1,
+    "split_changes": 0,
+    "other": 0
+  },
+  "gate_forced_new": 0,
+  "per_sid": [
+    {
+      "sid": "trump_2026:0054",
+      "old": "gated-UNVERIFIABLE",
+      "new": "TRUE",
+      "category": "newly_decided",
+      "text": "More Americans are working today than at any time in the history of our country."
+    },
+    {
+      "sid": "trump_2026:0219",
+      "old": "TRUE",
+      "new": "TRUE",
+      "category": "unchanged",
+      "text": "The price of eggs is down 60 percent."
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "schema": "truthbot-wave-report v1",
+  "generated": "2026-08-14T01:24:09.280765+00:00",
+  "wave_date": "2026-08-09",
+  "rules": {
+    "utterance_record": true,
+    "statistical_release": true
+  },
+  "tag": "d17c-wave2",
+  "escape": {
+    "kind": "extra-sid escape",
+    "reason": "D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a)).",
+    "sids": [
+      "biden_2022:0169",
+      "trump_2026:0054",
+      "trump_2026:0219"
+    ],
+    "tag": "d17c-wave2",
+    "wave_set_widened": false,
+    "wave_set_size": 29,
+    "source_artifact": "current publishing head (post-wave, post-rulings)",
+    "note": "--extra-sids admits claims the flip set never released. It is for a publish-blocking defect outside the flip set; the wave's own claim set, report and diffs are untouched."
+  },
+  "claim_set": [
+    "biden_2022:0169",
+    "trump_2026:0054",
+    "trump_2026:0219"
+  ],
+  "reasons": {
+    "biden_2022:0169": "extra-sid escape: D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a)).",
+    "trump_2026:0054": "extra-sid escape: D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a)).",
+    "trump_2026:0219": "extra-sid escape: D17-c wave 2: series-row escalation. Stage A showed the excerpts move stances (control arm 0 flips); 0054 clears T2.4 only with the D17-c stance pass. Panel for the two reason-tension items, escalation for 0054. No computed exhibit (c-eval guard, ruling (a))."
+  },
+  "dropped": {},
+  "per_speech": [
+    {
+      "speech": "biden_2022",
+      "sids": [
+        "biden_2022:0169"
+      ],
+      "complete": true,
+      "rows_banked": 1,
+      "packs": [
+        {
+          "sid": "biden_2022:0169",
+          "speech": "biden_2022",
+          "claim_shape": "c-eval",
+          "stored_items": 10,
+          "pack_items": 10,
+          "gate_code": "",
+          "quota_met": true,
+          "scores_joined": 10,
+          "items_unscored": 0,
+          "credit": {
+            "pack_items": 10,
+            "independent": 4,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 4,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          }
+        }
+      ],
+      "journal": "/home/ccagent/truth-bot/metrics/journals/biden_2022_d17c-wave2.jsonl",
+      "new_run_id": "44009622-3916-47cd-8a6c-79448c300861",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/44009622-3916-47cd-8a6c-79448c300861.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/d17c-wave2_biden_2022_verdict_diff.json",
+      "counts": {
+        "unchanged": 1,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 0,
+        "newly_decided": 0,
+        "split_changes": 0,
+        "other": 0
+      }
+    },
+    {
+      "speech": "trump_2026",
+      "sids": [
+        "trump_2026:0054",
+        "trump_2026:0219"
+      ],
+      "complete": true,
+      "rows_banked": 2,
+      "packs": [
+        {
+          "sid": "trump_2026:0054",
+          "speech": "trump_2026",
+          "claim_shape": "c-eval",
+          "stored_items": 10,
+          "pack_items": 10,
+          "gate_code": "",
+          "quota_met": true,
+          "scores_joined": 10,
+          "items_unscored": 0,
+          "credit": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          }
+        },
+        {
+          "sid": "trump_2026:0219",
+          "speech": "trump_2026",
+          "claim_shape": "c-eval",
+          "stored_items": 10,
+          "pack_items": 10,
+          "gate_code": "",
+          "quota_met": true,
+          "scores_joined": 10,
+          "items_unscored": 0,
+          "credit": {
+            "pack_items": 10,
+            "independent": 3,
+            "corroborant": 0,
+            "primary": 0,
+            "credits": 3,
+            "min_required": 2,
+            "role_aware": true,
+            "era_mode": "strict",
+            "quota_met": true,
+            "agrees": true
+          }
+        }
+      ],
+      "journal": "/home/ccagent/truth-bot/metrics/journals/trump_2026_d17c-wave2.jsonl",
+      "new_run_id": "5d3d54f0-e3fd-4fd2-85d2-0e9b2215d61a",
+      "artifact": "/home/ccagent/truth-bot/metrics/pca_runs/5d3d54f0-e3fd-4fd2-85d2-0e9b2215d61a.json",
+      "diff": "/home/ccagent/truth-bot/metrics/remediation_v2/d17c-wave2_trump_2026_verdict_diff.json",
+      "counts": {
+        "unchanged": 1,
+        "decided_to_decided_changed": 0,
+        "newly_gated": 0,
+        "newly_decided": 1,
+        "split_changes": 0,
+        "other": 0
+      }
+    }
+  ],
+  "exhibit_decisions": {},
+  "halted": "",
+  "spend_usd": 0.3266,
+  "cap_usd": 0.42
+}
