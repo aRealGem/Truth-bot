@@ -126,6 +126,27 @@ Logged for owner-visible re-adjudication in D17-d.
 
 ---
 
+## 5a. Deferred to D17-d, with dependencies
+
+**Substantive-on-page — DEFERRED.** Feeding the triage classification back into
+the render, so a `substantive` claim reads as permanent abstention rather than
+as backlog, is D17-d work and is **not** authorised here. Its motivating case is
+`trump_2026:0153` ("I asked Michael Dell…"): a private conversation carrying the
+same structured gate code as an under-retrieved claim, because the gate knows
+the pack did not qualify and cannot know that nothing ever could. **Dependency:
+the owner must ratify the 35 `substantive` classifications first** — putting a
+"cannot be verified" label on the page is an editorial assertion, and it would
+be resting on this desk pass.
+
+**Not authorised, batched for the owner at D17-d scope:** the series-lane
+ceiling above $0.50; `trump_2026:0466` re-adjudication; triage-feeds-render
+(above).
+
+**Web-tier1 estimate — DONE, $0**, at
+`metrics/remediation_v2/d17d_webtier1_estimate.json`. Panel-payload floor
+**$1.0151** on 81 claims, with retrieval, re-retrieval and escalation left
+explicitly unpriced, plus a 3-claim calibration probe designed and not run.
+
 ## 6. What the owner is being asked to scope
 
 1. **Series lane (7 claims, $0.7623)** — smallest, fully understood, needs a

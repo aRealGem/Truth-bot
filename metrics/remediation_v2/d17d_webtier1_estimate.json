@@ -1,0 +1,89 @@
+{
+  "schema": "truthbot-d17d-webtier1-estimate v1",
+  "lane": "web-tier1",
+  "claims": 81,
+  "per_speech": {
+    "biden_2022": 17,
+    "clinton_1998": 13,
+    "gwbush_2006": 8,
+    "obama_2014": 14,
+    "trump_2026": 29
+  },
+  "measured": {
+    "pack_payload_chars_total": 202371,
+    "pack_payload_chars_mean": 2498.4,
+    "mean_stored_snippet_chars": 132.2,
+    "basis": "real bytes from the committed publishing heads"
+  },
+  "assumed": {
+    "added_chars_per_claim": 1513.0,
+    "projected_payload_chars_total": 324927.5,
+    "assumptions": [
+      {
+        "id": "A1",
+        "assumption": "A Tier-1..3 retrieval pass adds 6 new items to a pack.",
+        "basis": "The existing packs cap at 10 items and the gate wants >=2 bearing Tier-1..3. Six is the midpoint between 'enough to clear the quota' and 'fills the cap'.",
+        "sensitivity": "Linear. Halving it halves the added payload."
+      },
+      {
+        "id": "A2",
+        "assumption": "A retrieved item's snippet resembles the ones already stored — same connector, same truncation.",
+        "basis": "Measured: the mean stored snippet length across these packs.",
+        "sensitivity": "Low. Snippet length is tightly clustered in the corpus."
+      },
+      {
+        "id": "A3",
+        "assumption": "No series_rows are attached on this lane.",
+        "basis": "web-tier1 is defined as claims no series settles, so the D17-c excerpt path does not apply. This is what makes the lane cheaper per claim than the series lane.",
+        "sensitivity": "High if violated — series rows were 91.2% of the payload on the claims that carried them."
+      }
+    ],
+    "warning": "These are ASSUMPTIONS. They are recorded separately from the measured figures so the two cannot merge into 'the estimate'."
+  },
+  "indicative_panel_cost": {
+    "usd_per_kchar": 0.003124,
+    "projected_usd": 1.0151,
+    "status": "PARTIAL — panel payload only",
+    "note": "This prices the panel call on a projected payload. It does NOT price retrieval, re-retrieval or escalation (below), so it is a FLOOR and must never be quoted as the lane cost."
+  },
+  "unpriced_components": [
+    {
+      "component": "retrieval itself (search API / connector calls)",
+      "why": "Off-proxy and not on the LiteLLM ledger, so no measured constant covers it. The d17c lanes were all no-retrieval re-gates, which is exactly why their constants cannot be borrowed here."
+    },
+    {
+      "component": "re-retrieval on gate failure",
+      "why": "T2.4 allows ONE targeted re-retrieval before forcing Unverifiable. How often that fires on this class is unknown and could add a whole second pass to an unknown fraction."
+    },
+    {
+      "component": "panel escalation on split",
+      "why": "trump_2026:0462 needed three panel calls to break a persistent split. The rate is unmeasured on this class."
+    }
+  ],
+  "calibration_probe": {
+    "design": "n=3, chosen to span the class rather than to be cheap",
+    "why_three": "One claim cannot separate a class-wide rate from a claim-specific one, and the three sub-shapes below plausibly cost different amounts.",
+    "claims": [
+      {
+        "sid": "trump_2026:0659",
+        "shape": "valor citation",
+        "why": "Documented in a formal award citation. Tests the case where the right source is a single authoritative record."
+      },
+      {
+        "sid": "trump_2026:0090",
+        "shape": "institutional fact",
+        "why": "Olympic host-city decision — an institution's own public record. Tests the easiest retrieval shape."
+      },
+      {
+        "sid": "trump_2026:0405",
+        "shape": "press-documented individual",
+        "why": "A scholarship reported in press coverage. Tests the hardest shape: no single authoritative record, so the gate depends on assembling independent reporting."
+      }
+    ],
+    "cost_band_usd": null,
+    "cost_band_status": "UNMEASURED",
+    "cost_band_note": "Deliberately not quoted. Quoting a band for the probe would recreate the exact error the probe exists to correct — the probe IS the measurement. Expect it to be small (3 claims), but 'small' is not a number and must not be recorded as one.",
+    "authorization": "METERED. Waits for an owner click at D17-d scope. Not run here."
+  },
+  "bottom_line": "The web-tier1 lane cannot be honestly costed from what we have. The panel-payload floor is computable and is stated; the retrieval components that likely dominate it are not. Run the 3-claim probe and measure."
+}
