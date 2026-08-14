@@ -164,14 +164,35 @@ def test_panel_chip_decomposes_abstentions_and_sums_to_claim_count() -> None:
         _bundle(consensus_verdict="Models split", gate=""),
     ]
     html = _verdict_panel(_site_report(bundles))
+    # D17-d: what used to fall into "unverifiable — other" is now named. The
+    # gate-failed bundle is a WITHHELD verdict, not an undecidable claim, and
+    # the chip says which. Terms still sum to claim_count.
     assert ("2 decided · 1 unverified — self-sourced only · "
-            "1 unverifiable — other · 1 models split") in html
+            "1 insufficient qualifying evidence retrieved · "
+            "1 models split") in html
 
 
-def test_panel_chip_absent_when_no_self_sourced_claims() -> None:
+def test_panel_chip_appears_for_gate_withheld_alone() -> None:
+    """D17-d: the chip is no longer self-sourced-only.
+
+    It used to be absent unless a self-sourced claim existed — so a report
+    whose abstentions were ALL gate-withheld decomposed nothing and published a
+    bare Unverifiable count, which is the exact reading this split exists to
+    fix."""
     bundles = [_bundle(VerdictLabel.TRUE, gate=""), _bundle(sources=[])]
     html = _verdict_panel(_site_report(bundles))
-    assert "vp-selfsource-chip" not in html
+    assert "vp-selfsource-chip" in html
+    assert "1 insufficient qualifying evidence retrieved" in html
+
+
+def test_the_chip_tooltip_describes_the_substates_it_shows() -> None:
+    """A chip listing only gate-withheld counts must not explain itself with
+    "every source bearing on this claim is the speaker's own organization"."""
+    from truthbot.publish.site import GATE_WITHHELD_TITLE, SELF_SOURCED_TITLE
+    html = _verdict_panel(_site_report(
+        [_bundle(VerdictLabel.TRUE, gate=""), _bundle(sources=[])]))
+    assert GATE_WITHHELD_TITLE.split(".")[0] in html
+    assert SELF_SOURCED_TITLE.split(".")[0] not in html
 
 
 # ── claims.json export ────────────────────────────────────────────────────────
