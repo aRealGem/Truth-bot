@@ -1601,7 +1601,8 @@ def _verdict_panel(site_report) -> str:
         anecdote_note_html = (
             '<p class="vp-anecdote-note" style="font-size:0.85rem;color:var(--ink-muted)">'
             f'{n_anec_uv} of the {uv_bucket} Unverifiable {unit} {verb}{split_clause} — '
-            'private individuals\' stories with no independent public record to check.</p>\n'
+            'personal stories about individuals, which the evidence gate did '
+            'not admit enough qualifying sources to rate.</p>\n'
         )
 
     # Honest-abstention chip (PR-A2.1 / T1.2): decompose the abstentions so an
@@ -2410,10 +2411,20 @@ def _pca_seat_line(prov, roster: Optional[dict] = None) -> str:
 #: own pill instead of the same Unverifiable used for data claims the evidence
 #: couldn't settle (2026-07-20, jackie review).
 ANECDOTE_PILL = "Anecdote"
+#: The copy asserts only what the classifier actually established: that this is
+#: a personal story told about an individual. It used to add "No independent
+#: public record exists to check it against", which is a claim about
+#: RETRIEVABILITY that nothing in the pipeline had checked — and the D17-d
+#: triage contradicts it on 21 trump claims alone, where the story is a valor
+#: citation, a reported crash or a court record. A Purple Heart citation is an
+#: independent public record. Saying otherwise told the reader a checkable fact
+#: was uncheckable.
 ANECDOTE_TITLE = (
-    "Guest anecdote — a private individual's personal story. No independent "
-    "public record exists to check it against, so truth-bot does not rate it. "
-    "This is a limit of the genre, not a failed verification."
+    "Guest anecdote — a personal story told about an individual. truth-bot "
+    "does not rate it here: the evidence gate did not admit enough qualifying "
+    "sources bearing on it. Some stories of this kind are documented in public "
+    "records and simply have not been checked yet; others are private by "
+    "nature and never will be."
 )
 
 
