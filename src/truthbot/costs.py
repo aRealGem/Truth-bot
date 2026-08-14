@@ -191,6 +191,71 @@ PER_CLAIM_USD_PLANNING: tuple[float, float] = (0.065, 0.080)
 #: no-retrieval floor beneath it.
 PACK_REUSE_USD_MEASURED: tuple[float, float] = (0.0036, 0.0132)
 
+# ── payload schema versioning (D17-c wave 2) ─────────────────────────────────
+#
+# A per-claim cost constant is only meaningful for the PAYLOAD SHAPE it was
+# measured under. PACK_REUSE_USD_MEASURED was measured on packs whose items
+# carried {id, source, tier, url, snippet}. D17-c added ``series_rows``, and on
+# the escalation run those rows were 91.2% of the panel payload — an 11.3x
+# inflation, and 31x on trump_2026:0054 alone (2,986 -> 93,740 characters).
+# Priced with the old constant, the run came in 8.2x over: $0.3266 against
+# $0.0396. The constant did not drift; it was applied to a payload it never
+# measured.
+#
+# So a constant now NAMES the schema it was measured under, and pricing REFUSES
+# on a mismatch rather than warning. A warning would have been ignored at 21:00
+# exactly as a warning always is.
+
+#: Payload shape the pack-reuse constants were measured against.
+PAYLOAD_SCHEMA_PACK_V2 = "pack-item-payload v2 (no series_rows)"
+
+#: Payload shape once D17-c series excerpts ride on the items.
+PAYLOAD_SCHEMA_SERIES_V1 = "pack-item-payload v3 (series_rows)"
+
+#: MEASURED on the d17c-wave2 escape run: $0.3266 of ledger spend over 3 claims
+#: and 104,547 payload characters. Ledger-derived, not a chars/4 estimate.
+SERIES_PAYLOAD_USD_PER_CLAIM: float = 0.1089
+SERIES_PAYLOAD_USD_PER_KCHAR: float = 0.003124
+
+#: Which constant is valid for which payload shape.
+_SCHEMA_OF_CONSTANT = {
+    "PACK_REUSE_USD_MEASURED": PAYLOAD_SCHEMA_PACK_V2,
+    "PER_CLAIM_USD_MEASURED": PAYLOAD_SCHEMA_PACK_V2,
+    "SERIES_PAYLOAD_USD_PER_CLAIM": PAYLOAD_SCHEMA_SERIES_V1,
+    "SERIES_PAYLOAD_USD_PER_KCHAR": PAYLOAD_SCHEMA_SERIES_V1,
+}
+
+
+class PayloadSchemaMismatch(ValueError):
+    """A cost constant was applied to a payload shape it never measured."""
+
+
+def payload_schema_for(items) -> str:
+    """The schema of a pack payload, read from the payload itself."""
+    for it in items or []:
+        if isinstance(it, dict) and it.get("series_rows"):
+            return PAYLOAD_SCHEMA_SERIES_V1
+    return PAYLOAD_SCHEMA_PACK_V2
+
+
+def check_constant_applies(constant_name: str, items) -> None:
+    """Refuse — never warn — when a constant does not match the payload.
+
+    This is the guard that would have caught the 8.2x miss before it was spent
+    rather than after: PACK_REUSE_USD_MEASURED against a payload carrying
+    series_rows is a category error, and the price of missing it is real money.
+    """
+    want = _SCHEMA_OF_CONSTANT.get(constant_name)
+    if want is None:
+        raise PayloadSchemaMismatch(
+            f"{constant_name} declares no payload schema — a constant that "
+            "cannot name what it measured is a proxy, not a measurement")
+    got = payload_schema_for(items)
+    if want != got:
+        raise PayloadSchemaMismatch(
+            f"{constant_name} was measured under {want!r} but this payload is "
+            f"{got!r}. Re-measure before pricing; do not scale the old number.")
+
 
 # ── rates ────────────────────────────────────────────────────────────────────
 
