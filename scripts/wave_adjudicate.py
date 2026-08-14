@@ -81,6 +81,7 @@ import argparse
 import json
 import sys
 import time
+import uuid
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -421,22 +422,13 @@ def _series_rows_index() -> dict:
     """
     if not GOLDENS_PATH.exists():
         return {}
-    doc = json.loads(GOLDENS_PATH.read_text(encoding="utf-8"))
-    index: dict = {}
-    for g in doc.get("goldens") or []:
-        if g.get("role") != "wave1":
-            continue
-        sid, eid = g["claim_sid"], g["evidence_id"]
-        rows = dict(g)
-        if (sid, eid) in SERIES_PERIOD_MISMATCH:
-            rows["window_period_mismatch"] = True
-            rows["window_period_mismatch_note"] = (
-                "This window does not reach the period the claim compares "
-                "against. The claim's reference point is named rather than "
-                "dated, so the selection rules did not extend the window to "
-                "cover it. Shown for transparency; it cannot settle the claim.")
-        index[(sid, g["full_table"])] = rows
-    return index
+    from mint_d17c_successors import series_index
+    # Resolved against the shipped head via the golden's E-number, NOT via the
+    # golden's ``full_table``: those differ (obama_2014:0189 is stored at
+    # ``fred.stlouisfed.org/data/cpiaucsl``, while full_table is
+    # ``/series/CPIAUCSL``), and keying on full_table silently dropped that
+    # excerpt — the one carrying the period-mismatch warning.
+    return series_index()
 
 
 def attach_series_rows(sid: str, items: list) -> list:
@@ -650,6 +642,27 @@ def merge_wave_evidence(source_art: dict, packs: dict) -> dict:
     return out
 
 
+#: Namespace for derived successor ids. Fixed forever: changing it would make
+#: every previously derived id irreproducible, which is the whole property.
+SUCCESSOR_NAMESPACE = uuid.UUID("6f9619ff-8b86-d011-b42d-00c04fc964ff")
+
+
+def successor_run_id(rebuild_of: str, tag: str, sids) -> str:
+    """A run id DERIVED from (parent, tag, claim set) rather than minted fresh.
+
+    A ``uuid4`` here means an identical re-mint produces a different id, so any
+    record that already cites the old one — a committed verdict diff, a report,
+    a manifest row — ends up pointing at an artifact that never existed. That
+    is not hypothetical: it is exactly what the first D17-c wave-2 mint did.
+
+    Same argument as stable claim ids: an identifier for a thing that is a pure
+    function of its inputs should be a pure function of those inputs. ``uuid5``
+    keeps the UUID shape, so nothing downstream needs to know it is derived.
+    """
+    basis = "\n".join([rebuild_of or "", tag or "", *sorted(sids or [])])
+    return str(uuid.uuid5(SUCCESSOR_NAMESPACE, basis))
+
+
 def write_wave_artifact(source_art: dict, wave_rows: list[dict], packs: dict,
                         roster_note: dict, *, speech_id: str,
                         wave_sids: list[str], reasons: dict,
@@ -675,9 +688,8 @@ def write_wave_artifact(source_art: dict, wave_rows: list[dict], packs: dict,
     held nothing worth carrying; an escape run builds on the publishing head,
     whose meta records the rulings that landed after the wave — dropping that
     would leave the newest artifact the least documented one."""
-    import uuid
-
-    run_id = run_id or str(uuid.uuid4())
+    run_id = run_id or successor_run_id(
+        source_art.get("run_id", ""), remediation, wave_sids)
     out_dir = Path(out_dir) if out_dir is not None else REPO / "metrics" / "pca_runs"
     old_meta = source_art.get("meta") or {}
     meta = dict(old_meta) if inherit_meta else {}
