@@ -368,14 +368,26 @@ def test_the_lock_check_actually_fails_when_an_ancestor_is_mutated(tmp_path):
 # ── 1B: verdict movement — scoped to the run's declared set ─────────────────
 
 def _declared_sids(meta: dict) -> set:
-    """The sids a run DECLARED it would adjudicate.
+    """The sids THIS RUN adjudicated — not the union with what it inherited.
 
-    Empty for a score-propagation merge, which declares nothing and may
-    therefore move nothing."""
-    out = set()
-    for block in ("wave", "escape_run"):
-        out |= set((meta.get(block) or {}).get("sids_adjudicated") or [])
-    return out
+    ``sids_adjudicated`` has to mean adjudicated. An escape run inherits its
+    parent's meta (``inherit_meta=bool(escape)``), so it carries the PARENT's
+    ``wave`` block alongside its own ``escape_run`` block. Taking the union made
+    the declared set the escape's 2 sids plus the wave's 15, which would have
+    let fifteen claims the escape run never touched move unflagged.
+
+    A wave run writes fresh meta and so cannot carry an inherited
+    ``escape_run``; an escape run always writes its own. So the presence of
+    ``escape_run`` identifies the run's own kind, and its block is the
+    declaration. A merge that is neither declares nothing and may move nothing.
+    """
+    if meta.get("escape_run"):
+        block = meta["escape_run"]
+    elif meta.get("wave"):
+        block = meta["wave"]
+    else:
+        return set()
+    return set(block.get("sids_adjudicated") or [])
 
 
 def test_verdicts_move_only_for_sids_the_run_declared(pr, heads):
@@ -409,6 +421,50 @@ def test_a_merge_that_declares_nothing_may_move_nothing():
     set means the scoped guard collapses back to the absolute one."""
     assert _declared_sids({}) == set()
     assert _declared_sids({"score_propagation": {"date": "x"}}) == set()
+
+
+def test_an_escape_run_does_not_inherit_its_parents_wave_declaration():
+    """The tightening, stated directly.
+
+    An escape run carries the parent's ``wave`` block because it inherits meta.
+    Its declaration is its OWN escape block; the inherited one belongs to a run
+    that already happened."""
+    meta = {
+        "escape_run": {"sids_adjudicated": ["trump_2026:0054", "trump_2026:0219"]},
+        "wave": {"sids_adjudicated": ["trump_2026:0294", "trump_2026:0428"]},
+    }
+    declared = _declared_sids(meta)
+    assert declared == {"trump_2026:0054", "trump_2026:0219"}
+    assert "trump_2026:0294" not in declared, (
+        "an inherited wave sid is not this run's declaration — under the union "
+        "it could have moved unflagged")
+
+
+def test_an_escape_run_moving_a_parent_wave_sid_is_caught(pr):
+    """Required by the ruling: the tightened guard must FAIL when an escape run
+    moves a sid that only the INHERITED wave block declared.
+
+    Under the union this passed silently, which is the whole reason for the
+    tightening — so it is proved here rather than argued."""
+    parent = {"rows": [{"sid": "trump_2026:0054", "verdict": "UNVERIFIABLE"},
+                       {"sid": "trump_2026:0294", "verdict": "TRUE"}]}
+    child = {
+        "meta": {
+            "rebuild_of": "parent",
+            # this run's own declaration: 0054 only
+            "escape_run": {"sids_adjudicated": ["trump_2026:0054"]},
+            # inherited from the parent's wave — NOT this run's to move
+            "wave": {"sids_adjudicated": ["trump_2026:0294"]},
+        },
+        "rows": [{"sid": "trump_2026:0054", "verdict": "TRUE"},
+                 {"sid": "trump_2026:0294", "verdict": "FALSE"}],  # undeclared
+    }
+    declared = _declared_sids(child["meta"])
+    cm, pm = pr.verdict_map(child), pr.verdict_map(parent)
+    moved = {sid for sid in set(cm) | set(pm) if cm.get(sid) != pm.get(sid)}
+    undeclared = moved - declared
+    assert undeclared == {"trump_2026:0294"}, (
+        "the tightened guard must catch a move the run never declared")
 
 
 def test_four_of_the_five_heads_now_pass_the_publish_gate(heads):
