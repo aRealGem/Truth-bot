@@ -342,6 +342,33 @@ claimed 60%". Both carry `arithmetic_hinge=True`, so the B2 contract already
 treats them as hypotheses for the panel rather than proof — the flag names the
 specific tension so no Stage B reads them as settled.
 
+**HALT (2026-08-13): the 0054 computed exhibit cannot attach — `c-eval`.**
+Wave 2's escalation lane specified a computed exhibit for `trump_2026:0054`,
+`max(CE16OV @ 2026-02-24) = 164,520 @ 2026-01`. The exhibit is built and
+verified at `metrics/computed_exhibits/ce16ov_record_high_2026_01.json`:
+well-formed, admissible on `c-count`, and **refused on `c-eval`** by
+`computed_exhibit.attach` — *"arithmetic cannot settle an evaluative claim"*.
+
+`trump_2026:0054` carries `claim_shape=c-eval`. So does `trump_2026:0219`. The
+guard lives at the single write point deliberately, "so an exhibit can never
+reach a C-EVAL page by some other route", and this record already ratified the
+principle on `trump_2026:0030`: under R-2 an evaluative claim "may carry **no
+exhibit at all**, and that is the right call about what can DECIDE it."
+
+The established remedy is a deliberate shape correction, as `R-1` did for
+`trump_2026:0031` (`scripts/reshape_rerun_0031.py`) — justified there because
+the sentence had *no superlative, no causal attribution, no comparison to
+another entity or era*. **0054 fails that test**: "than at any time in the
+history of our country" is a superlative on its face, so the 0031 reasoning
+does not transfer. `trump_2026:0219` — "The price of eggs is down 60 percent" —
+arguably *does* pass it, which makes it a candidate for the same correction,
+but a shape correction is an owner-visible act and not a thing to infer.
+
+Metered work halted before spending. The `series_rows` path is unaffected and
+is a different mechanism: showing a panel the source's own observations is not
+the same as asserting a computed result that settles the claim, and only the
+latter is what the guard forbids.
+
 **CLARIFICATION (2026-08-13): wave-2 flips land as successor artifacts, not as
 pack mutations.** An earlier wave-2 instruction read "packs change only per the
 flip lanes", which could be taken as authorising in-place rewrites of stored

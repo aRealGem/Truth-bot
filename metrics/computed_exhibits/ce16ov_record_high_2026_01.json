@@ -1,0 +1,17 @@
+{
+  "claim_ref": "trump_2026:0054",
+  "formula": "max(CE16OV) over the full eligible history at this vintage",
+  "inputs": {
+    "2025-12-01": 163992.0,
+    "2026-01-01": 164520.0
+  },
+  "note": "The maximum IS the latest observation, so the claim's \"than at any time in the history of our country\" is checkable directly: 164,520 at 2026-01-01 exceeds the prior high of 163,992 at 2025-12-01 by 528 thousand. Vintage-pinned; a later vintage may revise both levels.",
+  "result": 164520.0,
+  "rows_considered": 936,
+  "schema": "truthbot-computed-exhibit v1",
+  "series": "CE16OV",
+  "source": "ALFRED",
+  "source_url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=CE16OV&vintage_date=2026-02-24",
+  "vintage_date": "2026-02-24",
+  "window": "1948-01-01 .. 2026-01-01"
+}

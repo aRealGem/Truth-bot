@@ -136,6 +136,17 @@ class PackItem:
         # may inform context but must not decide the verdict.
         if self.era_note:
             payload["era_note"] = self.era_note
+        # D17-c series excerpt (wave 2): the actual observations, so a seat can
+        # do the arithmetic instead of taking a snippet's word for it. Omitted
+        # when unset, so every non-series pack carries the exact prior payload.
+        #
+        # The window's own limits ride WITH the rows — rows_shown of
+        # total_rows_in_full_table, the predicate that chose them, and the
+        # mismatch flag where the window does not reach the claim's period. A
+        # seat handed 25 rows and not told 779 were withheld is being invited
+        # to over-read them.
+        if self.series_rows:
+            payload["series_rows"] = self.series_rows
         return payload
 
 
