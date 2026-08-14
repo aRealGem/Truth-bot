@@ -144,7 +144,12 @@ def packs_from_evidence_dict(evidence_by_sid: dict,
                 supports_claim=ev.supports_claim,
                 relevance_score=ev.relevance_score,
                 published_at=(ev.published_at.date().isoformat()
-                              if ev.published_at else None)))
+                              if ev.published_at else None),
+                # D17-c: carry the series excerpt, as the other reconstruction
+                # paths do. THREE places build a PackItem from an Evidence; a
+                # field added to one and not the others is a field that appears
+                # on some pages and not others.
+                series_rows=getattr(ev, "series_rows", None)))
         packs[sid] = EvidencePack(sid=sid, window=None, items=items,
                                   gate_code=gate_codes.get(sid, ""))
     return packs

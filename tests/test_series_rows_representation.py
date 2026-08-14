@@ -149,3 +149,62 @@ def test_rows_reach_the_real_pack_renderer() -> None:
         anchor_base="ev-obama_2014-0189")
     assert "series-rows" in html
     assert "25 of 804 rows" in html
+
+
+# ── the round trip: artifact -> pack -> page ────────────────────────────────
+#
+# The bug this section exists for: series_rows reached the STORED artifact and
+# then vanished at render, so the feature was invisible on the published page
+# while every other test passed. Three separate places build a PackItem from an
+# Evidence, and the field had been added to none of them. A field is not
+# "carried" because the model has it — it is carried because every
+# reconstruction on the path copies it.
+
+def _round_trip_pack(evidence_dicts):
+    """Artifact evidence dicts -> EvidencePack, via the RENDER path."""
+    import sys
+    from pathlib import Path
+    repo = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(repo))
+    from scripts.rerender_pca_site import pack_from_evidence
+    return pack_from_evidence("s:1", evidence_dicts)
+
+
+def test_series_rows_survive_the_artifact_to_page_round_trip() -> None:
+    """Stored evidence -> pack -> sources_consulted -> rendered HTML."""
+    from truthbot.verdict.bridge import _pack_sources
+
+    stored = [{"claim_id": "s:1", "source_name": "FRED",
+               "source_url": "https://fred.stlouisfed.org/series/CPIAUCSL",
+               "source_tier": "Government", "snippet": "…",
+               "retrieved_at": "2026-01-01T00:00:00",
+               "series_rows": ROWS}]
+    pack = _round_trip_pack(stored)
+    assert pack.items[0].series_rows, "lost between artifact and PackItem"
+
+    srcs = _pack_sources(pack)
+    assert srcs[0].get("series_rows"), "lost between PackItem and the renderer"
+
+    html = _sources_consulted_html(srcs, anchor_base="ev-s-1")
+    assert "series-rows" in html, "lost between the renderer and the page"
+    assert "25 of 804 rows" in html
+
+
+def test_every_packitem_reconstruction_carries_series_rows() -> None:
+    """All THREE paths, named, so adding a fourth that forgets is caught here.
+
+    They exist because different callers rebuild packs differently; the field
+    has to survive all of them or it appears on some pages and not others."""
+    from truthbot.verdict.publish_pipeline import packs_from_evidence_dict
+
+    stored = {"s:1": [{"claim_id": "s:1", "source_name": "FRED",
+                       "source_url": "https://fred.stlouisfed.org/series/X",
+                       "source_tier": "Government", "snippet": "…",
+                       "retrieved_at": "2026-01-01T00:00:00",
+                       "series_rows": ROWS}]}
+    # path 1: the renderer's own reconstruction
+    assert _round_trip_pack(stored["s:1"]).items[0].series_rows
+    # path 2: the shared publish-pipeline decode
+    assert packs_from_evidence_dict(stored)["s:1"].items[0].series_rows
+    # path 3: citation -> pack item is covered by the wave/adjudication tests,
+    # which build through pack_item_from_citation.

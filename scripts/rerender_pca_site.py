@@ -78,6 +78,11 @@ def pack_from_evidence(sid: str, evs: list[dict]) -> EvidencePack:
             # pre-fix artifacts carry null here (date lives in the snippet).
             published_at=(str(ev.get("published_at"))[:10]
                           if ev.get("published_at") else None),
+            # D17-c: the series excerpt round-trips through the artifact so the
+            # rendered page can show the observations the panel reasoned over.
+            # Dropped here, the rows reach the stored evidence and then vanish
+            # at render — which is exactly what they did until this line.
+            series_rows=ev.get("series_rows"),
         ))
     return EvidencePack(sid=sid, window=None, items=items)
 
