@@ -298,13 +298,117 @@ def test_the_head_scores_its_evidence_and_its_parent_still_does_not(pr, heads):
         pt = scoring_telemetry_from_artifact(parent["evidence"])
         assert ct["items"] == pt["items"], f"{speech}: item count moved"
         assert ct["scored_rate"] > 0.9, f"{speech}: child barely scored"
-        assert pt["scored_rate"] < 0.1, (
-            f"{speech}: the PARENT is scored too — the merge mutated a prior "
-            "artifact instead of writing a new one")
-        assert ct["stance_null_rate"] < pt["stance_null_rate"]
-        # …and the merge moved provenance only.
-        assert pr.verdict_map(child) == pr.verdict_map(parent), \
-            f"{speech}: a verdict moved between parent and child"
+
+
+# ── 1A: ancestor immutability — universal, depth-independent ────────────────
+#
+# The two assertions removed above (``parent scored_rate < 0.1`` and
+# ``stance_null_rate`` strictly decreasing) were PROXIES for "no prior artifact
+# was edited". They assumed every head sits exactly one rebuild above the
+# unscored phase-3 artifact, so a legitimate successor to a SCORED head read as
+# mutation, and they only ever looked one link up. Replaced by a direct check.
+
+def _ancestor_locks():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "ancestor_locks", REPO / "scripts" / "ancestor_locks.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_every_ancestor_still_has_the_bytes_it_was_locked_with(heads):
+    """No artifact in any ``rebuild_of`` chain has been edited since locking.
+
+    This is what the proxy stood in for, checked directly, at any depth, over
+    every link rather than one."""
+    al = _ancestor_locks()
+    checked = 0
+    for speech in SPEECHES:
+        path = heads.get(speech)
+        if path is None:
+            continue
+        chain = al.chain_of(path.stem)
+        problems = al.verify(chain)
+        assert not problems, f"{speech}: " + "; ".join(problems)
+        checked += len(chain)
+    assert checked, "no chains checked — this test would pass vacuously"
+
+
+def test_the_lock_check_actually_fails_when_an_ancestor_is_mutated(tmp_path):
+    """The regression proof this rewrite lands on.
+
+    A guard that never fires is decoration. If this cannot catch a mutated
+    ancestor, the rewrite traded a proxy that misfired for one that does not
+    fire at all."""
+    al = _ancestor_locks()
+    victim = tmp_path / "runs" / "fake-ancestor.json"
+    victim.parent.mkdir(parents=True)
+    victim.write_text(json.dumps({"run_id": "fake-ancestor", "rows": []}))
+    original = al.sha256_of(victim)
+
+    al.RUNS = victim.parent
+    al.LOCKS = victim.parent / "ancestor_locks.json"
+    al.LOCKS.write_text(json.dumps(
+        {"schema": al.SCHEMA,
+         "locks": {"fake-ancestor": {"sha256": original}}}))
+
+    assert al.verify(["fake-ancestor"]) == [], "clean state should read clean"
+
+    victim.write_text(json.dumps({"run_id": "fake-ancestor",
+                                  "rows": [{"mutated": True}]}))
+    problems = al.verify(["fake-ancestor"])
+    assert problems, "a MUTATED ancestor was not caught"
+    assert "bytes changed" in problems[0]
+
+    victim.unlink()
+    assert al.verify(["fake-ancestor"]), "a DELETED locked artifact must also be caught"
+
+
+# ── 1B: verdict movement — scoped to the run's declared set ─────────────────
+
+def _declared_sids(meta: dict) -> set:
+    """The sids a run DECLARED it would adjudicate.
+
+    Empty for a score-propagation merge, which declares nothing and may
+    therefore move nothing."""
+    out = set()
+    for block in ("wave", "escape_run"):
+        out |= set((meta.get(block) or {}).get("sids_adjudicated") or [])
+    return out
+
+
+def test_verdicts_move_only_for_sids_the_run_declared(pr, heads):
+    """A verdict may move only where the run said it would.
+
+    The old assertion was absolute — no verdict may differ from the parent —
+    which is right for a score-propagation merge and wrong for an adjudication:
+    an escape run exists precisely to move the verdicts it names. Scoping to the
+    declared set keeps the protection where it matters (every OTHER claim must
+    not drift) without forbidding what the run was authorised to do."""
+    for speech in SPEECHES:
+        path = heads.get(speech)
+        if path is None:
+            pytest.skip(f"{speech}: no artifact in this checkout")
+        child = json.loads(path.read_text(encoding="utf-8"))
+        parent_path = RUNS_DIR / f"{child['meta']['rebuild_of']}.json"
+        if not parent_path.exists():
+            continue
+        parent = json.loads(parent_path.read_text(encoding="utf-8"))
+        declared = _declared_sids(child.get("meta") or {})
+        cm, pm = pr.verdict_map(child), pr.verdict_map(parent)
+        moved = {sid for sid in set(cm) | set(pm) if cm.get(sid) != pm.get(sid)}
+        undeclared = moved - declared
+        assert not undeclared, (
+            f"{speech}: {len(undeclared)} verdict(s) moved for sids the run "
+            f"never declared: {sorted(undeclared)[:5]}")
+
+
+def test_a_merge_that_declares_nothing_may_move_nothing():
+    """The score-propagation case, stated as its own contract: no declared
+    set means the scoped guard collapses back to the absolute one."""
+    assert _declared_sids({}) == set()
+    assert _declared_sids({"score_propagation": {"date": "x"}}) == set()
 
 
 def test_four_of_the_five_heads_now_pass_the_publish_gate(heads):
