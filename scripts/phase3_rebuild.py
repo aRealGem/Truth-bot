@@ -311,6 +311,43 @@ def pending_claims(claims: list[dict], done_rows: list[dict]) -> list[dict]:
     return [c for c in claims if c["sid"] not in done_sids]
 
 
+class UnknownSid(ValueError):
+    """--sids named a claim this speech does not contain."""
+
+
+def select_claims(claims: list[dict], sids: Optional[list[str]] = None,
+                  limit: int = 0) -> list[dict]:
+    """Narrow the run to a named claim set, a head slice, or both.
+
+    ``--sids`` exists because the retrieval lanes were speech-scoped, and a
+    speech is not a unit anybody can price: the D17-d web-tier1 backlog is 81
+    claims spread across five speeches, so buying it whole-speech means buying
+    hundreds of claims nobody asked for. A named set is the unit an owner can
+    actually authorise.
+
+    REFUSES an unknown sid rather than silently retrieving nothing, mirroring
+    ``wave_adjudicate.wave_set``: a claim that wanders in by hand is a claim
+    nobody costed, and a typo that quietly returns an empty set looks exactly
+    like a lane with no work in it.
+
+    Order is sids-then-limit, so ``--limit`` stays usable as a belt on a
+    named set. Claim order follows the ARTIFACT, not the order sids were
+    typed, so two runs of the same set chunk identically and resume cleanly.
+    """
+    if sids:
+        wanted = list(dict.fromkeys(sids))          # de-dup, keep first seen
+        have = {c["sid"] for c in claims}
+        missing = [s for s in wanted if s not in have]
+        if missing:
+            raise UnknownSid(
+                f"not in this speech's artifact: {', '.join(missing)}")
+        keep = set(wanted)
+        claims = [c for c in claims if c["sid"] in keep]
+    if limit:
+        claims = claims[:limit]
+    return claims
+
+
 def make_pack_builder(*, build_pack: Callable[[str, str, str], object],
                       cap: float, start_spend: float,
                       offproxy_est: Callable[[], float] = lambda: 0.0,
@@ -466,8 +503,10 @@ def run_rebuild(args) -> None:
     art = load_artifact(speech)
     claims = [{"sid": c["sid"], "text": c["text"],
                "context": c.get("context", "")} for c in art["claims"]]
-    if args.limit:
-        claims = claims[:args.limit]
+    try:
+        claims = select_claims(claims, getattr(args, "sids", None), args.limit)
+    except UnknownSid as exc:
+        sys.exit(f"--sids: {exc}")
     chunk_journal, packs_journal = journal_paths(speech)
 
     # Resume: sids already banked in the chunk journal are never re-run.
@@ -655,6 +694,13 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=0,
                     help="first N claims only (smoke slice; artifact is NOT "
                          "written until the full speech is banked)")
+    ap.add_argument("--sids", nargs="+", default=None, metavar="SID",
+                    help="retrieve ONLY these claim sids (e.g. "
+                         "trump_2026:0659). REFUSES a sid this speech does "
+                         "not contain. Like --limit this is a partial run, so "
+                         "no artifact is written — results bank in the "
+                         "journals. This is the unit an owner can price: a "
+                         "named set, not a whole speech")
     ap.add_argument("--shapes-sidecar", default=None, metavar="PATH",
                     help="shapes_backfill_<speech>.json from "
                          "scripts/backfill_claim_shapes.py — fills claim "
@@ -704,6 +750,36 @@ def main() -> None:
           f"(run {art.get('run_id', '?')[:8]})")
     print(f"  claims: {n_claims} (identity preserved verbatim)"
           + (f"; --limit slice: first {args.limit}" if args.limit else ""))
+    if args.sids:
+        try:
+            selected = select_claims(
+                [{"sid": c["sid"], "text": c.get("text", ""),
+                  "context": c.get("context", "")} for c in art["claims"]],
+                args.sids, args.limit)
+        except UnknownSid as exc:
+            sys.exit(f"--sids: {exc}")
+        print(f"  --sids slice: {len(selected)} of {n_claims} claims "
+              "(PARTIAL run — no artifact will be written)")
+        for c in selected:
+            print(f"      {c['sid']}  {c['text'][:64]}")
+        # The footgun: this script sources the PHASE-3 artifact, which for the
+        # five published speeches predates the wave. A sid can be decided here
+        # and gate-withheld on the publishing head (trump_2026:0659 is TRUE
+        # here, gate-withheld there). Rebuilding it would resurrect a
+        # superseded verdict and discard every ruling that landed since.
+        banked = {r.get("sid") for r in done_rows}
+        prebanked = [c["sid"] for c in selected if c["sid"] in banked]
+        print("  ! --sids sources the PHASE-3 artifact, NOT the publishing "
+              "head.")
+        print("    For D17-d backlog work use a publishing-head runner; "
+              "rebuilding a")
+        print("    post-wave claim from here discards the rulings that landed "
+              "in between.")
+        if prebanked:
+            print(f"    ! {len(prebanked)}/{len(selected)} selected sids are "
+                  "ALREADY BANKED in the chunk journal and would be skipped:")
+            print(f"      {', '.join(prebanked)}")
+            print("      (a --go here would retrieve nothing and exit clean)")
     print(f"  claim shapes registered: {n_shapes}/{n_claims} "
           f"({n_from_sidecar} from sidecar)"
           + ("" if n_shapes else " (pre-role-axis artifact — legacy quota; "
