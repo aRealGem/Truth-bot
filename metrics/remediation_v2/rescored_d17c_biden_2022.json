@@ -1,0 +1,144 @@
+{
+  "generated": "",
+  "model": "claude-haiku (D17-c Stage A, series-row augmented)",
+  "provenance": {
+    "census": "metrics/remediation_v2/d17c_stage0/stage_a_census.json",
+    "evidence_identical_verified": true,
+    "joins_against_rebuilt_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+    "measured_on_publishing_head": "ddb05ee3-7d9c-4b2c-beaf-e197b9354379",
+    "note": "stances measured with D17-c series excerpts in the scoring payload; control arm produced 0 flips, so these are excerpt-attributable",
+    "selector_run_sha256": "9f1c9a6d975ada4fe4e70170215da9d6796010ac49a1260c1265496c9ce9020c"
+  },
+  "schema": "truthbot-rescore-sidecar v1",
+  "sids": {
+    "biden_2022:0169": [
+      {
+        "one_line_why": "Cites the BLS Employment Situation report for Dec 2021 but does not state the actual figure.",
+        "relevance_score": 0.5,
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Official BLS data shows manufacturing employment at 12.559M in Jan 2022 vs 12.190M in Dec 2020, a gain of 369,000\u2014exactly matching the claim.",
+        "relevance_score": 1.0,
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02042022.htm",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "References BLS CES highlights for Dec 2021 over-the-year gains but does not state the specific figure.",
+        "relevance_score": 0.5,
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2021/current-employment-statistics-highlights-12-2021.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "BLS Monthly Labor Review states manufacturing employment grew by 365,000 in 2021, contradicting the claim of 369,000.",
+        "relevance_score": 1.0,
+        "source_url": "https://www.bls.gov/opub/mlr/2022/article/employment-recovery-continues-in-2021.htm",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Indicates the BLS CES series is available for computation but does not itself state the figure.",
+        "relevance_score": 0.5,
+        "source_url": "https://data.bls.gov/timeseries/CES3000000001",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Provides a pre-benchmark manufacturing level but does not state the year-over-year or calendar-year change.",
+        "relevance_score": 0.5,
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_01072022.htm",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Primary FRED/BLS data series MANEMP shows Dec 2020 at 12,190 thousand and Dec 2021 at 12,546 thousand, a gain of 356,000\u2014not 369,000.",
+        "relevance_score": 1.0,
+        "source_url": "https://fred.stlouisfed.org/series/MANEMP",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "BLS CES highlights state 12.559M in Jan 2022 and 12.190M in Dec 2020, implying a gain of 369,000, matching the claim.",
+        "relevance_score": 1.0,
+        "source_url": "https://www.bls.gov/ces/publications/highlights/2022/current-employment-statistics-highlights-01-2022.pdf",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "JEC fact sheet asserts manufacturing job gains in 2021 but does not state the specific 369,000 figure.",
+        "relevance_score": 0.5,
+        "source_url": "https://www.jec.senate.gov/public/index.cfm/democrats/fact-sheets?ID=F8D8901B-1446-4B05-A87D-0C3535C7AC43",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "JEC fact sheet on manufacturing progress is cited as source of the talking point but the snippet does not state the actual figure.",
+        "relevance_score": 0.5,
+        "source_url": "https://www.jec.senate.gov/public/_cache/files/e6b293d1-ad31-429e-a459-f55cc3b3870e/jec---manufacturing-progress-under-biden---fact-sheet---feb-2022---final.pdf",
+        "supports_claim": null
+      }
+    ],
+    "biden_2022:0245": [
+      {
+        "one_line_why": "Claim asserts >$1T deficit cut in a single year; snippet shows FY2021 deficit fell only $360B (from $3.1T to $2.8T), far below $1T threshold.",
+        "relevance_score": 0.95,
+        "source_url": "https://www.cbo.gov/publication/57539",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "OMB Historical Table 1.1 shows no prior single-year deficit decline exceeding $1T through its coverage, supporting the 'only president ever' superlative but contradicting that the claim's subject achieved it.",
+        "relevance_score": 0.9,
+        "source_url": "https://www.govinfo.gov/app/details/BUDGET-2021-TAB/BUDGET-2021-TAB-2-1",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Source identifies the data series needed to test the claim but does not itself present figures or comparisons.",
+        "relevance_score": 0.7,
+        "source_url": "https://fiscaldata.treasury.gov/americas-finance-guide/national-deficit/",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "CBO Monthly Budget Review for Feb 2022 provides running FY2022 data but snippet does not state actual year-over-year deficit change.",
+        "relevance_score": 0.5,
+        "source_url": "https://www.cbo.gov/system/files/2022-03/57841-MBR.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "CBO Historical Budget Data (1962\u2013present) shows no prior >$1T single-year deficit drops in recent history, consistent with 'only president ever' but does not confirm the claim's subject achieved it.",
+        "relevance_score": 0.85,
+        "source_url": "https://www.cbo.gov/system/files/2021-02/51134-2021-02-11-historicalbudgetdata.xlsx",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Source identifies the official baseline but does not present the deficit figures or year-over-year changes needed to evaluate the claim.",
+        "relevance_score": 0.4,
+        "source_url": "https://fiscal.treasury.gov/accounting/us-financial-report/2021/where-we-are-now",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "FRED FYFSD series (OMB source) shows FY2020 deficit of \u22123,131,917M and FY2021 deficit of \u22122,772,179M; year-over-year improvement is 359,738M (~$360B), not >$1T; no prior year shows >$1T single-year deficit reduction.",
+        "relevance_score": 0.95,
+        "source_url": "https://fred.stlouisfed.org/series/FYFSD",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "CBO infographic provides context on FY2021 deficit level but does not present the year-over-year change or historical comparisons needed to test the claim.",
+        "relevance_score": 0.5,
+        "source_url": "https://www.cbo.gov/publication/58268",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "CRFB analysis discusses whether Biden's $1T claim and FY2022 movements would make him unique, but snippet does not state the actual deficit figures or conclusion.",
+        "relevance_score": 0.8,
+        "source_url": "https://www.crfb.org/blogs/did-president-biden-reduce-deficit-1-trillion",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Confirms FY2021 deficit of $2.8T and $360B reduction from 2020, explicitly framing whether a >$1T single-year cut was realized or merely projected\u2014the realized cut fell far short.",
+        "relevance_score": 0.9,
+        "source_url": "https://www.crfb.org/blogs/treasury-2021-deficit-was-28-trillion",
+        "supports_claim": false
+      }
+    ]
+  },
+  "soft_failures": [],
+  "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+  "speech_id": "biden_2022",
+  "spend_note": "Stage A cost $0.053984 as ONE run across four speeches; see stage_a_census.json. Not split per speech here \u2014 that would be an invented number \u2014 and not restated, to avoid double-counting in the merged total.",
+  "spend_usd": 0.0
+}

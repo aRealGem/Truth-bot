@@ -1,0 +1,70 @@
+{
+  "generated": "",
+  "model": "claude-haiku (D17-c Stage A, series-row augmented)",
+  "provenance": {
+    "census": "metrics/remediation_v2/d17c_stage0/stage_a_census.json",
+    "evidence_identical_verified": true,
+    "joins_against_rebuilt_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+    "measured_on_publishing_head": "2cbda3e4-c578-442a-aee7-c5c28a388048",
+    "note": "stances measured with D17-c series excerpts in the scoring payload; control arm produced 0 flips, so these are excerpt-attributable",
+    "selector_run_sha256": "9f1c9a6d975ada4fe4e70170215da9d6796010ac49a1260c1265496c9ce9020c"
+  },
+  "schema": "truthbot-rescore-sidecar v1",
+  "sids": {
+    "obama_2014:0189": [
+      {
+        "one_line_why": "CRS table shows 1981 minimum $3.35 = $8.61 in real (2013) dollars; $7.25 in 2014 is ~16% below $8.61, not ~20%.",
+        "relevance_score": 0.95,
+        "source_url": "https://www.everycrsreport.com/files/20130226_R42973_44c181d93ef92acbbebebd1a13eb57774c7678a8.pdf",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "EPI explicitly calculates 1981 minimum as $8.24 in 2013 dollars versus $7.25 current, yielding ~12% decline, contradicting the ~20% claim.",
+        "relevance_score": 0.95,
+        "source_url": "https://www.epi.org/publication/raising-federal-minimum-wage-to-1010/",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Notes erosion of purchasing power but provides no specific percentage figure to compare against the 20% claim.",
+        "relevance_score": 0.5,
+        "source_url": "https://council.seattle.gov/2014/01/17/history-and-background-on-the-minimum-wage/",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "BLS CPI-U series is a component needed for inflation adjustment but does not itself state the minimum-wage comparison or the 20% figure.",
+        "relevance_score": 0.3,
+        "source_url": "https://fred.stlouisfed.org/data/cpiaucsl",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Identifies nominal wage history ($3.35 in 1981, $7.25 in 2014) but does not perform or state the real-value comparison.",
+        "relevance_score": 0.4,
+        "source_url": "https://www.dol.gov/agencies/whd/minimum-wage/history/chart",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "References a real minimum-wage series in 2013 dollars showing decline since early 1980s but snippet does not quote the specific percentage.",
+        "relevance_score": 0.6,
+        "source_url": "https://www.congress.gov/event/113th-congress/senate-event/LC30593/text",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Contextual White House framing document; does not contain the quantitative comparison at issue.",
+        "relevance_score": 0.2,
+        "source_url": "https://obamawhitehouse.archives.gov/the-press-office/2014/01/28/fact-sheet-opportunity-all-rewarding-hard-work",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Addresses minimum wage as share of median wage, not real purchasing power decline since Reagan era.",
+        "relevance_score": 0.1,
+        "source_url": "https://obamawhitehouse.archives.gov/sites/default/files/docs/epi_minimum_wage.pdf",
+        "supports_claim": null
+      }
+    ]
+  },
+  "soft_failures": [],
+  "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+  "speech_id": "obama_2014",
+  "spend_note": "Stage A cost $0.053984 as ONE run across four speeches; see stage_a_census.json. Not split per speech here \u2014 that would be an invented number \u2014 and not restated, to avoid double-counting in the merged total.",
+  "spend_usd": 0.0
+}

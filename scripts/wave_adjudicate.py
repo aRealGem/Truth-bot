@@ -338,9 +338,25 @@ def print_wave_set(wave: dict) -> None:
 
 # ── the stored packs ($0) ────────────────────────────────────────────────────
 
-def merged_sidecar(speech: str, *, use_b2: bool = True) -> dict:
-    """The B1a+B2 merged stance sidecar for a speech — the SAME selection and
-    merge the final re-gate ran (imported, not restated)."""
+def d17c_sidecar_path(speech: str) -> Path:
+    return REPO / "metrics" / "remediation_v2" / f"rescored_d17c_{speech}.json"
+
+
+def merged_sidecar(speech: str, *, use_b2: bool = True,
+                   use_d17c: bool = True) -> dict:
+    """The B1a+B2(+D17-c) merged stance sidecar — the SAME selection and merge
+    the final re-gate ran (imported, not restated).
+
+    D17-c is a THIRD pass and merges last, so where it disagrees it wins. That
+    precedence rests on the same argument as B1a→B2: the later pass saw
+    strictly more evidence — the series rows themselves — so it is better
+    informed, not merely newer. Its control arm produced zero flips, so the
+    stances it moved are attributable to the rows rather than to re-scoring.
+
+    Without it the gate never sees the flips Stage A paid to measure:
+    ``trump_2026:0054`` fails T2.4 with ``insufficient-qualifying-evidence``
+    and is forced Unverifiable before any panel call.
+    """
     b1a = load_rescore_sidecar(sidecar_path(speech), speech, REBUILT_RUNS[speech])
     b1a["pass_label"] = "b1a"
     b2 = None
@@ -348,7 +364,12 @@ def merged_sidecar(speech: str, *, use_b2: bool = True) -> dict:
     if use_b2 and b2_path.exists():
         b2 = load_rescore_sidecar(b2_path, speech, REBUILT_RUNS[speech])
         b2["pass_label"] = "b2"
-    return merge_sidecars(b1a, b2)
+    d17c = None
+    d17c_path = d17c_sidecar_path(speech)
+    if use_d17c and d17c_path.exists():
+        d17c = load_rescore_sidecar(d17c_path, speech, REBUILT_RUNS[speech])
+        d17c["pass_label"] = "d17c"
+    return merge_sidecars(b1a, b2, d17c)
 
 
 def source_artifact(speech: str, *, head: bool = False) -> tuple[Path, dict]:
@@ -378,6 +399,74 @@ def rules_default_state() -> dict:
     from truthbot.verdict import statistical_release, utterance_record
     return {"utterance_record": bool(utterance_record.flag_enabled()),
             "statistical_release": bool(statistical_release.flag_enabled())}
+
+
+#: D17-c goldens: the committed series excerpts, keyed (claim_sid, evidence_id).
+GOLDENS_PATH = (REPO / "metrics" / "remediation_v2" / "d17c_stage0"
+                / "goldens.json")
+
+#: R2: this window does not reach the period its claim compares against, so the
+#: rows are shown with a warning and cannot settle the claim.
+SERIES_PERIOD_MISMATCH = {("obama_2014:0189", "E4")}
+
+
+def _series_rows_index() -> dict:
+    """``(sid, source_url) -> series_rows`` for every committed wave-1 excerpt.
+
+    Keyed on the URL, NOT on the E-number. The golden's ``evidence_id`` is the
+    item's position in the SHIPPED pack; the gate re-orders and can drop items,
+    so ``E7`` after re-gating is not necessarily ``E7`` before it. Attaching a
+    series to the wrong item would be a silent, load-bearing error — the panel
+    would be handed a table that does not belong to the source beside it.
+    """
+    if not GOLDENS_PATH.exists():
+        return {}
+    doc = json.loads(GOLDENS_PATH.read_text(encoding="utf-8"))
+    index: dict = {}
+    for g in doc.get("goldens") or []:
+        if g.get("role") != "wave1":
+            continue
+        sid, eid = g["claim_sid"], g["evidence_id"]
+        rows = dict(g)
+        if (sid, eid) in SERIES_PERIOD_MISMATCH:
+            rows["window_period_mismatch"] = True
+            rows["window_period_mismatch_note"] = (
+                "This window does not reach the period the claim compares "
+                "against. The claim's reference point is named rather than "
+                "dated, so the selection rules did not extend the window to "
+                "cover it. Shown for transparency; it cannot settle the claim.")
+        index[(sid, g["full_table"])] = rows
+    return index
+
+
+def attach_series_rows(sid: str, items: list) -> list:
+    """Attach D17-c series excerpts to the pack items they belong to.
+
+    A no-op for every claim without a committed excerpt, which is all but seven
+    of them. ``PackItem`` is frozen, so this replaces rather than mutates.
+
+    Raises on an ambiguous match: if a pack ever carries two items at the same
+    source URL, the right rows cannot be chosen and guessing would put a table
+    under the wrong citation.
+    """
+    from dataclasses import replace
+
+    index = _series_rows_index()
+    if not index:
+        return items
+    out = []
+    for it in items:
+        rows = index.get((sid, it.source_url))
+        if rows is None:
+            out.append(it)
+            continue
+        dupes = [x for x in items if x.source_url == it.source_url]
+        if len(dupes) > 1:
+            raise ValueError(
+                f"{sid}: {len(dupes)} pack items share {it.source_url} — cannot "
+                "decide which carries the series excerpt")
+        out.append(replace(it, series_rows=rows))
+    return out
 
 
 def build_wave_packs(speech: str, artifact: dict, sidecar: dict,
@@ -446,6 +535,7 @@ def build_wave_packs(speech: str, artifact: dict, sidecar: dict,
             statistical_release=statistical_release)
         items = [pack_item_from_citation(i, cit)
                  for i, cit in enumerate(result.items, start=1)]
+        items = attach_series_rows(sid, items)
         packs[sid] = EvidencePack(
             sid=sid, window=window_for(sid), items=items,
             gate_code=result.gate_code,
