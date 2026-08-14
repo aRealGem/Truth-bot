@@ -877,11 +877,11 @@
     {
       "sid": "trump_2026:0054",
       "speech_id": "trump_2026",
-      "old_verdict": "TRUE",
-      "new_verdict": "UNVERIFIABLE",
-      "reason": "Re-adjudicated on the unified v2.3-role-axis-s5cap pipeline (2026-08-10): withheld by the evidence gate after the B1a+B2 stance re-score of the stored evidence pack: with real relevance and stance scores the pack no longer meets the Tier-1..3 bearing quota. Neither ratified rule is required to reach this outcome; the rebuilt pack no longer clears the evidence gate (insufficient-qualifying-evidence), so the claim is reported Unverifiable instead of decided.",
-      "date": "2026-08-10",
-      "source": "dc6-net-ledger-2026-08-10 (v2.3-role-axis-s5cap)"
+      "old_verdict": "UNVERIFIABLE",
+      "new_verdict": "TRUE",
+      "reason": "Re-adjudicated under D17-c series-row excerpting (2026-08-13): the 2026-08-10 correction reported this claim Unverifiable because the stored pack failed the Tier-1..3 bearing quota, not on substance. D17-c attaches the source's own series observations (CE16OV, ALFRED vintage 2026-02-24) to the evidence items; with them scored, the pack meets the quota (bearing 2 -> 4) and the panel decided TRUE. The reversal reflects restored decidability, not a change in the underlying facts.",
+      "date": "2026-08-14",
+      "source": "d17c-wave2"
     },
     {
       "sid": "trump_2026:0057",
