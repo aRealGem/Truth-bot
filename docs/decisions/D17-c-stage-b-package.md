@@ -153,6 +153,33 @@ would be the same estimate-error mistake that produced 2.351×. It needs a $0
 
 ---
 
+## 4a. Proposed S-12 — measure it or say you didn't
+
+**Proposed, not active. Ratified by the owner at publish.**
+
+> Where a fact can be measured, computed or imported, no artifact may assert it
+> from a proxy; either the proxy's generational assumption is written down, or
+> the proxy is replaced.
+
+Two failures in this wave were the same failure. A guard inferred "no prior
+artifact was edited" from *the parent looks unscored* — a proxy whose
+generational assumption (every head sits one rebuild above the unscored
+artifact) went unwritten until a deeper chain broke it. And a cost estimate
+inferred the price of a `series_rows` payload from a constant measured on packs
+that had none, running 8.2× over.
+
+**First enforcement point, and the working example to cite:** `costs.py` now
+refuses a constant that cannot name the payload schema it was measured under —
+
+```
+{constant} declares no payload schema — a constant that cannot name what it
+measured is a proxy, not a measurement
+```
+
+That is S-12 as a runtime refusal rather than a principle, at the one place it
+bites. `scripts/ancestor_locks.py` is the same idea applied to the other
+failure: the proxy replaced by the direct check it stood in for.
+
 ## 5. What this package does NOT ask for
 
 No Stage B execution, no publish, no render, no verdict rewrite, no gate
