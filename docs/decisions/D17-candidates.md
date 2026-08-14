@@ -342,7 +342,37 @@ claimed 60%". Both carry `arithmetic_hinge=True`, so the B2 contract already
 treats them as hypotheses for the panel rather than proof — the flag names the
 specific tension so no Stage B reads them as settled.
 
-**HALT (2026-08-13): the 0054 computed exhibit cannot attach — `c-eval`.**
+**D17 candidate (d), POST-PUBLISH — exhibit admissibility is keyed on the
+wrong axis.** Logged 2026-08-13, **not implemented**.
+
+`claim_shape` is the ORGANIZATIONAL axis for the evidential-role table, not a
+decidability axis, and exhibit admissibility currently keys on it. `c-eval`
+conflates two different things: causal / effectiveness claims, which arithmetic
+genuinely cannot settle, and superlatives / comparisons, which arithmetic is
+*exactly* what settles against a series we hold. Remedy: a second predicate —
+**is the decision procedure a computation over a series we hold** — with
+causal-attribution detection as the real blocker. The `0031` three-prong test
+inherits the same conflation and is in scope.
+
+The basis, verified rather than asserted. `shapes_backfill_trump_2026.json` is
+a **claude-haiku single-pass cheap-tier** classification (`hydramind single,
+tier=cheap`). Over 182 trump claims it returns **c-eval 44.5% (81), c-third
+44.0% (80), c-exist 7.7% (14), empty 3.8% (7), and c-count ZERO**. A 44.5%
+evaluative rate with not one countable claim in a speech full of numbers is a
+property of the classifier, not of the speech. The published run `91dd7a34`
+carries no `claim_shape` on its claims at all — `layer_a` holds
+`claim_type: "statistical"` for both `0054` and `0219` — so the shape that
+blocks the exhibit comes from the backfill, not from the shipped record.
+
+**`0219` reshape DEFERRED this wave (ruled).** `trump_2026:0219` — "The price of
+eggs is down 60 percent" — plausibly meets the `0031` three-prong test, but it
+needs a **comparison window before it needs a shape**: "down 60 percent" is
+meaningless without a stated baseline, and the excerpt's own rows put the fall
+at 58.6% from a March-2025 peak. Since the `0031` test is itself in scope under
+(d), reshaping on it now would build on a rule under review. Do not reshape.
+
+**HALT (2026-08-13, RESOLVED by ruling (a)): the 0054 computed exhibit cannot
+attach — `c-eval`.**
 Wave 2's escalation lane specified a computed exhibit for `trump_2026:0054`,
 `max(CE16OV @ 2026-02-24) = 164,520 @ 2026-01`. The exhibit is built and
 verified at `metrics/computed_exhibits/ce16ov_record_high_2026_01.json`:
@@ -368,6 +398,19 @@ Metered work halted before spending. The `series_rows` path is unaffected and
 is a different mechanism: showing a panel the source's own observations is not
 the same as asserting a computed result that settles the claim, and only the
 latter is what the guard forbids.
+
+**RESOLUTION (ruling (a)).** The escalation runs on `series_rows` alone. The
+exhibit stays on disk **unattached** — it becomes admissible if (d) lands — and
+gained two corrections while cheap: it now states its **comparison-class
+bound** (CE16OV begins 1948-01, so a "record" here is a record in the series we
+hold, not in the country's history) and names the **omitted observation**
+explicitly (`2025-10`, the shutdown data gap) rather than leaving it to be
+inferred from 937 calendar months against 936 observations. The
+`series_rows` distinction was upheld: the guard governs what may be asserted as
+DECIDING a claim; rows are what the panel reasons over. Verified that the
+rendered table carries no computed summary, delta or total row — every cell is
+verbatim from the golden; the only derived figure is the count of omitted rows,
+which discloses what is withheld rather than computing over the data.
 
 **CLARIFICATION (2026-08-13): wave-2 flips land as successor artifacts, not as
 pack mutations.** An earlier wave-2 instruction read "packs change only per the

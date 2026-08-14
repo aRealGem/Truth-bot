@@ -1,15 +1,25 @@
 {
   "claim_ref": "trump_2026:0054",
-  "formula": "max(CE16OV) over the full eligible history at this vintage",
+  "comparison_class_bound": "CE16OV begins 1948-01. This exhibit checks the claim against THE SERIES WE HOLD, not against the history of the country. Any employment level before 1948 is outside the series and therefore outside what this arithmetic can speak to; a 'record' here means a record in CE16OV at this vintage.",
+  "formula": "max(CE16OV) over the series held at this vintage",
+  "gaps": {
+    "calendar_months_spanned": 937,
+    "observations_present": 936,
+    "omitted_observations": [
+      "2025-10-01"
+    ],
+    "why": "2025-10 is absent from the published series (the shutdown data gap), so the span is one observation short of its calendar length. Stated explicitly rather than left to 937-936."
+  },
   "inputs": {
     "2025-12-01": 163992.0,
     "2026-01-01": 164520.0
   },
-  "note": "The maximum IS the latest observation, so the claim's \"than at any time in the history of our country\" is checkable directly: 164,520 at 2026-01-01 exceeds the prior high of 163,992 at 2025-12-01 by 528 thousand. Vintage-pinned; a later vintage may revise both levels.",
+  "note": "164,520 at 2026-01 is the maximum of CE16OV at vintage 2026-02-24 and is also its latest observation; the prior high is 163,992 at 2025-12, a difference of 528 thousand. Vintage-pinned: a later vintage may revise both levels. See comparison_class_bound - this settles a question about the series, not about the country's history.",
   "result": 164520.0,
   "rows_considered": 936,
   "schema": "truthbot-computed-exhibit v1",
   "series": "CE16OV",
+  "series_begins": "1948-01-01",
   "source": "ALFRED",
   "source_url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=CE16OV&vintage_date=2026-02-24",
   "vintage_date": "2026-02-24",

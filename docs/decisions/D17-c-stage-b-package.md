@@ -106,6 +106,14 @@ the current design cannot distinguish them at item level.
    and the scorer stops parsing rows out of prose. **Inherits whole-pack
    semantics** until the isolation ablation is measured, so it must not be
    built on an item-level attribution assumption.
+> **PUBLISH NOTE — read before the publish click.** After lane 3, a legacy
+> report renders **every source as unverified** until it is re-rendered with a
+> classification map. This is deliberate and is lane 3 working as ruled: the
+> old behaviour returned "verified" when no classification record existed,
+> which is how a URL returning 404 on both FRED and ALFRED wore the
+> source-verified badge on the published site, twice. It will look like a
+> regression to anyone who does not know it is intentional. It is not.
+
 3. **Badge fail-closed.** `_classify_source_for_render` currently returns
    `"verified"` both when no classification map exists and when a URL is merely
    absent from one — absence of evidence rendering as evidence of
