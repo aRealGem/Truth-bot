@@ -121,16 +121,61 @@ def test_per_rule_counts_are_pinned():
 # ── the safety property ──────────────────────────────────────────────────────
 
 def test_every_committed_error_runs_one_direction():
-    """All 30 committed errors predict 'substantive' for a claim the desk found
+    """All 30 COMMITTED errors predict 'substantive' for a claim the desk found
     documentable; none runs the other way. This is the polarity that argues
     against a "cannot be verified" render — if it ever flips, re-do the risk
-    analysis before shipping a label."""
+    analysis before shipping a label.
+
+    Scope: the commit layer ONLY. The abstain layer has one reverse-direction
+    miss — see test_residual_layer_has_one_reverse_miss. Do not restate this as
+    "the probe never called an undecidable claim checkable"; that is false.
+    """
     doc = probe.build()
     errors = [c for c in doc["claims"]
               if c["disposition"] == "committed" and not c["agree"]]
     assert len(errors) == 30
     assert all(c["predicted_class"] == "substantive" for c in errors)
     assert all(c["desk_class"] != "substantive" for c in errors)
+
+
+def test_commit_rules_are_pole_locked():
+    """Polarity pin. Every committing rule except R1 predicts 'substantive'.
+    A future rule that commits the OTHER way — asserting a claim is checkable —
+    carries a different and unanalysed risk, and must fail here loudly rather
+    than ship silently."""
+    for rule_id, (disp, predicted, _, _, _) in probe.RULES.items():
+        if disp != "committed":
+            continue
+        if rule_id == "R1-series-attached":
+            assert predicted == "series-core"   # the one positive-pole rule
+        else:
+            assert predicted == "substantive", (
+                f"{rule_id} commits to {predicted!r}: a reverse-pole commit "
+                "rule. Re-do the render risk analysis before allowing this.")
+
+
+def test_residual_layer_has_one_reverse_miss():
+    """trump_2026:0334 — 'many, if not most, illegal aliens do not speak
+    English' — is an unmeasured-population quantifier the desk called
+    substantive. R4 reads it as a plain statistic and narrows to
+    {series-core, web-tier1}, EXCLUDING substantive. So the abstain layer does
+    run the reverse direction once: it ruled out 'undecidable' for a claim that
+    is undecidable. This is the counterexample to a blanket one-directionality
+    claim and must stay visible."""
+    doc = probe.build()
+    by_sid = {c["sid"]: c for c in doc["claims"]}
+    c = by_sid["trump_2026:0334"]
+    assert c["disposition"] == "abstained"
+    assert c["rule_id"] == "R4-statistical-unattached"
+    assert c["desk_class"] == "substantive"
+    assert "substantive" not in c["residual_class_range"]
+    assert c["residual_contains_desk"] is False
+    # and it is the ONLY one, population-wide
+    reverse = [x for x in doc["claims"]
+               if x["disposition"] == "abstained"
+               and x["desk_class"] == "substantive"
+               and "substantive" not in (x["residual_class_range"] or [])]
+    assert [x["sid"] for x in reverse] == ["trump_2026:0334"]
 
 
 def test_commit_rules_have_the_measured_precision():
@@ -168,3 +213,19 @@ def test_anecdote_precedence_overlap_is_pinned():
     # precision below 0.5 either way — wrong more often than right
     assert o["R5_narrative_all"]["precision_if_treated_as_substantive"] < 0.5
     assert o["R5_personal_anecdote_only"]["precision_if_treated_as_substantive"] < 0.5
+
+
+def test_anecdote_denominator_is_r5_scoped_not_population_wide():
+    """The 47 anecdote figure is 'anecdotes that REACH R5', not 'anecdotes'.
+    Population-wide there are 48; clinton_1998:0225 is consumed earlier by R3
+    because it also carries claim_shape=c-eval. Rule precedence changes the
+    denominator, so the two numbers must not be quoted interchangeably."""
+    doc = probe.build()
+    anecdotes = [c for c in doc["claims"]
+                 if c["signals_used"]["claim_type"] == "personal-anecdote"]
+    assert len(anecdotes) == 48
+    in_r5 = [c for c in anecdotes if c["rule_id"] == "R5-narrative-type"]
+    assert len(in_r5) == 47
+    eaten = [c for c in anecdotes if c["rule_id"] != "R5-narrative-type"]
+    assert [(c["sid"], c["rule_id"]) for c in eaten] == [
+        ("clinton_1998:0225", "R3-eval-shape")]
