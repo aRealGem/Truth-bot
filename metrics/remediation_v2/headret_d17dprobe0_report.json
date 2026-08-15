@@ -1,0 +1,109 @@
+{
+  "schema": "truthbot-head-retrieve-report v1",
+  "generated": "2026-08-15T02:02:18.265993+00:00",
+  "tag": "d17dprobe0",
+  "speech": "trump_2026",
+  "phase": "RP",
+  "source_run_id": "799e71b6-2480-50ca-870e-1a95f0d0d5fe",
+  "source_note": "current publishing head, selected by lineage",
+  "reason": "D17-d web-tier1 pricing probe - regenerate report with banked phase R spend",
+  "sids": [
+    "trump_2026:0090",
+    "trump_2026:0405",
+    "trump_2026:0659"
+  ],
+  "claim_shapes": {
+    "trump_2026:0090": "c-third",
+    "trump_2026:0405": "c-eval",
+    "trump_2026:0659": "c-third"
+  },
+  "scored": true,
+  "cap_usd": 0.5,
+  "spend": {
+    "proxy": {
+      "usd": 0.0,
+      "basis": "litellm proxy ledger (proxy_key_spend, double-read, rounded up)",
+      "confidence": "ledger-true"
+    },
+    "offproxy": {
+      "usd": 0.0,
+      "basis": "provider-reported token counts at MODEL_RATES list rates (R2 gpt-5-mini, R3 grok-4.3)",
+      "confidence": "ESTIMATE — token-metered, reconciled against nothing",
+      "calls": {
+        "R2": 0,
+        "R3": 0
+      }
+    },
+    "r1_worker": {
+      "usd": null,
+      "basis": "Claude Max subscription (claude CLI, ANTHROPIC_API_KEY popped)",
+      "confidence": "UNPRICED — not billed, not estimable from here",
+      "calls": 0
+    },
+    "banked": {
+      "usd": 0.256002,
+      "basis": "prior sessions of this tag's chunk journal"
+    },
+    "billed_total_usd": 0.256002,
+    "estimated_share": 0.0,
+    "ceiling_basis": "billed_total_usd is what the breaker enforces against --budget"
+  },
+  "projection": {
+    "n_probe": 3,
+    "n_lane": 81,
+    "ledger_true_usd": 0.0,
+    "estimated_usd": 0.0,
+    "banked_usd": 6.9121,
+    "total_usd": 6.9121,
+    "estimated_share": 0.0,
+    "r1_calls_projected": 0,
+    "kind": "point projection from n=3 — NOT a band; n=3 gives no variance"
+  },
+  "complete": true,
+  "missing_sids": [],
+  "halted": "",
+  "journals": {
+    "chunk": "/home/ccagent/truth-bot/metrics/journals/trump_2026_headret_d17dprobe0.jsonl",
+    "packs": "/home/ccagent/truth-bot/metrics/journals/trump_2026_headret_d17dprobe0_packs.jsonl"
+  },
+  "verdict_diff": {
+    "n_compared": 3,
+    "counts": {
+      "unchanged": 3,
+      "decided_to_decided_changed": 0,
+      "newly_gated": 0,
+      "newly_decided": 0,
+      "split_changes": 0,
+      "other": 0
+    },
+    "gate_forced_new": 3,
+    "per_sid": [
+      {
+        "sid": "trump_2026:0090",
+        "old": "gated-UNVERIFIABLE",
+        "new": "gated-UNVERIFIABLE",
+        "category": "unchanged",
+        "text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics an"
+      },
+      {
+        "sid": "trump_2026:0405",
+        "old": "gated-UNVERIFIABLE",
+        "new": "gated-UNVERIFIABLE",
+        "category": "unchanged",
+        "text": "But today, all of that is behind them because Sage is a proud and wonderful young woman with a full ride scholarship to "
+      },
+      {
+        "sid": "trump_2026:0659",
+        "old": "gated-UNVERIFIABLE",
+        "new": "gated-UNVERIFIABLE",
+        "category": "unchanged",
+        "text": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one b"
+      }
+    ]
+  },
+  "artifact_written": false,
+  "artifact_note": "This runner has no artifact writer. Writing one would make this run the publishing head (shipping_artifact selects the unique rulings-descended leaf), so promotion is a separate, deliberate, owner-gated step.",
+  "decidability_now_stale": [],
+  "decidability_note": "These sids were retrievable-pending-lane on the decidability axis and now have a decided verdict. This runner does NOT edit data/decidability.json — that axis is owner-ratified-gated by design.",
+  "evidence_note": "build_evidence_pack_v2 REPLACES the head's stored evidence for a retrieved sid; it does not union with it. The d17d_webtier1_estimate assumption 'a retrieval pass adds N new items' does not describe this run."
+}

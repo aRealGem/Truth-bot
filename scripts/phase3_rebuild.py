@@ -371,6 +371,58 @@ def make_pack_builder(*, build_pack: Callable[[str, str, str], object],
     return pack_builder
 
 
+def metered_offproxy_retrievers():
+    """The economy retrieval config with R2/R3 metered for the off-proxy cost
+    estimate: ``(primary, retry, offproxy_est, usage)``.
+
+    Module scope rather than a ``run_rebuild`` local because this is the PRICING
+    INSTRUMENT — the estimator a lane's cost is bought on — and it now has a
+    second consumer (the publishing-head retrieval runner). ``MODEL_RATES``
+    already carries a rate correction through ``truthbot.costs``, but the R2
+    fallback chain and the ``_post`` seams do not: a second copy would meter a
+    changed fallback in one caller and silently price it at ``_DEFAULT_RATE`` in
+    the other. Two copies of the instrument that produces the number is exactly
+    the constant-with-forgotten-provenance failure.
+
+    R1 is deliberately NOT metered. ``ClaudeWorkerRetriever`` shells out to the
+    ``claude`` CLI with ``ANTHROPIC_API_KEY`` popped, so it runs on the Max
+    subscription: neither on the proxy ledger nor list-priced. A dollar figure
+    here would be a fiction — it is bounded by rate limits, not by ``--budget``.
+    """
+    from truthbot.verify import retrievers as R
+
+    usage: dict[str, list] = {"R2": [], "R3": []}
+
+    class MeteredR2(R.OpenAIBrowsingRetriever):
+        def _post(self, model, prompt):
+            doc = super()._post(model, prompt)
+            usage["R2"].append({"model": model, "usage": doc.get("usage") or {}})
+            return doc
+
+    class MeteredR3(R.GrokSearchRetriever):
+        def _post(self, model, prompt, tool):
+            doc = super()._post(model, prompt, tool)
+            usage["R3"].append({"model": model, "usage": doc.get("usage") or {}})
+            return doc
+
+    def offproxy_est() -> float:
+        total = 0.0
+        for entries in usage.values():
+            for e in entries:
+                rates = MODEL_RATES.get(str(e.get("model") or ""), _DEFAULT_RATE)
+                u = e["usage"]
+                tin = int(u.get("input_tokens") or u.get("prompt_tokens") or 0)
+                tout = int(u.get("output_tokens") or u.get("completion_tokens") or 0)
+                total += (tin * rates[0] + tout * rates[1]) / 1e6
+        return total
+
+    # Economy config (same as the rescue script / the 2026-08-01 full-stack
+    # runs): R1+R2 primary, grok joins only the T2.4 rescue round.
+    primary = (R.ClaudeWorkerRetriever(), MeteredR2())
+    retry = primary + (MeteredR3(model="grok-4.3"),)
+    return primary, retry, offproxy_est, usage
+
+
 def write_new_artifact(source_art: dict, new_rows: list[dict], packs: dict,
                        roster_note: dict, *, speech_id: str,
                        run_id: Optional[str] = None,
@@ -489,7 +541,6 @@ def run_rebuild(args) -> None:
     from truthbot.verdict import (adjudicator, proxy_lane, publish_pipeline,
                                   shape_registry)
     from truthbot.verdict.evidence_pack_v2 import build_evidence_pack_v2
-    from truthbot.verify import retrievers as R
     from truthbot.verify.principals import principal_relation
 
     if not proxy_lane.key_present():
@@ -518,35 +569,9 @@ def run_rebuild(args) -> None:
               f"(${banked_cost:.4f} prior proxy spend), {len(todo)} to run")
 
     # Off-proxy estimation (R2/R3 usage at list price) — rescue-script pattern.
-    usage: dict[str, list] = {"R2": [], "R3": []}
-
-    class MeteredR2(R.OpenAIBrowsingRetriever):
-        def _post(self, model, prompt):
-            doc = super()._post(model, prompt)
-            usage["R2"].append({"model": model, "usage": doc.get("usage") or {}})
-            return doc
-
-    class MeteredR3(R.GrokSearchRetriever):
-        def _post(self, model, prompt, tool):
-            doc = super()._post(model, prompt, tool)
-            usage["R3"].append({"model": model, "usage": doc.get("usage") or {}})
-            return doc
-
-    def _offproxy_est() -> float:
-        total = 0.0
-        for entries in usage.values():
-            for e in entries:
-                rates = MODEL_RATES.get(str(e.get("model") or ""), _DEFAULT_RATE)
-                u = e["usage"]
-                tin = int(u.get("input_tokens") or u.get("prompt_tokens") or 0)
-                tout = int(u.get("output_tokens") or u.get("completion_tokens") or 0)
-                total += (tin * rates[0] + tout * rates[1]) / 1e6
-        return total
-
-    # Economy config (same as the rescue script / the 2026-08-01 full-stack
-    # runs): R1+R2 primary, grok joins only the T2.4 rescue round.
-    primary = (R.ClaudeWorkerRetriever(), MeteredR2())
-    retry = primary + (MeteredR3(model="grok-4.3"),)
+    # Lives at module scope so the head-retrieval runner meters with the SAME
+    # instrument; see metered_offproxy_retrievers.
+    primary, retry, _offproxy_est, usage = metered_offproxy_retrievers()
 
     # Role-axis wiring, exactly like the CLI's _build_v2_pack_builder
     # (PR-A2.3/A2.5): the principal relation closes over (speaker, utterance)
