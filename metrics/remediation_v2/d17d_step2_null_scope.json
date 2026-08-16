@@ -1,0 +1,649 @@
+{
+  "schema": "truthbot-d17d-step2-null-scope v1",
+  "generated": "2026-08-16T16:17:13.507615+00:00",
+  "method": "$0 join of every null-stance creditable item on the supply_met_bearing_gap claims to the merged B1a+B2 sidecars by source_url. No calls, no re-scoring.",
+  "source_credit_supply": "2026-08-16T16:07:27.859897+00:00",
+  "n_gap_claims": 23,
+  "n_null_creditable_items": 62,
+  "disposition": {
+    "not_in_b1a_scope": 0,
+    "scored_but_null": 62,
+    "scored_resolved_not_propagated": 0
+  },
+  "abstention_profile": {
+    "n": 62,
+    "empty_snippet": 0,
+    "relevance_min": 0.0,
+    "relevance_median": 0.5,
+    "by_tier": {
+      "Established": 9,
+      "Government": 52,
+      "Wire": 1
+    },
+    "snippet_len_median": 133.5
+  },
+  "claims": [
+    {
+      "sid": "biden_2022:0200",
+      "speech": "biden_2022",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "biden_2022:0211",
+      "speech": "biden_2022",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 4,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "biden_2022:0366",
+      "speech": "biden_2022",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 3,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "biden_2022:0376",
+      "speech": "biden_2022",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 5,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "biden_2022:0427",
+      "speech": "biden_2022",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 3,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "biden_2022:0437",
+      "speech": "biden_2022",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 1,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "speech": "clinton_1998",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "speech": "clinton_1998",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 3,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "speech": "clinton_1998",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "speech": "clinton_1998",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 1,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "gwbush_2006:0024",
+      "speech": "gwbush_2006",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "speech": "gwbush_2006",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "speech": "gwbush_2006",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "speech": "gwbush_2006",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 1,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "obama_2014:0001",
+      "speech": "obama_2014",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 5,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "obama_2014:0070",
+      "speech": "obama_2014",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 5,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "obama_2014:0198",
+      "speech": "obama_2014",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 3,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "trump_2026:0100",
+      "speech": "trump_2026",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 1,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "trump_2026:0341",
+      "speech": "trump_2026",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "trump_2026:0403",
+      "speech": "trump_2026",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 3,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "trump_2026:0469",
+      "speech": "trump_2026",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 4,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "trump_2026:0665",
+      "speech": "trump_2026",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 4,
+      "scored_resolved_not_propagated": 0
+    },
+    {
+      "sid": "trump_2026:0685",
+      "speech": "trump_2026",
+      "sid_in_b1a_scope": true,
+      "not_in_b1a_scope": 0,
+      "scored_but_null": 2,
+      "scored_resolved_not_propagated": 0
+    }
+  ],
+  "abstentions": [
+    {
+      "sid": "biden_2022:0200",
+      "source_url": "https://aspe.hhs.gov/sites/default/files/private/pdf/264056/Comparing-Insulin-Prices.pdf",
+      "source_tier": "Established",
+      "relevance_score": 0.5,
+      "snippet_len": 147
+    },
+    {
+      "sid": "biden_2022:0200",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8597930/",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 70
+    },
+    {
+      "sid": "biden_2022:0211",
+      "source_url": "https://www.cms.gov/files/document/health-insurance-exchanges-2022-open-enrollment-report-final.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.9,
+      "snippet_len": 113
+    },
+    {
+      "sid": "biden_2022:0211",
+      "source_url": "https://aspe.hhs.gov/sites/default/files/2021-07/aspe-arp-ui-ib.pdf",
+      "source_tier": "Established",
+      "relevance_score": 0.7,
+      "snippet_len": 169
+    },
+    {
+      "sid": "biden_2022:0211",
+      "source_url": "https://www.cms.gov/files/document/american-rescue-plan-fast-facts-cms.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.95,
+      "snippet_len": 130
+    },
+    {
+      "sid": "biden_2022:0211",
+      "source_url": "https://www.cms.gov/files/document/marketplace-enrollment-and-savings-infographic.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.9,
+      "snippet_len": 126
+    },
+    {
+      "sid": "biden_2022:0366",
+      "source_url": "https://www.dhs.gov/archive/news/2021/12/03/dhs-highlights-efforts-address-human-trafficking",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 134
+    },
+    {
+      "sid": "biden_2022:0366",
+      "source_url": "https://www.congress.gov/crs_external_products/IF/PDF/IF10215/IF10215.27.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 158
+    },
+    {
+      "sid": "biden_2022:0366",
+      "source_url": "https://www.cbsnews.com/news/us-launches-operation-targeting-migrant-smuggling-gangs/",
+      "source_tier": "Established",
+      "relevance_score": 0.6,
+      "snippet_len": 148
+    },
+    {
+      "sid": "biden_2022:0376",
+      "source_url": "https://www.supremecourt.gov/grantednotedlist/21grantednotedlist",
+      "source_tier": "Government",
+      "relevance_score": 0.4,
+      "snippet_len": 146
+    },
+    {
+      "sid": "biden_2022:0376",
+      "source_url": "https://www.washingtonpost.com/politics/2021/12/01/supreme-court-mississippi-abortion-live-updates/",
+      "source_tier": "Established",
+      "relevance_score": 0.3,
+      "snippet_len": 105
+    },
+    {
+      "sid": "biden_2022:0376",
+      "source_url": "https://www.npr.org/2021/09/20/1038972266/supreme-court-date-roe-wade-dobbs-jackson-womens",
+      "source_tier": "Established",
+      "relevance_score": 0.2,
+      "snippet_len": 102
+    },
+    {
+      "sid": "biden_2022:0376",
+      "source_url": "https://www.supremecourt.gov/opinions/20pdf/21a24_8759.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 109
+    },
+    {
+      "sid": "biden_2022:0376",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.0,
+      "snippet_len": 129
+    },
+    {
+      "sid": "biden_2022:0427",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 166
+    },
+    {
+      "sid": "biden_2022:0427",
+      "source_url": "https://www.army.mil/article/242739/kfor_conducts_joint_force_protection_exercise_at_camp_bondsteel",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 148
+    },
+    {
+      "sid": "biden_2022:0427",
+      "source_url": "https://www.publichealth.va.gov/docs/exposures/va-ahobp-registry-data-report-feb2022.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 145
+    },
+    {
+      "sid": "biden_2022:0437",
+      "source_url": "https://www.publichealth.va.gov/exposures/publications/agent-orange/agent-orange-2020/presumptive.asp",
+      "source_tier": "Government",
+      "relevance_score": 0.4,
+      "snippet_len": 110
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "source_url": "https://nces.ed.gov/pubs97/98015.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 141
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "source_url": "https://nces.ed.gov/pubs97/97983.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 143
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "source_url": "https://www.govinfo.gov/content/pkg/PLAW-105publ78/pdf/PLAW-105publ78.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.8,
+      "snippet_len": 178
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+      "source_tier": "Government",
+      "relevance_score": 0.6,
+      "snippet_len": 126
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "source_url": "https://www.federalregister.gov/documents/1997/01/22/97-1528/job-training-partnership-act-employment-and-training-assistance-for-dislocated-workers-reallotment",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 166
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "source_url": "https://archives.nato.int/informationobject/502877",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 148
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "source_url": "https://archives.nato.int/uploads/r/null/1/3/137930/0331_Summit_Madrid_Press_Info_1997_ENG.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 133
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "source_url": "https://www3.nasa.gov/audience/formedia/archives/MP_Archive_98.html",
+      "source_tier": "Government",
+      "relevance_score": 0.7,
+      "snippet_len": 162
+    },
+    {
+      "sid": "gwbush_2006:0024",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31-pt1-PgH15.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 122
+    },
+    {
+      "sid": "gwbush_2006:0024",
+      "source_url": "https://www.congress.gov/109/crec/2006/01/31/152/9/modified/CREC-2006-01-31-pt1-PgS366-3.htm",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 81
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 133
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "source_url": "https://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 135
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.6,
+      "snippet_len": 148
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "source_url": "http://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.6,
+      "snippet_len": 146
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "source_url": "https://www.justice.gov/archive/ndic/pubs11/12620/marijuana.htm",
+      "source_tier": "Government",
+      "relevance_score": 0.4,
+      "snippet_len": 157
+    },
+    {
+      "sid": "obama_2014:0001",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.7,
+      "snippet_len": 136
+    },
+    {
+      "sid": "obama_2014:0001",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+      "source_tier": "Government",
+      "relevance_score": 0.7,
+      "snippet_len": 135
+    },
+    {
+      "sid": "obama_2014:0001",
+      "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_201312.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.7,
+      "snippet_len": 127
+    },
+    {
+      "sid": "obama_2014:0001",
+      "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.6,
+      "snippet_len": 127
+    },
+    {
+      "sid": "obama_2014:0001",
+      "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+      "source_tier": "Government",
+      "relevance_score": 1.0,
+      "snippet_len": 112
+    },
+    {
+      "sid": "obama_2014:0070",
+      "source_url": "https://www.sba.gov/sites/default/files/aboutsbaarticle/SBA%207a%20and%20504%20Gross%20Loan%20Approval%20Volume%20as%2009-30-13.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.9,
+      "snippet_len": 136
+    },
+    {
+      "sid": "obama_2014:0070",
+      "source_url": "https://www.washingtonpost.com/business/on-small-business/sba-backs-roughly-30-billion-in-small-business-loans-for-the-third-straight-year/2013/10/29/eb137e28-40da-11e3-a624-41d661b0bb78_story.html",
+      "source_tier": "Established",
+      "relevance_score": 0.7,
+      "snippet_len": 134
+    },
+    {
+      "sid": "obama_2014:0070",
+      "source_url": "https://home.treasury.gov/system/files/256/LGR-October-2013--cleared-for-transmittal-with-charts.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.4,
+      "snippet_len": 137
+    },
+    {
+      "sid": "obama_2014:0070",
+      "source_url": "https://www.federalreserve.gov/publications/other-reports/files/sbfreport2012.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 142
+    },
+    {
+      "sid": "obama_2014:0070",
+      "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+      "source_tier": "Government",
+      "relevance_score": 1.0,
+      "snippet_len": 137
+    },
+    {
+      "sid": "obama_2014:0198",
+      "source_url": "https://www.bls.gov/opub/btn/volume-2/spending-patterns-of-families-receiving-means-tested-government-assistance.htm",
+      "source_tier": "Government",
+      "relevance_score": 0.2,
+      "snippet_len": 129
+    },
+    {
+      "sid": "obama_2014:0198",
+      "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+      "source_tier": "Government",
+      "relevance_score": 1.0,
+      "snippet_len": 160
+    },
+    {
+      "sid": "obama_2014:0198",
+      "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+      "source_tier": "Government",
+      "relevance_score": 1.0,
+      "snippet_len": 100
+    },
+    {
+      "sid": "trump_2026:0100",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.7,
+      "snippet_len": 117
+    },
+    {
+      "sid": "trump_2026:0341",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 125
+    },
+    {
+      "sid": "trump_2026:0341",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 124
+    },
+    {
+      "sid": "trump_2026:0403",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 147
+    },
+    {
+      "sid": "trump_2026:0403",
+      "source_url": "https://www.ca4.uscourts.gov/opinions/241682.P.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.9,
+      "snippet_len": 154
+    },
+    {
+      "sid": "trump_2026:0403",
+      "source_url": "https://www.govinfo.gov/app/details/USCOURTS-ca4-24-01682",
+      "source_tier": "Government",
+      "relevance_score": 0.9,
+      "snippet_len": 136
+    },
+    {
+      "sid": "trump_2026:0469",
+      "source_url": "https://www.npr.org/2025/11/27/nx-s1-5622955/national-guard-shooting-washington-dc-updates",
+      "source_tier": "Established",
+      "relevance_score": 0.7,
+      "snippet_len": 132
+    },
+    {
+      "sid": "trump_2026:0469",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.5,
+      "snippet_len": 124
+    },
+    {
+      "sid": "trump_2026:0469",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 110
+    },
+    {
+      "sid": "trump_2026:0469",
+      "source_url": "https://www.nbcnews.com/news/us-news/national-guard-sarah-beckstrom-rcna246328",
+      "source_tier": "Established",
+      "relevance_score": 0.7,
+      "snippet_len": 119
+    },
+    {
+      "sid": "trump_2026:0665",
+      "source_url": "https://www.govinfo.gov/app/details/DCPD-202600136",
+      "source_tier": "Government",
+      "relevance_score": 0.8,
+      "snippet_len": 164
+    },
+    {
+      "sid": "trump_2026:0665",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.8,
+      "snippet_len": 130
+    },
+    {
+      "sid": "trump_2026:0665",
+      "source_url": "https://www.congress.gov/119/crec/2026/02/24/172/36/CREC-2026-02-24-pt1-PgS649.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.8,
+      "snippet_len": 84
+    },
+    {
+      "sid": "trump_2026:0665",
+      "source_url": "https://apnews.com/article/donald-trump-transcript-state-of-union-2026-c13e2a07df999b464b733f4a6e84dbd4",
+      "source_tier": "Wire",
+      "relevance_score": 0.8,
+      "snippet_len": 111
+    },
+    {
+      "sid": "trump_2026:0685",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_tier": "Government",
+      "relevance_score": 0.3,
+      "snippet_len": 123
+    },
+    {
+      "sid": "trump_2026:0685",
+      "source_url": "https://www.cbsnews.com/news/state-of-the-union-2026-trump-royce-williams-medal-of-honor/",
+      "source_tier": "Established",
+      "relevance_score": 0.2,
+      "snippet_len": 115
+    }
+  ],
+  "finding": "All 62 null-stance creditable items on the 23 gap claims are scored_but_null: B1a's scope COVERED every one (0 not_in_b1a_scope) and every scored stance propagated (0 not_propagated). The gap is therefore an ABSTENTION set, not a coverage miss or a propagation miss. The items are relevant (median relevance 0.5) with real snippets (0 empty, median 133.5 chars), tier-heavy Government — B1a saw topically-relevant text and declined a True/False stance at snippet granularity.",
+  "spend_gate": "Moving these nulls means a re-score with fuller text or a stronger scorer — SPEND. Per directive, cost-estimate to the owner before any calls; none are made here. Some abstentions may also be correct (relevant but genuinely non-bearing), which a re-score would confirm, not fix."
+}
