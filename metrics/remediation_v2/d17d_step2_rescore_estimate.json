@@ -1,0 +1,97 @@
+{
+  "schema": "truthbot-d17d-step2-rescore-estimate v1",
+  "generated": "2026-08-16T21:15:59.185001+00:00",
+  "method": "Input volume MEASURED via rescore_stored_packs.estimate_speech (relevance.score_payload + _SCORE_SYSTEM) over the step-2 target claims on the shipping head; output volume priced from truthbot.costs. NO calls made.",
+  "source_step2": "2026-08-16T16:17:13.507615+00:00",
+  "n_claims": 23,
+  "n_null_items_targeted": 62,
+  "n_items_rescored": 195,
+  "scope_note": "score_evidence rewrites a WHOLE pack, so the priced unit is every item on the target claims, not only the null ones.",
+  "per_speech": {
+    "biden_2022": {
+      "n_claims": 6,
+      "calls": 6,
+      "items_rescored": 50,
+      "null_items_targeted": 18,
+      "prompt_chars_measured": 20744,
+      "tokens_in_est": 6627,
+      "tokens_out_est": 3960,
+      "cost_usd_est_baseline": 0.0264,
+      "cost_usd_est_stronger_EXTRAPOLATED": 0.152
+    },
+    "clinton_1998": {
+      "n_claims": 4,
+      "calls": 4,
+      "items_rescored": 36,
+      "null_items_targeted": 8,
+      "prompt_chars_measured": 14675,
+      "tokens_in_est": 4688,
+      "tokens_out_est": 2852,
+      "cost_usd_est_baseline": 0.0189,
+      "cost_usd_est_stronger_EXTRAPOLATED": 0.109
+    },
+    "gwbush_2006": {
+      "n_claims": 4,
+      "calls": 4,
+      "items_rescored": 34,
+      "null_items_targeted": 7,
+      "prompt_chars_measured": 13936,
+      "tokens_in_est": 4452,
+      "tokens_out_est": 2693,
+      "cost_usd_est_baseline": 0.0179,
+      "cost_usd_est_stronger_EXTRAPOLATED": 0.1031
+    },
+    "obama_2014": {
+      "n_claims": 3,
+      "calls": 3,
+      "items_rescored": 30,
+      "null_items_targeted": 13,
+      "prompt_chars_measured": 11209,
+      "tokens_in_est": 3581,
+      "tokens_out_est": 2376,
+      "cost_usd_est_baseline": 0.0155,
+      "cost_usd_est_stronger_EXTRAPOLATED": 0.0892
+    },
+    "trump_2026": {
+      "n_claims": 6,
+      "calls": 6,
+      "items_rescored": 45,
+      "null_items_targeted": 16,
+      "prompt_chars_measured": 20063,
+      "tokens_in_est": 6410,
+      "tokens_out_est": 3564,
+      "cost_usd_est_baseline": 0.0242,
+      "cost_usd_est_stronger_EXTRAPOLATED": 0.139
+    }
+  },
+  "options": {
+    "1_same_scorer_baseline": {
+      "model": "claude-haiku",
+      "lane": "on-proxy (ledger-true)",
+      "total_usd_est": 0.1029,
+      "recommended": false,
+      "why": "B1a already scored these exact items with this exact model on this exact text and abstained; re-running it mostly buys the same nulls back. Priced for completeness, not offered as a fix."
+    },
+    "2_stronger_scorer": {
+      "model": "gpt-5.5",
+      "lane": "UNCONFIRMED — verify proxy serves it; if off-proxy the figure is ESTIMATE-ONLY with no ledger truth",
+      "total_usd_est_EXTRAPOLATED": 0.5923,
+      "recommended": "only via a one-speech pilot",
+      "why": "The first option that could actually move an abstention. The number is an ORDER-OF-MAGNITUDE extrapolation: costs.py's per-item output load is calibrated on claude-haiku only."
+    },
+    "3_fuller_text": {
+      "lane": "NOT ESTIMABLE from stored data",
+      "total_usd_est": null,
+      "why": "Most likely to resolve a stance (the abstentions look like snippet-granularity limits at ~133 chars), but it needs a document-fetch pass of unknown volume. A number here would be invented."
+    }
+  },
+  "pilot_suggestion": {
+    "cheapest_speech": "obama_2014",
+    "cheapest_speech_usd_baseline": 0.0155,
+    "most_null_items_speech": "biden_2022",
+    "most_null_items": 18,
+    "note": "Run ONE speech first and measure how many nulls actually resolve, before committing the full 23. Yield is the unpriced unknown and some abstentions are correct."
+  },
+  "uncertainty": "Uncertainty: token counts are NOT a tokenizer run — no tokenizer is installed and this path is $0/offline. 3.13 chars/token and 32.5 output tokens/item are BACK-SOLVED from ledger actuals (haiku-score-2026-08-09): the B1a run ($1.0632) and the B2 run ($0.5405), 2026-08-08, model claude-haiku, over 10 per-speech proxy_key_spend deltas. Back-test residuals +1.1% (B1a) and -0.3% (B2). This is a FIT TO TWO RUNS ON ONE MODEL, not a measured law: expect +/-5% on a whole run and +/-20% on a single speech, and nothing at all outside this prompt family. Haiku is ON-PROXY, so the funded run's real cost stays LEDGER-TRUE (proxy_key_spend) and the breaker, not this number, is what stops the spend.",
+  "spend_authorization": "NONE. This is an estimate only; no calls were made and none are authorized by this artifact. A funded run needs an explicit owner budget cap, which the breaker — not this number — enforces."
+}
