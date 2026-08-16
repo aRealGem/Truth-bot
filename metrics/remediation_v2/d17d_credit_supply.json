@@ -1,6 +1,6 @@
 {
   "schema": "truthbot-d17d-credit-supply v1",
-  "generated": "2026-08-16T16:07:27.859897+00:00",
+  "generated": "2026-08-16T20:03:05.811046+00:00",
   "method": "$0 recomputation of the post-speech band from stored published_at + the registered speech date. No calls, no gate re-run.",
   "min_bearing_t13": 2,
   "fair_game_days": 7,
@@ -2631,7 +2631,7 @@
     }
   ],
   "ceiling_note": "creditable_t13 is an UPPER BOUND: an item still has to bear on the claim (resolved True/False stance) to actually credit. supply-0 / supply-short are therefore firm exclusions; supply-met is NOT a prediction that the claim gates.",
-  "bearing_note": "bearing_t13 (+ null_stance_t13 == creditable_t13) splits each creditable item by supports_claim: True/False = a resolved stance that can count toward min_bearing_t13; None = retrieved but never stance-resolved, so it cannot bear. bearing-met is the strict refinement of supply-met used to seed the step-1/step-2 target sets.",
+  "bearing_note": "bearing_t13 (+ null_stance_t13 == creditable_t13) splits each creditable item by supports_claim: True/False = a resolved stance that can count toward min_bearing_t13; None = retrieved but never stance-resolved, so it cannot bear. bearing-met is the strict refinement of supply-met used to seed the step-1/step-2 target sets. IT IS STILL A CEILING, NOT A GATE PREDICTION: it does not model the D15 utterance_record exclusion, so a bearing-met claim can and does still gate when its bearing items are utterance-records (see d17d_step1_gate_axis: all 30 bearing-met claims are D15-gated).",
   "reconciliation": {
     "note": "Two denominators are in play — do not conflate them. creditable_t13 sums to 179 over ALL 81 web-tier1 claims; restricted to the 53 supply-met claims it sums to 157. The 22-item difference is the 22 supply-short claims, which by definition hold exactly 1 creditable item each (supply-0 holds none). null-stance is therefore 78/179 (44%) over all claims and 72/157 (46%) over supply-met only; the latter is the figure carried in prior notes.",
     "creditable_t13_all": 179,

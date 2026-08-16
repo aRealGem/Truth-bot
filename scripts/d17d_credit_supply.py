@@ -271,7 +271,12 @@ def run(speech_filter: str = "", out_path: Path = OUT) -> dict:
                          "min_bearing_t13; None = retrieved but never "
                          "stance-resolved, so it cannot bear. bearing-met is "
                          "the strict refinement of supply-met used to seed the "
-                         "step-1/step-2 target sets."),
+                         "step-1/step-2 target sets. IT IS STILL A CEILING, NOT "
+                         "A GATE PREDICTION: it does not model the D15 "
+                         "utterance_record exclusion, so a bearing-met claim can "
+                         "and does still gate when its bearing items are "
+                         "utterance-records (see d17d_step1_gate_axis: all 30 "
+                         "bearing-met claims are D15-gated)."),
         "reconciliation": {
             "note": ("Two denominators are in play — do not conflate them. "
                      "creditable_t13 sums to %d over ALL %d web-tier1 claims; "
