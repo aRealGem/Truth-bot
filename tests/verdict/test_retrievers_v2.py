@@ -41,6 +41,21 @@ def test_prompt_is_speaker_blind_and_era_scoped() -> None:
     assert "speaker" not in inspect.signature(build_retrieval_prompt).parameters
 
 
+def test_prompt_marks_fair_game_band_non_creditable() -> None:
+    # The credit window ends at the utterance; the +1..+7 fair-game band is
+    # admissible context that earns NO credit. Retrievers were previously told
+    # to "STRONGLY prefer" anything up to utterance+7, which fetched exactly the
+    # post-speech evidence the gate will not count. This pins the corrected
+    # incentive (D17-d step 3).
+    p = build_retrieval_prompt("Gas is below $2.30 in most states.",
+                               utterance=UTT, window=WINDOW)
+    low = p.lower()
+    assert "credit window" in low
+    assert "on or before 2026-02-24" in low          # window ends at utterance
+    assert "context only" in low and "no credit" in low
+    assert "2026-03-03" in p                          # fair-game end still stated
+
+
 def test_items_to_evidence_converts_and_enforces_exclusion() -> None:
     items = [
         {"url": "https://www.bls.gov/cpi/latest.htm", "date": "2026-02-11",
