@@ -1,6 +1,6 @@
 {
   "schema": "truthbot-d17d-credit-supply v1",
-  "generated": "2026-08-15T23:00:05.019555+00:00",
+  "generated": "2026-08-16T16:07:27.859897+00:00",
   "method": "$0 recomputation of the post-speech band from stored published_at + the registered speech date. No calls, no gate re-run.",
   "min_bearing_t13": 2,
   "fair_game_days": 7,
@@ -9,6 +9,10 @@
     "supply-short": 22,
     "supply-met": 53,
     "supply-0": 6
+  },
+  "bearing_totals": {
+    "supply_and_bearing_met": 30,
+    "supply_met_bearing_gap": 23
   },
   "per_speech": {
     "biden_2022": {
@@ -21,7 +25,9 @@
         "supply-0": 2
       },
       "post_speech_band_items": 17,
-      "creditable_items": 40
+      "creditable_items": 40,
+      "bearing_items": 21,
+      "null_stance_items": 19
     },
     "clinton_1998": {
       "run_id": "d7ee7340-c07d-55da-b9db-9397d7141c35",
@@ -33,7 +39,9 @@
         "supply-0": 1
       },
       "post_speech_band_items": 24,
-      "creditable_items": 31
+      "creditable_items": 31,
+      "bearing_items": 17,
+      "null_stance_items": 14
     },
     "gwbush_2006": {
       "run_id": "6df77093-e328-596e-bfd5-afabd08a1679",
@@ -44,7 +52,9 @@
         "supply-short": 4
       },
       "post_speech_band_items": 17,
-      "creditable_items": 13
+      "creditable_items": 13,
+      "bearing_items": 6,
+      "null_stance_items": 7
     },
     "obama_2014": {
       "run_id": "70748500-315a-5664-8474-c6632de57816",
@@ -56,7 +66,9 @@
         "supply-0": 1
       },
       "post_speech_band_items": 6,
-      "creditable_items": 29
+      "creditable_items": 29,
+      "bearing_items": 15,
+      "null_stance_items": 14
     },
     "trump_2026": {
       "run_id": "799e71b6-2480-50ca-870e-1a95f0d0d5fe",
@@ -68,7 +80,9 @@
         "supply-short": 7
       },
       "post_speech_band_items": 52,
-      "creditable_items": 66
+      "creditable_items": 66,
+      "bearing_items": 42,
+      "null_stance_items": 24
     }
   },
   "claims": [
@@ -76,893 +90,2553 @@
       "sid": "biden_2022:0017",
       "n_items": 4,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "01fbbed4-f63a-4d95-bd05-09c4e0004a8a",
+          "source_tier": "Established",
+          "published_at": "2022-02-28T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.323483",
+          "stance": "supports"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "biden_2022:0019",
       "n_items": 5,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "e5dd3d2b-0759-46ce-a56d-eaf82f1331bc",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.323609",
+          "stance": "supports"
+        },
+        {
+          "id": "6abfd988-33cd-4df4-9e53-286fe8067433",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.323643",
+          "stance": "supports"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "biden_2022:0051",
       "n_items": 8,
       "creditable_t13": 0,
+      "bearing_t13": 0,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [],
       "speech": "biden_2022",
-      "bucket": "supply-0"
+      "bucket": "supply-0",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "biden_2022:0137",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "53416f21-5b56-4889-baba-628ad085d501",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.329033",
+          "stance": "supports"
+        },
+        {
+          "id": "9528578f-5085-4e98-bcbc-99aae3206a09",
+          "source_tier": "Established",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.329046",
+          "stance": "supports"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "biden_2022:0146",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "e5705871-c40e-46cd-a4aa-69648b2330d1",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.329585",
+          "stance": "supports"
+        },
+        {
+          "id": "84cfc2a4-6808-473a-b4ab-b4330e878a2f",
+          "source_tier": "Established",
+          "published_at": "2022-01-21T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.329603",
+          "stance": "refutes"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "biden_2022:0168",
       "n_items": 3,
       "creditable_t13": 0,
+      "bearing_t13": 0,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [],
       "speech": "biden_2022",
-      "bucket": "supply-0"
+      "bucket": "supply-0",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "biden_2022:0171",
       "n_items": 9,
       "creditable_t13": 4,
+      "bearing_t13": 4,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "dde52213-b520-4b2c-8b9c-ec65c2b93f38",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.330456",
+          "stance": "supports"
+        },
+        {
+          "id": "5ef15d67-294d-421e-9ac1-4d912590dfcb",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.330507",
+          "stance": "supports"
+        },
+        {
+          "id": "b02f133b-f708-43f3-8e5b-baa28dc044db",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.330545",
+          "stance": "supports"
+        },
+        {
+          "id": "e7b1ed68-cb75-477c-9ac6-a40491eb2eca",
+          "source_tier": "Established",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.330559",
+          "stance": "supports"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "biden_2022:0200",
       "n_items": 8,
       "creditable_t13": 3,
+      "bearing_t13": 1,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "ffd75baa-0245-43d4-ae52-27213f091b97",
+          "source_tier": "Established",
+          "published_at": "2020-08-15T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.331655",
+          "stance": "supports"
+        },
+        {
+          "id": "19a153d5-6069-4833-a137-de47787281fc",
+          "source_tier": "Established",
+          "published_at": "2020-10-06T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.331733",
+          "stance": "null"
+        },
+        {
+          "id": "f3e10fbc-7a22-4371-9c0c-a5432d549757",
+          "source_tier": "Government",
+          "published_at": "2021-11-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.331745",
+          "stance": "null"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "biden_2022:0211",
       "n_items": 10,
       "creditable_t13": 5,
+      "bearing_t13": 1,
+      "null_stance_t13": 4,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "f814059c-4915-46e6-9eb1-5f28e48e8bd1",
+          "source_tier": "Government",
+          "published_at": "2022-01-27T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.332040",
+          "stance": "null"
+        },
+        {
+          "id": "3ae66f9f-626c-4044-b950-064111969f30",
+          "source_tier": "Established",
+          "published_at": "2021-07-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.332053",
+          "stance": "null"
+        },
+        {
+          "id": "b8c3d7d0-79fd-4696-b64a-65249681b261",
+          "source_tier": "Government",
+          "published_at": "2021-08-04T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.332065",
+          "stance": "null"
+        },
+        {
+          "id": "eda596df-9c59-4c4a-957c-690f048b6075",
+          "source_tier": "Government",
+          "published_at": "2021-03-23T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.332078",
+          "stance": "refutes"
+        },
+        {
+          "id": "8871e673-5339-4044-bebb-8c05529233e8",
+          "source_tier": "Government",
+          "published_at": "2021-08-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.332091",
+          "stance": "null"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "biden_2022:0284",
       "n_items": 8,
       "creditable_t13": 3,
+      "bearing_t13": 2,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "d2d1e515-ec0a-45e2-a322-c93ae2ac635a",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.334543",
+          "stance": "supports"
+        },
+        {
+          "id": "e5340422-97cf-48d8-893f-7a685835bfb6",
+          "source_tier": "Established",
+          "published_at": "2022-02-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.334557",
+          "stance": "refutes"
+        },
+        {
+          "id": "87f961c8-dbc1-4d24-b3e6-b251768f46da",
+          "source_tier": "Established",
+          "published_at": "2022-01-04T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.334654",
+          "stance": "null"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "biden_2022:0285",
       "n_items": 10,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 4,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "990501cd-b0e2-49c3-a71e-98184fb07870",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.334762",
+          "stance": "supports"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "biden_2022:0362",
       "n_items": 9,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "4b8deeb8-56a4-4fc5-bb8e-7e81119304f2",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.337389",
+          "stance": "supports"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "biden_2022:0366",
       "n_items": 10,
       "creditable_t13": 4,
+      "bearing_t13": 1,
+      "null_stance_t13": 3,
       "post_speech_band_t13": 0,
       "undated_t13": 1,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "8aeb0e1c-557f-4e58-8118-bbf1ce8b3c0e",
+          "source_tier": "Established",
+          "published_at": "2021-04-12T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.337717",
+          "stance": "refutes"
+        },
+        {
+          "id": "98b66de7-17c1-4403-a7f2-be5946e6930e",
+          "source_tier": "Government",
+          "published_at": "2021-12-03T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.337748",
+          "stance": "null"
+        },
+        {
+          "id": "a52dc7a7-08a7-40a4-b507-2a940fbddf3a",
+          "source_tier": "Government",
+          "published_at": "2022-01-03T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.337782",
+          "stance": "null"
+        },
+        {
+          "id": "d944b7d0-9cc6-49f6-9836-cd0b0fcbb1b2",
+          "source_tier": "Established",
+          "published_at": "2021-04-27T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.337801",
+          "stance": "null"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "biden_2022:0376",
       "n_items": 7,
       "creditable_t13": 5,
+      "bearing_t13": 0,
+      "null_stance_t13": 5,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "38f64dbe-21b3-41af-9ceb-49f6bf5e0a02",
+          "source_tier": "Government",
+          "published_at": "2021-05-17T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.338212",
+          "stance": "null"
+        },
+        {
+          "id": "f1a9212d-d577-461d-bd4b-229b74696390",
+          "source_tier": "Established",
+          "published_at": "2021-12-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.338227",
+          "stance": "null"
+        },
+        {
+          "id": "eca9a1cc-1c6a-4465-9388-3902a31752f5",
+          "source_tier": "Established",
+          "published_at": "2021-09-20T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.338244",
+          "stance": "null"
+        },
+        {
+          "id": "07f5f407-4ebf-42c4-b032-e4646fdbe383",
+          "source_tier": "Government",
+          "published_at": "2021-09-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.338260",
+          "stance": "null"
+        },
+        {
+          "id": "697db01c-e8f4-4ea1-a9d6-20d76a15bde7",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.338274",
+          "stance": "null"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "biden_2022:0420",
       "n_items": 6,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "9b0d9a1a-3de8-4c06-b631-1a8993606f82",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.350411",
+          "stance": "supports"
+        },
+        {
+          "id": "674c5332-9840-47f4-b75e-b9bd14591cec",
+          "source_tier": "Established",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.350449",
+          "stance": "supports"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "biden_2022:0427",
       "n_items": 6,
       "creditable_t13": 3,
+      "bearing_t13": 0,
+      "null_stance_t13": 3,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "63f9af5c-b602-4336-abea-f0603f2f2077",
+          "source_tier": "Government",
+          "published_at": "2022-03-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.350520",
+          "stance": "null"
+        },
+        {
+          "id": "c4c82d89-c531-412d-a44b-4e5423947310",
+          "source_tier": "Government",
+          "published_at": "2021-01-24T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.350559",
+          "stance": "null"
+        },
+        {
+          "id": "eb24501a-4e9a-4e21-9cf2-42d7011b0e54",
+          "source_tier": "Government",
+          "published_at": "2022-02-01T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.350572",
+          "stance": "null"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "biden_2022:0437",
       "n_items": 9,
       "creditable_t13": 2,
+      "bearing_t13": 1,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "9177bc81-8838-4eeb-9fd8-fc49393be4e2",
+          "source_tier": "Government",
+          "published_at": "2021-08-05T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.351010",
+          "stance": "supports"
+        },
+        {
+          "id": "92a2cfe0-ccb0-4fab-861a-4087772ad0ed",
+          "source_tier": "Government",
+          "published_at": "2020-07-21T00:00:00",
+          "retrieved_at": "2026-08-06T03:31:46.351036",
+          "stance": "null"
+        }
+      ],
       "speech": "biden_2022",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "clinton_1998:0027",
       "n_items": 10,
       "creditable_t13": 5,
+      "bearing_t13": 2,
+      "null_stance_t13": 3,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "64a30310-1042-48d3-95cb-be2f52b26733",
+          "source_tier": "Government",
+          "published_at": "1997-01-01T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.936003",
+          "stance": "null"
+        },
+        {
+          "id": "36217737-5540-4594-89e8-0ff50f5dcc2d",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.936016",
+          "stance": "supports"
+        },
+        {
+          "id": "d9f738c6-9bc2-4dd0-9a1d-203a6476f325",
+          "source_tier": "Established",
+          "published_at": "1998-01-05T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.936028",
+          "stance": "null"
+        },
+        {
+          "id": "e9682599-575b-4b39-8eb8-7286c9ef9f80",
+          "source_tier": "Government",
+          "published_at": "1998-01-08T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.936068",
+          "stance": "null"
+        },
+        {
+          "id": "7604d6a1-ffaf-4df5-858a-eb47c96e866c",
+          "source_tier": "Established",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.936081",
+          "stance": "supports"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "clinton_1998:0077",
       "n_items": 10,
       "creditable_t13": 3,
+      "bearing_t13": 1,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "799c5dce-9ed6-4cb9-9725-ed25d3a38bf5",
+          "source_tier": "Government",
+          "published_at": "1997-08-01T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.938674",
+          "stance": "null"
+        },
+        {
+          "id": "96f04625-f5eb-40b1-8459-58018b0bf676",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.938687",
+          "stance": "supports"
+        },
+        {
+          "id": "f1962895-2f19-4b26-bd1c-b10f9bce29d8",
+          "source_tier": "Government",
+          "published_at": "1997-07-01T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.938739",
+          "stance": "null"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "clinton_1998:0090",
       "n_items": 10,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "1c261fd2-b21b-4023-9165-0c748ab08328",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.939074",
+          "stance": "supports"
+        },
+        {
+          "id": "74e2c650-a053-4777-989d-b2200772528b",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.939126",
+          "stance": "supports"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "clinton_1998:0101",
       "n_items": 10,
       "creditable_t13": 3,
+      "bearing_t13": 0,
+      "null_stance_t13": 3,
       "post_speech_band_t13": 1,
       "undated_t13": 3,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "bedbefac-d54f-44ae-9925-8b6bc1d09be5",
+          "source_tier": "Government",
+          "published_at": "1997-11-13T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.939464",
+          "stance": "null"
+        },
+        {
+          "id": "93f79a02-0e79-470f-9469-9108915d5b62",
+          "source_tier": "Government",
+          "published_at": "1997-02-06T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.939477",
+          "stance": "null"
+        },
+        {
+          "id": "55362ec4-6147-4673-a59e-7d9622f41fbe",
+          "source_tier": "Government",
+          "published_at": "1997-01-22T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.939515",
+          "stance": "null"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "clinton_1998:0107",
       "n_items": 5,
       "creditable_t13": 1,
+      "bearing_t13": 0,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 0,
       "undated_t13": 1,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "7d4c77eb-ca14-4c4d-9817-f0984c57b61d",
+          "source_tier": "Government",
+          "published_at": "1997-01-01T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.939668",
+          "stance": "null"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "clinton_1998:0195",
       "n_items": 9,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 4,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "fb4b8d4e-2cd3-4918-b9d8-c2ed0b542a54",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.943509",
+          "stance": "supports"
+        },
+        {
+          "id": "2a4bd6f1-93ea-40ac-b53c-9188edb45bf5",
+          "source_tier": "Government",
+          "published_at": "1997-02-01T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.943524",
+          "stance": "supports"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "clinton_1998:0211",
       "n_items": 6,
       "creditable_t13": 3,
+      "bearing_t13": 1,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "765ee7ac-5b22-4c6e-babf-afe4e71cba79",
+          "source_tier": "Government",
+          "published_at": "1997-12-16T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.947446",
+          "stance": "null"
+        },
+        {
+          "id": "728c1884-cf4b-465d-ade5-4b76579b34ae",
+          "source_tier": "Government",
+          "published_at": "1997-07-08T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.947515",
+          "stance": "null"
+        },
+        {
+          "id": "802b7d8b-be9a-4c72-a2c5-4e2ad54c46ab",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.947585",
+          "stance": "supports"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "clinton_1998:0225",
       "n_items": 10,
       "creditable_t13": 4,
+      "bearing_t13": 3,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "3d5323e7-788c-4a15-979b-a2fb68aca7cd",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948090",
+          "stance": "supports"
+        },
+        {
+          "id": "69725b1e-a697-4e9b-b99c-4435bc29fef1",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948103",
+          "stance": "supports"
+        },
+        {
+          "id": "671757e0-eab4-4300-afe8-34b32b6ebffa",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948117",
+          "stance": "supports"
+        },
+        {
+          "id": "b674ce4a-7faf-4c45-bdfc-2f3bdc346f6d",
+          "source_tier": "Established",
+          "published_at": "1997-08-28T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948145",
+          "stance": "null"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "clinton_1998:0226",
       "n_items": 9,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "0be1875e-0ffe-438e-b1b0-ac5583eb7ac0",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948287",
+          "stance": "supports"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "clinton_1998:0227",
       "n_items": 10,
       "creditable_t13": 3,
+      "bearing_t13": 2,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "57f8d633-11e0-439c-8bd1-70f1d58880be",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948425",
+          "stance": "supports"
+        },
+        {
+          "id": "7083c844-31fb-4f42-9269-953612aed9e6",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948481",
+          "stance": "supports"
+        },
+        {
+          "id": "68036591-6d35-4c06-bda2-de1698e39787",
+          "source_tier": "Established",
+          "published_at": "1997-08-28T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948495",
+          "stance": "null"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "clinton_1998:0236",
       "n_items": 8,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "a5ae72f7-518c-467d-a442-f8444a690df9",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948979",
+          "stance": "supports"
+        },
+        {
+          "id": "8a8559d6-ca83-4316-9f70-071a0afbb90c",
+          "source_tier": "Government",
+          "published_at": "1998-01-27T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.948995",
+          "stance": "supports"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "clinton_1998:0241",
       "n_items": 4,
       "creditable_t13": 0,
+      "bearing_t13": 0,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [],
       "speech": "clinton_1998",
-      "bucket": "supply-0"
+      "bucket": "supply-0",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "clinton_1998:0358",
       "n_items": 10,
       "creditable_t13": 2,
+      "bearing_t13": 1,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 4,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "369005fb-f20a-41ca-a77b-b8f95c0682ec",
+          "source_tier": "Government",
+          "published_at": "1997-11-20T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.953393",
+          "stance": "supports"
+        },
+        {
+          "id": "04994621-3f5f-44e6-940e-0356646cca5e",
+          "source_tier": "Government",
+          "published_at": "1998-01-26T00:00:00",
+          "retrieved_at": "2026-08-03T13:03:58.953444",
+          "stance": "null"
+        }
+      ],
       "speech": "clinton_1998",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "gwbush_2006:0024",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 0,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "b146bdf3-8f39-4bea-b38f-6f0e2f6f7f73",
+          "source_tier": "Government",
+          "published_at": "2006-01-31T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.824389",
+          "stance": "null"
+        },
+        {
+          "id": "71e53f67-f3d3-442e-9aab-aa5d04354a26",
+          "source_tier": "Government",
+          "published_at": "2006-01-31T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.824423",
+          "stance": "null"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "gwbush_2006:0025",
       "n_items": 4,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "a9486653-7b2c-4050-975f-717bccea23ea",
+          "source_tier": "Government",
+          "published_at": "2006-01-31T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.824496",
+          "stance": "supports"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "gwbush_2006:0027",
       "n_items": 6,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "22dba536-1866-4e90-8399-e7e06d7e1642",
+          "source_tier": "Established",
+          "published_at": "2006-01-31T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.824628",
+          "stance": "supports"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "gwbush_2006:0147",
       "n_items": 10,
       "creditable_t13": 3,
+      "bearing_t13": 1,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "55484e39-8b5a-45d8-8f95-6dfa52bfea51",
+          "source_tier": "Government",
+          "published_at": "2006-01-31T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.826811",
+          "stance": "supports"
+        },
+        {
+          "id": "a64a538a-6366-4d8d-a4db-23cf07bba8dd",
+          "source_tier": "Government",
+          "published_at": "2006-01-26T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.826822",
+          "stance": "null"
+        },
+        {
+          "id": "254fea6d-1a3e-4ac4-be8a-fd93f3411472",
+          "source_tier": "Government",
+          "published_at": "2006-01-26T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.826832",
+          "stance": "null"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "gwbush_2006:0155",
       "n_items": 10,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 4,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "a9d3526d-5e58-4f6f-8c31-46bb3433e84f",
+          "source_tier": "Government",
+          "published_at": "2006-01-23T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.827518",
+          "stance": "supports"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "gwbush_2006:0156",
       "n_items": 10,
       "creditable_t13": 2,
+      "bearing_t13": 0,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 5,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "c674dba0-f1d7-420b-91de-bb7792d917ea",
+          "source_tier": "Government",
+          "published_at": "2006-01-26T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.827670",
+          "stance": "null"
+        },
+        {
+          "id": "69d2cca0-3de8-4f30-9ee3-66236ac4cd08",
+          "source_tier": "Government",
+          "published_at": "2006-01-26T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.827725",
+          "stance": "null"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "gwbush_2006:0189",
       "n_items": 8,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "7a6ce0c6-ebbb-463b-8124-0f5a250b45ed",
+          "source_tier": "Government",
+          "published_at": "2006-01-31T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.829117",
+          "stance": "supports"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "gwbush_2006:0217",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 1,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 2,
       "undated_t13": 1,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "932be3a6-1f9a-4c97-ac0c-2193ff4aac5a",
+          "source_tier": "Government",
+          "published_at": "2005-12-19T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.829672",
+          "stance": "supports"
+        },
+        {
+          "id": "0eb60eb6-d6dc-4a28-9b5b-8cb884b4e4bd",
+          "source_tier": "Government",
+          "published_at": "2005-02-01T00:00:00",
+          "retrieved_at": "2026-08-03T04:20:27.829702",
+          "stance": "null"
+        }
+      ],
       "speech": "gwbush_2006",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "obama_2014:0001",
       "n_items": 10,
       "creditable_t13": 6,
+      "bearing_t13": 1,
+      "null_stance_t13": 5,
       "post_speech_band_t13": 0,
       "undated_t13": 1,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "0760f9e3-36cd-463d-9ba3-e0c4ed8ce567",
+          "source_tier": "Government",
+          "published_at": "2014-01-10T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.207976",
+          "stance": "null"
+        },
+        {
+          "id": "1f7fa2a7-a175-432e-9ffe-7bce492d3aef",
+          "source_tier": "Government",
+          "published_at": "2014-01-10T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.207987",
+          "stance": "null"
+        },
+        {
+          "id": "8cfd1f04-64b6-4fd6-8bb0-e76d6f112a0f",
+          "source_tier": "Government",
+          "published_at": "2014-01-10T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.208010",
+          "stance": "null"
+        },
+        {
+          "id": "ac38ed2c-25db-4171-a373-19a570aec098",
+          "source_tier": "Government",
+          "published_at": "2014-01-10T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.208053",
+          "stance": "supports"
+        },
+        {
+          "id": "daf9e9d9-180c-4a20-bc20-a34667af2cae",
+          "source_tier": "Government",
+          "published_at": "2014-01-10T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.208064",
+          "stance": "null"
+        },
+        {
+          "id": "77b34e7b-b841-4a53-8a4e-f1ad99e87465",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.208075",
+          "stance": "null"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "obama_2014:0013",
       "n_items": 6,
       "creditable_t13": 1,
+      "bearing_t13": 0,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "385511c0-fb81-4302-81be-80ef504bf8d6",
+          "source_tier": "Established",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.209079",
+          "stance": "null"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "obama_2014:0045",
       "n_items": 6,
       "creditable_t13": 3,
+      "bearing_t13": 3,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "9b2a2342-e776-457a-ab60-e29de5f73d49",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.209803",
+          "stance": "supports"
+        },
+        {
+          "id": "bb978986-38fe-495e-911d-30fdf4495ae0",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.209825",
+          "stance": "supports"
+        },
+        {
+          "id": "7bd45b18-7861-4d6b-9ba2-16f52ec8848a",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.209847",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "obama_2014:0055",
       "n_items": 3,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "745bdf68-7dc7-465f-8323-8f9af195a3dc",
+          "source_tier": "Government",
+          "published_at": "2013-11-22T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.209990",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "obama_2014:0070",
       "n_items": 10,
       "creditable_t13": 5,
+      "bearing_t13": 0,
+      "null_stance_t13": 5,
       "post_speech_band_t13": 0,
       "undated_t13": 3,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "c7240ee0-bda7-47bd-9f69-6c87354dc849",
+          "source_tier": "Government",
+          "published_at": "2013-09-30T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.210468",
+          "stance": "null"
+        },
+        {
+          "id": "e7ffeea9-e7ac-4908-83cb-fa316488421e",
+          "source_tier": "Established",
+          "published_at": "2013-10-29T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.210479",
+          "stance": "null"
+        },
+        {
+          "id": "74795b8a-7b8c-45c4-81c4-b35501b1bb93",
+          "source_tier": "Government",
+          "published_at": "2013-11-01T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.210509",
+          "stance": "null"
+        },
+        {
+          "id": "05701000-f85d-4ad9-abe0-da709146887b",
+          "source_tier": "Government",
+          "published_at": "2012-09-01T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.210519",
+          "stance": "null"
+        },
+        {
+          "id": "eb15c455-0740-4455-844d-4b527832493d",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.210547",
+          "stance": "null"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "obama_2014:0082",
       "n_items": 5,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "4815b199-bdb4-44fd-a51c-536f986eb882",
+          "source_tier": "Established",
+          "published_at": "2013-03-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.211494",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "obama_2014:0114",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "03d14a28-663c-4641-a4d0-0a4f1a822042",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.212646",
+          "stance": "supports"
+        },
+        {
+          "id": "d7a70a8f-1c82-4af6-9def-71556d52f886",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.212698",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "obama_2014:0121",
       "n_items": 7,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "98f75d72-4126-479a-bb7b-e79e9f1cb5af",
+          "source_tier": "Established",
+          "published_at": "2014-01-24T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.212762",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "obama_2014:0153",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "94647bf6-5298-4cb3-9f82-a6e775d0ce03",
+          "source_tier": "Established",
+          "published_at": "2014-01-10T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.262472",
+          "stance": "supports"
+        },
+        {
+          "id": "52388fd3-8628-476b-9f9d-34926e9d9ff5",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.262546",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "obama_2014:0158",
       "n_items": 7,
       "creditable_t13": 0,
+      "bearing_t13": 0,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [],
       "speech": "obama_2014",
-      "bucket": "supply-0"
+      "bucket": "supply-0",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "obama_2014:0198",
       "n_items": 10,
       "creditable_t13": 3,
+      "bearing_t13": 0,
+      "null_stance_t13": 3,
       "post_speech_band_t13": 0,
       "undated_t13": 2,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "8e9bbcd4-85a0-42a3-94bc-52e26ab7512e",
+          "source_tier": "Government",
+          "published_at": "2013-12-16T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.266685",
+          "stance": "null"
+        },
+        {
+          "id": "fe2a68a7-3d1c-4e62-a75e-c86e063577d2",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.266719",
+          "stance": "null"
+        },
+        {
+          "id": "f2aca47e-f9ee-465f-9073-941b22c8eb15",
+          "source_tier": "Government",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.266730",
+          "stance": "null"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "obama_2014:0207",
       "n_items": 7,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "912aa683-2cc9-44c8-a2a6-1d3d508f1919",
+          "source_tier": "Established",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.267621",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "obama_2014:0255",
       "n_items": 8,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "a9f3e0ea-81d8-4d51-a2de-20f057a3b7b1",
+          "source_tier": "Government",
+          "published_at": "2012-01-01T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.271289",
+          "stance": "supports"
+        },
+        {
+          "id": "5e2a07d2-48fb-4c1c-9a1b-1b39b13eea4f",
+          "source_tier": "Established",
+          "published_at": "2014-01-28T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.271310",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "obama_2014:0283",
       "n_items": 6,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "f7d0bcdc-65e2-4fd8-8c8a-0902c4a19e88",
+          "source_tier": "Government",
+          "published_at": "2014-01-20T00:00:00",
+          "retrieved_at": "2026-08-05T16:25:09.272239",
+          "stance": "supports"
+        }
+      ],
       "speech": "obama_2014",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "trump_2026:0090",
       "n_items": 3,
       "creditable_t13": 0,
+      "bearing_t13": 0,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 1,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [],
       "speech": "trump_2026",
-      "bucket": "supply-0"
+      "bucket": "supply-0",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0098",
       "n_items": 9,
       "creditable_t13": 4,
+      "bearing_t13": 4,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "dd10dda8-6a15-48b5-9eb6-a03aace6ba78",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.420968",
+          "stance": "supports"
+        },
+        {
+          "id": "a93f07a9-7d44-489a-a551-60b0d77d30af",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.420981",
+          "stance": "supports"
+        },
+        {
+          "id": "ec42ffec-e4e1-4889-aaf0-3fd6d2f461a2",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.420993",
+          "stance": "supports"
+        },
+        {
+          "id": "e8ae2975-4e2b-45d8-9025-5b5f0b2b007b",
+          "source_tier": "Government",
+          "published_at": "2026-02-01T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421032",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0099",
       "n_items": 10,
       "creditable_t13": 4,
+      "bearing_t13": 2,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "74d3a043-bf01-4554-abfe-92aa2b83d575",
+          "source_tier": "Government",
+          "published_at": "2026-01-13T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421131",
+          "stance": "null"
+        },
+        {
+          "id": "aa1ab1ec-dcf9-422e-aeb7-4634c338e570",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421144",
+          "stance": "supports"
+        },
+        {
+          "id": "fc6878e8-99b8-4a73-9826-2670941116a7",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421182",
+          "stance": "supports"
+        },
+        {
+          "id": "9c33f3c0-2050-4772-8dc8-421de77cf782",
+          "source_tier": "Government",
+          "published_at": "2025-02-07T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421246",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0100",
       "n_items": 4,
       "creditable_t13": 2,
+      "bearing_t13": 1,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "d8576fee-7281-423c-bdd7-0de690e1ebc1",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421312",
+          "stance": "null"
+        },
+        {
+          "id": "a4d73cc3-019f-40c5-94c8-8f95fe70bea0",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421325",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "trump_2026:0102",
       "n_items": 5,
       "creditable_t13": 3,
+      "bearing_t13": 3,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "e756092a-d8e3-4572-ae4a-997c58ea7c08",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421474",
+          "stance": "supports"
+        },
+        {
+          "id": "9047b26e-ca24-4185-944f-7cfbe1999624",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421500",
+          "stance": "supports"
+        },
+        {
+          "id": "f3966bdc-a7b1-4b38-b4b3-21dc205b6399",
+          "source_tier": "Wire",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.421525",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0111",
       "n_items": 7,
       "creditable_t13": 3,
+      "bearing_t13": 3,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "1c38770f-38d6-4d40-b72f-82e6403b17c2",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.422355",
+          "stance": "supports"
+        },
+        {
+          "id": "08dd6dc0-4450-4aff-94a0-0ecf2494ae8c",
+          "source_tier": "Established",
+          "published_at": "2025-07-07T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.422369",
+          "stance": "supports"
+        },
+        {
+          "id": "a697d34c-6cab-47ad-a6ba-13f37a6209b5",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.422381",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0256",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "f8be2e27-873f-404f-b8b1-626ab3bc4516",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.429929",
+          "stance": "supports"
+        },
+        {
+          "id": "19a7f156-7fcf-4696-9740-f9dffcff0b64",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.429957",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0325",
       "n_items": 7,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "95d1a1bc-e2d7-40b7-9937-41cf0eba4a11",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.431597",
+          "stance": "supports"
+        },
+        {
+          "id": "d2655fc0-33ec-4958-bc81-affd863c7ba7",
+          "source_tier": "Established",
+          "published_at": "2024-06-25T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.431666",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0326",
       "n_items": 8,
       "creditable_t13": 1,
+      "bearing_t13": 0,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 1,
       "undated_t13": 1,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "8d5a273f-791d-4721-a3a3-855a60fa9365",
+          "source_tier": "Government",
+          "published_at": "2025-09-26T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.431816",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0340",
       "n_items": 7,
       "creditable_t13": 3,
+      "bearing_t13": 2,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "c5275d45-32e0-4cc8-9273-91f97b59759b",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.432739",
+          "stance": "supports"
+        },
+        {
+          "id": "9bcb7b00-06df-474e-9dbf-a0880165b1fa",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.432779",
+          "stance": "supports"
+        },
+        {
+          "id": "8c65d1a1-c230-4a0d-bce3-d673c7b8b98f",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.432817",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0341",
       "n_items": 5,
       "creditable_t13": 2,
+      "bearing_t13": 0,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "5470e25f-bab4-4f4a-9503-2bda648e9dd6",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.432867",
+          "stance": "null"
+        },
+        {
+          "id": "ad915397-515d-40d2-a536-53523a65c336",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.432919",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0342",
       "n_items": 4,
       "creditable_t13": 1,
+      "bearing_t13": 0,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "be065250-1002-40e4-81ec-34122886563e",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.432959",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0379",
       "n_items": 5,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 0,
       "undated_t13": 1,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "08080f82-5278-4c5f-aef2-4ab0fb2956ac",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.433955",
+          "stance": "supports"
+        },
+        {
+          "id": "d0b32cde-ba10-48c4-8bb6-4ab7904286cf",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.433968",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0400",
       "n_items": 4,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "4259c5c7-31ba-4513-92df-4ca358bdd560",
+          "source_tier": "Government",
+          "published_at": "2025-08-07T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434046",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "trump_2026:0402",
       "n_items": 8,
       "creditable_t13": 3,
+      "bearing_t13": 3,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "30f9a963-30c8-40e4-ba42-43f97dc9943e",
+          "source_tier": "Government",
+          "published_at": "2025-08-07T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434120",
+          "stance": "supports"
+        },
+        {
+          "id": "75e80ddb-e963-4b83-837b-f74b64b5c7df",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434159",
+          "stance": "supports"
+        },
+        {
+          "id": "949da946-d8c5-4d80-9727-022965c2fde9",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434198",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0403",
       "n_items": 6,
       "creditable_t13": 3,
+      "bearing_t13": 0,
+      "null_stance_t13": 3,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "90269732-69e5-485c-b43e-d495ddfcd978",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434266",
+          "stance": "null"
+        },
+        {
+          "id": "7efe23a9-0d99-44a5-aaf6-f6b34d288999",
+          "source_tier": "Government",
+          "published_at": "2025-08-07T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434305",
+          "stance": "null"
+        },
+        {
+          "id": "78aa500a-461e-4421-b446-b98113976ec4",
+          "source_tier": "Government",
+          "published_at": "2025-08-07T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434330",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0404",
       "n_items": 5,
       "creditable_t13": 1,
+      "bearing_t13": 0,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "07300eb7-4609-4528-a14c-43c18fb70ed1",
+          "source_tier": "Government",
+          "published_at": "2025-08-07T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434401",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0405",
       "n_items": 9,
       "creditable_t13": 3,
+      "bearing_t13": 3,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "f96d4ca0-3eed-44a0-85a6-97f93a14d61a",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434469",
+          "stance": "supports"
+        },
+        {
+          "id": "390dcf5e-2431-4110-a299-f88cd5795c0d",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434510",
+          "stance": "supports"
+        },
+        {
+          "id": "10a1ae75-7ed2-4f7a-8740-d7c99781a94a",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.434548",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0469",
       "n_items": 10,
       "creditable_t13": 4,
+      "bearing_t13": 0,
+      "null_stance_t13": 4,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "5059caa0-f03f-4658-b0df-f507bf8b411f",
+          "source_tier": "Established",
+          "published_at": "2025-11-27T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.436885",
+          "stance": "null"
+        },
+        {
+          "id": "0ddb5c60-92d4-47c4-aca2-6b0fd4166493",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.436900",
+          "stance": "null"
+        },
+        {
+          "id": "00b167d9-2226-4cda-ac08-f672d03b2d6e",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.436926",
+          "stance": "null"
+        },
+        {
+          "id": "04763556-ec36-48c7-a68a-f6f1d863ad88",
+          "source_tier": "Established",
+          "published_at": "2025-11-27T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.436939",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0569",
       "n_items": 7,
       "creditable_t13": 1,
+      "bearing_t13": 0,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "5b0a8c84-99bb-4c62-87d9-7f654974ef7b",
+          "source_tier": "Government",
+          "published_at": "2025-06-23T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.440999",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0643",
       "n_items": 6,
       "creditable_t13": 3,
+      "bearing_t13": 2,
+      "null_stance_t13": 1,
       "post_speech_band_t13": 1,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 2,
+      "creditable_items": [
+        {
+          "id": "79cab5d8-f87b-42fd-a341-d1c664e42cbd",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.444680",
+          "stance": "supports"
+        },
+        {
+          "id": "0e7340ff-8045-4efc-8208-063cb457b7ce",
+          "source_tier": "Established",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.444736",
+          "stance": "supports"
+        },
+        {
+          "id": "e5304bd4-e49c-42d3-86d8-cde8c2caab83",
+          "source_tier": "Established",
+          "published_at": "2026-01-31T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.444750",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0652",
       "n_items": 7,
       "creditable_t13": 0,
+      "bearing_t13": 0,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 4,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [],
       "speech": "trump_2026",
-      "bucket": "supply-0"
+      "bucket": "supply-0",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0659",
       "n_items": 10,
       "creditable_t13": 4,
+      "bearing_t13": 4,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 2,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "2f97f7fd-45a0-47ed-a2a7-9419484e1814",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445122",
+          "stance": "supports"
+        },
+        {
+          "id": "81498a00-63d5-4dfc-99de-356bb57a7f54",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445217",
+          "stance": "supports"
+        },
+        {
+          "id": "6e3a7903-6ae0-4f44-9adf-397b8b085f94",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445231",
+          "stance": "supports"
+        },
+        {
+          "id": "b538b9ae-ae53-45ed-a4b0-f390e52415b2",
+          "source_tier": "Established",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445245",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0660",
       "n_items": 10,
       "creditable_t13": 2,
+      "bearing_t13": 2,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 5,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "a0789ccc-1805-4116-8aca-fd0aa56a7817",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445327",
+          "stance": "supports"
+        },
+        {
+          "id": "b893fb30-c84a-4d73-b4de-772cf7790e22",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445340",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0664",
       "n_items": 10,
       "creditable_t13": 3,
+      "bearing_t13": 3,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 4,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "f5d40dbb-d4fd-421f-a328-2c08a1095bd7",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445502",
+          "stance": "supports"
+        },
+        {
+          "id": "74b4686c-7a63-4d4e-965a-01bf9c7a2228",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445558",
+          "stance": "supports"
+        },
+        {
+          "id": "745e5a28-f1e5-4d16-a406-527c434317c2",
+          "source_tier": "Established",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445627",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-met"
     },
     {
       "sid": "trump_2026:0665",
       "n_items": 10,
       "creditable_t13": 4,
+      "bearing_t13": 0,
+      "null_stance_t13": 4,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 3,
+      "creditable_items": [
+        {
+          "id": "30033860-0c73-4267-a4ed-5e472b454bd7",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445913",
+          "stance": "null"
+        },
+        {
+          "id": "dfd8ed8b-bb9d-4378-bb31-bf42b5f2f014",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445926",
+          "stance": "null"
+        },
+        {
+          "id": "a9245abc-0b21-4975-a510-446432590232",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445940",
+          "stance": "null"
+        },
+        {
+          "id": "1731d061-0ded-49af-a2e7-c80cc98b7483",
+          "source_tier": "Wire",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.445966",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-0"
     },
     {
       "sid": "trump_2026:0683",
       "n_items": 10,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 5,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "77e52dae-3980-4025-bb7e-56368c281a43",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.446864",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "trump_2026:0685",
       "n_items": 10,
       "creditable_t13": 3,
+      "bearing_t13": 1,
+      "null_stance_t13": 2,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 4,
+      "creditable_items": [
+        {
+          "id": "d553d4cc-e79f-45a2-88e2-a82879bc503a",
+          "source_tier": "Government",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.447148",
+          "stance": "null"
+        },
+        {
+          "id": "015a8c09-2ba7-47d1-85da-9458e5db1de9",
+          "source_tier": "Government",
+          "published_at": "2025-03-03T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.447163",
+          "stance": "refutes"
+        },
+        {
+          "id": "ba375725-635c-44df-976a-2b1b1446f1da",
+          "source_tier": "Established",
+          "published_at": "2026-02-24T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.447256",
+          "stance": "null"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-met"
+      "bucket": "supply-met",
+      "bearing_bucket": "bearing-short"
     },
     {
       "sid": "trump_2026:0686",
       "n_items": 9,
       "creditable_t13": 1,
+      "bearing_t13": 1,
+      "null_stance_t13": 0,
       "post_speech_band_t13": 3,
       "undated_t13": 0,
       "dropped_t13": 0,
       "not_t13": 5,
+      "creditable_items": [
+        {
+          "id": "3920f469-3221-4785-816a-e50d4662138b",
+          "source_tier": "Government",
+          "published_at": "2024-05-31T00:00:00",
+          "retrieved_at": "2026-08-06T21:17:43.447408",
+          "stance": "supports"
+        }
+      ],
       "speech": "trump_2026",
-      "bucket": "supply-short"
+      "bucket": "supply-short",
+      "bearing_bucket": "bearing-short"
     }
   ],
-  "ceiling_note": "creditable_t13 is an UPPER BOUND: an item still has to bear on the claim (resolved True/False stance) to actually credit. supply-0 / supply-short are therefore firm exclusions; supply-met is NOT a prediction that the claim gates."
+  "ceiling_note": "creditable_t13 is an UPPER BOUND: an item still has to bear on the claim (resolved True/False stance) to actually credit. supply-0 / supply-short are therefore firm exclusions; supply-met is NOT a prediction that the claim gates.",
+  "bearing_note": "bearing_t13 (+ null_stance_t13 == creditable_t13) splits each creditable item by supports_claim: True/False = a resolved stance that can count toward min_bearing_t13; None = retrieved but never stance-resolved, so it cannot bear. bearing-met is the strict refinement of supply-met used to seed the step-1/step-2 target sets.",
+  "reconciliation": {
+    "note": "Two denominators are in play — do not conflate them. creditable_t13 sums to 179 over ALL 81 web-tier1 claims; restricted to the 53 supply-met claims it sums to 157. The 22-item difference is the 22 supply-short claims, which by definition hold exactly 1 creditable item each (supply-0 holds none). null-stance is therefore 78/179 (44%) over all claims and 72/157 (46%) over supply-met only; the latter is the figure carried in prior notes.",
+    "creditable_t13_all": 179,
+    "creditable_t13_supply_met": 157,
+    "null_stance_t13_all": 78,
+    "null_stance_t13_supply_met": 72
+  }
 }
