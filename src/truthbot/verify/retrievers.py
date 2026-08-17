@@ -91,10 +91,15 @@ def build_retrieval_prompt(claim_text: str, *, context: str = "",
     if window:
         era = f"Evidence must be published between {window[0]} and {window[1]}. "
     if utterance:
-        era += (f"The claim was made on {utterance}; STRONGLY prefer sources "
-                f"published on or before {fair_game_end(utterance)} "
-                f"(utterance + {FAIR_GAME_DAYS} days — later items will be "
-                f"discarded).")
+        era += (f"The claim was made on {utterance}. The CREDIT WINDOW is "
+                f"publication ON OR BEFORE {utterance}: only sources published "
+                f"by then can count toward the verdict, so prioritise those. "
+                f"Sources published AFTER {utterance} and up to "
+                f"{fair_game_end(utterance)} (the {FAIR_GAME_DAYS}-day fair-game "
+                f"band) are admissible as CONTEXT ONLY and earn NO credit — do "
+                f"not spend slots on them unless nothing earlier exists; "
+                f"anything published after {fair_game_end(utterance)} will be "
+                f"discarded.")
     ctx = f"\nContext (surrounding transcript, non-evidentiary): {context[:400]}" if context else ""
     return (
         "You are an evidence retriever for a fact-checking pipeline. "
