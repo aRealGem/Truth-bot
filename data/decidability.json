@@ -1,5 +1,5 @@
 {
-  "schema": "truthbot-decidability v1",
+  "schema": "truthbot-decidability v2",
   "comment": "Seeded from the D17-d desk pass. Every row is provenance 'desk' and therefore NOT publishable -- publishable_entries() returns only 'owner-ratified'. Step 6 ratification flips rows one at a time. Regenerate with scripts/seed_decidability_from_desk.py.",
   "seeded_from": "metrics/remediation_v2/d17d_triage.json",
   "entries": [

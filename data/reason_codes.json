@@ -1,0 +1,68 @@
+{
+  "schema": "truthbot-reason-codes v1",
+  "comment": "Reason codes for the SUBSTANTIVE species only -- the rows recorded as 'undecidable-from-public-record'. They never apply to gate-withheld rows, and the two species never share wording: a gate-withheld claim is one we did not retrieve enough for, a coded claim is one the public record cannot reach. Copy here is OWNER-APPROVED (2026-08-17) and VERBATIM; do not edit wording without a new owner ratification. Renders key on axis + provenance + reason_code, never on prose.",
+  "owner_approved": "2026-08-17",
+  "shared_footer": "This label is re-reviewed if a qualifying source or measure is identified.",
+  "codes": [
+    {
+      "code": "INTENT",
+      "renders": true,
+      "copy": "This claim asserts what someone intends, believes, or aims to do. Public records document what people do, not what they mean by it, so no source can confirm or refute it.",
+      "precedents": [
+        {"sid": "gwbush_2006:0033", "role": "precedent"}
+      ]
+    },
+    {
+      "code": "PRIVATE-EVENT",
+      "renders": true,
+      "copy": "This claim describes a private moment with no public witnesses or records, so no qualifying source could confirm or refute it.",
+      "precedents": [
+        {"sid": "trump_2026:0153", "role": "precedent"}
+      ]
+    },
+    {
+      "code": "NO-INSTRUMENT",
+      "renders": true,
+      "copy": "This claim states a number or share for a population that no official or independent statistical source measures, so no data exists that could confirm or refute it.",
+      "precedents": [
+        {"sid": "trump_2026:0334", "role": "precedent"}
+      ]
+    },
+    {
+      "code": "MASS-VOICE",
+      "renders": true,
+      "copy": "This claim attributes a view to a large, unspecified group ('millions say,' 'everyone supports'), which no source can count or check.",
+      "precedents": [
+        {"sid": "trump_2026:0514", "role": "primary"},
+        {"sid": "biden_2022:0373", "role": "precedent"}
+      ]
+    },
+    {
+      "code": "COUNTERFACTUAL",
+      "renders": true,
+      "copy": "This claim is about what would have happened under different circumstances. Events that didn't occur leave no record, so it can't be confirmed or refuted.",
+      "precedents": [
+        {"sid": "trump_2026:0514", "role": "secondary"}
+      ]
+    },
+    {
+      "code": "NO-METRIC",
+      "renders": true,
+      "copy": "This claim ranks or compares ('largest in history') without saying by what measure, so no data can confirm or refute it as spoken. Where a standard measure exists, the claim is split and the measurable part is checked instead.",
+      "precedents": []
+    },
+    {
+      "code": "UNCODED",
+      "renders": false,
+      "copy": null,
+      "precedents": [],
+      "state_only": true,
+      "rules": [
+        "Never force-fit: assign a code only on a clear fit. A stretch or a tie between codes resolves to UNCODED.",
+        "An UNCODED row ships no substantive label and stays in its current unpublished state.",
+        "Resolution is either an existing code on review, or a new owner-ratified code added to this file with its spawning row recorded as that code's precedent.",
+        "The optional review_after field defers re-review."
+      ]
+    }
+  ]
+}
