@@ -1,0 +1,349 @@
+{
+  "schema": "truthbot-d17d-step6-code-map v1",
+  "generated": "2026-08-17T18:14:28.546073+00:00",
+  "status": "PROPOSAL",
+  "status_note": "Not written into data/decidability.json and nothing flipped to owner-ratified. These assignments become real only on the owner reply that ratifies them against Fable's independent mapping.",
+  "reason_codes_source": "data/reason_codes.json",
+  "n_rows": 35,
+  "rule": "Never force-fit: a code is assigned only on a clear fit; a stretch or a tie resolves to UNCODED.",
+  "assignments": [
+    {
+      "sid": "biden_2022:0045",
+      "speech": "biden_2022",
+      "speaker": "Joe Biden",
+      "reason_code": "NO-METRIC"
+    },
+    {
+      "sid": "biden_2022:0100",
+      "speech": "biden_2022",
+      "speaker": "Joe Biden",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "biden_2022:0124",
+      "speech": "biden_2022",
+      "speaker": "Joe Biden",
+      "reason_code": "NO-METRIC"
+    },
+    {
+      "sid": "biden_2022:0194",
+      "speech": "biden_2022",
+      "speaker": "Joe Biden",
+      "reason_code": "MASS-VOICE"
+    },
+    {
+      "sid": "biden_2022:0373",
+      "speech": "biden_2022",
+      "speaker": "Joe Biden",
+      "reason_code": "MASS-VOICE"
+    },
+    {
+      "sid": "biden_2022:0431",
+      "speech": "biden_2022",
+      "speaker": "Joe Biden",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "clinton_1998:0134",
+      "speech": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "clinton_1998:0135",
+      "speech": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "clinton_1998:0210",
+      "speech": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "reason_code": "UNCODED",
+      "mapper_note": "Causal attribution: that NATO CONTAINED communism and KEPT two continents secure over 50 years. No code covers 'X caused Y'; NO-METRIC is the nearest but this is not a ranking or comparison. Pairs with trump_2026:0666."
+    },
+    {
+      "sid": "clinton_1998:0240",
+      "speech": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "reason_code": "INTENT"
+    },
+    {
+      "sid": "clinton_1998:0243",
+      "speech": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "reason_code": "UNCODED",
+      "mapper_note": "Attributes agreement to a BOUNDED, SPECIFIED group (the members in the chamber). MASS-VOICE's copy says 'a large, unspecified group ... no source can count', which would misdescribe this row to a reader -- this group is enumerable, it is their inner agreement that is not. Pairs with trump_2026:0667."
+    },
+    {
+      "sid": "clinton_1998:0350",
+      "speech": "clinton_1998",
+      "speaker": "Bill Clinton",
+      "reason_code": "NO-INSTRUMENT"
+    },
+    {
+      "sid": "gwbush_2006:0033",
+      "speech": "gwbush_2006",
+      "speaker": "George W. Bush",
+      "reason_code": "INTENT"
+    },
+    {
+      "sid": "obama_2014:0004",
+      "speech": "obama_2014",
+      "speaker": "Barack Obama",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "obama_2014:0123",
+      "speech": "obama_2014",
+      "speaker": "Barack Obama",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "obama_2014:0125",
+      "speech": "obama_2014",
+      "speaker": "Barack Obama",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "obama_2014:0126",
+      "speech": "obama_2014",
+      "speaker": "Barack Obama",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0106",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "UNCODED",
+      "mapper_note": "'I was there.' carries no proposition standing alone; its referent sits in an adjacent sentence. That is a segmentation problem, closer to needs-decomposition than to any reason code."
+    },
+    {
+      "sid": "trump_2026:0110",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "INTENT"
+    },
+    {
+      "sid": "trump_2026:0137",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0153",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0161",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "UNCODED",
+      "mapper_note": "A forward-looking conditional PROJECTION about future account balances. COUNTERFACTUAL covers what WOULD HAVE happened in a past that did not occur; a projection is unrecorded for the different reason that it has not happened yet. Coding it COUNTERFACTUAL would state the wrong reason to the reader."
+    },
+    {
+      "sid": "trump_2026:0255",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0279",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0327",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0328",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0329",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0334",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "NO-INSTRUMENT"
+    },
+    {
+      "sid": "trump_2026:0450",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "UNCODED",
+      "mapper_note": "The bearing content is an unrecorded facial expression that had public witnesses (people on the train), so PRIVATE-EVENT's 'no public witnesses or records' is false of it. The 'no one will ever forget' wrapper is rhetorical framing rather than a countable attribution."
+    },
+    {
+      "sid": "trump_2026:0482",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT",
+      "reason_code_2": "INTENT"
+    },
+    {
+      "sid": "trump_2026:0487",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0514",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "MASS-VOICE",
+      "reason_code_2": "COUNTERFACTUAL"
+    },
+    {
+      "sid": "trump_2026:0638",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0666",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "UNCODED",
+      "mapper_note": "Causal attribution: that the mission and the crew's lives HINGED on one man. A citation can evidence what he did, not that everything turned on it. Desk records it in the same conflation family as ruling (d). Pairs with clinton_1998:0210."
+    },
+    {
+      "sid": "trump_2026:0667",
+      "speech": "trump_2026",
+      "speaker": "Donald Trump",
+      "reason_code": "UNCODED",
+      "mapper_note": "Inner awareness of a bounded, specified group (those in the helicopter). Same gap as clinton_1998:0243: MASS-VOICE would misdescribe an enumerable group as an uncountable one."
+    }
+  ],
+  "m6_audit": {
+    "by_speaker": {
+      "Joe Biden": {
+        "rows": 6,
+        "codes": {
+          "NO-METRIC": 2,
+          "PRIVATE-EVENT": 2,
+          "MASS-VOICE": 2
+        },
+        "uncoded": 0,
+        "uncoded_rate_pct": 0.0
+      },
+      "Bill Clinton": {
+        "rows": 6,
+        "codes": {
+          "PRIVATE-EVENT": 2,
+          "UNCODED": 2,
+          "INTENT": 1,
+          "NO-INSTRUMENT": 1
+        },
+        "uncoded": 2,
+        "uncoded_rate_pct": 33.3
+      },
+      "George W. Bush": {
+        "rows": 1,
+        "codes": {
+          "INTENT": 1
+        },
+        "uncoded": 0,
+        "uncoded_rate_pct": 0.0
+      },
+      "Barack Obama": {
+        "rows": 4,
+        "codes": {
+          "PRIVATE-EVENT": 4
+        },
+        "uncoded": 0,
+        "uncoded_rate_pct": 0.0
+      },
+      "Donald Trump": {
+        "rows": 18,
+        "codes": {
+          "UNCODED": 5,
+          "INTENT": 1,
+          "PRIVATE-EVENT": 10,
+          "NO-INSTRUMENT": 1,
+          "MASS-VOICE": 1
+        },
+        "uncoded": 5,
+        "uncoded_rate_pct": 27.8
+      }
+    },
+    "by_code": {
+      "NO-METRIC": 2,
+      "PRIVATE-EVENT": 18,
+      "MASS-VOICE": 3,
+      "UNCODED": 7,
+      "INTENT": 3,
+      "NO-INSTRUMENT": 2
+    },
+    "uncoded_total": 7,
+    "uncoded_rate_pct": 20.0,
+    "dual_coded": [
+      "trump_2026:0482",
+      "trump_2026:0514"
+    ]
+  },
+  "uncoded_gap_clusters": [
+    {
+      "gap": "causal-attribution",
+      "sids": [
+        "clinton_1998:0210",
+        "trump_2026:0666"
+      ],
+      "description": "A claim that one thing CAUSED or DEPENDED ON another. Evidence of the events does not establish the link, and none of the six codes names causation.",
+      "candidate_precedent": "trump_2026:0666"
+    },
+    {
+      "gap": "bounded-group-agreement",
+      "sids": [
+        "clinton_1998:0243",
+        "trump_2026:0667"
+      ],
+      "description": "A view or awareness attributed to a SPECIFIED, enumerable group. MASS-VOICE is the right family but its copy says 'large, unspecified', which is false of these rows. Resolvable either by a new code or by widening MASS-VOICE's wording at ratification.",
+      "candidate_precedent": "clinton_1998:0243"
+    },
+    {
+      "gap": "forward-projection",
+      "sids": [
+        "trump_2026:0161"
+      ],
+      "description": "A conditional claim about the future. Distinct from COUNTERFACTUAL, which is about a past that did not happen.",
+      "candidate_precedent": "trump_2026:0161"
+    },
+    {
+      "gap": "no-standalone-proposition",
+      "sids": [
+        "trump_2026:0106"
+      ],
+      "description": "The utterance has no checkable content without its antecedent. Arguably belongs on the decomposition track rather than carrying a reason code at all.",
+      "candidate_precedent": "trump_2026:0106"
+    },
+    {
+      "gap": "unrecorded-but-witnessed",
+      "sids": [
+        "trump_2026:0450"
+      ],
+      "description": "An observation that had witnesses but left no record. PRIVATE-EVENT explicitly requires 'no public witnesses', so it does not cover this.",
+      "candidate_precedent": "trump_2026:0450"
+    }
+  ],
+  "copy_observations": [
+    {
+      "code": "PRIVATE-EVENT",
+      "observation": "The copy says 'a private MOMENT', but most rows it correctly covers are private CIRCUMSTANCES, HISTORIES or ONGOING STATES rather than moments -- 'she's a dispatcher', 'she'd never collected unemployment benefits', '13 years on and off welfare', 'she is now in the first grade'. The operative clause ('no public witnesses or records') fits all of them, so they are coded rather than force-fitted elsewhere, but a reader may find 'moment' odd on a multi-year history.",
+      "affected_rows": 18,
+      "recommendation": "Consider widening to 'a private moment or circumstance' at ratification. NOT changed here: copy is owner-approved and verbatim."
+    }
+  ]
+}
