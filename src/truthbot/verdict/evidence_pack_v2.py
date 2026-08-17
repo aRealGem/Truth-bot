@@ -92,6 +92,12 @@ def pack_item_from_citation(i: int, cit) -> PackItem:
                       if ev.published_at else None),
         role=getattr(cit, "role", "") or "",
         era_note=era_note_for(cit),
+        # D17-c: the series excerpt travels WITH the item. Carried here because
+        # this is the one definition of citation -> pack item, and a field
+        # dropped here survives into the stored artifact and then vanishes at
+        # render. That is exactly what happened: the rows reached the evidence
+        # and never came back out onto the page.
+        series_rows=getattr(ev, "series_rows", None),
     )
     check_i5_provenance(item.provenance())   # I5: fail closed at entry
     return item

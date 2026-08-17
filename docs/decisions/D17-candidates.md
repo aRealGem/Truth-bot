@@ -131,7 +131,12 @@ false-positive risk of its own.
 ## D17-c — Retrieval-contract change: excerpt the series rows
 
 **Deferred from:** B2 (the scoring-prompt fix), 2026-08-08.
-**Evidence:** `metrics/remediation_v2/B2_FINDINGS.md`, `metrics/remediation_v2/b2_subset.json`.
+**Evidence:** `metrics/remediation_v2/B2_FINDINGS.md`;
+`metrics/remediation_v2/b2_subset.json` for the **design** (a truthful pre-run
+estimate, 2026-08-08, predating the `haiku-score-2026-08-09` calibration);
+`metrics/remediation_v2/d17c_stage0/b2_settlement.json` for the **measurement**
+($0.5405 actual, 2.35x the $0.2299 estimate). Cite the one that matches the
+question — the subset is not a cost figure.
 **Code:** `src/truthbot/verify/relevance.py` (`score_payload`).
 
 ### What was observed — with a number
@@ -182,6 +187,340 @@ single lever left on the pipeline's accuracy for that class.
   before anyone commits to a budget.
 - Does an excerpt need provenance of its own — the reader should be able to see
   which rows the verdict rested on, not just that a series was consulted.
+
+### Stage 0 findings (2026-08-12, $0 — no model calls)
+
+Scoping only. Stage 0 publishes nothing and re-adjudicates nothing.
+
+**Wave 1 = 84 items across 40 claims** — trump 35, biden 16, obama 15,
+clinton 10, gwbush 8. Derived from the shipped heads by
+`metrics/remediation_v2/d17c_stage0/wave1.py`, which asserts the split rather
+than restating it. That is the 124-item stance-null series population minus the
+document publishers (CBO/GAO/NCES/CRS publish tabled *reports*, not series) and
+minus NCHS/CDC.
+
+**The D17-c-reachable trump floor is 274/1472 = 18.61%.** Converting every
+wave-1 trump item still leaves that residual, against a 15% ceiling — so D17-c
+alone does not clear it. The earlier 17.73% figure assumed the document
+publishers were in scope; they are not.
+
+**NCHS/CDC is out of wave 1, logged not dropped.** Three stance-null items
+corpus-wide fails the ten-item coverage floor. The family is product-scoped:
+`wonder.`/`data.cdc.gov` are series-like, `cdc.gov/nchs` and `stacks.cdc.gov`
+are documents, and MMWR is a document-with-tables.
+
+**Pilot handler: FRED + ALFRED.** ALFRED is the *vintage axis* of the FRED
+handler, not a separate format, so the floor governs the handler — 23 corpus
+items between them, which clears it. It covers 9 of the 84 wave-1 items.
+
+**Cost.** An excerpt inflates the scoring prompt only; item count and reply
+schema are untouched, so the marginal cost is one term. Against a measured
+conservative prompt volume, a whole-pack re-score of the 40 claims with
+4,000-character excerpts projects **$0.2992** versus the $0.75 ceiling. The
+input side cannot threaten that ceiling: $0.75 would buy ~28,000 characters per
+excerpt. The mean/max token delta per item remains a *measurement* pending real
+payloads.
+
+**Head lineage (S-9).** The five publishing heads this record is derived from,
+so the lineage is greppable:
+
+| speech | run id |
+|---|---|
+| trump_2026 | `91dd7a34-7a3c-4f40-bcdc-276b2cb15d26` |
+| biden_2022 | `ddb05ee3-7d9c-4b2c-beaf-e197b9354379` |
+| obama_2014 | `2cbda3e4-c578-442a-aee7-c5c28a388048` |
+| clinton_1998 | `49b2e3e8-1667-4460-8989-b265914d4450` |
+| gwbush_2006 | `5c923c25-b065-4a9f-80bf-d23db4f9bcd1` |
+
+No heads have been moved to the gitignored `_quarantine/` yet, so there are no
+*quarantined*-head run ids to record; these are the live heads. Revisit when
+S-9 executes.
+
+**Ledger entry for the next corrections wave (not applied here).** The PR #105
+banner's "at most those" is an upper bound and is true, so the published prose
+stands. But its "48 are statistical series" is wrong for 12 items —
+CBO/GAO/NCES publish tabled reports, not series. Owner-approved as a wording
+correction for the next wave, alongside the dropped-row note. **Do not edit the
+published sentence outside a corrections wave.**
+
+**CLOSED by ruling: the selection window is now frequency-aware.** The Stage 0
+predicate took the 13 most recent observations at or before the utterance date,
+which was 13 months on a monthly series and 13 *years* on an annual one —
+`FYFSD` selected 2009-09-30 to 2021-09-30. Deterministic either way, but not
+the year-over-year window the wording implied. Ruled: trailing K at the series'
+native frequency, **K = 25 monthly / 9 quarterly / 13 annual**, frequency taken
+as the median spacing of the last four eligible observations and recorded in
+the predicate. A flat 13/5/2 was rejected — annual=2 guts the `FYFSD`
+cross-administration window, and frequency alone does not fix the `0054`
+claim-period mismatch.
+
+Four fixed committed regex rules run against claim text **and context** and
+propose an earlier start; the widest proposal wins and every fired rule is
+named per item: explicit years → Jan 1 of (min_year − 1); last/past N years →
+N+1 years; `record|ever|history|all-time|never` → full eligible history;
+`took office|administration|inherited` → trailing 5 years. Excerpts assert at
+most 1,500 rows and **halt rather than truncate**. Deepest fixture is
+`PAYEMS_current` at 1,051 observations, so the assert does not fire on the
+committed set.
+
+The other two questions carried out of Stage 0 are also closed: the
+`LNS12000000` dead link is a ledger entry (no substitution), and `units` ships
+null with a machine-readable reason at six-of-seven provenance fields.
+
+**Ruled (R1 = (b)): the superlative rule reads the claim's own words.**
+`record|ever|history|all-time|never` matches claim TEXT only; the other three
+rules stay on text + context. Under text+context it fired on
+`biden_2022:0169` — *"369,000 new manufacturing jobs just last year"*, a claim
+with no superlative of its own — because a neighbouring sentence carried one,
+pulling 997 rows of `MANEMP` for a claim about a single year. A rule keying on
+a claim's own assertion should read the claim's own words; the other three
+describe a period rather than assert a superlative, so context legitimately
+informs them. Only `0169` changed (997 → 25 rows); the other eight goldens are
+byte-identical. Matched Fable's pre-registered simulation on every value.
+
+**Stage A result: the rows move the scorer, and a control proves it was the
+rows.** Treatment (excerpts appended) produced 8 stance flips; the control —
+same 7 claims, same payload path, same cap, zero augmentation — produced
+**zero**. So all 8 flips are excerpt-attributable and none is rescore noise.
+Six landed on excerpted items, all null → definite. `trump_2026:0054` crossed
+the T2.4 bearing quota (1 → 3 Tier-1..3 bearing items, forced-Unverifiable →
+pass); claims clearing 5 → 6 of 7, **computed not applied**.
+
+Two of the six **refute** their claim — `biden_2022:0245` (FYFSD shows ~$360B
+of deficit improvement against a claimed "more than one trillion") and
+`trump_2026:0221` (poultry CPI +2.2% against "lower today"). The rows decide
+against the speaker as readily as for, which is the property that makes the
+mechanism worth shipping.
+
+**Excerpts have a spillover effect on their pack-mates.** `trump_2026:0054` E2
+and E10 carry no excerpt and their own payload bytes were unchanged, yet both
+moved in the treatment arm and neither moved in the control. They share a
+scoring call with an excerpted item, so the rows changed how the scorer read
+*neighbouring* evidence. Deterministic-path consequence, not a defect, but it
+means an excerpt's blast radius is the pack and not the item — worth knowing
+before per-item attribution is trusted anywhere downstream.
+
+**Attribution is causal at CLAIM level, descriptive at ITEM level (ruled).**
+Scoring is whole-pack — one `score_evidence` call per claim — so an unexcerpted
+item still shares a prompt with its pack's excerpts. The control licenses "the
+rows caused these claims to move"; it does not license "the rows caused *this
+item* to move". `stage_a_attribution.json` carries `shared_call` per row so the
+distinction is legible rather than assumed.
+
+Two named cases inside `trump_2026:0054`, which cut opposite ways:
+
+* `E2` — `spillover_anomaly=true`. Its own snippet asserts the January-2026
+  peak, and the excerpt confirms it (164,520 **is** the window maximum at
+  vintage 2026-02-24, and is also the last observation). The treatment stance
+  nonetheless came back *refuting*, contradicting both its snippet and the
+  rows. Named, not explained — item-level attribution cannot say why.
+* `E10` — `spillover_correction=true`, the mirror case. Its snippet cites
+  Dec-2025 at 163,992, which matches the rows exactly; the **stored** `False`
+  was the incoherent stance. The excerpt moving it to `True` reads as a
+  correction, not contamination. Spillover is therefore not simply a hazard.
+
+**D17 candidate: per-item-isolation scoring ablation.** Score each item alone
+against the claim and compare with its whole-pack stance; the divergence
+measures how much of any stance is pack context rather than the item. Priced
+before it runs. `series_rows` inherits whole-pack semantics until this is
+measured, so the production path should not assume item-level attribution
+either.
+
+**2.351× retired for measured-byte projections.** It came from
+`b2_subset.json`, a pre-run *estimate* that under-counted free-text volume, so
+it prices estimate error rather than measurement error. Stage A projected from
+measured excerpt bytes and realized **1.056×**. Estimate-based projections keep
+2.351×; measured-byte projections use **1.25×** until three realized factors
+are banked (this is the first). Cumulative Stage A spend $0.080910 = 54% of the
+$0.15 ceiling.
+
+**Two flipped stances disagree with their own stated reasoning**, now marked
+`stance_reason_tension=true`: `biden_2022:0169` E7 flipped to *supports* while
+its `one_line_why` reads "a gain of 356,000 — not 369,000", and
+`trump_2026:0219` E1 flipped to *supports* on 58.6% "which rounds to the
+claimed 60%". Both carry `arithmetic_hinge=True`, so the B2 contract already
+treats them as hypotheses for the panel rather than proof — the flag names the
+specific tension so no Stage B reads them as settled.
+
+**D17 candidate (d), POST-PUBLISH — exhibit admissibility is keyed on the
+wrong axis.** Logged 2026-08-13, **not implemented**.
+
+`claim_shape` is the ORGANIZATIONAL axis for the evidential-role table, not a
+decidability axis, and exhibit admissibility currently keys on it. `c-eval`
+conflates two different things: causal / effectiveness claims, which arithmetic
+genuinely cannot settle, and superlatives / comparisons, which arithmetic is
+*exactly* what settles against a series we hold. Remedy: a second predicate —
+**is the decision procedure a computation over a series we hold** — with
+causal-attribution detection as the real blocker. The `0031` three-prong test
+inherits the same conflation and is in scope.
+
+The basis, verified rather than asserted. `shapes_backfill_trump_2026.json` is
+a **claude-haiku single-pass cheap-tier** classification (`hydramind single,
+tier=cheap`). Over 182 trump claims it returns **c-eval 44.5% (81), c-third
+44.0% (80), c-exist 7.7% (14), empty 3.8% (7), and c-count ZERO**. A 44.5%
+evaluative rate with not one countable claim in a speech full of numbers is a
+property of the classifier, not of the speech. The published run `91dd7a34`
+carries no `claim_shape` on its claims at all — `layer_a` holds
+`claim_type: "statistical"` for both `0054` and `0219` — so the shape that
+blocks the exhibit comes from the backfill, not from the shipped record.
+
+**`0219` reshape DEFERRED this wave (ruled).** `trump_2026:0219` — "The price of
+eggs is down 60 percent" — plausibly meets the `0031` three-prong test, but it
+needs a **comparison window before it needs a shape**: "down 60 percent" is
+meaningless without a stated baseline, and the excerpt's own rows put the fall
+at 58.6% from a March-2025 peak. Since the `0031` test is itself in scope under
+(d), reshaping on it now would build on a rule under review. Do not reshape.
+
+**HALT (2026-08-13, RESOLVED by ruling (a)): the 0054 computed exhibit cannot
+attach — `c-eval`.**
+Wave 2's escalation lane specified a computed exhibit for `trump_2026:0054`,
+`max(CE16OV @ 2026-02-24) = 164,520 @ 2026-01`. The exhibit is built and
+verified at `metrics/computed_exhibits/ce16ov_record_high_2026_01.json`:
+well-formed, admissible on `c-count`, and **refused on `c-eval`** by
+`computed_exhibit.attach` — *"arithmetic cannot settle an evaluative claim"*.
+
+`trump_2026:0054` carries `claim_shape=c-eval`. So does `trump_2026:0219`. The
+guard lives at the single write point deliberately, "so an exhibit can never
+reach a C-EVAL page by some other route", and this record already ratified the
+principle on `trump_2026:0030`: under R-2 an evaluative claim "may carry **no
+exhibit at all**, and that is the right call about what can DECIDE it."
+
+The established remedy is a deliberate shape correction, as `R-1` did for
+`trump_2026:0031` (`scripts/reshape_rerun_0031.py`) — justified there because
+the sentence had *no superlative, no causal attribution, no comparison to
+another entity or era*. **0054 fails that test**: "than at any time in the
+history of our country" is a superlative on its face, so the 0031 reasoning
+does not transfer. `trump_2026:0219` — "The price of eggs is down 60 percent" —
+arguably *does* pass it, which makes it a candidate for the same correction,
+but a shape correction is an owner-visible act and not a thing to infer.
+
+Metered work halted before spending. The `series_rows` path is unaffected and
+is a different mechanism: showing a panel the source's own observations is not
+the same as asserting a computed result that settles the claim, and only the
+latter is what the guard forbids.
+
+**RESOLUTION (ruling (a)).** The escalation runs on `series_rows` alone. The
+exhibit stays on disk **unattached** — it becomes admissible if (d) lands — and
+gained two corrections while cheap: it now states its **comparison-class
+bound** (CE16OV begins 1948-01, so a "record" here is a record in the series we
+hold, not in the country's history) and names the **omitted observation**
+explicitly (`2025-10`, the shutdown data gap) rather than leaving it to be
+inferred from 937 calendar months against 936 observations. The
+`series_rows` distinction was upheld: the guard governs what may be asserted as
+DECIDING a claim; rows are what the panel reasons over. Verified that the
+rendered table carries no computed summary, delta or total row — every cell is
+verbatim from the golden; the only derived figure is the count of omitted rows,
+which discloses what is withheld rather than computing over the data.
+
+**CLARIFICATION (2026-08-13): wave-2 flips land as successor artifacts, not as
+pack mutations.** An earlier wave-2 instruction read "packs change only per the
+flip lanes", which could be taken as authorising in-place rewrites of stored
+packs. That reading is **retracted**; it would have contradicted the standing
+rule stated at the top of `scripts/rescore_stored_packs.py` — *"Never mutates
+the stored artifact. Results land in a SIDECAR … because artifacts are the
+record: archive-never-delete."*
+
+Flips and `series_rows` land by **minting successor run artifacts per speech**
+through the existing `rebuild_of` DAG (`src/truthbot/publish/heads.py`): each
+rebuild writes a new run whose `meta.rebuild_of` names its parent, and
+publishing resolves the unique current-generation leaf — the artifact no other
+names as parent. Shipped heads stay byte-frozen as the record, render already
+resolves the leaf, and no join logic is needed. `heads.py` raises if a speech
+ever has more than one leaf, so the DAG is self-checking.
+
+All five speeches mint successors — `clinton_1998` id-only — so the stable-id
+deep-link rotation completes site-wide in **one** event rather than trickling.
+`series_rows` is uniform across all 8 excerpted items; `obama_2014:0189`'s
+`window_period_mismatch` renders visibly; stances change only per the flip
+lanes.
+
+**Wave-2 REQUIRED-recommended: publish badges go fail-closed.** Today
+`_classify_source_for_render` returns `"verified"` when no classification map
+exists *and* when a URL is simply absent from one — both branches fail OPEN, so
+absence of evidence renders as evidence of verification. That is how a URL
+returning 404 on both FRED and ALFRED carried the `source-verified` badge on the
+published site, twice. Wave 2 should invert it: no classification record → no
+`"verified"` badge, and a known-dead URL renders broken. Rides the stable-ids
+re-render so deep links rotate once; owner ratification at the Stage B gate.
+
+**Priority bumped: URL-liveness audit and the retrieval contract.** Both were
+logged D17 candidates; the Stage A diagnostic raised their priority with
+evidence rather than suspicion. `retrieved_at` is an *assembly stamp*, not a
+retrieval time — all 20 items across the `0054` and `0055` packs are stamped
+inside 309 microseconds, rising ~13µs per item in list order, which is a
+serialization loop, not 20 HTTP round-trips. And `metrics/url_cache.jsonl`, the
+persistence path named in `url_validation.py`, has never existed on disk or in
+git. So nothing in the pipeline ever fetched these URLs, and nothing recorded
+that it hadn't. A stance (`supports_claim=True`) was attached to a
+browsing-model-authored snippet describing a page that never resolved.
+
+**Production-path candidate: a structured `series_rows` key.** Stage A appends
+the excerpt to `snippet` because the census had to measure against the shipped
+baseline, and changing the wire shape would have changed both variables at once.
+For the production path a dedicated `series_rows` key is cleaner provenance —
+the rows stop being prose the scorer has to parse out of a snippet. Logged, not
+scheduled.
+
+**Two D17 candidates LOGGED, not implemented (R2).**
+
+1. *Named-era / named-person anchor map.* A deterministic mapping from
+   proper-noun temporal anchors ("when Reagan first stood here") to dates. Real
+   scope and a new determinism surface; not to be smuggled in under a spend
+   ceiling.
+2. *`gap_periods` annotation in window provenance.* `CE16OV`, `CPILFESL`,
+   `CUUR0000SAF112` and `APU0000708111` each hole at 2025-10 (the shutdown data
+   gap); `PAYEMS` is complete. Fable-verified. Deferred so the pre-registered
+   run-sha stays binding — annotating provenance would change it.
+
+**Carried limitation: a proper-noun comparison anchor escapes all four rules.**
+`obama_2014:0189` compares the minimum wage to *"when Ronald Reagan first stood
+here"* (circa 1982). No rule fires, so it takes the default 25-month window
+(2011-12-01 to 2013-12-01), which does not reach the period the claim is
+actually about. This is the same claim-period mismatch that motivated rejecting
+13/5/2, surviving in the ruled ruleset because the anchor is a name rather than
+a date. Ruled (R2 = (a) amended): `0189` STAYS in wave 1, the mismatch is
+recorded as-is, and no named-anchor rule is implemented. Its census row must
+carry `window_period_mismatch=true` and is **NON-ACTIONABLE for any Stage B
+consideration**. The flag rides on the census row and deliberately NOT on the
+golden payload — adding a field there would change the pre-registered run-sha.
+
+**Stage A is BLOCKED on a payload-shape question, halted before spend.** The
+excerpt has no channel to the model. `relevance.score_payload` sends only
+`{i, source, snippet}` and truncates `snippet` at `SCORE_SNIPPET_CHARS = 400`;
+`Evidence` has no excerpt field and no insertion path exists in `src/`. Routing
+the excerpts through `snippet` unchanged would ship 3,200 of 49,655 characters
+— **93.6% of every excerpt truncated away** — and would still produce a
+complete, plausible-looking flip census measuring 400-character stubs. The
+pre-registered $0.0511 projection assumes the full 49,655 characters reach the
+model, so the cost model and the committed code disagree. Not resolvable
+without a ruling on how excerpts enter the payload; see the report for options.
+
+**Context widens more than claim text alone would.** Running the rules over
+`text + context` — as ruled — makes `record|ever|history` fire on
+`biden_2022:0169` (*"369,000 new manufacturing jobs just last year"*), whose own
+text carries no superlative, pulling the full 997-row `MANEMP` history for a
+claim about a single year. Deterministic and within the row cap, but it is
+breadth bought from the neighbouring sentences, not from the claim.
+
+**Closeout: the 448/445 census delta.** Reproduced exactly, and it is an
+artifact of the hand count rather than a defect in the code — see
+`d17c_stage0/delta_closeout.py`. Two mechanisms, together and only together
+giving 448 with Census +3, USDA-NASS +1, NCHS −1:
+
+1. *Press-prefix breadth.* The registry's own `press_prefixes` list is five,
+   but it is **additive** to `tier_registry.yaml`'s six `stat_press_prefixes`,
+   so the shipped `classify_ex` applies nine. The inherited `/newsroom` denies
+   three `census.gov` items. This is documented intent, not drift.
+2. *Path case-folding.* `statistical_agency._url_path` lowercases. Two items
+   turn on it, in opposite directions: `nass.usda.gov/Newsroom/...` is denied
+   as press (a hand count matching case-sensitively would admit it), and
+   `cdc.gov/MMWR/...` is admitted (a case-sensitive count would deny it).
+
+The shipped behaviour is correct on both counts — a `/Newsroom` press page
+*should* be denied and an `/MMWR` document *should* be admitted. Fable's
+hypothesis (b), that `quickstats.nass.usda.gov` might not resolve from entry
+`nass.usda.gov` by suffix, is **refuted**: it resolves, and the registry
+rationale and the code agree.
 
 ---
 

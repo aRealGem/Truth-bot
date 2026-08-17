@@ -1,0 +1,200 @@
+{
+  "generated": "",
+  "model": "claude-haiku (D17-c Stage A, series-row augmented)",
+  "provenance": {
+    "census": "metrics/remediation_v2/d17c_stage0/stage_a_census.json",
+    "evidence_identical_verified": true,
+    "joins_against_rebuilt_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+    "measured_on_publishing_head": "91dd7a34-7a3c-4f40-bcdc-276b2cb15d26",
+    "note": "stances measured with D17-c series excerpts in the scoring payload; control arm produced 0 flips, so these are excerpt-attributable",
+    "selector_run_sha256": "9f1c9a6d975ada4fe4e70170215da9d6796010ac49a1260c1265496c9ce9020c"
+  },
+  "schema": "truthbot-rescore-sidecar v1",
+  "sids": {
+    "trump_2026:0054": [
+      {
+        "one_line_why": "Primary BLS Employment Situation report for January 2026 is the official source needed to verify the record-high claim, but snippet does not state the actual figure.",
+        "relevance_score": 0.9,
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.htm",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "BLS time-series CE16OV shows January 2026 employed persons at 164,520K, which is higher than the prior all-time high of 163,992K in December 2025, supporting the claim.",
+        "relevance_score": 1.0,
+        "source_url": "https://data.bls.gov/timeseries/LNS12000000",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Official BLS Employment Situation for January 2026 is the authoritative source but snippet does not provide the specific employment level figure.",
+        "relevance_score": 0.9,
+        "source_url": "https://www.dol.gov/newsroom/economicdata/empsit_02112026.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "FRED CE16OV series shows January 2026 employed persons at 164,520K, exceeding the prior record of 163,992K in December 2025, confirming the claim.",
+        "relevance_score": 1.0,
+        "source_url": "https://fred.stlouisfed.org/series/CE16OV",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "Archived BLS release for January 2026 is the primary source but snippet does not state the actual employment figures.",
+        "relevance_score": 0.9,
+        "source_url": "https://www.bls.gov/news.release/archives/empsit_02112026.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "States all-time high was 163,992K in December 2025 with January/February 2026 revisions showing declines, contradicting the claim that more Americans are working today.",
+        "relevance_score": 1.0,
+        "source_url": "https://alfred.stlouisfed.org/series?seid=LNU02000000",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "PAYEMS nonfarm payroll series (establishment survey) is a different employment measure than household-survey employed persons; January 2026 shows 158,627K but this is not the series the claim rests on.",
+        "relevance_score": 0.5,
+        "source_url": "https://fred.stlouisfed.org/series/PAYEMS",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Reference to LNS12000000 series is relevant but snippet provides no actual figures for comparison.",
+        "relevance_score": 0.5,
+        "source_url": "https://fred.stlouisfed.org/series/LNS12000000",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "News coverage of January 2026 jobs report is background context but does not provide the specific employment level needed to verify the record-high assertion.",
+        "relevance_score": 0.6,
+        "source_url": "https://www.cnbc.com/2026/02/11/jobs-report-january-2026-.html",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Cites BLS data showing all-time high of 163,992K in December 2025; claim asserts more Americans working today, and January 2026 CE16OV data (164,520K) confirms this exceeds that prior peak.",
+        "relevance_score": 1.0,
+        "source_url": "https://tradingeconomics.com/united-states/employed-persons",
+        "supports_claim": true
+      }
+    ],
+    "trump_2026:0219": [
+      {
+        "one_line_why": "BLS official series shows peak of $6.227/doz (Mar 2025) to $2.577/doz (Jan 2026), a decline of 58.6%, which rounds to the claimed 60%.",
+        "relevance_score": 1.0,
+        "source_url": "https://fred.stlouisfed.org/series/APU0000708111",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "Source explicitly states Mar 2025 peak $6.227/doz and Jan 2026 $2.577/doz represent 'about a 59\u201360% decline,' directly corroborating the claim.",
+        "relevance_score": 1.0,
+        "source_url": "https://data.bls.gov/timeseries/APU0000708111",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "USDA ERS documents the same retail peak ($6.23/doz in Mar 2025) and subsequent sharp declines into 2026, consistent with the 60% drop claim.",
+        "relevance_score": 0.9,
+        "source_url": "https://ers.usda.gov/sites/default/files/_laserfiche/outlooks/113689/LDP-M-379.pdf?v=99408",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "Published report from Feb 13, 2026 states retail eggs down 34% year-over-year, contradicting the 60% claim (though YoY and peak-to-current are different baselines).",
+        "relevance_score": 0.8,
+        "source_url": "https://www.cnbc.com/2026/02/13/egg-prices-falling-in-us.html",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Confirms general downward trend in retail egg prices but provides no specific quantitative figure to compare against the 60% claim.",
+        "relevance_score": 0.5,
+        "source_url": "http://www.ers.usda.gov/data-products/charts-of-note/chart-detail?chartId=112677",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Describes prices as 'markedly lower' by late Feb 2026 but does not provide the specific percentage decline needed to verify the 60% figure.",
+        "relevance_score": 0.6,
+        "source_url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/3725/2026-02-27/1307445/ams_3725_00120.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Reports cage-free egg prices showing declines in early 2026 but does not quantify the magnitude relative to the 60% claim.",
+        "relevance_score": 0.5,
+        "source_url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2847/2026-02-02/1301528/ams_2847_00071.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "References 'scale of the early-2026 egg price decline' but provides no specific percentage or numerical comparison.",
+        "relevance_score": 0.4,
+        "source_url": "https://fb.org/market-intel/declining-egg-prices-squeeze-farmers",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Notes that 'magnitude of decline depends on baseline' but does not itself provide figures or resolve which baseline applies to the 60% claim.",
+        "relevance_score": 0.3,
+        "source_url": "https://www.ams.usda.gov/mnreports/ams_3725.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Lists advertised retail prices supporting lower consumer prices in early 2026 but does not quantify the percentage decline.",
+        "relevance_score": 0.5,
+        "source_url": "https://mymarketnews.ams.usda.gov/filerepo/sites/default/files/2757/2026-01-31/1302752/ams_2757_00311.pdf",
+        "supports_claim": null
+      }
+    ],
+    "trump_2026:0221": [
+      {
+        "one_line_why": "Claim asserts prices are lower; BLS data shows rent +5.1% YoY, lodging -3.0%, used cars -1.8%, new vehicles +0.1%\u2014most items up, contradicting 'lower by a lot'.",
+        "relevance_score": 0.95,
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.htm",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "BLS January 2026 CPI tables show food, shelter and indexed items flat or higher versus Jan 2025, directly contradicting the claim of prices lower by a lot.",
+        "relevance_score": 0.95,
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02132026.pdf",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Provides baseline CPI data from January 2025 (likely office-taking date) but does not itself compare to January 2026 or state whether prices rose or fell.",
+        "relevance_score": 0.6,
+        "source_url": "https://www.bls.gov/news.release/archives/cpi_02122025.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Full BLS January 2026 CPI release with category detail tables is a primary source document but snippet does not state the actual price direction or magnitudes.",
+        "relevance_score": 0.7,
+        "source_url": "https://www.dol.gov/newsroom/economicdata/cpi_02132026.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Confirms the claim was made on Feb 24, 2026, but does not address whether prices are actually lower or higher.",
+        "relevance_score": 0.3,
+        "source_url": "https://apnews.com/article/donald-trump-transcript-state-of-union-2026-c13e2a07df999b464b733f4a6e84dbd4",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "January 2026 CPI report states shelter and food categories still rising over the year, contradicting the claim that these items are lower.",
+        "relevance_score": 0.9,
+        "source_url": "https://www.cnbc.com/2026/02/13/cpi-inflation-report-january-2026.html",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "Promises detailed category breakdown for chicken, butter, fruit, rent but snippet itself does not provide the actual figures or direction.",
+        "relevance_score": 0.7,
+        "source_url": "https://www.advisorperspectives.com/dshort/updates/2026/02/20/inside-the-consumer-price-index-january-2026",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "NBC grocery tracker shows chicken and butter rose since Trump took office January 2025; only eggs were an exception, contradicting claim of lower prices.",
+        "relevance_score": 0.95,
+        "source_url": "https://www.nbcnews.com/data-graphics/grocery-price-tracker-inflation-trends-eggs-bread-trump-administration-rcna191508",
+        "supports_claim": false
+      },
+      {
+        "one_line_why": "FRED primary CPI series for poultry (CUUR0000SAF112) shows 339.169 in Jan 2025 and 346.613 in Jan 2026, a +2.2% increase, contradicting claim of lower prices.",
+        "relevance_score": 1.0,
+        "source_url": "https://fred.stlouisfed.org/series/CUUR0000SAF112",
+        "supports_claim": false
+      }
+    ]
+  },
+  "soft_failures": [],
+  "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+  "speech_id": "trump_2026",
+  "spend_note": "Stage A cost $0.053984 as ONE run across four speeches; see stage_a_census.json. Not split per speech here \u2014 that would be an invented number \u2014 and not restated, to avoid double-counting in the merged total.",
+  "spend_usd": 0.0
+}

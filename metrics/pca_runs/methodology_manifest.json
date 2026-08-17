@@ -183,6 +183,31 @@
       "speech_id": "trump_2026",
       "generation": "v2.3-role-axis-s5cap",
       "published": false
+    },
+    "c156d8f9-be85-5263-92a1-c08949afdedd": {
+      "speech_id": "biden_2022",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "d7ee7340-c07d-55da-b9db-9397d7141c35": {
+      "speech_id": "clinton_1998",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "6df77093-e328-596e-bfd5-afabd08a1679": {
+      "speech_id": "gwbush_2006",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "70748500-315a-5664-8474-c6632de57816": {
+      "speech_id": "obama_2014",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
+    },
+    "799e71b6-2480-50ca-870e-1a95f0d0d5fe": {
+      "speech_id": "trump_2026",
+      "generation": "v2.3-role-axis-s5cap",
+      "published": false
     }
   }
 }

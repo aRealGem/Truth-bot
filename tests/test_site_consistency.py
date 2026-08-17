@@ -4,10 +4,11 @@ tree so hand-typed or drifted figures cannot merge (T0.8; this is the test the
 together with the distribution-sum invariants).
 
 The remediation-v2 strict lints (index Sources-chip buckets incl. the
-political tier, bucket-sum invariants) run against a FRESH render below —
-the committed tree predates the remediation regeneration (its cards were
-rendered without the political bucket), so it is linted with
-``strict_buckets=False``; the Phase-2 regen flips it to True."""
+political tier, bucket-sum invariants, feed, no-lens-UI, rendered tiers) used to
+be exempted here, because the committed tree predated the remediation
+regeneration. The DC-6' publish (2026-08-11) replaced it with the
+post-remediation render, so the committed tree is now held to the SAME strict
+standard as a fresh render — no exemption, no flag."""
 from __future__ import annotations
 
 import re
@@ -28,9 +29,9 @@ _SITE = Path(__file__).resolve().parent.parent / "site-pca"
 @pytest.mark.skipif(not (_SITE / "data" / "reports.json").exists(),
                     reason="site-pca tree not present")
 def test_committed_site_has_no_consistency_violations() -> None:
-    # committed tree predates remediation regen; Phase-2 regen flips this
-    # to strict_buckets=True (and deletes the flag once the tree is fresh).
-    violations = check_site(_SITE, strict_buckets=False)
+    # STRICT (the default) since the DC-6' publish: the committed tree is the
+    # post-remediation render, so it gets no exemption a fresh render would not.
+    violations = check_site(_SITE)
     assert violations == [], "\n".join(violations)
 
 
@@ -178,20 +179,15 @@ def test_lens_lint_is_strict_gated_and_actually_fires(tmp_path) -> None:
     assert _check_no_lens_ui(tmp_path) == []
 
 
-def test_committed_site_pca_still_carries_the_chip_hence_the_gate() -> None:
-    """RETIRED at the DC-6' publish (rev 5) — the Q-3 tripwire.
+@pytest.mark.skipif(not (_SITE / "about.html").exists(),
+                    reason="site-pca tree not present")
+def test_committed_site_carries_no_lens_ui() -> None:
+    """The Q-3 tripwire, inverted after the DC-6' publish.
 
-    This documented WHY the lens lint was strict-gated: the committed site-pca was
-    pre-remediation output and still rendered the lens chip, so the lint stayed
-    gated at strict_buckets=False. The DC-6' publish replaced site-pca with the
-    post-remediation render, which carries NO lens UI — verified below — so the
-    premise no longer holds. The lint keeps its teeth (see
-    test_lens_lint_is_strict_gated_and_actually_fires); the strict GATE on
-    _check_no_lens_ui can now be dropped, which is the change that lands with the
-    merge to main. Kept as a skip (tombstone) so the retirement is on the record."""
-    if not (_SITE / "about.html").exists():
-        pytest.skip("site-pca tree not present")
-    # The publish flipped this green: the committed tree no longer carries lens UI.
+    This test used to assert the OPPOSITE — that the committed tree still carried
+    the lens chip — as the standing reason the lens lint had to be strict-gated.
+    The publish replaced site-pca with the post-remediation render, so the premise
+    is gone and the assertion is now simply: the committed tree carries no lens
+    UI. The lint keeps its teeth via
+    test_lens_lint_is_strict_gated_and_actually_fires."""
     assert _check_no_lens_ui(_SITE) == []
-    pytest.skip("Q-3 tripwire retired: site-pca is now the DC-6' render (no lens "
-                "UI); drop the strict gate on _check_no_lens_ui at merge to main")

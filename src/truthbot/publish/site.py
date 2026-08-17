@@ -773,20 +773,55 @@ def _classify_source_for_render(
 ) -> str:
     """Return one of ``"verified"``, ``"unverified"``, or ``"broken"``.
 
-    Defaults to ``"verified"`` when no classification map is provided —
-    preserving pre-Layer-4 rendering behavior on reports generated
-    before the URL filter ran.
+    FAILS CLOSED (wave 2): a URL earns ``"verified"`` only by having a
+    classification that says so. Absence of a record — no map at all, or a map
+    that does not mention this URL — renders ``"unverified"``.
+
+    This reverses the original behaviour, which returned ``"verified"`` in both
+    of those cases to preserve pre-Layer-4 rendering on reports generated before
+    the URL filter ran. That compatibility is what let absence of evidence
+    render as evidence of verification: ``fred.stlouisfed.org/series/LNS12000000``
+    returns 404 on FRED and on ALFRED, was never fetched, and carried the
+    ``source-verified`` badge on the published site — twice — because the run
+    artifact had no classification map at all and every branch defaulted to
+    verified.
+
+    The cost is deliberate and visible: a legacy report rendered without a
+    classification map now shows its sources as unverified until it is
+    re-rendered with one. Under-claiming on an old report is recoverable;
+    over-claiming on a dead link is what we published.
     """
     if not classifications:
-        return "verified"
+        return "unverified"
     cls = classifications.get(url)
     if cls is None:
-        return "verified"
+        return "unverified"
     if cls in _RENDER_AS_BROKEN:
         return "broken"
     if cls in _RENDER_AS_UNVERIFIED:
         return "unverified"
     return "verified"
+
+
+#: Two different things now render as "unverified", and they warrant different
+#: claims. A checked-but-blocked URL really is most likely real. An UNCHECKED
+#: one carries no such evidence, and saying it does would just relocate the
+#: over-claim that fail-closed exists to remove.
+_UNVERIFIED_CHECKED = (
+    "Could not be auto-verified at publish time (bot-blocked or transient "
+    "error). The URL is most likely real but you should confirm before "
+    "relying on it.")
+_UNVERIFIED_UNCHECKED = (
+    "Not checked at publish time — no verification record exists for this "
+    "URL. We are not vouching for it. Follow the link and confirm before "
+    "relying on it.")
+
+
+def _unverified_title(url: str, classifications: "dict[str, str] | None") -> str:
+    """Tooltip for the unverified badge, honest about which case this is."""
+    if not classifications or classifications.get(url) is None:
+        return _UNVERIFIED_UNCHECKED
+    return _UNVERIFIED_CHECKED
 
 
 def _evidence_list_html(
@@ -803,8 +838,9 @@ def _evidence_list_html(
     three CSS classes (``source-verified`` / ``source-unverified`` /
     skipped-as-broken) so the static site can visually distinguish them.
 
-    Without ``classifications`` every URL renders as verified (the
-    pre-Layer-4 behavior), so older publish runs still look identical.
+    Without ``classifications`` every URL renders as UNVERIFIED (wave-2
+    fail-closed). Older publish runs therefore no longer look identical —
+    that is the point: the old behaviour rendered unchecked URLs as verified.
 
     ``tier_index`` (A5 / C-3(a)) is the claim's ``stored_tier_index`` — these
     URLs come from ``ModelVerdict.web_sources`` and carry no tier of their
@@ -829,10 +865,8 @@ def _evidence_list_html(
         if render_cls == "unverified":
             unverified_badge = (
                 ' <span class="source-unverified-badge" '
-                'title="Could not be auto-verified at publish time '
-                '(bot-blocked or transient error). The URL is most '
-                'likely real but you should confirm before relying on '
-                'it.">unverified</span>'
+                f'title="{_esc(_unverified_title(url, classifications))}"'
+                '>unverified</span>'
             )
         items.append(
             f'<li class="source-{render_cls}"><span class="ev-mark">→</span>{badge}'
@@ -842,6 +876,81 @@ def _evidence_list_html(
     if not items:
         return '<p style="font-size:0.88rem;color:var(--ink-muted)">No sources retrieved.</p>'
     return f'<ul class="evidence-list">{"".join(items)}</ul>'
+
+
+#: Rows shown inline before the table collapses. A reader checking an
+#: arithmetic claim needs the endpoints and enough around them to see the
+#: shape; 1,045 rows of PAYEMS in an open table is not disclosure, it is noise.
+_SERIES_ROWS_INLINE = 14
+
+
+def _series_rows_html(rows: "dict | None") -> str:
+    """Render a D17-c series excerpt as a table a reader can check the claim against.
+
+    The point of series excerpting is that arithmetic claims become checkable by
+    the reader, not only by the scorer — so the observations render, with the
+    window that produced them, the rule that chose it, and how many rows of the
+    full table are NOT shown. A window is only honest if what it excluded is
+    visible next to what it included.
+
+    ``window_period_mismatch`` renders as a warning rather than a footnote: it
+    means these rows cannot settle this claim, and a reader who takes the table
+    at face value would be misled by our own exhibit.
+    """
+    if not rows or not rows.get("rows"):
+        return ""
+    obs = rows["rows"]
+    shown = obs[:_SERIES_ROWS_INLINE]
+    body = "".join(
+        f'<tr><td class="mono">{_esc(str(r.get("period", "")))}</td>'
+        f'<td class="mono">{_esc(str(r.get("value", "")))}</td></tr>'
+        for r in shown)
+    more = ""
+    if len(obs) > len(shown):
+        more = (f'<p class="dim series-more">+{len(obs) - len(shown):,} more '
+                f'observations in this window, not shown here.</p>')
+
+    total = rows.get("total_rows_in_full_table")
+    scope = (f'{rows.get("rows_shown", len(obs)):,} of {total:,} rows in the '
+             f'full table' if isinstance(total, int)
+             else f'{rows.get("rows_shown", len(obs)):,} rows')
+    window = ""
+    if rows.get("window_start") and rows.get("window_end"):
+        window = f' · {_esc(rows["window_start"])} to {_esc(rows["window_end"])}'
+
+    units = rows.get("units")
+    units_html = (f'<p class="dim series-units">Units: {_esc(str(units))}</p>'
+                  if units else "")
+    if not units and rows.get("units_unavailable_because"):
+        units_html = ('<p class="dim series-units">Units unavailable: '
+                      f'{_esc(str(rows["units_unavailable_because"]))}</p>')
+
+    mismatch = ""
+    if rows.get("window_period_mismatch"):
+        note = rows.get("window_period_mismatch_note") or (
+            "This window does not reach the period the claim compares against.")
+        mismatch = (f'<p class="series-mismatch">⚠ {_esc(str(note))}</p>')
+
+    predicate = rows.get("selection_predicate")
+    predicate_html = (f'<p class="dim series-predicate">Selected by: '
+                      f'{_esc(str(predicate))}</p>' if predicate else "")
+    full = rows.get("full_table")
+    full_html = (f'<p class="dim series-full"><a href="{_esc(str(full))}" '
+                 f'target="_blank" rel="noopener">Full table</a></p>'
+                 if full else "")
+    vintage = rows.get("vintage_as_of")
+    head = (f'{_esc(str(rows.get("series_id", "")))} · as of '
+            f'{_esc(str(vintage))}' if vintage
+            else _esc(str(rows.get("series_id", ""))))
+
+    return (
+        '<details class="series-rows"><summary class="series-summary">'
+        f'{head} — {scope}{window}</summary>'
+        f'{mismatch}'
+        '<table class="series-table"><tr><th>Period</th><th>Value</th></tr>'
+        f'{body}</table>{more}{units_html}{predicate_html}{full_html}'
+        '</details>'
+    )
 
 
 def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
@@ -891,6 +1000,7 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
         snippet_html = (
             f'<div class="source-snippet">{_esc(snippet)}</div>' if snippet else ""
         )
+        series_html = _series_rows_html(src.get("series_rows"))
         # The pack id (E1, E2, …) is what model reasoning cites — render it so
         # "E5 confirms…" in the write-up is traceable to a concrete source
         # (2026-07-19 review: the ids were captured but never displayed).
@@ -902,7 +1012,7 @@ def _sources_consulted_html(sources: list[dict], anchor_base: str = "",
             f'<li class="source-verified"{li_anchor}{stored_attr}>'
             f'<span class="ev-mark">→</span>{id_html}{badge}'
             f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(short)}</a>'
-            f'{name_html}{tier_html}{snippet_html}</li>'
+            f'{name_html}{tier_html}{snippet_html}{series_html}</li>'
         )
     if not items:
         return ""
@@ -1491,7 +1601,8 @@ def _verdict_panel(site_report) -> str:
         anecdote_note_html = (
             '<p class="vp-anecdote-note" style="font-size:0.85rem;color:var(--ink-muted)">'
             f'{n_anec_uv} of the {uv_bucket} Unverifiable {unit} {verb}{split_clause} — '
-            'private individuals\' stories with no independent public record to check.</p>\n'
+            'personal stories about individuals, which the evidence gate did '
+            'not admit enough qualifying sources to rate.</p>\n'
         )
 
     # Honest-abstention chip (PR-A2.1 / T1.2): decompose the abstentions so an
@@ -1502,17 +1613,39 @@ def _verdict_panel(site_report) -> str:
     n_split = dist_strict.get("Models split", 0)
     n_selfsrc = sum(1 for b in site_report.checkable_bundles
                     if _is_self_sourced_unverified(b))
+    # D17-d: split the residue. Nearly all of what used to read "unverifiable —
+    # other" is the gate declining to decide on an under-retrieved pack, which
+    # is a statement about our retrieval and not about the claim. Counted here
+    # EXCLUDING the two narrower sub-states so the terms still sum to
+    # claim_count, which consistency.py checks.
+    n_gate = sum(1 for b in site_report.checkable_bundles
+                 if _is_gate_withheld(b)
+                 and not _is_self_sourced_unverified(b)
+                 and not _is_anecdote_unverifiable(b))
     selfsource_chip_html = ""
-    if n_selfsrc:
+    if n_selfsrc or n_gate:
         n_decided = claim_count - uv_bucket - n_split
-        parts = [f"{n_decided} decided",
-                 f"{n_selfsrc} unverified — self-sourced only",
-                 f"{uv_bucket - n_selfsrc} unverifiable — other"]
+        parts = [f"{n_decided} decided"]
+        if n_selfsrc:
+            parts.append(f"{n_selfsrc} unverified — self-sourced only")
+        if n_gate:
+            parts.append(f"{n_gate} insufficient qualifying evidence retrieved")
+        n_other = uv_bucket - n_selfsrc - n_gate
+        if n_other:
+            parts.append(f"{n_other} unverifiable — other")
         if n_split:
             parts.append(f"{n_split} models split")
+        # The tooltip must describe the sub-states actually shown. Before D17-d
+        # the chip only ever appeared for self-sourced claims, so it could hard-
+        # code that title; a chip listing only gate-withheld counts while
+        # explaining "every source is the speaker's own organization" would be
+        # simply wrong.
+        chip_title = (SELF_SOURCED_TITLE if n_selfsrc and not n_gate
+                      else GATE_WITHHELD_TITLE if n_gate and not n_selfsrc
+                      else f"{SELF_SOURCED_TITLE} {GATE_WITHHELD_TITLE}")
         selfsource_chip_html = (
             '<p class="vp-selfsource-chip" '
-            f'title="{_esc(SELF_SOURCED_TITLE)}">' + _esc(" · ".join(parts))
+            f'title="{_esc(chip_title)}">' + _esc(" · ".join(parts))
             + '</p>\n'
         )
 
@@ -2278,10 +2411,20 @@ def _pca_seat_line(prov, roster: Optional[dict] = None) -> str:
 #: own pill instead of the same Unverifiable used for data claims the evidence
 #: couldn't settle (2026-07-20, jackie review).
 ANECDOTE_PILL = "Anecdote"
+#: The copy asserts only what the classifier actually established: that this is
+#: a personal story told about an individual. It used to add "No independent
+#: public record exists to check it against", which is a claim about
+#: RETRIEVABILITY that nothing in the pipeline had checked — and the D17-d
+#: triage contradicts it on 21 trump claims alone, where the story is a valor
+#: citation, a reported crash or a court record. A Purple Heart citation is an
+#: independent public record. Saying otherwise told the reader a checkable fact
+#: was uncheckable.
 ANECDOTE_TITLE = (
-    "Guest anecdote — a private individual's personal story. No independent "
-    "public record exists to check it against, so truth-bot does not rate it. "
-    "This is a limit of the genre, not a failed verification."
+    "Guest anecdote — a personal story told about an individual. truth-bot "
+    "does not rate it here: the evidence gate did not admit enough qualifying "
+    "sources bearing on it. Some stories of this kind are documented in public "
+    "records and simply have not been checked yet; others are private by "
+    "nature and never will be."
 )
 
 
@@ -2322,6 +2465,76 @@ def _self_source_ids(bundle: VerdictBundle) -> set[str]:
         if principal_relation(s.get("url", ""), bundle.speaker, bundle.date_str)
         is PrincipalRelation.SELF
     } - {""}
+
+
+#: Honest-abstention sub-state (D17-d). The GENERAL case that
+#: ``SELF_SOURCED_PILL`` and the anecdote pill are specific instances of: the
+#: evidence gate refused to decide because the pack never met the Tier-1..3
+#: bearing quota. That is a statement about OUR RETRIEVAL, not about the claim.
+#:
+#: Rendering it as a bare "Unverifiable" told readers a checkable fact could not
+#: be checked — "Olympics in LA: insufficient evidence" reads as a failed
+#: fact-check when it is really an unfinished one. 128 of the 132 Unverifiables
+#: across the five speeches are this species, and trump_2026:0054 sat here until
+#: D17-c handed the panel the rows and it decided TRUE. The claim did not
+#: change; what we retrieved did.
+GATE_WITHHELD_PILL = "Insufficient qualifying evidence retrieved"
+GATE_WITHHELD_TITLE = (
+    "The evidence gate withheld a verdict: the retrieved pack did not meet the "
+    "Tier-1..3 bearing quota, so the panel was never asked to decide. This "
+    "describes what we retrieved, NOT whether the claim is true — a claim here "
+    "may be perfectly checkable against evidence we have not yet gathered."
+)
+
+
+def _is_gate_withheld(bundle: VerdictBundle) -> bool:
+    """True when the gate refused to decide for want of qualifying evidence.
+
+    Keyed on the STRUCTURED gate code, never on the reasoning prose. The prose
+    happens to agree on all 128 rows today, but a phrasing change would
+    silently reclassify a claim's published state, and the reader-visible
+    difference between "we could not check this" and "this cannot be checked"
+    is too big to rest on a substring.
+
+    The two narrower pills win where they apply: an anecdote and a
+    self-sourced-only pack are both gate-withheld, and each says something more
+    specific about WHY.
+    """
+    consensus = bundle.consensus
+    if consensus.consensus_label != VerdictLabel.UNVERIFIABLE:
+        return False
+    if consensus.consensus_verdict == "Models split":
+        return False
+    return getattr(consensus.provenance, "evidence_gate", "") == GATE_INSUFFICIENT
+
+
+def _gate_withheld_html(bundle: VerdictBundle) -> str:
+    """Say WHY the verdict was withheld, on the claim itself.
+
+    The pill alone still leaves a reader to guess. This states the mechanism in
+    a sentence: the pack did not meet the bearing quota, so the panel never
+    ruled — and, crucially, that this is not a finding about the claim. A
+    reader who takes "Unverifiable" as "we looked and it's dubious" has been
+    misled by our own page.
+
+    Suppressed for the two narrower sub-states, which already say something
+    more specific on the same card.
+    """
+    if not _is_gate_withheld(bundle):
+        return ""
+    if _is_self_sourced_unverified(bundle) or _is_anecdote_unverifiable(bundle):
+        return ""
+    return (
+        '<div class="gate-withheld-note">'
+        '<strong>No verdict was reached.</strong> The evidence we retrieved for '
+        'this claim did not meet the quality bar required to decide it — too few '
+        'independent top-tier sources bearing on the core assertion — so the '
+        'panel was not asked to rule. '
+        '<em>This says what we gathered, not whether the claim is true.</em> '
+        'A claim here may be entirely checkable against evidence we have not yet '
+        'collected.'
+        '</div>'
+    )
 
 
 def _is_self_sourced_unverified(bundle: VerdictBundle) -> bool:
@@ -2473,6 +2686,14 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         label = SELF_SOURCED_PILL
         pill_title = SELF_SOURCED_TITLE
         anecdote_cls = " pill-self-sourced"
+    # Gate-withheld (D17-d): the general honest-abstention case, checked LAST
+    # so the two narrower pills keep their more specific finding. A bare
+    # "Unverifiable" now means what it should — the claim itself resists
+    # checking — rather than doubling as "we did not retrieve enough".
+    elif _is_gate_withheld(bundle):
+        label = GATE_WITHHELD_PILL
+        pill_title = GATE_WITHHELD_TITLE
+        anecdote_cls = " pill-gate-withheld"
     n = str(idx).zfill(2)
 
     context_html = ''
@@ -2750,6 +2971,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         # render on EVERY claim — including a gated/minimal claim whose
         # ``models_block`` provenance strip is empty.
         f'  {_correction_provenance_html(consensus.provenance, rel)}'
+        f'  {_gate_withheld_html(bundle)}'
         f'  {evidence_html}'
         f'  {consulted_html}'
         '  <div class="claim-foot">'
@@ -3941,6 +4163,32 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   outline: 3px double rgba(255,255,255,0.65);
   outline-offset: -4.5px;
 }
+/* The claim-card explainer for a withheld verdict. Muted rather than alarming:
+   this is an honest abstention, not a warning about the speaker. */
+.gate-withheld-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--border-strong);
+  background: rgba(127,127,127,0.06);
+}
+.gate-withheld-note strong { color: var(--ink); }
+/* Gate-withheld (D17-d): the pack never met the bearing quota, so the panel
+   was never asked. Keeps the Unverifiable colour family — this is still an
+   abstention — but a dashed outline marks it as a statement about our
+   RETRIEVAL rather than about the claim. The longer label wraps on narrow
+   viewports, so the pill is allowed to breathe. */
+.claim-pill.pill-gate-withheld {
+  outline: 2px dashed rgba(255,255,255,0.55);
+  outline-offset: -4.5px;
+  font-size: 0.78em;
+  line-height: 1.25;
+  max-width: 22ch;
+  white-space: normal;
+  text-align: center;
+}
 /* Per-item marker on the Sources-consulted strip: this record is the
    speaker's own organization (era-scoped principal match). */
 .ev-self {
@@ -4154,6 +4402,42 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
 }
 .computed-exhibit .ce-note { margin-top: 0.3rem; }
+/* D17-c series excerpt (wave 2) — the observations behind an arithmetic
+   claim, collapsed by default: audit detail, one click away, not in the way.
+   Same posture as the sources-consulted block it sits inside. */
+.series-rows { margin: 0.4rem 0 0.2rem; }
+.series-summary {
+  cursor: pointer;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+.series-summary:hover { color: var(--ink); }
+.series-table {
+  border-collapse: collapse;
+  margin: 0.45rem 0 0.3rem;
+  font-size: 0.72rem;
+}
+.series-table th,
+.series-table td {
+  padding: 0.12rem 0.75rem 0.12rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+.series-table th { color: var(--ink-muted); font-weight: 600; }
+.series-more, .series-units, .series-predicate, .series-full {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+}
+/* The window does not reach the period the claim is about. Amber, because a
+   reader taking the table at face value would be misled by our own exhibit. */
+.series-mismatch {
+  margin: 0.35rem 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.7rem;
+  border-left: 3px solid var(--amber, #b26a00);
+  background: rgba(178, 106, 0, 0.07);
+}
 /* Post-publication correction note (T1.5) — amber, can't be missed. */
 .pca-correction {
   margin-top: 0.25rem;

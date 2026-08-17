@@ -219,7 +219,15 @@ def test_anecdote_unverifiable_renders_anecdote_pill():
     assert ">Anecdote</span>" in html                 # never a bare "Unverifiable"
     assert "pill-anecdote" in html
     assert "Layer A: check-worthy (A2, personal-anecdote)" in html
-    assert "no independent" in html.lower()           # reader-facing genre copy
+    # D17-d: the copy used to assert "No independent public record exists to
+    # check it against" — a claim about RETRIEVABILITY that nothing in the
+    # pipeline had checked. THIS FIXTURE IS THE COUNTER-EXAMPLE: "at 17, our
+    # guest served in the Pacific" is service history, and service records are
+    # public. The triage classifies 21 anecdote-pilled trump claims as
+    # web-tier1 (documentable) for exactly this reason. The pill now asserts
+    # only what the classifier established.
+    assert "no independent public record exists" not in html.lower()
+    assert "did not admit enough qualifying sources" in html.lower()
 
 
 def test_anecdote_with_real_verdict_keeps_normal_pill():

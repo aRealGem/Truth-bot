@@ -1,0 +1,26 @@
+{
+  "basis": "MEASURED, ledger-derived: the d17c-wave2 escape run",
+  "claims": 3,
+  "guard": "costs.check_constant_applies REFUSES a constant whose payload schema does not match",
+  "ledger_spend_usd": 0.3266,
+  "note": "Cost here is driven by payload BYTES, not claim count: one claim carrying 1,981 rows costs more than a hundred carrying none. Price series work per-kchar, not per-claim.",
+  "payload_chars_with_rows": 104547,
+  "payload_chars_without_rows": 9244,
+  "payload_inflation_factor": 11.31,
+  "schema": "truthbot-d17c-series-cost-model v1",
+  "series_rows_share_of_payload_pct": 91.2,
+  "supersedes": {
+    "constant": "PACK_REUSE_USD_MEASURED",
+    "high_usd_per_claim": 0.0132,
+    "understated_by": 8.2,
+    "why": "measured on packs with no series_rows; applying it to a series-bearing payload is a category error, not a drift"
+  },
+  "usd_per_claim": 0.1089,
+  "usd_per_kchar": 0.003124,
+  "worst_single_claim": {
+    "chars_with_rows": 93740,
+    "chars_without_rows": 2986,
+    "inflation_factor": 31.4,
+    "sid": "trump_2026:0054"
+  }
+}

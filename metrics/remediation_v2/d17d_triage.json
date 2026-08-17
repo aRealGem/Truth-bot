@@ -1,0 +1,1092 @@
+{
+  "schema": "truthbot-d17d-triage v1",
+  "generated_from": {
+    "biden_2022": "c156d8f9-be85-5263-92a1-c08949afdedd",
+    "clinton_1998": "d7ee7340-c07d-55da-b9db-9397d7141c35",
+    "gwbush_2006": "6df77093-e328-596e-bfd5-afabd08a1679",
+    "obama_2014": "70748500-315a-5664-8474-c6632de57816",
+    "trump_2026": "799e71b6-2480-50ca-870e-1a95f0d0d5fe"
+  },
+  "method": "$0 desk classification of every gate-withheld claim (provenance_code == insufficient-qualifying-evidence) in all five speeches. No retrieval, no model call. Input to an owner scope decision, not a verdict.",
+  "gate_withheld_per_speech": {
+    "biden_2022": 24,
+    "clinton_1998": 21,
+    "gwbush_2006": 10,
+    "obama_2014": 19,
+    "trump_2026": 54
+  },
+  "gate_withheld_total": 128,
+  "class_totals": {
+    "web-tier1": 81,
+    "substantive": 35,
+    "series-core": 7,
+    "compound-split": 5
+  },
+  "cost": {
+    "series_lane_usd_per_claim": 0.1089,
+    "series_lane_claims": 7,
+    "series_lane_projected_usd": 0.7623,
+    "basis": "measured on the d17c-wave2 escape run ($0.003124/kchar, $0.1089/claim)",
+    "web_tier1_lane_usd": null,
+    "web_tier1_note": "UNPRICED. No measured constant exists for a retrieval-bearing lane on these packs, and S-12 forbids borrowing one — a per-claim number measured on a different payload is what ran the escalation 8.2x over. Needs its own $0 estimate pass before it is costed.",
+    "compound_split_lane_usd": null,
+    "compound_split_note": "UNPRICED, and blocked before it is priced: segmentation has to land before retrieval can be scoped for these claims.",
+    "substantive_lane_usd": 0.0,
+    "substantive_note": "$0 by definition — these are permanent honest abstentions. The work is display, not retrieval: they should read as 'cannot be verified', not as an unfinished backlog item."
+  },
+  "readjudication_candidates": [
+    {
+      "sid": "trump_2026:0466",
+      "page_position": "#118",
+      "verdict": "TRUE",
+      "confidence": 0.9,
+      "decidability_class": "readjudication-candidate",
+      "why": "The claim's core is causal — 'ALL BECAUSE she wore the uniform, she was shot' asserts the shooter's MOTIVE. The panel's stated reasoning verified that she was shot while on duty in uniform, which is a weakened paraphrase: evidence of the shooting does not reach why the shooter fired. Same conflation family as ruling (d) — a decision procedure that settles one proposition being credited with settling a neighbouring, harder one. No change now; logged for owner-visible re-adjudication in D17-d."
+    }
+  ],
+  "claims": [
+    {
+      "sid": "biden_2022:0017",
+      "speech": "biden_2022",
+      "text": "Groups of citizens blocking tanks with their bodies.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Civilians blocking tanks in Ukraine — extensively documented in wire reporting."
+    },
+    {
+      "sid": "biden_2022:0019",
+      "speech": "biden_2022",
+      "text": "In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” The Ukrainian Ambassador to the United States is here tonight.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A direct quotation from Zelenskyy's address to the European Parliament — the transcript settles it."
+    },
+    {
+      "sid": "biden_2022:0045",
+      "speech": "biden_2022",
+      "text": "Putin is now isolated from the world more than ever.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'Isolated from the world more than ever' is an evaluative comparison with no defined measure."
+    },
+    {
+      "sid": "biden_2022:0051",
+      "speech": "biden_2022",
+      "text": "The US Department of Justice is assembling a dedicated task force to go after the crimes of Russian oligarchs.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether DOJ stood up such a task force — the department's own announcements."
+    },
+    {
+      "sid": "biden_2022:0100",
+      "speech": "biden_2022",
+      "text": "I remember when my dad had to leave our home in Scranton, Pennsylvania to find work.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "The speaker's childhood memory of his father leaving for work."
+    },
+    {
+      "sid": "biden_2022:0124",
+      "speech": "biden_2022",
+      "text": "America used to have the best roads, bridges, and airports on Earth.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'Used to have the best' infrastructure is evaluative. Rankings exist (WEF) but the claim names no measure or date; arguable against web-tier1 if a measure is stipulated."
+    },
+    {
+      "sid": "biden_2022:0137",
+      "speech": "biden_2022",
+      "text": "And tonight, I’m announcing that this year we will start fixing over 65,000 miles of highway and 1,500 bridges in disrepair.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A stated programme scope — 65,000 miles and 1,500 bridges — checkable against DOT/FHWA announcements."
+    },
+    {
+      "sid": "biden_2022:0146",
+      "speech": "biden_2022",
+      "text": "If you travel 20 miles east of Columbus, Ohio, you’ll find 1,000 empty acres of land.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A specific site near Columbus and its acreage — local reporting and Intel's own filings."
+    },
+    {
+      "sid": "biden_2022:0154",
+      "speech": "biden_2022",
+      "text": "Intel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from $20 billion to $100 billion.",
+      "decidability_class": "compound-split",
+      "candidate_series": [],
+      "why": "Compound: a private remark by Intel's CEO (not retrievable) wrapped around an investment figure that IS (Intel announcements, SEC filings). Segment and keep the figure."
+    },
+    {
+      "sid": "biden_2022:0168",
+      "speech": "biden_2022",
+      "text": "GM is making the largest investment in its history—$7 billion to build electric vehicles, creating 4,000 jobs in Michigan.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "GM's $7bn investment and job figure, and whether it is the largest in its history — company statements and filings."
+    },
+    {
+      "sid": "biden_2022:0171",
+      "speech": "biden_2022",
+      "text": "As Ohio Senator Sherrod Brown says, “It’s time to bury the label “Rust Belt.” It’s time.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A direct quotation from a named senator."
+    },
+    {
+      "sid": "biden_2022:0194",
+      "speech": "biden_2022",
+      "text": "Top business leaders and most Americans support my plan.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'Top business leaders and most Americans support my plan' — an unmeasured quantifier over two undefined populations."
+    },
+    {
+      "sid": "biden_2022:0200",
+      "speech": "biden_2022",
+      "text": "Insulin costs about $10 a vial to make.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Insulin manufacturing cost per vial — published cost-of-production studies."
+    },
+    {
+      "sid": "biden_2022:0211",
+      "speech": "biden_2022",
+      "text": "Look, the American Rescue Plan is helping millions of families on Affordable Care Act plans save $2,400 a year on their health care premiums.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "ACA premium savings under the American Rescue Plan — HHS/CMS analyses. Borderline series-core if a specific premium series is stipulated."
+    },
+    {
+      "sid": "biden_2022:0284",
+      "speech": "biden_2022",
+      "text": "And Pfizer is working overtime to get us 1 million pills this month and more than double that next month.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Pfizer's monthly antiviral output — company and HHS statements."
+    },
+    {
+      "sid": "biden_2022:0285",
+      "speech": "biden_2022",
+      "text": "And we’re launching the “Test to Treat” initiative so people can get tested at a pharmacy, and if they’re positive, receive antiviral pills on the spot at no cost.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether the Test-to-Treat initiative launched as described — HHS."
+    },
+    {
+      "sid": "biden_2022:0362",
+      "speech": "biden_2022",
+      "text": "Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Endorsements from named organisations — their own statements."
+    },
+    {
+      "sid": "biden_2022:0366",
+      "speech": "biden_2022",
+      "text": "We’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Joint patrols with Mexico and Guatemala — DHS/State announcements."
+    },
+    {
+      "sid": "biden_2022:0373",
+      "speech": "biden_2022",
+      "text": "That’s why immigration reform is supported by everyone from labor unions to religious leaders to the US Chamber of Commerce.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'Supported by everyone from X to Y' is rhetorical breadth, not a countable claim."
+    },
+    {
+      "sid": "biden_2022:0376",
+      "speech": "biden_2022",
+      "text": "The constitutional right affirmed in Roe v.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "The constitutional holding of Roe — the opinion itself."
+    },
+    {
+      "sid": "biden_2022:0420",
+      "speech": "biden_2022",
+      "text": "One of those soldiers was my son Major Beau Biden.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Beau Biden's rank and service — public record."
+    },
+    {
+      "sid": "biden_2022:0427",
+      "speech": "biden_2022",
+      "text": "Combat medic in Kosovo and Iraq.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Service as a combat medic in Kosovo and Iraq — service records. NOTE: the surrounding passage refers to more than one person; confirm the referent before retrieving."
+    },
+    {
+      "sid": "biden_2022:0431",
+      "speech": "biden_2022",
+      "text": "He loved building Legos with their daughter.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "What he loved doing with his daughter."
+    },
+    {
+      "sid": "biden_2022:0437",
+      "speech": "biden_2022",
+      "text": "The VA is pioneering new ways of linking toxic exposures to diseases, already helping more veterans get benefits.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "VA programmes linking toxic exposure to benefits decisions — VA publications."
+    },
+    {
+      "sid": "clinton_1998:0027",
+      "speech": "clinton_1998",
+      "text": "For three decades, six Presidents have come before you to warn of the damage deficits pose to our nation.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether six presidents warned about deficits — the State of the Union corpus itself is the record."
+    },
+    {
+      "sid": "clinton_1998:0029",
+      "speech": "clinton_1998",
+      "text": "I will submit to Congress for 1999 the first balanced budget in 30 years.",
+      "decidability_class": "series-core",
+      "candidate_series": [
+        "FYFSD"
+      ],
+      "why": "First balanced budget in 30 years — the federal surplus/deficit series decides it directly. Same series D17-c already used on biden_2022:0245."
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "speech": "clinton_1998",
+      "text": "Now, with these teachers—listen—with these teachers, we will actually be able to reduce class size in the first, second, and third grades to an average of 18 students a class, all across America.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Class-size reduction from a teacher-hiring programme — NCES and programme reporting."
+    },
+    {
+      "sid": "clinton_1998:0090",
+      "speech": "clinton_1998",
+      "text": "In the last five years, we have led the way in opening new markets, with 240 trade agreements that remove foreign barriers to products bearing the proud stamp \"Made in the USA.\"",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A count of 240 trade agreements — USTR records."
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "speech": "clinton_1998",
+      "text": "That's why we have more than doubled funding for training dislocated workers since 1993.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Dislocated-worker training funding doubling since 1993 — DOL budget appropriations."
+    },
+    {
+      "sid": "clinton_1998:0107",
+      "speech": "clinton_1998",
+      "text": "And remember the big picture here: While we've been entering into hundreds of new trade agreements, we've been creating millions of new jobs.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "'Hundreds of new trade agreements' — same USTR record, weaker quantifier."
+    },
+    {
+      "sid": "clinton_1998:0132",
+      "speech": "clinton_1998",
+      "text": "I'm pleased to report we have also met that goal, two full years ahead of schedule.",
+      "decidability_class": "compound-split",
+      "candidate_series": [],
+      "why": "'We have also met that goal, two years ahead of schedule' — the goal is named in a previous sentence, so this cannot be retrieved for until the utterance is segmented and the referent bound."
+    },
+    {
+      "sid": "clinton_1998:0134",
+      "speech": "clinton_1998",
+      "text": "For 13 years, Elaine Kinslow of Indianapolis, Indiana, was on and off welfare.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A named individual's 13-year welfare history."
+    },
+    {
+      "sid": "clinton_1998:0135",
+      "speech": "clinton_1998",
+      "text": "Today, she's a dispatcher with a van company.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "Her current job."
+    },
+    {
+      "sid": "clinton_1998:0195",
+      "speech": "clinton_1998",
+      "text": "I thank General McCaffrey for his leadership, and I thank this Congress for passing the largest antidrug budget in history.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether it was the largest antidrug budget — ONDCP budget summaries."
+    },
+    {
+      "sid": "clinton_1998:0210",
+      "speech": "clinton_1998",
+      "text": "For 50 years, NATO contained communism and kept America and Europe secure.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'NATO contained communism and kept America and Europe secure' — a historical evaluation, not a checkable event."
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "speech": "clinton_1998",
+      "text": "Now these three formerly Communist countries have said yes to democracy.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether the three named countries adopted democratic government — documented."
+    },
+    {
+      "sid": "clinton_1998:0225",
+      "speech": "clinton_1998",
+      "text": "One of those— —thank you—one of those brave soldiers is sitting with the First Lady tonight: Army Sergeant Michael Tolbert.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A named soldier present as a guest — reporting and service records."
+    },
+    {
+      "sid": "clinton_1998:0226",
+      "speech": "clinton_1998",
+      "text": "His father was a decorated Vietnam vet.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "His father's Vietnam decorations — award records."
+    },
+    {
+      "sid": "clinton_1998:0227",
+      "speech": "clinton_1998",
+      "text": "After college in Colorado, he joined the Army.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "College in Colorado then Army service — records."
+    },
+    {
+      "sid": "clinton_1998:0236",
+      "speech": "clinton_1998",
+      "text": "I'm pleased to announce that four former Chairmen of the Joint Chiefs of Staff—Generals John Shalikashvili, Colin Powell, and David Jones and Admiral William Crowe—have endorsed this treaty.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether four named former Joint Chiefs chairmen endorsed as described — their statements."
+    },
+    {
+      "sid": "clinton_1998:0240",
+      "speech": "clinton_1998",
+      "text": "Saddam Hussein has spent the better part of this decade and much of his nation's wealth not on providing for the Iraqi people but on developing nuclear, chemical, and biological weapons and the missiles to deliver them.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "How Saddam Hussein 'spent the better part of a decade' — an evaluative characterisation of intent and priorities."
+    },
+    {
+      "sid": "clinton_1998:0241",
+      "speech": "clinton_1998",
+      "text": "The United Nations weapons inspectors have done a truly remarkable job finding and destroying more of Iraq's arsenal than was destroyed during the entire Gulf War.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "UNSCOM inspection and destruction findings — the commission's own reports."
+    },
+    {
+      "sid": "clinton_1998:0243",
+      "speech": "clinton_1998",
+      "text": "I know I speak for everyone in this chamber, Republicans and Democrats, when I say to Saddam Hussein, \"You cannot defy the will of the world,\" and when I say to him, \"You have used weapons of mass destruction before.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'I speak for everyone in this chamber' — a claim about others' agreement."
+    },
+    {
+      "sid": "clinton_1998:0350",
+      "speech": "clinton_1998",
+      "text": "Think of this: The first time I made a State of the Union speech to you, only a handful of physicists used the World Wide Web—literally, just a handful of people.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'Only a handful of physicists used the web' at a past date. Directionally famous but no measurement exists for the period; arguable against web-tier1 via CERN/NSF histories."
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "speech": "clinton_1998",
+      "text": "Beginning this year, 1998, men and women from 16 countries will build a foothold in the heavens, the international space station.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "ISS participation by 16 countries beginning in 1998 — NASA and partner-agency records."
+    },
+    {
+      "sid": "gwbush_2006:0024",
+      "speech": "gwbush_2006",
+      "text": "In 1945, there were about two dozen lonely democracies in the world.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Count of democracies in 1945 — Freedom House and Polity datasets, though the count depends on the definition used."
+    },
+    {
+      "sid": "gwbush_2006:0025",
+      "speech": "gwbush_2006",
+      "text": "Today, there are 122.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Count of democracies today — same datasets, same definitional caveat."
+    },
+    {
+      "sid": "gwbush_2006:0027",
+      "speech": "gwbush_2006",
+      "text": "At the start of 2006, more than half the people of our world live in democratic nations.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Share of world population in democratic nations — Freedom House plus population data."
+    },
+    {
+      "sid": "gwbush_2006:0033",
+      "speech": "gwbush_2006",
+      "text": "Their aim is to seize power in Iraq and use it as a safe haven to launch attacks against America and the world.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "The aim of an adversary. An attribution of intent, which evidence of actions cannot establish. Same conflation family as ruling (d)."
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "speech": "gwbush_2006",
+      "text": "In the last two and a half years, America has created 4.6 million new jobs—more than Japan and the European Union combined.",
+      "decidability_class": "series-core",
+      "candidate_series": [
+        "PAYEMS"
+      ],
+      "why": "4.6 million jobs over a dated window is a direct difference on nonfarm payrolls. The comparison to Japan and the EU needs OECD data, so the second half is web-tier1 — arguably compound."
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "speech": "gwbush_2006",
+      "text": "In the last five years, the tax relief you passed has left $880 billion in the hands of American workers, investors, small businesses, and families.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "$880bn of tax relief over five years — Treasury/CBO scoring."
+    },
+    {
+      "sid": "gwbush_2006:0155",
+      "speech": "gwbush_2006",
+      "text": "This year my budget will cut it again, and reduce or eliminate more than 140 programs that are performing poorly or not fulfilling essential priorities.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A count of programmes cut or eliminated — the budget documents."
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "speech": "gwbush_2006",
+      "text": "By passing these reforms, we will save the American taxpayer another $14 billion next year and stay on track to cut the deficit in half by 2009.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Projected $14bn savings — budget documents; forward-looking, so partially a projection."
+    },
+    {
+      "sid": "gwbush_2006:0189",
+      "speech": "gwbush_2006",
+      "text": "So tonight I announce the Advanced Energy Initiative—a 22-percent increase in clean-energy research—at the Department of Energy, to push for breakthroughs in two vital areas.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A 22 percent increase in clean-energy research funding — DOE budget request."
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "speech": "gwbush_2006",
+      "text": "Drug use among youth is down 19 percent since 2001.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Youth drug use down 19 percent since 2001 — Monitoring the Future / NSDUH. Survey series, not FRED, so not series-core as defined here."
+    },
+    {
+      "sid": "obama_2014:0001",
+      "speech": "obama_2014",
+      "text": "An entrepreneur flipped on the lights in her tech startup, and did her part to add to the more than eight million new jobs our businesses have created over the past four years.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A composite narrative opening. The embedded 'more than eight million' jobs figure is series-checkable, but the sentence as constructed is scene-setting; arguable as compound-split."
+    },
+    {
+      "sid": "obama_2014:0004",
+      "speech": "obama_2014",
+      "text": "A rural doctor gave a young child the first prescription to treat asthma that his mother could afford.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A rural doctor writing one prescription. No public record."
+    },
+    {
+      "sid": "obama_2014:0013",
+      "speech": "obama_2014",
+      "text": "And for the first time in over a decade, business leaders around the world have declared that China is no longer the world’s number one place to invest; America is.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Business-leader survey rankings on investment destination — the surveys are published (e.g. A.T. Kearney FDI Confidence Index)."
+    },
+    {
+      "sid": "obama_2014:0045",
+      "speech": "obama_2014",
+      "text": "The Joining Forces alliance that Michelle and Jill Biden launched has already encouraged employers to hire or train nearly 400,000 veterans and military spouses.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Joining Forces hiring/training totals — the initiative's own reporting."
+    },
+    {
+      "sid": "obama_2014:0055",
+      "speech": "obama_2014",
+      "text": "With the economy picking up speed, companies say they intend to hire more people this year.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "'Companies say they intend to hire' — hiring-intention surveys (NFIB, Duke CFO)."
+    },
+    {
+      "sid": "obama_2014:0070",
+      "speech": "obama_2014",
+      "text": "Over the past five years, my administration has made more loans to small business owners than any other.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "SBA lending volume by administration — SBA data; borderline series-core if an SBA series is stipulated."
+    },
+    {
+      "sid": "obama_2014:0082",
+      "speech": "obama_2014",
+      "text": "Businesses plan to invest almost $100 billion in new factories that use natural gas.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Announced natural-gas-driven factory investment — industry and company announcements."
+    },
+    {
+      "sid": "obama_2014:0114",
+      "speech": "obama_2014",
+      "text": "And today, Detroit Manufacturing Systems has more than 700 employees.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "One named firm's headcount — company statements and local reporting."
+    },
+    {
+      "sid": "obama_2014:0121",
+      "speech": "obama_2014",
+      "text": "But first, this Congress needs to restore the unemployment insurance you just let expire for 1.6 million people.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "The count of people whose unemployment insurance lapsed — DOL figures. Borderline series-core (ICSA/CCSA measure a different thing)."
+    },
+    {
+      "sid": "obama_2014:0123",
+      "speech": "obama_2014",
+      "text": "Misty DeMars is a mother of two young boys.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A named individual's family circumstances."
+    },
+    {
+      "sid": "obama_2014:0125",
+      "speech": "obama_2014",
+      "text": "She put herself through college.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "That she put herself through college."
+    },
+    {
+      "sid": "obama_2014:0126",
+      "speech": "obama_2014",
+      "text": "She’d never collected unemployment benefits.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "That she had never collected unemployment benefits — a negative about one person's history."
+    },
+    {
+      "sid": "obama_2014:0153",
+      "speech": "obama_2014",
+      "text": "But in the meantime, thirty states have raised pre-k funding on their own.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "How many states raised pre-K funding — NIEER's annual yearbook tracks exactly this."
+    },
+    {
+      "sid": "obama_2014:0158",
+      "speech": "obama_2014",
+      "text": "Tonight, I can announce that with the support of the FCC and companies like Apple, Microsoft, Sprint, and Verizon, we’ve got a down payment to start connecting more than 15,000 schools and twenty million students over the next two years, without adding a dime to the deficit.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether named companies committed via the FCC initiative — FCC and company announcements."
+    },
+    {
+      "sid": "obama_2014:0189",
+      "speech": "obama_2014",
+      "text": "Today, the federal minimum wage is worth about twenty percent less than it was when Ronald Reagan first stood here.",
+      "decidability_class": "series-core",
+      "candidate_series": [
+        "CPIAUCSL",
+        "FEDMINNFRWG"
+      ],
+      "why": "Real value of the federal minimum wage against a 1980s baseline: nominal minimum wage deflated by CPI. NOTE: D17-c already attached CPIAUCSL here and the window did NOT reach the Reagan-era baseline — this is the recorded window_period_mismatch. Deciding it needs the named-anchor work, not just the series."
+    },
+    {
+      "sid": "obama_2014:0198",
+      "speech": "obama_2014",
+      "text": "Right now, it helps about half of all parents at some point.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "'Helps about half of all parents at some point' — programme participation studies; the population and period are unstated, which is what makes it hard."
+    },
+    {
+      "sid": "obama_2014:0207",
+      "speech": "obama_2014",
+      "text": "MyRA guarantees a decent return with no risk of losing what you put in.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "MyRA's guarantee structure — Treasury's own programme documentation."
+    },
+    {
+      "sid": "obama_2014:0255",
+      "speech": "obama_2014",
+      "text": "When I took office, nearly 180,000 Americans were serving in Iraq and Afghanistan.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Troop levels in Iraq and Afghanistan at a dated point — DoD deployment figures. Borderline series-core; DoD publishes counts, not a FRED series."
+    },
+    {
+      "sid": "obama_2014:0283",
+      "speech": "obama_2014",
+      "text": "As we gather here tonight, Iran has begun to eliminate its stockpile of higher levels of enriched uranium.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether Iran had begun eliminating its higher-enriched stockpile — IAEA verification reporting."
+    },
+    {
+      "sid": "trump_2026:0035",
+      "speech": "trump_2026",
+      "text": "Mortgage rates are the lowest in four years and falling fast, and the annual cost of a typical new mortgage is down almost $5,000 just since I took office, one year.",
+      "decidability_class": "series-core",
+      "candidate_series": [
+        "MORTGAGE30US"
+      ],
+      "why": "30-year fixed mortgage rate; 'lowest in four years' is a direct min-over-window on the series, the same shape D17-c already decides."
+    },
+    {
+      "sid": "trump_2026:0040",
+      "speech": "trump_2026",
+      "text": "The stock market has set 53 all-time record highs since the election.",
+      "decidability_class": "series-core",
+      "candidate_series": [
+        "SP500",
+        "DJIA",
+        "NASDAQCOM"
+      ],
+      "why": "Count of record closes since a dated start — arithmetic over an index series. Which index is unstated, so the count depends on picking one; say so when scoping."
+    },
+    {
+      "sid": "trump_2026:0043",
+      "speech": "trump_2026",
+      "text": "In four long years, the last administration got less than $1 trillion in new investment in the United States.",
+      "decidability_class": "series-core",
+      "candidate_series": [
+        "ROWFDNQ027S",
+        "BOGZ1FL063164003Q"
+      ],
+      "why": "'New investment in the United States' most plausibly maps to foreign direct investment inflows. The mapping is ARGUABLE — the claim does not say which measure — and a wrong series would answer a different question."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "speech": "trump_2026",
+      "text": "We cut a record number of job killing regulations and, in one year, we have lifted 2.4 million Americans, a record, off of food stamps.",
+      "decidability_class": "compound-split",
+      "candidate_series": [],
+      "why": "Two claims in one sentence: a regulation count (Federal Register / Unified Agenda, web) and 'lifted 2.4 million Americans' out of something unnamed (a series, once the something is identified). Neither is retrievable until they are separated."
+    },
+    {
+      "sid": "trump_2026:0090",
+      "speech": "trump_2026",
+      "text": "I'm also pleased to say that the next time the Olympic torch is lit, it will be here in America for the 2028 Olympics and it's the summer version right in Los Angeles.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether the 2028 Olympic torch is lit in America — an IOC host-city decision. Documented, and no series touches it."
+    },
+    {
+      "sid": "trump_2026:0098",
+      "speech": "trump_2026",
+      "text": "At age 17, Buddy volunteered to defend America in World War II, serving in the Pacific under the great General Douglas MacArthur.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "WWII service at 17 in the Pacific: service records and unit histories are documentary."
+    },
+    {
+      "sid": "trump_2026:0099",
+      "speech": "trump_2026",
+      "text": "He fought bravely in the famous Battle of Manila, worked so hard.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Participation in the Battle of Manila — unit records."
+    },
+    {
+      "sid": "trump_2026:0100",
+      "speech": "trump_2026",
+      "text": "He was badly wounded and almost killed by enemy machine guns in Luzon.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Wounded at Luzon — casualty and service records."
+    },
+    {
+      "sid": "trump_2026:0102",
+      "speech": "trump_2026",
+      "text": "But he earned many honors, including a Purple Heart and a Bronze Star, came home started a family and tonight he is in the gallery looking forward to July 4th, 2026, his 100th birthday.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Purple Heart and Bronze Star are formal awards with citations on record."
+    },
+    {
+      "sid": "trump_2026:0106",
+      "speech": "trump_2026",
+      "text": "I was there.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'I was there.' Unfalsifiable as stated and carries no checkable content on its own."
+    },
+    {
+      "sid": "trump_2026:0110",
+      "speech": "trump_2026",
+      "text": "She thought she was going to die.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "What she thought she was feeling. A private mental state; no retrieval reaches it."
+    },
+    {
+      "sid": "trump_2026:0111",
+      "speech": "trump_2026",
+      "text": "Those prayers were answered when Coast Guard rescue swimmer Scott Ruskin descended from a helicopter above.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A named Coast Guard rescue swimmer performing a documented rescue — USCG records and contemporaneous reporting."
+    },
+    {
+      "sid": "trump_2026:0130",
+      "speech": "trump_2026",
+      "text": "Last year, I urged this Congress to begin the mission by passing the largest tax cuts in American history and our Republican majorities delivered so beautifully.",
+      "decidability_class": "compound-split",
+      "candidate_series": [],
+      "why": "The urging is trivially true; the embedded superlative ('largest tax cuts in American history') is the checkable core and needs CBO/Treasury scoring against prior cuts. Segment first."
+    },
+    {
+      "sid": "trump_2026:0137",
+      "speech": "trump_2026",
+      "text": "Megan is here this evening and she's happy to tell you that she is so, so much richer because, with no tax on tips, no tax on overtime and our expanded child tax credit done again by Republicans, Megan and her husband will take home more than $5,000 extra just for the year cutting her tax bill in more than half.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A named individual's felt financial position, plus attribution to a policy. Neither half is retrievable."
+    },
+    {
+      "sid": "trump_2026:0153",
+      "speech": "trump_2026",
+      "text": "You know, I asked Michael Dell, how do you make all that money?",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A private conversation with Michael Dell. Nothing public could settle what was said. NOTE: this claim currently renders as gate-withheld because the structured code cannot tell it apart from an under-retrieved claim — it is the clearest case for the substantive class existing."
+    },
+    {
+      "sid": "trump_2026:0161",
+      "speech": "trump_2026",
+      "text": "So, with modest additional contributions, these young people's accounts could grow to over $100,000 or more by the time they turn 18.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A conditional projection about future account balances, not an assertion of present fact."
+    },
+    {
+      "sid": "trump_2026:0255",
+      "speech": "trump_2026",
+      "text": "For five years, she and her husband have struggled with infertility and they turned to IVF.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A couple's private fertility history."
+    },
+    {
+      "sid": "trump_2026:0256",
+      "speech": "trump_2026",
+      "text": "One drug has been costing Catherine $4,000 to purchase.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A named drug's price is documentable (list price, GoodRx, CMS), though what THIS individual paid may not be. Arguable between web-tier1 and substantive; scope the drug price, not the person."
+    },
+    {
+      "sid": "trump_2026:0279",
+      "speech": "trump_2026",
+      "text": "She placed bids on 20 homes and lost all of those bids to gigantic investment firms that bypassed inspection, paid all cash and turned those houses into rentals, stealing away her American dream.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "One buyer's bidding history across 20 homes. No public record aggregates this."
+    },
+    {
+      "sid": "trump_2026:0291",
+      "speech": "trump_2026",
+      "text": "Since I took office, the typical 401-K balance is up by at least $30,000.",
+      "decidability_class": "series-core",
+      "candidate_series": [
+        "SP500",
+        "WILL5000IND"
+      ],
+      "why": "'Typical 401(k) balance up $30,000' is index-driven, but the authoritative figure is survey data (EBRI/Fidelity), not FRED. Series can bound it; only the survey can confirm it. Flagged as arguable."
+    },
+    {
+      "sid": "trump_2026:0325",
+      "speech": "trump_2026",
+      "text": "Delilah Coleman was only five years old in June 2024 when an 18-wheel tractor-trailer plowed into her stopped car traveling at 60 miles an hour or more.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A specific 2024 crash involving a named child — police, NTSB and contemporaneous reporting."
+    },
+    {
+      "sid": "trump_2026:0326",
+      "speech": "trump_2026",
+      "text": "The driver was an illegal alien let in by Joe Biden and given a commercial driver's license by open borders politicians in California.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Immigration status and CDL issuance for a named driver — court filings and state DMV records."
+    },
+    {
+      "sid": "trump_2026:0327",
+      "speech": "trump_2026",
+      "text": "Doctors said Delilah would never be able to walk or talk, have a good life.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "What doctors said about a prognosis, in private."
+    },
+    {
+      "sid": "trump_2026:0328",
+      "speech": "trump_2026",
+      "text": "She wouldn't even be able to eat again.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "Same private prognosis."
+    },
+    {
+      "sid": "trump_2026:0329",
+      "speech": "trump_2026",
+      "text": "But against all odds, she is now in the first grade, learning to walk.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A child's current developmental state — no public record."
+    },
+    {
+      "sid": "trump_2026:0334",
+      "speech": "trump_2026",
+      "text": "Many, if not most, illegal aliens do not speak English and cannot read even the most basic road signs as to direction, speed, danger or location.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'Many, if not most' of an unmeasured population. English proficiency of undocumented immigrants is not measured in a way that could confirm or refute this quantifier."
+    },
+    {
+      "sid": "trump_2026:0340",
+      "speech": "trump_2026",
+      "text": "In 2023, a 16-year-old high school cheerleader named Lizbeth Medina was supposed to perform in her town's Christmas parade, but she never arrived.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A named 2023 homicide victim — contemporaneous reporting."
+    },
+    {
+      "sid": "trump_2026:0341",
+      "speech": "trump_2026",
+      "text": "Her mother Jacqueline went home to look for her and she found her lying dead in a bathtub bleeding profusely after being stabbed 25 times.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "The circumstances of the death as reported — police and press."
+    },
+    {
+      "sid": "trump_2026:0342",
+      "speech": "trump_2026",
+      "text": "Lizbeth's killer was a previously arrested illegal alien who had broken in and brutally, just brutally extinguished the brightest light in her family's life, violently and viciously.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "The killer's prior arrest and immigration status — court records."
+    },
+    {
+      "sid": "trump_2026:0343",
+      "speech": "trump_2026",
+      "text": "Her heartbroken mother is in the gallery to remind everyone in this chamber exactly why we are deporting illegal alien criminals from our country at record numbers and we're getting them the hell out of here fast.",
+      "decidability_class": "compound-split",
+      "candidate_series": [],
+      "why": "Compound: 'her mother is in the gallery' (present, trivially checkable) plus 'why we are deporting' with an embedded record-removals claim that IS checkable against ICE removal statistics. Segment, then the removals core becomes series-or-agency retrievable. Cross-refs the logged utterance-segmentation item."
+    },
+    {
+      "sid": "trump_2026:0379",
+      "speech": "trump_2026",
+      "text": "And this should be an easy one, and by the way, it's polling at 89 percent, including Democrats, 89 percent.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A polling figure with a stated number — public polls, if one matching the description exists."
+    },
+    {
+      "sid": "trump_2026:0400",
+      "speech": "trump_2026",
+      "text": "In 2021, Sage was 14 when school officials in Virginia sought to socially transition her to a new gender, treating her as a boy and hiding it from her parents.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A named minor and a Virginia school district's actions — court filings and reporting."
+    },
+    {
+      "sid": "trump_2026:0402",
+      "speech": "trump_2026",
+      "text": "Before long, a confused Sage ran away from home.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A runaway incident tied to the same documented case."
+    },
+    {
+      "sid": "trump_2026:0403",
+      "speech": "trump_2026",
+      "text": "After she was found in a horrific situation in Maryland, a left-wing judge refused to return sage to her parents because they did not immediately state that their daughter was their son.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A judge's custody decision — court record."
+    },
+    {
+      "sid": "trump_2026:0404",
+      "speech": "trump_2026",
+      "text": "Sage was thrown into an all-boys state home and suffered terribly for a long time.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Placement in a state facility — court and agency records."
+    },
+    {
+      "sid": "trump_2026:0405",
+      "speech": "trump_2026",
+      "text": "But today, all of that is behind them because Sage is a proud and wonderful young woman with a full ride scholarship to Liberty University.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A full-ride scholarship is documentable via the institution or reporting."
+    },
+    {
+      "sid": "trump_2026:0450",
+      "speech": "trump_2026",
+      "text": "No one will ever forget—there were people on that train, no one will ever forget the expression of terror on Iryna's face as she looked up at her attacker in the last seconds of her life.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "The expressions on people's faces. Not a checkable proposition."
+    },
+    {
+      "sid": "trump_2026:0469",
+      "speech": "trump_2026",
+      "text": "Sarah Beckstrom died in order to defend our capital.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A named service member's death in a documented incident."
+    },
+    {
+      "sid": "trump_2026:0482",
+      "speech": "trump_2026",
+      "text": "The doctors thought that Andrew was gone, but his mother said no, no, Mr. President, Andrew will be fine.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "What doctors thought and what a mother said, in a hospital room."
+    },
+    {
+      "sid": "trump_2026:0487",
+      "speech": "trump_2026",
+      "text": "This was a conversation that I had with her that night with her son laying hopelessly in bed, blood all over.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A private conversation the speaker had that night."
+    },
+    {
+      "sid": "trump_2026:0514",
+      "speech": "trump_2026",
+      "text": "Thirty-five million people said the prime minister of Pakistan would have died if it were not for my involvement.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "'Thirty-five million people said' — an unmeasured mass attribution, wrapped around a counterfactual about what would have happened. Neither half is decidable."
+    },
+    {
+      "sid": "trump_2026:0569",
+      "speech": "trump_2026",
+      "text": "After Midnight Hammer, they were warned to make no future attempts to rebuild their weapons program in a particular, nuclear weapons, yet they continue starting it all over.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether a warning was delivered after a named operation — reporting and official statements."
+    },
+    {
+      "sid": "trump_2026:0638",
+      "speech": "trump_2026",
+      "text": "She grew up in a tight knit Venezuelan family and was especially close to her beloved uncle, Enrique.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "A family's closeness. Not a checkable proposition."
+    },
+    {
+      "sid": "trump_2026:0643",
+      "speech": "trump_2026",
+      "text": "Alejandro, I'm pleased to inform you that not only has your uncle been released, but he's here tonight.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A named person's release from detention and presence at the address — documentable."
+    },
+    {
+      "sid": "trump_2026:0652",
+      "speech": "trump_2026",
+      "text": "But the deeds of one warrior that night will live forever in the eternal chronicles of military valor, Chief Warrant Officer Five, Eric Slover, planned the mission and was the flight lead in the cockpit of the first helicopter.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Valor deeds of a named service member — the citation is the record."
+    },
+    {
+      "sid": "trump_2026:0659",
+      "speech": "trump_2026",
+      "text": "While preparing to land, enemy machine guns fired from every angle and Eric was hit very badly in the leg and hip, one bullet after another.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Slover: wounds sustained under fire, described in the valor citation."
+    },
+    {
+      "sid": "trump_2026:0660",
+      "speech": "trump_2026",
+      "text": "He absorbed four agonizing shots, shredding his leg into numerous pieces.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Same citation — number and effect of the wounds."
+    },
+    {
+      "sid": "trump_2026:0664",
+      "speech": "trump_2026",
+      "text": "Eric maneuvered his helicopter with all of those lives and souls to face the enemy and let his gunners eliminate the threat—turned the helicopter around so the gunners could take care of business, saving the lives of his fellow warriors from what could have been a catastrophic crash deep in enemy territory.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Aircraft manoeuvre under fire — citation and after-action record."
+    },
+    {
+      "sid": "trump_2026:0665",
+      "speech": "trump_2026",
+      "text": "Only after safely landing the helicopter with all the warriors aboard in the exact right spot, which was vital to the mission, we probably would have had maybe cancel the mission if that didn't happen, Eric told his copilot, also wounded but not as gravely, to take over, I'm about ready to pass out.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "The landing and its location — same citation."
+    },
+    {
+      "sid": "trump_2026:0666",
+      "speech": "trump_2026",
+      "text": "The success of the entire mission and the lives of his fellow warriors hinge on Eric's ability to take the searing pain, it was unbelievable what's happened to his legs, of the bullets and keep on flying and landing and people knew what was happening.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "That the mission's success and the crew's lives HINGED on one man is a causal attribution, not an event. The citation can evidence what he did, not that everything turned on it. Same conflation family as ruling (d)."
+    },
+    {
+      "sid": "trump_2026:0667",
+      "speech": "trump_2026",
+      "text": "Everybody in the back of the helicopter knew because they saw the blood pouring down the aisle.",
+      "decidability_class": "substantive",
+      "candidate_series": [],
+      "why": "What everybody in the helicopter knew. A group's inner awareness."
+    },
+    {
+      "sid": "trump_2026:0683",
+      "speech": "trump_2026",
+      "text": "In the skies over Korea in 1952, Royce was in the dogfight of a lifetime, legendary dogfight.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "A 1952 Korean-war dogfight involving a named pilot — service records."
+    },
+    {
+      "sid": "trump_2026:0685",
+      "speech": "trump_2026",
+      "text": "It was his first aerial combat of the war and despite being massively outnumbered and outgunned, Royce led the takedown of four enemy jets and almost destroyed the others, vanquishing his adversaries while taking 263 bullets to his own plane and being seriously hurt.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "First aerial combat, outnumbered, led the engagement — citation and records."
+    },
+    {
+      "sid": "trump_2026:0686",
+      "speech": "trump_2026",
+      "text": "His story was secret for over 50 years.",
+      "decidability_class": "web-tier1",
+      "candidate_series": [],
+      "why": "Whether the story was classified for 50 years — declassification records."
+    }
+  ]
+}

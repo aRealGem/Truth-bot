@@ -1,0 +1,82 @@
+{
+  "generated": "",
+  "model": "claude-haiku (D17-c Stage A, series-row augmented)",
+  "provenance": {
+    "census": "metrics/remediation_v2/d17c_stage0/stage_a_census.json",
+    "evidence_identical_verified": true,
+    "joins_against_rebuilt_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+    "measured_on_publishing_head": "5c923c25-b065-4a9f-80bf-d23db4f9bcd1",
+    "note": "stances measured with D17-c series excerpts in the scoring payload; control arm produced 0 flips, so these are excerpt-attributable",
+    "selector_run_sha256": "9f1c9a6d975ada4fe4e70170215da9d6796010ac49a1260c1265496c9ce9020c"
+  },
+  "schema": "truthbot-rescore-sidecar v1",
+  "sids": {
+    "gwbush_2006:0133": [
+      {
+        "one_line_why": "Claim asserts economy is growing; BEA official data shows 3.5% real GDP growth for 2005, supporting growth assertion, though Q4 slowdown to 1.1% raises questions about 'vigorous'.",
+        "relevance_score": 0.85,
+        "source_url": "https://bea.gov/news/2006/gross-domestic-product-fourth-quarter-2005-advance-estimates",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "Employment Situation report cited but snippet does not provide the actual payroll or unemployment figures needed to assess health claim.",
+        "relevance_score": 0.5,
+        "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_200601.pdf",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "Official BEA data: 3.5% real GDP growth for 2005 directly supports the 'growing' assertion in the claim.",
+        "relevance_score": 0.85,
+        "source_url": "https://www.bea.gov/news/2006/gross-domestic-product-fourth-quarter-2005-advance-estimates",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "OECD Economic Outlook tables show U.S. real GDP growth above Euro area and Japan, directly supporting claim that U.S. is growing faster than other major industrialized nations.",
+        "relevance_score": 0.95,
+        "source_url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2006/01/oecd-economic-outlook-volume-2005-issue-2_g1gh4975/eco_outlook-v2005-2-en.pdf",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "BLS payroll summary cited but snippet does not provide the actual multi-year job change figures needed to assess the health claim.",
+        "relevance_score": 0.4,
+        "source_url": "https://www.bls.gov/opub/ted/2006/feb/wk1/art02.htm",
+        "supports_claim": null
+      },
+      {
+        "one_line_why": "BLS December 2005 unemployment at 4.9% with continued payroll gains supports the 'healthy' labor market assertion.",
+        "relevance_score": 0.75,
+        "source_url": "https://www.bls.gov/news.release/history/empsit_01062006.txt",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "IMF statement that U.S. continued to lead global recovery and outpace most trading partners directly supports claim of faster growth than other major industrialized nations.",
+        "relevance_score": 0.9,
+        "source_url": "https://www.imf.org/en/News/Articles/2015/09/28/04/53/pn05100",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "FRED PAYEMS series shows nonfarm payrolls rose from 130,255K (Dec 2003) to 134,468K (Dec 2005), a gain of 4,213K jobs over 24 months, supporting 'healthy' economy assertion.",
+        "relevance_score": 0.8,
+        "source_url": "https://fred.stlouisfed.org/series/PAYEMS",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "Official BEA advance release confirms 3.5% real GDP growth for 2005, supporting the 'growing' assertion.",
+        "relevance_score": 0.85,
+        "source_url": "https://www.bea.gov/index.php/news/2006/gross-domestic-product-fourth-quarter-2005-advance-estimates",
+        "supports_claim": true
+      },
+      {
+        "one_line_why": "Congressional JEC notes Q4 2005 GDP growth of 1.1% fell well below 3.0% consensus, contradicting the 'vigorous' characterization of growth.",
+        "relevance_score": 0.8,
+        "source_url": "https://www.jec.senate.gov/public/index.cfm/republicans/2006/1/gdp-growth-rate-slows-to-1.1-in-fourth-quarter-of-2005_476",
+        "supports_claim": false
+      }
+    ]
+  },
+  "soft_failures": [],
+  "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+  "speech_id": "gwbush_2006",
+  "spend_note": "Stage A cost $0.053984 as ONE run across four speeches; see stage_a_census.json. Not split per speech here \u2014 that would be an invented number \u2014 and not restated, to avoid double-counting in the merged total.",
+  "spend_usd": 0.0
+}

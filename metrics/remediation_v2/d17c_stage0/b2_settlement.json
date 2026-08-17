@@ -1,0 +1,80 @@
+{
+  "b2_findings_crosscheck": {
+    "flips": 17,
+    "published_total_spend_usd": 0.5404,
+    "trigger_items": 227
+  },
+  "calibration_id": "haiku-score-2026-08-09",
+  "calls": 115,
+  "chars_per_token": 3.13,
+  "cited_pre_run_estimate_usd": 0.2299,
+  "crosschecks": {
+    "calls == b2_subset estimate calls (115)": true,
+    "items == b2_subset estimate items (1028)": true,
+    "measured freetext/item == calibration constant (identity by construction)": true,
+    "measured total vs B2_FINDINGS table": true
+  },
+  "estimate_vs_actual_factor": 2.351,
+  "freetext_chars_measured": 150292,
+  "freetext_chars_per_item_measured": 146.2,
+  "items": 1028,
+  "measured_cost_usd": 0.54051,
+  "measured_source": "spend_usd recorded in the five rescored_b2_*.json run artifacts",
+  "per_speech": {
+    "biden_2022": {
+      "calls": 18,
+      "freetext_chars": 21904,
+      "items": 157,
+      "source_run": "37744fc8-41f1-4375-9f8a-01ca17d0327f",
+      "spend_usd": 0.08045
+    },
+    "clinton_1998": {
+      "calls": 21,
+      "freetext_chars": 28459,
+      "items": 190,
+      "source_run": "d0010426-2e8f-4449-b839-60f85d923d56",
+      "spend_usd": 0.108035
+    },
+    "gwbush_2006": {
+      "calls": 11,
+      "freetext_chars": 13792,
+      "items": 103,
+      "source_run": "74a89c5f-54c4-47dd-a6eb-624c69fcdd4b",
+      "spend_usd": 0.046333
+    },
+    "obama_2014": {
+      "calls": 20,
+      "freetext_chars": 26423,
+      "items": 183,
+      "source_run": "4de8a551-ea99-440d-aca0-12a133e620e3",
+      "spend_usd": 0.097997
+    },
+    "trump_2026": {
+      "calls": 45,
+      "freetext_chars": 59714,
+      "items": 395,
+      "source_run": "4ee5a251-9b3c-49be-9283-0ac062ac2c10",
+      "spend_usd": 0.207695
+    }
+  },
+  "prompt_chars": 412532,
+  "prompt_chars_source": "superseded worktree b2_subset.json, retained under S-9 at _quarantine/pre-d17c-2026-08-12/b2_subset.json.worktree; the CITED b2_subset.json carries no prompt_chars field",
+  "purpose": "the MEASURED counterpart to b2_subset.json's pre-run estimate; D17-c Evidence cites the subset for design and this for cost",
+  "rederivation_gap_pct": 0.298,
+  "rederived_estimate": {
+    "calibration_id": "haiku-score-2026-08-09",
+    "cost_usd_est": 0.5389,
+    "freetext_chars_est": 150292,
+    "items": 1028,
+    "model": "claude-haiku",
+    "prompt_chars": 412532,
+    "rate_in_usd_per_mtok": 1.0,
+    "rate_out_usd_per_mtok": 5.0,
+    "tokens_in_est": 131799,
+    "tokens_out_est": 81427,
+    "tokens_out_fixed_est": 33410,
+    "tokens_out_freetext_est": 48017
+  },
+  "schema": "truthbot-b2-settlement v1",
+  "within_rounding": true
+}

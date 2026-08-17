@@ -205,11 +205,64 @@ def test_repo_corrections_file_is_valid_and_matches_net_ledger() -> None:
     net = {e["sid"]: e for e in json.loads(npath.read_text())["entries"]}
     # the changelog is exactly the net ledger's ledger-eligible set, no more.
     assert {e["sid"] for e in entries} == set(net)
+    # The verdict move is pinned for entries that CLAIM DC-6' provenance. A
+    # later correction wave supersedes an entry in place — the ledger permits
+    # one entry per sid, and the displaced one is archived, never deleted — so
+    # its move legitimately differs from the DC-6' record, which describes the
+    # wave being superseded and cannot anticipate the next one. Scoped by
+    # source rather than relaxed: an entry still claiming DC-6' provenance must
+    # still match DC-6' exactly.
     for e in entries:
         rec = net.get(e["sid"])
         assert rec is not None, e["sid"]
+        if not str(e.get("source", "")).startswith("dc6-"):
+            continue
         assert rec["old_verdict"] == e["old_verdict"]
         assert rec["new_verdict"] == e["new_verdict"]
+
+
+def test_a_superseded_correction_survives_and_the_history_joins_up() -> None:
+    """A correction may only be replaced if its predecessor stays readable.
+
+    One entry per sid means a re-correction REPLACES rather than appends. That
+    is only honest if the displaced entry is still on disk AND the two join up:
+    otherwise the page shows the latest move and quietly loses that the claim
+    had been corrected before — which is the exact thing this ledger exists to
+    prevent.
+
+    Scoped to archives that declare ``kind == "entry-supersede"``. The older
+    archives are whole-ledger snapshots taken when the corpus was
+    re-adjudicated FROM SCRATCH (the DC-6' clean-slate reset), so their entries
+    describe a different run and legitimately do not continue into the live
+    ones — ``trump_2026:0057`` goes TRUE in the 2026-08-06 snapshot and
+    MISLEADING live, and that is not a broken chain, it is a different corpus.
+    """
+    import pytest
+    repo = Path(__file__).resolve().parents[2]
+    cpath = repo / "data" / "corrections.json"
+    if not cpath.exists():
+        pytest.skip("corrections not in this checkout")
+    live = {e["sid"]: e for e in load_corrections(cpath)}
+    archived: dict[str, list] = {}
+    for arch in sorted((repo / "data").glob("corrections-archive-*.json")):
+        doc = json.loads(arch.read_text())
+        if doc.get("kind") != "entry-supersede":
+            continue
+        for e in doc.get("entries") or []:
+            archived.setdefault(e["sid"], []).append(e)
+
+    joined = 0
+    for sid, e in live.items():
+        prior = archived.get(sid) or []
+        if not prior:
+            continue
+        last = prior[-1]
+        assert e["old_verdict"].upper() == last["new_verdict"].upper(), (
+            f"{sid}: the live correction starts at {e['old_verdict']} but its "
+            f"archived predecessor ended at {last['new_verdict']} — the "
+            "published history would not join up")
+        joined += 1
+    assert joined, "no superseded correction found — this would pass vacuously"
 
 
 # ── Empty-state vs ledger display (remediation v2, 1.11) ─────────────────────

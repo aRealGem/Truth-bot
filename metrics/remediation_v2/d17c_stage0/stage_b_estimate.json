@@ -1,0 +1,19 @@
+{
+  "band_high_usd": 0.0396,
+  "band_low_usd": 0.0108,
+  "basis": "costs.PACK_REUSE_USD_MEASURED \u2014 ledger-derived per-claim re-adjudication on STORED packs (no retrieval)",
+  "ceiling_usd": 0.5,
+  "claims": [
+    "biden_2022:0169",
+    "trump_2026:0219",
+    "trump_2026:0054"
+  ],
+  "class": "estimate-based -> keeps the 2.351x factor (1.25x is for measured-byte only)",
+  "n_claims": 3,
+  "outlier_case_usd": 0.0903,
+  "outlier_note": "if every claim needs multiple panel calls to break a split, as trump_2026:0462 did",
+  "schema": "truthbot-d17c-stage-b-estimate v1",
+  "stressed_high_usd": 0.0931,
+  "stressed_outlier_usd": 0.2123,
+  "verdict": "UNDER"
+}
