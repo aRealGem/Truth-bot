@@ -1,8 +1,8 @@
 [
   {
-    "id": "a1327ad1-3a9d-47e3-9882-8bbb99e6dc86",
+    "id": "dc86b931-adba-4803-a0bc-543e4994fa64",
     "date": "2026-02-24",
-    "generated_at": "2026-08-12T00:48:33Z",
+    "generated_at": "2026-08-14T18:22:24Z",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -10,42 +10,42 @@
     "panel_roster": {
       "name": "prod",
       "seats": {
-        "proposer": [
-          "opus-worker"
+        "arbiter": [
+          "gpt-5.5"
         ],
         "critic": [
           "grok-4.3"
         ],
-        "arbiter": [
-          "gpt-5.5"
+        "proposer": [
+          "opus-worker"
         ]
       }
     },
     "triage_count": 540,
     "verdict_distribution": {
-      "True": 60,
+      "True": 61,
       "Mostly True": 0,
       "Misleading": 22,
       "Exaggerated": 0,
       "False": 39,
-      "Unverifiable": 57,
+      "Unverifiable": 56,
       "Truthy": 0,
       "Falsey": 0,
       "Models split": 4
     },
     "verdict_distribution_lenient": {
-      "True": 60,
+      "True": 61,
       "Truthy": 0,
-      "Unverifiable": 57,
+      "Unverifiable": 56,
       "Falsey": 0,
       "False": 39,
       "Models split": 4,
       "Misleading": 22
     },
     "verdict_distribution_strict": {
-      "True": 60,
+      "True": 61,
       "Truthy": 0,
-      "Unverifiable": 57,
+      "Unverifiable": 56,
       "Falsey": 0,
       "False": 39,
       "Models split": 4,
@@ -54,7 +54,7 @@
     "model_agreement_rate": 0.533,
     "url": "reports/2026-02-24-donald-trump-583aca.html",
     "tier_counts": {
-      "gov": 164,
+      "gov": 166,
       "wire": 32,
       "news": 75,
       "fc": 0,
@@ -62,9 +62,9 @@
       "other": 132
     },
     "tier_fallback": {
-      "joined": 468,
+      "joined": 470,
       "fallback": 0,
-      "total": 468,
+      "total": 470,
       "fallback_rate": 0.0
     },
     "source_of_claims": "Donald Trump",
@@ -73,9 +73,9 @@
     "channel": ""
   },
   {
-    "id": "10fd3bfc-66bc-4df0-8962-baf49811d815",
+    "id": "743a2d3e-48a4-476d-9330-6f2c92e1f9c3",
     "date": "2022-03-01",
-    "generated_at": "2026-08-12T00:48:32Z",
+    "generated_at": "2026-08-14T18:22:24Z",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -83,14 +83,14 @@
     "panel_roster": {
       "name": "prod",
       "seats": {
-        "proposer": [
-          "opus-worker"
+        "arbiter": [
+          "gpt-5.5"
         ],
         "critic": [
           "grok-4.3"
         ],
-        "arbiter": [
-          "gpt-5.5"
+        "proposer": [
+          "opus-worker"
         ]
       }
     },
@@ -124,7 +124,7 @@
       "Models split": 3,
       "Misleading": 3
     },
-    "model_agreement_rate": 0.685,
+    "model_agreement_rate": 0.676,
     "url": "reports/2022-03-01-joe-biden-d359c0.html",
     "tier_counts": {
       "gov": 134,
@@ -146,9 +146,9 @@
     "channel": ""
   },
   {
-    "id": "987f87be-9ab6-4a6d-b940-dff788c62297",
+    "id": "6f3b5cba-1173-4c80-8ad2-d0b304c52717",
     "date": "2014-01-28",
-    "generated_at": "2026-08-12T00:48:32Z",
+    "generated_at": "2026-08-14T18:22:25Z",
     "speaker": "Barack Obama",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -156,14 +156,14 @@
     "panel_roster": {
       "name": "prod",
       "seats": {
-        "proposer": [
-          "opus-worker"
+        "arbiter": [
+          "gpt-5.5"
         ],
         "critic": [
           "grok-4.3"
         ],
-        "arbiter": [
-          "gpt-5.5"
+        "proposer": [
+          "opus-worker"
         ]
       }
     },
@@ -219,9 +219,9 @@
     "channel": ""
   },
   {
-    "id": "0b691ced-8c7a-4c71-8d30-bfa561433fb2",
+    "id": "ff33d3a8-c3ed-4d37-bd8f-252f995242e0",
     "date": "2006-01-31",
-    "generated_at": "2026-08-12T00:48:32Z",
+    "generated_at": "2026-08-14T18:22:24Z",
     "speaker": "George W. Bush",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -229,14 +229,14 @@
     "panel_roster": {
       "name": "prod",
       "seats": {
-        "proposer": [
-          "opus-worker"
+        "arbiter": [
+          "gpt-5.5"
         ],
         "critic": [
           "grok-4.3"
         ],
-        "arbiter": [
-          "gpt-5.5"
+        "proposer": [
+          "opus-worker"
         ]
       }
     },
@@ -292,9 +292,9 @@
     "channel": ""
   },
   {
-    "id": "7ad02643-2dc2-49e0-9e90-3068eb5d69a5",
+    "id": "abfc5483-f29b-4443-bdc2-250ecc5b4f73",
     "date": "1998-01-27",
-    "generated_at": "2026-08-12T00:48:32Z",
+    "generated_at": "2026-08-14T18:22:24Z",
     "speaker": "Bill Clinton",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -302,14 +302,14 @@
     "panel_roster": {
       "name": "prod",
       "seats": {
-        "proposer": [
-          "opus-worker"
+        "arbiter": [
+          "gpt-5.5"
         ],
         "critic": [
           "grok-4.3"
         ],
-        "arbiter": [
-          "gpt-5.5"
+        "proposer": [
+          "opus-worker"
         ]
       }
     },

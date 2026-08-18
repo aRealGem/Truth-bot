@@ -964,6 +964,32 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   outline: 3px double rgba(255,255,255,0.65);
   outline-offset: -4.5px;
 }
+/* The claim-card explainer for a withheld verdict. Muted rather than alarming:
+   this is an honest abstention, not a warning about the speaker. */
+.gate-withheld-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--border-strong);
+  background: rgba(127,127,127,0.06);
+}
+.gate-withheld-note strong { color: var(--ink); }
+/* Gate-withheld (D17-d): the pack never met the bearing quota, so the panel
+   was never asked. Keeps the Unverifiable colour family — this is still an
+   abstention — but a dashed outline marks it as a statement about our
+   RETRIEVAL rather than about the claim. The longer label wraps on narrow
+   viewports, so the pill is allowed to breathe. */
+.claim-pill.pill-gate-withheld {
+  outline: 2px dashed rgba(255,255,255,0.55);
+  outline-offset: -4.5px;
+  font-size: 0.78em;
+  line-height: 1.25;
+  max-width: 22ch;
+  white-space: normal;
+  text-align: center;
+}
 /* Per-item marker on the Sources-consulted strip: this record is the
    speaker's own organization (era-scoped principal match). */
 .ev-self {
@@ -1177,6 +1203,42 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
 }
 .computed-exhibit .ce-note { margin-top: 0.3rem; }
+/* D17-c series excerpt (wave 2) — the observations behind an arithmetic
+   claim, collapsed by default: audit detail, one click away, not in the way.
+   Same posture as the sources-consulted block it sits inside. */
+.series-rows { margin: 0.4rem 0 0.2rem; }
+.series-summary {
+  cursor: pointer;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+.series-summary:hover { color: var(--ink); }
+.series-table {
+  border-collapse: collapse;
+  margin: 0.45rem 0 0.3rem;
+  font-size: 0.72rem;
+}
+.series-table th,
+.series-table td {
+  padding: 0.12rem 0.75rem 0.12rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+.series-table th { color: var(--ink-muted); font-weight: 600; }
+.series-more, .series-units, .series-predicate, .series-full {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+}
+/* The window does not reach the period the claim is about. Amber, because a
+   reader taking the table at face value would be misled by our own exhibit. */
+.series-mismatch {
+  margin: 0.35rem 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.7rem;
+  border-left: 3px solid var(--amber, #b26a00);
+  background: rgba(178, 106, 0, 0.07);
+}
 /* Post-publication correction note (T1.5) — amber, can't be missed. */
 .pca-correction {
   margin-top: 0.25rem;
