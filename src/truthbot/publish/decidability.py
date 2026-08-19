@@ -198,9 +198,21 @@ def _check_reason_codes(path, e: dict, registry) -> None:
 
 
 def publishable_entries(entries: list[dict]) -> list[dict]:
-    """Fail closed: only owner-ratified assignments may reach a page."""
+    """Fail closed: a row reaches a page only as the RENDER SET -- owner-ratified
+    provenance, recorded ``undecidable-from-public-record``, AND a ``reason_code``
+    to show.
+
+    Owner-ratified provenance is necessary but NOT sufficient (A1, Wave A
+    2026-08-19). The two step-6 reclassified-out rows -- ``biden_2022:0194``
+    (retrievable-pending-lane) and ``trump_2026:0106`` (needs-decomposition) --
+    are genuinely owner-ratified but carry no ``reason_code``, so a
+    provenance-only gate over-returns them by 2. The render set is exactly the 33
+    coded substantive rows; ``reason_code_2`` is audit-only and never widens it.
+    """
     return [e for e in entries
-            if e.get("provenance") == PUBLISHABLE_PROVENANCE]
+            if e.get("provenance") == PUBLISHABLE_PROVENANCE
+            and e.get("decidability") == _REASON_CODE_ONLY_ON
+            and e.get("reason_code")]
 
 
 def by_sid(entries: list[dict], *, publishable_only: bool = True) -> dict[str, dict]:
