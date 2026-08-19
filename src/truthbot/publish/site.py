@@ -63,6 +63,20 @@ from truthbot.verify.source_tiers import TIER_BUCKET, TIER_DISPLAY, classify_tie
 
 logger = logging.getLogger(__name__)
 
+
+def _reproducible_now() -> datetime:
+    """Wall clock, unless SOURCE_DATE_EPOCH is set -- then a fixed UTC instant.
+
+    The reproducible-builds convention: with the env var set, every render
+    timestamp collapses to one deterministic value, so a double-render is
+    byte-identical (Wave A / A2 determinism check). Production leaves the env
+    unset and gets the real time; nothing about the shipped render changes.
+    """
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    if epoch:
+        return datetime.fromtimestamp(int(epoch), tz=timezone.utc)
+    return datetime.now(timezone.utc)
+
 # ── Verdict presentation constants ────────────────────────────────────────────
 
 # CSS class slugs — map label → slug used in .v-{slug} and .vt-{slug}
@@ -198,7 +212,7 @@ class SiteReport:
     transcript_source_url: str
     bundles: list[VerdictBundle]
     video_source_url: str = ""
-    generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    generated_at: datetime = field(default_factory=_reproducible_now)
     # Richer speaker/speech identity fields (Change 2)
     source_of_claims: str = ""
     source_of_claims_professional_public_title: str = ""
@@ -2053,7 +2067,7 @@ def _models_engaged(site_report) -> tuple[int, str]:
 
 
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
-    stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    stamp = stamp or _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
     # The Strict/Lenient editorial-lens chip was removed here (remediation
     # v2, 1.8 / DC-4'): the toggle was structurally inert under the PCA
@@ -2232,7 +2246,7 @@ def _page_report(
     og_type: str = "article",
     page_path: Optional[str] = None,
 ) -> str:
-    stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
         if footer else ''
@@ -2933,7 +2947,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         '</details>'
     )
 
-    gen_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    gen_ts = _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     permalink = f"#{'claim-' + str(idx)}" if standalone else f"{rel}claims/{claim.id}.html"
 
     # Back links only appear on the in-report claim cards (standalone=False),
@@ -6526,7 +6540,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     # Model-insights strip retired with the vestigial insights page
     # (remediation T0.4) — it summarized a single pseudo-model with 0%
     # dissent by construction. Returns with the Phase 4 per-seat rebuild.
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    now = _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     body = (
         hero_html
         + stats_html
@@ -7906,7 +7920,7 @@ def _render_feed(reports: list[dict], site_url: str) -> str:
         )
 
     feed_updated = (max(updated_stamps) if updated_stamps
-                    else _iso_utc(datetime.now(timezone.utc)))
+                    else _iso_utc(_reproducible_now()))
     return (
         '<?xml version="1.0" encoding="utf-8"?>\n'
         '<feed xmlns="http://www.w3.org/2005/Atom">\n'
