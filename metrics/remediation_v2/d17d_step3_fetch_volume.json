@@ -1,0 +1,258 @@
+{
+  "schema": "truthbot-d17d-step3-fetch-volume v1",
+  "measured_at": "2026-08-19",
+  "author": "ccagent",
+  "mode": "$0 volume measurement, STORED DATA ONLY -- no fetches, no HEAD requests, no network egress (egress restricted to FRED/ALFRED).",
+  "scope": "option 3 (full document text) over the 42 credit-relevant null-stance items (62 minus the 20 D15 speech-itself items).",
+  "source_fixture": "metrics/remediation_v2/d17d_step3_read_fixture.json",
+  "resolvability_read": "metrics/remediation_v2/d17d_fable_resolvability_read.json",
+  "pinned_commit": "893e38b",
+  "n_credit_relevant_items": 42,
+  "n_claims_covered": 18,
+  "distinct_source_urls": 41,
+  "distinct_domains": 25,
+  "domains": {
+    "archives.nato.int": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Government": 2
+      }
+    },
+    "army.mil": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "aspe.hhs.gov": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Established": 2
+      }
+    },
+    "bls.gov": {
+      "items": 4,
+      "distinct_urls": 4,
+      "tiers": {
+        "Government": 4
+      }
+    },
+    "ca4.uscourts.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "cbo.gov": {
+      "items": 4,
+      "distinct_urls": 3,
+      "tiers": {
+        "Government": 4
+      }
+    },
+    "cbsnews.com": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Established": 1
+      }
+    },
+    "cms.gov": {
+      "items": 3,
+      "distinct_urls": 3,
+      "tiers": {
+        "Government": 3
+      }
+    },
+    "congress.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "dhs.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "federalregister.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "federalreserve.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "fraser.stlouisfed.org": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Government": 2
+      }
+    },
+    "govinfo.gov": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Government": 2
+      }
+    },
+    "home.treasury.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "justice.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "nbcnews.com": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Established": 1
+      }
+    },
+    "nces.ed.gov": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Government": 2
+      }
+    },
+    "npr.org": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Established": 2
+      }
+    },
+    "pmc.ncbi.nlm.nih.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "publichealth.va.gov": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Government": 2
+      }
+    },
+    "sba.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    },
+    "supremecourt.gov": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Government": 2
+      }
+    },
+    "washingtonpost.com": {
+      "items": 2,
+      "distinct_urls": 2,
+      "tiers": {
+        "Established": 2
+      }
+    },
+    "www3.nasa.gov": {
+      "items": 1,
+      "distinct_urls": 1,
+      "tiers": {
+        "Government": 1
+      }
+    }
+  },
+  "stored_full_text": {
+    "repo_tracked_urls_with_full_text": 0,
+    "repo_note": "No repo-tracked URL->document-text store exists (searched: no evidence/fulltext/documents store; packs+sidecars carry retriever DESCRIPTIONS not document text, per resolvability Finding 2).",
+    "local_cache_rows": 0,
+    "local_cache_note": "truthbot_cache/*.db Cache tables are empty (0 rows) and untracked; no cached response bodies.",
+    "urls_with_stored_full_text": 0,
+    "urls_that_would_need_a_fetch": 41
+  },
+  "per_claim_item_counts": {
+    "biden_2022:0200": 2,
+    "biden_2022:0211": 4,
+    "biden_2022:0366": 3,
+    "biden_2022:0376": 4,
+    "biden_2022:0427": 2,
+    "biden_2022:0437": 1,
+    "clinton_1998:0077": 2,
+    "clinton_1998:0101": 3,
+    "clinton_1998:0211": 2,
+    "clinton_1998:0358": 1,
+    "gwbush_2006:0147": 2,
+    "gwbush_2006:0156": 2,
+    "gwbush_2006:0217": 1,
+    "obama_2014:0001": 4,
+    "obama_2014:0070": 4,
+    "obama_2014:0198": 1,
+    "trump_2026:0403": 2,
+    "trump_2026:0469": 2
+  },
+  "per_domain_robots_tos_posture": {
+    "archives.nato.int": "not recorded in-repo",
+    "army.mil": "not recorded in-repo",
+    "aspe.hhs.gov": "not recorded in-repo",
+    "bls.gov": "not recorded in-repo",
+    "ca4.uscourts.gov": "not recorded in-repo",
+    "cbo.gov": "not recorded in-repo",
+    "cbsnews.com": "not recorded in-repo",
+    "cms.gov": "not recorded in-repo",
+    "congress.gov": "not recorded in-repo",
+    "dhs.gov": "not recorded in-repo",
+    "federalregister.gov": "not recorded in-repo",
+    "federalreserve.gov": "not recorded in-repo",
+    "fraser.stlouisfed.org": "not recorded in-repo",
+    "govinfo.gov": "not recorded in-repo",
+    "home.treasury.gov": "not recorded in-repo",
+    "justice.gov": "not recorded in-repo",
+    "nbcnews.com": "not recorded in-repo",
+    "nces.ed.gov": "not recorded in-repo",
+    "npr.org": "not recorded in-repo",
+    "pmc.ncbi.nlm.nih.gov": "not recorded in-repo",
+    "publichealth.va.gov": "not recorded in-repo",
+    "sba.gov": "not recorded in-repo",
+    "supremecourt.gov": "not recorded in-repo",
+    "washingtonpost.com": "not recorded in-repo",
+    "www3.nasa.gov": "not recorded in-repo"
+  },
+  "url_liveness": "UNKNOWN and unknowable without egress -- RECORDED, NOT RESOLVED. Precedent: trump_2026:0054:E8 dead link. An egress decision is the owner's, not ccagent's.",
+  "cost_estimate": "NOT ESTIMABLE",
+  "cost_estimate_reason": "Two required inputs are unmeasurable from stored data: (1) URL liveness (which of the fetch-needed URLs still resolve), and (2) per-document text volume (bytes/tokens) which cannot be known without fetching. Per the one-cost-truth discipline, no number is invented; NOT ESTIMABLE is the honest output pending an owner egress decision.",
+  "n_null_stance_claims_total": 23,
+  "claims_fully_d15_dead": [
+    "gwbush_2006:0024",
+    "trump_2026:0100",
+    "trump_2026:0341",
+    "trump_2026:0665",
+    "trump_2026:0685"
+  ],
+  "claims_fully_d15_note": "5 of the 23 null-stance claims have EVERY qualifying item in the D15 speech-itself set, so they carry zero credit-relevant items and cannot be revived by fetching document text -- they are dead under D15 independent of option 3."
+}
