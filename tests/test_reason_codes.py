@@ -52,14 +52,17 @@ def _registry_doc(entries):
 
 # ── the shipped registry ─────────────────────────────────────────────────────
 
-def test_shipped_registry_has_the_seven_owner_approved_codes() -> None:
+def test_shipped_registry_has_the_eleven_owner_ratified_codes() -> None:
+    # Step-6 ratification (owner/Fable 2026-08-18) added CAUSAL-LINK,
+    # GROUP-STATE, PROJECTION and NO-RECORD to the seven owner-approved codes.
     reg = load_reason_codes(CODES_PATH)
     assert known(reg) == {"INTENT", "PRIVATE-EVENT", "NO-INSTRUMENT",
                           "MASS-VOICE", "COUNTERFACTUAL", "NO-METRIC",
-                          STATE_ONLY}
+                          "CAUSAL-LINK", "GROUP-STATE", "PROJECTION",
+                          "NO-RECORD", STATE_ONLY}
     # UNCODED is a pipeline state, not a label -- it can never reach a reader.
     assert STATE_ONLY not in renderable(reg)
-    assert len(renderable(reg)) == 6
+    assert len(renderable(reg)) == 10
 
 
 def test_shipped_copy_carries_the_shared_footer() -> None:
@@ -127,10 +130,16 @@ def test_shipped_registry_loads_under_v2_and_stays_fail_closed() -> None:
     reg = load_reason_codes(CODES_PATH)
     entries = load_decidability(REGISTRY_PATH, reason_codes=reg)
     assert len(entries) == 128
-    # Step 6 writes NO codes into the registry -- the map is a proposal until
-    # the owner rules, and nothing is ratified by this pass.
-    assert not [e for e in entries if e.get("reason_code")]
-    assert not [e for e in entries if e["provenance"] == "owner-ratified"]
+    # Step-6 ratification (owner/Fable 2026-08-18) wrote the owner-ratified
+    # codes in: 33 substantive rows carry a reason_code and 35 rows are
+    # owner-ratified (the 33 coded plus the 2 reclassified-out rows). Every
+    # coded row is still an undecidable-from-public-record row (fail closed).
+    coded = [e for e in entries if e.get("reason_code")]
+    assert len(coded) == 33
+    assert all(e["decidability"] == "undecidable-from-public-record"
+               for e in coded)
+    assert len([e for e in entries
+                if e["provenance"] == "owner-ratified"]) == 35
 
 
 def test_reason_code_is_illegal_on_a_non_substantive_row(tmp_path) -> None:

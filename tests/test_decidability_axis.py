@@ -165,22 +165,25 @@ def test_by_sid_is_keyed_not_carried(tmp_path):
 
 # ── the shipped registry ─────────────────────────────────────────────────────
 
-def test_shipped_registry_loads_and_publishes_nothing_yet():
-    """The seeded registry is the desk pass recorded, not ratified. Until step
-    6 it must publish exactly nothing."""
+def test_shipped_registry_publishes_the_step6_ratified_set():
+    """After step-6 ratification (owner/Fable 2026-08-18) the registry
+    publishes the owner-ratified rows: 35 owner-ratified (33 coded substantive
+    rows plus the 2 reclassified-out rows), the remaining 93 still desk."""
     entries = load_decidability(REGISTRY)
     assert len(entries) == 128
-    assert publishable_entries(entries) == []
-    assert all(e["provenance"] == "desk" for e in entries)
+    assert len(publishable_entries(entries)) == 35
+    assert len([e for e in entries if e["provenance"] == "desk"]) == 93
 
 
 def test_shipped_registry_value_distribution():
     s = summary(load_decidability(REGISTRY))
-    assert s["publishable"] == 0
+    assert s["publishable"] == 35
+    # Step-6 reclassed 2 rows: trump_2026:0106 -> needs-decomposition and
+    # biden_2022:0194 -> retrievable-pending-lane, moving 88/35/5 to 89/33/6.
     assert s["by_value"] == {
-        "retrievable-pending-lane": 88,     # 81 web-tier1 + 7 series-core
-        "undecidable-from-public-record": 35,
-        "needs-decomposition": 5,
+        "retrievable-pending-lane": 89,
+        "undecidable-from-public-record": 33,
+        "needs-decomposition": 6,
     }
 
 
@@ -210,6 +213,23 @@ def test_registry_covers_exactly_the_desk_pass():
 
 # ── the seeder ───────────────────────────────────────────────────────────────
 
+# Step-6 ratification writes the owner-ratified overlay (reason codes, ratified
+# provenance, 2 reclassifications) directly into the shipped file, on top of the
+# desk seed. The seeder still owns the desk skeleton, so it reproduces the
+# shipped file with that overlay stripped back off.
+_RECLASSED_IN_STEP6 = {"trump_2026:0106", "biden_2022:0194"}
+
+
+def _desk_skeleton(entry):
+    e = {k: v for k, v in entry.items()
+         if k not in ("reason_code", "reason_code_2", "note")}
+    if e.get("provenance") == "owner-ratified":
+        e["provenance"] = "desk"
+    if entry["sid"] in _RECLASSED_IN_STEP6:
+        e["decidability"] = "undecidable-from-public-record"
+    return e
+
+
 def test_seeder_is_deterministic():
     spec = importlib.util.spec_from_file_location(
         "seed_decidability", REPO / "scripts" / "seed_decidability_from_desk.py")
@@ -219,6 +239,9 @@ def test_seeder_is_deterministic():
     a = json.dumps(mod.build(), sort_keys=True)
     b = json.dumps(mod.build(), sort_keys=True)
     assert a == b
-    # and it reproduces the shipped file exactly
+    # and it reproduces the shipped file's desk skeleton (ratification overlay
+    # stripped -- see _desk_skeleton).
     shipped = json.loads(REGISTRY.read_text(encoding="utf-8"))
-    assert mod.build() == shipped
+    expected = dict(shipped)
+    expected["entries"] = [_desk_skeleton(e) for e in shipped["entries"]]
+    assert mod.build() == expected
