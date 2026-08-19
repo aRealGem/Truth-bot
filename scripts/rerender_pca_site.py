@@ -298,10 +298,18 @@ def main() -> None:
     # annotated in place (skip, default) or the verdict is rewritten (apply,
     # historical replay). Both modes feed render_artifact the ledger; the mode
     # selects the behaviour.
+    # A3 (Wave A): the reason-coded render set, built from the fail-closed
+    # registries (data/decidability.json + data/reason_codes.json). Keys come
+    # only from the recorded axis; empty registries -> empty map -> the
+    # species does not render.
+    from truthbot.publish.site import build_reason_pills
+    reason_pills = build_reason_pills(REPO)
+    if reason_pills:
+        print(f"reason-coded render set: {len(reason_pills)} claim(s)")
     publisher = SitePublisher(
         site_root=args.site_root, corrections=corrections,
         correction_notes=load_notes(REPO / "data" / "corrections.json"),
-        resolution_changes=resolution)
+        resolution_changes=resolution, reason_pills=reason_pills)
     for p in paths:
         render_artifact(p, publisher, args.role, corrections=corrections,
                         require_fit=not args.allow_unfit_gate,

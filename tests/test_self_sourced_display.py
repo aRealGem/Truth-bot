@@ -181,7 +181,7 @@ def test_panel_chip_appears_for_gate_withheld_alone() -> None:
     fix."""
     bundles = [_bundle(VerdictLabel.TRUE, gate=""), _bundle(sources=[])]
     html = _verdict_panel(_site_report(bundles))
-    assert "vp-selfsource-chip" in html
+    assert "vp-abstention-chip" in html  # A3: class renamed (was vp-selfsource-chip)
     assert "1 insufficient qualifying evidence retrieved" in html
 
 

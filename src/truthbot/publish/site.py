@@ -1657,11 +1657,39 @@ def _verdict_panel(site_report) -> str:
         chip_title = (SELF_SOURCED_TITLE if n_selfsrc and not n_gate
                       else GATE_WITHHELD_TITLE if n_gate and not n_selfsrc
                       else f"{SELF_SOURCED_TITLE} {GATE_WITHHELD_TITLE}")
+        # A3: renamed from vp-selfsource-chip — since D17-d this chip decomposes
+        # ALL the honest abstentions, not just the self-sourced sub-state, so the
+        # old class name misdescribed it. consistency.py parses this chip's copy;
+        # the two change in lockstep (test_abstention_chip pins the parse).
         selfsource_chip_html = (
-            '<p class="vp-selfsource-chip" '
+            '<p class="vp-abstention-chip" '
             f'title="{_esc(chip_title)}">' + _esc(" · ".join(parts))
             + '</p>\n'
         )
+
+    # M-6 evenhandedness (Wave A A3): genre-property disclosure for the
+    # reason-coded species. Counts derive from the recorded axis (the render
+    # map), never from prose. Silent when the map is empty or the report holds
+    # none, so legacy publishes are byte-identical. Prose is a DRAFT for the
+    # owner's red pen (S-8) — flagged in the Wave A PR.
+    genre_note_html = ""
+    if _REASON_PILLS:
+        _ids = {getattr(b.claim, "id", None) for b in site_report.checkable_bundles}
+        n_coded = sum(1 for cid in _REASON_PILLS if cid in _ids)
+        corpus_coded = len(_REASON_PILLS)
+        if n_coded:
+            genre_line = (
+                f"{n_coded} of the corpus's {corpus_coded} claims recorded as "
+                "beyond the public record fall on this speech."
+            )
+            if corpus_coded and n_coded * 2 > corpus_coded:
+                genre_line += (
+                    " That concentration is a property of the speech's "
+                    "rhetorical genre — personal stories, intentions, and "
+                    "unmeasured superlatives — not a finding about the speaker."
+                )
+            genre_note_html = ('<p class="vp-genre-note">'
+                               + _esc(genre_line) + '</p>\n')
 
     return (
         '<section class="verdict-panel">\n'
@@ -1670,6 +1698,7 @@ def _verdict_panel(site_report) -> str:
         + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
         + selfsource_chip_html
+        + genre_note_html
         + anecdote_note_html
         + source_row_html
         + '</section>\n'
@@ -2501,6 +2530,64 @@ GATE_WITHHELD_TITLE = (
 )
 
 
+#: Reason-coded species (step 6 / Wave A A3). The RENDER SET map:
+#: ``{stable claim id -> {"sid", "code", "copy"}}`` built from the recorded
+#: decidability axis by :func:`build_reason_pills` and installed per publish by
+#: :meth:`SitePublisher.publish`. Keys come ONLY from the axis (provenance +
+#: decidability + reason_code) — never parsed from prose, never inferred, and
+#: ``reason_code_2`` (audit-only) never enters the map. Empty map == the
+#: species does not render, so legacy publishes stay byte-identical.
+_REASON_PILLS: dict[str, dict] = {}
+
+
+def set_reason_pills(pills: "Optional[dict]") -> None:
+    """Install (or clear) the reason-code render map for this publish."""
+    global _REASON_PILLS
+    _REASON_PILLS = dict(pills or {})
+
+
+def build_reason_pills(repo_root: Path) -> dict[str, dict]:
+    """The render-set map from the fail-closed registries.
+
+    ``publishable_entries()`` (A1) already enforces owner-ratified +
+    undecidable-from-public-record + reason_code, so every row here carries a
+    code; ``copy_for`` appends the shared footer and refuses UNCODED. The copy
+    is owner-ratified VERBATIM — this function must never edit or reflow it.
+    """
+    from truthbot.models import stable_claim_id
+    from truthbot.publish.decidability import (load_decidability,
+                                               publishable_entries)
+    from truthbot.publish.reason_codes import copy_for, load_reason_codes
+    root = Path(repo_root)
+    reg = load_reason_codes(root / "data" / "reason_codes.json")
+    entries = load_decidability(root / "data" / "decidability.json",
+                                reason_codes=reg)
+    return {
+        stable_claim_id(e["sid"]): {
+            "sid": e["sid"],
+            "code": e["reason_code"],
+            "copy": copy_for(reg, e["reason_code"]),
+        }
+        for e in publishable_entries(entries)
+    }
+
+
+def _reason_code_html(claim) -> str:
+    """The reason-coded species' claim-card explainer.
+
+    Verbatim ratified copy + shared footer (already joined by ``copy_for``).
+    The other species (:func:`_gate_withheld_html`) never renders on the same
+    card — the recorded axis supersedes the gate copy for these rows, and the
+    two species never share wording.
+    """
+    reason = _REASON_PILLS.get(getattr(claim, "id", None))
+    if not reason:
+        return ""
+    return ('<div class="reason-code-note">'
+            + _esc(reason["copy"])
+            + '</div>')
+
+
 def _is_gate_withheld(bundle: VerdictBundle) -> bool:
     """True when the gate refused to decide for want of qualifying evidence.
 
@@ -2537,6 +2624,11 @@ def _gate_withheld_html(bundle: VerdictBundle) -> str:
     if not _is_gate_withheld(bundle):
         return ""
     if _is_self_sourced_unverified(bundle) or _is_anecdote_unverifiable(bundle):
+        return ""
+    # Reason-coded rows (step 6) are the OTHER species: the recorded axis says
+    # the public record cannot reach the claim, which supersedes the statement
+    # about our retrieval. The two species never share a card.
+    if getattr(bundle.claim, "id", None) in _REASON_PILLS:
         return ""
     return (
         '<div class="gate-withheld-note">'
@@ -2963,6 +3055,19 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
             '    </span>'
         )
 
+    # Reason-coded species (step 6 / A3): a second pill keyed on the recorded
+    # axis. The pill text is the code itself; the ratified copy (verbatim, with
+    # the shared footer) rides the tooltip AND the visible note in the body.
+    # ``reason_code_2`` is audit-only and never reaches the map, so it can
+    # never render here.
+    _reason = _REASON_PILLS.get(getattr(claim, "id", None))
+    reason_pill_html = ""
+    if _reason:
+        reason_pill_html = (
+            f'  <span class="claim-pill reason-code-pill"'
+            f' title="{_esc(_reason["copy"])}">'
+            f'{_esc(_reason["code"])}</span>')
+
     return (
         f'<article class="claim" id="claim-{idx}">'
         '<div class="claim-head">'
@@ -2973,6 +3078,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  <span class="claim-pill claim-pill-headline v-{css}{anecdote_cls}"'
         f' title="{_esc(pill_title)}">'
         f'{_esc(label)}</span>'
+        + reason_pill_html +
         f'  {triage_badge}'
         '</div>'
         '<div class="claim-body">'
@@ -2985,6 +3091,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         # render on EVERY claim — including a gated/minimal claim whose
         # ``models_block`` provenance strip is empty.
         f'  {_correction_provenance_html(consensus.provenance, rel)}'
+        f'  {_reason_code_html(claim)}'
         f'  {_gate_withheld_html(bundle)}'
         f'  {evidence_html}'
         f'  {consulted_html}'
@@ -4203,6 +4310,30 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   white-space: normal;
   text-align: center;
 }
+/* Reason-coded species (step 6 / Wave A A3): the recorded axis says the public
+   record cannot reach this claim. The pill carries the ratified CODE; the
+   verbatim copy rides the tooltip and the .reason-code-note block below. Muted
+   mono chip — a taxonomy key, not a verdict color. */
+.claim-pill.reason-code-pill {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  background: rgba(127,127,127,0.10);
+  border: 1px solid var(--border-strong);
+}
+/* The claim-card explainer for a reason-coded row. Same muted register as
+   .gate-withheld-note — an honest statement about the record, not a warning —
+   but its own class: the two species never share wording OR styling hooks. */
+.reason-code-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--border-strong);
+  background: rgba(127,127,127,0.06);
+}
 /* Per-item marker on the Sources-consulted strip: this record is the
    speaker's own organization (era-scoped principal match). */
 .ev-self {
@@ -4218,9 +4349,17 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   white-space: nowrap;
 }
 /* Abstention-decomposition chip under the verdict bars (PR-A2.1 T1.2). */
-.vp-selfsource-chip {
+.vp-abstention-chip {
   font-family: var(--mono);
   font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin: 0.35rem 0 0;
+}
+/* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
+   concentrates on one speech, say so as a genre property, in the panel. */
+.vp-genre-note {
+  font-size: 0.8rem;
+  line-height: 1.5;
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
@@ -7962,7 +8101,8 @@ class SitePublisher:
                  corrections: Optional[list[dict]] = None,
                  correction_notes: Optional[list[dict]] = None,
                  report_aliases: Optional[dict[str, str]] = None,
-                 resolution_changes: Optional[list[dict]] = None) -> None:
+                 resolution_changes: Optional[list[dict]] = None,
+                 reason_pills: Optional[dict] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
@@ -7982,6 +8122,10 @@ class SitePublisher:
         self._report_aliases: dict[str, str] = (
             dict(report_aliases) if report_aliases is not None
             else _load_report_aliases())
+        # Reason-coded render set (step 6 / Wave A A3): {stable claim id ->
+        # {"sid","code","copy"}} from build_reason_pills(). None/empty -> the
+        # species does not render (legacy publishes stay byte-identical).
+        self._reason_pills: dict = dict(reason_pills or {})
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -7993,6 +8137,10 @@ class SitePublisher:
         """
         self._ensure_structure()
         self._copy_assets()
+        # Install this publisher's reason-code render map for the module-level
+        # card/panel renderers (same keyed-registry pattern as decidability:
+        # nothing has to CARRY it, so no reconstruction path can drop it).
+        set_reason_pills(self._reason_pills)
 
         # Backfill speaker/date onto bundles that bridged without them
         # (PR-A2.1). The bridge only threads speaker/date_str when the claim
