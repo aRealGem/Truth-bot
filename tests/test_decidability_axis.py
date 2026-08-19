@@ -221,13 +221,40 @@ _RECLASSED_IN_STEP6 = {"trump_2026:0106", "biden_2022:0194"}
 
 
 def _desk_skeleton(entry):
-    e = {k: v for k, v in entry.items()
-         if k not in ("reason_code", "reason_code_2", "note")}
-    if e.get("provenance") == "owner-ratified":
+    # Only strip the ratification overlay from rows that actually carry it
+    # (Fable D2 tightening T1). A desk row carrying a reason_code is real seeder
+    # drift and MUST fail the determinism test, not be normalized away.
+    if entry.get("provenance") == "owner-ratified":
+        e = {k: v for k, v in entry.items()
+             if k not in ("reason_code", "reason_code_2", "note")}
         e["provenance"] = "desk"
+    else:
+        e = dict(entry)
     if entry["sid"] in _RECLASSED_IN_STEP6:
         e["decidability"] = "undecidable-from-public-record"
     return e
+
+
+def test_step6_reclassification_set_is_pinned():
+    # The helper that reconstructs reclassified rows must not grow silently
+    # (Fable D2 tightening T2).
+    assert _RECLASSED_IN_STEP6 == {"trump_2026:0106", "biden_2022:0194"}
+    by = {e["sid"]: e for e in load_decidability(REGISTRY)}
+    assert by["trump_2026:0106"]["decidability"] == "needs-decomposition"
+    assert by["biden_2022:0194"]["decidability"] == "retrievable-pending-lane"
+
+
+def test_render_set_invariant():
+    # D1 tied to the suite (Fable D2 tightening T3): the only owner-ratified rows
+    # WITHOUT a reason_code are the 2 reclassified-out rows, and every
+    # reason_code-bearing row is undecidable-from-public-record.
+    entries = load_decidability(REGISTRY)
+    ratified_uncoded = {e["sid"] for e in entries
+                        if e["provenance"] == "owner-ratified"
+                        and not e.get("reason_code")}
+    assert ratified_uncoded == _RECLASSED_IN_STEP6
+    assert all(e["decidability"] == "undecidable-from-public-record"
+               for e in entries if e.get("reason_code"))
 
 
 def test_seeder_is_deterministic():
