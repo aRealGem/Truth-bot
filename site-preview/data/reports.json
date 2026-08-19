@@ -1,0 +1,367 @@
+[
+  {
+    "id": "e1196059-e7d4-5672-89e7-d58b298f80ce",
+    "date": "2026-02-24",
+    "generated_at": "2026-08-19T17:58:21Z",
+    "speaker": "Donald Trump",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 182,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "arbiter": [
+          "gpt-5.5"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "proposer": [
+          "opus-worker"
+        ]
+      }
+    },
+    "triage_count": 540,
+    "verdict_distribution": {
+      "True": 61,
+      "Mostly True": 0,
+      "Misleading": 22,
+      "Exaggerated": 0,
+      "False": 39,
+      "Unverifiable": 56,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 4
+    },
+    "verdict_distribution_lenient": {
+      "True": 61,
+      "Truthy": 0,
+      "Unverifiable": 56,
+      "Falsey": 0,
+      "False": 39,
+      "Models split": 4,
+      "Misleading": 22
+    },
+    "verdict_distribution_strict": {
+      "True": 61,
+      "Truthy": 0,
+      "Unverifiable": 56,
+      "Falsey": 0,
+      "False": 39,
+      "Models split": 4,
+      "Misleading": 22
+    },
+    "model_agreement_rate": 0.533,
+    "url": "reports/2026-02-24-donald-trump-583aca.html",
+    "tier_counts": {
+      "gov": 166,
+      "wire": 32,
+      "news": 75,
+      "fc": 0,
+      "political": 65,
+      "other": 132
+    },
+    "tier_fallback": {
+      "joined": 470,
+      "fallback": 0,
+      "total": 470,
+      "fallback_rate": 0.0
+    },
+    "source_of_claims": "Donald Trump",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "62b4b112-e471-c7a6-3397-57daa08ce6d0",
+    "date": "2022-03-01",
+    "generated_at": "2026-08-19T17:58:21Z",
+    "speaker": "Joe Biden",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 111,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "arbiter": [
+          "gpt-5.5"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "proposer": [
+          "opus-worker"
+        ]
+      }
+    },
+    "triage_count": 369,
+    "verdict_distribution": {
+      "True": 80,
+      "Mostly True": 0,
+      "Misleading": 3,
+      "Exaggerated": 0,
+      "False": 1,
+      "Unverifiable": 24,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 3
+    },
+    "verdict_distribution_lenient": {
+      "True": 80,
+      "Truthy": 0,
+      "Unverifiable": 24,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 3,
+      "Misleading": 3
+    },
+    "verdict_distribution_strict": {
+      "True": 80,
+      "Truthy": 0,
+      "Unverifiable": 24,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 3,
+      "Misleading": 3
+    },
+    "model_agreement_rate": 0.676,
+    "url": "reports/2022-03-01-joe-biden-d359c0.html",
+    "tier_counts": {
+      "gov": 134,
+      "wire": 17,
+      "news": 64,
+      "fc": 0,
+      "political": 51,
+      "other": 80
+    },
+    "tier_fallback": {
+      "joined": 346,
+      "fallback": 0,
+      "total": 346,
+      "fallback_rate": 0.0
+    },
+    "source_of_claims": "Joe Biden",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "f2aeafee-21f3-5ee4-5157-a443a990ea4d",
+    "date": "2014-01-28",
+    "generated_at": "2026-08-19T17:58:21Z",
+    "speaker": "Barack Obama",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 96,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "arbiter": [
+          "gpt-5.5"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "proposer": [
+          "opus-worker"
+        ]
+      }
+    },
+    "triage_count": 243,
+    "verdict_distribution": {
+      "True": 69,
+      "Mostly True": 0,
+      "Misleading": 4,
+      "Exaggerated": 0,
+      "False": 1,
+      "Unverifiable": 20,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 2
+    },
+    "verdict_distribution_lenient": {
+      "True": 69,
+      "Truthy": 0,
+      "Unverifiable": 20,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 2,
+      "Misleading": 4
+    },
+    "verdict_distribution_strict": {
+      "True": 69,
+      "Truthy": 0,
+      "Unverifiable": 20,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 2,
+      "Misleading": 4
+    },
+    "model_agreement_rate": 0.719,
+    "url": "reports/2014-01-28-barack-obama-bc9c9f.html",
+    "tier_counts": {
+      "gov": 105,
+      "wire": 3,
+      "news": 39,
+      "fc": 0,
+      "political": 56,
+      "other": 62
+    },
+    "tier_fallback": {
+      "joined": 265,
+      "fallback": 0,
+      "total": 265,
+      "fallback_rate": 0.0
+    },
+    "source_of_claims": "Barack Obama",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "e9907c96-c4f2-a087-fd85-5cf69e9a94be",
+    "date": "2006-01-31",
+    "generated_at": "2026-08-19T17:58:21Z",
+    "speaker": "George W. Bush",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 48,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "arbiter": [
+          "gpt-5.5"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "proposer": [
+          "opus-worker"
+        ]
+      }
+    },
+    "triage_count": 227,
+    "verdict_distribution": {
+      "True": 32,
+      "Mostly True": 0,
+      "Misleading": 4,
+      "Exaggerated": 0,
+      "False": 1,
+      "Unverifiable": 11,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_lenient": {
+      "True": 32,
+      "Truthy": 0,
+      "Unverifiable": 11,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 0,
+      "Misleading": 4
+    },
+    "verdict_distribution_strict": {
+      "True": 32,
+      "Truthy": 0,
+      "Unverifiable": 11,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 0,
+      "Misleading": 4
+    },
+    "model_agreement_rate": 0.708,
+    "url": "reports/2006-01-31-george-w-bush-82f462.html",
+    "tier_counts": {
+      "gov": 84,
+      "wire": 0,
+      "news": 16,
+      "fc": 0,
+      "political": 22,
+      "other": 31
+    },
+    "tier_fallback": {
+      "joined": 153,
+      "fallback": 0,
+      "total": 153,
+      "fallback_rate": 0.0
+    },
+    "source_of_claims": "George W. Bush",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  },
+  {
+    "id": "ffe5032b-e1d3-4a6b-f9c5-1dfa53439a0b",
+    "date": "1998-01-27",
+    "generated_at": "2026-08-19T17:58:21Z",
+    "speaker": "Bill Clinton",
+    "role": "President",
+    "venue": "U.S. Capitol",
+    "claim_count": 92,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "arbiter": [
+          "gpt-5.5"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "proposer": [
+          "opus-worker"
+        ]
+      }
+    },
+    "triage_count": 278,
+    "verdict_distribution": {
+      "True": 64,
+      "Mostly True": 0,
+      "Misleading": 5,
+      "Exaggerated": 0,
+      "False": 1,
+      "Unverifiable": 21,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 1
+    },
+    "verdict_distribution_lenient": {
+      "True": 64,
+      "Truthy": 0,
+      "Unverifiable": 21,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 1,
+      "Misleading": 5
+    },
+    "verdict_distribution_strict": {
+      "True": 64,
+      "Truthy": 0,
+      "Unverifiable": 21,
+      "Falsey": 0,
+      "False": 1,
+      "Models split": 1,
+      "Misleading": 5
+    },
+    "model_agreement_rate": 0.609,
+    "url": "reports/1998-01-27-bill-clinton-54f0ca.html",
+    "tier_counts": {
+      "gov": 138,
+      "wire": 0,
+      "news": 32,
+      "fc": 0,
+      "political": 39,
+      "other": 53
+    },
+    "tier_fallback": {
+      "joined": 262,
+      "fallback": 0,
+      "total": 262,
+      "fallback_rate": 0.0
+    },
+    "source_of_claims": "Bill Clinton",
+    "source_of_claims_professional_public_title": "President",
+    "event": "",
+    "channel": ""
+  }
+]

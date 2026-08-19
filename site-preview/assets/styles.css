@@ -1,0 +1,2487 @@
+/* ─────────────────────────────────────────────────────────────────────
+   truth-bot — consolidated stylesheet
+   Accountability dashboard aesthetic. Verdict colors are sacred —
+   they are the ONLY chromatic colors in the design.
+
+   Sections:
+     [00] Design tokens
+     [01] Reset & base
+     [02] Status bar
+     [03] Layout primitives
+     [04] Masthead (full + compact variants)
+     [05] Section heads
+     [06] Index page — aggregate stats & verdict bar
+     [07] Index page — report cards
+     [08] Report page — speech hero
+     [09] Report page — verdict panel
+     [10] Report page — Truthy column & speech bubble
+     [11] Report page — TOC
+     [12] Report page — claim cards
+     [13] Report page — caveat callout
+     [14] Report page — model verdict matrix
+     [15] Report page — expandable reasoning
+     [16] Report page — evidence list
+     [17] Report page — claim footer & methodology
+     [18] Footer
+     [19] Verdict color utilities
+     [20] Truthy SVG internal animations
+     [21] Page-load choreography
+     [22] Responsive
+   ───────────────────────────────────────────────────────────────────── */
+
+
+/* [00] Design tokens ─────────────────────────────────────────────────── */
+:root {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-hover: #fdfcfa;
+  --surface-warm: #faf8f3;
+  --ink: #0c0a09;
+  --ink-muted: #57534e;
+  --ink-faint: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+
+  /* Verdict palette — the ONLY chromatic colors in the design.
+     Change one variable, every bar / pill / swatch / dissent flag /
+     Truthy bubble tint updates. Never hardcode these hex values
+     anywhere else in the codebase. */
+  --v-true:         #15803d;
+  --v-mostly-true:  #65a30d;
+  --v-exaggerated:  #ca8a04;
+  --v-misleading:   #c2410c;
+  --v-false:        #991b1b;
+  --v-unverifiable: #44403c;
+  /* 5-bucket coarse-axis projection (Truthy scale). Used on the headline
+     pill only — the per-model strip stays on the 6-bucket palette above.
+     truthy sits between true (green) and exaggerated (amber); falsey
+     sits between misleading (orange) and false (red). */
+  --v-truthy:       #84cc16;
+  --v-falsey:       #ea580c;
+  /* percent-true headline mid band (50-75% inclusive, jackie 2026-07-25) */
+  --v-mid:          #ca8a04;
+  /* Models split — panel deadlock. Its own cool slate, distinct from the
+     warm-gray Unverifiable, so the aggregate bars can show the split bucket
+     as a real segment (T0.2) rather than silently dropping it. */
+  --v-split:        #64748b;
+
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono:  'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --max-w: 960px;
+}
+
+
+/* [01] Reset & base ──────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: 1.5rem; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { color: inherit; text-decoration: none; }
+
+
+/* [02] Status bar ────────────────────────────────────────────────────── */
+/* Thin terminal-style strip at the top. Signals "monitoring tool". */
+.status-bar {
+  background: var(--ink);
+  color: #d6d3d1;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.25rem;
+}
+.status-bar .row {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.status-bar .live::before {
+  content: "●";
+  color: #4ade80;
+  margin-right: 0.45rem;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+.status-bar .stamp { margin-left: auto; color: #a8a29e; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+
+/* [03] Layout primitives ─────────────────────────────────────────────── */
+.wrap {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+
+/* [04] Masthead ──────────────────────────────────────────────────────── */
+/* Two variants: .masthead (full, used on index) and the compact form
+   inside report pages with .wordmark-sm + .breadcrumb. */
+header.masthead {
+  padding: 3.25rem 0 2.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Full masthead (index page) */
+.masthead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.wordmark {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--ink);
+}
+/* The lone chrome accent: a red period after "truth-bot". */
+.wordmark .dot { color: var(--v-false); }
+.tagline {
+  margin-top: 0.65rem;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+  max-width: 42ch;
+}
+
+/* Top nav (index page) */
+nav.top-nav {
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-top: 0.85rem;
+}
+nav.top-nav a {
+  color: var(--ink-muted);
+  transition: color 120ms ease;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+}
+nav.top-nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* Compact masthead override (report pages add .compact OR set padding inline).
+   When a report page uses the smaller wordmark + breadcrumb pattern,
+   reduce the masthead padding via the .mast-row container. */
+.mast-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+header.masthead:has(.mast-row) {
+  padding: 1.5rem 0 1.25rem;
+}
+.wordmark-sm {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.wordmark-sm .dot { color: var(--v-false); }
+.breadcrumb {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+.breadcrumb a { color: var(--ink-muted); transition: color 120ms ease; }
+.breadcrumb a:hover { color: var(--ink); }
+.breadcrumb .arrow { margin-right: 0.4rem; }
+
+
+/* [05] Section heads ─────────────────────────────────────────────────── */
+.section-head {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin: 2.75rem 0 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.section-head .sub { color: var(--ink-faint); }
+
+
+/* [06] Index page — aggregate stats & verdict bar ────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  margin-bottom: 1rem;
+}
+.stat {
+  padding: 1.4rem 1.6rem;
+  border-right: 1px solid var(--border);
+}
+.stat:last-child { border-right: none; }
+.stat .num {
+  font-family: var(--serif);
+  font-size: 2.9rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+}
+.stat .num .unit {
+  font-size: 1.5rem;
+  color: var(--ink-muted);
+  margin-left: 0.05rem;
+}
+.stat .lbl {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  margin-top: 0.6rem;
+}
+
+/* Aggregate verdict bar (index page hero) */
+.agg {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.4rem 1.6rem;
+}
+.agg-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  margin-bottom: 0.85rem;
+}
+.agg-bar {
+  display: flex;
+  height: 34px;
+  overflow: hidden;
+}
+.agg-bar .seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: filter 200ms ease;
+}
+.agg-bar .seg:hover { filter: brightness(1.12); }
+
+.agg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.4rem;
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.legend-item.zero { color: var(--ink-faint); }
+.swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+.legend-item .ct {
+  color: var(--ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.legend-item.zero .ct { color: var(--ink-faint); }
+
+
+/* Index page — hero Truthy layout */
+.index-hero {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 0 1rem;
+  flex-wrap: nowrap;
+}
+a.hero-truthy-link {
+  color: inherit;
+  text-decoration: none;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  outline-offset: 3px;
+}
+a.hero-truthy-link:focus-visible {
+  outline: 2px solid var(--ink-muted);
+}
+a.hero-truthy-link:hover .hero-truthy-wrap {
+  filter: brightness(1.04);
+}
+.truthy-fun-h1 {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem;
+  color: var(--ink);
+}
+.truthy-sound-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.truthy-sound-label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  user-select: none;
+}
+.truthy-sound-toggle {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.truthy-sound-toggle:hover {
+  background: var(--surface-hover);
+  color: var(--ink);
+  border-color: var(--ink-muted);
+}
+.truthy-sound-toggle:focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 2px;
+}
+.truthy-sound-toggle-icons { position: relative; width: 22px; height: 22px; }
+.truthy-sound-toggle-icons svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.truthy-sound-toggle .icon-on { opacity: 1; }
+.truthy-sound-toggle .icon-off { opacity: 0; pointer-events: none; }
+.truthy-sound-toggle.is-muted .icon-on { opacity: 0; }
+.truthy-sound-toggle.is-muted .icon-off { opacity: 1; }
+.truthy-fun-notes {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  max-width: 40rem;
+}
+.truthy-fun-notes-lead {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.truthy-fun-notes-mascot {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.truthy-fun-notes-outro {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+/* Hero bubble: tail points LEFT toward Truthy (overrides default upward tail).
+   width: fit-content + column align-items:flex-start so the bubble hugs caption
+   text instead of stretching to the full flex column width. */
+.index-hero .truthy-bubble {
+  width: fit-content;
+  max-width: min(92vw, 260px);
+  box-sizing: border-box;
+  text-align: left;
+}
+.index-hero .truthy-bubble::before,
+.index-hero .truthy-bubble::after {
+  left: -8px;
+  top: 1rem;
+  transform: none;
+  border-left: none;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+.index-hero .truthy-bubble::before { border-right: 8px solid var(--border); border-bottom-color: transparent; }
+.index-hero .truthy-bubble::after  { border-right: 8px solid var(--surface-warm); left: -7px; border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-true::before { border-right-color: rgba(21, 128, 61, 0.3); border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
+.index-hero .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
+.hero-truthy-wrap {
+  flex-shrink: 0;
+  animation: hero-truthy-float 3.2s ease-in-out infinite;
+}
+.hero-truthy-wrap svg {
+  width: 280px;
+  height: 336px;
+}
+@keyframes hero-truthy-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+/* Counter-animate the floor shadow so it stays put in the viewport
+   while Truthy bobs, and subtly breathes (a touch smaller when he's up). */
+.index-hero #floorShadow,
+.truthy-frame #floorShadow {
+  transform-box: fill-box;
+  transform-origin: 150px 353px;
+  animation: hero-shadow-breathe 3.2s ease-in-out infinite;
+}
+@keyframes hero-shadow-breathe {
+  0%, 100% { transform: translateY(0)   scale(1);    opacity: 1; }
+  50%      { transform: translateY(6px) scale(0.95); opacity: 0.9; }
+}
+/* Index hero: gentle wave on left arm while both arms stay raised (happy state) */
+@keyframes index-hero-wave-arm {
+  0%, 100% { transform: rotate(130deg); }
+  50%      { transform: rotate(150deg); }
+}
+.index-hero #mascot.state-true.hero-wave #armLeftSwing {
+  transform-box: view-box;
+  transform-origin: 88px 253px;
+  animation: index-hero-wave-arm 0.9s ease-in-out infinite;
+}
+.hero-truthy-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.stat-wide {
+  border-right: none;
+}
+.stat-breakdown {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+  line-height: 1.45;
+}
+.stat-breakdown strong { color: var(--ink); font-weight: 600; }
+
+
+/* [07] Index page — report cards ─────────────────────────────────────── */
+.reports { display: flex; flex-direction: column; }
+.report {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  padding: 1.6rem;
+  transition: background 150ms ease;
+  display: block;
+  color: inherit;
+}
+.report:last-child { border-bottom: 1px solid var(--border); }
+.report:hover { background: var(--surface-hover); }
+
+.report-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+.report-headline {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.report-meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  margin-top: 0.5rem;
+}
+.report-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+.verdict-pill {
+  text-align: right;
+  flex-shrink: 0;
+}
+.verdict-pill .label {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  display: block;
+}
+.verdict-pill .label.neutral { color: var(--ink); }
+.verdict-pill .ratio {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-top: 0.35rem;
+}
+
+/* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
+.report-bar {
+  display: flex;
+  height: 6px;
+  overflow: hidden;
+  margin: 0.25rem 0 1rem;
+}
+.report-bar .seg { transition: filter 200ms ease; }
+
+.report-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+}
+.report-counts .ct {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.report-counts .ct .n {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.report-cta {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.report-cta .src { color: var(--ink-faint); }
+.report-cta .src-tiers {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+.report-cta .read {
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: gap 200ms ease;
+}
+.report:hover .report-cta .read { gap: 0.7rem; }
+
+
+/* [08] Report page — speech hero ─────────────────────────────────────── */
+.hero { padding: 2.5rem 0 1rem; }
+.hero-overline {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 0.75rem;
+}
+.speaker-name {
+  font-family: var(--serif);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.speech-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink-muted);
+  margin-top: 0.4rem;
+}
+.speech-meta {
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+}
+.speech-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+
+/* [09] Report page — verdict panel ───────────────────────────────────── */
+.verdict-panel {
+  margin-top: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.vp-headline {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  align-items: stretch;
+}
+.vp-text-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+  min-width: 0;
+}
+.vp-verdict {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+.vp-verdict.neutral { color: var(--ink); }
+.vp-ratio {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-top: 0.5rem;
+}
+
+/* Big verdict bar inside the panel */
+.vp-bar-wrap { padding: 1.5rem 1.75rem; }
+.vp-bar {
+  display: flex;
+  height: 38px;
+  overflow: hidden;
+}
+.vp-bar .seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: filter 200ms ease;
+}
+.vp-bar .seg:hover { filter: brightness(1.12); }
+.vp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin-top: 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+
+/* Source row at the bottom of the verdict panel */
+.source-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.75rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.source-row a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+  transition: border-color 150ms ease;
+}
+.source-row a:hover { border-bottom-color: var(--ink); }
+.source-row .lab { color: var(--ink-faint); margin-right: 0.5rem; }
+
+
+/* [10] Report page — Truthy column & speech bubble ───────────────────── */
+.vp-truthy-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px;
+}
+.truthy-frame {
+  position: relative;
+  cursor: pointer;
+  transition: filter 200ms ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Match index-hero bob; shadow counter-animates inside the SVG (#floorShadow). */
+  animation: hero-truthy-float 3.2s ease-in-out infinite;
+}
+.truthy-frame:hover { filter: brightness(1.04); }
+.truthy-frame:active { filter: brightness(0.98); }
+.truthy-tap-hint {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.45rem;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.truthy-frame:hover .truthy-tap-hint { opacity: 1; }
+.truthy-tap-hint .icon { width: 8px; height: 8px; }
+
+/* Editorial speech bubble — Truthy's voice in Newsreader italic.
+   Tail points up at Truthy. Border tints to match mood. */
+.truthy-bubble {
+  position: relative;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  padding: 0.7rem 1rem;
+  max-width: 240px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--ink);
+  text-align: center;
+}
+.truthy-bubble::before,
+.truthy-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+.truthy-bubble::before {
+  top: -9px;
+  border-bottom: 8px solid var(--border);
+}
+.truthy-bubble::after {
+  top: -7px;
+  border-bottom: 8px solid var(--surface-warm);
+}
+.truthy-bubble.is-true { border-color: rgba(21, 128, 61, 0.3); }
+.truthy-bubble.is-true::before { border-bottom-color: rgba(21, 128, 61, 0.3); }
+.truthy-bubble.is-iffy { border-color: rgba(202, 138, 4, 0.4); }
+.truthy-bubble.is-iffy::before { border-bottom-color: rgba(202, 138, 4, 0.4); }
+.truthy-bubble.is-lie { border-color: rgba(153, 27, 27, 0.3); }
+.truthy-bubble.is-lie::before { border-bottom-color: rgba(153, 27, 27, 0.3); }
+
+
+/* [11] Report page — TOC ─────────────────────────────────────────────── */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0;
+}
+.toc-item {
+  display: grid;
+  grid-template-columns: 2.5rem auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 120ms ease;
+  color: inherit;
+}
+.toc-item:last-child { border-bottom: none; }
+.toc-item:hover { background: var(--surface-warm); }
+.toc-num {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.toc-pill {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #fff;
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.toc-text {
+  font-size: 0.92rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.toc-jump {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+
+
+/* [12] Report page — claim cards ─────────────────────────────────────── */
+.claim {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+  scroll-margin-top: 1rem;
+}
+.claim-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-warm);
+}
+.claim-num {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* Family rail — brackets the Truthy/Falsey family groups above a verdict bar
+   at the same widths as the segments, so the headline's "N of M decided
+   claims X-leaning" totals are visibly derivable from the graph. */
+.vp-family-rail, .report-family-rail {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.vp-family-rail .fam, .report-family-rail .fam {
+  border-top: 2px solid;
+  padding-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.vp-family-rail .fam .n, .report-family-rail .fam .n { font-weight: 700; }
+.fam.fam-true    { border-color: var(--v-truthy); color: var(--v-true); }
+.fam.fam-false   { border-color: var(--v-falsey); color: var(--v-false); text-align: right; }
+.fam.fam-abstain { border-color: var(--border-strong, #d6d3d1); color: var(--ink-faint); text-align: center; border-top-style: dashed; }
+
+.claim-pill {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  padding: 0.25rem 0.7rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+/* Guest-anecdote genre marker: keeps the Unverifiable color family but a
+   dashed outline signals "no public record exists", not "we failed". */
+.claim-pill.pill-anecdote, .toc-pill.pill-anecdote {
+  outline: 1.5px dashed rgba(255,255,255,0.65);
+  outline-offset: -3.5px;
+}
+/* Self-sourced-only abstention (PR-A2.1): Unverifiable color family, solid
+   double-rule outline — "the only witness is the claimant", not "we failed". */
+.claim-pill.pill-self-sourced {
+  outline: 3px double rgba(255,255,255,0.65);
+  outline-offset: -4.5px;
+}
+/* The claim-card explainer for a withheld verdict. Muted rather than alarming:
+   this is an honest abstention, not a warning about the speaker. */
+.gate-withheld-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--border-strong);
+  background: rgba(127,127,127,0.06);
+}
+.gate-withheld-note strong { color: var(--ink); }
+/* Gate-withheld (D17-d): the pack never met the bearing quota, so the panel
+   was never asked. Keeps the Unverifiable colour family — this is still an
+   abstention — but a dashed outline marks it as a statement about our
+   RETRIEVAL rather than about the claim. The longer label wraps on narrow
+   viewports, so the pill is allowed to breathe. */
+.claim-pill.pill-gate-withheld {
+  outline: 2px dashed rgba(255,255,255,0.55);
+  outline-offset: -4.5px;
+  font-size: 0.78em;
+  line-height: 1.25;
+  max-width: 22ch;
+  white-space: normal;
+  text-align: center;
+}
+/* Reason-coded species (step 6 / Wave A A3): the recorded axis says the public
+   record cannot reach this claim. The pill carries the ratified CODE; the
+   verbatim copy rides the tooltip and the .reason-code-note block below. Muted
+   mono chip — a taxonomy key, not a verdict color. */
+.claim-pill.reason-code-pill {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  background: rgba(127,127,127,0.10);
+  border: 1px solid var(--border-strong);
+}
+/* The claim-card explainer for a reason-coded row. Same muted register as
+   .gate-withheld-note — an honest statement about the record, not a warning —
+   but its own class: the two species never share wording OR styling hooks. */
+.reason-code-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--border-strong);
+  background: rgba(127,127,127,0.06);
+}
+/* Per-item marker on the Sources-consulted strip: this record is the
+   speaker's own organization (era-scoped principal match). */
+.ev-self {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  padding: 0.05rem 0.3rem;
+  margin-right: 0.4rem;
+  white-space: nowrap;
+}
+/* Abstention-decomposition chip under the verdict bars (PR-A2.1 T1.2). */
+.vp-abstention-chip {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin: 0.35rem 0 0;
+}
+/* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
+   concentrates on one speech, say so as a genre property, in the panel. */
+.vp-genre-note {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin: 0.35rem 0 0;
+}
+.claim-body { padding: 1.75rem 1.75rem 1.5rem; }
+.claim-quote {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--border-strong);
+}
+/* Claim-in-context (2026-08-01): the checked sentence emphasized inside its
+   greyed transcript neighbors — deictic quotes ("we'll launch six more") are
+   unreadable bare, and the panel always judged with this context. */
+.claim-quote-ctx { font-size: 1.15rem; }
+.claim-quote-ctx .ccq-side {
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+.claim-quote-ctx .ccq-claim {
+  color: var(--ink);
+  font-size: 1.32rem;
+  font-weight: 700;
+}
+.claim-context-fallback {
+  margin-top: 0.6rem;
+  padding-left: 1.25rem;
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+}
+.claim-context-fallback .ccq-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-right: 0.5rem;
+}
+.claim-context {
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+}
+.claim-context .sep { margin: 0 0.5rem; color: var(--ink-faint); }
+
+
+/* [13] Report page — caveat callout ──────────────────────────────────── */
+/* Always visible, never collapsible. Editorial annotation style. */
+.caveat {
+  margin: 1.5rem 0 0;
+  background: #fefbf3;
+  border-left: 3px solid var(--v-exaggerated);
+  padding: 0.9rem 1.1rem;
+}
+.caveat-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--v-exaggerated);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.caveat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.caveat-item {
+  display: block;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.caveat-item + .caveat-item {
+  margin-top: 0.45rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed color-mix(in srgb, var(--v-exaggerated) 35%, transparent);
+}
+.caveat-attribution {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--v-exaggerated);
+  font-weight: 600;
+  margin-right: 0.45rem;
+}
+.caveat-attribution::after {
+  content: "2";
+  margin-left: 0.45rem;
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+.caveat-text {
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+
+/* [14] Report page — model verdict matrix ────────────────────────────── */
+.models { margin-top: 1.75rem; }
+.models-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.65rem;
+}
+.models-label,
+.models-agreement {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+}
+.models-agreement .num {
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.pca-provenance {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+.pca-seats {
+  margin-top: 0.15rem;
+  color: var(--ink-faint);
+}
+/* Computed exhibit (A8 / R-2) — the arithmetic, both input levels, and the
+   data vintage. Deliberately a distinct block, not a badge tucked into the
+   provenance strip: R-2 wants a reader to be able to redo the division. */
+.computed-exhibit {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, #3b6ea5);
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+}
+.computed-exhibit .ce-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.computed-exhibit .ce-badge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent, #3b6ea5);
+}
+.computed-exhibit .ce-series {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-formula {
+  font-family: var(--mono);
+  margin: 0 0 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs {
+  list-style: none;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+}
+.computed-exhibit .ce-inputs li {
+  display: flex;
+  gap: 0.6rem;
+}
+.computed-exhibit .ce-date { color: var(--ink-muted); min-width: 6.5rem; }
+.computed-exhibit .ce-vintage,
+.computed-exhibit .ce-note {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.computed-exhibit .ce-note { margin-top: 0.3rem; }
+/* D17-c series excerpt (wave 2) — the observations behind an arithmetic
+   claim, collapsed by default: audit detail, one click away, not in the way.
+   Same posture as the sources-consulted block it sits inside. */
+.series-rows { margin: 0.4rem 0 0.2rem; }
+.series-summary {
+  cursor: pointer;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+.series-summary:hover { color: var(--ink); }
+.series-table {
+  border-collapse: collapse;
+  margin: 0.45rem 0 0.3rem;
+  font-size: 0.72rem;
+}
+.series-table th,
+.series-table td {
+  padding: 0.12rem 0.75rem 0.12rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+.series-table th { color: var(--ink-muted); font-weight: 600; }
+.series-more, .series-units, .series-predicate, .series-full {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+}
+/* The window does not reach the period the claim is about. Amber, because a
+   reader taking the table at face value would be misled by our own exhibit. */
+.series-mismatch {
+  margin: 0.35rem 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.7rem;
+  border-left: 3px solid var(--amber, #b26a00);
+  background: rgba(178, 106, 0, 0.07);
+}
+/* Post-publication correction note (T1.5) — amber, can't be missed. */
+.pca-correction {
+  margin-top: 0.25rem;
+  color: var(--v-exaggerated);
+}
+.pca-correction a { color: var(--v-exaggerated); text-decoration: underline; }
+/* D14 (A7) adjacent-claim coherence annotation — always visible, editorial. */
+.pca-coherence {
+  margin-top: 0.4rem;
+  background: #fefbf3;
+  border-left: 3px solid var(--v-exaggerated);
+  padding: 0.5rem 0.75rem;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+.pca-coherence .coherence-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.corrections-table td.mono { font-family: var(--mono); font-size: 0.8rem; }
+.corrections-note { color: var(--ink-muted); }
+/* F9: models-split resolution-state badge — neutral, not a verdict colour. */
+.vt-split {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  color: var(--ink-muted);
+  border: 1px dashed var(--rule, #d8d4ca);
+  border-radius: 3px;
+  padding: 0 0.3em;
+}
+/* D-B: per-speech stance-scored coverage disclosure block. */
+.stance-coverage {
+  margin: 1.25rem 0;
+  background: var(--surface, #faf9f6);
+  border: 1px solid var(--rule, #e5e2da);
+  border-left: 3px solid var(--ink-muted);
+  padding: 0.9rem 1.1rem;
+  font-size: 0.9rem;
+}
+.stance-coverage-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.stance-coverage p { margin: 0.35rem 0; }
+.stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+.stance-coverage-exception {
+  border-left: 3px solid var(--v-exaggerated);
+  padding-left: 0.75rem;
+  background: #fefbf3;
+}
+/* Pipeline diagram (About, T4.2) — structural only, no figures. */
+.pipeline-diagram {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  margin: 1rem 0; font-family: var(--sans); font-size: 0.82rem;
+}
+.pipeline-diagram .pd-node {
+  border: 1px solid var(--rule, #ccc); border-radius: 6px;
+  padding: 0.35rem 0.6rem; text-align: center; line-height: 1.25;
+}
+.pipeline-diagram .pd-node small { color: var(--ink-muted); font-size: 0.72rem; }
+.pipeline-diagram .pd-arrow { color: var(--ink-faint); }
+.seat-insights td .ct { font-weight: 600; }
+.report-correction-banner {
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--v-exaggerated);
+  background: color-mix(in srgb, var(--v-exaggerated) 8%, transparent);
+  font-size: 0.9rem;
+}
+.report-correction-banner a { text-decoration: underline; }
+/* Statement Triage — set-aside (non-check-worthy) sentence stream */
+.triage-group { margin: 0 0 1.5rem; }
+.triage-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+.triage-item {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.triage-text { line-height: 1.5; }
+.triage-meta {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+}
+.triage-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-right: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+}
+.model {
+  padding: 0.75rem 0.85rem;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--surface);
+  position: relative;
+}
+.model:last-child { border-right: none; }
+/* Dissenting model: warm bg + small DISSENT tag in the corner */
+.model.dissent { background: #fefbf3; }
+.model.dissent::after {
+  content: "DISSENT";
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--v-exaggerated);
+  font-weight: 600;
+}
+/* No-response model: muted bg + FAILED tag in the corner */
+.model.no-response { background: #f9f8f7; }
+.model.no-response::after {
+  content: "FAILED";
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+.model-name {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.model-verdict {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+
+
+/* [15] Report page — per-model reasoning (native <details>) ─────────── */
+details.model-reasoning {
+  margin-top: 0.65rem;
+  border: 1px solid var(--border);
+}
+details.model-reasoning > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.6rem 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 120ms ease;
+}
+details.model-reasoning > summary .model-reasoning-model {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 0.82em;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+details.model-reasoning > summary::-webkit-details-marker { display: none; }
+details.model-reasoning > summary::before {
+  content: "▸";
+  transition: transform 200ms ease;
+  color: var(--ink-faint);
+  display: inline-block;
+}
+details.model-reasoning[open] > summary::before { transform: rotate(90deg); }
+details.model-reasoning > summary:hover { background: var(--surface-warm); }
+.model-reasoning-body {
+  padding: 0 0.85rem 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.model-reasoning-body p { margin: 0.4rem 0 0; }
+.model-reasoning-body p:first-child { margin-top: 0.2rem; }
+
+details.model-tier-wrap {
+  margin-top: 0.45rem;
+  border: 1px dashed var(--border);
+}
+details.model-tier-wrap > summary.model-tier-sum {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
+.model-tier-body {
+  padding: 0 0.6rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--ink);
+}
+
+/* [16] Report page — evidence list ───────────────────────────────────── */
+.evidence { margin-top: 1.5rem; }
+.evidence-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 0.55rem;
+}
+.evidence-list { list-style: none; }
+.evidence-list li {
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+.evidence-list li:first-child { border-top: none; }
+.evidence-list .ev-mark {
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  font-size: 0.75rem;
+}
+.evidence-list .ev-id {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin: 0 0.35rem 0 0.15rem;
+}
+/* E-id references inside model reasoning → jump links to the pack item. */
+.model-reasoning-body a.ev-ref {
+  font-family: var(--mono);
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px dashed var(--border-strong);
+}
+.model-reasoning-body a.ev-ref:hover { border-bottom-style: solid; }
+/* Briefly spotlight the pack item a clicked E-id lands on. */
+.evidence-list li:target { background: var(--surface-raised, rgba(0,0,0,0.05)); }
+.evidence-list a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+.evidence-list a:hover { border-bottom-color: var(--ink); }
+.evidence-list .ev-src {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-left: 0.5rem;
+}
+/* Source-tier badges (preserved from existing schema) */
+.evidence-tier {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.35rem;
+  color: #fff;
+  border-radius: 1px;
+  font-weight: 600;
+  margin-right: 0.4rem;
+}
+.tier-gov   { background: #1565c0; }
+.tier-news  { background: #4a148c; }
+.tier-fc    { background: #e65100; }
+.tier-other { background: #546e7a; }
+/* T7 political communications — warm brown, deliberately NOT the verdict red,
+   which means a FALSE ruling rather than an untrusted source. */
+.tier-political { background: #6d4c41; }
+.evidence-list .source-snippet {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+
+/* Collapsible evidence/sources (native <details>) */
+details.evidence-details {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border);
+}
+details.evidence-details > summary.evidence-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 120ms ease;
+  user-select: none;
+}
+details.evidence-details > summary.evidence-summary::-webkit-details-marker { display: none; }
+details.evidence-details > summary.evidence-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  transition: transform 200ms ease;
+  display: inline-block;
+}
+details.evidence-details[open] > summary.evidence-summary::before { transform: rotate(90deg); }
+details.evidence-details > summary.evidence-summary:hover { background: var(--surface-warm); }
+details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
+
+
+/* [17] Report page — claim footer & methodology ──────────────────────── */
+.claim-foot {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.permalink {
+  color: var(--ink-faint);
+  transition: color 120ms ease;
+}
+.permalink:hover { color: var(--ink); }
+.permalink::before {
+  content: "#";
+  margin-right: 0.15rem;
+  color: var(--ink-faint);
+}
+
+.methodology {
+  margin-top: 3rem;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+.methodology strong { color: var(--ink); font-weight: 600; }
+.methodology a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+/* PCA panel composition — which model fills each seat, once per run. */
+.panel-composition {
+  margin-top: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+.panel-composition-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.panel-composition-title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+.panel-composition-roster {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+.panel-composition-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+}
+.panel-composition-seat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.panel-composition-role {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+.panel-composition-model { color: var(--ink); }
+
+
+/* [18] Footer ────────────────────────────────────────────────────────── */
+footer.foot {
+  margin-top: 4rem;
+  padding: 1.5rem 0 2.5rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-muted);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+footer.foot a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+footer.foot .footer-hash {
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  border-bottom: none;
+  text-decoration: none;
+}
+footer.foot .footer-hash:hover {
+  text-decoration: underline;
+  color: var(--ink-muted);
+}
+
+
+/* [18a] Beta release badge ──────────────────────────────────────────── */
+/* Rendered inline next to every "Pipeline vX.Y.Z" version string while the
+   project is pre-1.0 (see IS_BETA in site.py). Auto-hidden once version ≥ 1.0
+   because the render sites concat an empty string instead of the span. */
+.beta-badge {
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0.05em 0.45em;
+  font-family: var(--mono);
+  font-size: 0.82em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--surface-warm, #f5f4ef);
+  border: 1px solid var(--border-strong, #d6d3d1);
+  border-radius: 3px;
+  line-height: 1.3;
+  vertical-align: baseline;
+}
+.status-bar .beta-badge {
+  color: #d6d3d1;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+footer.foot .beta-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+
+/* [18b] HR dividers & dim helper ────────────────────────────────────── */
+hr.rule {
+  border: none;
+  border-top: 1px solid var(--border-strong);
+  margin: 2rem 0;
+}
+hr.rule-light {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+/* Muted body copy — used for footnotes, about-page prose, empty states */
+.dim {
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.dim a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+.dim a:hover { border-bottom-color: var(--ink); }
+
+
+/* [19] Verdict color utilities ───────────────────────────────────────── */
+/* Background paint */
+.v-true         { background: var(--v-true); }
+.v-mostly-true  { background: var(--v-mostly-true); }
+.v-exaggerated  { background: var(--v-exaggerated); }
+.v-misleading   { background: var(--v-misleading); }
+.v-false        { background: var(--v-false); }
+.v-unverifiable { background: var(--v-unverifiable); }
+/* 5-bucket coarse-axis paint (headline pill only). */
+.v-truthy       { background: var(--v-truthy); }
+.v-falsey       { background: var(--v-falsey); }
+.v-split        { background: var(--v-split); }
+/* Text paint */
+.vt-true         { color: var(--v-true); }
+.vt-mostly-true  { color: var(--v-mostly-true); }
+.vt-exaggerated  { color: var(--v-exaggerated); }
+.vt-misleading   { color: var(--v-misleading); }
+.vt-false        { color: var(--v-false); }
+.vt-mid          { color: var(--v-mid); }
+.vt-unverifiable { color: var(--v-unverifiable); }
+.vt-truthy       { color: var(--v-truthy); }
+.vt-falsey       { color: var(--v-falsey); }
+.vt-split        { color: var(--v-split); }
+
+/* [20] Truthy SVG internal animations ────────────────────────────────── */
+/* These drive Truthy's idle behavior, eye states, and pose changes.
+   The state classes (.state-true, .state-iffy, .state-lie) are toggled
+   on the #mascot SVG by truthbot.js based on the data-mood attribute. */
+
+@keyframes idle {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2.5px); }
+}
+#character {
+  animation: idle 4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes antenna-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50%      { transform: rotate(2deg); }
+}
+#antenna {
+  animation: antenna-sway 3s ease-in-out infinite;
+  transform-origin: 150px 62px;
+  transform-box: fill-box;
+}
+
+.eye-led { opacity: 0; transition: opacity 0.35s ease; }
+
+@keyframes true-happy-cycle {
+  0%, 70% { opacity: 1; }
+  78%, 88% { opacity: 0; }
+  96%, 100% { opacity: 1; }
+}
+@keyframes true-neutral-cycle {
+  0%, 70% { opacity: 0; }
+  78%, 88% { opacity: 1; }
+  96%, 100% { opacity: 0; }
+}
+@keyframes happy-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+.state-true .eye-happy {
+  animation:
+    true-happy-cycle 4s ease-in-out infinite,
+    happy-pulse 2.2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.state-true .eye-neutral { animation: true-neutral-cycle 4s ease-in-out infinite; }
+.state-iffy .eye-iffy { opacity: 1; }
+
+@keyframes sad-wander {
+  0%   { transform: translate(-4px, 0.5px); }
+  25%  { transform: translate(-3px, 2px); }
+  50%  { transform: translate( 4px, 2.5px); }
+  75%  { transform: translate( 3px, 1.2px); }
+  100% { transform: translate(-4px, 0.5px); }
+}
+.state-lie .eye-sad {
+  opacity: 1;
+  animation: sad-wander 4.2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.state-lie #eyeRightGroup .eye-sad { animation-delay: -1.3s; }
+
+.eye-shape {
+  transform-origin: center;
+  transform-box: fill-box;
+  transition: transform 0.09s ease-out;
+}
+#mascot.blinking .eye-shape { transform: scaleY(0.06); }
+
+@keyframes tear-fall {
+  0%   { transform: translateY(-4px); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateY(72px); opacity: 0; }
+}
+.state-lie #tearLeft,
+.state-lie #tearRight {
+  animation: tear-fall 2.2s ease-in infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.state-lie #tearRight { animation-delay: 0.7s; }
+#tearLeft, #tearRight { opacity: 0; }
+
+/* Report Truthy is rendered smaller than index-hero (170px vs 280px wide SVG).
+   Scale tears in .truthy-frame so on-screen tear mass tracks the hero (~280/170
+   ≈ 1.65); extra lift on <=740px when the SVG is only 110px wide. */
+.truthy-frame #mascot.state-lie #tearLeft,
+.truthy-frame #mascot.state-lie #tearRight {
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation-name: tear-fall-report;
+}
+.truthy-frame #mascot.state-lie #tearRight { animation-delay: 0.7s; }
+
+@keyframes tear-fall-report {
+  0%   { transform: translateY(-4px) scale(1.82); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateY(76px) scale(1.82); opacity: 0; }
+}
+
+@keyframes tear-fall-report-sm {
+  0%   { transform: translateY(-4px) scale(2.62); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateY(82px) scale(2.62); opacity: 0; }
+}
+
+#armLeftSwing,
+#armRightSwing,
+#eyeLeftGroup,
+#eyeRightGroup,
+#headGroup,
+#bodyGroup,
+#clipboard {
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#led, #ledHalo { transition: fill 0.3s; }
+
+/* Triggered by JS when user clicks Truthy: brief LED flash */
+@keyframes ledFlash {
+  0%   { filter: brightness(1); }
+  30%  { filter: brightness(1.6) saturate(1.3); }
+  100% { filter: brightness(1); }
+}
+#mascot.speaking #led,
+#mascot.speaking #ledHalo {
+  animation: ledFlash 0.7s ease-out;
+}
+
+
+/* [21] Page-load choreography ────────────────────────────────────────── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Staggered reveal of major content blocks */
+.stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
+  animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+/* Index page stagger */
+.stats     { animation-delay: 50ms; }
+.how-strip { animation-delay: 80ms; }
+.agg       { animation-delay: 130ms; }
+.reports .report:nth-of-type(1) { animation-delay: 240ms; }
+.reports .report:nth-of-type(2) { animation-delay: 320ms; }
+.reports .report:nth-of-type(3) { animation-delay: 400ms; }
+/* Report page stagger */
+.hero          { animation-delay: 60ms; }
+.verdict-panel { animation-delay: 140ms; }
+.toc           { animation-delay: 220ms; }
+
+
+/* [22] Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 740px) {
+  /* Masthead variants */
+  .wordmark { font-size: 2rem; }
+  header.masthead { padding: 2.25rem 0 1.5rem; }
+  .masthead-row { flex-direction: column; gap: 0.5rem; }
+  nav.top-nav { padding-top: 0.5rem; }
+
+  /* Status bar */
+  .status-bar .stamp { margin-left: 0; }
+
+  /* Index aggregate stats — single column. Report .stats.stats-4 and
+     .stats.stats-5 own their own breakpoints (further down in this
+     stylesheet) so they're excluded here. */
+  .stats:not(.stats-4):not(.stats-5) { grid-template-columns: 1fr; }
+  .stat {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 1.3rem;
+  }
+  .stat:last-child { border-bottom: none; }
+  .stat .num { font-size: 2.4rem; }
+  /* Index hero stacks on mobile */
+  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
+  .hero-truthy-wrap svg { width: 180px; height: 216px; }
+  /* Mobile hero stacks vertically; revert the bubble tail to point UP at Truthy. */
+  .index-hero .truthy-bubble::before,
+  .index-hero .truthy-bubble::after {
+    left: 50%;
+    top: -9px;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent !important;
+    border-top: none;
+    border-bottom: 8px solid var(--border);
+  }
+  .index-hero .truthy-bubble::after { top: -7px; border-bottom-color: var(--surface-warm); }
+  .index-hero .truthy-bubble.is-true::before { border-right-color: transparent !important; border-bottom-color: rgba(21, 128, 61, 0.3); }
+  .index-hero .truthy-bubble.is-iffy::before { border-right-color: transparent !important; border-bottom-color: rgba(202, 138, 4, 0.4); }
+  .index-hero .truthy-bubble.is-lie::before  { border-right-color: transparent !important; border-bottom-color: rgba(153, 27, 27, 0.3); }
+  .index-hero .truthy-bubble { max-width: min(92vw, 240px); }
+
+  /* Report card layout collapses verdict pill below headline */
+  .report-top { flex-direction: column; gap: 0.85rem; }
+  .verdict-pill { text-align: left; }
+
+  /* Speech hero */
+  .speaker-name { font-size: 2.2rem; }
+  .speech-title { font-size: 1.3rem; }
+
+  /* Verdict panel: Truthy goes inline next to bubble (bubble tail re-points) */
+  .vp-headline {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+  .vp-truthy-col {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    min-width: 0;
+  }
+  .vp-truthy-col .truthy-frame svg { width: 110px; height: 132px; }
+  .truthy-frame #mascot.state-lie #tearLeft,
+  .truthy-frame #mascot.state-lie #tearRight {
+    animation-name: tear-fall-report-sm;
+  }
+  .truthy-bubble {
+    max-width: none;
+    flex: 1;
+    text-align: left;
+  }
+  /* Re-point the bubble tail leftward toward Truthy */
+  .truthy-bubble::before,
+  .truthy-bubble::after {
+    left: -8px;
+    top: 1rem;
+    transform: none;
+    border-left: none;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+  .truthy-bubble::before { border-right: 8px solid var(--border); }
+  .truthy-bubble::after  { border-right: 8px solid var(--surface-warm); left: -7px; }
+  .truthy-bubble.is-true::before { border-right-color: rgba(21, 128, 61, 0.3); border-bottom-color: transparent; }
+  .truthy-bubble.is-iffy::before { border-right-color: rgba(202, 138, 4, 0.4); border-bottom-color: transparent; }
+  .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
+
+  .vp-bar-wrap, .source-row { padding-left: 1.25rem; padding-right: 1.25rem; }
+
+  /* Model grid stacks */
+  .model-grid { grid-template-columns: 1fr; }
+  .model {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .model:last-child { border-bottom: none; }
+
+  /* TOC compresses */
+  .toc-item { grid-template-columns: 2rem auto 1fr; }
+  .toc-jump { display: none; }
+  .toc-text { white-space: normal; }
+
+  /* Claim cards */
+  .claim-body { padding: 1.25rem; }
+  .claim-quote { font-size: 1.15rem; padding-left: 1rem; }
+}
+
+
+/* [23] Stat icons (landing page) ─────────────────────────────────────── */
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+.stat-icon {
+  color: var(--ink-muted);
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+/* [24] How-it-works trust strip (landing page) ───────────────────────── */
+.how-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.how-step {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex: 1;
+}
+.how-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  background: var(--border);
+  width: 1.3rem;
+  height: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.how-text {
+  flex: 1;
+}
+.how-sep {
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+/* [25] Larger landing-page stat icons (hero scale) ───────────────────── */
+.stat-icon-lg {
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
+}
+
+/* [27] Inline icons in section heads + claim cards ───────────────────── */
+.section-head-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-head-icon {
+  color: var(--ink-muted);
+  opacity: 0.75;
+  margin-bottom: 0; /* override default .stat-icon margin */
+  flex-shrink: 0;
+}
+.claim-head-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.claim-head-icon {
+  color: var(--ink-muted);
+  opacity: 0.7;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* [28] Per-claim back-links in .claim-foot ───────────────────────────── */
+.claim-back-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+}
+.claim-back-links .back-link {
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--border);
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.claim-back-links .back-link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-muted);
+}
+.claim-back-links .sep {
+  color: var(--ink-faint);
+  user-select: none;
+}
+
+/* [29] Small-screen overrides for stat icons + how-strip ─────────────── */
+@media (max-width: 600px) {
+  .stat { flex-direction: row; align-items: center; gap: 1rem; }
+  .stat-icon { flex-shrink: 0; margin-bottom: 0; }
+  /* Shrink the hero-scale icons so text still wraps nicely on phones */
+  .stat-icon-lg { width: 32px; height: 32px; }
+  .how-strip { flex-direction: column; gap: 0.5rem; }
+  .how-sep { display: none; }
+  /* Allow the claim-foot back-links to wrap below on narrow screens */
+  .claim-foot {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+  .claim-back-links {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* [30] Four-column report stats variant */
+.stats.stats-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.verdict-panel > .stats.stats-4 {
+  border-top: 1px solid var(--border);
+  margin: 0 1.25rem 1rem;
+}
+@media (max-width: 700px) {
+  .stats.stats-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .stats.stats-4 { grid-template-columns: 1fr; }
+}
+
+/* [30b] Headline-stats frames — promoted % truthy / % false above the
+   aggregate stats grid. Two prominent block frames so the verdict
+   percentages aren't competing visually with claim/model/leader counts. */
+.vp-headline-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.25rem 0.5rem;
+}
+.vp-headline-stat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.1rem 1rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.vp-headline-stat::before {
+  /* Tinted left accent strip — Truthy frame uses the truthy color,
+     False frame uses the falsey color. Matches the per-claim pill
+     palette so the two frames are visually distinct. */
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+}
+.vp-headline-stat.vp-stat-truthy::before { background: var(--v-truthy); }
+.vp-headline-stat.vp-stat-false::before  { background: var(--v-falsey); }
+.vp-headline-stat .vp-stat-icon { color: var(--ink-muted); flex: 0 0 auto; }
+.vp-headline-stat.vp-stat-truthy .vp-stat-icon { color: var(--v-truthy); }
+.vp-headline-stat.vp-stat-false  .vp-stat-icon { color: var(--v-falsey); }
+.vp-headline-stat .vp-stat-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.vp-headline-stat .vp-stat-num {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.vp-headline-stat .vp-stat-lbl {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-top: 0.15rem;
+}
+.vp-headline-stat .vp-stat-hint {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  margin-top: 0.1rem;
+}
+@media (max-width: 600px) {
+  .vp-headline-stats { grid-template-columns: 1fr; }
+}
+
+/* [16] Model Panel Insights ─────────────────────────────────────────── */
+
+.insights-strip {
+  margin: 0 0 1.4rem;
+}
+.insight-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.insight-card {
+  padding: 1.1rem 1.25rem;
+  border-right: 1px solid var(--border);
+}
+.insight-card:last-child { border-right: none; }
+.insight-card-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 0.4rem;
+}
+.insight-card-headline {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.3rem;
+  color: var(--ink);
+}
+.insight-card-figure {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+@media (max-width: 700px) {
+  .insight-cards { grid-template-columns: 1fr; }
+  .insight-card { border-right: none; border-bottom: 1px solid var(--border); }
+  .insight-card:last-child { border-bottom: none; }
+}
+
+/* Per-model summary table on the dedicated insights page */
+.insights-summary {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0.75rem 0 1.5rem;
+}
+.insights-summary th, .insights-summary td {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.insights-summary thead th {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+.insights-summary .num-cell { text-align: right; font-variant-numeric: tabular-nums; }
+.insights-meta {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+/* Bias chart — paired horizontal bars centered on a midpoint */
+.bias-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.bias-row {
+  display: grid;
+  grid-template-columns: 13rem 1fr 4rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+.bias-row-label { font-weight: 600; }
+.bias-track {
+  position: relative;
+  height: 14px;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+.bias-mid {
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  bottom: -2px;
+  width: 1px;
+  background: var(--ink-faint);
+}
+.bias-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.bias-fill-lenient { left: 50%; background: var(--v-truthy); }
+.bias-fill-strict  { right: 50%; background: var(--v-falsey); }
+.bias-row-figure {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  text-align: right;
+}
+@media (max-width: 600px) {
+  .bias-row { grid-template-columns: 1fr; }
+  .bias-row-figure { text-align: left; }
+}
+
+/* Pairwise agreement matrix */
+.agreement-matrix {
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.agreement-matrix th, .agreement-matrix td {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.agreement-matrix thead th { background: var(--surface); }
+.agreement-matrix .agg-self {
+  background: var(--surface);
+  color: var(--ink-faint);
+}
+.agreement-matrix .agg-cell {
+  font-variant-numeric: tabular-nums;
+}
+.agreement-matrix .agg-n {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  font-family: var(--mono);
+}
+
+/* Extreme split cards */
+.insights-extremes { margin-top: 1.25rem; }
+.extreme-card {
+  border: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--surface);
+}
+.extreme-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+  font-size: 0.78rem;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+}
+.extreme-diff {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+}
+.extreme-odd-label {
+  margin-left: auto;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+}
+.extreme-text {
+  margin: 0.25rem 0;
+  font-size: 0.96rem;
+  line-height: 1.4;
+}
+.extreme-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.extreme-speaker { color: var(--ink-faint); }
+.insights-method { margin-top: 1.5rem; font-size: 0.92rem; }
+
