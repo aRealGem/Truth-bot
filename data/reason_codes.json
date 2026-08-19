@@ -9,47 +9,137 @@
       "renders": true,
       "copy": "This claim asserts what someone intends, believes, or aims to do. Public records document what people do, not what they mean by it, so no source can confirm or refute it.",
       "precedents": [
-        {"sid": "gwbush_2006:0033", "role": "precedent"}
-      ]
+        {
+          "sid": "gwbush_2006:0033",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
     },
     {
       "code": "PRIVATE-EVENT",
       "renders": true,
-      "copy": "This claim describes a private moment with no public witnesses or records, so no qualifying source could confirm or refute it.",
+      "copy": "This claim describes private circumstances or events that left no public record, so no qualifying source could confirm or refute it.",
       "precedents": [
-        {"sid": "trump_2026:0153", "role": "precedent"}
-      ]
+        {
+          "sid": "trump_2026:0153",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
     },
     {
       "code": "NO-INSTRUMENT",
       "renders": true,
       "copy": "This claim states a number or share for a population that no official or independent statistical source measures, so no data exists that could confirm or refute it.",
       "precedents": [
-        {"sid": "trump_2026:0334", "role": "precedent"}
-      ]
+        {
+          "sid": "trump_2026:0334",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
     },
     {
       "code": "MASS-VOICE",
       "renders": true,
       "copy": "This claim attributes a view to a large, unspecified group ('millions say,' 'everyone supports'), which no source can count or check.",
       "precedents": [
-        {"sid": "trump_2026:0514", "role": "primary"},
-        {"sid": "biden_2022:0373", "role": "precedent"}
-      ]
+        {
+          "sid": "trump_2026:0514",
+          "role": "primary"
+        },
+        {
+          "sid": "biden_2022:0373",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
     },
     {
       "code": "COUNTERFACTUAL",
       "renders": true,
       "copy": "This claim is about what would have happened under different circumstances. Events that didn't occur leave no record, so it can't be confirmed or refuted.",
       "precedents": [
-        {"sid": "trump_2026:0514", "role": "secondary"}
-      ]
+        {
+          "sid": "trump_2026:0514",
+          "role": "secondary"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
     },
     {
       "code": "NO-METRIC",
       "renders": true,
       "copy": "This claim ranks or compares ('largest in history') without saying by what measure, so no data can confirm or refute it as spoken. Where a standard measure exists, the claim is split and the measurable part is checked instead.",
-      "precedents": []
+      "precedents": [],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
+    },
+    {
+      "code": "CAUSAL-LINK",
+      "renders": true,
+      "copy": "This claim asserts that one thing caused, prevented, or depended on another. Records can document the events themselves but not the link between them, so no source can confirm or refute it.",
+      "precedents": [
+        {
+          "sid": "clinton_1998:0210",
+          "role": "precedent"
+        },
+        {
+          "sid": "trump_2026:0666",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
+    },
+    {
+      "code": "GROUP-STATE",
+      "renders": true,
+      "copy": "This claim asserts what a specific group of people knew, felt, or agreed. What was in other people's minds leaves no record, so no source can confirm or refute it.",
+      "precedents": [
+        {
+          "sid": "clinton_1998:0243",
+          "role": "precedent"
+        },
+        {
+          "sid": "trump_2026:0667",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
+    },
+    {
+      "code": "PROJECTION",
+      "renders": true,
+      "copy": "This claim is a prediction about what could happen in the future. The future has not left a record yet, so no source can confirm or refute it today.",
+      "precedents": [
+        {
+          "sid": "trump_2026:0161",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
+    },
+    {
+      "code": "NO-RECORD",
+      "renders": true,
+      "copy": "This claim describes something people may have witnessed, but that left no record a source could check, so it can't be confirmed or refuted.",
+      "precedents": [
+        {
+          "sid": "trump_2026:0450",
+          "role": "precedent"
+        }
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
     },
     {
       "code": "UNCODED",
@@ -62,7 +152,9 @@
         "An UNCODED row ships no substantive label and stays in its current unpublished state.",
         "Resolution is either an existing code on review, or a new owner-ratified code added to this file with its spawning row recorded as that code's precedent.",
         "The optional review_after field defers re-review."
-      ]
+      ],
+      "status": "owner-ratified",
+      "ratified_at": "2026-08-18"
     }
   ]
 }

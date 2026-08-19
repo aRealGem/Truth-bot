@@ -27,11 +27,12 @@
       "sid": "biden_2022:0045",
       "speech_id": "biden_2022",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'Isolated from the world more than ever' is an evaluative comparison with no defined measure.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "NO-METRIC"
     },
     {
       "sid": "biden_2022:0051",
@@ -47,21 +48,23 @@
       "sid": "biden_2022:0100",
       "speech_id": "biden_2022",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "The speaker's childhood memory of his father leaving for work.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "biden_2022:0124",
       "speech_id": "biden_2022",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'Used to have the best' infrastructure is evaluative. Rankings exist (WEF) but the claim names no measure or date; arguable against web-tier1 if a measure is stipulated.",
       "desk_class": "substantive",
-      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment)."
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "NO-METRIC"
     },
     {
       "sid": "biden_2022:0137",
@@ -115,12 +118,13 @@
     {
       "sid": "biden_2022:0194",
       "speech_id": "biden_2022",
-      "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'Top business leaders and most Americans support my plan' — an unmeasured quantifier over two undefined populations.",
       "desk_class": "substantive",
-      "review_trigger": "A published measurement of the population with a stated method and period."
+      "review_trigger": "A published measurement of the population with a stated method and period.",
+      "note": "step-6 2026-08-18"
     },
     {
       "sid": "biden_2022:0200",
@@ -186,11 +190,12 @@
       "sid": "biden_2022:0373",
       "speech_id": "biden_2022",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'Supported by everyone from X to Y' is rhetorical breadth, not a countable claim.",
       "desk_class": "substantive",
-      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment)."
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "MASS-VOICE"
     },
     {
       "sid": "biden_2022:0376",
@@ -226,11 +231,12 @@
       "sid": "biden_2022:0431",
       "speech_id": "biden_2022",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "What he loved doing with his daughter.",
       "desk_class": "substantive",
-      "review_trigger": "A first-hand published statement by the person about their own state at the time."
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "biden_2022:0437",
@@ -318,21 +324,23 @@
       "sid": "clinton_1998:0134",
       "speech_id": "clinton_1998",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A named individual's 13-year welfare history.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "clinton_1998:0135",
       "speech_id": "clinton_1998",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "Her current job.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "clinton_1998:0195",
@@ -348,11 +356,12 @@
       "sid": "clinton_1998:0210",
       "speech_id": "clinton_1998",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'NATO contained communism and kept America and Europe secure' — a historical evaluation, not a checkable event.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "CAUSAL-LINK"
     },
     {
       "sid": "clinton_1998:0211",
@@ -408,11 +417,12 @@
       "sid": "clinton_1998:0240",
       "speech_id": "clinton_1998",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "How Saddam Hussein 'spent the better part of a decade' — an evaluative characterisation of intent and priorities.",
       "desk_class": "substantive",
-      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment)."
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "INTENT"
     },
     {
       "sid": "clinton_1998:0241",
@@ -428,21 +438,23 @@
       "sid": "clinton_1998:0243",
       "speech_id": "clinton_1998",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'I speak for everyone in this chamber' — a claim about others' agreement.",
       "desk_class": "substantive",
-      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment)."
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "GROUP-STATE"
     },
     {
       "sid": "clinton_1998:0350",
       "speech_id": "clinton_1998",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'Only a handful of physicists used the web' at a past date. Directionally famous but no measurement exists for the period; arguable against web-tier1 via CERN/NSF histories.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "NO-INSTRUMENT"
     },
     {
       "sid": "clinton_1998:0358",
@@ -488,11 +500,12 @@
       "sid": "gwbush_2006:0033",
       "speech_id": "gwbush_2006",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "The aim of an adversary. An attribution of intent, which evidence of actions cannot establish. Same conflation family as ruling (d).",
       "desk_class": "substantive",
-      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment)."
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "INTENT"
     },
     {
       "sid": "gwbush_2006:0134",
@@ -571,11 +584,12 @@
       "sid": "obama_2014:0004",
       "speech_id": "obama_2014",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A rural doctor writing one prescription. No public record.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "obama_2014:0013",
@@ -651,31 +665,34 @@
       "sid": "obama_2014:0123",
       "speech_id": "obama_2014",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A named individual's family circumstances.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "obama_2014:0125",
       "speech_id": "obama_2014",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "That she put herself through college.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "obama_2014:0126",
       "speech_id": "obama_2014",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "That she had never collected unemployment benefits — a negative about one person's history.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "obama_2014:0153",
@@ -855,22 +872,24 @@
     {
       "sid": "trump_2026:0106",
       "speech_id": "trump_2026",
-      "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "decidability": "needs-decomposition",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'I was there.' Unfalsifiable as stated and carries no checkable content on its own.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "note": "step-6 2026-08-18"
     },
     {
       "sid": "trump_2026:0110",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "What she thought she was feeling. A private mental state; no retrieval reaches it.",
       "desk_class": "substantive",
-      "review_trigger": "A first-hand published statement by the person about their own state at the time."
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "INTENT"
     },
     {
       "sid": "trump_2026:0111",
@@ -895,41 +914,45 @@
       "sid": "trump_2026:0137",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A named individual's felt financial position, plus attribution to a policy. Neither half is retrievable.",
       "desk_class": "substantive",
-      "review_trigger": "A first-hand published statement by the person about their own state at the time."
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0153",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A private conversation with Michael Dell. Nothing public could settle what was said. NOTE: this claim currently renders as gate-withheld because the structured code cannot tell it apart from an under-retrieved claim — it is the clearest case for the substantive class existing.",
       "desk_class": "substantive",
-      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange."
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0161",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A conditional projection about future account balances, not an assertion of present fact.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PROJECTION"
     },
     {
       "sid": "trump_2026:0255",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A couple's private fertility history.",
       "desk_class": "substantive",
-      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange."
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0256",
@@ -945,11 +968,12 @@
       "sid": "trump_2026:0279",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "One buyer's bidding history across 20 homes. No public record aggregates this.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0291",
@@ -989,41 +1013,45 @@
       "sid": "trump_2026:0327",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "What doctors said about a prognosis, in private.",
       "desk_class": "substantive",
-      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange."
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0328",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "Same private prognosis.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0329",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A child's current developmental state — no public record.",
       "desk_class": "substantive",
-      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval."
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0334",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'Many, if not most' of an unmeasured population. English proficiency of undocumented immigrants is not measured in a way that could confirm or refute this quantifier.",
       "desk_class": "substantive",
-      "review_trigger": "A published measurement of the population with a stated method and period."
+      "review_trigger": "A published measurement of the population with a stated method and period.",
+      "reason_code": "NO-INSTRUMENT"
     },
     {
       "sid": "trump_2026:0340",
@@ -1128,11 +1156,12 @@
       "sid": "trump_2026:0450",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "The expressions on people's faces. Not a checkable proposition.",
       "desk_class": "substantive",
-      "review_trigger": "A first-hand published statement by the person about their own state at the time."
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "NO-RECORD"
     },
     {
       "sid": "trump_2026:0469",
@@ -1148,31 +1177,36 @@
       "sid": "trump_2026:0482",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "What doctors thought and what a mother said, in a hospital room.",
       "desk_class": "substantive",
-      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange."
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT",
+      "reason_code_2": "INTENT"
     },
     {
       "sid": "trump_2026:0487",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A private conversation the speaker had that night.",
       "desk_class": "substantive",
-      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange."
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0514",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "'Thirty-five million people said' — an unmeasured mass attribution, wrapped around a counterfactual about what would have happened. Neither half is decidable.",
       "desk_class": "substantive",
-      "review_trigger": "A published measurement of the population with a stated method and period."
+      "review_trigger": "A published measurement of the population with a stated method and period.",
+      "reason_code": "MASS-VOICE",
+      "reason_code_2": "COUNTERFACTUAL"
     },
     {
       "sid": "trump_2026:0569",
@@ -1188,11 +1222,12 @@
       "sid": "trump_2026:0638",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "A family's closeness. Not a checkable proposition.",
       "desk_class": "substantive",
-      "review_trigger": "A first-hand published statement by the person about their own state at the time."
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "PRIVATE-EVENT"
     },
     {
       "sid": "trump_2026:0643",
@@ -1258,21 +1293,23 @@
       "sid": "trump_2026:0666",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "That the mission's success and the crew's lives HINGED on one man is a causal attribution, not an event. The citation can evidence what he did, not that everything turned on it. Same conflation family as ruling (d).",
       "desk_class": "substantive",
-      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment)."
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "CAUSAL-LINK"
     },
     {
       "sid": "trump_2026:0667",
       "speech_id": "trump_2026",
       "decidability": "undecidable-from-public-record",
-      "provenance": "desk",
+      "provenance": "owner-ratified",
       "date": "2026-08-14",
       "why": "What everybody in the helicopter knew. A group's inner awareness.",
       "desk_class": "substantive",
-      "review_trigger": "A first-hand published statement by the person about their own state at the time."
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "GROUP-STATE"
     },
     {
       "sid": "trump_2026:0683",
