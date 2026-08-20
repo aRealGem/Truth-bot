@@ -13,13 +13,14 @@ from truthbot.publish.consistency import check_report_page
 
 
 def _claims():
-    def c(strict, verdict, *, selfsrc=False, gate="", anecdote=False):
+    def c(strict, verdict, *, selfsrc=False, gate="", anecdote=False, code=""):
         return {
             "coarse_strict_label": strict,
             "consensus_verdict": verdict,
             "provenance": {
                 "self_sourced_only": selfsrc,
                 "evidence_gate": gate,
+                "reason_code": code,
                 "layer_a_claim_type":
                     "personal-anecdote" if anecdote else "statistical",
             },
@@ -73,3 +74,38 @@ def test_anecdote_substate_is_excluded_from_the_gate_term():
     chip = ("2 decided · 1 unverified — self-sourced only · "
             "2 unverifiable — other")
     assert _chip_violations(_page(chip), claims) == []
+
+
+# ── F3: the reason-coded term ────────────────────────────────────────────────
+
+def test_coded_row_leaves_the_gate_term_for_its_own():
+    claims = _claims()
+    # the plain gate-withheld row is now recorded as beyond the public record
+    claims[3]["provenance"]["reason_code"] = "PRIVATE-EVENT"
+    chip = ("2 decided · 1 unverified — self-sourced only · "
+            "1 beyond the public record · 1 unverifiable — other")
+    assert _chip_violations(_page(chip), claims) == []
+    # and the OLD copy (counting it as a retrieval shortfall) now fails
+    stale = ("2 decided · 1 unverified — self-sourced only · "
+             "1 insufficient qualifying evidence retrieved · "
+             "1 unverifiable — other")
+    assert _chip_violations(_page(stale), claims)
+
+
+def test_coded_takes_precedence_over_self_sourced():
+    claims = _claims()
+    # the self-sourced row is ALSO reason-coded: it counts once, as coded
+    claims[2]["provenance"]["reason_code"] = "MASS-VOICE"
+    chip = ("2 decided · 1 beyond the public record · "
+            "1 insufficient qualifying evidence retrieved · "
+            "1 unverifiable — other")
+    assert _chip_violations(_page(chip), claims) == []
+
+
+def test_coded_term_still_sums_to_claim_count():
+    claims = _claims()
+    claims[3]["provenance"]["reason_code"] = "PRIVATE-EVENT"
+    chip = ("2 decided · 1 unverified — self-sourced only · "
+            "1 beyond the public record · 5 unverifiable — other")
+    vios = _chip_violations(_page(chip), claims)
+    assert any("sum to" in v for v in vios)
