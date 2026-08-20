@@ -131,6 +131,29 @@ def load_resolution_changes(path: Path) -> list[dict]:
     return [e for e in (doc.get("resolution_state_changes") or []) if e.get("sid")]
 
 
+def load_label_changes(path: Path) -> list[dict]:
+    """Wave A F1: the ``label_changes`` block of data/corrections.json — claims
+    whose PUBLISHED EXPLANATION changed while the verdict itself did not.
+
+    Its own species, and therefore its own loader. :func:`load_corrections`
+    validates that a correction MOVES a verdict (it raises on
+    ``old_verdict == new_verdict``) and would reject every one of these by
+    construction — the whole point of the step-6 reason codes is that the
+    verdict stands and only the reason given to the reader changes. This is the
+    same move the F9 ``resolution_state_changes`` block made for a species the
+    verdict table could not express.
+
+    Deliberately NOT part of the ledger-completeness union: that gate reconciles
+    CHANGED VERDICTS against the DC-6' net record, so a claim whose verdict did
+    not move would register there as a phantom correction. Missing file or key →
+    empty."""
+    path = Path(path)
+    if not path.exists():
+        return []
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    return [e for e in (doc.get("label_changes") or []) if e.get("sid")]
+
+
 def annotate_to_artifact(artifact: dict, entries: list[dict],
                          resolution: list[dict] | None = None) -> int:
     """F12: SKIP-mode annotation. The staged head already carries the corrected
