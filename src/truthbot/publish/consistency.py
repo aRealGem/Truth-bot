@@ -205,6 +205,9 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
             "decided": "decided",
             "unverified — self-sourced only": "selfsrc",
             "insufficient qualifying evidence retrieved": "gate",
+            # F3: the reason-coded species, re-derived from the reason_code
+            # exported onto each claim's provenance.
+            "beyond the public record": "coded",
             "unverifiable — other": "other",
             "models split": "split",
         }
@@ -223,11 +226,19 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
             dist = _coarse_dist(report_claims, "strict")
             uv = dist.get("Unverifiable", 0)
             split = dist.get("Models split", 0)
+            # F3: the reason-coded species takes precedence over every other
+            # abstention sub-state, exactly as it does in site.py.
+            def _coded(c):
+                return bool(c.get("provenance", {}).get("reason_code")) and \
+                    c.get("coarse_strict_label") == "Unverifiable" and \
+                    c.get("consensus_verdict") != "Models split"
+            coded = sum(1 for c in report_claims if _coded(c))
             selfsrc = sum(1 for c in report_claims
-                          if c.get("provenance", {}).get("self_sourced_only"))
+                          if c.get("provenance", {}).get("self_sourced_only")
+                          and not _coded(c))
             # Mirrors site.py's chip term exactly: gate-withheld (UNVERIFIABLE,
-            # not split, gate code insufficient) MINUS the two narrower
-            # sub-states, each excluded inside the same predicate chain.
+            # not split, gate code insufficient) MINUS the narrower sub-states,
+            # each excluded inside the same predicate chain.
             gate = sum(
                 1 for c in report_claims
                 if (c.get("provenance", {}).get("evidence_gate")
@@ -236,13 +247,16 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
                     and c.get("consensus_verdict") != "Models split"
                     and not c.get("provenance", {}).get("self_sourced_only")
                     and c.get("provenance", {}).get("layer_a_claim_type")
-                    != "personal-anecdote"))
+                    != "personal-anecdote"
+                    and not _coded(c)))
             want = {"decided": claim_count - uv - split}
             if selfsrc:
                 want["selfsrc"] = selfsrc
             if gate:
                 want["gate"] = gate
-            other = uv - selfsrc - gate
+            if coded:
+                want["coded"] = coded
+            other = uv - selfsrc - gate - coded
             if other:
                 want["other"] = other
             if split:

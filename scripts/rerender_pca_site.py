@@ -306,10 +306,18 @@ def main() -> None:
     reason_pills = build_reason_pills(REPO)
     if reason_pills:
         print(f"reason-coded render set: {len(reason_pills)} claim(s)")
+    # F1: explanation changes (verdict stood, published reason changed) — their
+    # own ledger section; see corrections.load_label_changes for why they are
+    # not corrections entries and not in the completeness union.
+    from truthbot.publish.corrections import load_label_changes
+    label_changes = load_label_changes(REPO / "data" / "corrections.json")
+    if label_changes:
+        print(f"explanation changes on file: {len(label_changes)} entries")
     publisher = SitePublisher(
         site_root=args.site_root, corrections=corrections,
         correction_notes=load_notes(REPO / "data" / "corrections.json"),
-        resolution_changes=resolution, reason_pills=reason_pills)
+        resolution_changes=resolution, reason_pills=reason_pills,
+        label_changes=label_changes)
     for p in paths:
         render_artifact(p, publisher, args.role, corrections=corrections,
                         require_fit=not args.allow_unfit_gate,

@@ -1612,11 +1612,27 @@ def _verdict_panel(site_report) -> str:
         split_clause = ""
         if n_anec_split:
             split_clause = f", plus {n_anec_split} more among the Models-split claims"
+        # F3 coherence: a guest anecdote that the recorded axis codes as beyond
+        # the public record is NOT an evidence-gate shortfall, and saying so
+        # contradicted its own claim card. The tail clause now names whichever
+        # reason actually applies to these anecdotes.
+        n_anec_coded = sum(1 for b in anec_bundles
+                           if getattr(b.claim, "id", None) in _REASON_PILLS
+                           and b.consensus.consensus_verdict != "Models split")
+        if n_anec_coded >= n_anec_uv and n_anec_uv:
+            tail = ('personal stories about individuals, which no public record '
+                    'could confirm or refute.')
+        elif n_anec_coded:
+            tail = (f'personal stories about individuals — {n_anec_coded} of them '
+                    'recorded as beyond the public record, the rest lacking '
+                    'enough qualifying sources for the evidence gate to rate.')
+        else:
+            tail = ('personal stories about individuals, which the evidence gate '
+                    'did not admit enough qualifying sources to rate.')
         anecdote_note_html = (
             '<p class="vp-anecdote-note" style="font-size:0.85rem;color:var(--ink-muted)">'
             f'{n_anec_uv} of the {uv_bucket} Unverifiable {unit} {verb}{split_clause} — '
-            'personal stories about individuals, which the evidence gate did '
-            'not admit enough qualifying sources to rate.</p>\n'
+            + tail + '</p>\n'
         )
 
     # Honest-abstention chip (PR-A2.1 / T1.2): decompose the abstentions so an
@@ -1625,8 +1641,23 @@ def _verdict_panel(site_report) -> str:
     # re-derivable from claims.json (consistency.py checks it). Rendered only
     # when the sub-state exists so legacy reports are byte-identical.
     n_split = dist_strict.get("Models split", 0)
+    # Wave A F3 — chip coherence. A reason-coded row is recorded as beyond the
+    # public record, so counting it as "insufficient qualifying evidence
+    # retrieved" told the reader the opposite of what its own claim card says.
+    # It takes precedence over every other abstention sub-state and carries its
+    # own term. Keyed ONLY off the recorded axis (the A1 render set), never off
+    # prose or the gate code.
+    def _is_reason_coded(b) -> bool:
+        # Same shape as the other sub-state predicates: only inside the
+        # Unverifiable bucket, never a split row, so the terms still sum.
+        return (getattr(b.claim, "id", None) in _REASON_PILLS
+                and b.consensus.consensus_label == VerdictLabel.UNVERIFIABLE
+                and b.consensus.consensus_verdict != "Models split")
+    n_coded = sum(1 for b in site_report.checkable_bundles
+                  if _is_reason_coded(b))
     n_selfsrc = sum(1 for b in site_report.checkable_bundles
-                    if _is_self_sourced_unverified(b))
+                    if _is_self_sourced_unverified(b)
+                    and not _is_reason_coded(b))
     # D17-d: split the residue. Nearly all of what used to read "unverifiable —
     # other" is the gate declining to decide on an under-retrieved pack, which
     # is a statement about our retrieval and not about the claim. Counted here
@@ -1635,16 +1666,19 @@ def _verdict_panel(site_report) -> str:
     n_gate = sum(1 for b in site_report.checkable_bundles
                  if _is_gate_withheld(b)
                  and not _is_self_sourced_unverified(b)
-                 and not _is_anecdote_unverifiable(b))
+                 and not _is_anecdote_unverifiable(b)
+                 and not _is_reason_coded(b))  # F3: coded rows carry their own term
     selfsource_chip_html = ""
-    if n_selfsrc or n_gate:
+    if n_selfsrc or n_gate or n_coded:
         n_decided = claim_count - uv_bucket - n_split
         parts = [f"{n_decided} decided"]
         if n_selfsrc:
             parts.append(f"{n_selfsrc} unverified — self-sourced only")
         if n_gate:
             parts.append(f"{n_gate} insufficient qualifying evidence retrieved")
-        n_other = uv_bucket - n_selfsrc - n_gate
+        if n_coded:
+            parts.append(f"{n_coded} beyond the public record")
+        n_other = uv_bucket - n_selfsrc - n_gate - n_coded
         if n_other:
             parts.append(f"{n_other} unverifiable — other")
         if n_split:
@@ -1654,9 +1688,13 @@ def _verdict_panel(site_report) -> str:
         # code that title; a chip listing only gate-withheld counts while
         # explaining "every source is the speaker's own organization" would be
         # simply wrong.
-        chip_title = (SELF_SOURCED_TITLE if n_selfsrc and not n_gate
-                      else GATE_WITHHELD_TITLE if n_gate and not n_selfsrc
-                      else f"{SELF_SOURCED_TITLE} {GATE_WITHHELD_TITLE}")
+        # F3: composed from the sub-states actually shown, so adding the
+        # reason-coded term can never leave the tooltip explaining a term the
+        # chip does not carry (or omitting one it does).
+        chip_title = " ".join(
+            t for t, shown in ((SELF_SOURCED_TITLE, n_selfsrc),
+                               (GATE_WITHHELD_TITLE, n_gate),
+                               (REASON_CODED_TITLE, n_coded)) if shown)
         # A3: renamed from vp-selfsource-chip — since D17-d this chip decomposes
         # ALL the honest abstentions, not just the self-sourced sub-state, so the
         # old class name misdescribed it. consistency.py parses this chip's copy;
@@ -2529,6 +2567,17 @@ GATE_WITHHELD_TITLE = (
     "may be perfectly checkable against evidence we have not yet gathered."
 )
 
+
+#: Chip tooltip for the reason-coded term (Wave A F3). The counterpart to
+#: ``GATE_WITHHELD_TITLE``, and deliberately its opposite statement: that one is
+#: about OUR RETRIEVAL, this one is about the WORLD. The two never share wording.
+REASON_CODED_TITLE = (
+    "Recorded as beyond the public record: an owner-ratified review found that "
+    "no qualifying source could settle these claims — a private moment, an "
+    "unmeasured population, an attribution of someone's intent — so the panel "
+    "was not asked to decide. This is a statement about the record, NOT about "
+    "what we happened to retrieve."
+)
 
 #: Reason-coded species (step 6 / Wave A A3). The RENDER SET map:
 #: ``{stable claim id -> {"sid", "code", "copy"}}`` built from the recorded
@@ -7602,7 +7651,8 @@ def _corrections_verdict_span(v: str) -> str:
 
 
 def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
-                        resolution_changes: Optional[list[dict]] = None) -> str:
+                        resolution_changes: Optional[list[dict]] = None,
+                        label_changes: Optional[list[dict]] = None) -> str:
     """The public Corrections page (P67.6 / T1.5) — a fact-checking-norm
     changelog: claim id, old → new verdict, reason, date. Rendered on every
     publish (empty state included) so the page exists before its first entry
@@ -7610,7 +7660,12 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
 
     ``resolution_changes`` (F9): the net-visible non-ledger moves whose verdict
     crossed a models-split boundary, shown in their own section so a change of
-    resolution state is disclosed as clearly as a change of verdict."""
+    resolution state is disclosed as clearly as a change of verdict.
+
+    ``label_changes`` (Wave A F1): claims whose published EXPLANATION changed
+    while the verdict stood — the step-6 reason codes. Same disclosure logic one
+    step further out: what the page told the reader changed, so the page says
+    so."""
     if entries:
         rows = "".join(
             f'<tr><td class="mono">{_esc(e["sid"])}</td>'
@@ -7653,6 +7708,31 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
             '<th>Reason</th><th>Date</th></tr>'
             f'{rrows}</table>'
         )
+    label_html = ""
+    if label_changes:
+        lrows = "".join(
+            f'<tr><td class="mono">{_esc(e["sid"])}</td>'
+            f'<td>{_esc(e["speech_id"])}</td>'
+            f'<td>{_esc(e.get("old_label", ""))} → {_esc(e.get("new_label", ""))}</td>'
+            f'<td>{_esc(e.get("reason", ""))}</td>'
+            f'<td>{_esc(e.get("date", ""))}</td></tr>'
+            for e in label_changes
+        )
+        label_html = (
+            '<h3>Explanation changes</h3>'
+            '<p>These claims did not change verdict, and none of them was ever '
+            'decided: each was published as unverifiable and remains '
+            'unverifiable. What changed is the REASON the page gives for that. '
+            'They had been published as if we simply had not retrieved enough '
+            'evidence; the recorded review found that no public record could '
+            'settle them at all, and the page now says which of those two things '
+            'is true. Listed here for the same reason a verdict change is: what '
+            'we told the reader changed.</p>'
+            '<table class="tier-table corrections-table">'
+            '<tr><th>Claim</th><th>Report</th><th>Explanation</th>'
+            '<th>Reason</th><th>Date</th></tr>'
+            f'{lrows}</table>'
+        )
     # A note flagged ``draft`` is framing prose awaiting owner red-pen (S-8): it
     # is carried in data/corrections.json so the owner can review it against the
     # staged site, but it MUST NOT render as final published prose. It is emitted
@@ -7681,6 +7761,7 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
         + draft_html
         + table
         + resolution_html
+        + label_html
     )
     footer = (
         f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
@@ -8102,7 +8183,8 @@ class SitePublisher:
                  correction_notes: Optional[list[dict]] = None,
                  report_aliases: Optional[dict[str, str]] = None,
                  resolution_changes: Optional[list[dict]] = None,
-                 reason_pills: Optional[dict] = None) -> None:
+                 reason_pills: Optional[dict] = None,
+                 label_changes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
@@ -8115,6 +8197,10 @@ class SitePublisher:
         # F9: net-visible resolution-state changes (verdict crossed a models-split
         # boundary) — their own section on corrections.html.
         self._resolution_changes: list[dict] = list(resolution_changes or [])
+        # Wave A F1: explanation changes (verdict stood, the published reason
+        # changed) — their own ledger section, never mixed into the verdict
+        # table and never counted by the ledger-completeness gate.
+        self._label_changes: list[dict] = list(label_changes or [])
         # Dead-URL → stable-slug redirect ledger (DC-3'). Defaults to the
         # repo's data/report_aliases.json; stubs are only ever emitted for
         # aliases whose TARGET page exists in this site root, so synthetic /
@@ -8231,7 +8317,8 @@ class SitePublisher:
         self._write(self._root / "corrections.html",
                     _render_corrections(self._corrections,
                                         self._correction_notes,
-                                        self._resolution_changes))
+                                        self._resolution_changes,
+                                        self._label_changes))
 
         # Redirect stubs for dead report URLs (DC-3'): whenever a stable
         # target page exists in this render, every aliased old filename gets
@@ -8442,6 +8529,12 @@ class SitePublisher:
                 "evidence_gate":   getattr(bundle.consensus.provenance,
                                            "evidence_gate", ""),
                 "self_sourced_only": _is_self_sourced_unverified(bundle),
+                # Wave A F3: the recorded decidability axis's reason code, so
+                # the chip's "beyond the public record" term re-derives from
+                # claims.json like every other published figure (T0.8). Empty
+                # string on every row the axis does not cover.
+                "reason_code": (_REASON_PILLS.get(bundle.claim.id) or {}).get(
+                    "code", ""),
                 # Standing agreed-verdict audit (remediation v2, 1.12):
                 # deterministic-lint findings + the human-review queue bit.
                 "audit_flags":     list(getattr(bundle.consensus.provenance,
