@@ -397,15 +397,19 @@ Two lookup paths over the cache:
 - 23/23 projection tests still green (`tests/test_consensus_projection.py` +
   `tests/test_site_render_projection.py`).
 
-### `raw.githack` preview
+### `raw.githack` public surface
 
-After push, the demo URLs surface the new chrome:
+The PUBLIC serving surface is `main/site-pca/` (owner decision 2026-08-18:
+raw.githack over `main/site-pca` is the SOLE publication surface for the alpha,
+through P131; official publication hangs off ExpressionPi at project
+completion, owner-gated — see P121). `site-test/` is a legacy demo root, not
+the live site. After a publish to main, the live URLs:
 
-- Index: <https://raw.githack.com/aRealGem/Truth-bot/main/site-test/index.html>
-- Sample SOTU report (29 claims):
-  <https://raw.githack.com/aRealGem/Truth-bot/main/site-test/reports/2026-02-24-donald-trump-e81546.html>
+- Index: <https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/index.html>
+- Sample SOTU report:
+  <https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/reports/2026-02-24-donald-trump-583aca.html>
 - About page (5-bucket projection table + guardrail explainer):
-  <https://raw.githack.com/aRealGem/Truth-bot/main/site-test/about.html>
+  <https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/about.html>
 
 The Lens chip in the status bar toggles every headline pill between Lenient
 (default) and Strict; the per-model strip stays 6-bucket. Preference persists
@@ -982,7 +986,7 @@ Before running anything:
 
 ## Current State (pre-batch push, retained for history)
 - **Pipeline:** Phases 1–5 are complete. Multi-adapter verification (Anthropic + OpenAI fallback to gpt-4.1), telemetry logging (`metrics/adapter_calls.jsonl`), and the static site publisher are all working end-to-end via `truthbot publish`.
-- **Latest publish:** `site-test/` contains the 2026-03-04 Trump SOTU run (5 claims, 3 False / 2 True-ish verdicts). Material is ready to rsync to ExpressionPi once a live document root is configured.
+- **Latest publish:** the live surface is `main/site-pca/` on raw.githack (see "raw.githack public surface" above). Historical note, superseded: `site-test/` held the 2026-03-04 Trump SOTU demo run (5 claims); ExpressionPi hosting is P121, owner-gated at project completion.
 - **Telemetry:** Anthropic calls average ~19s / $0.65 each; OpenAI adapter currently lands on gpt-4.1 fallback because gpt-5.4 isn’t GA yet. `truthbot metrics summary` reports cleanly from the JSONL log.
 - **Working tree:** `src/truthbot/publish/site.py` + the regenerated `site-test` assets contain a WIP UI refresh (provider/model labels inside claim cards). The content renders fine locally, but the file picked up mojibake (“Ã¢ÂÂ” etc.) and needs to be re-encoded before shipping.
 
