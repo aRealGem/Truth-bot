@@ -29,7 +29,7 @@
     {
       "date": "2026-08-20",
       "owner_approved": "2026-08-20",
-      "text": "Methodology note: an internal consistency check on the report-header abstention chip had been only partially enforcing since the chip's copy grew beyond its original two terms; no published figure is known to be wrong. The check has been rebuilt to parse the chip's full grammar, and a recomputation audit of all five report chips accompanies this wave."
+      "text": "Methodology note: an internal consistency check on the report-header abstention chip had been inert — its pattern required the chip's terms in one fixed consecutive order that no published page emitted — so the chip's figures had gone unchecked. A full recomputation audit of all five report chips accompanied this wave: every published figure matched. The check has been rebuilt to parse the chip's full grammar and now fails on stale copy."
     }
   ],
   "entries": [

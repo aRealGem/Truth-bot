@@ -3,9 +3,16 @@
 Wave A A3 renamed the chip class (vp-selfsource-chip -> vp-abstention-chip:
 since D17-d it decomposes ALL honest abstentions, not just the self-sourced
 sub-state) and taught ``consistency.check_report_page`` the chip's ACTUAL
-grammar. The old parser expected the pre-D17-d two-term copy, so any page
-carrying the gate term silently never matched — the gate was a no-op exactly
-where it mattered. These tests pin that the gate now parses what site.py emits.
+grammar.
+
+The defect this replaced (Fable-ratified 2026-08-20): the old regex required
+the terms in one fixed consecutive order -- decided, self-sourced-only,
+unverifiable-other -- so it failed on every published page: two reports never
+emitted a self-sourced term at all, and on the other three the gate term sat
+between the self-sourced and other terms. The check was inert on all five live
+reports.
+
+These tests pin that the gate now parses what site.py emits.
 """
 from __future__ import annotations
 

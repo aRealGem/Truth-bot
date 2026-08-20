@@ -194,11 +194,14 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
     # Honest-abstention chip (PR-A2.1 T1.2, decomposed further by D17-d;
     # class renamed vp-selfsource-chip -> vp-abstention-chip in Wave A A3 in
     # LOCKSTEP with this parser). Its decomposition must re-derive from
-    # claims.json. NOTE the old regex here expected the pre-D17-d two-term
-    # copy, so on any page emitting the gate term it silently never matched
-    # and this gate was a no-op — the parser now speaks the chip's actual
-    # grammar: "N decided" plus any of the three abstention terms plus an
-    # optional split term, all summing to claim_count.
+    # claims.json. NOTE on the defect this replaced (Fable-ratified 2026-08-20):
+    # the old regex required the terms in one fixed consecutive order --
+    # decided, self-sourced-only, unverifiable-other -- so it failed on every
+    # published page: two reports never emitted a self-sourced term at all, and
+    # on the other three the gate term sat between the self-sourced and other
+    # terms. The check was inert on all five live reports. The parser now
+    # speaks the chip's actual grammar: "N decided" plus any of the abstention
+    # terms plus an optional split term, all summing to claim_count.
     m = re.search(r'vp-abstention-chip[^>]*>([^<]+)</p>', page)
     if m:
         _CHIP_TERMS = {
