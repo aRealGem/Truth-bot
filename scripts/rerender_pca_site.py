@@ -21,6 +21,7 @@ carries an `evidence` key (i.e. post-2026-07-19 runs), oldest first.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import uuid
@@ -109,7 +110,7 @@ def stance_coverage(evidence: dict) -> dict:
     #             that state facts without taking a side (stance-free by nature)
     #   other   — everything else, largely claims no evidence can settle
     series = record = other = 0
-    for _sid, pack in (evidence or {}).items():
+    for _sid, pack in sorted((evidence or {}).items()):  # A2: stable key order
         total_packs += 1
         has_null = False
         for e in pack or []:
@@ -189,7 +190,7 @@ def render_artifact(path: Path, publisher: SitePublisher, role: str,
             print(f"{meta.get('speech_id')}: annotated {n} correction note(s)")
     rows, claims = d["rows"], d["claims"]
     packs = {sid: pack_from_evidence(sid, evs)
-             for sid, evs in (d.get("evidence") or {}).items()}
+             for sid, evs in sorted((d.get("evidence") or {}).items())}  # A2: stable key order
 
     out = bridge_mod.bridge(rows, claims, packs)
 
@@ -199,8 +200,21 @@ def render_artifact(path: Path, publisher: SitePublisher, role: str,
             date_val = datetime.strptime(meta["date"], "%Y-%m-%d")
         except ValueError:
             pass
+    # A2 (Wave A): content-derived report_id so re-renders of the same head land
+    # on the same id (was uuid4() -> rotated every render, churning reports.json /
+    # claims.json). sha256 over the canonical render inputs, formatted to the
+    # existing UUID-string shape. speech_id keys the slug already; this stabilizes
+    # the id fields the slug does not cover.
+    _canonical = json.dumps({
+        "speech_id": str(meta.get("speech_id") or ""),
+        "speaker": meta.get("speaker", ""),
+        "role": role,
+        "date": meta.get("date", ""),
+        "venue": meta.get("venue", ""),
+    }, sort_keys=True).encode("utf-8")
+    _report_id = str(uuid.UUID(hex=hashlib.sha256(_canonical).hexdigest()[:32]))
     site_report = SiteReport(
-        report_id=str(uuid.uuid4()),
+        report_id=_report_id,
         speaker=meta.get("speaker", ""),
         role=role,
         date=date_val,
@@ -245,7 +259,7 @@ def main() -> None:
     if not paths:
         # LATEST artifact per speech_id. Pass paths explicitly to render an
         # older run.
-        paths = list(publishing_heads().values())
+        paths = [p for _sid, p in sorted(publishing_heads().items())]  # A2: stable speech order
         if not paths:
             sys.exit("no artifacts with persisted evidence found under metrics/pca_runs/")
         print(f"rendering {len(paths)} artifact(s): {', '.join(p.stem[:8] for p in paths)}")
@@ -284,10 +298,26 @@ def main() -> None:
     # annotated in place (skip, default) or the verdict is rewritten (apply,
     # historical replay). Both modes feed render_artifact the ledger; the mode
     # selects the behaviour.
+    # A3 (Wave A): the reason-coded render set, built from the fail-closed
+    # registries (data/decidability.json + data/reason_codes.json). Keys come
+    # only from the recorded axis; empty registries -> empty map -> the
+    # species does not render.
+    from truthbot.publish.site import build_reason_pills
+    reason_pills = build_reason_pills(REPO)
+    if reason_pills:
+        print(f"reason-coded render set: {len(reason_pills)} claim(s)")
+    # F1: explanation changes (verdict stood, published reason changed) — their
+    # own ledger section; see corrections.load_label_changes for why they are
+    # not corrections entries and not in the completeness union.
+    from truthbot.publish.corrections import load_label_changes
+    label_changes = load_label_changes(REPO / "data" / "corrections.json")
+    if label_changes:
+        print(f"explanation changes on file: {len(label_changes)} entries")
     publisher = SitePublisher(
         site_root=args.site_root, corrections=corrections,
         correction_notes=load_notes(REPO / "data" / "corrections.json"),
-        resolution_changes=resolution)
+        resolution_changes=resolution, reason_pills=reason_pills,
+        label_changes=label_changes)
     for p in paths:
         render_artifact(p, publisher, args.role, corrections=corrections,
                         require_fit=not args.allow_unfit_gate,

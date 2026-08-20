@@ -63,6 +63,20 @@ from truthbot.verify.source_tiers import TIER_BUCKET, TIER_DISPLAY, classify_tie
 
 logger = logging.getLogger(__name__)
 
+
+def _reproducible_now() -> datetime:
+    """Wall clock, unless SOURCE_DATE_EPOCH is set -- then a fixed UTC instant.
+
+    The reproducible-builds convention: with the env var set, every render
+    timestamp collapses to one deterministic value, so a double-render is
+    byte-identical (Wave A / A2 determinism check). Production leaves the env
+    unset and gets the real time; nothing about the shipped render changes.
+    """
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    if epoch:
+        return datetime.fromtimestamp(int(epoch), tz=timezone.utc)
+    return datetime.now(timezone.utc)
+
 # ── Verdict presentation constants ────────────────────────────────────────────
 
 # CSS class slugs — map label → slug used in .v-{slug} and .vt-{slug}
@@ -198,7 +212,7 @@ class SiteReport:
     transcript_source_url: str
     bundles: list[VerdictBundle]
     video_source_url: str = ""
-    generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    generated_at: datetime = field(default_factory=_reproducible_now)
     # Richer speaker/speech identity fields (Change 2)
     source_of_claims: str = ""
     source_of_claims_professional_public_title: str = ""
@@ -1598,11 +1612,27 @@ def _verdict_panel(site_report) -> str:
         split_clause = ""
         if n_anec_split:
             split_clause = f", plus {n_anec_split} more among the Models-split claims"
+        # F3 coherence: a guest anecdote that the recorded axis codes as beyond
+        # the public record is NOT an evidence-gate shortfall, and saying so
+        # contradicted its own claim card. The tail clause now names whichever
+        # reason actually applies to these anecdotes.
+        n_anec_coded = sum(1 for b in anec_bundles
+                           if getattr(b.claim, "id", None) in _REASON_PILLS
+                           and b.consensus.consensus_verdict != "Models split")
+        if n_anec_coded >= n_anec_uv and n_anec_uv:
+            tail = ('personal stories about individuals, which no public record '
+                    'could confirm or refute.')
+        elif n_anec_coded:
+            tail = (f'personal stories about individuals — {n_anec_coded} of them '
+                    'recorded as beyond the public record, the rest lacking '
+                    'enough qualifying sources for the evidence gate to rate.')
+        else:
+            tail = ('personal stories about individuals, which the evidence gate '
+                    'did not admit enough qualifying sources to rate.')
         anecdote_note_html = (
             '<p class="vp-anecdote-note" style="font-size:0.85rem;color:var(--ink-muted)">'
             f'{n_anec_uv} of the {uv_bucket} Unverifiable {unit} {verb}{split_clause} — '
-            'personal stories about individuals, which the evidence gate did '
-            'not admit enough qualifying sources to rate.</p>\n'
+            + tail + '</p>\n'
         )
 
     # Honest-abstention chip (PR-A2.1 / T1.2): decompose the abstentions so an
@@ -1611,8 +1641,23 @@ def _verdict_panel(site_report) -> str:
     # re-derivable from claims.json (consistency.py checks it). Rendered only
     # when the sub-state exists so legacy reports are byte-identical.
     n_split = dist_strict.get("Models split", 0)
+    # Wave A F3 — chip coherence. A reason-coded row is recorded as beyond the
+    # public record, so counting it as "insufficient qualifying evidence
+    # retrieved" told the reader the opposite of what its own claim card says.
+    # It takes precedence over every other abstention sub-state and carries its
+    # own term. Keyed ONLY off the recorded axis (the A1 render set), never off
+    # prose or the gate code.
+    def _is_reason_coded(b) -> bool:
+        # Same shape as the other sub-state predicates: only inside the
+        # Unverifiable bucket, never a split row, so the terms still sum.
+        return (getattr(b.claim, "id", None) in _REASON_PILLS
+                and b.consensus.consensus_label == VerdictLabel.UNVERIFIABLE
+                and b.consensus.consensus_verdict != "Models split")
+    n_coded = sum(1 for b in site_report.checkable_bundles
+                  if _is_reason_coded(b))
     n_selfsrc = sum(1 for b in site_report.checkable_bundles
-                    if _is_self_sourced_unverified(b))
+                    if _is_self_sourced_unverified(b)
+                    and not _is_reason_coded(b))
     # D17-d: split the residue. Nearly all of what used to read "unverifiable —
     # other" is the gate declining to decide on an under-retrieved pack, which
     # is a statement about our retrieval and not about the claim. Counted here
@@ -1621,16 +1666,19 @@ def _verdict_panel(site_report) -> str:
     n_gate = sum(1 for b in site_report.checkable_bundles
                  if _is_gate_withheld(b)
                  and not _is_self_sourced_unverified(b)
-                 and not _is_anecdote_unverifiable(b))
+                 and not _is_anecdote_unverifiable(b)
+                 and not _is_reason_coded(b))  # F3: coded rows carry their own term
     selfsource_chip_html = ""
-    if n_selfsrc or n_gate:
+    if n_selfsrc or n_gate or n_coded:
         n_decided = claim_count - uv_bucket - n_split
         parts = [f"{n_decided} decided"]
         if n_selfsrc:
             parts.append(f"{n_selfsrc} unverified — self-sourced only")
         if n_gate:
             parts.append(f"{n_gate} insufficient qualifying evidence retrieved")
-        n_other = uv_bucket - n_selfsrc - n_gate
+        if n_coded:
+            parts.append(f"{n_coded} beyond the public record")
+        n_other = uv_bucket - n_selfsrc - n_gate - n_coded
         if n_other:
             parts.append(f"{n_other} unverifiable — other")
         if n_split:
@@ -1640,14 +1688,46 @@ def _verdict_panel(site_report) -> str:
         # code that title; a chip listing only gate-withheld counts while
         # explaining "every source is the speaker's own organization" would be
         # simply wrong.
-        chip_title = (SELF_SOURCED_TITLE if n_selfsrc and not n_gate
-                      else GATE_WITHHELD_TITLE if n_gate and not n_selfsrc
-                      else f"{SELF_SOURCED_TITLE} {GATE_WITHHELD_TITLE}")
+        # F3: composed from the sub-states actually shown, so adding the
+        # reason-coded term can never leave the tooltip explaining a term the
+        # chip does not carry (or omitting one it does).
+        chip_title = " ".join(
+            t for t, shown in ((SELF_SOURCED_TITLE, n_selfsrc),
+                               (GATE_WITHHELD_TITLE, n_gate),
+                               (REASON_CODED_TITLE, n_coded)) if shown)
+        # A3: renamed from vp-selfsource-chip — since D17-d this chip decomposes
+        # ALL the honest abstentions, not just the self-sourced sub-state, so the
+        # old class name misdescribed it. consistency.py parses this chip's copy;
+        # the two change in lockstep (test_abstention_chip pins the parse).
         selfsource_chip_html = (
-            '<p class="vp-selfsource-chip" '
+            '<p class="vp-abstention-chip" '
             f'title="{_esc(chip_title)}">' + _esc(" · ".join(parts))
             + '</p>\n'
         )
+
+    # M-6 evenhandedness (Wave A A3): genre-property disclosure for the
+    # reason-coded species. Counts derive from the recorded axis (the render
+    # map), never from prose. Silent when the map is empty or the report holds
+    # none, so legacy publishes are byte-identical. Prose is a DRAFT for the
+    # owner's red pen (S-8) — flagged in the Wave A PR.
+    genre_note_html = ""
+    if _REASON_PILLS:
+        _ids = {getattr(b.claim, "id", None) for b in site_report.checkable_bundles}
+        n_coded = sum(1 for cid in _REASON_PILLS if cid in _ids)
+        corpus_coded = len(_REASON_PILLS)
+        if n_coded:
+            genre_line = (
+                f"{n_coded} of the corpus's {corpus_coded} claims recorded as "
+                "beyond the public record fall on this speech."
+            )
+            if corpus_coded and n_coded * 2 > corpus_coded:
+                genre_line += (
+                    " That concentration is a property of the speech's "
+                    "rhetorical genre — personal stories, intentions, and "
+                    "unmeasured superlatives — not a finding about the speaker."
+                )
+            genre_note_html = ('<p class="vp-genre-note">'
+                               + _esc(genre_line) + '</p>\n')
 
     return (
         '<section class="verdict-panel">\n'
@@ -1656,6 +1736,7 @@ def _verdict_panel(site_report) -> str:
         + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
         + selfsource_chip_html
+        + genre_note_html
         + anecdote_note_html
         + source_row_html
         + '</section>\n'
@@ -2053,7 +2134,7 @@ def _models_engaged(site_report) -> tuple[int, str]:
 
 
 def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
-    stamp = stamp or datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    stamp = stamp or _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     model_str = f"{model_count} Model{'s' if model_count != 1 else ''}" if model_count else "Multi-model"
     # The Strict/Lenient editorial-lens chip was removed here (remediation
     # v2, 1.8 / DC-4'): the toggle was structurally inert under the PCA
@@ -2232,7 +2313,7 @@ def _page_report(
     og_type: str = "article",
     page_path: Optional[str] = None,
 ) -> str:
-    stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
         if footer else ''
@@ -2487,6 +2568,75 @@ GATE_WITHHELD_TITLE = (
 )
 
 
+#: Chip tooltip for the reason-coded term (Wave A F3). The counterpart to
+#: ``GATE_WITHHELD_TITLE``, and deliberately its opposite statement: that one is
+#: about OUR RETRIEVAL, this one is about the WORLD. The two never share wording.
+REASON_CODED_TITLE = (
+    "Recorded as beyond the public record: an owner-ratified review found that "
+    "no qualifying source could settle these claims — a private moment, an "
+    "unmeasured population, an attribution of someone's intent — so the panel "
+    "was not asked to decide. This is a statement about the record, NOT about "
+    "what we happened to retrieve."
+)
+
+#: Reason-coded species (step 6 / Wave A A3). The RENDER SET map:
+#: ``{stable claim id -> {"sid", "code", "copy"}}`` built from the recorded
+#: decidability axis by :func:`build_reason_pills` and installed per publish by
+#: :meth:`SitePublisher.publish`. Keys come ONLY from the axis (provenance +
+#: decidability + reason_code) — never parsed from prose, never inferred, and
+#: ``reason_code_2`` (audit-only) never enters the map. Empty map == the
+#: species does not render, so legacy publishes stay byte-identical.
+_REASON_PILLS: dict[str, dict] = {}
+
+
+def set_reason_pills(pills: "Optional[dict]") -> None:
+    """Install (or clear) the reason-code render map for this publish."""
+    global _REASON_PILLS
+    _REASON_PILLS = dict(pills or {})
+
+
+def build_reason_pills(repo_root: Path) -> dict[str, dict]:
+    """The render-set map from the fail-closed registries.
+
+    ``publishable_entries()`` (A1) already enforces owner-ratified +
+    undecidable-from-public-record + reason_code, so every row here carries a
+    code; ``copy_for`` appends the shared footer and refuses UNCODED. The copy
+    is owner-ratified VERBATIM — this function must never edit or reflow it.
+    """
+    from truthbot.models import stable_claim_id
+    from truthbot.publish.decidability import (load_decidability,
+                                               publishable_entries)
+    from truthbot.publish.reason_codes import copy_for, load_reason_codes
+    root = Path(repo_root)
+    reg = load_reason_codes(root / "data" / "reason_codes.json")
+    entries = load_decidability(root / "data" / "decidability.json",
+                                reason_codes=reg)
+    return {
+        stable_claim_id(e["sid"]): {
+            "sid": e["sid"],
+            "code": e["reason_code"],
+            "copy": copy_for(reg, e["reason_code"]),
+        }
+        for e in publishable_entries(entries)
+    }
+
+
+def _reason_code_html(claim) -> str:
+    """The reason-coded species' claim-card explainer.
+
+    Verbatim ratified copy + shared footer (already joined by ``copy_for``).
+    The other species (:func:`_gate_withheld_html`) never renders on the same
+    card — the recorded axis supersedes the gate copy for these rows, and the
+    two species never share wording.
+    """
+    reason = _REASON_PILLS.get(getattr(claim, "id", None))
+    if not reason:
+        return ""
+    return ('<div class="reason-code-note">'
+            + _esc(reason["copy"])
+            + '</div>')
+
+
 def _is_gate_withheld(bundle: VerdictBundle) -> bool:
     """True when the gate refused to decide for want of qualifying evidence.
 
@@ -2523,6 +2673,11 @@ def _gate_withheld_html(bundle: VerdictBundle) -> str:
     if not _is_gate_withheld(bundle):
         return ""
     if _is_self_sourced_unverified(bundle) or _is_anecdote_unverifiable(bundle):
+        return ""
+    # Reason-coded rows (step 6) are the OTHER species: the recorded axis says
+    # the public record cannot reach the claim, which supersedes the statement
+    # about our retrieval. The two species never share a card.
+    if getattr(bundle.claim, "id", None) in _REASON_PILLS:
         return ""
     return (
         '<div class="gate-withheld-note">'
@@ -2933,7 +3088,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         '</details>'
     )
 
-    gen_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    gen_ts = _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     permalink = f"#{'claim-' + str(idx)}" if standalone else f"{rel}claims/{claim.id}.html"
 
     # Back links only appear on the in-report claim cards (standalone=False),
@@ -2949,6 +3104,19 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
             '    </span>'
         )
 
+    # Reason-coded species (step 6 / A3): a second pill keyed on the recorded
+    # axis. The pill text is the code itself; the ratified copy (verbatim, with
+    # the shared footer) rides the tooltip AND the visible note in the body.
+    # ``reason_code_2`` is audit-only and never reaches the map, so it can
+    # never render here.
+    _reason = _REASON_PILLS.get(getattr(claim, "id", None))
+    reason_pill_html = ""
+    if _reason:
+        reason_pill_html = (
+            f'  <span class="claim-pill reason-code-pill"'
+            f' title="{_esc(_reason["copy"])}">'
+            f'{_esc(_reason["code"])}</span>')
+
     return (
         f'<article class="claim" id="claim-{idx}">'
         '<div class="claim-head">'
@@ -2959,6 +3127,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  <span class="claim-pill claim-pill-headline v-{css}{anecdote_cls}"'
         f' title="{_esc(pill_title)}">'
         f'{_esc(label)}</span>'
+        + reason_pill_html +
         f'  {triage_badge}'
         '</div>'
         '<div class="claim-body">'
@@ -2971,6 +3140,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         # render on EVERY claim — including a gated/minimal claim whose
         # ``models_block`` provenance strip is empty.
         f'  {_correction_provenance_html(consensus.provenance, rel)}'
+        f'  {_reason_code_html(claim)}'
         f'  {_gate_withheld_html(bundle)}'
         f'  {evidence_html}'
         f'  {consulted_html}'
@@ -4189,6 +4359,30 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   white-space: normal;
   text-align: center;
 }
+/* Reason-coded species (step 6 / Wave A A3): the recorded axis says the public
+   record cannot reach this claim. The pill carries the ratified CODE; the
+   verbatim copy rides the tooltip and the .reason-code-note block below. Muted
+   mono chip — a taxonomy key, not a verdict color. */
+.claim-pill.reason-code-pill {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  background: rgba(127,127,127,0.10);
+  border: 1px solid var(--border-strong);
+}
+/* The claim-card explainer for a reason-coded row. Same muted register as
+   .gate-withheld-note — an honest statement about the record, not a warning —
+   but its own class: the two species never share wording OR styling hooks. */
+.reason-code-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--border-strong);
+  background: rgba(127,127,127,0.06);
+}
 /* Per-item marker on the Sources-consulted strip: this record is the
    speaker's own organization (era-scoped principal match). */
 .ev-self {
@@ -4204,9 +4398,17 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   white-space: nowrap;
 }
 /* Abstention-decomposition chip under the verdict bars (PR-A2.1 T1.2). */
-.vp-selfsource-chip {
+.vp-abstention-chip {
   font-family: var(--mono);
   font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin: 0.35rem 0 0;
+}
+/* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
+   concentrates on one speech, say so as a genre property, in the panel. */
+.vp-genre-note {
+  font-size: 0.8rem;
+  line-height: 1.5;
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
@@ -6526,7 +6728,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     # Model-insights strip retired with the vestigial insights page
     # (remediation T0.4) — it summarized a single pseudo-model with 0%
     # dissent by construction. Returns with the Phase 4 per-seat rebuild.
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    now = _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     body = (
         hero_html
         + stats_html
@@ -7449,7 +7651,8 @@ def _corrections_verdict_span(v: str) -> str:
 
 
 def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
-                        resolution_changes: Optional[list[dict]] = None) -> str:
+                        resolution_changes: Optional[list[dict]] = None,
+                        label_changes: Optional[list[dict]] = None) -> str:
     """The public Corrections page (P67.6 / T1.5) — a fact-checking-norm
     changelog: claim id, old → new verdict, reason, date. Rendered on every
     publish (empty state included) so the page exists before its first entry
@@ -7457,7 +7660,12 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
 
     ``resolution_changes`` (F9): the net-visible non-ledger moves whose verdict
     crossed a models-split boundary, shown in their own section so a change of
-    resolution state is disclosed as clearly as a change of verdict."""
+    resolution state is disclosed as clearly as a change of verdict.
+
+    ``label_changes`` (Wave A F1): claims whose published EXPLANATION changed
+    while the verdict stood — the step-6 reason codes. Same disclosure logic one
+    step further out: what the page told the reader changed, so the page says
+    so."""
     if entries:
         rows = "".join(
             f'<tr><td class="mono">{_esc(e["sid"])}</td>'
@@ -7500,6 +7708,31 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
             '<th>Reason</th><th>Date</th></tr>'
             f'{rrows}</table>'
         )
+    label_html = ""
+    if label_changes:
+        lrows = "".join(
+            f'<tr><td class="mono">{_esc(e["sid"])}</td>'
+            f'<td>{_esc(e["speech_id"])}</td>'
+            f'<td>{_esc(e.get("old_label", ""))} → {_esc(e.get("new_label", ""))}</td>'
+            f'<td>{_esc(e.get("reason", ""))}</td>'
+            f'<td>{_esc(e.get("date", ""))}</td></tr>'
+            for e in label_changes
+        )
+        label_html = (
+            '<h3>Explanation changes</h3>'
+            '<p>These claims did not change verdict, and none of them was ever '
+            'decided: each was published as unverifiable and remains '
+            'unverifiable. What changed is the REASON the page gives for that. '
+            'They had been published as if we simply had not retrieved enough '
+            'evidence; the recorded review found that no public record could '
+            'settle them at all, and the page now says which of those two things '
+            'is true. Listed here for the same reason a verdict change is: what '
+            'we told the reader changed.</p>'
+            '<table class="tier-table corrections-table">'
+            '<tr><th>Claim</th><th>Report</th><th>Explanation</th>'
+            '<th>Reason</th><th>Date</th></tr>'
+            f'{lrows}</table>'
+        )
     # A note flagged ``draft`` is framing prose awaiting owner red-pen (S-8): it
     # is carried in data/corrections.json so the owner can review it against the
     # staged site, but it MUST NOT render as final published prose. It is emitted
@@ -7528,6 +7761,7 @@ def _render_corrections(entries: list[dict], notes: Optional[list[dict]] = None,
         + draft_html
         + table
         + resolution_html
+        + label_html
     )
     footer = (
         f'<span>truth-bot · pipeline v{PIPELINE_VERSION}{BETA_BADGE_HTML}</span>'
@@ -7906,7 +8140,7 @@ def _render_feed(reports: list[dict], site_url: str) -> str:
         )
 
     feed_updated = (max(updated_stamps) if updated_stamps
-                    else _iso_utc(datetime.now(timezone.utc)))
+                    else _iso_utc(_reproducible_now()))
     return (
         '<?xml version="1.0" encoding="utf-8"?>\n'
         '<feed xmlns="http://www.w3.org/2005/Atom">\n'
@@ -7948,7 +8182,9 @@ class SitePublisher:
                  corrections: Optional[list[dict]] = None,
                  correction_notes: Optional[list[dict]] = None,
                  report_aliases: Optional[dict[str, str]] = None,
-                 resolution_changes: Optional[list[dict]] = None) -> None:
+                 resolution_changes: Optional[list[dict]] = None,
+                 reason_pills: Optional[dict] = None,
+                 label_changes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
             self._root = Path(site_root)
@@ -7961,6 +8197,10 @@ class SitePublisher:
         # F9: net-visible resolution-state changes (verdict crossed a models-split
         # boundary) — their own section on corrections.html.
         self._resolution_changes: list[dict] = list(resolution_changes or [])
+        # Wave A F1: explanation changes (verdict stood, the published reason
+        # changed) — their own ledger section, never mixed into the verdict
+        # table and never counted by the ledger-completeness gate.
+        self._label_changes: list[dict] = list(label_changes or [])
         # Dead-URL → stable-slug redirect ledger (DC-3'). Defaults to the
         # repo's data/report_aliases.json; stubs are only ever emitted for
         # aliases whose TARGET page exists in this site root, so synthetic /
@@ -7968,6 +8208,10 @@ class SitePublisher:
         self._report_aliases: dict[str, str] = (
             dict(report_aliases) if report_aliases is not None
             else _load_report_aliases())
+        # Reason-coded render set (step 6 / Wave A A3): {stable claim id ->
+        # {"sid","code","copy"}} from build_reason_pills(). None/empty -> the
+        # species does not render (legacy publishes stay byte-identical).
+        self._reason_pills: dict = dict(reason_pills or {})
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -7979,6 +8223,10 @@ class SitePublisher:
         """
         self._ensure_structure()
         self._copy_assets()
+        # Install this publisher's reason-code render map for the module-level
+        # card/panel renderers (same keyed-registry pattern as decidability:
+        # nothing has to CARRY it, so no reconstruction path can drop it).
+        set_reason_pills(self._reason_pills)
 
         # Backfill speaker/date onto bundles that bridged without them
         # (PR-A2.1). The bridge only threads speaker/date_str when the claim
@@ -8069,7 +8317,8 @@ class SitePublisher:
         self._write(self._root / "corrections.html",
                     _render_corrections(self._corrections,
                                         self._correction_notes,
-                                        self._resolution_changes))
+                                        self._resolution_changes,
+                                        self._label_changes))
 
         # Redirect stubs for dead report URLs (DC-3'): whenever a stable
         # target page exists in this render, every aliased old filename gets
@@ -8280,6 +8529,12 @@ class SitePublisher:
                 "evidence_gate":   getattr(bundle.consensus.provenance,
                                            "evidence_gate", ""),
                 "self_sourced_only": _is_self_sourced_unverified(bundle),
+                # Wave A F3: the recorded decidability axis's reason code, so
+                # the chip's "beyond the public record" term re-derives from
+                # claims.json like every other published figure (T0.8). Empty
+                # string on every row the axis does not cover.
+                "reason_code": (_REASON_PILLS.get(bundle.claim.id) or {}).get(
+                    "code", ""),
                 # Standing agreed-verdict audit (remediation v2, 1.12):
                 # deterministic-lint findings + the human-review queue bit.
                 "audit_flags":     list(getattr(bundle.consensus.provenance,

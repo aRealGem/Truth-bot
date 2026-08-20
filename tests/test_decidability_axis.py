@@ -100,13 +100,31 @@ def test_undecidable_with_a_review_trigger_loads(tmp_path):
 # ── fail closed ──────────────────────────────────────────────────────────────
 
 def test_only_owner_ratified_is_publishable(tmp_path):
+    # All four rows are undecidable + reason-coded so provenance is the ONLY
+    # variable; A1's render-set gate then admits exactly the owner-ratified one.
+    def _pub(**kw):
+        return _entry(decidability="undecidable-from-public-record",
+                      review_trigger="A published first-hand account.",
+                      reason_code="INTENT", **kw)
     entries = load_decidability(_write(tmp_path, [
-        _entry(sid="s:1", provenance="desk"),
-        _entry(sid="s:2", provenance="rule"),
-        _entry(sid="s:3", provenance="model"),
-        _entry(sid="s:4", provenance="owner-ratified"),
+        _pub(sid="s:1", provenance="desk"),
+        _pub(sid="s:2", provenance="rule"),
+        _pub(sid="s:3", provenance="model"),
+        _pub(sid="s:4", provenance="owner-ratified"),
     ]))
     assert [e["sid"] for e in publishable_entries(entries)] == ["s:4"]
+
+
+def test_owner_ratified_without_a_reason_code_does_not_publish(tmp_path):
+    # A1 render-set gate: the step-6 reclassified-out rows are owner-ratified but
+    # carry no reason_code (or are not undecidable), so they never reach a page.
+    entries = load_decidability(_write(tmp_path, [
+        _entry(sid="biden_2022:0194", provenance="owner-ratified",
+               decidability="retrievable-pending-lane"),
+        _entry(sid="trump_2026:0106", provenance="owner-ratified",
+               decidability="needs-decomposition"),
+    ]))
+    assert publishable_entries(entries) == []
 
 
 def test_desk_assignment_is_invisible_to_a_render(tmp_path):
@@ -143,6 +161,7 @@ def test_lookup_survives_the_offline_artifact_path(tmp_path):
         _entry(sid="trump_2026:0153",
                decidability="undecidable-from-public-record",
                review_trigger="A published first-hand account.",
+               reason_code="PRIVATE-EVENT",
                provenance="owner-ratified")]))
 
     # exactly what the offline artifact path reconstructs — no speaker, no
@@ -157,7 +176,10 @@ def test_lookup_survives_the_offline_artifact_path(tmp_path):
 
 def test_by_sid_is_keyed_not_carried(tmp_path):
     entries = load_decidability(_write(tmp_path, [
-        _entry(sid="a:1", provenance="owner-ratified"),
+        _entry(sid="a:1", provenance="owner-ratified",
+               decidability="undecidable-from-public-record",
+               review_trigger="A published first-hand account.",
+               reason_code="INTENT"),
         _entry(sid="a:2", provenance="desk")]))
     assert set(by_sid(entries)) == {"a:1"}
     assert set(by_sid(entries, publishable_only=False)) == {"a:1", "a:2"}
@@ -166,18 +188,19 @@ def test_by_sid_is_keyed_not_carried(tmp_path):
 # ── the shipped registry ─────────────────────────────────────────────────────
 
 def test_shipped_registry_publishes_the_step6_ratified_set():
-    """After step-6 ratification (owner/Fable 2026-08-18) the registry
-    publishes the owner-ratified rows: 35 owner-ratified (33 coded substantive
-    rows plus the 2 reclassified-out rows), the remaining 93 still desk."""
+    """A1 (Wave A 2026-08-19): publishable_entries() is the RENDER SET -- the 33
+    coded substantive rows. 35 rows are owner-ratified, but the 2 reclassified-out
+    rows carry no reason_code and so are NOT publishable; 93 rows are still desk."""
     entries = load_decidability(REGISTRY)
     assert len(entries) == 128
-    assert len(publishable_entries(entries)) == 35
+    assert len(publishable_entries(entries)) == 33
+    assert len([e for e in entries if e["provenance"] == "owner-ratified"]) == 35
     assert len([e for e in entries if e["provenance"] == "desk"]) == 93
 
 
 def test_shipped_registry_value_distribution():
     s = summary(load_decidability(REGISTRY))
-    assert s["publishable"] == 35
+    assert s["publishable"] == 33  # A1: render set, not the 35 owner-ratified
     # Step-6 reclassed 2 rows: trump_2026:0106 -> needs-decomposition and
     # biden_2022:0194 -> retrievable-pending-lane, moving 88/35/5 to 89/33/6.
     assert s["by_value"] == {
@@ -185,6 +208,28 @@ def test_shipped_registry_value_distribution():
         "undecidable-from-public-record": 33,
         "needs-decomposition": 6,
     }
+
+
+def test_publishable_render_set_contract():
+    # A1 (Wave A 2026-08-19) -- the pinned render-set contract. Publishable iff
+    # owner-ratified AND undecidable-from-public-record AND reason_code present.
+    entries = load_decidability(REGISTRY)
+    pub = publishable_entries(entries)
+    sids = {e["sid"] for e in pub}
+    assert len(pub) == 33
+    # the 2 reclassified-out owner-ratified rows are EXCLUDED by name
+    assert "biden_2022:0194" not in sids      # retrievable-pending-lane, no code
+    assert "trump_2026:0106" not in sids       # needs-decomposition, no code
+    # every published row satisfies all three legs of the gate
+    assert all(e["provenance"] == "owner-ratified" for e in pub)
+    assert all(e["decidability"] == "undecidable-from-public-record" for e in pub)
+    assert all(e.get("reason_code") for e in pub)
+    # both duals are IN, each carrying a non-rendering reason_code_2 (audit-only)
+    by = {e["sid"]: e for e in pub}
+    assert "trump_2026:0482" in sids and by["trump_2026:0482"]["reason_code_2"] == "INTENT"
+    assert "trump_2026:0514" in sids and by["trump_2026:0514"]["reason_code_2"] == "COUNTERFACTUAL"
+    # UNCODED is a pipeline state -- it can never enter the render set
+    assert not any(e.get("reason_code") == "UNCODED" for e in pub)
 
 
 def test_every_shipped_undecidable_names_a_review_trigger():
