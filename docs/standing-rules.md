@@ -59,3 +59,25 @@ Review (Fable) rules only on PUSHED artifacts: report head SHAs with every
 result; unpushed work is invisible and does not count as done, verified, or
 even claimed. Corollary: "committed locally" is a working state, not a
 reviewable one — push before reporting.
+
+Second corollary: **a passing postcondition is not a passing build.** Verifying
+the specific thing you set out to change (a tree-equality check, a rendered
+diff, a targeted test) says nothing about the state of the suite around it.
+Establish that the artifact you produced is green as a whole, not merely
+correct in the dimension you were watching.
+
+## M-12 — Publish checklist
+
+The publication surface is `main/site-pca/` served via raw.githack (see
+STATUS.md). Every publish to main must satisfy, in order:
+
+1. Pre-publish: full suite green on the branch being published.
+2. The publish postcondition itself (tree-equality of the rendered site
+   against the accepted preview render).
+3. **Post-publish: full suite green ON the publish commit.**
+
+Step 3 is not implied by step 1 or step 2. It was added 2026-08-21 after the
+D17-c publish (`d63ec5b`) left `main` red: the publish moved the corpus, six
+derived constants in the DC-6' acceptance fixture went stale, and the gap was
+invisible because the ordered postcondition in step 2 passed. Nothing about
+the rendered page was wrong; the build was simply never re-checked as a whole.

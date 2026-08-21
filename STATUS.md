@@ -415,6 +415,12 @@ The Lens chip in the status bar toggles every headline pill between Lenient
 (default) and Strict; the per-model strip stays 6-bucket. Preference persists
 in `localStorage`.
 
+**Publish checklist:** the binding steps live in
+[`docs/standing-rules.md`](docs/standing-rules.md) M-12 — pre-publish suite
+green, the tree-equality postcondition, and **post-publish: full suite green ON
+the publish commit**. That third step was added 2026-08-21 after the D17-c
+publish left `main` red behind a passing postcondition.
+
 ### Out of scope (intentional)
 
 - Re-firing the orphaned report against live LLMs.
