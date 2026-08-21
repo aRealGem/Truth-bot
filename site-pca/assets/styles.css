@@ -990,6 +990,30 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   white-space: normal;
   text-align: center;
 }
+/* Reason-coded species (step 6 / Wave A A3): the recorded axis says the public
+   record cannot reach this claim. The pill carries the ratified CODE; the
+   verbatim copy rides the tooltip and the .reason-code-note block below. Muted
+   mono chip — a taxonomy key, not a verdict color. */
+.claim-pill.reason-code-pill {
+  font-family: var(--mono);
+  font-size: 0.72em;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  background: rgba(127,127,127,0.10);
+  border: 1px solid var(--border-strong);
+}
+/* The claim-card explainer for a reason-coded row. Same muted register as
+   .gate-withheld-note — an honest statement about the record, not a warning —
+   but its own class: the two species never share wording OR styling hooks. */
+.reason-code-note {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--border-strong);
+  background: rgba(127,127,127,0.06);
+}
 /* Per-item marker on the Sources-consulted strip: this record is the
    speaker's own organization (era-scoped principal match). */
 .ev-self {
@@ -1005,9 +1029,17 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   white-space: nowrap;
 }
 /* Abstention-decomposition chip under the verdict bars (PR-A2.1 T1.2). */
-.vp-selfsource-chip {
+.vp-abstention-chip {
   font-family: var(--mono);
   font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin: 0.35rem 0 0;
+}
+/* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
+   concentrates on one speech, say so as a genre property, in the panel. */
+.vp-genre-note {
+  font-size: 0.8rem;
+  line-height: 1.5;
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
