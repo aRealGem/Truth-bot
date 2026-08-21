@@ -191,30 +191,86 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
             violations.append(
                 f"{slug}: chip {frame_cls} shows {got}, derived {want}")
 
-    # Self-sourced-only abstention chip (PR-A2.1 T1.2): its decomposition must
-    # re-derive from claims.json — decided/self-sourced/other(/split) sum to
-    # claim_count, with the self-sourced count read off the exported
-    # provenance.self_sourced_only flags.
-    m = re.search(r'vp-selfsource-chip[^>]*>(\d+) decided · (\d+) unverified — '
-                  r'self-sourced only · (\d+) unverifiable — other'
-                  r'(?: · (\d+) models split)?', page)
+    # Honest-abstention chip (PR-A2.1 T1.2, decomposed further by D17-d;
+    # class renamed vp-selfsource-chip -> vp-abstention-chip in Wave A A3 in
+    # LOCKSTEP with this parser). Its decomposition must re-derive from
+    # claims.json. NOTE on the defect this replaced (Fable-ratified 2026-08-20):
+    # the old regex required the terms in one fixed consecutive order --
+    # decided, self-sourced-only, unverifiable-other -- so it failed on every
+    # published page: two reports never emitted a self-sourced term at all, and
+    # on the other three the gate term sat between the self-sourced and other
+    # terms. The check was inert on all five live reports. The parser now
+    # speaks the chip's actual grammar: "N decided" plus any of the abstention
+    # terms plus an optional split term, all summing to claim_count.
+    m = re.search(r'vp-abstention-chip[^>]*>([^<]+)</p>', page)
     if m:
-        got = [int(g) for g in m.groups() if g is not None]
-        dist = _coarse_dist(report_claims, "strict")
-        uv = dist.get("Unverifiable", 0)
-        split = dist.get("Models split", 0)
-        selfsrc = sum(1 for c in report_claims
-                      if c.get("provenance", {}).get("self_sourced_only"))
-        want = [claim_count - uv - split, selfsrc, uv - selfsrc]
-        if split:
-            want.append(split)
-        if got != want:
-            violations.append(
-                f"{slug}: self-source chip shows {got}, derived {want}")
-        if sum(got) != claim_count:
-            violations.append(
-                f"{slug}: self-source chip terms sum to {sum(got)}, "
-                f"claim_count is {claim_count}")
+        _CHIP_TERMS = {
+            "decided": "decided",
+            "unverified — self-sourced only": "selfsrc",
+            "insufficient qualifying evidence retrieved": "gate",
+            # F3: the reason-coded species, re-derived from the reason_code
+            # exported onto each claim's provenance.
+            "beyond the public record": "coded",
+            "unverifiable — other": "other",
+            "models split": "split",
+        }
+        got: dict[str, int] = {}
+        chip_ok = True
+        for part in m.group(1).split(" · "):
+            pm = re.fullmatch(r"(\d+) (.+)", part.strip())
+            key = _CHIP_TERMS.get(pm.group(2)) if pm else None
+            if key is None or key in got:
+                violations.append(
+                    f"{slug}: abstention chip carries unparseable term {part!r}")
+                chip_ok = False
+                break
+            got[key] = int(pm.group(1))
+        if chip_ok:
+            dist = _coarse_dist(report_claims, "strict")
+            uv = dist.get("Unverifiable", 0)
+            split = dist.get("Models split", 0)
+            # F3: the reason-coded species takes precedence over every other
+            # abstention sub-state, exactly as it does in site.py.
+            def _coded(c):
+                return bool(c.get("provenance", {}).get("reason_code")) and \
+                    c.get("coarse_strict_label") == "Unverifiable" and \
+                    c.get("consensus_verdict") != "Models split"
+            coded = sum(1 for c in report_claims if _coded(c))
+            selfsrc = sum(1 for c in report_claims
+                          if c.get("provenance", {}).get("self_sourced_only")
+                          and not _coded(c))
+            # Mirrors site.py's chip term exactly: gate-withheld (UNVERIFIABLE,
+            # not split, gate code insufficient) MINUS the narrower sub-states,
+            # each excluded inside the same predicate chain.
+            gate = sum(
+                1 for c in report_claims
+                if (c.get("provenance", {}).get("evidence_gate")
+                    == "insufficient-qualifying-evidence"
+                    and c.get("coarse_strict_label") == "Unverifiable"
+                    and c.get("consensus_verdict") != "Models split"
+                    and not c.get("provenance", {}).get("self_sourced_only")
+                    and c.get("provenance", {}).get("layer_a_claim_type")
+                    != "personal-anecdote"
+                    and not _coded(c)))
+            want = {"decided": claim_count - uv - split}
+            if selfsrc:
+                want["selfsrc"] = selfsrc
+            if gate:
+                want["gate"] = gate
+            if coded:
+                want["coded"] = coded
+            other = uv - selfsrc - gate - coded
+            if other:
+                want["other"] = other
+            if split:
+                want["split"] = split
+            if got != want:
+                violations.append(
+                    f"{slug}: abstention chip shows {got}, derived {want}")
+            if sum(got.values()) != claim_count:
+                violations.append(
+                    f"{slug}: abstention chip terms sum to {sum(got.values())}, "
+                    f"claim_count is {claim_count}")
 
     # Anecdote footnote must reconcile with the derived Unverifiable bucket.
     m = re.search(r'vp-anecdote-note[^>]*>(\d+) of the (\d+) Unverifiable', page)

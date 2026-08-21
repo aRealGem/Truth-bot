@@ -1,0 +1,1345 @@
+{
+  "schema": "truthbot-decidability v2",
+  "comment": "Seeded from the D17-d desk pass. Every row is provenance 'desk' and therefore NOT publishable -- publishable_entries() returns only 'owner-ratified'. Step 6 ratification flips rows one at a time. Regenerate with scripts/seed_decidability_from_desk.py.",
+  "seeded_from": "metrics/remediation_v2/d17d_triage.json",
+  "entries": [
+    {
+      "sid": "biden_2022:0017",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Civilians blocking tanks in Ukraine — extensively documented in wire reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0019",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A direct quotation from Zelenskyy's address to the European Parliament — the transcript settles it.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0045",
+      "speech_id": "biden_2022",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'Isolated from the world more than ever' is an evaluative comparison with no defined measure.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "NO-METRIC"
+    },
+    {
+      "sid": "biden_2022:0051",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether DOJ stood up such a task force — the department's own announcements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0100",
+      "speech_id": "biden_2022",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "The speaker's childhood memory of his father leaving for work.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "biden_2022:0124",
+      "speech_id": "biden_2022",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'Used to have the best' infrastructure is evaluative. Rankings exist (WEF) but the claim names no measure or date; arguable against web-tier1 if a measure is stipulated.",
+      "desk_class": "substantive",
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "NO-METRIC"
+    },
+    {
+      "sid": "biden_2022:0137",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A stated programme scope — 65,000 miles and 1,500 bridges — checkable against DOT/FHWA announcements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0146",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A specific site near Columbus and its acreage — local reporting and Intel's own filings.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0154",
+      "speech_id": "biden_2022",
+      "decidability": "needs-decomposition",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Compound: a private remark by Intel's CEO (not retrievable) wrapped around an investment figure that IS (Intel announcements, SEC filings). Segment and keep the figure.",
+      "desk_class": "compound-split"
+    },
+    {
+      "sid": "biden_2022:0168",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "GM's $7bn investment and job figure, and whether it is the largest in its history — company statements and filings.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0171",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A direct quotation from a named senator.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0194",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'Top business leaders and most Americans support my plan' — an unmeasured quantifier over two undefined populations.",
+      "desk_class": "substantive",
+      "review_trigger": "A published measurement of the population with a stated method and period.",
+      "note": "step-6 2026-08-18"
+    },
+    {
+      "sid": "biden_2022:0200",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Insulin manufacturing cost per vial — published cost-of-production studies.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0211",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "ACA premium savings under the American Rescue Plan — HHS/CMS analyses. Borderline series-core if a specific premium series is stipulated.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0284",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Pfizer's monthly antiviral output — company and HHS statements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0285",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether the Test-to-Treat initiative launched as described — HHS.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0362",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Endorsements from named organisations — their own statements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0366",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Joint patrols with Mexico and Guatemala — DHS/State announcements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0373",
+      "speech_id": "biden_2022",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'Supported by everyone from X to Y' is rhetorical breadth, not a countable claim.",
+      "desk_class": "substantive",
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "MASS-VOICE"
+    },
+    {
+      "sid": "biden_2022:0376",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "The constitutional holding of Roe — the opinion itself.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0420",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Beau Biden's rank and service — public record.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0427",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Service as a combat medic in Kosovo and Iraq — service records. NOTE: the surrounding passage refers to more than one person; confirm the referent before retrieving.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "biden_2022:0431",
+      "speech_id": "biden_2022",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "What he loved doing with his daughter.",
+      "desk_class": "substantive",
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "biden_2022:0437",
+      "speech_id": "biden_2022",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "VA programmes linking toxic exposure to benefits decisions — VA publications.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0027",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether six presidents warned about deficits — the State of the Union corpus itself is the record.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0029",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "First balanced budget in 30 years — the federal surplus/deficit series decides it directly. Same series D17-c already used on biden_2022:0245.",
+      "desk_class": "series-core",
+      "lane": "series",
+      "candidate_series": [
+        "FYFSD"
+      ]
+    },
+    {
+      "sid": "clinton_1998:0077",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Class-size reduction from a teacher-hiring programme — NCES and programme reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0090",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A count of 240 trade agreements — USTR records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0101",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Dislocated-worker training funding doubling since 1993 — DOL budget appropriations.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0107",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "'Hundreds of new trade agreements' — same USTR record, weaker quantifier.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0132",
+      "speech_id": "clinton_1998",
+      "decidability": "needs-decomposition",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "'We have also met that goal, two years ahead of schedule' — the goal is named in a previous sentence, so this cannot be retrieved for until the utterance is segmented and the referent bound.",
+      "desk_class": "compound-split"
+    },
+    {
+      "sid": "clinton_1998:0134",
+      "speech_id": "clinton_1998",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A named individual's 13-year welfare history.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "clinton_1998:0135",
+      "speech_id": "clinton_1998",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "Her current job.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "clinton_1998:0195",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether it was the largest antidrug budget — ONDCP budget summaries.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0210",
+      "speech_id": "clinton_1998",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'NATO contained communism and kept America and Europe secure' — a historical evaluation, not a checkable event.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "CAUSAL-LINK"
+    },
+    {
+      "sid": "clinton_1998:0211",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether the three named countries adopted democratic government — documented.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0225",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A named soldier present as a guest — reporting and service records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0226",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "His father's Vietnam decorations — award records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0227",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "College in Colorado then Army service — records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0236",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether four named former Joint Chiefs chairmen endorsed as described — their statements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0240",
+      "speech_id": "clinton_1998",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "How Saddam Hussein 'spent the better part of a decade' — an evaluative characterisation of intent and priorities.",
+      "desk_class": "substantive",
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "INTENT"
+    },
+    {
+      "sid": "clinton_1998:0241",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "UNSCOM inspection and destruction findings — the commission's own reports.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "clinton_1998:0243",
+      "speech_id": "clinton_1998",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'I speak for everyone in this chamber' — a claim about others' agreement.",
+      "desk_class": "substantive",
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "GROUP-STATE"
+    },
+    {
+      "sid": "clinton_1998:0350",
+      "speech_id": "clinton_1998",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'Only a handful of physicists used the web' at a past date. Directionally famous but no measurement exists for the period; arguable against web-tier1 via CERN/NSF histories.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "NO-INSTRUMENT"
+    },
+    {
+      "sid": "clinton_1998:0358",
+      "speech_id": "clinton_1998",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "ISS participation by 16 countries beginning in 1998 — NASA and partner-agency records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0024",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Count of democracies in 1945 — Freedom House and Polity datasets, though the count depends on the definition used.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0025",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Count of democracies today — same datasets, same definitional caveat.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0027",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Share of world population in democratic nations — Freedom House plus population data.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0033",
+      "speech_id": "gwbush_2006",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "The aim of an adversary. An attribution of intent, which evidence of actions cannot establish. Same conflation family as ruling (d).",
+      "desk_class": "substantive",
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "INTENT"
+    },
+    {
+      "sid": "gwbush_2006:0134",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "4.6 million jobs over a dated window is a direct difference on nonfarm payrolls. The comparison to Japan and the EU needs OECD data, so the second half is web-tier1 — arguably compound.",
+      "desk_class": "series-core",
+      "lane": "series",
+      "candidate_series": [
+        "PAYEMS"
+      ]
+    },
+    {
+      "sid": "gwbush_2006:0147",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "$880bn of tax relief over five years — Treasury/CBO scoring.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0155",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A count of programmes cut or eliminated — the budget documents.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0156",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Projected $14bn savings — budget documents; forward-looking, so partially a projection.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0189",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A 22 percent increase in clean-energy research funding — DOE budget request.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "gwbush_2006:0217",
+      "speech_id": "gwbush_2006",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Youth drug use down 19 percent since 2001 — Monitoring the Future / NSDUH. Survey series, not FRED, so not series-core as defined here.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0001",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A composite narrative opening. The embedded 'more than eight million' jobs figure is series-checkable, but the sentence as constructed is scene-setting; arguable as compound-split.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0004",
+      "speech_id": "obama_2014",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A rural doctor writing one prescription. No public record.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "obama_2014:0013",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Business-leader survey rankings on investment destination — the surveys are published (e.g. A.T. Kearney FDI Confidence Index).",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0045",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Joining Forces hiring/training totals — the initiative's own reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0055",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "'Companies say they intend to hire' — hiring-intention surveys (NFIB, Duke CFO).",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0070",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "SBA lending volume by administration — SBA data; borderline series-core if an SBA series is stipulated.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0082",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Announced natural-gas-driven factory investment — industry and company announcements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0114",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "One named firm's headcount — company statements and local reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0121",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "The count of people whose unemployment insurance lapsed — DOL figures. Borderline series-core (ICSA/CCSA measure a different thing).",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0123",
+      "speech_id": "obama_2014",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A named individual's family circumstances.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "obama_2014:0125",
+      "speech_id": "obama_2014",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "That she put herself through college.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "obama_2014:0126",
+      "speech_id": "obama_2014",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "That she had never collected unemployment benefits — a negative about one person's history.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "obama_2014:0153",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "How many states raised pre-K funding — NIEER's annual yearbook tracks exactly this.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0158",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether named companies committed via the FCC initiative — FCC and company announcements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0189",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Real value of the federal minimum wage against a 1980s baseline: nominal minimum wage deflated by CPI. NOTE: D17-c already attached CPIAUCSL here and the window did NOT reach the Reagan-era baseline — this is the recorded window_period_mismatch. Deciding it needs the named-anchor work, not just the series.",
+      "desk_class": "series-core",
+      "lane": "series",
+      "candidate_series": [
+        "CPIAUCSL",
+        "FEDMINNFRWG"
+      ]
+    },
+    {
+      "sid": "obama_2014:0198",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "'Helps about half of all parents at some point' — programme participation studies; the population and period are unstated, which is what makes it hard.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0207",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "MyRA's guarantee structure — Treasury's own programme documentation.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0255",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Troop levels in Iraq and Afghanistan at a dated point — DoD deployment figures. Borderline series-core; DoD publishes counts, not a FRED series.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "obama_2014:0283",
+      "speech_id": "obama_2014",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether Iran had begun eliminating its higher-enriched stockpile — IAEA verification reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0035",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "30-year fixed mortgage rate; 'lowest in four years' is a direct min-over-window on the series, the same shape D17-c already decides.",
+      "desk_class": "series-core",
+      "lane": "series",
+      "candidate_series": [
+        "MORTGAGE30US"
+      ]
+    },
+    {
+      "sid": "trump_2026:0040",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Count of record closes since a dated start — arithmetic over an index series. Which index is unstated, so the count depends on picking one; say so when scoping.",
+      "desk_class": "series-core",
+      "lane": "series",
+      "candidate_series": [
+        "SP500",
+        "DJIA",
+        "NASDAQCOM"
+      ]
+    },
+    {
+      "sid": "trump_2026:0043",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "'New investment in the United States' most plausibly maps to foreign direct investment inflows. The mapping is ARGUABLE — the claim does not say which measure — and a wrong series would answer a different question.",
+      "desk_class": "series-core",
+      "lane": "series",
+      "candidate_series": [
+        "ROWFDNQ027S",
+        "BOGZ1FL063164003Q"
+      ]
+    },
+    {
+      "sid": "trump_2026:0057",
+      "speech_id": "trump_2026",
+      "decidability": "needs-decomposition",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Two claims in one sentence: a regulation count (Federal Register / Unified Agenda, web) and 'lifted 2.4 million Americans' out of something unnamed (a series, once the something is identified). Neither is retrievable until they are separated.",
+      "desk_class": "compound-split"
+    },
+    {
+      "sid": "trump_2026:0090",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether the 2028 Olympic torch is lit in America — an IOC host-city decision. Documented, and no series touches it.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0098",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "WWII service at 17 in the Pacific: service records and unit histories are documentary.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0099",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Participation in the Battle of Manila — unit records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0100",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Wounded at Luzon — casualty and service records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0102",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Purple Heart and Bronze Star are formal awards with citations on record.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0106",
+      "speech_id": "trump_2026",
+      "decidability": "needs-decomposition",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'I was there.' Unfalsifiable as stated and carries no checkable content on its own.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "note": "step-6 2026-08-18"
+    },
+    {
+      "sid": "trump_2026:0110",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "What she thought she was feeling. A private mental state; no retrieval reaches it.",
+      "desk_class": "substantive",
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "INTENT"
+    },
+    {
+      "sid": "trump_2026:0111",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A named Coast Guard rescue swimmer performing a documented rescue — USCG records and contemporaneous reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0130",
+      "speech_id": "trump_2026",
+      "decidability": "needs-decomposition",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "The urging is trivially true; the embedded superlative ('largest tax cuts in American history') is the checkable core and needs CBO/Treasury scoring against prior cuts. Segment first.",
+      "desk_class": "compound-split"
+    },
+    {
+      "sid": "trump_2026:0137",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A named individual's felt financial position, plus attribution to a policy. Neither half is retrievable.",
+      "desk_class": "substantive",
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0153",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A private conversation with Michael Dell. Nothing public could settle what was said. NOTE: this claim currently renders as gate-withheld because the structured code cannot tell it apart from an under-retrieved claim — it is the clearest case for the substantive class existing.",
+      "desk_class": "substantive",
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0161",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A conditional projection about future account balances, not an assertion of present fact.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PROJECTION"
+    },
+    {
+      "sid": "trump_2026:0255",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A couple's private fertility history.",
+      "desk_class": "substantive",
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0256",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A named drug's price is documentable (list price, GoodRx, CMS), though what THIS individual paid may not be. Arguable between web-tier1 and substantive; scope the drug price, not the person.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0279",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "One buyer's bidding history across 20 homes. No public record aggregates this.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0291",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "'Typical 401(k) balance up $30,000' is index-driven, but the authoritative figure is survey data (EBRI/Fidelity), not FRED. Series can bound it; only the survey can confirm it. Flagged as arguable.",
+      "desk_class": "series-core",
+      "lane": "series",
+      "candidate_series": [
+        "SP500",
+        "WILL5000IND"
+      ]
+    },
+    {
+      "sid": "trump_2026:0325",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A specific 2024 crash involving a named child — police, NTSB and contemporaneous reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0326",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Immigration status and CDL issuance for a named driver — court filings and state DMV records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0327",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "What doctors said about a prognosis, in private.",
+      "desk_class": "substantive",
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0328",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "Same private prognosis.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0329",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A child's current developmental state — no public record.",
+      "desk_class": "substantive",
+      "review_trigger": "A stipulated measure and period that makes the comparison checkable, agreed before retrieval.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0334",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'Many, if not most' of an unmeasured population. English proficiency of undocumented immigrants is not measured in a way that could confirm or refute this quantifier.",
+      "desk_class": "substantive",
+      "review_trigger": "A published measurement of the population with a stated method and period.",
+      "reason_code": "NO-INSTRUMENT"
+    },
+    {
+      "sid": "trump_2026:0340",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A named 2023 homicide victim — contemporaneous reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0341",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "The circumstances of the death as reported — police and press.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0342",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "The killer's prior arrest and immigration status — court records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0343",
+      "speech_id": "trump_2026",
+      "decidability": "needs-decomposition",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Compound: 'her mother is in the gallery' (present, trivially checkable) plus 'why we are deporting' with an embedded record-removals claim that IS checkable against ICE removal statistics. Segment, then the removals core becomes series-or-agency retrievable. Cross-refs the logged utterance-segmentation item.",
+      "desk_class": "compound-split"
+    },
+    {
+      "sid": "trump_2026:0379",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A polling figure with a stated number — public polls, if one matching the description exists.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0400",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A named minor and a Virginia school district's actions — court filings and reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0402",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A runaway incident tied to the same documented case.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0403",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A judge's custody decision — court record.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0404",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Placement in a state facility — court and agency records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0405",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A full-ride scholarship is documentable via the institution or reporting.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0450",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "The expressions on people's faces. Not a checkable proposition.",
+      "desk_class": "substantive",
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "NO-RECORD"
+    },
+    {
+      "sid": "trump_2026:0469",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A named service member's death in a documented incident.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0482",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "What doctors thought and what a mother said, in a hospital room.",
+      "desk_class": "substantive",
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT",
+      "reason_code_2": "INTENT"
+    },
+    {
+      "sid": "trump_2026:0487",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A private conversation the speaker had that night.",
+      "desk_class": "substantive",
+      "review_trigger": "A published first-hand account by a participant, or a contemporaneous record of the exchange.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0514",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "'Thirty-five million people said' — an unmeasured mass attribution, wrapped around a counterfactual about what would have happened. Neither half is decidable.",
+      "desk_class": "substantive",
+      "review_trigger": "A published measurement of the population with a stated method and period.",
+      "reason_code": "MASS-VOICE",
+      "reason_code_2": "COUNTERFACTUAL"
+    },
+    {
+      "sid": "trump_2026:0569",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether a warning was delivered after a named operation — reporting and official statements.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0638",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "A family's closeness. Not a checkable proposition.",
+      "desk_class": "substantive",
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "PRIVATE-EVENT"
+    },
+    {
+      "sid": "trump_2026:0643",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A named person's release from detention and presence at the address — documentable.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0652",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Valor deeds of a named service member — the citation is the record.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0659",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Slover: wounds sustained under fire, described in the valor citation.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0660",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Same citation — number and effect of the wounds.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0664",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Aircraft manoeuvre under fire — citation and after-action record.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0665",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "The landing and its location — same citation.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0666",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "That the mission's success and the crew's lives HINGED on one man is a causal attribution, not an event. The citation can evidence what he did, not that everything turned on it. Same conflation family as ruling (d).",
+      "desk_class": "substantive",
+      "review_trigger": "A published statement of intent by the actor, or a record establishing it (court finding, declassified assessment).",
+      "reason_code": "CAUSAL-LINK"
+    },
+    {
+      "sid": "trump_2026:0667",
+      "speech_id": "trump_2026",
+      "decidability": "undecidable-from-public-record",
+      "provenance": "owner-ratified",
+      "date": "2026-08-14",
+      "why": "What everybody in the helicopter knew. A group's inner awareness.",
+      "desk_class": "substantive",
+      "review_trigger": "A first-hand published statement by the person about their own state at the time.",
+      "reason_code": "GROUP-STATE"
+    },
+    {
+      "sid": "trump_2026:0683",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "A 1952 Korean-war dogfight involving a named pilot — service records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0685",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "First aerial combat, outnumbered, led the engagement — citation and records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    },
+    {
+      "sid": "trump_2026:0686",
+      "speech_id": "trump_2026",
+      "decidability": "retrievable-pending-lane",
+      "provenance": "desk",
+      "date": "2026-08-14",
+      "why": "Whether the story was classified for 50 years — declassification records.",
+      "desk_class": "web-tier1",
+      "lane": "web-tier1"
+    }
+  ]
+}

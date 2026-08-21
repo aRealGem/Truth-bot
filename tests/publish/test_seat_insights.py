@@ -38,20 +38,29 @@ def test_acceptance_fixture_f10_f11_reproduced_from_committed_site() -> None:
     # escalation 14/111) are preserved in git history; the guard's job is
     # unchanged: committed site data and insights math may never drift apart
     # silently.
+    #
+    # RE-PINNED AGAIN 2026-08-21: the D17-c re-adjudication (published in
+    # d63ec5b, `site-pca/data/claims.json`) escalated one further claim in each
+    # report, moving six derived values. All values below are DERIVED from that
+    # published bundle via compute_seat_insights, not copied from test output.
+    # The rendered page and the build-time consistency check were already
+    # correct; only these constants were stale. Superseded pins: trump
+    # critic-False 0.480, escalation 30/182, arbiter proposer 13; biden
+    # critic-False 0.092, escalation 11/111, arbiter proposer 6.
     trump = ins[by_speaker["Donald Trump"]]
     assert trump.n_claims == 182
-    assert trump.seats["critic"].rate("False") == pytest.approx(0.480, abs=1e-3)
-    assert trump.escalation_rate == pytest.approx(30 / 182, abs=1e-4)
-    assert trump.arbiter_sided["proposer"] == 13
+    assert trump.seats["critic"].rate("False") == pytest.approx(0.484375, abs=1e-3)
+    assert trump.escalation_rate == pytest.approx(31 / 182, abs=1e-4)
+    assert trump.arbiter_sided["proposer"] == 14
     assert trump.arbiter_sided["critic"] == 12
     assert trump.overrides == {"False→Misleading": 7, "Misleading→False": 1,
                                "Disagreement→Misleading": 1}
 
     biden = ins[by_speaker["Joe Biden"]]
     assert biden.n_claims == 111
-    assert biden.seats["critic"].rate("False") == pytest.approx(0.092, abs=1e-3)
-    assert biden.escalation_rate == pytest.approx(11 / 111, abs=1e-4)
-    assert biden.arbiter_sided["proposer"] == 6
+    assert biden.seats["critic"].rate("False") == pytest.approx(0.103448, abs=1e-3)
+    assert biden.escalation_rate == pytest.approx(12 / 111, abs=1e-4)
+    assert biden.arbiter_sided["proposer"] == 7
     assert biden.overrides == {"False→Misleading": 1}
 
 
@@ -64,8 +73,10 @@ def test_insights_v2_page_renders_seats_no_hydramind() -> None:
     assert "Hydramind" not in html
     assert "Proposer" in html and "Critic" in html and "Arbiter" in html
     assert "Severity-Classifier stage-2 overrides" in html
-    # F11 escalation figures render (DC-6' published corpus: 30/182 and 11/111)
-    assert "16.5%" in html and "9.9%" in html
+    # F11 escalation figures render (DC-6' published corpus: 31/182 and 12/111,
+    # re-pinned 2026-08-21 to the D17-c re-adjudication -- see the derivation
+    # note in test_acceptance_fixture_f10_f11_reproduced_from_committed_site)
+    assert "17.0%" in html and "10.8%" in html
 
 
 def test_publisher_writes_v2_page_when_seat_data_exists(tmp_path: Path) -> None:

@@ -1,0 +1,663 @@
+{
+  "schema": "fable-resolvability-read v1",
+  "read_at": "2026-08-19",
+  "author": "Fable",
+  "fixture": "metrics/remediation_v2/d17d_step3_read_fixture.json",
+  "fixture_pinned_commit": "893e38b",
+  "n_items": 62,
+  "n_claims": 23,
+  "protocol": {
+    "pre_registered": "Protocol pre-registered with the owner 2026-08-19 00:59 UTC BEFORE any snippet was read.",
+    "classes": {
+      "A": "stance resolvable from the snippet alone",
+      "B": "snippet insufficient, full document plausibly resolves",
+      "C": "correct abstention"
+    },
+    "thresholds_fixed_in_advance": "A>=25% cheap pilot; A<25% & B>=40% full-document path + $0 volume measurement; C>=60% close the lane.",
+    "result": "A 8 (12.9%) / B 23 (37.1%) / C 31 (50.0%). NO pre-registered threshold cleared -> per-speech branch."
+  },
+  "tallies": {
+    "all_62": {
+      "A": 8,
+      "B": 23,
+      "C": 31,
+      "A_pct": 12.9,
+      "B_pct": 37.1,
+      "C_pct": 50.0
+    },
+    "credit_relevant_42": {
+      "A": 8,
+      "B": 23,
+      "C": 11,
+      "A_pct": 19.0,
+      "B_pct": 54.8,
+      "note": "42 = 62 minus the 20 D15 speech-itself items; denominator is post-hoc, labeled, NOT pre-registered."
+    }
+  },
+  "finding_1_d15": "(D15, post-registration annotation; A/B/C assignments unchanged): 20 of the 62 items are transcripts/coverage OF THE SPEECH ITSELF (Congressional Record, White House DCPD, AP transcripts). Definitionally correct abstentions AND permanently non-crediting under D15 -- re-scoring whole packs buys dead items. On the credit-relevant 42: A 8 (19.0%) / B 23 (54.8%) / C 11. The full-document branch clears on THAT denominator only -- post-hoc, labeled, not pre-registered.",
+  "finding_2_pack_content": "(the real one): stored snippets are retriever-WRITTEN DESCRIPTIONS of documents, not document text -- e.g. \"likely including family-of-four $2,400/year figure\", the retriever hedging. A scorer declining to resolve a stance from a hedged description is CORRECT. The 23 null-stance claims are a PACK-CONTENT defect, not a scorer defect.",
+  "consequent_rulings": "option 1 (same model re-score) CLOSED. Option 2 (stronger model, same snippet) CLOSED -- no model resolves a stance from a description of a document; the $0.5923 line is retired, not deferred. Option 3 (full document text) is the only live path and remains UNPRICED. Rec (d) -- some abstentions are correct -- is confirmed at >=11 of 42 on the credit-relevant subset.",
+  "caveat": "on the read: Fable classified from the same descriptions the scorer saw, so B inherits the retriever's characterization of each document.",
+  "item_classes": [
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0376",
+      "item_id": "07f5f407-4ebf-42c4-b032-e4646fdbe383",
+      "source_url": "https://www.supremecourt.gov/opinions/20pdf/21a24_8759.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2021-09-01T00:00:00"
+    },
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0376",
+      "item_id": "38f64dbe-21b3-41af-9ceb-49f6bf5e0a02",
+      "source_url": "https://www.supremecourt.gov/grantednotedlist/21grantednotedlist",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2021-05-17T00:00:00"
+    },
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0376",
+      "item_id": "eca9a1cc-1c6a-4465-9388-3902a31752f5",
+      "source_url": "https://www.npr.org/2021/09/20/1038972266/supreme-court-date-roe-wade-dobbs-jackson-womens",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Established",
+      "published_at": "2021-09-20T00:00:00"
+    },
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0376",
+      "item_id": "f1a9212d-d577-461d-bd4b-229b74696390",
+      "source_url": "https://www.washingtonpost.com/politics/2021/12/01/supreme-court-mississippi-abortion-live-updates/",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Established",
+      "published_at": "2021-12-01T00:00:00"
+    },
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0211",
+      "item_id": "728c1884-cf4b-465d-ade5-4b76579b34ae",
+      "source_url": "https://archives.nato.int/uploads/r/null/1/3/137930/0331_Summit_Madrid_Press_Info_1997_ENG.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "1997-07-08T00:00:00"
+    },
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0211",
+      "item_id": "765ee7ac-5b22-4c6e-babf-afe4e71cba79",
+      "source_url": "https://archives.nato.int/informationobject/502877",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "1997-12-16T00:00:00"
+    },
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "trump_2026:0469",
+      "item_id": "04763556-ec36-48c7-a68a-f6f1d863ad88",
+      "source_url": "https://www.nbcnews.com/news/us-news/national-guard-sarah-beckstrom-rcna246328",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Established",
+      "published_at": "2025-11-27T00:00:00"
+    },
+    {
+      "class": "A",
+      "d15_utterance_record": false,
+      "sid": "trump_2026:0469",
+      "item_id": "5059caa0-f03f-4658-b0df-f507bf8b411f",
+      "source_url": "https://www.npr.org/2025/11/27/nx-s1-5622955/national-guard-shooting-washington-dc-updates",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Established",
+      "published_at": "2025-11-27T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0200",
+      "item_id": "19a153d5-6069-4833-a137-de47787281fc",
+      "source_url": "https://aspe.hhs.gov/sites/default/files/private/pdf/264056/Comparing-Insulin-Prices.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Established",
+      "published_at": "2020-10-06T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0200",
+      "item_id": "f3e10fbc-7a22-4371-9c0c-a5432d549757",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8597930/",
+      "source_name": "R3-grok-search",
+      "source_tier": "Government",
+      "published_at": "2021-11-01T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0211",
+      "item_id": "8871e673-5339-4044-bebb-8c05529233e8",
+      "source_url": "https://www.cms.gov/files/document/marketplace-enrollment-and-savings-infographic.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2021-08-01T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0211",
+      "item_id": "b8c3d7d0-79fd-4696-b64a-65249681b261",
+      "source_url": "https://www.cms.gov/files/document/american-rescue-plan-fast-facts-cms.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2021-08-04T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0211",
+      "item_id": "f814059c-4915-46e6-9eb1-5f28e48e8bd1",
+      "source_url": "https://www.cms.gov/files/document/health-insurance-exchanges-2022-open-enrollment-report-final.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2022-01-27T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0366",
+      "item_id": "98b66de7-17c1-4403-a7f2-be5946e6930e",
+      "source_url": "https://www.dhs.gov/archive/news/2021/12/03/dhs-highlights-efforts-address-human-trafficking",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2021-12-03T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0366",
+      "item_id": "a52dc7a7-08a7-40a4-b507-2a940fbddf3a",
+      "source_url": "https://www.congress.gov/crs_external_products/IF/PDF/IF10215/IF10215.27.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2022-01-03T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0101",
+      "item_id": "55362ec4-6147-4673-a59e-7d9622f41fbe",
+      "source_url": "https://www.federalregister.gov/documents/1997/01/22/97-1528/job-training-partnership-act-employment-and-training-assistance-for-dislocated-workers-reallotment",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "1997-01-22T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0101",
+      "item_id": "93f79a02-0e79-470f-9469-9108915d5b62",
+      "source_url": "https://fraser.stlouisfed.org/title/budget-united-states-government-appendix-233/fiscal-year-1998-5752/content/fulltext/BUDGET-1998-APP-1-14",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "1997-02-06T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0358",
+      "item_id": "04994621-3f5f-44e6-940e-0356646cca5e",
+      "source_url": "https://www3.nasa.gov/audience/formedia/archives/MP_Archive_98.html",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "1998-01-26T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "gwbush_2006:0147",
+      "item_id": "254fea6d-1a3e-4ac4-be8a-fd93f3411472",
+      "source_url": "https://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2006-01-26T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "gwbush_2006:0147",
+      "item_id": "a64a538a-6366-4d8d-a4db-23cf07bba8dd",
+      "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2006-01-26T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "gwbush_2006:0156",
+      "item_id": "69d2cca0-3de8-4f30-9ee3-66236ac4cd08",
+      "source_url": "http://www.cbo.gov/ftpdocs/70xx/doc7027/01-26-BudgetOutlook.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2006-01-26T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "gwbush_2006:0156",
+      "item_id": "c674dba0-f1d7-420b-91de-bb7792d917ea",
+      "source_url": "https://www.cbo.gov/sites/default/files/109th-congress-2005-2006/reports/01-26-budgetoutlook.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2006-01-26T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "gwbush_2006:0217",
+      "item_id": "0eb60eb6-d6dc-4a28-9b5b-8cb884b4e4bd",
+      "source_url": "https://www.justice.gov/archive/ndic/pubs11/12620/marijuana.htm",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2005-02-01T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0001",
+      "item_id": "0760f9e3-36cd-463d-9ba3-e0c4ed8ce567",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2014-01-10T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0001",
+      "item_id": "1f7fa2a7-a175-432e-9ffe-7bce492d3aef",
+      "source_url": "https://www.bls.gov/news.release/archives/empsit_01102014.htm",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2014-01-10T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0001",
+      "item_id": "8cfd1f04-64b6-4fd6-8bb0-e76d6f112a0f",
+      "source_url": "https://fraser.stlouisfed.org/files/docs/releases/bls/bls_employnews_201312.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2014-01-10T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0001",
+      "item_id": "daf9e9d9-180c-4a20-bc20-a34667af2cae",
+      "source_url": "https://www.bls.gov/ces/publications/highlights/2013/current-employment-statistics-highlights-12-2013.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2014-01-10T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0070",
+      "item_id": "c7240ee0-bda7-47bd-9f69-6c87354dc849",
+      "source_url": "https://www.sba.gov/sites/default/files/aboutsbaarticle/SBA%207a%20and%20504%20Gross%20Loan%20Approval%20Volume%20as%2009-30-13.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2013-09-30T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0070",
+      "item_id": "e7ffeea9-e7ac-4908-83cb-fa316488421e",
+      "source_url": "https://www.washingtonpost.com/business/on-small-business/sba-backs-roughly-30-billion-in-small-business-loans-for-the-third-straight-year/2013/10/29/eb137e28-40da-11e3-a624-41d661b0bb78_story.html",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Established",
+      "published_at": "2013-10-29T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "trump_2026:0403",
+      "item_id": "78aa500a-461e-4421-b446-b98113976ec4",
+      "source_url": "https://www.govinfo.gov/app/details/USCOURTS-ca4-24-01682",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2025-08-07T00:00:00"
+    },
+    {
+      "class": "B",
+      "d15_utterance_record": false,
+      "sid": "trump_2026:0403",
+      "item_id": "7efe23a9-0d99-44a5-aaf6-f6b34d288999",
+      "source_url": "https://www.ca4.uscourts.gov/opinions/241682.P.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2025-08-07T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0211",
+      "item_id": "3ae66f9f-626c-4044-b950-064111969f30",
+      "source_url": "https://aspe.hhs.gov/sites/default/files/2021-07/aspe-arp-ui-ib.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Established",
+      "published_at": "2021-07-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0366",
+      "item_id": "d944b7d0-9cc6-49f6-9836-cd0b0fcbb1b2",
+      "source_url": "https://www.cbsnews.com/news/us-launches-operation-targeting-migrant-smuggling-gangs/",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Established",
+      "published_at": "2021-04-27T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "biden_2022:0376",
+      "item_id": "697db01c-e8f4-4ea1-a9d6-20d76a15bde7",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2022-03-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "biden_2022:0427",
+      "item_id": "63f9af5c-b602-4336-abea-f0603f2f2077",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2022-03-01/pdf/CREC-2022-03-01.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2022-03-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0427",
+      "item_id": "c4c82d89-c531-412d-a44b-4e5423947310",
+      "source_url": "https://www.army.mil/article/242739/kfor_conducts_joint_force_protection_exercise_at_camp_bondsteel",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2021-01-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0427",
+      "item_id": "eb24501a-4e9a-4e21-9cf2-42d7011b0e54",
+      "source_url": "https://www.publichealth.va.gov/docs/exposures/va-ahobp-registry-data-report-feb2022.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2022-02-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "biden_2022:0437",
+      "item_id": "92a2cfe0-ccb0-4fab-861a-4087772ad0ed",
+      "source_url": "https://www.publichealth.va.gov/exposures/publications/agent-orange/agent-orange-2020/presumptive.asp",
+      "source_name": "R3-grok-search",
+      "source_tier": "Government",
+      "published_at": "2020-07-21T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0077",
+      "item_id": "799c5dce-9ed6-4cb9-9725-ed25d3a38bf5",
+      "source_url": "https://nces.ed.gov/pubs97/98015.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "1997-08-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0077",
+      "item_id": "f1962895-2f19-4b26-bd1c-b10f9bce29d8",
+      "source_url": "https://nces.ed.gov/pubs97/97983.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "1997-07-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "clinton_1998:0101",
+      "item_id": "bedbefac-d54f-44ae-9925-8b6bc1d09be5",
+      "source_url": "https://www.govinfo.gov/content/pkg/PLAW-105publ78/pdf/PLAW-105publ78.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "1997-11-13T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "gwbush_2006:0024",
+      "item_id": "71e53f67-f3d3-442e-9aab-aa5d04354a26",
+      "source_url": "https://www.congress.gov/109/crec/2006/01/31/152/9/modified/CREC-2006-01-31-pt1-PgS366-3.htm",
+      "source_name": "R3-grok-search",
+      "source_tier": "Government",
+      "published_at": "2006-01-31T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "gwbush_2006:0024",
+      "item_id": "b146bdf3-8f39-4bea-b38f-6f0e2f6f7f73",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2006-01-31/pdf/CREC-2006-01-31-pt1-PgH15.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2006-01-31T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "obama_2014:0001",
+      "item_id": "77b34e7b-b841-4a53-8a4e-f1ad99e87465",
+      "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2014-01-28T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0070",
+      "item_id": "05701000-f85d-4ad9-abe0-da709146887b",
+      "source_url": "https://www.federalreserve.gov/publications/other-reports/files/sbfreport2012.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2012-09-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0070",
+      "item_id": "74795b8a-7b8c-45c4-81c4-b35501b1bb93",
+      "source_url": "https://home.treasury.gov/system/files/256/LGR-October-2013--cleared-for-transmittal-with-charts.pdf",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Government",
+      "published_at": "2013-11-01T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "obama_2014:0070",
+      "item_id": "eb15c455-0740-4455-844d-4b527832493d",
+      "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2014-01-28T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": false,
+      "sid": "obama_2014:0198",
+      "item_id": "8e9bbcd4-85a0-42a3-94bc-52e26ab7512e",
+      "source_url": "https://www.bls.gov/opub/btn/volume-2/spending-patterns-of-families-receiving-means-tested-government-assistance.htm",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2013-12-16T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "obama_2014:0198",
+      "item_id": "f2aca47e-f9ee-465f-9073-941b22c8eb15",
+      "source_url": "https://www.govinfo.gov/content/pkg/PPP-2014-book1/pdf/PPP-2014-book1.pdf",
+      "source_name": "R3-grok-search",
+      "source_tier": "Government",
+      "published_at": "2014-01-28T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "obama_2014:0198",
+      "item_id": "fe2a68a7-3d1c-4e62-a75e-c86e063577d2",
+      "source_url": "https://obamalibrary.archives.gov/sites/default/files/uploads/documents/State%20of%20the%20Union%20Address%202014%20%28TRANSCRIPT%29.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2014-01-28T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0100",
+      "item_id": "d8576fee-7281-423c-bdd7-0de690e1ebc1",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0341",
+      "item_id": "5470e25f-bab4-4f4a-9503-2bda648e9dd6",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0341",
+      "item_id": "ad915397-515d-40d2-a536-53523a65c336",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0403",
+      "item_id": "90269732-69e5-485c-b43e-d495ddfcd978",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0469",
+      "item_id": "00b167d9-2226-4cda-ac08-f672d03b2d6e",
+      "source_url": "https://www.govinfo.gov/content/pkg/CREC-2026-02-24/pdf/CREC-2026-02-24.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0469",
+      "item_id": "0ddb5c60-92d4-47c4-aca2-6b0fd4166493",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0665",
+      "item_id": "1731d061-0ded-49af-a2e7-c80cc98b7483",
+      "source_url": "https://apnews.com/article/donald-trump-transcript-state-of-union-2026-c13e2a07df999b464b733f4a6e84dbd4",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Wire",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0665",
+      "item_id": "30033860-0c73-4267-a4ed-5e472b454bd7",
+      "source_url": "https://www.govinfo.gov/app/details/DCPD-202600136",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0665",
+      "item_id": "a9245abc-0b21-4975-a510-446432590232",
+      "source_url": "https://www.congress.gov/119/crec/2026/02/24/172/36/CREC-2026-02-24-pt1-PgS649.pdf",
+      "source_name": "R3-grok-search",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0665",
+      "item_id": "dfd8ed8b-bb9d-4378-bb31-bf42b5f2f014",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0685",
+      "item_id": "ba375725-635c-44df-976a-2b1b1446f1da",
+      "source_url": "https://www.cbsnews.com/news/state-of-the-union-2026-trump-royce-williams-medal-of-honor/",
+      "source_name": "R1-opus-worker",
+      "source_tier": "Established",
+      "published_at": "2026-02-24T00:00:00"
+    },
+    {
+      "class": "C",
+      "d15_utterance_record": true,
+      "sid": "trump_2026:0685",
+      "item_id": "d553d4cc-e79f-45a2-88e2-a82879bc503a",
+      "source_url": "https://www.govinfo.gov/content/pkg/DCPD-202600136/pdf/DCPD-202600136.pdf",
+      "source_name": "R2-gpt-browsing",
+      "source_tier": "Government",
+      "published_at": "2026-02-24T00:00:00"
+    }
+  ]
+}

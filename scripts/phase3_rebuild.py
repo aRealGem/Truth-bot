@@ -311,6 +311,43 @@ def pending_claims(claims: list[dict], done_rows: list[dict]) -> list[dict]:
     return [c for c in claims if c["sid"] not in done_sids]
 
 
+class UnknownSid(ValueError):
+    """--sids named a claim this speech does not contain."""
+
+
+def select_claims(claims: list[dict], sids: Optional[list[str]] = None,
+                  limit: int = 0) -> list[dict]:
+    """Narrow the run to a named claim set, a head slice, or both.
+
+    ``--sids`` exists because the retrieval lanes were speech-scoped, and a
+    speech is not a unit anybody can price: the D17-d web-tier1 backlog is 81
+    claims spread across five speeches, so buying it whole-speech means buying
+    hundreds of claims nobody asked for. A named set is the unit an owner can
+    actually authorise.
+
+    REFUSES an unknown sid rather than silently retrieving nothing, mirroring
+    ``wave_adjudicate.wave_set``: a claim that wanders in by hand is a claim
+    nobody costed, and a typo that quietly returns an empty set looks exactly
+    like a lane with no work in it.
+
+    Order is sids-then-limit, so ``--limit`` stays usable as a belt on a
+    named set. Claim order follows the ARTIFACT, not the order sids were
+    typed, so two runs of the same set chunk identically and resume cleanly.
+    """
+    if sids:
+        wanted = list(dict.fromkeys(sids))          # de-dup, keep first seen
+        have = {c["sid"] for c in claims}
+        missing = [s for s in wanted if s not in have]
+        if missing:
+            raise UnknownSid(
+                f"not in this speech's artifact: {', '.join(missing)}")
+        keep = set(wanted)
+        claims = [c for c in claims if c["sid"] in keep]
+    if limit:
+        claims = claims[:limit]
+    return claims
+
+
 def make_pack_builder(*, build_pack: Callable[[str, str, str], object],
                       cap: float, start_spend: float,
                       offproxy_est: Callable[[], float] = lambda: 0.0,
@@ -332,6 +369,58 @@ def make_pack_builder(*, build_pack: Callable[[str, str, str], object],
             publish_pipeline.append_packs_journal(packs_journal, sid, pack)
         return pack
     return pack_builder
+
+
+def metered_offproxy_retrievers():
+    """The economy retrieval config with R2/R3 metered for the off-proxy cost
+    estimate: ``(primary, retry, offproxy_est, usage)``.
+
+    Module scope rather than a ``run_rebuild`` local because this is the PRICING
+    INSTRUMENT — the estimator a lane's cost is bought on — and it now has a
+    second consumer (the publishing-head retrieval runner). ``MODEL_RATES``
+    already carries a rate correction through ``truthbot.costs``, but the R2
+    fallback chain and the ``_post`` seams do not: a second copy would meter a
+    changed fallback in one caller and silently price it at ``_DEFAULT_RATE`` in
+    the other. Two copies of the instrument that produces the number is exactly
+    the constant-with-forgotten-provenance failure.
+
+    R1 is deliberately NOT metered. ``ClaudeWorkerRetriever`` shells out to the
+    ``claude`` CLI with ``ANTHROPIC_API_KEY`` popped, so it runs on the Max
+    subscription: neither on the proxy ledger nor list-priced. A dollar figure
+    here would be a fiction — it is bounded by rate limits, not by ``--budget``.
+    """
+    from truthbot.verify import retrievers as R
+
+    usage: dict[str, list] = {"R2": [], "R3": []}
+
+    class MeteredR2(R.OpenAIBrowsingRetriever):
+        def _post(self, model, prompt):
+            doc = super()._post(model, prompt)
+            usage["R2"].append({"model": model, "usage": doc.get("usage") or {}})
+            return doc
+
+    class MeteredR3(R.GrokSearchRetriever):
+        def _post(self, model, prompt, tool):
+            doc = super()._post(model, prompt, tool)
+            usage["R3"].append({"model": model, "usage": doc.get("usage") or {}})
+            return doc
+
+    def offproxy_est() -> float:
+        total = 0.0
+        for entries in usage.values():
+            for e in entries:
+                rates = MODEL_RATES.get(str(e.get("model") or ""), _DEFAULT_RATE)
+                u = e["usage"]
+                tin = int(u.get("input_tokens") or u.get("prompt_tokens") or 0)
+                tout = int(u.get("output_tokens") or u.get("completion_tokens") or 0)
+                total += (tin * rates[0] + tout * rates[1]) / 1e6
+        return total
+
+    # Economy config (same as the rescue script / the 2026-08-01 full-stack
+    # runs): R1+R2 primary, grok joins only the T2.4 rescue round.
+    primary = (R.ClaudeWorkerRetriever(), MeteredR2())
+    retry = primary + (MeteredR3(model="grok-4.3"),)
+    return primary, retry, offproxy_est, usage
 
 
 def write_new_artifact(source_art: dict, new_rows: list[dict], packs: dict,
@@ -452,7 +541,6 @@ def run_rebuild(args) -> None:
     from truthbot.verdict import (adjudicator, proxy_lane, publish_pipeline,
                                   shape_registry)
     from truthbot.verdict.evidence_pack_v2 import build_evidence_pack_v2
-    from truthbot.verify import retrievers as R
     from truthbot.verify.principals import principal_relation
 
     if not proxy_lane.key_present():
@@ -466,8 +554,10 @@ def run_rebuild(args) -> None:
     art = load_artifact(speech)
     claims = [{"sid": c["sid"], "text": c["text"],
                "context": c.get("context", "")} for c in art["claims"]]
-    if args.limit:
-        claims = claims[:args.limit]
+    try:
+        claims = select_claims(claims, getattr(args, "sids", None), args.limit)
+    except UnknownSid as exc:
+        sys.exit(f"--sids: {exc}")
     chunk_journal, packs_journal = journal_paths(speech)
 
     # Resume: sids already banked in the chunk journal are never re-run.
@@ -479,35 +569,9 @@ def run_rebuild(args) -> None:
               f"(${banked_cost:.4f} prior proxy spend), {len(todo)} to run")
 
     # Off-proxy estimation (R2/R3 usage at list price) — rescue-script pattern.
-    usage: dict[str, list] = {"R2": [], "R3": []}
-
-    class MeteredR2(R.OpenAIBrowsingRetriever):
-        def _post(self, model, prompt):
-            doc = super()._post(model, prompt)
-            usage["R2"].append({"model": model, "usage": doc.get("usage") or {}})
-            return doc
-
-    class MeteredR3(R.GrokSearchRetriever):
-        def _post(self, model, prompt, tool):
-            doc = super()._post(model, prompt, tool)
-            usage["R3"].append({"model": model, "usage": doc.get("usage") or {}})
-            return doc
-
-    def _offproxy_est() -> float:
-        total = 0.0
-        for entries in usage.values():
-            for e in entries:
-                rates = MODEL_RATES.get(str(e.get("model") or ""), _DEFAULT_RATE)
-                u = e["usage"]
-                tin = int(u.get("input_tokens") or u.get("prompt_tokens") or 0)
-                tout = int(u.get("output_tokens") or u.get("completion_tokens") or 0)
-                total += (tin * rates[0] + tout * rates[1]) / 1e6
-        return total
-
-    # Economy config (same as the rescue script / the 2026-08-01 full-stack
-    # runs): R1+R2 primary, grok joins only the T2.4 rescue round.
-    primary = (R.ClaudeWorkerRetriever(), MeteredR2())
-    retry = primary + (MeteredR3(model="grok-4.3"),)
+    # Lives at module scope so the head-retrieval runner meters with the SAME
+    # instrument; see metered_offproxy_retrievers.
+    primary, retry, _offproxy_est, usage = metered_offproxy_retrievers()
 
     # Role-axis wiring, exactly like the CLI's _build_v2_pack_builder
     # (PR-A2.3/A2.5): the principal relation closes over (speaker, utterance)
@@ -655,6 +719,13 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=0,
                     help="first N claims only (smoke slice; artifact is NOT "
                          "written until the full speech is banked)")
+    ap.add_argument("--sids", nargs="+", default=None, metavar="SID",
+                    help="retrieve ONLY these claim sids (e.g. "
+                         "trump_2026:0659). REFUSES a sid this speech does "
+                         "not contain. Like --limit this is a partial run, so "
+                         "no artifact is written — results bank in the "
+                         "journals. This is the unit an owner can price: a "
+                         "named set, not a whole speech")
     ap.add_argument("--shapes-sidecar", default=None, metavar="PATH",
                     help="shapes_backfill_<speech>.json from "
                          "scripts/backfill_claim_shapes.py — fills claim "
@@ -704,6 +775,36 @@ def main() -> None:
           f"(run {art.get('run_id', '?')[:8]})")
     print(f"  claims: {n_claims} (identity preserved verbatim)"
           + (f"; --limit slice: first {args.limit}" if args.limit else ""))
+    if args.sids:
+        try:
+            selected = select_claims(
+                [{"sid": c["sid"], "text": c.get("text", ""),
+                  "context": c.get("context", "")} for c in art["claims"]],
+                args.sids, args.limit)
+        except UnknownSid as exc:
+            sys.exit(f"--sids: {exc}")
+        print(f"  --sids slice: {len(selected)} of {n_claims} claims "
+              "(PARTIAL run — no artifact will be written)")
+        for c in selected:
+            print(f"      {c['sid']}  {c['text'][:64]}")
+        # The footgun: this script sources the PHASE-3 artifact, which for the
+        # five published speeches predates the wave. A sid can be decided here
+        # and gate-withheld on the publishing head (trump_2026:0659 is TRUE
+        # here, gate-withheld there). Rebuilding it would resurrect a
+        # superseded verdict and discard every ruling that landed since.
+        banked = {r.get("sid") for r in done_rows}
+        prebanked = [c["sid"] for c in selected if c["sid"] in banked]
+        print("  ! --sids sources the PHASE-3 artifact, NOT the publishing "
+              "head.")
+        print("    For D17-d backlog work use a publishing-head runner; "
+              "rebuilding a")
+        print("    post-wave claim from here discards the rulings that landed "
+              "in between.")
+        if prebanked:
+            print(f"    ! {len(prebanked)}/{len(selected)} selected sids are "
+                  "ALREADY BANKED in the chunk journal and would be skipped:")
+            print(f"      {', '.join(prebanked)}")
+            print("      (a --go here would retrieve nothing and exit clean)")
     print(f"  claim shapes registered: {n_shapes}/{n_claims} "
           f"({n_from_sidecar} from sidecar)"
           + ("" if n_shapes else " (pre-role-axis artifact — legacy quota; "

@@ -1,0 +1,120 @@
+{
+  "schema": "truthbot-d17d-step6-decomposition-spec v1",
+  "generated": "2026-08-17T18:15:30.024877+00:00",
+  "status": "RECORD ONLY -- segmentation deferred",
+  "status_note": "All five rows remain fail-closed excluded until they are segmented. Nothing here changes a lane, a verdict or a published state, and no row is ratified.",
+  "n_rows": 5,
+  "owner_guided": [
+    "trump_2026:0057",
+    "trump_2026:0130",
+    "trump_2026:0343"
+  ],
+  "desk_drafted": [
+    "biden_2022:0154",
+    "clinton_1998:0132"
+  ],
+  "rows": [
+    {
+      "sid": "biden_2022:0154",
+      "speech": "biden_2022",
+      "desk_why": "Compound: a private remark by Intel's CEO (not retrievable) wrapped around an investment figure that IS (Intel announcements, SEC filings). Segment and keep the figure.",
+      "guidance_source": "desk-draft (ccagent) -- queued for the same owner ratification reply",
+      "fragments": [
+        {
+          "fragment": "Intel's CEO ... told me they are ready to ...",
+          "route": "non-bearing (PRIVATE-EVENT family)",
+          "detail": "A private remark reported by the speaker. Nothing public settles what was said to him."
+        },
+        {
+          "fragment": "Intel is ready to increase its investment from $20 billion to $100 billion",
+          "route": "web lane",
+          "detail": "The checkable core the desk said to keep: company announcements and SEC filings carry the figures. VINTAGE CAVEAT: sources must be published on or before the utterance date."
+        },
+        {
+          "fragment": "who is here tonight",
+          "route": "trivially checkable",
+          "detail": "Gallery presence."
+        }
+      ],
+      "draft_note": "Split keeps the figure and drops only the private remark, which is exactly the desk's instruction."
+    },
+    {
+      "sid": "clinton_1998:0132",
+      "speech": "clinton_1998",
+      "desk_why": "'We have also met that goal, two years ahead of schedule' — the goal is named in a previous sentence, so this cannot be retrieved for until the utterance is segmented and the referent bound.",
+      "guidance_source": "desk-draft (ccagent) -- queued for the same owner ratification reply",
+      "fragments": [
+        {
+          "fragment": "we have also met that goal, two full years ahead of schedule",
+          "route": "blocked on referent binding, then lane by substance",
+          "detail": "'That goal' is named in a PRIOR sentence, so this utterance carries no standalone proposition. This is referent binding, not a multi-claim compound: re-segment to include the antecedent, producing a self-contained claim of the form '<goal> was met two years ahead of schedule', and only then route -- a numeric target goes to the series lane, a program milestone to the web lane."
+        }
+      ],
+      "draft_note": "SAME UNDERLYING PROBLEM as trump_2026:0106 ('I was there'), which the code map returns as UNCODED under the no-standalone-proposition gap. One sits on the decomposition track and the other on the reason-code track, but both are unbound referents. Worth handling uniformly rather than fixing twice."
+    },
+    {
+      "sid": "trump_2026:0057",
+      "speech": "trump_2026",
+      "desk_why": "Two claims in one sentence: a regulation count (Federal Register / Unified Agenda, web) and 'lifted 2.4 million Americans' out of something unnamed (a series, once the something is identified). Neither is retrievable until they are separated.",
+      "guidance_source": "owner-guidance (2026-08-17 batch)",
+      "fragments": [
+        {
+          "fragment": "record number of job-killing regulations cut",
+          "route": "web lane",
+          "detail": "Federal Register / Unified Agenda regulation counts."
+        },
+        {
+          "fragment": "2.4 million Americans lifted off food stamps",
+          "route": "series lane",
+          "detail": "SNAP participation series."
+        },
+        {
+          "fragment": "'job-killing'",
+          "route": "non-bearing",
+          "detail": "Characterization; carries no checkable proposition."
+        }
+      ]
+    },
+    {
+      "sid": "trump_2026:0130",
+      "speech": "trump_2026",
+      "desk_why": "The urging is trivially true; the embedded superlative ('largest tax cuts in American history') is the checkable core and needs CBO/Treasury scoring against prior cuts. Segment first.",
+      "guidance_source": "owner-guidance (2026-08-17 batch)",
+      "fragments": [
+        {
+          "fragment": "I urged this Congress to begin the mission",
+          "route": "non-bearing",
+          "detail": "Trivially true and near-empty; the owner noted the 'begin' hedge drains it further."
+        },
+        {
+          "fragment": "the largest tax cuts in American history",
+          "route": "series lane / web lane once operationalized",
+          "detail": "This is the core. Operationalize as revenue effect, share of GDP, on a standard CBO/Treasury comparison basis. If it is NOT operationalized, the claim is NO-METRIC."
+        }
+      ]
+    },
+    {
+      "sid": "trump_2026:0343",
+      "speech": "trump_2026",
+      "desk_why": "Compound: 'her mother is in the gallery' (present, trivially checkable) plus 'why we are deporting' with an embedded record-removals claim that IS checkable against ICE removal statistics. Segment, then the removals core becomes series-or-agency retrievable. Cross-refs the logged utterance-segmentation item.",
+      "guidance_source": "owner-guidance (2026-08-17 batch)",
+      "fragments": [
+        {
+          "fragment": "her heartbroken mother is in the gallery",
+          "route": "trivially checkable",
+          "detail": "Presence in the chamber."
+        },
+        {
+          "fragment": "deporting ... at record numbers",
+          "route": "series lane",
+          "detail": "ICE ERO removals series. VINTAGE CAVEAT: the comparison must use figures published on or before the utterance."
+        },
+        {
+          "fragment": "'why we are deporting'",
+          "route": "non-bearing (INTENT family)",
+          "detail": "A motive wrapper; intent is not established by records."
+        }
+      ]
+    }
+  ]
+}
