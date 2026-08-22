@@ -3264,11 +3264,15 @@ def _claim_quote_html(claim, css: str = "") -> str:
     below the quote rather than being dropped.
 
     ``css`` (readability pass, Section 5) is the claim's own ``_verdict_css``
-    slug — when given, adds a ``v-{css}`` modifier so the quote's left border
+    slug — when given, adds a ``qb-{css}`` modifier so the quote's left border
     reads the same verdict color as the claim's headline pill, instead of a
     fixed neutral rule.
     """
-    css_cls = f" v-{css}" if css else ""
+    # NOTE: deliberately NOT "v-{css}" — that class already means "paint this
+    # element's *background* with the verdict color" (the [19] Verdict color
+    # utilities used by pills/bars/swatches), and a claim quote is body text,
+    # not a filled chip. "qb-{css}" (quote border) keeps the two apart.
+    css_cls = f" qb-{css}" if css else ""
     text = (claim.text or "").strip()
     ctx = (getattr(claim, "context", "") or "").strip()
     bare = f'<blockquote class="claim-quote{css_cls}">"{_esc(text)}"</blockquote>'
@@ -4566,10 +4570,10 @@ details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
 /* Readability pass (Section 5): the left border reads the claim's own
    verdict color instead of a fixed neutral rule — covers both the fine
    6-bucket and coarse 5-bucket slugs, since callers may pass either. */
-.claim-quote.v-true, .claim-quote.v-mostly-true, .claim-quote.v-truthy { border-left-color: var(--v-true); }
-.claim-quote.v-exaggerated, .claim-quote.v-misleading, .claim-quote.v-falsey { border-left-color: var(--v-misleading); }
-.claim-quote.v-false { border-left-color: var(--v-false); }
-.claim-quote.v-unverifiable, .claim-quote.v-split { border-left-color: var(--v-unverifiable); }
+.claim-quote.qb-true, .claim-quote.qb-mostly-true, .claim-quote.qb-truthy { border-left-color: var(--v-true); }
+.claim-quote.qb-exaggerated, .claim-quote.qb-misleading, .claim-quote.qb-falsey { border-left-color: var(--v-misleading); }
+.claim-quote.qb-false { border-left-color: var(--v-false); }
+.claim-quote.qb-unverifiable, .claim-quote.qb-split { border-left-color: var(--v-unverifiable); }
 /* Claim-in-context (2026-08-01): the checked sentence emphasized inside its
    greyed transcript neighbors — deictic quotes ("we'll launch six more") are
    unreadable bare, and the panel always judged with this context. */
