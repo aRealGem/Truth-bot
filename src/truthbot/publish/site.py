@@ -2194,7 +2194,14 @@ def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     )
 
 
-def _masthead_full(rel: str = "./") -> str:
+def _masthead_full(rel: str = "./", current: str = "") -> str:
+    """``current`` (readability pass, Section 6-7) names the nav item that
+    matches the page being rendered — "reports" | "about" | "" (neither,
+    e.g. corrections/model-insights/404 pages that aren't literally either
+    top-nav destination) — and gets ``aria-current="page"`` + ``.active``."""
+    def _nav_a(href: str, label: str, key: str) -> str:
+        cls = ' class="active" aria-current="page"' if key == current else ''
+        return f'      <a href="{href}"{cls}>{label}</a>\n'
     return (
         '<header class="masthead">\n'
         '  <div class="wrap masthead-row">\n'
@@ -2204,9 +2211,9 @@ def _masthead_full(rel: str = "./") -> str:
         '      <p class="tagline">Automated political fact-checking with multi-model consensus analysis.</p>\n'
         '    </div>\n'
         '    <nav class="top-nav">\n'
-        f'      <a href="{rel}index.html">Reports</a>\n'
-        f'      <a href="{rel}about.html">About</a>\n'
-        f'      <a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub ↗</a>\n'
+        + _nav_a(f'{rel}index.html', 'Reports', 'reports')
+        + _nav_a(f'{rel}about.html', 'About', 'about')
+        + f'      <a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub ↗</a>\n'
         '    </nav>\n'
         '  </div>\n'
         '</header>\n'
@@ -2334,7 +2341,7 @@ def _page_index(
         '</head>\n'
         '<body>\n'
         + _status_bar(model_count)
-        + _masthead_full(rel="./")
+        + _masthead_full(rel="./", current="reports")
         + '<main class="wrap">\n'
         + body
         + '\n</main>\n'
@@ -2398,6 +2405,7 @@ def _page_about(
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "website",
     page_path: Optional[str] = None,
+    current: str = "",
 ) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
@@ -2421,7 +2429,7 @@ def _page_about(
         '</head>\n'
         '<body>\n'
         + _status_bar()
-        + _masthead_full(rel="./")
+        + _masthead_full(rel="./", current=current)
         + '<main class="wrap">\n'
         + body
         + '\n</main>\n'
@@ -3591,7 +3599,7 @@ header.masthead {
 }
 .wordmark {
   font-family: var(--serif);
-  font-size: 2.6rem;
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
   font-weight: 500;
   letter-spacing: -0.025em;
   line-height: 1;
@@ -3611,21 +3619,27 @@ nav.top-nav {
   display: flex;
   gap: 1.4rem;
   align-items: center;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-family: var(--sans);
   padding-top: 0.85rem;
 }
+/* Readability pass (Section 6-7): >=44px touch target (0.75rem*1.5 line-
+   height + 0.75rem vertical padding clears it), sentence case at >=14px —
+   nav links are neither pills nor section-head labels, so they don't keep
+   Section 1's uppercase-mono carve-out. */
 nav.top-nav a {
   color: var(--ink-muted);
+  font-size: 0.875rem;
   transition: color 120ms ease;
-  padding: 0.25rem 0;
-  border-bottom: 1px solid transparent;
+  padding: 0.75rem 0.6rem;
+  border-bottom: 2px solid transparent;
 }
 nav.top-nav a:hover {
   color: var(--ink);
   border-bottom-color: var(--ink);
+}
+nav.top-nav a.active {
+  color: var(--ink);
+  border-bottom-color: #65a30d;
 }
 
 /* Compact masthead override (report pages add .compact OR set padding inline).
@@ -4087,6 +4101,9 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   transition: gap 200ms ease;
 }
 .report:hover .report-cta .read { gap: 0.7rem; }
+@media (pointer: coarse) {
+  .report-cta .read { gap: 0.7rem; }
+}
 
 
 /* [08] Report page — speech hero ─────────────────────────────────────── */
@@ -4101,7 +4118,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .speaker-name {
   font-family: var(--serif);
-  font-size: 3.2rem;
+  font-size: clamp(1.9rem, 6vw, 3.2rem);
   font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.03em;
@@ -4255,6 +4272,13 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   transition: opacity 200ms ease;
 }
 .truthy-frame:hover .truthy-tap-hint { opacity: 1; }
+/* Readability pass (Section 6-7): the hover-only reveal above left touch
+   users (no real :hover) and keyboard users (tabindex="0" but no :focus
+   rule) with no way to see this hint at all — both get it now. */
+.truthy-frame:focus-visible .truthy-tap-hint { opacity: 1; }
+@media (pointer: coarse) {
+  .truthy-tap-hint { opacity: 1; }
+}
 .truthy-tap-hint .icon { width: 8px; height: 8px; }
 
 /* Editorial speech bubble — Truthy's voice in Newsreader italic.
@@ -5516,10 +5540,22 @@ hr.rule-light {
 .toc           { animation-delay: 220ms; }
 
 
+/* [21b] Responsive — mid tier ──────────────────────────────────────────
+   New breakpoint between mobile (≤740px, below) and desktop: mascot steps
+   down before the mobile tier shrinks it further, stats stay 3-col with
+   tighter padding, report-page gutters tighten. Placed BEFORE the 740px
+   block so the narrower breakpoint's own overrides still win at ≤740px
+   (later same-specificity rules win the cascade). */
+@media (max-width: 900px) {
+  .hero-truthy-wrap svg { width: 220px; height: 264px; }
+  .stat { padding: 1rem 1.1rem; }
+  .claim-body { padding: 1.25rem 1.25rem 1.1rem; }
+  .vp-bar-wrap, .source-row { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+
 /* [22] Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 740px) {
   /* Masthead variants */
-  .wordmark { font-size: 2rem; }
   header.masthead { padding: 2.25rem 0 1.5rem; }
   .masthead-row { flex-direction: column; gap: 0.5rem; }
   nav.top-nav { padding-top: 0.5rem; }
@@ -5542,25 +5578,12 @@ hr.rule-light {
   }
   .stat:last-child { border-bottom: none; }
   .stat .num { font-size: 2.4rem; }
-  /* Index hero stacks on mobile */
-  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
-  .hero-truthy-wrap svg { width: 180px; height: 216px; }
-  /* Mobile hero stacks vertically; revert the bubble tail to point UP at Truthy. */
-  .index-hero .truthy-bubble::before,
-  .index-hero .truthy-bubble::after {
-    left: 50%;
-    top: -9px;
-    transform: translateX(-50%);
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent !important;
-    border-top: none;
-    border-bottom: 8px solid var(--border);
-  }
-  .index-hero .truthy-bubble::after { top: -7px; border-bottom-color: var(--surface-warm); }
-  .index-hero .truthy-bubble.is-true::before { border-right-color: transparent !important; border-bottom-color: rgba(21, 128, 61, 0.3); }
-  .index-hero .truthy-bubble.is-iffy::before { border-right-color: transparent !important; border-bottom-color: rgba(202, 138, 4, 0.4); }
-  .index-hero .truthy-bubble.is-lie::before  { border-right-color: transparent !important; border-bottom-color: rgba(153, 27, 27, 0.3); }
-  .index-hero .truthy-bubble { max-width: min(92vw, 240px); }
+  /* Mobile hero: mascot inline beside the bubble (row, not stacked column) —
+     the left-pointing tail rules above (desktop default) already apply
+     correctly at this width, so no tail re-pointing override is needed. */
+  .index-hero { flex-direction: row; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
+  .hero-truthy-wrap svg { width: 110px; height: 132px; }
+  .index-hero .truthy-bubble { max-width: min(60vw, 200px); }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }
@@ -5571,7 +5594,6 @@ hr.rule-light {
   .report-counts { display: none; }
 
   /* Speech hero */
-  .speaker-name { font-size: 2.2rem; }
   .speech-title { font-size: 1.3rem; }
 
   /* Verdict panel: Truthy goes inline next to bubble (bubble tail re-points) */
@@ -8242,6 +8264,7 @@ def _render_about() -> str:
         ),
         og_type="website",
         page_path="about.html",
+        current="about",
     )
 
 
