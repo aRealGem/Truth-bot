@@ -1132,9 +1132,15 @@ def _verdict_bar_html(
             continue
         pct = count / total * 100
         css = _verdict_css(label)
+        # Readability pass: a numeral crammed into a segment under ~6% of the
+        # bar's width just overflows/gets clipped by the bar's overflow:hidden
+        # — the legend already carries the exact count, and the title=
+        # tooltip below carries it on hover/focus regardless of whether the
+        # numeral renders.
+        numeral = str(count) if pct >= 6.0 else ""
         segs.append(
             f'<div class="seg v-{css}" style="width:{pct:.1f}%" '
-            f'title="{_esc(label)}: {count}">{count}</div>'
+            f'title="{_esc(label)}: {count}">{numeral}</div>'
         )
     parts_aria = [f"{dist.get(l,0)} {l}" for l in label_order if dist.get(l, 0) > 0]
     aria = "Verdict distribution: " + ", ".join(parts_aria)
@@ -3228,6 +3234,7 @@ def _toc(bundles: list[VerdictBundle]) -> str:
 
 def _report_card(r: dict) -> str:
     claim_count = r.get("claim_count", 0)
+    url = _esc(r.get("url", "#"))
 
     # Strict 5-bucket coarse-axis aggregate — the one published axis
     # (remediation v2, 1.8). Falls back to projecting the legacy 6-bucket
@@ -3237,12 +3244,15 @@ def _report_card(r: dict) -> str:
     dist_strict = (r.get("verdict_distribution_strict")
                    or _agg_project_dist(fine_dist, "strict"))
 
-    # Headline (percent-true FamilyVerdict label — the band display, DC-4'),
-    # segment bar, per-bucket counts, and the family rail tying the
-    # headline's leaning totals to the bar.
-    headline, cls, ratio_text = _family_verdict(dist_strict)
-    # Every bucket renders, Models split included — the card bar must sum
-    # to claim_count just like the report-page bar (remediation T0.2).
+    # Full FamilyVerdict (not just the label/css/ratio_text the thin
+    # ``_family_verdict`` wrapper exposes) — the readability pass's pill and
+    # summary line both need true_count/decided/total so their numerator and
+    # denominator can never drift out of lockstep with the headline's own.
+    fam = _agg_family_verdict(dist_strict)
+    undecided = fam.total - fam.decided
+
+    # Bucket-colored segment bar — unchanged; still sums to claim_count
+    # just like the report-page bar (remediation T0.2).
     total_named = sum(dist_strict.values()) or 1
     segs_inner: list[str] = []
     counts_inner: list[str] = []
@@ -3258,14 +3268,21 @@ def _report_card(r: dict) -> str:
             f'<div class="ct"><span class="swatch v-{_verdict_css(label)}"></span>'
             f'{_esc(label)} <span class="n">{count}</span></div>'
         )
-    head_strict = (
-        f'<span class="label {cls}">{_esc(headline)}</span>'
-        f'<span class="ratio">{_esc(ratio_text)}</span>'
-    )
-    rail_strict = _family_rail_html(dist_strict, AGGREGATE_BAR_ORDER,
-                                    rail_class="report-family-rail")
     segs_strict = "".join(segs_inner)
     counts_strict = "".join(counts_inner)
+
+    # Pill: "NN% True · T/D decided" on desktop, "NN% True" alone on mobile
+    # (the "· T/D decided" suffix is CSS-hidden under the mobile breakpoint —
+    # see .pill-decided). Summary line spells the same numbers out in words,
+    # plus the undecided count the pill's ratio omits.
+    pill_html = (
+        f'<span class="label {fam.css}">{_esc(fam.label)}</span>'
+        f'<span class="pill-decided"> · {fam.true_count}/{fam.decided} decided</span>'
+    )
+    summary_text = (
+        f'{fam.ratio_text} · {undecided} undecided'
+        if fam.decided else fam.ratio_text
+    )
 
     meta_bits = []
     if r.get("date"):
@@ -3274,45 +3291,30 @@ def _report_card(r: dict) -> str:
         meta_bits.append(_esc(r["venue"]))
     meta = '<span class="sep">·</span>'.join(meta_bits)
 
-    tier_counts = r.get("tier_counts") or {}
-    # Every nonzero bucket ships, via aggregation.sources_line (1.6):
-    # "other" since remediation F6, and "press/political" since remediation
-    # v2 — the old hand-kept order omitted the political bucket entirely,
-    # hiding 162 sources on the Trump card. The data-tier-counts attribute
-    # is the machine-readable mirror consistency.check_site lints against
-    # reports.json tier_counts.
-    _tier_pairs = _agg_sources_line(tier_counts)
-    _tier_parts = [f'{count} {label}' for label, count in _tier_pairs]
-    _tier_attr = " ".join(
-        f"{key}:{tier_counts.get(key, 0)}"
-        for key, _label in TIER_LINE_ORDER if tier_counts.get(key, 0)
-    )
-    src_tiers_html = (
-        f'    <span class="src-tiers" data-tier-counts="{_esc(_tier_attr)}">'
-        f'Sources: {" · ".join(_tier_parts)}</span>'
-        if _tier_parts else ''
-    )
-
+    # Readability pass (P134 site refinement): the per-family rail and the
+    # source-tier line are report-page detail, not homepage-card detail —
+    # removed here entirely (not just CSS-hidden); a reader wanting that
+    # breakdown clicks through to the report itself.
     return (
-        f'<a href="{_esc(r.get("url", "#"))}" class="report">'
+        f'<div class="report">'
         '  <div class="report-top">'
         '    <div>'
-        f'      <div class="report-headline">{_esc(r.get("speaker", ""))}</div>'
+        f'      <div class="report-headline"><a href="{url}">'
+        f'{_esc(r.get("speaker", ""))}</a></div>'
         f'      <div class="report-meta">{meta}</div>'
         '    </div>'
         '    <div class="verdict-pill">'
-        f'      <span>{head_strict}</span>'
+        f'      <span>{pill_html}</span>'
         '    </div>'
         '  </div>'
-        f'  {rail_strict}'
         f'  <div class="report-bar">{segs_strict}</div>'
+        f'  <div class="report-summary">{_esc(summary_text)}</div>'
         f'  <div class="report-counts">{counts_strict}</div>'
         '  <div class="report-cta">'
         f'    <span class="src">{claim_count} claim{"s" if claim_count != 1 else ""}</span>'
-        + src_tiers_html +
-        '    <span class="read">Read full report →</span>'
+        f'    <a href="{url}" class="read">Read full report →</a>'
         '  </div>'
-        '</a>'
+        '</div>'
     )
 
 
@@ -3408,6 +3410,10 @@ CSS = """\
   --ink: #0c0a09;
   --ink-muted: #57534e;
   --ink-faint: #a8a29e;
+  /* Readability pass: --ink-faint is for decorative/disabled text only. A
+     handful of elements were using it for text that carries meaning (jump
+     links, counts) — those get this slightly darker floor instead. */
+  --ink-dim: #78716c;
   --border: #e7e5e4;
   --border-strong: #d6d3d1;
 
@@ -3885,6 +3891,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 /* [07] Index page — report cards ─────────────────────────────────────── */
 .reports { display: flex; flex-direction: column; }
 .report {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
   border-bottom: none;
@@ -3912,12 +3919,23 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   line-height: 1.15;
   color: var(--ink);
 }
+/* Un-nested card link (readability pass): only the leader name and the CTA
+   are real links now — the rest of the card is clickable via this link's
+   stretched pseudo-element, so a reader/screen-reader/keyboard user gets
+   one clearly-labeled link per card instead of a giant unlabeled region. */
+.report-headline a {
+  color: inherit;
+  text-decoration: none;
+}
+.report-headline a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
 .report-meta {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--ink-muted);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: #57534e;
   margin-top: 0.5rem;
 }
 .report-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
@@ -3932,16 +3950,12 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   font-weight: 500;
   letter-spacing: -0.015em;
   line-height: 1.1;
-  display: block;
 }
 .verdict-pill .label.neutral { color: var(--ink); }
-.verdict-pill .ratio {
+.verdict-pill .pill-decided {
   font-family: var(--mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 0.85rem;
   color: var(--ink-muted);
-  margin-top: 0.35rem;
 }
 
 /* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
@@ -3949,9 +3963,16 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   display: flex;
   height: 6px;
   overflow: hidden;
-  margin: 0.25rem 0 1rem;
+  margin: 0.25rem 0 0.6rem;
 }
 .report-bar .seg { transition: filter 200ms ease; }
+
+.report-summary {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: #57534e;
+  margin-bottom: 0.75rem;
+}
 
 .report-counts {
   display: flex;
@@ -3972,6 +3993,8 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 
 .report-cta {
+  position: relative;
+  z-index: 1;
   margin-top: 1.1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
@@ -3984,15 +4007,9 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   letter-spacing: 0.07em;
 }
 .report-cta .src { color: var(--ink-faint); }
-.report-cta .src-tiers {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-faint);
-}
 .report-cta .read {
   color: var(--ink);
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -4031,11 +4048,9 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .speech-meta {
   margin-top: 1rem;
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--ink-muted);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: #57534e;
 }
 .speech-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
 
@@ -4082,7 +4097,8 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .vp-bar-wrap { padding: 1.5rem 1.75rem; }
 .vp-bar {
   display: flex;
-  height: 38px;
+  height: 12px;
+  border-radius: 6px;
   overflow: hidden;
 }
 .vp-bar .seg {
@@ -4233,7 +4249,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .toc-num {
   font-family: var(--mono);
   font-size: 0.75rem;
-  color: var(--ink-faint);
+  color: var(--ink-dim);
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
@@ -4258,7 +4274,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .toc-jump {
   font-family: var(--mono);
   font-size: 0.75rem;
-  color: var(--ink-faint);
+  color: var(--ink-dim);
 }
 
 
@@ -4289,7 +4305,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 /* Family rail — brackets the Truthy/Falsey family groups above a verdict bar
    at the same widths as the segments, so the headline's "N of M decided
    claims X-leaning" totals are visibly derivable from the graph. */
-.vp-family-rail, .report-family-rail {
+.vp-family-rail {
   display: flex;
   gap: 2px;
   margin-bottom: 0.35rem;
@@ -4298,7 +4314,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.vp-family-rail .fam, .report-family-rail .fam {
+.vp-family-rail .fam {
   border-top: 2px solid;
   padding-top: 0.2rem;
   white-space: nowrap;
@@ -4306,7 +4322,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   text-overflow: ellipsis;
   min-width: 0;
 }
-.vp-family-rail .fam .n, .report-family-rail .fam .n { font-weight: 700; }
+.vp-family-rail .fam .n { font-weight: 700; }
 .fam.fam-true    { border-color: var(--v-truthy); color: var(--v-true); }
 .fam.fam-false   { border-color: var(--v-falsey); color: var(--v-false); text-align: right; }
 .fam.fam-abstain { border-color: var(--border-strong, #d6d3d1); color: var(--ink-faint); text-align: center; border-top-style: dashed; }
@@ -5184,6 +5200,49 @@ hr.rule-light {
 .v-truthy       { background: var(--v-truthy); }
 .v-falsey       { background: var(--v-falsey); }
 .v-split        { background: var(--v-split); }
+
+/* Readability pass — WCAG AA pill/badge contrast. The bar/swatch fills
+   above stay saturated (bars carry a numeral or nothing, never body text);
+   only FILLED PILLS/BADGES (.claim-pill, .toc-pill) get tinted-bg/dark-ink
+   pairs here, since white text on --v-truthy/--v-exaggerated (lime/amber)
+   fails AA. One rule per verdict family, covering both the fine 6-bucket
+   slugs (true/mostly-true/exaggerated/misleading/false/unverifiable) and
+   the coarse 5-bucket slugs the claim-card headline pill actually paints
+   with (true/truthy/falsey/false/unverifiable/split) — a pill can carry
+   either axis's slug depending on which label produced it. */
+.claim-pill.v-true, .toc-pill.v-true,
+.claim-pill.v-mostly-true, .toc-pill.v-mostly-true,
+.claim-pill.v-truthy, .toc-pill.v-truthy {
+  background: #ecfccb;
+  color: #3f6212;
+}
+.claim-pill.v-exaggerated, .toc-pill.v-exaggerated,
+.claim-pill.v-misleading, .toc-pill.v-misleading,
+.claim-pill.v-falsey, .toc-pill.v-falsey {
+  background: #fef9c3;
+  color: #713f12;
+}
+.claim-pill.v-false, .toc-pill.v-false {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.claim-pill.v-unverifiable, .toc-pill.v-unverifiable,
+.claim-pill.v-split, .toc-pill.v-split {
+  background: #f5f5f4;
+  color: #57534e;
+}
+/* Sub-state outlines (anecdote / self-sourced / gate-withheld) were tuned
+   for a white-on-saturated pill; on the new tinted-light pills a white
+   outline is invisible, so they switch to a dark-ink-based rgba. */
+.claim-pill.pill-anecdote, .toc-pill.pill-anecdote {
+  outline-color: rgba(87, 83, 78, 0.5);
+}
+.claim-pill.pill-self-sourced {
+  outline-color: rgba(87, 83, 78, 0.55);
+}
+.claim-pill.pill-gate-withheld {
+  outline-color: rgba(87, 83, 78, 0.45);
+}
 /* Text paint */
 .vt-true         { color: var(--v-true); }
 .vt-mostly-true  { color: var(--v-mostly-true); }
@@ -5358,6 +5417,10 @@ hr.rule-light {
   .masthead-row { flex-direction: column; gap: 0.5rem; }
   nav.top-nav { padding-top: 0.5rem; }
 
+  /* Verdict bar: legend already carries the counts at this width — belt
+     and suspenders alongside the pct<6% per-segment omission above. */
+  .vp-bar .seg { color: transparent; }
+
   /* Status bar */
   .status-bar .stamp { margin-left: 0; }
 
@@ -5395,6 +5458,10 @@ hr.rule-light {
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }
   .verdict-pill { text-align: left; }
+  /* Mobile pill drops the "· T/D decided" suffix and the swatch/count
+     legend — the summary line already carries the same numbers in words. */
+  .verdict-pill .pill-decided { display: none; }
+  .report-counts { display: none; }
 
   /* Speech hero */
   .speaker-name { font-size: 2.2rem; }
@@ -5853,6 +5920,18 @@ hr.rule-light {
 }
 .extreme-speaker { color: var(--ink-faint); }
 .insights-method { margin-top: 1.5rem; font-size: 0.92rem; }
+
+/* Readability pass — touch-target type floor (pointer: coarse). The 0.75rem
+   base floor established above is legible on a desktop pointer; a touch
+   viewport gets a slightly higher floor for the same mono micro-labels. */
+@media (pointer: coarse) {
+  .toc-num, .toc-jump,
+  footer.foot, footer.foot .footer-hash,
+  .fam .n, .legend-item .ct,
+  .vp-legend {
+    font-size: 0.8rem;
+  }
+}
 
 """
 

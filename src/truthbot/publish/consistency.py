@@ -784,41 +784,12 @@ def check_run_artifacts(repo_root) -> list[str]:
     return violations
 
 
-def _check_index_tier_buckets(index_html: str, reports: list[dict]) -> list[str]:
-    """Remediation v2 (1.6): the Sources line on every index card must
-    reproduce reports.json tier_counts exactly — every nonzero bucket,
-    political included (the old hand-kept order silently dropped it, hiding
-    162 sources on the Trump card). Parses the machine-readable
-    ``data-tier-counts`` attribute on ``.src-tiers``."""
-    violations: list[str] = []
-    for r in reports[:20]:  # the index renders the first 20 cards
-        url = r.get("url", "")
-        slug = url or r.get("id", "?")
-        tier_counts = r.get("tier_counts") or {}
-        want = {k: v for k, v in tier_counts.items() if v}
-        start = index_html.find(f'href="{url}" class="report"')
-        if start < 0:
-            violations.append(f"index: no report card found for {slug}")
-            continue
-        card = index_html[start:index_html.find("</a>", start)]
-        m = re.search(r'class="src-tiers" data-tier-counts="([^"]*)"', card)
-        if not m:
-            if want:
-                violations.append(
-                    f"index card {slug}: no machine-readable Sources chip "
-                    f"(data-tier-counts) but tier_counts has {want}")
-            continue
-        got = {k: int(v) for k, v in
-               (pair.split(":") for pair in m.group(1).split() if ":" in pair)}
-        if got != want:
-            violations.append(
-                f"index card {slug}: Sources chip buckets {got} != "
-                f"reports.json tier_counts {want}")
-        if sum(got.values()) != sum(tier_counts.values()):
-            violations.append(
-                f"index card {slug}: Sources chip sums to {sum(got.values())}, "
-                f"tier_counts sum to {sum(tier_counts.values())}")
-    return violations
+# _check_index_tier_buckets (remediation v2, 1.6) was removed in the site
+# readability pass: it validated the homepage card's ``.src-tiers`` chip
+# against ``reports.json`` tier_counts, and that chip was removed from
+# ``_report_card`` entirely (source-tier detail now lives only on the
+# report page) — there is no longer a homepage-rendered surface for this
+# check to validate.
 
 
 #: Buckets the aggregate bar can actually render (aggregation.AGGREGATE_BAR_ORDER
@@ -1167,7 +1138,6 @@ def check_site(site_root: Path, strict_buckets: bool = True) -> list[str]:
     # (old static feed.xml, cards without the political bucket); every
     # fresh render runs them (default True).
     if strict_buckets:
-        violations.extend(_check_index_tier_buckets(index_html, reports))
         violations.extend(_check_bucket_invariants(reports, claims))
         violations.extend(check_feed(site_root, reports))
         violations.extend(_check_no_lens_ui(site_root))

@@ -115,12 +115,10 @@ def test_fresh_render_passes_strict_lints(tmp_path) -> None:
     pub.publish(sr)
     violations = check_site(tmp_path, strict_buckets=True)
     assert violations == [], "\n".join(violations)
-
-    # The political bucket actually rendered on the index card (the exact
-    # regression the strict lint exists for).
-    index_html = (tmp_path / "index.html").read_text(encoding="utf-8")
-    assert "press/political" in index_html
-    assert 'data-tier-counts="' in index_html
+    # Readability pass (site.py Section 4): the index card's source-tier
+    # chip (the surface the political-bucket regression above used to pin)
+    # was removed from the homepage entirely — that detail now lives only
+    # on the report page, which is exercised by other tests.
 
 
 # ── R-1: no lens UI anywhere ─────────────────────────────────────────────────
