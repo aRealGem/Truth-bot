@@ -739,6 +739,35 @@ def _tier_badge(url: str, tier: "SourceTier | str | None" = None,
             f'{code}</span>')
 
 
+def _evidence_tier_summary(items: list, *, tier_index: "dict[str, SourceTier] | None" = None,
+                           from_pack: bool = False) -> str:
+    """'3 gov, 1 news' style tier breakdown for a details summary line
+    (Section 5, readability pass) — so the reader sees the mix of source
+    quality before clicking to expand the collapsed evidence block.
+
+    ``from_pack=True`` reads each item's OWN stored ``tier`` field directly
+    (pack items — same authority :func:`stored_tier_index` is built from);
+    otherwise ``items`` is a list of bare URLs resolved against
+    ``tier_index`` with the render-time classify_tier fallback.
+    """
+    counts: dict[str, int] = {}
+    if from_pack:
+        for src in items:
+            try:
+                tier = SourceTier((src.get("tier") or "").strip())
+            except ValueError:
+                continue
+            bucket = TIER_BUCKET[tier]
+            counts[bucket] = counts.get(bucket, 0) + 1
+    else:
+        for url in items:
+            tier, _ = _resolve_tier(url, tier_index)
+            bucket = TIER_BUCKET[tier]
+            counts[bucket] = counts.get(bucket, 0) + 1
+    parts = [f'{counts[key]} {label}' for key, label in TIER_LINE_ORDER if counts.get(key)]
+    return ", ".join(parts)
+
+
 # Layer 4 — anti-hallucination publish-layer rendering.
 #
 # A URL's reachability classification (from
@@ -1705,10 +1734,18 @@ def _verdict_panel(site_report) -> str:
         # ALL the honest abstentions, not just the self-sourced sub-state, so the
         # old class name misdescribed it. consistency.py parses this chip's copy;
         # the two change in lockstep (test_abstention_chip pins the parse).
+        # Readability pass (Section 5): default-collapsed under a generic
+        # "Why undecided" summary. The inner <p class="vp-abstention-chip">
+        # is UNCHANGED — consistency.py's parser (test_abstention_chip) reads
+        # it by regex and the two must stay in lockstep; nesting it inside
+        # <details> rather than rewriting its markup keeps that parser valid.
         selfsource_chip_html = (
+            '<details class="vp-abstention-details">'
+            '<summary class="vp-abstention-summary">Why undecided</summary>'
             '<p class="vp-abstention-chip" '
             f'title="{_esc(chip_title)}">' + _esc(" · ".join(parts))
-            + '</p>\n'
+            + '</p>'
+            '</details>\n'
         )
 
     # M-6 evenhandedness (Wave A A3): genre-property disclosure for the
@@ -2789,16 +2826,31 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     seat_html = (
         f'<div class="pca-seats">{_esc(seat_line)}</div>' if seat_line else ""
     )
+    # Readability pass (Section 5): default-collapsed on every viewport,
+    # including desktop — audit-trail detail, not first-read content. The
+    # summary names each seat's own prediction (role: label) when captured,
+    # so the reader can tell at a glance whether the panel disagreed with
+    # itself without opening the strip; falls back to the chain's own text
+    # when no per-seat data was captured (older bundles).
+    by_role = getattr(prov, "panel_by_role", None) or {}
+    if by_role:
+        seat_order = [r for r in _SEAT_ORDER if r in by_role] + sorted(
+            r for r in by_role if r not in _SEAT_ORDER)
+        summary_text = "Provenance — " + " · ".join(
+            f'{role}: {"/".join(by_role[role])}' for role in seat_order)
+    else:
+        summary_text = f"Provenance — {parts[0]}"
     # The correction and coherence notes are NOT emitted here: they ride on the
     # claim card via :func:`_correction_provenance_html` (F14), so they survive on
     # a gated/minimal claim whose provenance chain is empty and this strip renders
     # nothing. One emit path, two templates — they cannot drift.
     return (
-        '<div class="pca-provenance" '
-        'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
-        'tally, each seat&#39;s own prediction, and any Severity Classifier '
-        'stage-2 override.">'
-        f'{chain}{seat_html}</div>'
+        '<details class="pca-provenance-details">'
+        f'<summary class="pca-provenance-summary">{_esc(summary_text)}</summary>'
+        '<div class="pca-provenance-body">'
+        f'{chain}{seat_html}'
+        '</div>'
+        '</details>'
     )
 
 
@@ -3046,9 +3098,13 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         if consulted_inner:
             # Collapsed by default (2026-07-19 review): the snippet verbiage is
             # audit detail, not first-read content — one click away, not in the way.
+            _consulted_tiers = _evidence_tier_summary(consulted, from_pack=True)
+            _consulted_summary = f'Sources consulted ({len(consulted)})'
+            if _consulted_tiers:
+                _consulted_summary += f' · {_consulted_tiers}'
             consulted_html = (
                 '<details class="evidence-details">'
-                f'  <summary class="evidence-summary">Sources consulted ({len(consulted)})</summary>'
+                f'  <summary class="evidence-summary">{_esc(_consulted_summary)}</summary>'
                 f'  <div class="evidence">{consulted_inner}</div>'
                 '</details>'
             )
@@ -3087,9 +3143,18 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         )
     else:
         evidence_inner = _evidence_list_html([], classifications=None)
+    _evidence_summary = "Evidence"
+    if all_urls:
+        _cited = all_urls[:10]
+        _evidence_summary += f' — {len(_cited)} source{"s" if len(_cited) != 1 else ""}'
+        _evidence_tiers = _evidence_tier_summary(_cited, tier_index=_tier_index)
+        if _evidence_tiers:
+            _evidence_summary += f' · {_evidence_tiers}'
+    else:
+        _evidence_summary += ' / sources list'
     evidence_html = (
         '<details class="evidence-details">'
-        '  <summary class="evidence-summary">Combined evidence / sources list</summary>'
+        f'  <summary class="evidence-summary">{_esc(_evidence_summary)}</summary>'
         f'  <div class="evidence">{evidence_inner}</div>'
         '</details>'
     )
@@ -3137,7 +3202,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  {triage_badge}'
         '</div>'
         '<div class="claim-body">'
-        f'  {_claim_quote_html(claim)}'
+        f'  {_claim_quote_html(claim, css)}'
         f'  {context_html}'
         f'  {caveat_html}'
         f'  {computed_exhibit_html}'
@@ -3159,7 +3224,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         '</article>'
     )
 
-def _claim_quote_html(claim) -> str:
+def _claim_quote_html(claim, css: str = "") -> str:
     """The claim quote, rendered INSIDE its surrounding transcript sentences.
 
     Half the Obama-2014 claims (49/96) open with deictic words — "Tonight, I'm
@@ -3173,10 +3238,16 @@ def _claim_quote_html(claim) -> str:
     ``claim.context`` format is the segmenter's ``prev || claim || next``;
     when the claim text isn't a clean element of it, the whole context renders
     below the quote rather than being dropped.
+
+    ``css`` (readability pass, Section 5) is the claim's own ``_verdict_css``
+    slug — when given, adds a ``v-{css}`` modifier so the quote's left border
+    reads the same verdict color as the claim's headline pill, instead of a
+    fixed neutral rule.
     """
+    css_cls = f" v-{css}" if css else ""
     text = (claim.text or "").strip()
     ctx = (getattr(claim, "context", "") or "").strip()
-    bare = f'<blockquote class="claim-quote">"{_esc(text)}"</blockquote>'
+    bare = f'<blockquote class="claim-quote{css_cls}">"{_esc(text)}"</blockquote>'
     if not ctx or ctx == text:
         return bare
     parts = [p.strip() for p in ctx.split("||") if p.strip()]
@@ -3192,7 +3263,7 @@ def _claim_quote_html(claim) -> str:
                      for p in parts[i + 1:])
     mid = f'<span class="ccq-claim">"{_esc(text)}"</span>'
     return (
-        '<blockquote class="claim-quote claim-quote-ctx" '
+        f'<blockquote class="claim-quote claim-quote-ctx{css_cls}" '
         'title="The checked claim, emphasized, inside the transcript sentences '
         'around it — the same context the verdict panel judged with.">'
         + " ".join(s for s in (before, mid, after) if s)
@@ -4420,6 +4491,19 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
+/* Readability pass (Section 5): default-collapsed wrapper around the chip
+   above — same native-<details> posture as the evidence/provenance blocks. */
+details.vp-abstention-details { margin: 0.35rem 0 0; }
+.vp-abstention-summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.vp-abstention-summary::-webkit-details-marker { display: none; }
+.vp-abstention-summary::before { content: "▶ "; font-size: 0.7rem; }
+details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
 /* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
    concentrates on one speech, say so as a genre property, in the panel. */
 .vp-genre-note {
@@ -4432,21 +4516,30 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-quote {
   font-family: var(--serif);
   font-size: 1.4rem;
-  font-weight: 400;
-  line-height: 1.4;
+  font-weight: 500;
+  line-height: 1.55;
   letter-spacing: -0.012em;
   color: var(--ink);
   padding-left: 1.25rem;
   border-left: 3px solid var(--border-strong);
+  max-width: 72ch;
 }
+/* Readability pass (Section 5): the left border reads the claim's own
+   verdict color instead of a fixed neutral rule — covers both the fine
+   6-bucket and coarse 5-bucket slugs, since callers may pass either. */
+.claim-quote.v-true, .claim-quote.v-mostly-true, .claim-quote.v-truthy { border-left-color: var(--v-true); }
+.claim-quote.v-exaggerated, .claim-quote.v-misleading, .claim-quote.v-falsey { border-left-color: var(--v-misleading); }
+.claim-quote.v-false { border-left-color: var(--v-false); }
+.claim-quote.v-unverifiable, .claim-quote.v-split { border-left-color: var(--v-unverifiable); }
 /* Claim-in-context (2026-08-01): the checked sentence emphasized inside its
    greyed transcript neighbors — deictic quotes ("we'll launch six more") are
    unreadable bare, and the panel always judged with this context. */
 .claim-quote-ctx { font-size: 1.15rem; }
 .claim-quote-ctx .ccq-side {
-  color: var(--ink-muted);
+  color: var(--ink-faint);
   font-size: 0.92rem;
   font-weight: 400;
+  font-style: italic;
 }
 .claim-quote-ctx .ccq-claim {
   color: var(--ink);
@@ -4554,14 +4647,28 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
-.pca-provenance {
+/* Readability pass (Section 5): default-collapsed on every viewport —
+   native <details>, same posture as the evidence/sources blocks below. */
+details.pca-provenance-details {
+  margin-bottom: 0.6rem;
   font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--ink-muted);
-  margin-bottom: 0.6rem;
-  line-height: 1.5;
+}
+.pca-provenance-summary {
+  cursor: pointer;
+  list-style: none;
+  line-height: 1.4;
   word-break: break-word;
 }
+.pca-provenance-summary::-webkit-details-marker { display: none; }
+.pca-provenance-summary::before {
+  content: "▶ ";
+  font-size: 0.7rem;
+  display: inline-block;
+}
+details.pca-provenance-details[open] > .pca-provenance-summary::before { transform: rotate(90deg); display: inline-block; }
+.pca-provenance-body { margin-top: 0.35rem; line-height: 1.5; word-break: break-word; }
 .pca-seats {
   margin-top: 0.15rem;
   color: var(--ink-faint);
