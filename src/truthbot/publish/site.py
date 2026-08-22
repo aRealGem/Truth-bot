@@ -192,10 +192,15 @@ BETA_TEXT_SUFFIX = ' (beta)' if IS_BETA else ''
 # <updated> stamp) is gone.
 
 # Google Fonts link tags (exact — do not modify)
+# Readability pass (Section 10): trimmed to weights actually used. Dropped:
+# Geist 300 (grep for "font-weight: 300" finds zero matching selectors) and
+# Newsreader italic-500 (every "font-style: italic" selector pairs with
+# weight 400, none with 500). Geist 700 and Newsreader italic-400 stay —
+# both are genuinely used (.ccq-claim / .fam .n; .speech-title / .truthy-bubble).
 _GOOGLE_FONTS = """\
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-  <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400;6..72,1,500&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap\">
+  <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap\">
 """
 
 
@@ -2280,6 +2285,11 @@ def _social_head(
     desc = og_description if meta_description is None else meta_description
     image_abs = f"{_site_url()}/assets/social-card.png"
     parts = [
+        # Readability pass (Section 9): SVG first — legible at 16px, unlike
+        # the 232-byte favicon.ico. Listed before the .ico/32px-PNG
+        # fallbacks (a browser that understands type="image/svg+xml" prefers
+        # it regardless of order; this is just the conventional ordering).
+        f'  <link rel="icon" href="{rel}favicon.svg" type="image/svg+xml">\n',
         f'  <link rel="icon" href="{rel}favicon.ico" sizes="any">\n',
         f'  <link rel="icon" href="{rel}assets/favicon-32.png" type="image/png" sizes="32x32">\n',
         f'  <link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png">\n',
@@ -8605,6 +8615,10 @@ class SitePublisher:
         if ico_src.exists():
             (self._root / "favicon.ico").write_bytes(ico_src.read_bytes())
             logger.debug("Copied favicon.ico to site root")
+        svg_src = src_dir / "favicon.svg"
+        if svg_src.exists():
+            (self._root / "favicon.svg").write_bytes(svg_src.read_bytes())
+            logger.debug("Copied favicon.svg to site root")
 
     def _write_alias_stubs(self) -> None:
         """Emit reports/{old}.html redirect stubs for every alias whose

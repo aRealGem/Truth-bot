@@ -211,6 +211,7 @@ class TestTierCountsForReport:
 class TestSocialHead:
     def test_emits_favicon_links(self):
         html = _social_head("./", "T", "D")
+        assert '<link rel="icon" href="./favicon.svg" type="image/svg+xml">' in html
         assert '<link rel="icon" href="./favicon.ico" sizes="any">' in html
         assert '<link rel="icon" href="./assets/favicon-32.png"' in html
         assert '<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">' in html
@@ -443,6 +444,7 @@ class TestPublisherAssets:
         pub._copy_assets()
 
         assert (tmp_dir / "favicon.ico").exists()
+        assert (tmp_dir / "favicon.svg").exists()
         assert (tmp_dir / "assets" / "social-card.png").exists()
         assert (tmp_dir / "assets" / "favicon-32.png").exists()
         assert (tmp_dir / "assets" / "apple-touch-icon.png").exists()
