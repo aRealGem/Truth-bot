@@ -2202,12 +2202,18 @@ def _masthead_full(rel: str = "./", current: str = "") -> str:
     def _nav_a(href: str, label: str, key: str) -> str:
         cls = ' class="active" aria-current="page"' if key == current else ''
         return f'      <a href="{href}"{cls}>{label}</a>\n'
+    # Readability pass (Section 8): the homepage wordmark is the page's own
+    # <h1> (it had none before). Every other page using this masthead already
+    # carries its own more specific <h1> (report speaker name, "About",
+    # "Model panel insights", ...), so the wordmark stays a plain <div>
+    # there to avoid a second <h1> on the page.
+    wordmark_tag = "h1" if current == "reports" else "div"
     return (
         '<header class="masthead">\n'
         '  <div class="wrap masthead-row">\n'
         '    <div>\n'
-        f'      <div class="wordmark"><a href="{rel}index.html" style="color:inherit;text-decoration:none">'
-        'truth-bot<span class="dot">.</span></a></div>\n'
+        f'      <{wordmark_tag} class="wordmark"><a href="{rel}index.html" style="color:inherit;text-decoration:none">'
+        f'truth-bot<span class="dot">.</span></a></{wordmark_tag}>\n'
         '      <p class="tagline">Automated political fact-checking with multi-model consensus analysis.</p>\n'
         '    </div>\n'
         '    <nav class="top-nav">\n'
@@ -3564,7 +3570,6 @@ a { color: inherit; text-decoration: none; }
   content: "●";
   color: #4ade80;
   margin-right: 0.45rem;
-  animation: pulse 2.4s ease-in-out infinite;
 }
 .status-bar .stamp { margin-left: auto; color: #a8a29e; }
 @keyframes pulse {
@@ -3690,6 +3695,11 @@ header.masthead:has(.mast-row) {
   align-items: baseline;
 }
 .section-head .sub { color: var(--ink-faint); }
+/* Readability pass (Section 8): these were plain <span>s until now, so the
+   uppercase-mono label styling above lived entirely on .section-head via
+   inheritance. As <h2>, the UA stylesheet's own font-size/font-weight would
+   otherwise win over that inherited value — reset it back to match. */
+.section-head h2 { font: inherit; }
 
 
 /* [06] Index page — aggregate stats & verdict bar ────────────────────── */
@@ -3922,7 +3932,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .index-hero .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
 .hero-truthy-wrap {
   flex-shrink: 0;
-  animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
 .hero-truthy-wrap svg {
   width: 280px;
@@ -3938,7 +3947,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .truthy-frame #floorShadow {
   transform-box: fill-box;
   transform-origin: 150px 353px;
-  animation: hero-shadow-breathe 3.2s ease-in-out infinite;
 }
 @keyframes hero-shadow-breathe {
   0%, 100% { transform: translateY(0)   scale(1);    opacity: 1; }
@@ -3952,7 +3960,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .index-hero #mascot.state-true.hero-wave #armLeftSwing {
   transform-box: view-box;
   transform-origin: 88px 253px;
-  animation: index-hero-wave-arm 0.9s ease-in-out infinite;
 }
 .hero-truthy-col {
   flex: 1;
@@ -4247,8 +4254,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   transition: filter 200ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  /* Match index-hero bob; shadow counter-animates inside the SVG (#floorShadow). */
-  animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
 .truthy-frame:hover { filter: brightness(1.04); }
 .truthy-frame:active { filter: brightness(0.98); }
@@ -5396,7 +5401,6 @@ hr.rule-light {
   50%      { transform: translateY(-2.5px); }
 }
 #character {
-  animation: idle 4s ease-in-out infinite;
   transform-origin: center bottom;
 }
 
@@ -5405,7 +5409,6 @@ hr.rule-light {
   50%      { transform: rotate(2deg); }
 }
 #antenna {
-  animation: antenna-sway 3s ease-in-out infinite;
   transform-origin: 150px 62px;
   transform-box: fill-box;
 }
@@ -5427,13 +5430,9 @@ hr.rule-light {
   50%      { transform: scale(1.08); }
 }
 .state-true .eye-happy {
-  animation:
-    true-happy-cycle 4s ease-in-out infinite,
-    happy-pulse 2.2s ease-in-out infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
-.state-true .eye-neutral { animation: true-neutral-cycle 4s ease-in-out infinite; }
 .state-iffy .eye-iffy { opacity: 1; }
 
 @keyframes sad-wander {
@@ -5445,7 +5444,6 @@ hr.rule-light {
 }
 .state-lie .eye-sad {
   opacity: 1;
-  animation: sad-wander 4.2s ease-in-out infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
@@ -5465,7 +5463,6 @@ hr.rule-light {
 }
 .state-lie #tearLeft,
 .state-lie #tearRight {
-  animation: tear-fall 2.2s ease-in infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
@@ -5512,10 +5509,6 @@ hr.rule-light {
   30%  { filter: brightness(1.6) saturate(1.3); }
   100% { filter: brightness(1); }
 }
-#mascot.speaking #led,
-#mascot.speaking #ledHalo {
-  animation: ledFlash 0.7s ease-out;
-}
 
 
 /* [21] Page-load choreography ────────────────────────────────────────── */
@@ -5523,10 +5516,9 @@ hr.rule-light {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-/* Staggered reveal of major content blocks */
-.stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
-  animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
-}
+/* Staggered reveal of major content blocks — animation applied only under
+   prefers-reduced-motion:no-preference (see consolidated block below); the
+   animation-delay values below are inert without the animation itself. */
 /* Index page stagger */
 .stats     { animation-delay: 50ms; }
 .how-strip { animation-delay: 80ms; }
@@ -6049,6 +6041,41 @@ hr.rule-light {
 }
 .extreme-speaker { color: var(--ink-faint); }
 .insights-method { margin-top: 1.5rem; font-size: 0.92rem; }
+
+/* Readability pass (Section 8) — every `animation:` this stylesheet applies
+   (as opposed to the @keyframes that merely define one) is gated behind
+   prefers-reduced-motion:no-preference, consolidated here rather than left
+   scattered across 13 base selectors above. Each selector keeps every OTHER
+   property (transform-origin, transform-box, opacity, etc.) on its own base
+   rule above — only the animation itself moves. The existing
+   `.how-strip { animation: none; }` HOW_STRIP_RISE off-switch (emitted
+   below, module-level) is an independent manual override and stays
+   compatible: it forces the animation off regardless of motion preference,
+   and nesting the "on" declaration here doesn't change that. */
+@media (prefers-reduced-motion: no-preference) {
+  .status-bar .live::before { animation: pulse 2.4s ease-in-out infinite; }
+  .hero-truthy-wrap { animation: hero-truthy-float 3.2s ease-in-out infinite; }
+  .index-hero #floorShadow,
+  .truthy-frame #floorShadow { animation: hero-shadow-breathe 3.2s ease-in-out infinite; }
+  .index-hero #mascot.state-true.hero-wave #armLeftSwing { animation: index-hero-wave-arm 0.9s ease-in-out infinite; }
+  .truthy-frame { animation: hero-truthy-float 3.2s ease-in-out infinite; }
+  #character { animation: idle 4s ease-in-out infinite; }
+  #antenna { animation: antenna-sway 3s ease-in-out infinite; }
+  .state-true .eye-happy {
+    animation:
+      true-happy-cycle 4s ease-in-out infinite,
+      happy-pulse 2.2s ease-in-out infinite;
+  }
+  .state-true .eye-neutral { animation: true-neutral-cycle 4s ease-in-out infinite; }
+  .state-lie .eye-sad { animation: sad-wander 4.2s ease-in-out infinite; }
+  .state-lie #tearLeft,
+  .state-lie #tearRight { animation: tear-fall 2.2s ease-in infinite; }
+  #mascot.speaking #led,
+  #mascot.speaking #ledHalo { animation: ledFlash 0.7s ease-out; }
+  .stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
+    animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  }
+}
 
 /* Readability pass — touch-target type floor (pointer: coarse). The 0.75rem
    base floor established above is legible on a desktop pointer; a touch
@@ -6888,7 +6915,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     )
 
     stats_html = (
-        '<div class="section-head"><span>Program stats</span><span class="sub">All time</span></div>'
+        '<div class="section-head"><h2>Program stats</h2><span class="sub">All time</span></div>'
         '<div class="stats">'
         + '<div class="stat">'
         + _icon_svg(_ICON_BODY_LEADERS, size=48, extra_class="stat-icon-lg")
@@ -6942,7 +6969,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + stats_html
         + how_strip_html
         + '<hr class="rule">'
-        + '<div class="section-head"><span>Latest truthiness reviews</span>'
+        + '<div class="section-head"><h2>Latest truthiness reviews</h2>'
         + '<span class="sub">Feed</span></div>'
         + cards_html
         + _HERO_SCRIPT
@@ -7058,10 +7085,10 @@ def _render_report(site_report: SiteReport) -> str:
         # id="claim-catalog" is the anchor target for per-claim "Back to claim list" links.
         toc_section_head = (
             '<div class="section-head" id="claim-catalog">'
-            + '<span class="section-head-label">'
+            + '<h2 class="section-head-label">'
             + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="section-head-icon")
             + '<span>Jump to claim</span>'
-            + '</span>'
+            + '</h2>'
             + '<span class="sub">' + str(claim_count) + ' claim' + ('s' if claim_count != 1 else '') + ' evaluated</span>'
             + '</div>'
         )
@@ -7170,7 +7197,7 @@ def _render_report(site_report: SiteReport) -> str:
         + toc_section_head
         + toc_html
         + '<div class="section-head">'
-        + '<span>Claims, in order spoken</span>'
+        + '<h2>Claims, in order spoken</h2>'
         + '<span class="sub">Anchor links shareable</span>'
         + '</div>'
         + claim_blocks
@@ -7532,7 +7559,7 @@ def _insights_strip_html(insights: "ModelPanelInsights | None") -> str:
     return (
         '<section class="insights-strip" aria-labelledby="insights-strip-head">\n'
         '  <div class="section-head">'
-        '<span id="insights-strip-head">Model panel insights</span>'
+        '<h2 id="insights-strip-head">Model panel insights</h2>'
         '<span class="sub"><a href="./model-insights.html">'
         'Full breakdown &rarr;</a></span></div>\n'
         '  <div class="insight-cards">' + ''.join(cards) + '</div>\n'
