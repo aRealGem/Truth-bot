@@ -3462,7 +3462,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--ink);
   color: #d6d3d1;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 0.55rem 1.25rem;
@@ -3535,7 +3535,7 @@ nav.top-nav {
   gap: 1.4rem;
   align-items: center;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding-top: 0.85rem;
@@ -3574,7 +3574,7 @@ header.masthead:has(.mast-row) {
 .wordmark-sm .dot { color: var(--v-false); }
 .breadcrumb {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -3587,7 +3587,7 @@ header.masthead:has(.mast-row) {
 /* [05] Section heads ─────────────────────────────────────────────────── */
 .section-head {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ink-muted);
@@ -3630,7 +3630,7 @@ header.masthead:has(.mast-row) {
 }
 .stat .lbl {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -3645,7 +3645,7 @@ header.masthead:has(.mast-row) {
 }
 .agg-label {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -3674,7 +3674,7 @@ header.masthead:has(.mast-row) {
   gap: 0.35rem 1.4rem;
   margin-top: 1rem;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .legend-item {
@@ -3914,7 +3914,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .report-meta {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
@@ -3937,7 +3937,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .verdict-pill .label.neutral { color: var(--ink); }
 .verdict-pill .ratio {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -3958,7 +3958,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   flex-wrap: wrap;
   gap: 0.3rem 1.4rem;
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .report-counts .ct {
@@ -3979,14 +3979,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   justify-content: space-between;
   align-items: center;
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
 }
 .report-cta .src { color: var(--ink-faint); }
 .report-cta .src-tiers {
   font-family: var(--mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-faint);
@@ -4005,7 +4005,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .hero { padding: 2.5rem 0 1rem; }
 .hero-overline {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
@@ -4071,7 +4071,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .vp-verdict.neutral { color: var(--ink); }
 .vp-ratio {
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -4102,7 +4102,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   gap: 0.4rem 1.4rem;
   margin-top: 1.1rem;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 
@@ -4115,7 +4115,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   border-top: 1px solid var(--border);
   background: var(--surface-warm);
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
 }
@@ -4155,7 +4155,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   background: var(--ink);
   color: var(--bg);
   font-family: var(--mono);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.25rem 0.45rem;
@@ -4232,14 +4232,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .toc-item:hover { background: var(--surface-warm); }
 .toc-num {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
 .toc-pill {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: #fff;
@@ -4257,7 +4257,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .toc-jump {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
 }
 
@@ -4280,7 +4280,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .claim-num {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
@@ -4294,7 +4294,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   gap: 2px;
   margin-bottom: 0.35rem;
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -4313,7 +4313,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 
 .claim-pill {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #fff;
@@ -4353,7 +4353,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-pill.pill-gate-withheld {
   outline: 2px dashed rgba(255,255,255,0.55);
   outline-offset: -4.5px;
-  font-size: 0.78em;
+  font-size: 0.75rem;
   line-height: 1.25;
   max-width: 22ch;
   white-space: normal;
@@ -4365,7 +4365,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
    mono chip — a taxonomy key, not a verdict color. */
 .claim-pill.reason-code-pill {
   font-family: var(--mono);
-  font-size: 0.72em;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   color: var(--ink-muted);
   background: rgba(127,127,127,0.10);
@@ -4387,7 +4387,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
    speaker's own organization (era-scoped principal match). */
 .ev-self {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -4445,7 +4445,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .claim-context-fallback .ccq-label {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-right: 0.5rem;
@@ -4453,7 +4453,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-context {
   margin-top: 1rem;
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
@@ -4471,7 +4471,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .caveat-label {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--v-exaggerated);
@@ -4497,7 +4497,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .caveat-attribution {
   display: inline-block;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--v-exaggerated);
@@ -4528,7 +4528,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .models-label,
 .models-agreement {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -4540,7 +4540,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .pca-provenance {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   margin-bottom: 0.6rem;
   line-height: 1.5;
@@ -4569,14 +4569,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .computed-exhibit .ce-badge {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent, #3b6ea5);
 }
 .computed-exhibit .ce-series {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .computed-exhibit .ce-formula {
@@ -4589,7 +4589,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0 0 0.35rem;
   padding: 0;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
 }
 .computed-exhibit .ce-inputs li {
@@ -4600,7 +4600,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .computed-exhibit .ce-vintage,
 .computed-exhibit .ce-note {
   margin: 0;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .computed-exhibit .ce-note { margin-top: 0.3rem; }
@@ -4610,7 +4610,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .series-rows { margin: 0.4rem 0 0.2rem; }
 .series-summary {
   cursor: pointer;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   letter-spacing: 0.01em;
 }
@@ -4618,7 +4618,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .series-table {
   border-collapse: collapse;
   margin: 0.45rem 0 0.3rem;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 .series-table th,
 .series-table td {
@@ -4629,14 +4629,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .series-table th { color: var(--ink-muted); font-weight: 600; }
 .series-more, .series-units, .series-predicate, .series-full {
   margin: 0.2rem 0 0;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 /* The window does not reach the period the claim is about. Amber, because a
    reader taking the table at face value would be misled by our own exhibit. */
 .series-mismatch {
   margin: 0.35rem 0;
   padding: 0.35rem 0.5rem;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   border-left: 3px solid var(--amber, #b26a00);
   background: rgba(178, 106, 0, 0.07);
 }
@@ -4657,7 +4657,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .pca-coherence .coherence-label {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   display: block;
@@ -4668,7 +4668,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 /* F9: models-split resolution-state badge — neutral, not a verdict colour. */
 .vt-split {
   font-family: var(--mono);
-  font-size: 0.85em;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   border: 1px dashed var(--rule, #d8d4ca);
   border-radius: 3px;
@@ -4685,7 +4685,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .stance-coverage-label {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
@@ -4708,7 +4708,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   border: 1px solid var(--rule, #ccc); border-radius: 6px;
   padding: 0.35rem 0.6rem; text-align: center; line-height: 1.25;
 }
-.pipeline-diagram .pd-node small { color: var(--ink-muted); font-size: 0.72rem; }
+.pipeline-diagram .pd-node small { color: var(--ink-muted); font-size: 0.75rem; }
 .pipeline-diagram .pd-arrow { color: var(--ink-faint); }
 .seat-insights td .ct { font-weight: 600; }
 .report-correction-banner {
@@ -4734,14 +4734,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .triage-text { line-height: 1.5; }
 .triage-meta {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   margin-top: 0.25rem;
 }
 .triage-tag {
   display: inline-block;
   font-family: var(--mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   font-weight: 600;
   padding: 0.05rem 0.35rem;
   border: 1px solid var(--border);
@@ -4773,7 +4773,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   top: 0.5rem;
   right: 0.5rem;
   font-family: var(--mono);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--v-exaggerated);
   font-weight: 600;
@@ -4786,14 +4786,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   top: 0.5rem;
   right: 0.5rem;
   font-family: var(--mono);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--ink-faint);
   font-weight: 600;
 }
 .model-name {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -4816,7 +4816,7 @@ details.model-reasoning > summary {
   cursor: pointer;
   padding: 0.6rem 0.85rem;
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -4828,7 +4828,7 @@ details.model-reasoning > summary {
 details.model-reasoning > summary .model-reasoning-model {
   font-family: var(--mono);
   font-weight: 400;
-  font-size: 0.82em;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   letter-spacing: 0.02em;
 }
@@ -4859,7 +4859,7 @@ details.model-tier-wrap > summary.model-tier-sum {
   cursor: pointer;
   padding: 0.35rem 0.6rem;
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-muted);
@@ -4868,7 +4868,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .model-tier-body {
   padding: 0 0.6rem 0.5rem;
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--ink);
 }
 
@@ -4876,7 +4876,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .evidence { margin-top: 1.5rem; }
 .evidence-label {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
@@ -4900,7 +4900,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 }
 .evidence-list .ev-id {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink-muted);
   margin: 0 0.35rem 0 0.15rem;
@@ -4908,7 +4908,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 /* E-id references inside model reasoning → jump links to the pack item. */
 .model-reasoning-body a.ev-ref {
   font-family: var(--mono);
-  font-size: 0.8em;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink);
   border-bottom: 1px dashed var(--border-strong);
@@ -4924,7 +4924,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .evidence-list a:hover { border-bottom-color: var(--ink); }
 .evidence-list .ev-src {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -4933,7 +4933,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 /* Source-tier badges (preserved from existing schema) */
 .evidence-tier {
   font-family: var(--mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
   padding: 0.1rem 0.35rem;
   color: #fff;
@@ -4968,7 +4968,7 @@ details.evidence-details > summary.evidence-summary {
   cursor: pointer;
   padding: 0.6rem 1rem;
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -4981,7 +4981,7 @@ details.evidence-details > summary.evidence-summary {
 details.evidence-details > summary.evidence-summary::-webkit-details-marker { display: none; }
 details.evidence-details > summary.evidence-summary::before {
   content: "▶";
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   transition: transform 200ms ease;
   display: inline-block;
@@ -5000,7 +5000,7 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   justify-content: space-between;
   align-items: center;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -5051,14 +5051,14 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
 }
 .panel-composition-title {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-muted);
 }
 .panel-composition-roster {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
 }
 .panel-composition-list {
@@ -5076,7 +5076,7 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
 }
 .panel-composition-role {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-faint);
@@ -5090,7 +5090,7 @@ footer.foot {
   padding: 1.5rem 0 2.5rem;
   border-top: 1px solid var(--border);
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
@@ -5125,7 +5125,7 @@ footer.foot .footer-hash:hover {
   margin-left: 0.4em;
   padding: 0.05em 0.45em;
   font-family: var(--mono);
-  font-size: 0.82em;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5492,7 +5492,7 @@ hr.rule-light {
 }
 .how-num {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink-faint);
   background: var(--border);
@@ -5552,7 +5552,7 @@ hr.rule-light {
   align-items: center;
   gap: 0.55rem;
   flex-wrap: wrap;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
 }
 .claim-back-links .back-link {
@@ -5650,7 +5650,7 @@ hr.rule-light {
 }
 .vp-headline-stat .vp-stat-lbl {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink);
@@ -5658,7 +5658,7 @@ hr.rule-light {
 }
 .vp-headline-stat .vp-stat-hint {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   margin-top: 0.1rem;
 }
@@ -5684,7 +5684,7 @@ hr.rule-light {
 .insight-card:last-child { border-right: none; }
 .insight-card-eyebrow {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -5723,7 +5723,7 @@ hr.rule-light {
 }
 .insights-summary thead th {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -5802,7 +5802,7 @@ hr.rule-light {
 }
 .agreement-matrix .agg-n {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   font-family: var(--mono);
 }
