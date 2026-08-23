@@ -1691,6 +1691,61 @@ details.evidence-details[open] > summary.evidence-summary::before { transform: r
 details.evidence-details > summary.evidence-summary:hover { background: var(--surface-warm); }
 details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
 
+/* Wave B (P134 item 2) — default-collapsed disclosure frames: the per-claim
+   provenance strip (+ per-seat votes) and the reason-code / gate-withheld
+   explainer notes. Same native-<details> posture as the evidence/sources
+   blocks above: audit/editorial detail, one click away, not in the way.
+   The claim-pill headline, chip counts, genre-note, and correction notices
+   are untouched by this pass (M-6 hard constraint on disclosure integrity). */
+details.pca-provenance-details {
+  margin-bottom: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+.pca-provenance-summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink-faint);
+  user-select: none;
+}
+.pca-provenance-summary::-webkit-details-marker { display: none; }
+.pca-provenance-summary::before {
+  content: "▶ ";
+  font-size: 0.6rem;
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.pca-provenance-details[open] > .pca-provenance-summary::before { transform: rotate(90deg); }
+.pca-provenance-summary:hover { color: var(--ink-muted); }
+.pca-provenance-body { margin-top: 0.3rem; line-height: 1.5; word-break: break-word; }
+
+details.reason-code-details,
+details.gate-withheld-details {
+  margin: 0.75rem 0 0;
+}
+.reason-code-summary,
+.gate-withheld-summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  user-select: none;
+}
+.reason-code-summary::-webkit-details-marker,
+.gate-withheld-summary::-webkit-details-marker { display: none; }
+.reason-code-summary::before,
+.gate-withheld-summary::before {
+  content: "▶ ";
+  font-size: 0.6rem;
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.reason-code-details[open] > .reason-code-summary::before,
+details.gate-withheld-details[open] > .gate-withheld-summary::before { transform: rotate(90deg); }
+details.reason-code-details .reason-code-note,
+details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
+
 
 /* [17] Report page — claim footer & methodology ──────────────────────── */
 .claim-foot {
@@ -1733,6 +1788,28 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
 }
+/* Wave B (P134 item 2): the prose body is default-collapsed behind a native
+   <details>; the lead-in label stays visible as the clickable summary. */
+.methodology-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: var(--ink);
+  user-select: none;
+}
+.methodology-summary::-webkit-details-marker { display: none; }
+.methodology-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.methodology-details[open] > .methodology-summary::before { transform: rotate(90deg); }
+.methodology-details > p { margin: 0.6rem 0 0; }
 
 /* PCA panel composition — which model fills each seat, once per run. */
 .panel-composition {
@@ -1743,13 +1820,27 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   font-size: 0.85rem;
   color: var(--ink-muted);
 }
-.panel-composition-head {
+/* Wave B (P134 item 2): default-collapsed — title + roster name (the
+   at-a-glance facts) stay in the visible summary; the seat list closes. */
+.panel-composition-summary {
+  cursor: pointer;
+  list-style: none;
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
   flex-wrap: wrap;
-  margin-bottom: 0.5rem;
+  user-select: none;
 }
+.panel-composition-summary::-webkit-details-marker { display: none; }
+.panel-composition-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.panel-composition-details[open] > .panel-composition-summary::before { transform: rotate(90deg); }
+.panel-composition-details .panel-composition-list { margin-top: 0.5rem; }
 .panel-composition-title {
   font-family: var(--mono);
   font-size: 0.75rem;

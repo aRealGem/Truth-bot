@@ -2141,15 +2141,19 @@ def _panel_composition_html(site_report) -> str:
         if name else ""
     )
 
+    # Wave B (P134 item 2): default-collapsed. Once-per-run roster detail, not
+    # first-read content — the title + roster name stay visible in the summary.
     return (
         '<aside class="panel-composition">'
-        '<div class="panel-composition-head">'
+        '<details class="panel-composition-details">'
+        '<summary class="panel-composition-summary">'
         '<span class="panel-composition-title">PCA panel composition</span>'
         + name_html
-        + '</div>'
+        + '</summary>'
         + '<ul class="panel-composition-list">'
         + ''.join(seat_rows)
         + '</ul>'
+        + '</details>'
         '</aside>'
     )
 
@@ -2699,9 +2703,15 @@ def _reason_code_html(claim) -> str:
     reason = _REASON_PILLS.get(getattr(claim, "id", None))
     if not reason:
         return ""
-    return ('<div class="reason-code-note">'
+    # Wave B (P134 item 2): default-collapsed. The code itself is already
+    # visible on the claim-pill chip (with the copy on hover); this block is
+    # the expanded verbatim explainer, one click away rather than in the way.
+    return ('<details class="reason-code-details">'
+            '<summary class="reason-code-summary">Reason-coded — detail</summary>'
+            '<div class="reason-code-note">'
             + _esc(reason["copy"])
-            + '</div>')
+            + '</div>'
+            '</details>')
 
 
 def _is_gate_withheld(bundle: VerdictBundle) -> bool:
@@ -2746,7 +2756,12 @@ def _gate_withheld_html(bundle: VerdictBundle) -> str:
     # about our retrieval. The two species never share a card.
     if getattr(bundle.claim, "id", None) in _REASON_PILLS:
         return ""
+    # Wave B (P134 item 2): default-collapsed. The headline pill already says
+    # "Insufficient qualifying evidence retrieved"; this is the expanded
+    # explanation of the mechanism, not the finding itself.
     return (
+        '<details class="gate-withheld-details">'
+        '<summary class="gate-withheld-summary">Why no verdict was reached</summary>'
         '<div class="gate-withheld-note">'
         '<strong>No verdict was reached.</strong> The evidence we retrieved for '
         'this claim did not meet the quality bar required to decide it — too few '
@@ -2756,6 +2771,7 @@ def _gate_withheld_html(bundle: VerdictBundle) -> str:
         'A claim here may be entirely checkable against evidence we have not yet '
         'collected.'
         '</div>'
+        '</details>'
     )
 
 
@@ -2868,6 +2884,9 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     # claim card via :func:`_correction_provenance_html` (F14), so they survive on
     # a gated/minimal claim whose provenance chain is empty and this strip renders
     # nothing. One emit path, two templates — they cannot drift.
+    # Wave B (P134 item 2): default-collapsed — the chain + per-seat tally are
+    # audit detail, not first-read content. The headline pill and chip counts
+    # this strip used to sit under stay fully visible; only this aux block closes.
     return (
         '<details class="pca-provenance-details">'
         f'<summary class="pca-provenance-summary">{_esc(summary_text)}</summary>'
@@ -5161,6 +5180,61 @@ details.evidence-details[open] > summary.evidence-summary::before { transform: r
 details.evidence-details > summary.evidence-summary:hover { background: var(--surface-warm); }
 details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
 
+/* Wave B (P134 item 2) — default-collapsed disclosure frames: the per-claim
+   provenance strip (+ per-seat votes) and the reason-code / gate-withheld
+   explainer notes. Same native-<details> posture as the evidence/sources
+   blocks above: audit/editorial detail, one click away, not in the way.
+   The claim-pill headline, chip counts, genre-note, and correction notices
+   are untouched by this pass (M-6 hard constraint on disclosure integrity). */
+details.pca-provenance-details {
+  margin-bottom: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+.pca-provenance-summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink-faint);
+  user-select: none;
+}
+.pca-provenance-summary::-webkit-details-marker { display: none; }
+.pca-provenance-summary::before {
+  content: "▶ ";
+  font-size: 0.6rem;
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.pca-provenance-details[open] > .pca-provenance-summary::before { transform: rotate(90deg); }
+.pca-provenance-summary:hover { color: var(--ink-muted); }
+.pca-provenance-body { margin-top: 0.3rem; line-height: 1.5; word-break: break-word; }
+
+details.reason-code-details,
+details.gate-withheld-details {
+  margin: 0.75rem 0 0;
+}
+.reason-code-summary,
+.gate-withheld-summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  user-select: none;
+}
+.reason-code-summary::-webkit-details-marker,
+.gate-withheld-summary::-webkit-details-marker { display: none; }
+.reason-code-summary::before,
+.gate-withheld-summary::before {
+  content: "▶ ";
+  font-size: 0.6rem;
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.reason-code-details[open] > .reason-code-summary::before,
+details.gate-withheld-details[open] > .gate-withheld-summary::before { transform: rotate(90deg); }
+details.reason-code-details .reason-code-note,
+details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
+
 
 /* [17] Report page — claim footer & methodology ──────────────────────── */
 .claim-foot {
@@ -5203,6 +5277,28 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
 }
+/* Wave B (P134 item 2): the prose body is default-collapsed behind a native
+   <details>; the lead-in label stays visible as the clickable summary. */
+.methodology-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: var(--ink);
+  user-select: none;
+}
+.methodology-summary::-webkit-details-marker { display: none; }
+.methodology-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.methodology-details[open] > .methodology-summary::before { transform: rotate(90deg); }
+.methodology-details > p { margin: 0.6rem 0 0; }
 
 /* PCA panel composition — which model fills each seat, once per run. */
 .panel-composition {
@@ -5213,13 +5309,27 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   font-size: 0.85rem;
   color: var(--ink-muted);
 }
-.panel-composition-head {
+/* Wave B (P134 item 2): default-collapsed — title + roster name (the
+   at-a-glance facts) stay in the visible summary; the seat list closes. */
+.panel-composition-summary {
+  cursor: pointer;
+  list-style: none;
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
   flex-wrap: wrap;
-  margin-bottom: 0.5rem;
+  user-select: none;
 }
+.panel-composition-summary::-webkit-details-marker { display: none; }
+.panel-composition-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.panel-composition-details[open] > .panel-composition-summary::before { transform: rotate(90deg); }
+.panel-composition-details .panel-composition-list { margin-top: 0.5rem; }
 .panel-composition-title {
   font-family: var(--mono);
   font-size: 0.75rem;
@@ -7117,9 +7227,14 @@ def _render_report(site_report: SiteReport) -> str:
     if _roster_seats:
         _comp = " / ".join(
             f"{role}={', '.join(ms or [])}" for role, ms in _roster_seats.items())
+        # Wave B (P134 item 2): default-collapsed \u2014 nested inside the existing
+        # <aside class="methodology"> wrapper so report-ordering checks that
+        # locate that literal tag still pass unchanged.
         methodology_html = (
             '<aside class="methodology">'
-            '<strong>How this report was generated.</strong> truth-bot extracts factual '
+            '<details class="methodology-details">'
+            '<summary class="methodology-summary">How this report was generated</summary>'
+            '<p>truth-bot extracts factual '
             'claims from the source transcript, screens them for check-worthiness, and '
             'routes each checkable claim to a proposer \u2192 critic \u2192 arbiter panel '
             'of language models (' + _esc(_comp) + '), grounded in a retrieved evidence '
@@ -7127,20 +7242,24 @@ def _render_report(site_report: SiteReport) -> str:
             'dedicated Severity Classifier model re-examines the False-vs-Misleading '
             'boundary. Verdicts, seat votes, and sources are shown on every claim page. '
             'Truthy McTruthface\u2019s mood reflects the aggregate score across all claims. '
-            '<a href="../about.html">Read the full methodology \u2192</a>'
+            '<a href="../about.html">Read the full methodology \u2192</a></p>'
+            '</details>'
             '</aside>'
         )
     else:
         _model_word = str(_model_count) + ' frontier language model' + ('s' if _model_count != 1 else '')
         methodology_html = (
             '<aside class="methodology">'
-            '<strong>How this report was generated.</strong> truth-bot extracts factual claims '
+            '<details class="methodology-details">'
+            '<summary class="methodology-summary">How this report was generated</summary>'
+            '<p>truth-bot extracts factual claims '
             'from the source transcript, submits each independently to ' + _model_word + ' '
             'with the instruction to verify against publicly cited sources, and aggregates '
             'verdicts using a simple majority rule. Caveats are surfaced when models flag '
             'ambiguity or framing concerns. Truthy McTruthface\u2019s mood reflects the aggregate '
             'score across all claims. '
-            '<a href="../about.html">Read the full methodology \u2192</a>'
+            '<a href="../about.html">Read the full methodology \u2192</a></p>'
+            '</details>'
             '</aside>'
         )
 
@@ -7176,11 +7295,14 @@ def _render_report(site_report: SiteReport) -> str:
         _n_triage = len(site_report.characterization)
         triage_link_html = (
             '<aside class="methodology">'
-            '<strong>Statement Triage.</strong> Of the sentences in this speech, '
+            '<details class="methodology-details">'
+            '<summary class="methodology-summary">Statement Triage</summary>'
+            '<p>Of the sentences in this speech, '
             + str(_n_triage) + ' were set aside as non-check-worthy '
             '(pleasantries, opinion, or otherwise unimportant) before fact-checking. '
             '<a href="' + _esc(site_report.triage_slug) + '.html">'
-            'See what we set aside and why →</a>'
+            'See what we set aside and why →</a></p>'
+            '</details>'
             '</aside>'
         )
 
@@ -7269,12 +7391,16 @@ def _falsifiability_note_html(n_claims: int, n_set_aside: int) -> str:
     ratio = n_claims / total
     return (
         '<aside class="methodology">'
-        f'<strong>Falsifiability ratio.</strong> {n_claims} of the {total} '
+        '<details class="methodology-details">'
+        '<summary class="methodology-summary">Falsifiability ratio</summary>'
+        f'<p>{n_claims} of the {total} '
         f'sentences in this speech ({format(ratio, ".1%")}) made a checkable '
         'factual claim. This is a statistic about the <em>genre</em> — '
         'political speech is mostly narrative, applause lines, and aspiration '
         '— not about the speaker\'s accuracy, which the report itself '
-        'measures.</aside>'
+        'measures.</p>'
+        '</details>'
+        '</aside>'
     )
 
 
@@ -7311,12 +7437,15 @@ def _render_statement_triage(site_report: SiteReport) -> str:
         f'{_esc(site_report.display_date)}</div>'
         '</section>'
         '<aside class="methodology">'
-        '<strong>What we set aside.</strong> The pipeline reads every sentence of '
+        '<details class="methodology-details">'
+        '<summary class="methodology-summary">What we set aside</summary>'
+        '<p>The pipeline reads every sentence of '
         'the speech, but only fact-checks the ones that assert a verifiable claim. '
         f'The {total} sentence' + ('s' if total != 1 else '') + ' below were '
         'recorded as <em>non-check-worthy</em> — pleasantries, opinion, or '
         'otherwise unimportant — and set aside before verification. We surface '
-        'them here so it is clear what was excluded and which stage excluded it.'
+        'them here so it is clear what was excluded and which stage excluded it.</p>'
+        '</details>'
         '</aside>'
         + _falsifiability_note_html(len(site_report.checkable_bundles), total)
     )
