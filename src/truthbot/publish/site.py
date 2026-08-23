@@ -1756,6 +1756,7 @@ def _verdict_panel(site_report) -> str:
     # none, so legacy publishes are byte-identical. Prose is a DRAFT for the
     # owner's red pen (S-8) — flagged in the Wave A PR.
     genre_note_html = ""
+    genre_note_text = ""
     if _REASON_PILLS:
         _ids = {getattr(b.claim, "id", None) for b in site_report.checkable_bundles}
         n_coded = sum(1 for cid in _REASON_PILLS if cid in _ids)
@@ -1771,8 +1772,40 @@ def _verdict_panel(site_report) -> str:
                     "rhetorical genre — personal stories, intentions, and "
                     "unmeasured superlatives — not a finding about the speaker."
                 )
+            # Readability (Wave B follow-up): the genre note and the anecdote
+            # note used to sit loose under the collapsed "Why undecided" block,
+            # reading as its continuation while not being part of it. They are
+            # now one disclosure frame.
+            #
+            # M-6 boundary — the ENTIRE genre line stays in the <summary>, not
+            # just its first sentence. The first sentence states the
+            # concentration ("17 of the corpus's 33 claims … fall on this
+            # speech"); the second is what makes it a GENRE property rather than
+            # a finding about the speaker. Surfacing the count while collapsing
+            # the framing would invert the rule instead of satisfying it, so the
+            # summary carries both and only the anecdote breakdown collapses.
+            genre_note_text = genre_line
             genre_note_html = ('<p class="vp-genre-note">'
                                + _esc(genre_line) + '</p>\n')
+
+    # Compose the genre/anecdote disclosure frame. The frame only exists when
+    # there is something to collapse into it; with a genre note alone (or an
+    # anecdote note alone) the loose paragraph is already correct and nothing
+    # would be gained by making the reader click.
+    # <summary>'s content model is phrasing content, so the note is a <span>
+    # here rather than the <p> used in the un-framed case. The `vp-genre-note`
+    # class rides along either way -- test_reason_code_render keys on it.
+    if genre_note_text and anecdote_note_html:
+        disclosure_frame_html = (
+            '<details class="vp-genre-details">'
+            '<summary class="vp-genre-summary">'
+            '<span class="vp-genre-note">' + _esc(genre_note_text) + '</span>'
+            '</summary>'
+            '<div class="vp-genre-body">' + anecdote_note_html.strip() + '</div>'
+            '</details>\n'
+        )
+    else:
+        disclosure_frame_html = genre_note_html + anecdote_note_html
 
     return (
         '<section class="verdict-panel">\n'
@@ -1781,8 +1814,7 @@ def _verdict_panel(site_report) -> str:
         + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
         + selfsource_chip_html
-        + genre_note_html
-        + anecdote_note_html
+        + disclosure_frame_html
         + source_row_html
         + '</section>\n'
     )
@@ -4543,6 +4575,23 @@ details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
+/* Wave B follow-up: the genre note is the clickable summary of the frame that
+   holds the anecdote breakdown, so it needs the block layout the <p> gave it
+   (inside <summary> it is a <span> -- summary takes phrasing content only). */
+details.vp-genre-details { margin: 0.35rem 0 0; }
+.vp-genre-summary {
+  cursor: pointer;
+  list-style: none;
+}
+.vp-genre-summary::-webkit-details-marker { display: none; }
+.vp-genre-summary::before {
+  content: "▶ ";
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.vp-genre-summary .vp-genre-note { display: inline; margin: 0; }
+.vp-genre-body { margin-top: 0.35rem; }
+.vp-genre-body .vp-anecdote-note { margin: 0; }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {
   font-family: var(--serif);
@@ -4848,6 +4897,14 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
 }
 .stance-coverage p { margin: 0.35rem 0; }
 .stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+/* Wave B follow-up: collapsed frame. The label + measured rate live in the
+   summary, so the block reads at a glance without opening. */
+.stance-coverage-summary { cursor: pointer; list-style: none; }
+.stance-coverage-summary::-webkit-details-marker { display: none; }
+.stance-coverage-summary .stance-coverage-label { margin-bottom: 0.2rem; }
+.stance-coverage-summary .stance-coverage-label::before { content: "▶ "; }
+.stance-coverage-headline { display: block; line-height: 1.5; }
+.stance-coverage-body { margin-top: 0.5rem; }
 .stance-coverage-exception {
   border-left: 3px solid var(--v-exaggerated);
   padding-left: 0.75rem;
@@ -4873,6 +4930,12 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
   font-size: 0.9rem;
 }
 .report-correction-banner a { text-decoration: underline; }
+/* Wave B follow-up: collapsed frame. "Corrections applied: N verdicts revised"
+   stays in the summary -- only the mechanics collapse. */
+.report-correction-summary { cursor: pointer; list-style: none; }
+.report-correction-summary::-webkit-details-marker { display: none; }
+.report-correction-summary::before { content: "▶ "; font-size: 0.7rem; }
+.report-correction-body { margin-top: 0.5rem; }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
@@ -6897,9 +6960,28 @@ def _render_stance_coverage(site_report: SiteReport) -> str:
     rate = cov["rate_pct"]
     ceiling = cov["ceiling_pct"]
     scored = cov["items"] - cov["stance_null"]
-    body = (
-        '<aside class="stance-coverage">'
+    # Readability (Wave B follow-up): collapsed like the other auxiliary frames,
+    # but the measured rate against the ceiling rides in the <summary> so it is
+    # legible without a click -- the number IS the disclosure; the paragraphs
+    # under it are the explanation.
+    #
+    # "shown, not hidden" (see this function's docstring) is preserved for the
+    # over-ceiling speech by naming the exception in the summary too. Otherwise
+    # the one report published under an owner-ratified exception would be the
+    # one report whose exception notice needed a click to find.
+    summary = (
+        '<summary class="stance-coverage-summary">'
         '<span class="stance-coverage-label">Evidence coverage</span>'
+        f'<span class="stance-coverage-headline">{rate:.1f}% of '
+        f'{cov["items"]:,} evidence items carried no stance '
+        f'(threshold {ceiling:.0f}%)'
+        + (' · published under an exception' if cov.get("over_ceiling") else '')
+        + '</span></summary>'
+    )
+    body = (
+        '<details class="stance-coverage">'
+        + summary
+        + '<div class="stance-coverage-body">'
         f'<p>The stance scorer took a support or refute position on '
         f'{scored:,} of {cov["items"]:,} evidence items; '
         f'<strong>{rate:.1f}%</strong> ({cov["stance_null"]:,} items) carried no '
@@ -6942,7 +7024,7 @@ def _render_stance_coverage(site_report: SiteReport) -> str:
             'exception is therefore reviewed at each publish rather than expiring '
             'on any single fix.</p>'
         )
-    return body + '</aside>'
+    return body + '</div></details>'
 
 
 def _render_report(site_report: SiteReport) -> str:
@@ -7075,16 +7157,29 @@ def _render_report(site_report: SiteReport) -> str:
                                 b.consensus.provenance.correction_note)] if m)
         _latest = _dates[-1] if _dates else ""
         _n = len(_corrected)
+        # Readability (Wave B follow-up): collapsed, but the fact that verdicts
+        # were revised is NOT collapsible -- it rides in the <summary>, always
+        # visible. Only the mechanics (what the revision did to the aggregates,
+        # where each change is logged) sit behind the click. A reader who never
+        # opens this still learns the report was corrected and how many verdicts
+        # moved; hiding that behind a bare "Corrections" toggle would make the
+        # disclosure depend on curiosity.
+        # The `report-correction-banner` class is kept on the outer element so
+        # test_corrections keys on the same hook.
         correction_banner = (
-            '<aside class="report-correction-banner">'
+            '<details class="report-correction-banner">'
+            '<summary class="report-correction-summary">'
             f'<strong>Corrections applied:</strong> {_n} verdict'
             f'{"s" if _n != 1 else ""} on this report '
             f'{"were" if _n != 1 else "was"} revised'
             + (f' on {_esc(_latest)}' if _latest else '')
-            + ' following a reasoning audit. Aggregates and the headline reflect '
+            + ' following a reasoning audit.'
+            + '</summary>'
+            + '<div class="report-correction-body">'
+              'Aggregates and the headline reflect '
               'the corrected verdicts; each change is logged on the '
               '<a href="../corrections.html">Corrections page</a> and marked on '
-              'the claim\'s provenance strip.</aside>'
+              'the claim\'s provenance strip.</div></details>'
         )
 
     body = (

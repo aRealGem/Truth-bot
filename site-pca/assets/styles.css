@@ -1057,6 +1057,23 @@ details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
+/* Wave B follow-up: the genre note is the clickable summary of the frame that
+   holds the anecdote breakdown, so it needs the block layout the <p> gave it
+   (inside <summary> it is a <span> -- summary takes phrasing content only). */
+details.vp-genre-details { margin: 0.35rem 0 0; }
+.vp-genre-summary {
+  cursor: pointer;
+  list-style: none;
+}
+.vp-genre-summary::-webkit-details-marker { display: none; }
+.vp-genre-summary::before {
+  content: "▶ ";
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.vp-genre-summary .vp-genre-note { display: inline; margin: 0; }
+.vp-genre-body { margin-top: 0.35rem; }
+.vp-genre-body .vp-anecdote-note { margin: 0; }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {
   font-family: var(--serif);
@@ -1362,6 +1379,14 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
 }
 .stance-coverage p { margin: 0.35rem 0; }
 .stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+/* Wave B follow-up: collapsed frame. The label + measured rate live in the
+   summary, so the block reads at a glance without opening. */
+.stance-coverage-summary { cursor: pointer; list-style: none; }
+.stance-coverage-summary::-webkit-details-marker { display: none; }
+.stance-coverage-summary .stance-coverage-label { margin-bottom: 0.2rem; }
+.stance-coverage-summary .stance-coverage-label::before { content: "▶ "; }
+.stance-coverage-headline { display: block; line-height: 1.5; }
+.stance-coverage-body { margin-top: 0.5rem; }
 .stance-coverage-exception {
   border-left: 3px solid var(--v-exaggerated);
   padding-left: 0.75rem;
@@ -1387,6 +1412,12 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
   font-size: 0.9rem;
 }
 .report-correction-banner a { text-decoration: underline; }
+/* Wave B follow-up: collapsed frame. "Corrections applied: N verdicts revised"
+   stays in the summary -- only the mechanics collapse. */
+.report-correction-summary { cursor: pointer; list-style: none; }
+.report-correction-summary::-webkit-details-marker { display: none; }
+.report-correction-summary::before { content: "▶ "; font-size: 0.7rem; }
+.report-correction-body { margin-top: 0.5rem; }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
