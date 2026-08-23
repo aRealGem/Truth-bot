@@ -582,15 +582,9 @@ def test_false_or_worse_uses_headline_family_over_decided() -> None:
     assert 'vp-stat-num">67%' in false_frame_html
 
 
-# ── Round 3: site-wide Truthy mute persistence contract ─────────────────────
-
-
-def test_embedded_js_contains_truthy_mute_storage_key() -> None:
-    """The mute-toggle IIFE persists state under localStorage["truthy-mute"].
-    We pin the key here so a rename can't silently break stored prefs."""
-    from truthbot.publish.site import JS
-    assert "'truthy-mute'" in JS
-    assert "isTruthyFunPage" in JS  # fun-page exclusion path stays in place
+# NOTE: the site-wide Truthy mute-persistence contract that used to be pinned
+# here is gone — report-page audio and its speaker-badge control were removed.
+# The absence is now pinned in tests/test_truthy_audio_removal.py.
 
 
 def test_embedded_js_has_no_lens_toggle() -> None:
@@ -615,11 +609,44 @@ def test_status_bar_has_no_lens_chip() -> None:
     assert "Operational" in html and "4 Models" in html
 
 
-def test_truthy_tap_hint_includes_label_span_for_state_aware_text() -> None:
-    """The tap-hint label is now JS-controlled (Tap / Tap to mute / Muted)
-    so the JS needs a stable hook to find. Pin the marker class."""
-    from truthbot.publish.site import _TRUTHY_TAP_HINT
-    assert 'class="tap-hint-label"' in _TRUTHY_TAP_HINT
+# NOTE: the `.tap-hint-label` marker-class pin that used to live here is gone
+# with the speaker badge itself. See tests/test_truthy_audio_removal.py.
+
+
+# ── Truthy caption copy ─────────────────────────────────────────────────────
+# The multi-claim "true" caption deliberately says "Most", not "All": a report
+# whose overall verdict is true can still contain individual claims that failed,
+# so "All sources check out" overclaims. Editorial call, easy to regress.
+
+_MULTI_TRUE_CAPTION = "Most sources check out. Looking good!"
+
+
+def test_multi_claim_true_caption_says_most_not_all() -> None:
+    """Python-side caption for a multi-claim happy report."""
+    from truthbot.publish.site import _initial_bubble
+
+    text, cls = _initial_bubble("happy", 5)
+    assert text == _MULTI_TRUE_CAPTION
+    assert cls == "is-true"
+    assert "All sources check out" not in text
+
+
+def test_js_caption_map_mirrors_python_caption() -> None:
+    """The browser re-renders captions client-side from its own map, so the JS
+    copy must match the Python one or the text changes on JS activation."""
+    from truthbot.publish.site import JS
+
+    assert _MULTI_TRUE_CAPTION in JS
+    assert "All sources check out" not in JS
+
+
+def test_single_claim_true_caption_is_unchanged() -> None:
+    """The single-claim wording never said "All" and is not part of this
+    change — pin it so the multi-claim edit doesn't bleed into it."""
+    from truthbot.publish.site import _initial_bubble
+
+    text, _ = _initial_bubble("happy", 1)
+    assert text == "That checks out. Sources match!"
 
 
 # ── Round 3: index strip wiring ─────────────────────────────────────────────

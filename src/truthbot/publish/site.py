@@ -1449,16 +1449,6 @@ _TRUTHY_SVG = (
     '</svg>'
 )
 
-_TRUTHY_TAP_HINT = (
-    '<div class="truthy-tap-hint">'
-    '<svg class="icon" viewBox="0 0 24 24" fill="currentColor">'
-    '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4.03v8.05a4.5 4.5 0 002.5-4.02zM14 3.23v2.06a7 7 0 010 13.42v2.06a9 9 0 000-17.54z"/>'
-    '</svg>'
-    '<span class="tap-hint-label">Tap</span>'
-    '</div>'
-)
-
-
 def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
     """Return (initial_text, css_class) prior to JS activation."""
     state_map = {"happy": "true", "iffy": "iffy", "sad": "lie"}
@@ -1514,14 +1504,21 @@ def _verdict_panel(site_report) -> str:
     svg_html = _TRUTHY_SVG.replace('class="state-true"', 'class="' + svg_state + '"')
     aria_mood = {"happy": "happy", "iffy": "uncertain", "sad": "sad"}.get(mood, "uncertain")
 
+    # Truthy is decorative-but-informative on report pages: the SVG conveys the
+    # overall mood, so it carries a role="img" + label rather than being silent.
+    # It is deliberately NOT interactive. The mascot used to be a role="button"
+    # tabindex="0" control whose only action was toggling the audio mute, with a
+    # speaker-icon badge overlaying it as the affordance. Both are gone (the badge
+    # rendered oversized on iOS Safari and covered Truthy, and report-page audio
+    # was removed with it), and a focusable button that does nothing is worse than
+    # no button at all. The fun page at truthy.html keeps its own audio + controls.
     widget = (
         '<div class="vp-truthy-col">'
         + '<div class="truthy-frame" id="truthy-mascot-widget"'
         + ' data-mood="' + mood + '" data-claim-count="' + str(claim_count) + '"'
-        + ' role="button" tabindex="0"'
-        + ' aria-label="Truthy McTruthface, the truth-bot mascot. Currently ' + aria_mood + '. Click to hear.">'
+        + ' role="img"'
+        + ' aria-label="Truthy McTruthface, the truth-bot mascot. Currently ' + aria_mood + '.">'
         + svg_html
-        + _TRUTHY_TAP_HINT
         + '</div>'
         + '<div class="truthy-bubble ' + bubble_cls + '" id="truthy-bubble">' + _esc(bubble_text) + '</div>'
         + '</div>'
@@ -4281,48 +4278,15 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   gap: 0.75rem;
   min-width: 200px;
 }
+/* Truthy is presentational on report pages — no cursor/hover/active affordance,
+   because there is nothing to activate. The `.truthy-tap-hint` speaker badge that
+   used to sit here (absolutely positioned against this frame) is gone: on iOS
+   Safari it rendered full-size and covered the mascot instead of showing as a
+   small corner badge. It was the mute control, so report-page audio went with it. */
 .truthy-frame {
   position: relative;
-  cursor: pointer;
-  transition: filter 200ms ease;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
-.truthy-frame:hover { filter: brightness(1.04); }
-.truthy-frame:active { filter: brightness(0.98); }
-.truthy-tap-hint {
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.45rem;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-.truthy-frame:hover .truthy-tap-hint { opacity: 1; }
-/* Readability pass (Section 6-7): the hover-only reveal above left keyboard
-   users (tabindex="0" but no :focus rule) with no way to see this hint at
-   all — they get it now via :focus-visible.
-   A `(pointer: coarse)` always-visible twin was tried here too but reverted
-   (user report, 2026-08-22): on an iPhone report page it made this hint
-   permanently visible and full-size, covering/replacing Truthy instead of
-   the small "Tap" badge it's meant to be — worse than the hover-only gap it
-   was meant to close. Restoring a real touch-visible equivalent needs the
-   oversized-rendering bug understood and fixed first; not chased here since
-   the user's priority is Truthy displaying correctly, audio-hint a11y is
-   low priority for now. */
-.truthy-frame:focus-visible .truthy-tap-hint { opacity: 1; }
-.truthy-tap-hint .icon { width: 8px; height: 8px; }
 
 /* Editorial speech bubble — Truthy's voice in Newsreader italic.
    Tail points up at Truthy. Border tints to match mood. */
@@ -5632,13 +5596,6 @@ hr.rule-light {
 }
 #led, #ledHalo { transition: fill 0.3s; }
 
-/* Triggered by JS when user clicks Truthy: brief LED flash */
-@keyframes ledFlash {
-  0%   { filter: brightness(1); }
-  30%  { filter: brightness(1.6) saturate(1.3); }
-  100% { filter: brightness(1); }
-}
-
 
 /* [21] Page-load choreography ────────────────────────────────────────── */
 @keyframes rise {
@@ -6199,8 +6156,6 @@ hr.rule-light {
   .state-lie .eye-sad { animation: sad-wander 4.2s ease-in-out infinite; }
   .state-lie #tearLeft,
   .state-lie #tearRight { animation: tear-fall 2.2s ease-in infinite; }
-  #mascot.speaking #led,
-  #mascot.speaking #ledHalo { animation: ledFlash 0.7s ease-out; }
   .stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
     animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
   }
@@ -6340,216 +6295,18 @@ JS = """\
     }
     scheduleBlink();
 
-    /* ─── Web Audio droid sounds ─────────────────────────────────────
-       Synthesized via Web Audio API. No audio files needed,
-       no licensing, no network round-trips. All sounds resolve in
-       <500ms.
-
-       Autoplay-policy contract: browsers (especially Safari) leave a
-       freshly-created AudioContext in ``suspended`` until a user
-       gesture explicitly resumes it. ``audioCtx.resume()`` returns
-       a Promise. The earlier implementation called resume() and
-       *immediately* scheduled oscillators against ``ctx.currentTime``
-       — on Safari and some Chrome variants the context was still
-       suspended at schedule time, so the oscillator silently
-       no-op'd. The fix: ``unlockAudio()`` returns a Promise, and the
-       play functions are only invoked after that Promise resolves.
-       ──────────────────────────────────────────────────────────── */
-    var audioCtx = null;
-    function unlockAudio() {
-      if (!audioCtx) {
-        try {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        } catch (e) { return Promise.resolve(null); }
-      }
-      if (audioCtx.state === 'suspended') {
-        var p = audioCtx.resume();
-        // Some old Safari versions return undefined from resume().
-        if (p && typeof p.then === 'function') {
-          return p.then(function() { return audioCtx; },
-                        function() { return audioCtx; });
-        }
-      }
-      return Promise.resolve(audioCtx);
-    }
-
-    // Happy: bright rising arpeggio (C5 → E5 → G5 → C6) with square wave
-    function playHappy(ctx) {
-      var notes = [523.25, 659.25, 783.99, 1046.50];
-      notes.forEach(function(freq, i) {
-        var t0 = ctx.currentTime + i * 0.07;
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(freq, t0);
-        gain.gain.setValueAtTime(0, t0);
-        gain.gain.linearRampToValueAtTime(0.12, t0 + 0.01);
-        gain.gain.linearRampToValueAtTime(0, t0 + 0.10);
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(t0);
-        osc.stop(t0 + 0.12);
-      });
-    }
-
-    // Confused: triangle wave bending up to ~620Hz then dropping to ~330Hz
-    function playConfused(ctx) {
-      var t0 = ctx.currentTime;
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(440, t0);
-      osc.frequency.exponentialRampToValueAtTime(620, t0 + 0.18);
-      osc.frequency.exponentialRampToValueAtTime(330, t0 + 0.42);
-      gain.gain.setValueAtTime(0, t0);
-      gain.gain.linearRampToValueAtTime(0.14, t0 + 0.02);
-      gain.gain.linearRampToValueAtTime(0, t0 + 0.45);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(t0);
-      osc.stop(t0 + 0.5);
-    }
-
-    // Sad: descending minor third (G4 → Eb4) with downward pitch bend on each note
-    function playSad(ctx) {
-      var notes = [392.00, 311.13];
-      notes.forEach(function(freq, i) {
-        var t0 = ctx.currentTime + i * 0.20;
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, t0);
-        osc.frequency.linearRampToValueAtTime(freq * 0.93, t0 + 0.25);
-        gain.gain.setValueAtTime(0, t0);
-        gain.gain.linearRampToValueAtTime(0.15, t0 + 0.03);
-        gain.gain.linearRampToValueAtTime(0, t0 + 0.28);
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(t0);
-        osc.stop(t0 + 0.32);
-      });
-    }
-
-    var soundMap = { true: playHappy, iffy: playConfused, lie: playSad };
-
-    /* ─── Speak handler ──────────────────────────────────────────────
-       Awaits the AudioContext unlock Promise before scheduling
-       oscillators. Browsers that silently dropped the prior
-       fire-and-forget pattern now actually emit sound.
-       ──────────────────────────────────────────────────────────── */
-    function speak() {
-      var match = mascot.className.match(/state-(true|iffy|lie)/);
-      if (!match) return;
-      var state = match[1];
-      var fn = soundMap[state];
-      if (!fn) return;
-      mascot.classList.add('speaking');
-      setTimeout(function() { mascot.classList.remove('speaking'); }, 700);
-      unlockAudio().then(function(ctx) {
-        if (!ctx) return;
-        /* Defer oscillator scheduling one microtask so ``resume()``'s
-           state transition has flushed on Safari / some Chrome builds. */
-        queueMicrotask(function() { fn(ctx); });
-      });
-    }
-
     /* ─── Initialize ─── */
     var mood = widget.getAttribute('data-mood') || 'iffy';
     var stateMap = { happy: 'true', iffy: 'iffy', sad: 'lie' };
     setState(stateMap[mood] || 'iffy');
 
-    /* ─── Site-wide mute state + queued first-gesture autoplay ─────
-       Default: ``mute === 'off'`` (sound enabled). On report and
-       index pages we attempt a one-shot mood sound on the user's
-       first interaction with the page (browser autoplay policies
-       block AudioContext.start() until a gesture). On the dedicated
-       Truthy fun page we keep the legacy "tap = always plays"
-       behavior so the page stays a playground.
-
-       Persistence: localStorage["truthy-mute"] in {"on", "off"}.
-       ─────────────────────────────────────────────────────────── */
-    var TRUTHY_MUTE_KEY = 'truthy-mute';
-    var DEFAULT_TRUTHY_MUTE = 'off';
-    var path = (window.location && window.location.pathname) || '';
-    /* The dedicated Truthy fun page keeps the legacy "tap always plays"
-       behavior; everywhere else uses the mute toggle. Detection is by
-       URL path substring so query strings / hashes don't trip it up. */
-    var isTruthyFunPage = path.indexOf('truthy.html') !== -1;
-
-    function readMute() {
-      try {
-        var v = localStorage.getItem(TRUTHY_MUTE_KEY);
-        return (v === 'on' || v === 'off') ? v : DEFAULT_TRUTHY_MUTE;
-      } catch (e) { return DEFAULT_TRUTHY_MUTE; }
-    }
-    function writeMute(v) {
-      try { localStorage.setItem(TRUTHY_MUTE_KEY, v); } catch (e) { /* ignore */ }
-    }
-
-    var tapHintLabel = widget.querySelector('.tap-hint-label');
-    function updateTapHintLabel(mute) {
-      if (!tapHintLabel) return;
-      if (isTruthyFunPage) {
-        tapHintLabel.textContent = 'Tap';
-      } else if (mute === 'on') {
-        tapHintLabel.textContent = 'Muted';
-      } else {
-        tapHintLabel.textContent = 'Tap to mute';
-      }
-    }
-    if (tapHintLabel) widget.setAttribute('data-mute', isTruthyFunPage ? 'na' : readMute());
-    updateTapHintLabel(readMute());
-
-    /* Queued first-gesture autoplay. Suppressed on the fun page
-       (legacy behavior). Removed if the user explicitly taps the
-       mascot before any other gesture (taking explicit control of
-       the mute toggle should not also fire the queued play).
-
-       ``pointerdown`` fires *before* the subsequent ``click``, which
-       matters when the user's first gesture is on a navigation link:
-       click navigates the page away, while pointerdown gives the
-       AudioContext unlock + oscillator schedule a head start. */
-    var queuedHandler = null;
-    var QUEUE_EVENTS = ['pointerdown', 'click', 'keydown', 'touchstart'];
-    function removeQueued() {
-      if (!queuedHandler) return;
-      QUEUE_EVENTS.forEach(function(evt) {
-        document.removeEventListener(evt, queuedHandler, true);
-      });
-      queuedHandler = null;
-    }
-    function setupQueuedAutoplay() {
-      if (isTruthyFunPage) return;
-      if (readMute() === 'on') return;
-      queuedHandler = function() { removeQueued(); speak(); };
-      QUEUE_EVENTS.forEach(function(evt) {
-        document.addEventListener(evt, queuedHandler, true);
-      });
-    }
-    setupQueuedAutoplay();
-
-    function onMascotActivate(e) {
-      if (isTruthyFunPage) {
-        speak();
-        return;
-      }
-      /* User explicitly took control before any queued autoplay
-         could fire — cancel it so the click only does the mute
-         toggle, not also a play. */
-      removeQueued();
-      if (e && e.stopPropagation) e.stopPropagation();
-      var current = readMute();
-      var next = (current === 'on') ? 'off' : 'on';
-      writeMute(next);
-      widget.setAttribute('data-mute', next);
-      updateTapHintLabel(next);
-      if (next === 'off') speak();  // unmuting always plays once
-    }
-
-    widget.addEventListener('click', onMascotActivate);
-    widget.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        onMascotActivate(e);
-      }
-    });
+    /* Report-page audio removed: the mood sounds, the audio-context unlock,
+       the localStorage mute flag and the queued first-gesture autoplay are all
+       gone, along with the speaker-badge control that was their only visible
+       affordance. Truthy is presentational here and has no click/keyboard
+       handler. The playground at truthy.html keeps its own independent audio
+       (_TRUTHY_FUN_SCRIPT) -- this init() no-ops there, since that page has
+       no #truthy-mascot-widget. */
   }
 
   // Run init immediately if DOM is already parsed; otherwise wait

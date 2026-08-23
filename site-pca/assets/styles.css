@@ -792,48 +792,15 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   gap: 0.75rem;
   min-width: 200px;
 }
+/* Truthy is presentational on report pages — no cursor/hover/active affordance,
+   because there is nothing to activate. The `.truthy-tap-hint` speaker badge that
+   used to sit here (absolutely positioned against this frame) is gone: on iOS
+   Safari it rendered full-size and covered the mascot instead of showing as a
+   small corner badge. It was the mute control, so report-page audio went with it. */
 .truthy-frame {
   position: relative;
-  cursor: pointer;
-  transition: filter 200ms ease;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
-.truthy-frame:hover { filter: brightness(1.04); }
-.truthy-frame:active { filter: brightness(0.98); }
-.truthy-tap-hint {
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.45rem;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-.truthy-frame:hover .truthy-tap-hint { opacity: 1; }
-/* Readability pass (Section 6-7): the hover-only reveal above left keyboard
-   users (tabindex="0" but no :focus rule) with no way to see this hint at
-   all — they get it now via :focus-visible.
-   A `(pointer: coarse)` always-visible twin was tried here too but reverted
-   (user report, 2026-08-22): on an iPhone report page it made this hint
-   permanently visible and full-size, covering/replacing Truthy instead of
-   the small "Tap" badge it's meant to be — worse than the hover-only gap it
-   was meant to close. Restoring a real touch-visible equivalent needs the
-   oversized-rendering bug understood and fixed first; not chased here since
-   the user's priority is Truthy displaying correctly, audio-hint a11y is
-   low priority for now. */
-.truthy-frame:focus-visible .truthy-tap-hint { opacity: 1; }
-.truthy-tap-hint .icon { width: 8px; height: 8px; }
 
 /* Editorial speech bubble — Truthy's voice in Newsreader italic.
    Tail points up at Truthy. Border tints to match mood. */
@@ -2143,13 +2110,6 @@ hr.rule-light {
 }
 #led, #ledHalo { transition: fill 0.3s; }
 
-/* Triggered by JS when user clicks Truthy: brief LED flash */
-@keyframes ledFlash {
-  0%   { filter: brightness(1); }
-  30%  { filter: brightness(1.6) saturate(1.3); }
-  100% { filter: brightness(1); }
-}
-
 
 /* [21] Page-load choreography ────────────────────────────────────────── */
 @keyframes rise {
@@ -2710,8 +2670,6 @@ hr.rule-light {
   .state-lie .eye-sad { animation: sad-wander 4.2s ease-in-out infinite; }
   .state-lie #tearLeft,
   .state-lie #tearRight { animation: tear-fall 2.2s ease-in infinite; }
-  #mascot.speaking #led,
-  #mascot.speaking #ledHalo { animation: ledFlash 0.7s ease-out; }
   .stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
     animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
   }
