@@ -4291,13 +4291,18 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   transition: opacity 200ms ease;
 }
 .truthy-frame:hover .truthy-tap-hint { opacity: 1; }
-/* Readability pass (Section 6-7): the hover-only reveal above left touch
-   users (no real :hover) and keyboard users (tabindex="0" but no :focus
-   rule) with no way to see this hint at all — both get it now. */
+/* Readability pass (Section 6-7): the hover-only reveal above left keyboard
+   users (tabindex="0" but no :focus rule) with no way to see this hint at
+   all — they get it now via :focus-visible.
+   A `(pointer: coarse)` always-visible twin was tried here too but reverted
+   (user report, 2026-08-22): on an iPhone report page it made this hint
+   permanently visible and full-size, covering/replacing Truthy instead of
+   the small "Tap" badge it's meant to be — worse than the hover-only gap it
+   was meant to close. Restoring a real touch-visible equivalent needs the
+   oversized-rendering bug understood and fixed first; not chased here since
+   the user's priority is Truthy displaying correctly, audio-hint a11y is
+   low priority for now. */
 .truthy-frame:focus-visible .truthy-tap-hint { opacity: 1; }
-@media (pointer: coarse) {
-  .truthy-tap-hint { opacity: 1; }
-}
 .truthy-tap-hint .icon { width: 8px; height: 8px; }
 
 /* Editorial speech bubble — Truthy's voice in Newsreader italic.
