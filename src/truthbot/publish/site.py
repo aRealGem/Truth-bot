@@ -1470,7 +1470,7 @@ def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
         "lie":  "Oh no… that isn't true.",
     }
     captions_multi = {
-        "true": "All sources check out. Looking good!",
+        "true": "Most sources check out. Looking good!",
         "iffy": "Mixed signals — some hold up, some don't.",
         "lie":  "Oh no… most of this doesn't check out.",
     }
@@ -6159,7 +6159,7 @@ JS = """\
       lie:  "Oh no… that isn't true."
     };
     var captionsMulti = {
-      true: "All sources check out. Looking good!",
+      true: "Most sources check out. Looking good!",
       iffy: "Mixed signals — some hold up, some don't.",
       lie:  "Oh no… most of this doesn't check out."
     };
