@@ -77,7 +77,13 @@ def test_genre_note_disclosure_is_fully_inside_the_summary() -> None:
             seen += 1
             summary = _summary_text(el)
             collapsed = _collapsed_text(el)
-            assert "beyond the public record fall on this speech" in summary, (
+            # The concentration statement must tie the corpus-wide count to THIS
+            # speech. "This speech carries N of the corpus's M ..." -- both the
+            # link to the speech and the count are load-bearing for M-6.
+            assert "This speech carries" in summary, (
+                f"{p.name}: genre line no longer ties the count to this speech"
+            )
+            assert "beyond the public record" in summary, (
                 f"{p.name}: genre concentration is not visible in the summary"
             )
             # When the framing sentence is emitted at all it must ride in the
@@ -89,6 +95,57 @@ def test_genre_note_disclosure_is_fully_inside_the_summary() -> None:
             if "That concentration is a property" in el.text_content():
                 assert "not a finding about the speaker" in summary
     assert seen, "no genre disclosure frames found in the rendered reports"
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_frame_titles_are_plain_english_and_parallel() -> None:
+    """The two "why" frames are worded as a matched set, in plain English.
+
+    "Why some evidence carried no stance" is deliberately NOT "Where evidence
+    coverage falls short": 4 of the 5 published speeches sit UNDER the
+    stance-null ceiling, so a shortfall title would assert something the
+    measurement contradicts, and would contradict this block's own body copy
+    ("a share of null stance is expected and is not a retrieval failure").
+
+    Asserted against RENDERED text, not the module source -- the source also
+    carries the comment explaining why the rejected wording was rejected, and a
+    source-level scan cannot tell copy from commentary about copy."""
+    seen = 0
+    for p, doc in _docs():
+        # Statement-triage pages carry no verdict panel and none of these
+        # frames -- they are not in scope for this pin.
+        if not doc.find_class("verdict-panel"):
+            continue
+        seen += 1
+        text = doc.text_content()
+        assert "Why some claims are undecided" in text, f"{p.name}"
+        assert "Why some evidence carried no stance" in text, f"{p.name}"
+        assert "falls short" not in text, f"{p.name}: rejected wording shipped"
+        assert "Why undecided" not in text.replace(
+            "Why some claims are undecided", ""), f"{p.name}: old title survives"
+    assert seen, "no full report pages found to check"
+
+
+def test_disclosure_markers_animate_to_their_open_position() -> None:
+    """Every collapsible frame's triangle rotates on a transition rather than
+    snapping. Two frames already did this; the rest were inconsistent."""
+    from truthbot.publish.site import CSS
+
+    markers = (
+        ".vp-abstention-summary::before",
+        ".vp-genre-summary::before",
+        ".pca-provenance-summary::before",
+        ".report-correction-summary::before",
+        ".stance-coverage-summary .stance-coverage-label::before",
+    )
+    for sel in markers:
+        assert sel in CSS, f"{sel} lost its marker rule"
+        assert f"details[open] > {sel}" in CSS, (
+            f"{sel} does not rotate when its frame is open"
+        )
+    assert "transition: transform 200ms ease;" in CSS
+    # Motion is opt-out for readers who ask for less of it.
+    assert "@media (prefers-reduced-motion: reduce)" in CSS
 
 
 @pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
@@ -115,7 +172,7 @@ def test_evidence_coverage_rate_and_exception_are_visible() -> None:
         for el in doc.find_class("stance-coverage"):
             seen += 1
             summary = _summary_text(el)
-            assert "Evidence coverage" in summary
+            assert "Why some evidence carried no stance" in summary
             assert "carried no stance" in summary, (
                 f"{p.name}: stance-null rate is not visible in the summary"
             )

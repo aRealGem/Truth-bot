@@ -1743,7 +1743,8 @@ def _verdict_panel(site_report) -> str:
         # <details> rather than rewriting its markup keeps that parser valid.
         selfsource_chip_html = (
             '<details class="vp-abstention-details">'
-            '<summary class="vp-abstention-summary">Why undecided</summary>'
+            '<summary class="vp-abstention-summary">'
+            'Why some claims are undecided</summary>'
             '<p class="vp-abstention-chip" '
             f'title="{_esc(chip_title)}">' + _esc(" · ".join(parts))
             + '</p>'
@@ -1762,9 +1763,16 @@ def _verdict_panel(site_report) -> str:
         n_coded = sum(1 for cid in _REASON_PILLS if cid in _ids)
         corpus_coded = len(_REASON_PILLS)
         if n_coded:
+            # Phrasing: leads with the speech rather than trailing "fall on this
+            # speech", which read as a non-sequitur. The concentration statement
+            # is load-bearing for M-6 and survives the rewrite -- the sentence
+            # still says these corpus-wide claims land HERE. Truncating at
+            # "record" was considered and rejected: it leaves a corpus statistic
+            # with nothing tying it to this report, which is the disclosure.
+            # "carries" also fixes the old subject-verb bug ("1 ... fall").
             genre_line = (
-                f"{n_coded} of the corpus's {corpus_coded} claims recorded as "
-                "beyond the public record fall on this speech."
+                f"This speech carries {n_coded} of the corpus's "
+                f"{corpus_coded} claims recorded as beyond the public record."
             )
             if corpus_coded and n_coded * 2 > corpus_coded:
                 genre_line += (
@@ -4936,6 +4944,40 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
 .report-correction-summary::-webkit-details-marker { display: none; }
 .report-correction-summary::before { content: "▶ "; font-size: 0.7rem; }
 .report-correction-body { margin-top: 0.5rem; }
+
+/* Wave B follow-up: disclosure markers rotate to their open position instead of
+   snapping there. `evidence-details` and `model-reasoning` already animated;
+   the five below did not -- the provenance marker rotated but had no
+   transition, and the rest never rotated at all -- so a report page with
+   several frames open showed its triangles pointing inconsistently.
+   Consolidated here so every frame turns the same way at the same speed.
+   The glyph is re-declared without its trailing space: a space inside the
+   pseudo-element rotates with it and pushes the triangle off-centre at 90deg,
+   so the gap is a margin instead. */
+.vp-abstention-summary::before,
+.vp-genre-summary::before,
+.pca-provenance-summary::before,
+.report-correction-summary::before,
+.stance-coverage-summary .stance-coverage-label::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.3em;
+  transition: transform 200ms ease;
+}
+details[open] > .vp-abstention-summary::before,
+details[open] > .vp-genre-summary::before,
+details[open] > .pca-provenance-summary::before,
+details[open] > .report-correction-summary::before,
+details[open] > .stance-coverage-summary .stance-coverage-label::before {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-abstention-summary::before,
+  .vp-genre-summary::before,
+  .pca-provenance-summary::before,
+  .report-correction-summary::before,
+  .stance-coverage-summary .stance-coverage-label::before { transition: none; }
+}
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
@@ -6971,7 +7013,14 @@ def _render_stance_coverage(site_report: SiteReport) -> str:
     # one report whose exception notice needed a click to find.
     summary = (
         '<summary class="stance-coverage-summary">'
-        '<span class="stance-coverage-label">Evidence coverage</span>'
+        # Title parallels "Why some claims are undecided" so the frames read as
+        # a matched set. Deliberately NOT "Where evidence coverage falls short":
+        # 4 of the 5 published speeches sit UNDER the stance-null ceiling, so
+        # that title would assert a shortfall the measurement contradicts -- and
+        # would contradict this block's own body copy, which says a share of
+        # null stance is expected and is not a retrieval failure.
+        '<span class="stance-coverage-label">Why some evidence '
+        'carried no stance</span>'
         f'<span class="stance-coverage-headline">{rate:.1f}% of '
         f'{cov["items"]:,} evidence items carried no stance '
         f'(threshold {ceiling:.0f}%)'

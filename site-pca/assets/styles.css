@@ -1418,6 +1418,40 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
 .report-correction-summary::-webkit-details-marker { display: none; }
 .report-correction-summary::before { content: "▶ "; font-size: 0.7rem; }
 .report-correction-body { margin-top: 0.5rem; }
+
+/* Wave B follow-up: disclosure markers rotate to their open position instead of
+   snapping there. `evidence-details` and `model-reasoning` already animated;
+   the five below did not -- the provenance marker rotated but had no
+   transition, and the rest never rotated at all -- so a report page with
+   several frames open showed its triangles pointing inconsistently.
+   Consolidated here so every frame turns the same way at the same speed.
+   The glyph is re-declared without its trailing space: a space inside the
+   pseudo-element rotates with it and pushes the triangle off-centre at 90deg,
+   so the gap is a margin instead. */
+.vp-abstention-summary::before,
+.vp-genre-summary::before,
+.pca-provenance-summary::before,
+.report-correction-summary::before,
+.stance-coverage-summary .stance-coverage-label::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.3em;
+  transition: transform 200ms ease;
+}
+details[open] > .vp-abstention-summary::before,
+details[open] > .vp-genre-summary::before,
+details[open] > .pca-provenance-summary::before,
+details[open] > .report-correction-summary::before,
+details[open] > .stance-coverage-summary .stance-coverage-label::before {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-abstention-summary::before,
+  .vp-genre-summary::before,
+  .pca-provenance-summary::before,
+  .report-correction-summary::before,
+  .stance-coverage-summary .stance-coverage-label::before { transition: none; }
+}
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
