@@ -6,16 +6,18 @@ collapsed only if the disclosing sentence itself stays visible in the
 `<summary>`. Anything that must be true whether or not the reader clicks
 belongs above the fold of the frame, not inside it.
 
-Three frames are governed here:
+Three areas are governed here:
 
-* **Genre note** (M-6, `docs/standing-rules.md`) -- the rule requires a
-  genre-driven concentration to be "measured and disclosed rather than silently
-  shipped". The subtle failure is partial: surfacing the *count* ("17 of the
-  corpus's 33 claims fall on this speech") while collapsing the *framing*
-  ("that concentration is a property of the speech's rhetorical genre ... not a
-  finding about the speaker") would leave the concentration reading as a finding
-  about the speaker -- the exact outcome M-6 exists to prevent. So the whole
-  genre line is pinned into the summary, not merely its opening sentence.
+* **Genre note** (M-6, `docs/standing-rules.md`) -- NOT a frame. Owner-ratified
+  2026-08-24 (Fable ruling 2026-08-23): the note is rate-based, renders only on
+  the speech with the strictly highest beyond-public-record rate, and both of
+  its sentences stay fully visible OUTSIDE any `<details>`.
+
+  An earlier revision made the note the `<summary>` of a collapsed frame, on the
+  reasoning that a summary is visible without a click. The ruling supersedes
+  that: a `<summary>` is still a descendant of `<details>`, and the requirement
+  is the note in the open, not merely reachable. The pins below assert the
+  stronger property.
 
 * **Corrections banner** -- that verdicts were revised, and how many, stays
   visible. Only the mechanics collapse.
@@ -67,34 +69,73 @@ def test_every_disclosure_frame_is_default_closed() -> None:
             assert el.get("open") is None, f"{p.name}: a <details> ships open"
 
 
+# The exact ratified note, at the current corpus (5 speeches, trump_2026 top at
+# 17/182 = 9.3%, median 4.5%). Pinned verbatim: the wording is owner-ratified
+# and sentence 2 must not be edited.
+EXPECTED_GENRE_NOTE = (
+    "Of this speech's 182 checked claims, 17 (9.3%) were recorded as beyond "
+    "the public record — the highest rate of the five speeches checked "
+    "(median 4.5%). That concentration is a property of the speech's "
+    "rhetorical genre — personal stories, intentions, and unmeasured "
+    "superlatives — not a finding about the speaker."
+)
+
+TOP_RATE_REPORT = "2026-02-24-donald-trump-583aca.html"
+
+
 @pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
-def test_genre_note_disclosure_is_fully_inside_the_summary() -> None:
-    """M-6: both the concentration count AND the genre-property framing are
-    visible without opening the frame."""
-    seen = 0
+def test_genre_note_renders_exact_ratified_string_on_top_rate_speech() -> None:
+    """(a) The note on trump_2026 is the ratified copy, byte for byte."""
+    target = [(p, d) for p, d in _docs() if p.name == TOP_RATE_REPORT]
+    assert target, f"{TOP_RATE_REPORT} not rendered"
+    p, doc = target[0]
+    notes = doc.find_class("vp-genre-note")
+    assert len(notes) == 1, f"{p.name}: expected exactly one genre note"
+    got = " ".join(notes[0].text_content().split())
+    assert got == EXPECTED_GENRE_NOTE, (
+        f"\n  expected: {EXPECTED_GENRE_NOTE}\n  got:      {got}"
+    )
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_genre_note_absent_on_every_other_report() -> None:
+    """(b) Only the highest-rate speech carries the note."""
+    carriers = [p.name for p, doc in _docs() if doc.find_class("vp-genre-note")]
+    assert carriers == [TOP_RATE_REPORT], (
+        f"genre note rendered on unexpected reports: {carriers}"
+    )
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_genre_note_is_not_inside_any_details() -> None:
+    """(c) M-6 hard constraint: both sentences fully visible, outside <details>.
+
+    A previous revision made this note the <summary> of a collapsed frame. A
+    <summary> is a descendant of <details>, so that arrangement fails here --
+    which is the point: the ruling requires the note in the open, not merely
+    reachable."""
     for p, doc in _docs():
-        for el in doc.find_class("vp-genre-details"):
-            seen += 1
-            summary = _summary_text(el)
-            collapsed = _collapsed_text(el)
-            # The concentration statement must tie the corpus-wide count to THIS
-            # speech. "This speech carries N of the corpus's M ..." -- both the
-            # link to the speech and the count are load-bearing for M-6.
-            assert "This speech carries" in summary, (
-                f"{p.name}: genre line no longer ties the count to this speech"
+        for el in doc.find_class("vp-genre-note"):
+            ancestors = [a.tag for a in el.iterancestors()]
+            assert "details" not in ancestors, (
+                f"{p.name}: the genre note is inside a <details> "
+                f"(ancestors: {ancestors[:6]})"
             )
-            assert "beyond the public record" in summary, (
-                f"{p.name}: genre concentration is not visible in the summary"
-            )
-            # When the framing sentence is emitted at all it must ride in the
-            # summary next to the count -- never on the collapsed side.
-            assert "not a finding about the speaker" not in collapsed, (
-                f"{p.name}: the genre-property framing was collapsed while the "
-                "concentration count stayed visible. That inverts M-6."
-            )
-            if "That concentration is a property" in el.text_content():
-                assert "not a finding about the speaker" in summary
-    assert seen, "no genre disclosure frames found in the rendered reports"
+            assert "summary" not in ancestors, f"{p.name}: note is in a <summary>"
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_genre_note_uses_no_inferential_statistics_vocabulary() -> None:
+    """Vocabulary guard. With n=5 the maximum possible |z| is
+    (n-1)/sqrt(n) = 1.789, so a 2-sigma claim could never fire and a 1-sigma
+    claim selects one speech regardless of the data. The note states a RANK,
+    which is what this sample size supports."""
+    banned = ("standard deviation", "σ", "sigma", "z-score", "outlier")
+    for p, doc in _docs():
+        for el in doc.find_class("vp-genre-note"):
+            text = el.text_content().lower()
+            for word in banned:
+                assert word not in text, f"{p.name}: note uses {word!r}"
 
 
 @pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
@@ -133,7 +174,7 @@ def test_disclosure_markers_animate_to_their_open_position() -> None:
 
     markers = (
         ".vp-abstention-summary::before",
-        ".vp-genre-summary::before",
+        ".vp-anecdote-summary::before",
         ".pca-provenance-summary::before",
         ".report-correction-summary::before",
         ".stance-coverage-summary .stance-coverage-label::before",

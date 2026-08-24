@@ -306,6 +306,16 @@ def main() -> None:
     reason_pills = build_reason_pills(REPO)
     if reason_pills:
         print(f"reason-coded render set: {len(reason_pills)} claim(s)")
+    # The M-6 genre note is rate-based: it renders only on the speech with the
+    # highest beyond-public-record RATE, which is a corpus-wide comparison and
+    # cannot be decided while publishing a single report. Built once here from
+    # the same publishing heads the render walks, so the denominator matches the
+    # "Claims Checked" figure on every page and the result does not depend on
+    # the order reports happen to be published in.
+    from truthbot.publish.site import build_corpus_genre_rates
+    corpus_genre_rates = build_corpus_genre_rates()
+    if corpus_genre_rates:
+        print(f"corpus genre rates: {len(corpus_genre_rates)} speech(es)")
     # F1: explanation changes (verdict stood, published reason changed) — their
     # own ledger section; see corrections.load_label_changes for why they are
     # not corrections entries and not in the completeness union.
@@ -317,6 +327,7 @@ def main() -> None:
         site_root=args.site_root, corrections=corrections,
         correction_notes=load_notes(REPO / "data" / "corrections.json"),
         resolution_changes=resolution, reason_pills=reason_pills,
+        corpus_genre_rates=corpus_genre_rates,
         label_changes=label_changes)
     for p in paths:
         render_artifact(p, publisher, args.role, corrections=corrections,

@@ -1057,23 +1057,26 @@ details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
-/* Wave B follow-up: the genre note is the clickable summary of the frame that
-   holds the anecdote breakdown, so it needs the block layout the <p> gave it
-   (inside <summary> it is a <span> -- summary takes phrasing content only). */
-details.vp-genre-details { margin: 0.35rem 0 0; }
-.vp-genre-summary {
+/* The genre note above is NOT collapsible (M-6): it renders as an open
+   paragraph. The anecdote breakdown carries its own frame instead -- it used to
+   ride inside the genre note's frame, and dissolving that without replacing it
+   would leave the breakdown loose under "Why some claims are undecided" again. */
+details.vp-anecdote-details { margin: 0.35rem 0 0; }
+.vp-anecdote-summary {
   cursor: pointer;
   list-style: none;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
 }
-.vp-genre-summary::-webkit-details-marker { display: none; }
-.vp-genre-summary::before {
+.vp-anecdote-summary::-webkit-details-marker { display: none; }
+.vp-anecdote-summary::before {
   content: "▶ ";
   font-size: 0.7rem;
   color: var(--ink-muted);
 }
-.vp-genre-summary .vp-genre-note { display: inline; margin: 0; }
-.vp-genre-body { margin-top: 0.35rem; }
-.vp-genre-body .vp-anecdote-note { margin: 0; }
+.vp-anecdote-body { margin-top: 0.35rem; }
+.vp-anecdote-body .vp-anecdote-note { margin: 0; }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {
   font-family: var(--serif);
@@ -1429,7 +1432,7 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
    pseudo-element rotates with it and pushes the triangle off-centre at 90deg,
    so the gap is a margin instead. */
 .vp-abstention-summary::before,
-.vp-genre-summary::before,
+.vp-anecdote-summary::before,
 .pca-provenance-summary::before,
 .report-correction-summary::before,
 .stance-coverage-summary .stance-coverage-label::before {
@@ -1439,7 +1442,7 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
   transition: transform 200ms ease;
 }
 details[open] > .vp-abstention-summary::before,
-details[open] > .vp-genre-summary::before,
+details[open] > .vp-anecdote-summary::before,
 details[open] > .pca-provenance-summary::before,
 details[open] > .report-correction-summary::before,
 details[open] > .stance-coverage-summary .stance-coverage-label::before {
@@ -1447,7 +1450,7 @@ details[open] > .stance-coverage-summary .stance-coverage-label::before {
 }
 @media (prefers-reduced-motion: reduce) {
   .vp-abstention-summary::before,
-  .vp-genre-summary::before,
+  .vp-anecdote-summary::before,
   .pca-provenance-summary::before,
   .report-correction-summary::before,
   .stance-coverage-summary .stance-coverage-label::before { transition: none; }

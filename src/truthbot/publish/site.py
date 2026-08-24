@@ -1756,64 +1756,71 @@ def _verdict_panel(site_report) -> str:
     # map), never from prose. Silent when the map is empty or the report holds
     # none, so legacy publishes are byte-identical. Prose is a DRAFT for the
     # owner's red pen (S-8) — flagged in the Wave A PR.
+    # RATE-based trigger and copy (owner-ratified 2026-08-24, Fable ruling of
+    # 2026-08-23; supersedes the count-share wording).
+    #
+    # Why rate and not count-share: the speeches differ ~4x in length, so a
+    # count share ("17 of the corpus's 33") tracks how much a speaker SAID as
+    # much as how they said it. The rate divides that out.
+    #
+    # Trigger: the note renders on the speech with the strictly highest rate,
+    # and on all tied speeches on an exact tie. No other speech gets it.
+    #
+    # Deliberately NOT expressed as a standard deviation / z-score / outlier:
+    # with n=5 the maximum possible |z| is (n-1)/sqrt(n) = 1.789, so a
+    # 2-sigma test could never fire and a 1-sigma test selects exactly one
+    # speech regardless of the data. A rank statement ("the highest rate of the
+    # five speeches checked") is what this sample size can actually support.
     genre_note_html = ""
-    genre_note_text = ""
-    if _REASON_PILLS:
-        _ids = {getattr(b.claim, "id", None) for b in site_report.checkable_bundles}
-        n_coded = sum(1 for cid in _REASON_PILLS if cid in _ids)
-        corpus_coded = len(_REASON_PILLS)
-        if n_coded:
-            # Phrasing: leads with the speech rather than trailing "fall on this
-            # speech", which read as a non-sequitur. The concentration statement
-            # is load-bearing for M-6 and survives the rewrite -- the sentence
-            # still says these corpus-wide claims land HERE. Truncating at
-            # "record" was considered and rejected: it leaves a corpus statistic
-            # with nothing tying it to this report, which is the disclosure.
-            # "carries" also fixes the old subject-verb bug ("1 ... fall").
+    rate_table = _genre_rate_table()
+    this_speech = getattr(site_report, "speech_id", "") or ""
+    if rate_table and this_speech in rate_table:
+        mine = rate_table[this_speech]
+        top = max(row["rate"] for row in rate_table.values())
+        # Strictly highest, or tied for highest. Compared on the same rounded
+        # figure the page prints, so the page can never claim "the highest
+        # rate" while showing a number equal to another speech's.
+        is_top = round(mine["rate"], 1) >= round(top, 1) and mine["coded"] > 0
+        if is_top:
+            n_speeches = len(rate_table)
+            median_rate = _median([row["rate"] for row in rate_table.values()])
+            speeches_word = _CARDINALS.get(n_speeches, str(n_speeches))
             genre_line = (
-                f"This speech carries {n_coded} of the corpus's "
-                f"{corpus_coded} claims recorded as beyond the public record."
+                f"Of this speech's {mine['checked']} checked claims, "
+                f"{mine['coded']} ({mine['rate']:.1f}%) were recorded as beyond "
+                f"the public record — the highest rate of the {speeches_word} "
+                f"speeches checked (median {median_rate:.1f}%)."
+                # Sentence 2 is VERBATIM from the shipped note. Do not edit.
+                " That concentration is a property of the speech's "
+                "rhetorical genre — personal stories, intentions, and "
+                "unmeasured superlatives — not a finding about the speaker."
             )
-            if corpus_coded and n_coded * 2 > corpus_coded:
-                genre_line += (
-                    " That concentration is a property of the speech's "
-                    "rhetorical genre — personal stories, intentions, and "
-                    "unmeasured superlatives — not a finding about the speaker."
-                )
-            # Readability (Wave B follow-up): the genre note and the anecdote
-            # note used to sit loose under the collapsed "Why undecided" block,
-            # reading as its continuation while not being part of it. They are
-            # now one disclosure frame.
-            #
-            # M-6 boundary — the ENTIRE genre line stays in the <summary>, not
-            # just its first sentence. The first sentence states the
-            # concentration ("17 of the corpus's 33 claims … fall on this
-            # speech"); the second is what makes it a GENRE property rather than
-            # a finding about the speaker. Surfacing the count while collapsing
-            # the framing would invert the rule instead of satisfying it, so the
-            # summary carries both and only the anecdote breakdown collapses.
-            genre_note_text = genre_line
+            # M-6 hard constraint: both sentences stay fully visible, outside
+            # any <details>. An earlier revision made this note the <summary> of
+            # a collapsed frame; the ruling of 2026-08-24 puts it back in the
+            # open. It is a plain paragraph in the panel and must stay one.
             genre_note_html = ('<p class="vp-genre-note">'
                                + _esc(genre_line) + '</p>\n')
 
-    # Compose the genre/anecdote disclosure frame. The frame only exists when
-    # there is something to collapse into it; with a genre note alone (or an
-    # anecdote note alone) the loose paragraph is already correct and nothing
-    # would be gained by making the reader click.
-    # <summary>'s content model is phrasing content, so the note is a <span>
-    # here rather than the <p> used in the un-framed case. The `vp-genre-note`
-    # class rides along either way -- test_reason_code_render keys on it.
-    if genre_note_text and anecdote_note_html:
-        disclosure_frame_html = (
-            '<details class="vp-genre-details">'
-            '<summary class="vp-genre-summary">'
-            '<span class="vp-genre-note">' + _esc(genre_note_text) + '</span>'
-            '</summary>'
-            '<div class="vp-genre-body">' + anecdote_note_html.strip() + '</div>'
+    # The genre note is emitted OPEN (M-6 hard constraint above) and therefore
+    # cannot host the anecdote breakdown as a collapsed body, which is how the
+    # previous revision framed it. The anecdote note gets its own frame instead,
+    # with its own plain-English summary -- otherwise dissolving the old frame
+    # would leave it loose under "Why some claims are undecided" again, which is
+    # the orphan this pass exists to remove.
+    if anecdote_note_html:
+        anecdote_frame_html = (
+            '<details class="vp-anecdote-details">'
+            '<summary class="vp-anecdote-summary">'
+            'Why some claims can&#39;t be checked at all</summary>'
+            '<div class="vp-anecdote-body">' + anecdote_note_html.strip() + '</div>'
             '</details>\n'
         )
     else:
-        disclosure_frame_html = genre_note_html + anecdote_note_html
+        anecdote_frame_html = ""
+
+    # Order: the always-visible disclosure first, then the collapsible detail.
+    disclosure_frame_html = genre_note_html + anecdote_frame_html
 
     return (
         '<section class="verdict-panel">\n'
@@ -2701,6 +2708,85 @@ def set_reason_pills(pills: "Optional[dict]") -> None:
     """Install (or clear) the reason-code render map for this publish."""
     global _REASON_PILLS
     _REASON_PILLS = dict(pills or {})
+
+
+#: Per-speech claim counts for the whole publishing corpus, keyed by speech_id.
+#: The M-6 genre note is RATE-based (owner-ratified 2026-08-24): it renders on
+#: the speech with the strictly highest beyond-public-record rate, which cannot
+#: be decided from one report in isolation. Same keyed-registry pattern as
+#: ``_REASON_PILLS`` -- empty map == the note does not render, so a caller that
+#: does not supply it fails closed rather than guessing from partial data.
+_CORPUS_GENRE_RATES: dict[str, dict] = {}
+
+
+def set_corpus_genre_rates(rates: "Optional[dict]") -> None:
+    """Install (or clear) the corpus-wide per-speech rate map for this publish."""
+    global _CORPUS_GENRE_RATES
+    _CORPUS_GENRE_RATES = dict(rates or {})
+
+
+def build_corpus_genre_rates(runs_dir: "Optional[Path]" = None) -> dict[str, dict]:
+    """Per-speech ``{"checked": n}`` across the publishing corpus.
+
+    Reads the SAME artifact set the renderer publishes -- ``publishing_heads()``,
+    the latest evidence-bearing run per speech -- so the denominator can never
+    disagree with the "Claims Checked" figure on the rendered page. Order
+    independent: the map is a property of the artifact set, not of the sequence
+    in which reports happen to be published. Offline and $0 (JSON reads only).
+    """
+    from truthbot.publish.heads import publishing_heads
+    out: dict[str, dict] = {}
+    for sid, path in publishing_heads(runs_dir).items():
+        try:
+            art = json.loads(Path(path).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        checked = len(art.get("claims") or [])
+        if checked:
+            out[sid] = {"checked": checked}
+    return out
+
+
+def _genre_rate_table() -> dict[str, dict]:
+    """Join the corpus claim counts to the reason-coded map -> per-speech rates.
+
+    Returns ``{speech_id: {"checked", "coded", "rate"}}``. Speeches with no
+    checked claims are absent; a speech with zero coded claims still appears
+    with rate 0.0 so it counts toward the median.
+    """
+    if not _CORPUS_GENRE_RATES:
+        return {}
+    coded: dict[str, int] = {}
+    for row in _REASON_PILLS.values():
+        speech = str(row.get("sid", "")).split(":")[0]
+        if speech:
+            coded[speech] = coded.get(speech, 0) + 1
+    table = {}
+    for speech, meta in _CORPUS_GENRE_RATES.items():
+        checked = meta.get("checked") or 0
+        if not checked:
+            continue
+        n = coded.get(speech, 0)
+        table[speech] = {"checked": checked, "coded": n,
+                         "rate": 100.0 * n / checked}
+    return table
+
+
+#: Small cardinals spelled out; the ratified copy wants "five speeches", not
+#: "5 speeches", up to ten.
+_CARDINALS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five",
+              6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten"}
+
+
+def _median(values: "list[float]") -> float:
+    ordered = sorted(values)
+    n = len(ordered)
+    if not n:
+        return 0.0
+    mid = n // 2
+    if n % 2:
+        return ordered[mid]
+    return (ordered[mid - 1] + ordered[mid]) / 2.0
 
 
 def build_reason_pills(repo_root: Path) -> dict[str, dict]:
@@ -4583,23 +4669,26 @@ details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
-/* Wave B follow-up: the genre note is the clickable summary of the frame that
-   holds the anecdote breakdown, so it needs the block layout the <p> gave it
-   (inside <summary> it is a <span> -- summary takes phrasing content only). */
-details.vp-genre-details { margin: 0.35rem 0 0; }
-.vp-genre-summary {
+/* The genre note above is NOT collapsible (M-6): it renders as an open
+   paragraph. The anecdote breakdown carries its own frame instead -- it used to
+   ride inside the genre note's frame, and dissolving that without replacing it
+   would leave the breakdown loose under "Why some claims are undecided" again. */
+details.vp-anecdote-details { margin: 0.35rem 0 0; }
+.vp-anecdote-summary {
   cursor: pointer;
   list-style: none;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
 }
-.vp-genre-summary::-webkit-details-marker { display: none; }
-.vp-genre-summary::before {
+.vp-anecdote-summary::-webkit-details-marker { display: none; }
+.vp-anecdote-summary::before {
   content: "▶ ";
   font-size: 0.7rem;
   color: var(--ink-muted);
 }
-.vp-genre-summary .vp-genre-note { display: inline; margin: 0; }
-.vp-genre-body { margin-top: 0.35rem; }
-.vp-genre-body .vp-anecdote-note { margin: 0; }
+.vp-anecdote-body { margin-top: 0.35rem; }
+.vp-anecdote-body .vp-anecdote-note { margin: 0; }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {
   font-family: var(--serif);
@@ -4955,7 +5044,7 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
    pseudo-element rotates with it and pushes the triangle off-centre at 90deg,
    so the gap is a margin instead. */
 .vp-abstention-summary::before,
-.vp-genre-summary::before,
+.vp-anecdote-summary::before,
 .pca-provenance-summary::before,
 .report-correction-summary::before,
 .stance-coverage-summary .stance-coverage-label::before {
@@ -4965,7 +5054,7 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
   transition: transform 200ms ease;
 }
 details[open] > .vp-abstention-summary::before,
-details[open] > .vp-genre-summary::before,
+details[open] > .vp-anecdote-summary::before,
 details[open] > .pca-provenance-summary::before,
 details[open] > .report-correction-summary::before,
 details[open] > .stance-coverage-summary .stance-coverage-label::before {
@@ -4973,7 +5062,7 @@ details[open] > .stance-coverage-summary .stance-coverage-label::before {
 }
 @media (prefers-reduced-motion: reduce) {
   .vp-abstention-summary::before,
-  .vp-genre-summary::before,
+  .vp-anecdote-summary::before,
   .pca-provenance-summary::before,
   .report-correction-summary::before,
   .stance-coverage-summary .stance-coverage-label::before { transition: none; }
@@ -8469,6 +8558,7 @@ class SitePublisher:
                  report_aliases: Optional[dict[str, str]] = None,
                  resolution_changes: Optional[list[dict]] = None,
                  reason_pills: Optional[dict] = None,
+                 corpus_genre_rates: Optional[dict] = None,
                  label_changes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
@@ -8497,6 +8587,12 @@ class SitePublisher:
         # {"sid","code","copy"}} from build_reason_pills(). None/empty -> the
         # species does not render (legacy publishes stay byte-identical).
         self._reason_pills: dict = dict(reason_pills or {})
+        # Corpus-wide per-speech claim counts for the RATE-based M-6 genre note
+        # ({speech_id -> {"checked": n}} from build_corpus_genre_rates()). The
+        # note compares one speech against every other, so it cannot be decided
+        # from the report being published. None/empty -> the note does not
+        # render, rather than being decided from a partial corpus.
+        self._corpus_genre_rates: dict = dict(corpus_genre_rates or {})
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -8512,6 +8608,7 @@ class SitePublisher:
         # card/panel renderers (same keyed-registry pattern as decidability:
         # nothing has to CARRY it, so no reconstruction path can drop it).
         set_reason_pills(self._reason_pills)
+        set_corpus_genre_rates(self._corpus_genre_rates)
 
         # Backfill speaker/date onto bundles that bridged without them
         # (PR-A2.1). The bridge only threads speaker/date_str when the claim
