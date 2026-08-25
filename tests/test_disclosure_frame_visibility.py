@@ -167,6 +167,22 @@ def test_frame_titles_are_plain_english_and_parallel() -> None:
     assert seen, "no full report pages found to check"
 
 
+def test_genre_note_shares_the_frame_rail_without_looking_clickable() -> None:
+    """The always-open note sits on the same text rail as the collapsible
+    frames, so it does not read as a rendering slip -- but it must NOT carry
+    the ▶ marker, which would advertise a control that does not exist."""
+    from truthbot.publish.site import CSS
+
+    block = CSS.split(".vp-genre-note {", 1)[1].split("}", 1)[0]
+    assert "padding-left" in block, "note no longer aligns to the frames' rail"
+    assert "border-left" in block, "note lost its always-open marker rule"
+    # No marker pseudo-element anywhere for this class.
+    assert ".vp-genre-note::before" not in CSS
+    assert ".vp-genre-note::marker" not in CSS
+    # And it is never wired into the rotating-marker selector list.
+    assert "> .vp-genre-note::before" not in CSS
+
+
 def test_disclosure_markers_animate_to_their_open_position() -> None:
     """Every collapsible frame's triangle rotates on a transition rather than
     snapping. Two frames already did this; the rest were inconsistent."""

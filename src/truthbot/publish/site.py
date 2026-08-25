@@ -4663,11 +4663,28 @@ details.vp-abstention-details { margin: 0.35rem 0 0; }
 details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
 /* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
    concentrates on one speech, say so as a genre property, in the panel. */
+/* This note is the one disclosure in the panel that never collapses (M-6,
+   ruled 2026-08-24), which left it looking like a stray paragraph: every frame
+   around it indents its text past a marker glyph, so the note's first character
+   sat about a character to the LEFT of every neighbouring line, reading as a
+   rendering slip rather than a deliberate always-open block.
+
+   It now shares that text rail and the same muted 0.8rem treatment. It
+   deliberately does NOT borrow the ▶ marker: a marker here would advertise a
+   control that does not exist. The hairline down the left edge does the job the
+   marker does for the others -- it groups the note with the disclosure stack
+   and marks it as permanently open, rather than a frame whose triangle failed
+   to draw. Prose stays in the body face; the frames use mono for one-line
+   titles, and two sentences of mono would cost more in readability than the
+   consistency is worth. */
 .vp-genre-note {
   font-size: 0.8rem;
   line-height: 1.5;
   color: var(--ink-muted);
-  margin: 0.35rem 0 0;
+  margin: 0.5rem 0 0;
+  /* marker glyph (0.7rem) + its 0.3em gap == the frames' text rail */
+  padding-left: 0.95rem;
+  border-left: 2px solid var(--rule, #e5e2da);
 }
 /* The genre note above is NOT collapsible (M-6): it renders as an open
    paragraph. The anecdote breakdown carries its own frame instead -- it used to
