@@ -37,6 +37,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from typing import Callable, Optional, Protocol, Sequence
 
+from truthbot.metrics.telemetry import get_claim_id, get_telemetry
 from truthbot.models import Evidence, SourceTier
 from truthbot.verdict.era_lint import FAIR_GAME_DAYS, fair_game_end
 from truthbot.verify.factcheck_exclusion import is_excluded_factchecker
@@ -63,8 +64,51 @@ def _is_http_429(exc: Exception) -> bool:
     return isinstance(exc, urllib.error.HTTPError) and getattr(exc, "code", None) == 429
 
 
+# Metered retriever lanes (R2/R3) bill a provider on every attempt, including
+# the ones that fail. ``tier="retrieval"`` keeps them distinguishable from the
+# adjudication panel in adapter_calls.jsonl — the two were indistinguishable
+# (in fact, invisible) until 2026-08-26.
+RETRIEVAL_TIER = "retrieval"
+
+
+def _retrieval_status(exc: Exception) -> str:
+    """Map a failed retrieval call to the status vocabulary the adapters use."""
+    if _is_http_429(exc):
+        return "rate_limited"
+    if isinstance(exc, MissingKeyError):
+        return "no_key"
+    if isinstance(exc, TimeoutError) or "timed out" in str(exc).lower():
+        return "timeout"
+    return "api_error"
+
+
+def _record_usage(td: dict, usage: dict) -> None:
+    """Copy a Responses-API usage block onto a telemetry dict.
+
+    Shared by R2 (OpenAI) and R3 (xAI) — the xAI /v1/responses envelope mirrors
+    OpenAI's, which is why R3 already reuses R2's output parsing.
+    """
+    td["input_tokens"] = int(
+        usage.get("input_tokens") or usage.get("prompt_tokens") or 0
+    )
+    td["output_tokens"] = int(
+        usage.get("output_tokens") or usage.get("completion_tokens") or 0
+    )
+    details = usage.get("prompt_tokens_details") or {}
+    td["openai_cached_prompt_tokens"] = int(details.get("cached_tokens") or 0)
+
+
 class PendingDecisionError(RuntimeError):
     """The retriever seat is blocked on an open roster decision."""
+
+
+class MissingKeyError(RuntimeError):
+    """A metered retriever lane has no API key, so no call was billed.
+
+    Distinct from a provider failure: it must not be reported as spend, and
+    ``EnvironmentError`` (an alias of ``OSError``) cannot be told apart from a
+    network error, which is why this exists.
+    """
 
 
 class ContaminationError(AssertionError):
@@ -234,7 +278,7 @@ class OpenAIBrowsingRetriever:
     def _post(self, model: str, prompt: str) -> dict:
         key = os.environ.get("OPENAI_API_KEY")
         if not key:
-            raise EnvironmentError("OPENAI_API_KEY not set (R2 lane)")
+            raise MissingKeyError("OPENAI_API_KEY not set (R2 lane)")
         body = json.dumps({
             "model": model,
             "input": prompt,
@@ -262,6 +306,7 @@ class OpenAIBrowsingRetriever:
         prompt = build_retrieval_prompt(claim_text, context=context,
                                         utterance=utterance, window=window)
         last_err: Exception | None = None
+        telemetry = get_telemetry()
         for model in self._models():
             # An EMPTY parse from a successful call is a soft failure, not an
             # answer (P67.9 mini pilot: gpt-5-mini came back empty on 2/15
@@ -270,22 +315,34 @@ class OpenAIBrowsingRetriever:
             # same model once (pennies at mini rates), then fall down the
             # chain like a POST failure would.
             for attempt in (1, 2):
-                try:
-                    doc = self._post(model, prompt)
-                except Exception as exc:  # noqa: BLE001 — fall down the chain
-                    logger.warning("%s: model %s failed (%s)", self.label, model, exc)
-                    last_err = exc
-                    if self.on_rate_limit and _is_http_429(exc):
-                        self.on_rate_limit()
-                    break                      # POST failure → next model
-                usage = doc.get("usage") or {}
-                logger.info("%s: model=%s tokens in/out %s/%s", self.label, model,
-                            usage.get("input_tokens"), usage.get("output_tokens"))
-                items = items_to_evidence(
-                    _parse_shortlist_json(self._output_text(doc)),
-                    retriever_label=self.label)
-                if items:
-                    return items
+                # One record per attempt, not per claim: falling down the model
+                # chain bills every rung, and the whole point of this lane's
+                # telemetry is that nothing bills invisibly. ``break``/``return``
+                # out of this block still write the record — the context
+                # manager's finally runs either way.
+                with telemetry.measure(
+                    "openai", model, get_claim_id(), tier=RETRIEVAL_TIER,
+                ) as td:
+                    try:
+                        doc = self._post(model, prompt)
+                    except Exception as exc:  # noqa: BLE001 — fall down the chain
+                        td["status"] = _retrieval_status(exc)
+                        logger.warning("%s: model %s failed (%s)", self.label, model, exc)
+                        last_err = exc
+                        if self.on_rate_limit and _is_http_429(exc):
+                            self.on_rate_limit()
+                        break                      # POST failure → next model
+                    usage = doc.get("usage") or {}
+                    _record_usage(td, usage)
+                    logger.info("%s: model=%s tokens in/out %s/%s", self.label, model,
+                                usage.get("input_tokens"), usage.get("output_tokens"))
+                    items = items_to_evidence(
+                        _parse_shortlist_json(self._output_text(doc)),
+                        retriever_label=self.label)
+                    td["retrieved_url_count"] = len(items)
+                    td["status"] = "ok" if items else "empty_shortlist"
+                    if items:
+                        return items
                 logger.warning("%s: model %s returned an empty shortlist "
                                "(attempt %d/2)", self.label, model, attempt)
         logger.warning("%s: all models failed or empty (%s)", self.label, last_err)
@@ -313,7 +370,7 @@ class GrokSearchRetriever:
     def _post(self, model: str, prompt: str, tool: dict) -> dict:
         key = os.environ.get("XAI_API_KEY")
         if not key:
-            raise EnvironmentError("XAI_API_KEY not set (R3 lane)")
+            raise MissingKeyError("XAI_API_KEY not set (R3 lane)")
         # xAI Agent Tools API (the 2026 replacement for the deprecated
         # search_parameters Live Search — the old field now 410s). The
         # /v1/responses envelope mirrors OpenAI's, so R2's output parsing
@@ -343,20 +400,30 @@ class GrokSearchRetriever:
         elif window:
             tool["to_date"] = window[1].isoformat()
         model = self.model or os.environ.get("TRUTHBOT_R3_MODEL") or "grok-4"
-        try:
-            doc = self._post(model, prompt, tool)
-        except Exception as exc:  # noqa: BLE001 — fail soft like the other seats
-            logger.warning("%s: model %s failed (%s)", self.label, model, exc)
-            if self.on_rate_limit and _is_http_429(exc):
-                self.on_rate_limit()
-            return []
-        usage = doc.get("usage") or {}
-        logger.info("%s: model=%s tokens in/out %s/%s", self.label,
-                    doc.get("model", model), usage.get("input_tokens"),
-                    usage.get("output_tokens"))
-        return items_to_evidence(
-            _parse_shortlist_json(OpenAIBrowsingRetriever._output_text(doc)),
-            retriever_label=self.label)
+        # Metered exactly like R2 — this lane bills xAI on the same raw urllib
+        # path and was equally invisible in adapter_calls.jsonl.
+        with get_telemetry().measure(
+            "xai", model, get_claim_id(), tier=RETRIEVAL_TIER,
+        ) as td:
+            try:
+                doc = self._post(model, prompt, tool)
+            except Exception as exc:  # noqa: BLE001 — fail soft like the other seats
+                td["status"] = _retrieval_status(exc)
+                logger.warning("%s: model %s failed (%s)", self.label, model, exc)
+                if self.on_rate_limit and _is_http_429(exc):
+                    self.on_rate_limit()
+                return []
+            usage = doc.get("usage") or {}
+            _record_usage(td, usage)
+            logger.info("%s: model=%s tokens in/out %s/%s", self.label,
+                        doc.get("model", model), usage.get("input_tokens"),
+                        usage.get("output_tokens"))
+            items = items_to_evidence(
+                _parse_shortlist_json(OpenAIBrowsingRetriever._output_text(doc)),
+                retriever_label=self.label)
+            td["retrieved_url_count"] = len(items)
+            td["status"] = "ok" if items else "empty_shortlist"
+            return items
 
 
 # ── T2.6 contamination guard (harness assertion, not a convention) ───────────

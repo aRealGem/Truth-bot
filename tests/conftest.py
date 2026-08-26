@@ -27,6 +27,22 @@ from truthbot.models import (
 )
 
 
+@pytest.fixture(autouse=True)
+def isolate_telemetry(tmp_path, monkeypatch):
+    """Point telemetry at a throwaway metrics dir for every test.
+
+    ``get_telemetry`` resolves ``settings.metrics_dir`` once and caches the
+    logger in a module global, so without this any test that reaches a real
+    adapter or retriever call path appends rows to the repo's own
+    ``metrics/adapter_calls.jsonl``. That file is the spend ledger — test rows
+    in it are indistinguishable from production ones.
+    """
+    import truthbot.metrics.telemetry as tel
+
+    monkeypatch.setenv("TRUTHBOT_METRICS_DIR", str(tmp_path / "metrics"))
+    monkeypatch.setattr(tel, "_telemetry_instance", None)
+
+
 @pytest.fixture
 def sample_transcript() -> Transcript:
     return Transcript(

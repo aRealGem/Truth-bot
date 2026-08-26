@@ -24,6 +24,7 @@ from datetime import date
 from typing import TYPE_CHECKING, Callable, Optional, Sequence
 
 from hydramind.invariants import check_i5_provenance
+from truthbot.metrics.telemetry import ClaimSpend, claim_context, claim_spend_context
 from truthbot.verify.retrievers import Retriever
 
 if TYPE_CHECKING:      # import-light: the hint only, never the brave/httpx tail
@@ -197,10 +198,17 @@ def build_evidence_pack_v2(
                            r.label, sid, exc)
             return []
 
+    # Running total of what this claim's retrieval billed. The metered lanes
+    # (R2/R3) are several call layers below and run on a thread pool, so the
+    # cost is carried back out through context rather than return values; the
+    # primary and retry rounds share one accumulator because they are one bill.
+    spend = ClaimSpend()
+
     def _shortlists(pool: Sequence[Retriever], label_suffix: str, ctx: str):
         # runner controls fan-out (serial by default, concurrent under the P120
         # pool); it returns shortlists in pool order, so labels line up.
-        results = runner(pool, lambda r: _call_one(r, ctx))
+        with claim_context(sid), claim_spend_context(spend):
+            results = runner(pool, lambda r: _call_one(r, ctx))
         return [(r.label + label_suffix, sl) for r, sl in zip(pool, results)]
 
     # URLs already sent to the scorer — the retry round scores only its NEW
@@ -263,7 +271,8 @@ def build_evidence_pack_v2(
                         gate_code=res.gate_code, pool=pool,
                         excluded_fc=list(res.excluded_fc),
                         quarantined=list(getattr(res, "quarantined", []) or []),
-                        scoring=scoring_telemetry(items))
+                        scoring=scoring_telemetry(items),
+                        retrieval=spend.snapshot())
     if not era_exempt:
         era_lint.assert_pack_within_era(pack, utterance, era_mode=mode)
     return pack

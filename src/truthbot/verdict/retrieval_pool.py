@@ -18,6 +18,7 @@ Retrievers are blocking I/O (subprocess for R1, HTTP for R2/R3), so both levels 
 """
 from __future__ import annotations
 
+import contextvars
 import logging
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from typing import Callable, Optional, Sequence
@@ -44,7 +45,16 @@ def parallel_shortlists(pool: Sequence, call: Callable[[object], list], *,
         return call(r)
 
     with ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
-        futs = [ex.submit(_wrapped, r) for r in pool]
+        # ThreadPoolExecutor does NOT propagate contextvars, so without this the
+        # workers lose the caller's claim/run context and every metered
+        # retrieval record would be attributed to no claim at all.
+        #
+        # A fresh Context per submit is required: Context.run raises
+        # "cannot enter context - already entered" if one Context object is
+        # entered by two threads at once, so hoisting a single copy_context()
+        # out of the loop would crash intermittently under fan-out.
+        futs = [ex.submit(contextvars.copy_context().run, _wrapped, r)
+                for r in pool]
         return [f.result() for f in futs]     # pool order preserved
 
 

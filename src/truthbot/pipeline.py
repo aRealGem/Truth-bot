@@ -511,6 +511,38 @@ def _routes_to_batch(adapter, settings) -> bool:
     return True
 
 
+def announce_openai_route(args, settings=None) -> str:
+    """Print the OpenAI billing route at publish start; halt on unacked live mode.
+
+    Live mode forfeits the 50% batch discount and was reachable purely by an
+    inline ``TRUTHBOT_OPENAI_LIVE=1`` in a documented run command, with no
+    warning printed anywhere. Returns the route for callers/tests.
+    """
+    import os
+
+    if settings is None:
+        from truthbot.config import settings as settings
+
+    # truthbot.costs (the measured per-claim bands), NOT truthbot.metrics.costs
+    # (the per-token rate table) — two different modules.
+    from truthbot.costs import PER_CLAIM_USD_MEASURED
+
+    live = bool(getattr(settings, "openai_live_mode", False))
+    model = os.environ.get("TRUTHBOT_R2_MODEL") or "gpt-5.5"
+    lo, hi = PER_CLAIM_USD_MEASURED
+    route = "LIVE (full price)" if live else "batch (50% discount)"
+    print(f"OpenAI route: {route} | retrieval model={model} | "
+          f"est. ${lo:.3f}-${hi:.3f}/claim adjudication (measured, "
+          f"excludes retrieval)")
+    if live and not getattr(args, "ack_live_cost", False):
+        print("BLOCKED: TRUTHBOT_OPENAI_LIVE is set, which doubles OpenAI "
+              "spend by skipping the batch discount. Re-run with "
+              "--ack-live-cost to confirm that is intended, or unset the "
+              "variable. No spend attempted.")
+        sys.exit(1)
+    return "live" if live else "batch"
+
+
 def _run_publish_batch_submit(
     *,
     args,
@@ -1253,6 +1285,13 @@ def _run_publish_pca(args) -> None:
     print(f"Segmented {len(sentences)} sentence(s) (speech_id={speech_id}, "
           f"utterance={date.date().isoformat()})")
 
+    # Minted HERE, before any spend. It used to be created after adjudication,
+    # purely to name the artifact — which meant every telemetry record written
+    # during Phase R retrieval carried run_id=None and no run summary existed to
+    # reconcile a bill against.
+    import uuid
+    run_id = str(uuid.uuid4())
+
     evidence_mode = getattr(args, "evidence_mode", "v1") or "v1"
     retrieval_phase_mode = getattr(args, "retrieval_phase", "split")
     provider = None
@@ -1312,6 +1351,7 @@ def _run_publish_pca(args) -> None:
     print(f"Verifying via PCA (roster={getattr(args, 'roster', 'dev')}, "
           f"chunk_size={chunk_size}, evidence={evidence_mode}, "
           f"mode={mode_label})...")
+    announce_openai_route(args)
     # P67.3: chunk journal + resume + preflight budget probe. The journal
     # defaults ON (metrics/journals/<speech_id>.jsonl): a mid-run failure keeps
     # every completed chunk, and re-running with --resume re-spends only on
@@ -1321,6 +1361,7 @@ def _run_publish_pca(args) -> None:
         Path(_cfg.metrics_dir) / "journals" / f"{speech_id}.jsonl")
     resume_rows: list = []
     resume_packs: dict = {}
+    inline_banked_retrieval = 0.0
     resume = bool(getattr(args, "resume", False))
     if resume:
         resume_rows, resume_packs, prior_cost, _ = \
@@ -1328,6 +1369,11 @@ def _run_publish_pca(args) -> None:
         if resume_rows:
             print(f"  resume: {len(resume_rows)} journaled rows from "
                   f"{journal_path} (banked spend ${prior_cost:.2f})")
+        # Inline-retrieval resume: those chunks' packs were retrieved in the
+        # earlier run and come back as serialized evidence with no cost on them.
+        # Split mode reads its banked retrieval off the packs journal instead.
+        inline_banked_retrieval = (
+            publish_pipeline.load_chunk_journal_retrieval_spend(journal_path))
 
     # P120 B1 phase-split: when retrieving v2 evidence, build ALL packs up front
     # (Phase R) and journal each at build time, then run the panel (Phase P) over
@@ -1337,6 +1383,10 @@ def _run_publish_pca(args) -> None:
     # inline keeps the fused (pre-P120) behavior as the ablation baseline.
     prebuilt_layer_a = None
     phase_r_telemetry = None
+    # Only spend a live pack object can no longer report — i.e. retrieval paid
+    # by an earlier run for journal-resumed sids. Packs built this run are
+    # counted inside run_pca_verify as their chunk completes.
+    banked_retrieval_cost_usd = inline_banked_retrieval
     split = governor is not None
     if split:
         packs_journal = (Path(_cfg.metrics_dir) / "journals"
@@ -1374,11 +1424,13 @@ def _run_publish_pca(args) -> None:
         pool_note = ("serial" if not governor.adaptive and governor.pool_start <= 1
                      else f"adaptive pool ≤{governor.pool_max}, r1_cap={governor.r1_cli_cap}")
         print(f"Phase R: building {len(todo)} pack(s) ({pool_note})...")
+        from truthbot.metrics.telemetry import telemetry_run_context
         try:
-            packs = retrieval_phase.build_packs_phase(
-                todo, pack_builder, journal_path=packs_journal,
-                resume_packs=loaded_packs, on_progress=_phase_r_progress,
-                governor=governor)
+            with telemetry_run_context(run_id=run_id):
+                packs = retrieval_phase.build_packs_phase(
+                    todo, pack_builder, journal_path=packs_journal,
+                    resume_packs=loaded_packs, on_progress=_phase_r_progress,
+                    governor=governor)
         except CriticalPressureTimeout as exc:
             # Clean journaled stop: completed packs are on disk; rerun --resume when
             # the Pi recovers. Never stack panel spend on a degraded box.
@@ -1386,8 +1438,25 @@ def _run_publish_pca(args) -> None:
                   f"Completed packs journaled → {packs_journal}; rerun with --resume.")
             sys.exit(0)
         phase_r_telemetry = governor.telemetry()
+        # Freshly built packs carry their own cost and are counted downstream as
+        # their chunk completes. Journal-resumed packs were paid for by an
+        # earlier run and carry no snapshot, so read theirs back off the journal
+        # rather than reporting them free.
+        fresh_sids = {sid for sid in packs if sid not in loaded_packs}
+        fresh_cost = sum(
+            float((getattr(packs[sid], "retrieval", None) or {}).get("cost_usd") or 0.0)
+            for sid in fresh_sids)
+        # Split mode journals every pack it builds, so the packs journal is the
+        # complete banked record here — it supersedes the chunk-journal figure.
+        banked_retrieval_cost_usd = sum(
+            cost for sid, cost
+            in publish_pipeline.load_packs_journal_spend(packs_journal).items()
+            if sid not in fresh_sids)
         print(f"Phase R complete: {len(packs)} pack(s) built for the panel "
-              f"→ {packs_journal} | telemetry: {phase_r_telemetry}")
+              f"→ {packs_journal} | retrieval spend ${fresh_cost:.4f}"
+              + (f" (+${banked_retrieval_cost_usd:.4f} banked)"
+                 if banked_retrieval_cost_usd else "")
+              + f" | telemetry: {phase_r_telemetry}")
         # Phase P consumes prebuilt packs — rebuild the adjudicate lane so it looks
         # packs up instead of retrieving. layer_a_fn is unchanged and unused now
         # (Layer A already ran).
@@ -1409,31 +1478,43 @@ def _run_publish_pca(args) -> None:
             return budget_cap - (proxy_key_spend() - _start_spend)
 
     from truthbot.config import settings as _settings
-    result = publish_pipeline.run_pca_verify(
-        sentences,
-        layer_a_fn=layer_a_fn,
-        adjudicate_fn=adjudicate_fn,
-        chunk_size=chunk_size,
-        on_progress=_on_progress,
-        resume_rows=resume_rows,
-        resume_packs=resume_packs,
-        journal_path=journal_path,
-        budget_check=budget_check,
-        prebuilt_layer_a=prebuilt_layer_a,
-        # Standing agreed-verdict audit queue (remediation v2, 1.12): rows a
-        # queue-action lint routed to human review. Append-only; approval and
-        # any re-adjudication spend stay with jackie.
-        audit_queue_path=(Path(_settings.metrics_dir) / "audits"
-                          / "readjudication_queue.jsonl"),
-    )
+    from truthbot.metrics.telemetry import finalize_run, telemetry_run_context
+    with telemetry_run_context(run_id=run_id):
+        result = publish_pipeline.run_pca_verify(
+            sentences,
+            layer_a_fn=layer_a_fn,
+            adjudicate_fn=adjudicate_fn,
+            chunk_size=chunk_size,
+            on_progress=_on_progress,
+            resume_rows=resume_rows,
+            resume_packs=resume_packs,
+            journal_path=journal_path,
+            budget_check=budget_check,
+            prebuilt_layer_a=prebuilt_layer_a,
+            banked_retrieval_cost_usd=banked_retrieval_cost_usd,
+            # Standing agreed-verdict audit queue (remediation v2, 1.12): rows a
+            # queue-action lint routed to human review. Append-only; approval and
+            # any re-adjudication spend stay with jackie.
+            audit_queue_path=(Path(_settings.metrics_dir) / "audits"
+                              / "readjudication_queue.jsonl"),
+        )
+    # Adjudication and retrieval are reported separately on purpose: cost_usd
+    # drives the budget breaker's per-chunk projection, so a one-off Phase R
+    # total folded into it would forecast a phantom per-chunk cost and halt
+    # runs early. The all-legs number is the one to compare against a bill.
+    total_cost = result.cost_usd + result.retrieval_cost_usd
     print(f"Layer A: {result.n_check_worthy}/{result.n_sentences} check-worthy; "
-          f"adjudicated in {result.n_chunks} chunk(s); spend ${result.cost_usd:.4f}")
+          f"adjudicated in {result.n_chunks} chunk(s); "
+          f"spend ${result.cost_usd:.4f} adjudication "
+          f"+ ${result.retrieval_cost_usd:.4f} retrieval "
+          f"= ${total_cost:.4f} total")
+    try:
+        finalize_run(run_id)
+    except Exception as exc:  # noqa: BLE001 — reporting must not fail the run
+        logger.warning("finalize_run failed: %s", exc)
 
     # Persist the raw rows + claims BEFORE publishing so a re-render never needs
     # another live run. run_id ties the artifact to this speech/run.
-    import uuid
-    from truthbot.config import settings as _settings
-    run_id = str(uuid.uuid4())
     _persist_pca_run(
         run_id,
         result,
@@ -1446,6 +1527,10 @@ def _run_publish_pca(args) -> None:
             "n_sentences": result.n_sentences,
             "n_check_worthy": result.n_check_worthy,
             "cost_usd": result.cost_usd,
+            # Retrieval is reported beside adjudication, not inside it — see the
+            # budget-breaker note above. total_cost_usd is the all-legs figure.
+            "retrieval_cost_usd": result.retrieval_cost_usd,
+            "total_cost_usd": total_cost,
             # P120: adaptive pool params + observed pares, for ablation comparability.
             "phase_r_pool": phase_r_telemetry,
         },
@@ -1480,6 +1565,9 @@ def _run_publish(args) -> None:
         return
 
     _preflight_key_sanity()
+    # The legacy engine is where TRUTHBOT_OPENAI_LIVE actually flips the OpenAI
+    # seat off the batch API (_routes_to_batch), so the guard matters most here.
+    announce_openai_route(args)
 
     # Load transcript
     src = args.transcript
@@ -1793,6 +1881,13 @@ def main() -> None:
     pub_parser.add_argument("--venue",      default="",   help="Venue or event name")
     pub_parser.add_argument("--source-url", default="",   help="Transcript source URL")
     pub_parser.add_argument("--site-root",  default=None, help="Site output root (overrides TRUTHBOT_SITE_ROOT)")
+    pub_parser.add_argument(
+        "--ack-live-cost",
+        action="store_true",
+        help=("Acknowledge that TRUTHBOT_OPENAI_LIVE forfeits the 50%% batch "
+              "discount. Required to publish in live mode; without it the run "
+              "stops before spending anything."),
+    )
     pub_parser.add_argument(
         "--max-claims",
         type=int,

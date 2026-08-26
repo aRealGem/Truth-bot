@@ -188,6 +188,14 @@ class EvidencePack:
     # number that makes "the v2 path never scores relevance or stance"
     # visible on disk instead of inferable only by reading the call graph.
     scoring: dict = field(default_factory=dict)
+    # Retrieval spend telemetry (2026-08-26): what the metered retriever lanes
+    # (R2/R3) actually billed to build this pack — ``{cost_usd, calls,
+    # unpriced_calls, by_adapter}``. Set by the v2 builder; empty on v1 packs.
+    # Journaled with the pack, never part of the panel payload. Retrieval was
+    # the largest unmetered spend in the Jul/Aug 2026 reconciliation: the packs
+    # journal itemised every call while recording no tokens and no cost for any
+    # of them, so a ~$313 bill self-reported as $9.57.
+    retrieval: dict = field(default_factory=dict)
 
     @property
     def ids(self) -> list[str]:

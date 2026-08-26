@@ -36,6 +36,19 @@ def _pack(sid):
                  retrieved_at="2026-01-01T00:00:00+00:00", sha256="x")])
 
 
+def _pack_with_retrieval(sid, cost_usd):
+    """EvidencePack is frozen, so retrieval telemetry goes in at construction —
+    which is also how the v2 builder sets it."""
+    return EvidencePack(
+        sid=sid, window=None,
+        items=[PackItem(pack_id="E1", source_name="BLS",
+                        source_url="https://bls.gov/x",
+                        tier=SourceTier.GOVERNMENT, snippet="snip",
+                        retrieved_at="2026-01-01T00:00:00+00:00", sha256="x")],
+        retrieval={"cost_usd": cost_usd, "calls": 2, "unpriced_calls": 0,
+                   "by_adapter": {"openai": cost_usd}})
+
+
 def _make_fake_adjudicate(calls):
     """Returns an adjudicate_fn that records each chunk and echoes resolved rows."""
     def fake_adjudicate(chunk):
@@ -73,6 +86,45 @@ def test_run_pca_verify_chunks_bridges_and_totals_cost():
     assert res.evidence["sp:0000"][0].source_tier is SourceTier.GOVERNMENT
     # cost summed across the 3 chunks (0.1 each)
     assert abs(res.cost_usd - 0.3) < 1e-9
+
+
+def test_retrieval_cost_is_tracked_but_kept_out_of_cost_usd():
+    """Retrieval spend must never enter ``cost_usd``.
+
+    ``cost_usd`` is what the budget breaker averages to project the NEXT
+    chunk's cost. Folding a one-off retrieval total into it would forecast a
+    per-chunk cost no chunk will ever incur and halt runs early — so the two
+    legs are reported side by side instead.
+    """
+    def adj_with_retrieval(chunk):
+        rows = [{"sid": c["sid"], "status": "resolved", "verdict": "TRUE",
+                 "confidence": 0.9, "citations": ["E1"], "reasoning": "ok",
+                 "votes": {"TRUE": 3}} for c in chunk]
+        packs = {c["sid"]: _pack_with_retrieval(c["sid"], 0.25) for c in chunk}
+        return rows, {"packs": packs, "cost_usd": 0.1}
+
+    res = pp.run_pca_verify(
+        _sentences(3),
+        layer_a_fn=_fake_classify_all_checkworthy,
+        adjudicate_fn=adj_with_retrieval,
+        chunk_size=1,
+        banked_retrieval_cost_usd=1.0,
+    )
+    # Adjudication only — unchanged by the retrieval legs.
+    assert abs(res.cost_usd - 0.3) < 1e-9
+    # 1.0 banked from a prior run + 3 packs x 0.25 retrieved this run.
+    assert abs(res.retrieval_cost_usd - 1.75) < 1e-9
+
+
+def test_packs_without_retrieval_telemetry_report_zero_retrieval_cost():
+    """v1 packs and journal-resumed packs carry no snapshot; that must not crash."""
+    res = pp.run_pca_verify(
+        _sentences(2),
+        layer_a_fn=_fake_classify_all_checkworthy,
+        adjudicate_fn=_make_fake_adjudicate([]),
+        chunk_size=1,
+    )
+    assert res.retrieval_cost_usd == 0.0
 
 
 def test_run_pca_verify_captures_roster_once():

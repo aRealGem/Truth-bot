@@ -1,7 +1,10 @@
 """
 Per-provider per-token cost rates (USD).
 
-Sources (rates verified 2026-04-22; re-verify when models or prices change):
+Sources (rates verified 2026-04-22; the gpt-5.5 / gpt-5-mini / gpt-5.4 / gpt-4o
+and grok-4.3 rows re-verified against the live pricing pages 2026-08-26.
+Re-verify when models or prices change — a missing or stale row does not fail,
+it silently mis-bills, which is how the Jul/Aug 2026 undercount happened):
   Anthropic: https://www.anthropic.com/pricing (API tab)
   OpenAI:    https://openai.com/api/pricing
   Google:    https://ai.google.dev/gemini-api/docs/pricing
@@ -21,7 +24,10 @@ Gemini 2.5 Pro: table uses the ≤200K-token bucket; prompts here stay well unde
 """
 from __future__ import annotations
 
+import logging
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 # (input_per_token, cached_input_per_token, output_per_token)
 COST_TABLE: dict[tuple[str, str], tuple[float, float, float]] = {
@@ -57,6 +63,22 @@ COST_TABLE: dict[tuple[str, str], tuple[float, float, float]] = {
         2.50 / 1_000_000,
         0.25 / 1_000_000,
         15.00 / 1_000_000,
+    ),
+    # R2 evidence-retrieval default (TRUTHBOT_R2_MODEL, else this). Until
+    # 2026-08-26 this row was missing, so every R2 call fell through to
+    # FALLBACK_COST_PER_TOKEN and billed output at $15/MTok against a true
+    # $30 — a silent 2x undercount on the highest-volume OpenAI path.
+    ("openai", "gpt-5.5"): (
+        5.00 / 1_000_000,
+        0.50 / 1_000_000,
+        30.00 / 1_000_000,
+    ),
+    # Distinct SKU from gpt-5.4-mini below; pinned by the phase3/rescue/headret
+    # scripts via TRUTHBOT_R2_MODEL.
+    ("openai", "gpt-5-mini"): (
+        0.25 / 1_000_000,
+        0.025 / 1_000_000,
+        2.00 / 1_000_000,
     ),
     ("openai", "gpt-4.1"): (
         2.00 / 1_000_000,
@@ -110,6 +132,13 @@ COST_TABLE: dict[tuple[str, str], tuple[float, float, float]] = {
         0.05 / 1_000_000,
         0.50 / 1_000_000,
     ),
+    # R3 retrieval lane (TRUTHBOT_R3_MODEL). <200K-prompt bucket; the >=200K
+    # bucket is 2.50 / 0.40 / 5.00 per MTok if retrieval prompts ever grow.
+    ("xai", "grok-4.3"): (
+        1.25 / 1_000_000,
+        0.20 / 1_000_000,
+        2.50 / 1_000_000,
+    ),
 }
 FALLBACK_COST_PER_TOKEN: tuple[float, float, float] = (
     5.00 / 1_000_000,
@@ -125,6 +154,46 @@ BATCH_DISCOUNT: dict[str, float] = {
     "gemini": 0.5,
     "xai": 0.5,
 }
+
+# (adapter, model) pairs already reported as unpriced, so the error fires once
+# per process rather than once per call.
+_WARNED_UNPRICED: set[tuple[str, str]] = set()
+
+
+def is_priced(adapter_name: str, model_id: str) -> bool:
+    """True when this (adapter, model) has a real rate row.
+
+    Callers use this to record *how* a dollar figure was derived. A
+    fallback-priced call is a guess, and the July/August 2026 reconciliation
+    showed the guess can be wrong by 2x in either direction.
+    """
+    return (adapter_name, model_id) in COST_TABLE
+
+
+def _rates(adapter_name: str, model_id: str) -> tuple[float, float, float]:
+    """Look up per-token rates, complaining loudly on a miss.
+
+    Deliberately does not raise: this runs inside ``TelemetryLogger.measure``'s
+    ``finally`` block, where an exception would surface at the API call site and
+    turn a metering gap into an outage.
+    """
+    rates = COST_TABLE.get((adapter_name, model_id))
+    if rates is not None:
+        return rates
+    key = (adapter_name, model_id)
+    if key not in _WARNED_UNPRICED:
+        _WARNED_UNPRICED.add(key)
+        logger.error(
+            "No cost row for (%s, %s) — pricing this call at the generic "
+            "fallback (%.2f/%.2f/%.2f per MTok). Spend telemetry for this "
+            "model is a GUESS until a row is added to COST_TABLE.",
+            adapter_name,
+            model_id,
+            FALLBACK_COST_PER_TOKEN[0] * 1_000_000,
+            FALLBACK_COST_PER_TOKEN[1] * 1_000_000,
+            FALLBACK_COST_PER_TOKEN[2] * 1_000_000,
+        )
+    return FALLBACK_COST_PER_TOKEN
 
 
 def estimate_cost(
@@ -151,9 +220,7 @@ def estimate_cost(
     batch ID (scaffolding / misconfiguration) are billed at live list prices so
     telemetry stays honest.
     """
-    in_rate, cached_in_rate, out_rate = COST_TABLE.get(
-        (adapter_name, model_id), FALLBACK_COST_PER_TOKEN
-    )
+    in_rate, cached_in_rate, out_rate = _rates(adapter_name, model_id)
 
     if adapter_name == "anthropic":
         # Anthropic: cache reads billed at cached_in_rate (= 0.1 × in_rate in table);

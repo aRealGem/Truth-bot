@@ -127,6 +127,36 @@ def test_packs_journal_roundtrip_preserves_gate_code(tmp_path):
     assert loaded["sp:0001"].items == []
 
 
+def test_packs_journal_records_retrieval_spend(tmp_path):
+    """The packs journal itemised every retrieval call and priced none of them —
+    which is how a ~$313 bill self-reported as $9.57."""
+    jp = tmp_path / "spend_packs.jsonl"
+    # EvidencePack is frozen — retrieval telemetry is set at construction, the
+    # same way the v2 builder sets it.
+    paid = EvidencePack(
+        sid="sp:0000", window=None, items=_pack("sp:0000").items,
+        retrieval={"cost_usd": 0.42, "calls": 3, "unpriced_calls": 0,
+                   "by_adapter": {"openai": 0.30, "xai": 0.12}})
+    pp.append_packs_journal(jp, "sp:0000", paid)
+    pp.append_packs_journal(jp, "sp:0001", _pack("sp:0001"))
+
+    spend = pp.load_packs_journal_spend(jp)
+    assert spend["sp:0000"] == 0.42
+    # A pack with no retrieval telemetry reports 0.0 rather than vanishing.
+    assert spend["sp:0001"] == 0.0
+    # The spend reader must not disturb the pack reader.
+    assert set(pp.load_packs_journal(jp)) == {"sp:0000", "sp:0001"}
+
+
+def test_load_packs_journal_spend_tolerates_pre_field_journals(tmp_path):
+    """Journals written before the field existed must still load, at 0.0."""
+    jp = tmp_path / "old_packs.jsonl"
+    pp.append_packs_journal(jp, "sp:0000", _pack("sp:0000"))
+    assert "retrieval" not in jp.read_text()
+    assert pp.load_packs_journal_spend(jp) == {"sp:0000": 0.0}
+    assert pp.load_packs_journal_spend(tmp_path / "missing.jsonl") == {}
+
+
 # ── packs_only_builder ────────────────────────────────────────────────────────
 
 def test_packs_only_builder_returns_prebuilt_and_gates_on_miss():

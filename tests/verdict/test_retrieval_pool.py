@@ -39,6 +39,39 @@ def test_parallel_shortlists_runs_concurrently():
     assert time.monotonic() - start < 0.13
 
 
+def test_parallel_shortlists_propagates_claim_context():
+    """Workers must see the caller's claim/run context.
+
+    ThreadPoolExecutor does not propagate contextvars, so without an explicit
+    copy_context every metered retrieval record would be filed against no claim
+    at all. This test fails on the pre-2026-08-26 pool.
+    """
+    from truthbot.metrics.telemetry import claim_context, get_claim_id
+
+    pool = [_R("A"), _R("B"), _R("C")]
+    with claim_context("sp:0009"):
+        seen = retrieval_pool.parallel_shortlists(pool, lambda r: get_claim_id())
+    assert seen == ["sp:0009"] * 3
+
+
+def test_parallel_shortlists_uses_a_fresh_context_per_submit():
+    """Concurrent workers must not share one Context object.
+
+    ``Context.run`` raises "cannot enter context - already entered" if the same
+    Context is entered by two threads at once, so hoisting a single
+    copy_context() out of the submit loop would crash under real fan-out. The
+    barrier forces genuine overlap.
+    """
+    pool = [_R("A"), _R("B"), _R("C")]
+    barrier = threading.Barrier(len(pool), timeout=5)
+
+    def overlap(_r):
+        barrier.wait()
+        return "ok"
+
+    assert retrieval_pool.parallel_shortlists(pool, overlap) == ["ok"] * 3
+
+
 def test_r1_gate_caps_concurrent_cli_workers():
     # r1_cli_cap=1 → the two claude-CLI (R1) calls must NOT overlap.
     g = PoolGovernor(r1_cli_cap=1)

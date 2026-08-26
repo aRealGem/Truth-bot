@@ -61,6 +61,12 @@ class PcaVerifyResult:
     n_check_worthy: int = 0
     n_chunks: int = 0
     cost_usd: float = 0.0
+    # Evidence-retrieval spend, kept OUT of ``cost_usd`` deliberately: the
+    # budget breaker projects the next chunk's cost from the running mean of
+    # per-chunk ``cost_usd``, so folding a one-off Phase R total into it would
+    # forecast a per-chunk cost that no chunk will ever incur and halt the run
+    # early. Callers wanting the bill add the two.
+    retrieval_cost_usd: float = 0.0
     # PCA panel composition for THIS run: {"name": <roster>, "seats": {seat: [alias]}}.
     # Per-RUN fact (the whole run uses one roster), captured once from the first
     # non-empty adjudicate notes. Empty → legacy-clean (no composition rendered).
@@ -100,6 +106,15 @@ def append_chunk_journal(path, chunk_idx: int, rows: list[dict],
                      for sid, pack in (packs or {}).items()},
         "cost_usd": cost_usd,
     }
+    # Retrieval spend for this chunk's packs. ``cost_usd`` above is adjudication
+    # only, and the serialized ``evidence`` cannot carry a pack's cost, so
+    # without this an inline-retrieval run's resume would report its retrieval
+    # as free. Additive: absent on journals written before the field existed.
+    chunk_retrieval = sum(
+        float((getattr(pack, "retrieval", None) or {}).get("cost_usd") or 0.0)
+        for pack in (packs or {}).values())
+    if chunk_retrieval:
+        rec["retrieval_cost_usd"] = chunk_retrieval
     if roster:
         rec["roster"] = roster
     p = Path(path)
@@ -179,6 +194,27 @@ def load_chunk_journal(path) -> tuple[list[dict], dict, float, Optional[dict]]:
     return rows, packs, cost, roster
 
 
+def load_chunk_journal_retrieval_spend(path) -> float:
+    """Retrieval spend banked in a chunk journal (inline-retrieval resume).
+
+    Separate from :func:`load_chunk_journal` so its 4-tuple return shape — which
+    several callers unpack positionally — stays put. Records predating the field
+    contribute 0.0: unknown, not free.
+    """
+    import json
+    from pathlib import Path
+
+    p = Path(path)
+    if not p.exists():
+        return 0.0
+    total = 0.0
+    for line in p.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        total += float(json.loads(line).get("retrieval_cost_usd") or 0.0)
+    return total
+
+
 # ── P120 B1 phase-split: Phase R packs journal ───────────────────────────────
 #
 # One JSONL line per built pack: {"sid", "gate_code", "evidence": [Evidence…]}.
@@ -223,6 +259,13 @@ def append_packs_journal(path, sid: str, pack) -> None:
     scoring = getattr(pack, "scoring", None) or {}
     if scoring:
         rec["scoring"] = dict(scoring)
+    # Retrieval spend (2026-08-26): what the metered R2/R3 lanes billed for this
+    # claim. Same additive pattern; absent on journals written before the field
+    # existed — which is every journal behind the Jul/Aug undercount, where this
+    # file listed thousands of paid calls and priced none of them.
+    retrieval = getattr(pack, "retrieval", None) or {}
+    if retrieval:
+        rec["retrieval"] = dict(retrieval)
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("a", encoding="utf-8") as fh:
@@ -250,6 +293,32 @@ def load_packs_journal(path) -> dict:
         evidence_by_sid[sid] = rec.get("evidence") or []
         gate_codes[sid] = rec.get("gate_code") or ""
     return packs_from_evidence_dict(evidence_by_sid, gate_codes)
+
+
+def load_packs_journal_spend(path) -> dict:
+    """sid → retrieval cost already paid, from a Phase R packs journal.
+
+    Kept separate from :func:`load_packs_journal` because that function's
+    return shape has several production and test callers; resume needs the
+    spend without disturbing them. Records predating the ``retrieval`` field
+    report 0.0 — genuinely unknown, not genuinely free.
+    """
+    import json
+    from pathlib import Path
+
+    p = Path(path)
+    if not p.exists():
+        return {}
+    out: dict = {}
+    for line in p.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        sid = rec.get("sid")
+        if not sid:
+            continue
+        out[sid] = float((rec.get("retrieval") or {}).get("cost_usd") or 0.0)
+    return out
 
 
 # ── Standing agreed-verdict audit (remediation v2, 1.12) ─────────────────────
@@ -363,6 +432,7 @@ def run_pca_verify(
     budget_check: Optional[Callable[[], float]] = None,
     budget_safety: float = 1.5,
     prebuilt_layer_a: Optional[LayerAResult] = None,
+    banked_retrieval_cost_usd: float = 0.0,
     audit_queue_path=None,
 ) -> PcaVerifyResult:
     """Segmented sentences → published-ready ``VerdictBundle``s via the PCA stack.
@@ -388,6 +458,12 @@ def run_pca_verify(
                     chunk cost × ``budget_safety`` (rolling mean of completed
                     chunks), the run halts EARLY with ``BudgetHalt`` — before
                     spend, with everything journaled.
+      banked_retrieval_cost_usd: retrieval spend paid by an EARLIER run for
+                    sids resumed from a journal. Packs built this run carry
+                    their own cost and are counted as their chunk completes, so
+                    this covers only what a live pack object can no longer
+                    report. Never folded into ``cost_usd`` — see that field's
+                    note.
       audit_queue_path: remediation v2 (1.12) — when set, rows the standing
                     agreed-verdict audit queues are appended here
                     (``append_readjudication_queue``); the audit stage itself
@@ -407,6 +483,7 @@ def run_pca_verify(
         characterization=layer_a.characterization_stream,
         n_sentences=len(sentences),
         n_check_worthy=len(queue),
+        retrieval_cost_usd=float(banked_retrieval_cost_usd or 0.0),
     )
     if not queue:
         return result
@@ -448,6 +525,15 @@ def run_pca_verify(
             chunk_cost = float(notes.get("cost_usd", 0.0) or 0.0)
             chunk_costs.append(chunk_cost)
             result.cost_usd += chunk_cost
+            # Each pack reports what it cost to retrieve, whether it was built
+            # inline in this chunk or up front in Phase R (split mode hands the
+            # same pack objects back through ``packs_only_builder``). Counting
+            # here — once per pack, as its chunk completes — is what keeps the
+            # two paths from needing separate accounting. Journal-resumed packs
+            # carry no snapshot and are covered by banked_retrieval_cost_usd.
+            result.retrieval_cost_usd += sum(
+                float((getattr(p, "retrieval", None) or {}).get("cost_usd") or 0.0)
+                for p in chunk_packs.values())
             # Capture the PCA roster composition once — it's identical across
             # chunks, so take the first non-empty one and never overwrite it.
             if result.roster is None:

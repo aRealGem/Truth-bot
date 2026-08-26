@@ -7,25 +7,37 @@ from __future__ import annotations
 import csv
 import json
 import logging
+import threading
 import time
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Generator, Optional
 
-from truthbot.metrics.costs import estimate_cost
+from truthbot.metrics.costs import estimate_cost, is_priced
 
 logger = logging.getLogger(__name__)
 
 _run_id_var: ContextVar[Optional[str]] = ContextVar("tb_run_id", default=None)
 _evidence_injected_var: ContextVar[bool] = ContextVar("tb_evidence_injected", default=True)
 _synthesis_mode_var: ContextVar[str] = ContextVar("tb_synthesis_mode", default="live")
+_claim_id_var: ContextVar[str] = ContextVar("tb_claim_id", default="")
 
 
 def get_run_id() -> Optional[str]:
     return _run_id_var.get()
+
+
+def get_claim_id() -> str:
+    """Claim currently being worked on, for call sites too deep to be passed one.
+
+    The retrievers are the motivating case: their ``shortlist`` signature is a
+    shared protocol across four implementations and they run on a thread pool,
+    so neither a parameter nor instance state can carry the claim safely.
+    """
+    return _claim_id_var.get()
 
 
 def get_evidence_injected() -> bool:
@@ -53,6 +65,79 @@ def telemetry_run_context(
         _run_id_var.reset(rid_tok)
         _evidence_injected_var.reset(ev_tok)
         _synthesis_mode_var.reset(sm_tok)
+
+
+@contextmanager
+def claim_context(claim_id: str) -> Generator[None, None, None]:
+    """Bind the claim id for nested calls.
+
+    Kept separate from ``telemetry_run_context`` on purpose: a run spans the
+    whole publish, a claim spans one evidence pack, and conflating the two
+    lifetimes is how a per-claim value ends up smeared across a run.
+    """
+    tok = _claim_id_var.set(claim_id or "")
+    try:
+        yield
+    finally:
+        _claim_id_var.reset(tok)
+
+
+@dataclass
+class ClaimSpend:
+    """Thread-safe running total of what one claim cost to work.
+
+    ``contextvars.copy_context()`` copies the mapping, not the values, so every
+    retrieval worker thread shares this one object — hence the lock. A bare
+    ``self.by_adapter[k] += x`` from three threads is not atomic.
+    """
+
+    cost_usd: float = 0.0
+    calls: int = 0
+    unpriced_calls: int = 0
+    by_adapter: dict = field(default_factory=dict)
+    _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
+
+    def add(self, adapter_name: str, cost: float, *, priced: bool) -> None:
+        with self._lock:
+            self.cost_usd += cost
+            self.calls += 1
+            if not priced:
+                self.unpriced_calls += 1
+            self.by_adapter[adapter_name] = (
+                self.by_adapter.get(adapter_name, 0.0) + cost
+            )
+
+    def snapshot(self) -> dict:
+        with self._lock:
+            return {
+                "cost_usd": self.cost_usd,
+                "calls": self.calls,
+                "unpriced_calls": self.unpriced_calls,
+                "by_adapter": dict(self.by_adapter),
+            }
+
+
+_claim_spend_var: ContextVar[Optional[ClaimSpend]] = ContextVar(
+    "tb_claim_spend", default=None
+)
+
+
+@contextmanager
+def claim_spend_context(
+    spend: Optional[ClaimSpend] = None,
+) -> Generator[ClaimSpend, None, None]:
+    """Accumulate the cost of every adapter call made inside this block.
+
+    Pass an existing :class:`ClaimSpend` to keep totalling across several
+    non-contiguous blocks — a claim's primary and retry retrieval rounds are
+    two such blocks and belong to one bill.
+    """
+    spend = spend if spend is not None else ClaimSpend()
+    tok = _claim_spend_var.set(spend)
+    try:
+        yield spend
+    finally:
+        _claim_spend_var.reset(tok)
 
 
 @dataclass
@@ -92,6 +177,10 @@ class CallRecord:
     # of the two; ``finalize_run`` aggregates per-adapter and overall.
     model_reported_source_count: int = 0
     stripped_source_count: int = 0
+    # How ``estimated_cost_usd`` was derived: "table" when COST_TABLE had a row
+    # for this (adapter, model), "fallback" when it did not and generic rates
+    # were used. A fallback-priced dollar is a guess and says so on disk.
+    cost_basis: str = "table"
 
 
 class TelemetryLogger:
@@ -166,6 +255,13 @@ class TelemetryLogger:
                 mode=eff_mode,
                 batch_job_id=eff_batch_id,
             )
+            priced = is_priced(adapter_name, model_id)
+            spend = _claim_spend_var.get()
+            if spend is not None:
+                # Fold here, the one place that knows the cost. Accumulating at
+                # the call sites instead is what let a second, drifting copy of
+                # the pricing instrument grow in scripts/phase3_rebuild.py.
+                spend.add(adapter_name, estimated_cost, priced=priced)
             record = CallRecord(
                 timestamp=datetime.utcnow().isoformat(),
                 adapter_name=adapter_name,
@@ -196,6 +292,7 @@ class TelemetryLogger:
                 stripped_source_count=int(
                     data.get("stripped_source_count", 0) or 0
                 ),
+                cost_basis="table" if priced else "fallback",
             )
             self.log(record)
 
@@ -295,19 +392,46 @@ def finalize_run(run_id: str, *, jsonl_path: Optional[Path] = None) -> dict:
     frontier_cost = summary["by_tier"].get("frontier", 0.0) + summary["by_tier"].get(
         "frontier_shadow", 0.0
     )
+    retrieval_cost = summary["by_tier"].get("retrieval", 0.0)
     row = {
         "run_id": run_id,
         "total_calls": summary["total_calls"],
         "total_cost_usd": f"{summary['total_cost_usd']:.6f}",
         "triage_cost_usd": f"{triage_cost:.6f}",
         "frontier_cost_usd": f"{frontier_cost:.6f}",
+        "retrieval_cost_usd": f"{retrieval_cost:.6f}",
         "net_savings_placeholder": "",
     }
-    fieldnames = list(row.keys())
-    write_header = not roi_path.exists()
+    # This file is appended to across runs, so the header is fixed by whichever
+    # version wrote the first row. Writing today's wider row under an older
+    # narrower header would shift every value one column left — silent
+    # corruption of the very ledger this change exists to make trustworthy.
+    # Match the existing header when there is one, and only widen a fresh file.
+    existing_header: Optional[list[str]] = None
+    if roi_path.exists():
+        try:
+            with roi_path.open("r", encoding="utf-8", newline="") as f:
+                existing_header = next(csv.reader(f), None)
+        except OSError as exc:
+            logger.warning("finalize_run: cannot read %s header: %s", roi_path, exc)
+    if existing_header:
+        fieldnames = existing_header
+        dropped = [k for k in row if k not in fieldnames]
+        if dropped:
+            logger.warning(
+                "finalize_run: %s predates columns %s; those values are in "
+                "run_summaries/%s.json but omitted from the CSV. Delete or "
+                "rotate the CSV to pick up the wider schema.",
+                roi_path,
+                ", ".join(dropped),
+                run_id,
+            )
+        row = {k: row.get(k, "") for k in fieldnames}
+    else:
+        fieldnames = list(row.keys())
     with roi_path.open("a", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
-        if write_header:
+        if not existing_header:
             w.writeheader()
         w.writerow(row)
 

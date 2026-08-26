@@ -377,12 +377,16 @@ def metered_offproxy_retrievers():
 
     Module scope rather than a ``run_rebuild`` local because this is the PRICING
     INSTRUMENT — the estimator a lane's cost is bought on — and it now has a
-    second consumer (the publishing-head retrieval runner). ``MODEL_RATES``
-    already carries a rate correction through ``truthbot.costs``, but the R2
-    fallback chain and the ``_post`` seams do not: a second copy would meter a
-    changed fallback in one caller and silently price it at ``_DEFAULT_RATE`` in
-    the other. Two copies of the instrument that produces the number is exactly
-    the constant-with-forgotten-provenance failure.
+    second consumer (the publishing-head retrieval runner). Two copies of the
+    instrument that produces the number is exactly the
+    constant-with-forgotten-provenance failure.
+
+    Since 2026-08-26 the retrievers meter THEMSELVES: R2/R3 write a priced row
+    to ``adapter_calls.jsonl`` per call, so what remains here is a usage capture
+    for this script's own report, and ``offproxy_est`` prices it through the
+    same ``metrics.costs.estimate_cost`` the telemetry uses. The subclasses are
+    kept only because the ``usage`` dict is reported per lane; they no longer
+    carry any pricing of their own.
 
     R1 is deliberately NOT metered. ``ClaudeWorkerRetriever`` shells out to the
     ``claude`` CLI with ``ANTHROPIC_API_KEY`` popped, so it runs on the Max
@@ -406,14 +410,26 @@ def metered_offproxy_retrievers():
             return doc
 
     def offproxy_est() -> float:
+        # Priced by the SAME estimator the retrievers' own telemetry uses, so
+        # this script's number and adapter_calls.jsonl can never disagree. The
+        # local MODEL_RATES arithmetic this replaced was the second copy of the
+        # pricing instrument that the docstring above warns about — and it
+        # priced an unknown model at gpt-5.5's rate, which understated
+        # gpt-5.5's own output by half until COST_TABLE gained a row for it.
+        from truthbot.metrics.costs import estimate_cost
+
         total = 0.0
-        for entries in usage.values():
+        for lane, entries in usage.items():
+            adapter = "openai" if lane == "R2" else "xai"
             for e in entries:
-                rates = MODEL_RATES.get(str(e.get("model") or ""), _DEFAULT_RATE)
                 u = e["usage"]
-                tin = int(u.get("input_tokens") or u.get("prompt_tokens") or 0)
-                tout = int(u.get("output_tokens") or u.get("completion_tokens") or 0)
-                total += (tin * rates[0] + tout * rates[1]) / 1e6
+                total += estimate_cost(
+                    adapter, str(e.get("model") or ""),
+                    int(u.get("input_tokens") or u.get("prompt_tokens") or 0),
+                    int(u.get("output_tokens") or u.get("completion_tokens") or 0),
+                    openai_cached_prompt_tokens=int(
+                        (u.get("prompt_tokens_details") or {}).get("cached_tokens") or 0),
+                )
         return total
 
     # Economy config (same as the rescue script / the 2026-08-01 full-stack
