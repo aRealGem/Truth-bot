@@ -138,6 +138,105 @@ def test_genre_note_uses_no_inferential_statistics_vocabulary() -> None:
                 assert word not in text, f"{p.name}: note uses {word!r}"
 
 
+# Byte-level pin of the ratified copy. The literal above is the readable
+# assertion; these two are the tamper guard. The string carries three U+2014 em
+# dashes, and an em dash is exactly what a latin-1 round-trip, a copy-paste
+# through a terminal, or a well-meaning "fix the punctuation" edit silently
+# mangles into something that still LOOKS right in a diff.
+EXPECTED_GENRE_NOTE_SHA256 = (
+    "bb36728bb68ec430e02cca319cb71e990e2c3ab45c90930e35d9ba3fe4ba4b87")
+EXPECTED_GENRE_NOTE_LEN = 312
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_genre_note_matches_ratified_hash_and_length() -> None:
+    """(b, second form) Pin the rendered note on bytes, not on appearance."""
+    import hashlib
+
+    target = [(p, d) for p, d in _docs() if p.name == TOP_RATE_REPORT]
+    assert target, f"{TOP_RATE_REPORT} not rendered"
+    _p, doc = target[0]
+    got = " ".join(doc.find_class("vp-genre-note")[0].text_content().split())
+    assert len(got) == EXPECTED_GENRE_NOTE_LEN, (
+        f"length {len(got)} != {EXPECTED_GENRE_NOTE_LEN}; "
+        f"non-ascii present: {sorted({hex(ord(c)) for c in got if ord(c) > 127})}"
+    )
+    assert hashlib.sha256(got.encode("utf-8")).hexdigest() == (
+        EXPECTED_GENRE_NOTE_SHA256), "rendered note does not match ratified bytes"
+    # The three em dashes are load-bearing for the hash; name them so a failure
+    # points at the cause instead of at the hash.
+    assert got.count("—") == 3, f"expected 3 em dashes, found {got.count(chr(0x2014))}"
+
+
+#: Inferential-statistics vocabulary the SITE may not use in its own voice.
+_BANNED_PROSE = ("SD", "sigma", "standard deviation", "z-score", "outlier",
+                 "statistically")
+
+
+def _own_prose(doc) -> str:
+    """Text the site asserts in its OWN voice.
+
+    Two exclusions, both load-bearing, both learned from real hits on the
+    published corpus:
+
+    * **URL-bearing material.** The Trump report cites a truncated
+      congress.gov path ("...-20260121-SD...") twice. A bare \\bSD\\b over the
+      page matches those. A citation is not a copy defect.
+    * **Quoted evidence snippets.** The Clinton report quotes an ONDCP source
+      reading "household-survey rates statistically unchanged from 1996". That
+      is the GOVERNMENT's word inside a quotation. Banning it there would
+      force truth-bot to misquote its own evidence, which is a worse failure
+      than the one the rule guards against. The rule governs what the site
+      concludes, not what its sources said.
+    """
+    import copy
+    import re
+
+    d = copy.deepcopy(doc)
+    for el in d.xpath("//a | //script | //style | //code | //pre"
+                      " | //*[contains(@class, 'source-snippet')]"
+                      " | //*[contains(@class, 'evidence-list')]"
+                      " | //blockquote"):
+        el.drop_tree()
+    text = d.text_content()
+    text = re.sub(r"\b(?:https?://|www\.)\S+", " ", text)
+    text = re.sub(r"\b\S+\.(?:gov|com|org|net|edu)\S*", " ", text)
+    return text
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_report_prose_uses_no_inferential_statistics_vocabulary() -> None:
+    """(c, second half) The ban covers the page's own prose, not just the note.
+
+    Wider than the note-scoped guard above: the ruling is about what the SITE
+    asserts, so a sigma claim smuggled into a neighbouring paragraph breaches
+    it just as surely as one inside the note.
+    """
+    import re
+
+    for p, doc in _docs():
+        prose = _own_prose(doc)
+        for word in _BANNED_PROSE:
+            assert not re.search(rf"\b{re.escape(word)}\b", prose, re.I), (
+                f"{p.name}: banned inferential-statistics vocabulary {word!r} "
+                f"in the site's own prose")
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_vocabulary_ban_does_not_police_quoted_evidence() -> None:
+    """Pins the exclusion above, so nobody 'tightens' the ban onto quotations.
+
+    Without this, a future widening of the scope would start failing on the
+    ONDCP snippet and the tempting fix would be to edit the evidence text.
+    """
+    import re
+
+    hits = [p.name for p, doc in _docs()
+            if re.search(r"\bstatistically\b", doc.text_content(), re.I)]
+    assert hits, ("expected at least one quoted source to use banned "
+                  "vocabulary; if the corpus changed, re-point this pin")
+
+
 @pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
 def test_frame_titles_are_plain_english_and_parallel() -> None:
     """The two "why" frames are worded as a matched set, in plain English.
