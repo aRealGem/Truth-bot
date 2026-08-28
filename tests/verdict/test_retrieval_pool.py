@@ -3,6 +3,7 @@ claim pool). Offline: fake retrievers/builders, injected clock, tmp pressure fil
 """
 from __future__ import annotations
 
+import contextvars
 import threading
 import time
 
@@ -134,6 +135,48 @@ def test_build_packs_pooled_builds_all_and_journals(tmp_path):
     assert packs["s0"] == "pack-s0"
     assert sorted(journaled) == [f"s{i}" for i in range(5)]
     assert g.telemetry()["max_in_flight"] >= 1
+
+
+@pytest.mark.parametrize("pool_max", [1, 3])
+def test_build_packs_pooled_propagates_run_id_at_every_pool_size(tmp_path, pool_max):
+    """L2 workers must inherit run_id, including at pool_max=1.
+
+    run_id is bound by telemetry_run_context on the DRIVER thread, whereas
+    claim_id is bound inside the worker by the pack builder. So this level is
+    where run_id specifically goes missing, and it does so at EVERY pool size:
+    a serial pool is still a different thread. Split-mode retrieval rows were
+    landing with a correct claim_id and run_id=None, which is what left the
+    spend ledger unattributable to any run.
+    """
+    from truthbot.metrics.telemetry import get_run_id, telemetry_run_context
+
+    g = _ok_gov(tmp_path, pool_max=pool_max)
+    with telemetry_run_context(run_id="run-77"):
+        packs = retrieval_pool.build_packs_pooled(
+            _todo(4), lambda sid, t, c: get_run_id(), g,
+            on_pack=lambda sid, p: None)
+    assert set(packs.values()) == {"run-77"}, (
+        "L2 workers lost the driver's run_id; every retrieval row this run "
+        "wrote would be orphaned")
+
+
+def test_plain_submit_loses_run_id_but_copied_context_keeps_it(tmp_path):
+    """Pins WHY the fix is needed, so it cannot be quietly reverted.
+
+    Asserts the failure mode directly: a plain ThreadPoolExecutor.submit drops
+    the contextvar, and a per-submit copy_context().run preserves it.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    from truthbot.metrics.telemetry import get_run_id, telemetry_run_context
+
+    with telemetry_run_context(run_id="run-88"):
+        with ThreadPoolExecutor(max_workers=1) as ex:
+            plain = ex.submit(get_run_id).result()
+            copied = ex.submit(contextvars.copy_context().run, get_run_id).result()
+
+    assert plain is None, "baseline assumption broken: threads now inherit context"
+    assert copied == "run-88"
 
 
 def test_build_packs_pooled_empty_todo(tmp_path):

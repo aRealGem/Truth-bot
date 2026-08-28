@@ -6,6 +6,8 @@ from __future__ import annotations
 
 from datetime import date
 
+import pytest
+
 from truthbot.models import VerdictBundle, VerdictLabel
 from truthbot.verdict import publish_pipeline as pp
 from truthbot.verdict import speech_context
@@ -114,6 +116,57 @@ def test_retrieval_cost_is_tracked_but_kept_out_of_cost_usd():
     assert abs(res.cost_usd - 0.3) < 1e-9
     # 1.0 banked from a prior run + 3 packs x 0.25 retrieved this run.
     assert abs(res.retrieval_cost_usd - 1.75) < 1e-9
+
+
+def test_banked_is_memo_only_and_series_sums_to_journal_spend(tmp_path):
+    """Invariant: banked never double-counts, and the run totals to the journal.
+
+    Two ways this could go wrong. Banked could be added to packs that also
+    report their own cost (double count), or a resumed pack could report
+    nothing and be silently treated as free (drop). This pins the arithmetic
+    end to end: what the packs journal says the run paid must equal what the
+    result reports, across a fresh leg and a resumed leg.
+    """
+    from truthbot.verdict import publish_pipeline as _pp
+
+    jp = tmp_path / "inv_packs.jsonl"
+    # Leg 1: two packs retrieved and journaled this run, $0.25 each.
+    fresh = {}
+    for sid in ("sp:0000", "sp:0001"):
+        p = _pack_with_retrieval(sid, 0.25)
+        fresh[sid] = p
+        _pp.append_packs_journal(jp, sid, p)
+    # Leg 2: one pack paid for by an EARLIER run. It round-trips through the
+    # journal, so it comes back with no cost snapshot on the object.
+    _pp.append_packs_journal(jp, "sp:0002", _pack_with_retrieval("sp:0002", 0.40))
+
+    journal_spend = _pp.load_packs_journal_spend(jp)
+    assert journal_spend == {"sp:0000": 0.25, "sp:0001": 0.25, "sp:0002": 0.40}
+
+    # The resumed sid is the one no live pack can report, so it is the ONLY
+    # thing banked may cover.
+    resumed = {"sp:0002"}
+    banked = sum(c for sid, c in journal_spend.items() if sid in resumed)
+
+    def adj(chunk):
+        rows = [{"sid": c["sid"], "status": "resolved", "verdict": "TRUE",
+                 "confidence": 0.9, "citations": ["E1"], "reasoning": "ok",
+                 "votes": {"TRUE": 3}} for c in chunk]
+        return rows, {"packs": {c["sid"]: fresh[c["sid"]] for c in chunk
+                                if c["sid"] in fresh},
+                      "cost_usd": 0.1}
+
+    res = pp.run_pca_verify(
+        _sentences(2),
+        layer_a_fn=_fake_classify_all_checkworthy,
+        adjudicate_fn=adj,
+        chunk_size=1,
+        banked_retrieval_cost_usd=banked,
+    )
+    # Every dollar in the journal is accounted for exactly once.
+    assert res.retrieval_cost_usd == pytest.approx(sum(journal_spend.values()))
+    # And none of it leaked into the budget breaker's input.
+    assert res.cost_usd == pytest.approx(0.2)
 
 
 def test_packs_without_retrieval_telemetry_report_zero_retrieval_cost():

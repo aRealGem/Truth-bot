@@ -102,7 +102,16 @@ def build_packs_pooled(
                     if c is None:
                         exhausted = True
                         break
-                    fut = ex.submit(pack_builder, c["sid"], c["text"],
+                    # Same per-submit context copy as the L1 fan-out above, and
+                    # for the same reason: threads do not inherit contextvars.
+                    # This level is where run_id is lost — it is bound by
+                    # telemetry_run_context on the DRIVER thread, while
+                    # claim_id is bound inside the worker by the pack builder.
+                    # So without this, split-mode retrieval rows land with a
+                    # correct claim_id and run_id=None at every pool size,
+                    # including pool=1, and nothing ties a row to its run.
+                    fut = ex.submit(contextvars.copy_context().run,
+                                    pack_builder, c["sid"], c["text"],
                                     c.get("context", ""))
                     inflight[fut] = c["sid"]
             governor.observe_in_flight(len(inflight))
