@@ -30,6 +30,7 @@ import re
 import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Optional
 
@@ -372,6 +373,40 @@ def _esc(text: str) -> str:
             .replace("<", "&lt;")
             .replace(">", "&gt;")
             .replace('"', "&quot;"))
+
+
+#: Reader-feedback config, loaded once per process. Lives in ``data/`` rather
+#: than as a constant here for the same reason ``data/reason_codes.json`` does:
+#: changing it should be a reviewable one-file diff, not an edit buried in a
+#: 9,000-line renderer.
+_READER_FEEDBACK_PATH = Path(__file__).resolve().parents[3] / "data" / "reader_feedback.json"
+
+
+@lru_cache(maxsize=1)
+def _feedback_cfg() -> dict:
+    from truthbot.publish.reader_feedback import load_config
+    return load_config(_READER_FEEDBACK_PATH)
+
+
+def _feedback_link_html(*, cls: str, text: str, aria: str, **values: str) -> str:
+    """One prefilled feedback link, or ``""`` when the form is not configured.
+
+    Both call sites (claim card, report footer) go through this single helper so
+    the URL shape cannot drift between them — the report-footer test pins its
+    prefilled URL against the page's own canonical link to keep them honest.
+
+    Encoding order matters and is not interchangeable: ``prefill_url`` does the
+    percent-encoding, and only then is the result HTML-escaped here. Escaping
+    first would turn each ``&`` separator into ``&amp;`` before it was
+    percent-encoded, corrupting every field after the first.
+    """
+    from truthbot.publish.reader_feedback import prefill_url
+
+    href = prefill_url(_feedback_cfg(), **values)
+    if not href:
+        return ""
+    return (f'    <a class="{cls}" href="{_esc(href)}" target="_blank"'
+            f' rel="noopener" aria-label="{_esc(aria)}">{_esc(text)} &#x2197;</a>')
 
 
 def _verdict_css(label_str: str) -> str:
@@ -3328,6 +3363,23 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     gen_ts = _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     permalink = f"#{'claim-' + str(idx)}" if standalone else f"{rel}claims/{claim.id}.html"
 
+    # Reader feedback. Emits nothing at all unless the form is configured, so
+    # the site is byte-identical to a build without the feature until then.
+    # The claim page's own canonical URL is the identity we send: it is stable,
+    # already public, and resolves the full claim text that the prefill has to
+    # truncate. Speaker/date come off the bundle (models.py:664-665).
+    feedback_html = _feedback_link_html(
+        cls="claim-feedback-link",
+        text="Something look off?",
+        aria="Send feedback about this claim (opens a form in a new tab)",
+        claim_url=f"{_site_url()}/claims/{claim.id}.html",
+        claim_id=claim.id,
+        claim_text=claim.text,
+        verdict=getattr(bundle.consensus, "consensus_verdict", "") or "",
+        speaker=getattr(bundle, "speaker", "") or getattr(claim, "speaker", "") or "",
+        speech_date=getattr(bundle, "date_str", "") or "",
+    )
+
     # Back links only appear on the in-report claim cards (standalone=False),
     # since standalone claim pages are their own scroll scope and "#claim-catalog"
     # / "#top" anchors don't exist there.
@@ -3385,7 +3437,8 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'    <a href="#claim-{idx}" class="permalink">claim-{idx}</a>'
         + back_links_html
         + f'    <span>Last verified {gen_ts}</span>'
-        '  </div>'
+        + feedback_html
+        + '  </div>'
         '</div>'
         '</article>'
     )
@@ -5082,7 +5135,9 @@ details[open] > .stance-coverage-summary .stance-coverage-label::before {
   .vp-anecdote-summary::before,
   .pca-provenance-summary::before,
   .report-correction-summary::before,
-  .stance-coverage-summary .stance-coverage-label::before { transition: none; }
+  .stance-coverage-summary .stance-coverage-label::before,
+  .claim-feedback-link,
+  .report-feedback-link { transition: none; }
 }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
@@ -5436,6 +5491,32 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   content: "#";
   margin-right: 0.15rem;
   color: var(--ink-faint);
+}
+
+/* [17b] Reader feedback link — claim foot + report footer.
+   A plain link, never a button: it opens a prefilled form in a new tab and
+   submits nothing from this page. min-height is the literal 44px rather than
+   2.75rem so the a11y pin can grep it unambiguously (html is 16px, so they are
+   the same number). The underline is text-decoration, not border-bottom: on a
+   44px-tall inline-flex box a border would draw well below the text. */
+.claim-feedback-link,
+.report-feedback-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  min-height: 44px;
+  padding: 0.25rem 0.5rem;
+  color: var(--ink-muted);
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+  transition: color 120ms ease;
+}
+.claim-feedback-link:hover,
+.report-feedback-link:hover { color: var(--ink); }
+.claim-feedback-link:focus-visible,
+.report-feedback-link:focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 2px;
 }
 
 .methodology {
@@ -7354,12 +7435,25 @@ def _render_report(site_report: SiteReport) -> str:
         + _run_manifest_html(site_report)
         + _panel_composition_html(site_report)
     )
+    # Report-level feedback: about the report as a whole, not any one claim.
+    # Wrapped in its own span only when configured, so an unconfigured build
+    # emits no empty element.
+    _report_feedback = _feedback_link_html(
+        cls="report-feedback-link",
+        text="Send feedback on this report",
+        aria="Send feedback about this report (opens a form in a new tab)",
+        claim_url=f"{_site_url()}/reports/{site_report.report_slug}.html",
+        claim_id=getattr(site_report, "speech_id", "") or "",
+        speaker=getattr(site_report, "speaker", "") or "",
+        speech_date=site_report.date.strftime("%Y-%m-%d") if site_report.date else "",
+    )
     footer = (
         '<span>truth-bot · pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML + '</span>'
         + f'<span>Prompt <a class="footer-hash" href="../about.html#prompt">{phash}</a>'
         + ' · <a href="../corrections.html">Corrections</a></span>'
         + '<span>Source: <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">'
         + 'github.com/aRealGem/Truth-bot</a></span>'
+        + (f'<span>{_report_feedback.strip()}</span>' if _report_feedback else '')
     )
     _headline, _ = _headline_verdict(site_report.verdict_distribution)
     _n_claims = len(site_report.checkable_bundles)

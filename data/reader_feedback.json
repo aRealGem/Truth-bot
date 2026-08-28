@@ -1,0 +1,30 @@
+{
+  "schema": "truthbot-reader-feedback v1",
+  "_comment": [
+    "Prefilled Google Form for reader feedback. UNCONFIGURED as shipped: an empty",
+    "form_url renders NO control anywhere on the site, and the rendered HTML stays",
+    "byte-identical to a build without this feature. That is deliberate, so the code",
+    "can merge before the form exists.",
+    "",
+    "TO LIGHT IT UP: create the form (short-answer / paragraph questions only -",
+    "checkbox questions need repeated entry params and are not supported here), use",
+    "the form's 'Get pre-filled link' action, and read the ids out of the URL it",
+    "emits. That URL has exactly the shape this file records:",
+    "  https://docs.google.com/forms/d/e/<FORM_ID>/viewform?usp=pp_url&entry.123=x",
+    "Put everything up to and including /viewform in form_url, and the numeric ids",
+    "in entries. Any entry left empty is simply not prefilled.",
+    "",
+    "claim_url is REQUIRED: without it a response cannot be traced back to the claim",
+    "it is about, which is the whole point. It is also the field that makes claim_text",
+    "truncation harmless, since the full text is one click away."
+  ],
+  "form_url": "",
+  "entries": {
+    "claim_url": "",
+    "claim_id": "",
+    "claim_text": "",
+    "verdict": "",
+    "speaker": "",
+    "speech_date": ""
+  }
+}
