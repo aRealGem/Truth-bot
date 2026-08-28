@@ -35,10 +35,29 @@ and guessing at it would be how a broken link reaches readers.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from urllib.parse import quote, urlencode
 
 SCHEMA = "truthbot-reader-feedback v1"
+
+#: Published claim ids are speech-derived: ``trump_2026-0010``. But
+#: ``Claim.id`` DEFAULTS to a uuid4 (models.py:147), which is what synthetic
+#: and test bundles carry. A uuid must never reach a prefilled URL: it would
+#: put an opaque identifier in a link a reader can see and share, and it would
+#: not resolve to any published claim page. All 529 ids in the published corpus
+#: match this pattern.
+#:
+#: Scoped to the feedback link on purpose rather than enforced globally in the
+#: renderer: 26 existing test call sites build bundles with the uuid default,
+#: and failing the render on those would break them for no safety gain. The
+#: exposure is the public URL, so that is what is guarded.
+SPEECH_DERIVED_ID = re.compile(r"^[a-z0-9_]+-\d{4}$")
+
+
+def is_publishable_id(claim_id: str) -> bool:
+    """True when this id is speech-derived and therefore safe to put in a URL."""
+    return bool(SPEECH_DERIVED_ID.match(str(claim_id or "")))
 
 #: Fields offered to the form, in a FIXED order. Explicit rather than dict
 #: iteration so the generated query string is stable across runs and versions —

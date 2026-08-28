@@ -388,6 +388,11 @@ def _feedback_cfg() -> dict:
     return load_config(_READER_FEEDBACK_PATH)
 
 
+def _publishable_claim_id(claim_id: str) -> bool:
+    from truthbot.publish.reader_feedback import is_publishable_id
+    return is_publishable_id(claim_id)
+
+
 def _feedback_link_html(*, cls: str, text: str, aria: str, **values: str) -> str:
     """One prefilled feedback link, or ``""`` when the form is not configured.
 
@@ -3368,7 +3373,11 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     # The claim page's own canonical URL is the identity we send: it is stable,
     # already public, and resolves the full claim text that the prefill has to
     # truncate. Speaker/date come off the bundle (models.py:664-665).
-    feedback_html = _feedback_link_html(
+    #
+    # Guarded on a speech-derived id: Claim.id defaults to a uuid4, and a uuid
+    # in a reader-visible URL would be both opaque and unresolvable. Synthetic
+    # bundles simply get no link rather than a broken one.
+    feedback_html = "" if not _publishable_claim_id(claim.id) else _feedback_link_html(
         cls="claim-feedback-link",
         text="Something look off?",
         aria="Send feedback about this claim (opens a form in a new tab)",

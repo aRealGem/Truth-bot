@@ -19,7 +19,8 @@ from lxml import html as LH
 from truthbot.publish import site
 from truthbot.publish.reader_feedback import (CLAIM_TEXT_LIMIT, FIELD_ORDER,
                                               ReaderFeedbackError, is_configured,
-                                              load_config, prefill_url, truncate)
+                                              is_publishable_id, load_config,
+                                              prefill_url, truncate)
 
 REPORTS = sorted(
     (Path(__file__).resolve().parents[2] / "site-pca" / "reports").glob("*.html"))
@@ -216,6 +217,48 @@ def test_control_is_never_inside_a_details():
         doc = LH.fromstring(p.read_text(encoding="utf-8"))
         assert doc.xpath(
             '//a[contains(@class, "feedback-link")]/ancestor::details') == []
+
+
+# ── claim-id guard: no uuid may reach a reader-visible URL ───────────────────
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_every_published_claim_id_is_speech_derived():
+    """Pins the published corpus against the uuid default.
+
+    ``Claim.id`` defaults to a uuid4 (models.py:147). A uuid reaching a
+    rendered claim id would put an opaque, unresolvable identifier into a
+    public URL. All 529 ids in the corpus are speech-derived; this fails the
+    build if that ever stops being true.
+    """
+    claims_json = Path(__file__).resolve().parents[2] / "site-pca" / "data" / "claims.json"
+    rows = json.loads(claims_json.read_text(encoding="utf-8"))
+    rows = rows if isinstance(rows, list) else rows.get("claims", rows)
+    bad = [r["id"] for r in rows if not is_publishable_id(r["id"])]
+    assert bad == [], f"non-speech-derived claim id(s) reached the corpus: {bad[:5]}"
+
+    pages = sorted((claims_json.parents[1] / "claims").glob("*.html"))
+    bad_files = [p.stem for p in pages if not is_publishable_id(p.stem)]
+    assert bad_files == [], f"non-speech-derived claim page(s): {bad_files[:5]}"
+
+
+def test_uuid_claim_id_gets_no_feedback_link(configured):
+    """A synthetic bundle must not emit a link to an unresolvable claim page."""
+    assert not is_publishable_id("3f2b9c1a-4d5e-6f70-8a9b-0c1d2e3f4a5b")
+    assert is_publishable_id("trump_2026-0010")
+    # And the guard is wired into the renderer, not merely available.
+    assert "_publishable_claim_id(claim.id)" in Path(
+        site.__file__).read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("bad", [
+    "3f2b9c1a-4d5e-6f70-8a9b-0c1d2e3f4a5b",   # uuid4
+    "Trump_2026-0010",                        # uppercase speech id
+    "trump_2026-10",                          # too few digits
+    "trump_2026",                             # no claim index
+    "", None,
+])
+def test_non_speech_derived_ids_are_rejected(bad):
+    assert not is_publishable_id(bad)
 
 
 # ── a11y pins, read off the CSS constant ─────────────────────────────────────
