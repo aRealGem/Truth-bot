@@ -3747,19 +3747,19 @@ CSS = """\
   --v-split:        #64748b;
 
   /* Note accent — the one chromatic color that does NOT carry a verdict.
-     A pale parchment wash for reader-facing asides that need to be noticed
-     without being alarming. It exists because a purely neutral callout was
-     read straight past.
+     For reader-facing asides that must be noticed without being alarming.
 
-     It must NEVER be set to --v-exaggerated (#ca8a04) or any other verdict
-     hex, however tempting the resemblance: on a fact-checking page an amber
-     panel would read as an Exaggerated verdict, and a request for feedback is
-     not a finding about anything. A test pins the distinction.
+     VIOLET on purpose. The verdict palette runs green -> lime -> amber ->
+     orange -> red, plus stone for Unverifiable and slate for a split panel.
+     Violet is the one hue that appears nowhere in it, so this surface cannot
+     be mistaken for a finding at a glance. An earlier parchment yellow was
+     rejected for exactly that reason: it sat one step from --v-exaggerated
+     (#ca8a04) on a page full of amber pills. Never set these to a verdict hex.
 
-     Contrast on --note-bg: --ink 18.3:1, --ink-muted 7.1:1 (both pass AA).
-     --ink-dim measures 4.45:1 and is therefore NOT used on this surface. */
-  --note-bg: #fdf6e3;
-  --note-border: #ecdfb8;
+     Contrast on --note-bg: --ink 16.6:1, --ink-muted 6.4:1 (both pass AA).
+     --ink-dim is NOT used on this surface. */
+  --note-bg: #ede9fe;
+  --note-border: #c4b5fd;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -5564,15 +5564,17 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   outline-offset: 2px;
 }
 
-/* The one visible ask per report. Structurally the .methodology callout --
-   same margin, padding and hairline border -- but on the note accent rather
-   than the warm neutral: on the neutral it was read straight past. The tint is
-   a pale parchment wash, NOT the amber of --v-exaggerated, so it cannot be
-   mistaken for a verdict on a page full of them. */
+/* The one visible ask per report, sitting high on the page. Structurally the
+   .methodology callout -- same padding, hairline border -- but on the violet
+   note accent: on the warm neutral it was read straight past, and violet is
+   the one hue absent from the verdict palette, so it cannot be mistaken for a
+   finding. Margin is symmetric because it now sits BETWEEN sections rather
+   than trailing the page. */
 .report-feedback-callout {
-  margin-top: 3rem;
+  margin: 2rem 0;
   background: var(--note-bg);
   border: 1px solid var(--note-border);
+  border-radius: 0.5rem;
   padding: 1.25rem 1.5rem;
 }
 .report-feedback-callout .rfc-lead {
@@ -7503,11 +7505,20 @@ def _render_report(site_report: SiteReport) -> str:
               'the claim\'s provenance strip.</div></details>'
         )
 
-    # Report-level feedback. One visible ask per page, in the same callout
-    # vocabulary as the methodology block, placed directly after the claims
-    # where a reader who has read the check arrives with an opinion.
+    # Report-level feedback. ONE visible ask per page, placed HIGH -- directly
+    # after the verdict panel and any corrections banner, above the contents
+    # list and the claims.
     #
-    # Deliberately ONE per report rather than a loud banner on each of 182
+    # It first shipped after the claims, on the reasoning that a reader who has
+    # read the check arrives with an opinion. That reasoning assumed linear
+    # reading of a document that is ~79,000 words long: measured on the Trump
+    # report, the callout landed at 99.8% of the page, below all 182 claims.
+    # Effectively nobody saw it, and no amount of tinting fixes a placement
+    # problem. The beta framing also belongs BEFORE the verdicts rather than
+    # after them -- "we may have got this wrong" is context for reading the
+    # report, not a footnote to it.
+    #
+    # Still deliberately ONE per report rather than a banner on each of 182
     # claims: repeated often enough, an invitation stops reading as openness
     # and starts reading as engagement-farming, which is the last register a
     # fact-checker wants. The per-claim links stay quiet and carry the
@@ -7538,6 +7549,7 @@ def _render_report(site_report: SiteReport) -> str:
         + _verdict_panel(site_report)
         + correction_banner
         + _render_stance_coverage(site_report)
+        + feedback_callout_html
         + toc_section_head
         + toc_html
         + '<div class="section-head">'
@@ -7545,7 +7557,6 @@ def _render_report(site_report: SiteReport) -> str:
         + '<span class="sub">Anchor links shareable</span>'
         + '</div>'
         + claim_blocks
-        + feedback_callout_html
         + methodology_html
         + triage_link_html
         + _run_manifest_html(site_report)

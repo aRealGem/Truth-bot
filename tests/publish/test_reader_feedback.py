@@ -311,6 +311,30 @@ def test_report_carries_exactly_one_feedback_callout():
 
 
 @pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_callout_sits_high_on_the_page_not_below_the_claims():
+    """Placement, not styling, was what made the first version invisible.
+
+    It originally rendered after the claims. On the Trump report that put it at
+    99.8% of a 79,000-word document, below all 182 claims: present in the DOM,
+    unreachable in practice. Colour cannot fix that, so the position is pinned
+    -- it must precede the first claim, and sit in the first quarter of the
+    page.
+    """
+    if not is_configured(load_config(site._READER_FEEDBACK_PATH)):
+        pytest.skip("feature dark")
+    for p, doc in _full_reports():
+        raw = p.read_text(encoding="utf-8")
+        at = raw.find("report-feedback-callout")
+        first_claim = raw.find('<article class="claim"')
+        assert at != -1, f"{p.name}: no callout"
+        assert at < first_claim, (
+            f"{p.name}: callout renders after the first claim; on a long report "
+            f"that is the bottom of the page")
+        pct = 100 * at / len(raw)
+        assert pct < 25, f"{p.name}: callout at {pct:.1f}% of the document"
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
 def test_callout_is_visible_not_collapsed():
     """It is the visible ask; behind a <details> it would not be one."""
     for p in REPORTS:
@@ -396,8 +420,12 @@ def test_feedback_styling_hardcodes_no_colour_and_borrows_no_verdict():
                           "--v-exaggerated", "--v-unverifiable"):
         assert verdict_token not in decls, (
             f"{verdict_token} borrowed for chrome; feedback is not a verdict")
-    # And the warning itself must survive, since it is what stops the shortcut.
-    assert "--v-exaggerated" in block, "the do-not-reuse note was removed"
+    # The warning itself must survive somewhere, since it is what stops the
+    # shortcut. It lives beside the token definition in :root rather than at
+    # the use site -- the right place for it, and the place a future editor
+    # changing the colour will actually be looking.
+    root = site.CSS.split(":root {", 1)[1].split("\n}", 1)[0]
+    assert "--v-exaggerated" in root, "the do-not-reuse warning was removed"
 
 
 # ── a11y pins, read off the CSS constant ─────────────────────────────────────
