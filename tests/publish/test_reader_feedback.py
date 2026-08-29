@@ -339,22 +339,65 @@ def test_claim_link_breaks_out_of_the_metadata_register():
     assert "border:" in block, "the chip border is what makes it read as a control"
 
 
-def test_callout_reuses_the_methodology_callout_vocabulary():
-    """Warm surface + hairline border, so it reads as furniture, not an ad."""
+def test_callout_uses_the_note_accent_not_a_verdict_colour():
+    """The tint must never be a verdict colour.
+
+    An amber panel on a page full of amber "Exaggerated" pills would read as a
+    verdict, and a request for feedback is not a finding about anything. The
+    resemblance to --v-exaggerated makes this exactly the shortcut a later
+    tidy-up would take, so it is pinned.
+    """
     block = site.CSS.split(".report-feedback-callout {", 1)[1].split("}", 1)[0]
-    assert "var(--surface-warm)" in block
-    assert "1px solid var(--border)" in block
+    assert "var(--note-bg)" in block
+    assert "var(--note-border)" in block
+
+    root = site.CSS.split(":root {", 1)[1].split("\n}", 1)[0]
+    note = dict(re.findall(r"(--note-[\w-]+):\s*(#[0-9a-fA-F]{3,8})", root))
+    assert set(note) == {"--note-bg", "--note-border"}, note
+    verdicts = dict(re.findall(r"(--v-[\w-]+):\s*(#[0-9a-fA-F]{3,8})", root))
+    assert verdicts, "verdict palette not found; the guard would pass vacuously"
+    clash = {k: v for k, v in note.items()
+             if v.lower() in {x.lower() for x in verdicts.values()}}
+    assert not clash, f"note accent collides with the verdict palette: {clash}"
 
 
-def test_feedback_styling_uses_no_chromatic_colour():
-    """The verdict palette is the design's ONLY chromatic vocabulary, and the
-    token block says never to hardcode those hex values elsewhere. Emphasis
-    here comes from type, space and border instead."""
+def test_note_surface_keeps_its_text_above_AA():
+    """--ink-dim measures 4.45:1 on the note tint, so it must not appear here."""
+    def _lum(h):
+        h = h.lstrip("#")
+        ch = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+        ch = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in ch]
+        return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]
+
+    root = site.CSS.split(":root {", 1)[1].split("\n}", 1)[0]
+    tok = dict(re.findall(r"(--[\w-]+):\s*(#[0-9a-fA-F]{6})", root))
+    bg = _lum(tok["--note-bg"])
+    for name in ("--ink", "--ink-muted"):
+        fg = _lum(tok[name])
+        hi, lo = max(fg, bg), min(fg, bg)
+        assert (hi + 0.05) / (lo + 0.05) >= 4.5, f"{name} below AA on --note-bg"
+
+    callout = site.CSS.split(".report-feedback-callout", 1)[1].split("/* [18", 1)[0]
+    assert "--ink-dim" not in callout, "--ink-dim is below AA on this surface"
+
+
+def test_feedback_styling_hardcodes_no_colour_and_borrows_no_verdict():
+    """Colour reaches this block only through a token, and never a verdict one.
+
+    Scoped to DECLARATIONS: comments are stripped first. The block deliberately
+    names --v-exaggerated in prose, to warn the next reader off the very
+    shortcut this test forbids, and an unscoped scan would fire on that warning.
+    """
     block = site.CSS.split("/* [17b] Reader feedback", 1)[1].split("/* [18", 1)[0]
-    assert not re.search(r"#[0-9a-fA-F]{3,6}\b", block), "hardcoded colour"
+    decls = re.sub(r"/\*.*?\*/", "", block, flags=re.S)
+    assert not re.search(r"#[0-9a-fA-F]{3,6}\b", decls), (
+        "hardcoded colour; add a token to :root instead")
     for verdict_token in ("--v-true", "--v-false", "--v-misleading",
                           "--v-exaggerated", "--v-unverifiable"):
-        assert verdict_token not in block
+        assert verdict_token not in decls, (
+            f"{verdict_token} borrowed for chrome; feedback is not a verdict")
+    # And the warning itself must survive, since it is what stops the shortcut.
+    assert "--v-exaggerated" in block, "the do-not-reuse note was removed"
 
 
 # ── a11y pins, read off the CSS constant ─────────────────────────────────────

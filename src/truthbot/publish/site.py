@@ -3720,10 +3720,13 @@ CSS = """\
   --border: #e7e5e4;
   --border-strong: #d6d3d1;
 
-  /* Verdict palette — the ONLY chromatic colors in the design.
+  /* Verdict palette — the only chromatic colors that carry MEANING.
      Change one variable, every bar / pill / swatch / dissent flag /
      Truthy bubble tint updates. Never hardcode these hex values
-     anywhere else in the codebase. */
+     anywhere else in the codebase.
+     One non-verdict accent exists for chrome — see --note-* below. It is
+     deliberately not part of this block and must never be set to one of
+     these values. */
   --v-true:         #15803d;
   --v-mostly-true:  #65a30d;
   --v-exaggerated:  #ca8a04;
@@ -3742,6 +3745,21 @@ CSS = """\
      warm-gray Unverifiable, so the aggregate bars can show the split bucket
      as a real segment (T0.2) rather than silently dropping it. */
   --v-split:        #64748b;
+
+  /* Note accent — the one chromatic color that does NOT carry a verdict.
+     A pale parchment wash for reader-facing asides that need to be noticed
+     without being alarming. It exists because a purely neutral callout was
+     read straight past.
+
+     It must NEVER be set to --v-exaggerated (#ca8a04) or any other verdict
+     hex, however tempting the resemblance: on a fact-checking page an amber
+     panel would read as an Exaggerated verdict, and a request for feedback is
+     not a finding about anything. A test pins the distinction.
+
+     Contrast on --note-bg: --ink 18.3:1, --ink-muted 7.1:1 (both pass AA).
+     --ink-dim measures 4.45:1 and is therefore NOT used on this surface. */
+  --note-bg: #fdf6e3;
+  --note-border: #ecdfb8;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -5546,13 +5564,15 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   outline-offset: 2px;
 }
 
-/* The one visible ask per report. Same callout vocabulary as .methodology --
-   warm surface, hairline border -- so it reads as part of the furniture rather
-   than as an ad. */
+/* The one visible ask per report. Structurally the .methodology callout --
+   same margin, padding and hairline border -- but on the note accent rather
+   than the warm neutral: on the neutral it was read straight past. The tint is
+   a pale parchment wash, NOT the amber of --v-exaggerated, so it cannot be
+   mistaken for a verdict on a page full of them. */
 .report-feedback-callout {
   margin-top: 3rem;
-  background: var(--surface-warm);
-  border: 1px solid var(--border);
+  background: var(--note-bg);
+  border: 1px solid var(--note-border);
   padding: 1.25rem 1.5rem;
 }
 .report-feedback-callout .rfc-lead {
@@ -5573,7 +5593,8 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   font-size: 0.88rem;
   color: var(--ink);
   padding: 0.4rem 0.9rem;
-  border: 1px solid var(--border-strong);
+  /* White on the tint, so the control reads as raised off the panel. */
+  border: 1px solid var(--note-border);
   border-radius: 0.4rem;
   background: var(--surface);
 }
