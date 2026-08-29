@@ -1856,9 +1856,13 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
    bar is the site's metadata voice -- mono, 0.75rem, uppercase, letterspaced --
    which is right for "CLAIM-1" and "LAST VERIFIED ...", and wrong for an
    invitation: styled as a label, the link read as a timestamp and nobody saw
-   it. Sentence case, sans, and a chip border make it read as a control.
-   Emphasis comes from type, space and border, never colour: the verdict
-   palette is the design's only chromatic vocabulary and must stay that way. */
+   it. Sentence case, sans, and a chip make it read as a control.
+
+   Both surfaces carry the same violet note accent, so a reader learns the
+   colour once at the top of the report and then recognises it 182 times below
+   without having to read the label again. Violet appears nowhere in the
+   verdict palette, which is what makes it safe to repeat this often: an amber
+   or green chip under every claim would compete with the verdict pills. */
 .claim-feedback-link,
 .report-feedback-link {
   display: inline-flex;
@@ -1873,16 +1877,17 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   font-size: 0.8rem;
   text-transform: none;
   letter-spacing: 0;
-  color: var(--ink-dim);
+  /* --ink-muted, not --ink-dim: on the violet the dim tone measures 4.04:1 at
+     this size and fails AA. The neutral chip could afford it; this one cannot. */
+  color: var(--ink-muted);
   padding: 0.3rem 0.7rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--note-border);
   border-radius: 0.4rem;
-  background: var(--surface);
+  background: var(--note-bg);
 }
 .claim-feedback-link:hover {
   color: var(--ink);
-  border-color: var(--border-strong);
-  background: var(--surface-warm);
+  border-color: var(--ink-muted);
 }
 .claim-feedback-link:focus-visible,
 .report-feedback-link:focus-visible {

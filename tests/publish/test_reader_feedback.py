@@ -401,8 +401,20 @@ def test_note_surface_keeps_its_text_above_AA():
         hi, lo = max(fg, bg), min(fg, bg)
         assert (hi + 0.05) / (lo + 0.05) >= 4.5, f"{name} below AA on --note-bg"
 
-    callout = site.CSS.split(".report-feedback-callout", 1)[1].split("/* [18", 1)[0]
-    assert "--ink-dim" not in callout, "--ink-dim is below AA on this surface"
+    # --ink-dim measures 4.04:1 on the violet and must not appear on EITHER
+    # surface that carries it -- the callout or the per-claim chip.
+    feedback_css = site.CSS.split("/* [17b] Reader feedback", 1)[1].split("/* [18", 1)[0]
+    decls = re.sub(r"/\*.*?\*/", "", feedback_css, flags=re.S)
+    assert "--ink-dim" not in decls, "--ink-dim is below AA on the note surface"
+
+
+def test_claim_chip_and_callout_share_the_note_accent():
+    """One colour learned once, then recognised 182 times without re-reading."""
+    chip = site.CSS.split(".claim-feedback-link {", 1)[1].split("}", 1)[0]
+    callout = site.CSS.split(".report-feedback-callout {", 1)[1].split("}", 1)[0]
+    for block, name in ((chip, "claim chip"), (callout, "report callout")):
+        assert "var(--note-bg)" in block, f"{name} is off the note accent"
+        assert "var(--note-border)" in block, f"{name} border is off the accent"
 
 
 def test_feedback_styling_hardcodes_no_colour_and_borrows_no_verdict():
