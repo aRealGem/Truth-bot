@@ -1470,7 +1470,9 @@ details[open] > .stance-coverage-summary .stance-coverage-label::before {
   .vp-anecdote-summary::before,
   .pca-provenance-summary::before,
   .report-correction-summary::before,
-  .stance-coverage-summary .stance-coverage-label::before { transition: none; }
+  .stance-coverage-summary .stance-coverage-label::before,
+  .claim-feedback-link,
+  .report-feedback-link { transition: none; }
 }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
@@ -1824,6 +1826,32 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   content: "#";
   margin-right: 0.15rem;
   color: var(--ink-faint);
+}
+
+/* [17b] Reader feedback link — claim foot + report footer.
+   A plain link, never a button: it opens a prefilled form in a new tab and
+   submits nothing from this page. min-height is the literal 44px rather than
+   2.75rem so the a11y pin can grep it unambiguously (html is 16px, so they are
+   the same number). The underline is text-decoration, not border-bottom: on a
+   44px-tall inline-flex box a border would draw well below the text. */
+.claim-feedback-link,
+.report-feedback-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  min-height: 44px;
+  padding: 0.25rem 0.5rem;
+  color: var(--ink-muted);
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+  transition: color 120ms ease;
+}
+.claim-feedback-link:hover,
+.report-feedback-link:hover { color: var(--ink); }
+.claim-feedback-link:focus-visible,
+.report-feedback-link:focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 2px;
 }
 
 .methodology {

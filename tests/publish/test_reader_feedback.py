@@ -48,11 +48,25 @@ def test_missing_config_file_is_unconfigured_not_an_error(tmp_path):
     assert prefill_url(cfg, claim_url="https://x") == ""
 
 
-def test_shipped_config_is_unconfigured():
-    """As committed the feature is dark, so the site is byte-identical to a
-    build without it. This is what lets the code merge before the form exists."""
+def test_shipped_config_is_wellformed():
+    """The shipped config loads, and if it is live it points somewhere sane.
+
+    An earlier version of this test asserted the config was UNCONFIGURED,
+    which encoded a temporary state (ships dark, before the form existed) as a
+    permanent invariant. It duly failed the moment the form was wired up. The
+    durable property is well-formedness, not darkness: fail-closed behaviour is
+    covered by the missing-file and empty-config tests above.
+    """
     cfg = load_config(site._READER_FEEDBACK_PATH)
-    assert not is_configured(cfg)
+    if not is_configured(cfg):
+        return                                   # dark is a legitimate state
+    url = cfg["form_url"]
+    assert url.startswith("https://"), "a feedback form must not be plain http"
+    assert "docs.google.com/forms/" in url
+    assert url.endswith("/viewform"), (
+        "form_url holds everything up to /viewform; the query string is built")
+    assert cfg["entries"]["claim_url"].isdigit(), (
+        "claim_url must be a numeric Google Forms entry id")
 
 
 def test_bad_schema_raises(tmp_path):
