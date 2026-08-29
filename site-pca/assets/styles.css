@@ -1828,30 +1828,85 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   color: var(--ink-faint);
 }
 
-/* [17b] Reader feedback link — claim foot + report footer.
-   A plain link, never a button: it opens a prefilled form in a new tab and
-   submits nothing from this page. min-height is the literal 44px rather than
+/* [17b] Reader feedback — per-claim link + one report-level callout.
+   Plain links, never buttons: they open a prefilled form in a new tab and
+   submit nothing from this page. min-height is the literal 44px rather than
    2.75rem so the a11y pin can grep it unambiguously (html is 16px, so they are
-   the same number). The underline is text-decoration, not border-bottom: on a
-   44px-tall inline-flex box a border would draw well below the text. */
+   the same number).
+
+   The per-claim link deliberately BREAKS OUT of .claim-foot's register. That
+   bar is the site's metadata voice -- mono, 0.75rem, uppercase, letterspaced --
+   which is right for "CLAIM-1" and "LAST VERIFIED ...", and wrong for an
+   invitation: styled as a label, the link read as a timestamp and nobody saw
+   it. Sentence case, sans, and a chip border make it read as a control.
+   Emphasis comes from type, space and border, never colour: the verdict
+   palette is the design's only chromatic vocabulary and must stay that way. */
 .claim-feedback-link,
 .report-feedback-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.3em;
+  gap: 0.35em;
   min-height: 44px;
-  padding: 0.25rem 0.5rem;
-  color: var(--ink-muted);
-  text-decoration: underline dotted;
-  text-underline-offset: 0.25em;
-  transition: color 120ms ease;
+  text-decoration: none;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
 }
-.claim-feedback-link:hover,
-.report-feedback-link:hover { color: var(--ink); }
+.claim-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink-dim);
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: var(--surface);
+}
+.claim-feedback-link:hover {
+  color: var(--ink);
+  border-color: var(--border-strong);
+  background: var(--surface-warm);
+}
 .claim-feedback-link:focus-visible,
 .report-feedback-link:focus-visible {
   outline: 2px solid var(--ink-muted);
   outline-offset: 2px;
+}
+
+/* The one visible ask per report. Same callout vocabulary as .methodology --
+   warm surface, hairline border -- so it reads as part of the furniture rather
+   than as an ad. */
+.report-feedback-callout {
+  margin-top: 3rem;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+}
+.report-feedback-callout .rfc-lead {
+  margin: 0 0 0.4rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.report-feedback-callout .rfc-body {
+  margin: 0 0 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+.report-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.4rem;
+  background: var(--surface);
+}
+.report-feedback-link:hover {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
 }
 
 .methodology {

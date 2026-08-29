@@ -101,7 +101,7 @@ def test_link_helper_emits_nothing_when_unconfigured(monkeypatch):
 
 def test_prefill_url_shape_and_values(configured):
     html = site._feedback_link_html(
-        cls="claim-feedback-link", text="Something look off?", aria="A",
+        cls="claim-feedback-link", text="Something wrong? Welcome feedback!", aria="A",
         claim_url="https://s/claims/trump_2026-0010.html",
         claim_id="trump_2026-0010", claim_text="Unemployment is at a low.",
         verdict="MOSTLY TRUE", speaker="Donald Trump", speech_date="2026-02-24")
@@ -199,7 +199,8 @@ def test_copy_does_not_invite_a_vote_on_truth(configured):
     """The link asks about OUR check. Wording that reads as 'do you agree with
     this verdict' would turn a fact-check into a poll."""
     html = site._feedback_link_html(
-        cls="c", text="Something look off?", aria="a", claim_url="https://x")
+        cls="c", text="Something wrong? Welcome feedback!", aria="a",
+        claim_url="https://x")
     text = LH.fromstring(html).text_content().lower()
     for banned in ("do you agree", "vote", "was this fair", "rate this"):
         assert banned not in text
@@ -275,12 +276,93 @@ def test_non_speech_derived_ids_are_rejected(bad):
     assert not is_publishable_id(bad)
 
 
+# ── the report-level callout ─────────────────────────────────────────────────
+
+def _full_reports():
+    """Only the real report pages.
+
+    ``reports/*.html`` also holds triage pages and the redirect stubs left
+    behind by re-adjudication. Neither is a report and neither carries a
+    callout; a claim article is what distinguishes the real thing.
+    """
+    for p in REPORTS:
+        doc = LH.fromstring(p.read_text(encoding="utf-8"))
+        if doc.xpath('//article[contains(@class, "claim")]'):
+            yield p, doc
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_report_carries_exactly_one_feedback_callout():
+    """One visible ask per report, never per claim.
+
+    Repeated under all 182 claims an invitation stops reading as openness and
+    starts reading as engagement-farming, which is the wrong register for a
+    fact-checker. The per-claim links stay quiet and carry the claim-specific
+    case; this is the one that asks out loud.
+    """
+    on = is_configured(load_config(site._READER_FEEDBACK_PATH))
+    seen = 0
+    for p, doc in _full_reports():
+        seen += 1
+        callouts = doc.find_class("report-feedback-callout")
+        assert len(callouts) == (1 if on else 0), f"{p.name}: {len(callouts)} callouts"
+        if on:
+            assert len(doc.find_class("report-feedback-link")) == 1
+    assert seen == 5, f"expected the five published reports, walked {seen}"
+
+
+@pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
+def test_callout_is_visible_not_collapsed():
+    """It is the visible ask; behind a <details> it would not be one."""
+    for p in REPORTS:
+        doc = LH.fromstring(p.read_text(encoding="utf-8"))
+        for el in doc.find_class("report-feedback-callout"):
+            assert [a.tag for a in el.iterancestors() if a.tag == "details"] == []
+
+
+def test_callout_copy_invites_correction_not_a_verdict_vote(configured):
+    from truthbot.publish.site import _render_report  # noqa: F401  (import pin)
+
+    lead = "Something wrong? Welcome feedback!"
+    assert lead in Path(site.__file__).read_text(encoding="utf-8")
+    body = Path(site.__file__).read_text(encoding="utf-8")
+    for banned in ("do you agree", "vote on", "was this fair", "rate this verdict"):
+        assert banned not in body.lower()
+
+
+def test_claim_link_breaks_out_of_the_metadata_register():
+    """.claim-foot is mono/uppercase/letterspaced -- the site's metadata voice.
+    Inheriting it is exactly why the link read as a timestamp and went unseen."""
+    block = site.CSS.split(".claim-feedback-link {", 1)[1].split("}", 1)[0]
+    assert "text-transform: none" in block
+    assert "letter-spacing: 0" in block
+    assert "var(--sans)" in block
+    assert "border:" in block, "the chip border is what makes it read as a control"
+
+
+def test_callout_reuses_the_methodology_callout_vocabulary():
+    """Warm surface + hairline border, so it reads as furniture, not an ad."""
+    block = site.CSS.split(".report-feedback-callout {", 1)[1].split("}", 1)[0]
+    assert "var(--surface-warm)" in block
+    assert "1px solid var(--border)" in block
+
+
+def test_feedback_styling_uses_no_chromatic_colour():
+    """The verdict palette is the design's ONLY chromatic vocabulary, and the
+    token block says never to hardcode those hex values elsewhere. Emphasis
+    here comes from type, space and border instead."""
+    block = site.CSS.split("/* [17b] Reader feedback", 1)[1].split("/* [18", 1)[0]
+    assert not re.search(r"#[0-9a-fA-F]{3,6}\b", block), "hardcoded colour"
+    for verdict_token in ("--v-true", "--v-false", "--v-misleading",
+                          "--v-exaggerated", "--v-unverifiable"):
+        assert verdict_token not in block
+
+
 # ── a11y pins, read off the CSS constant ─────────────────────────────────────
 
 def test_feedback_link_css_meets_the_a11y_convention():
-    block = site.CSS.split(
+    shared = site.CSS.split(
         ".claim-feedback-link,\n.report-feedback-link {", 1)[1].split("}", 1)[0]
-    assert "min-height: 44px" in block, "touch target below the 44px convention"
+    assert "min-height: 44px" in shared, "touch target below the 44px convention"
     assert ".claim-feedback-link:focus-visible" in site.CSS
     reduce_block = site.CSS.split(
         "@media (prefers-reduced-motion: reduce) {", 1)[1].split("\n}", 1)[0]
@@ -290,7 +372,7 @@ def test_feedback_link_css_meets_the_a11y_convention():
 def test_feedback_css_avoids_the_lens_sweep():
     """consistency._check_no_lens_ui bans these across all rendered css/html."""
     block = site.CSS.split(
-        ".claim-feedback-link,\n.report-feedback-link {", 1)[1].split("}", 1)[0]
+        "/* [17b] Reader feedback", 1)[1].split("/* [18", 1)[0]
     for pattern in ("Lens", "editorial-lens", "lens-label", "lens-value",
                     "lens-target", "lens-pill", "data-lens", "DEFAULT_LENS"):
         assert pattern not in block

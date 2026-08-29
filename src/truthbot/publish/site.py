@@ -3379,7 +3379,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     # bundles simply get no link rather than a broken one.
     feedback_html = "" if not _publishable_claim_id(claim.id) else _feedback_link_html(
         cls="claim-feedback-link",
-        text="Something look off?",
+        text="Something wrong? Welcome feedback!",
         aria="Send feedback about this claim (opens a form in a new tab)",
         claim_url=f"{_site_url()}/claims/{claim.id}.html",
         claim_id=claim.id,
@@ -5502,30 +5502,85 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   color: var(--ink-faint);
 }
 
-/* [17b] Reader feedback link — claim foot + report footer.
-   A plain link, never a button: it opens a prefilled form in a new tab and
-   submits nothing from this page. min-height is the literal 44px rather than
+/* [17b] Reader feedback — per-claim link + one report-level callout.
+   Plain links, never buttons: they open a prefilled form in a new tab and
+   submit nothing from this page. min-height is the literal 44px rather than
    2.75rem so the a11y pin can grep it unambiguously (html is 16px, so they are
-   the same number). The underline is text-decoration, not border-bottom: on a
-   44px-tall inline-flex box a border would draw well below the text. */
+   the same number).
+
+   The per-claim link deliberately BREAKS OUT of .claim-foot's register. That
+   bar is the site's metadata voice -- mono, 0.75rem, uppercase, letterspaced --
+   which is right for "CLAIM-1" and "LAST VERIFIED ...", and wrong for an
+   invitation: styled as a label, the link read as a timestamp and nobody saw
+   it. Sentence case, sans, and a chip border make it read as a control.
+   Emphasis comes from type, space and border, never colour: the verdict
+   palette is the design's only chromatic vocabulary and must stay that way. */
 .claim-feedback-link,
 .report-feedback-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.3em;
+  gap: 0.35em;
   min-height: 44px;
-  padding: 0.25rem 0.5rem;
-  color: var(--ink-muted);
-  text-decoration: underline dotted;
-  text-underline-offset: 0.25em;
-  transition: color 120ms ease;
+  text-decoration: none;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
 }
-.claim-feedback-link:hover,
-.report-feedback-link:hover { color: var(--ink); }
+.claim-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink-dim);
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: var(--surface);
+}
+.claim-feedback-link:hover {
+  color: var(--ink);
+  border-color: var(--border-strong);
+  background: var(--surface-warm);
+}
 .claim-feedback-link:focus-visible,
 .report-feedback-link:focus-visible {
   outline: 2px solid var(--ink-muted);
   outline-offset: 2px;
+}
+
+/* The one visible ask per report. Same callout vocabulary as .methodology --
+   warm surface, hairline border -- so it reads as part of the furniture rather
+   than as an ad. */
+.report-feedback-callout {
+  margin-top: 3rem;
+  background: var(--surface-warm);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+}
+.report-feedback-callout .rfc-lead {
+  margin: 0 0 0.4rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.report-feedback-callout .rfc-body {
+  margin: 0 0 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+.report-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.4rem;
+  background: var(--surface);
+}
+.report-feedback-link:hover {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
 }
 
 .methodology {
@@ -7427,6 +7482,36 @@ def _render_report(site_report: SiteReport) -> str:
               'the claim\'s provenance strip.</div></details>'
         )
 
+    # Report-level feedback. One visible ask per page, in the same callout
+    # vocabulary as the methodology block, placed directly after the claims
+    # where a reader who has read the check arrives with an opinion.
+    #
+    # Deliberately ONE per report rather than a loud banner on each of 182
+    # claims: repeated often enough, an invitation stops reading as openness
+    # and starts reading as engagement-farming, which is the last register a
+    # fact-checker wants. The per-claim links stay quiet and carry the
+    # actionable, claim-specific case.
+    _report_feedback = _feedback_link_html(
+        cls="report-feedback-link",
+        text="Send feedback on this report",
+        aria="Send feedback about this report (opens a form in a new tab)",
+        claim_url=f"{_site_url()}/reports/{site_report.report_slug}.html",
+        claim_id=getattr(site_report, "speech_id", "") or "",
+        speaker=getattr(site_report, "speaker", "") or "",
+        speech_date=site_report.date.strftime("%Y-%m-%d") if site_report.date else "",
+    )
+    feedback_callout_html = ""
+    if _report_feedback:
+        feedback_callout_html = (
+            '<aside class="report-feedback-callout">'
+            '<p class="rfc-lead">Something wrong? Welcome feedback!</p>'
+            '<p class="rfc-body">This is a beta. If a verdict looks wrong, or the '
+            'evidence behind it does not hold up, tell us &mdash; every response '
+            'is read. You can flag a single claim from the link under it, or the '
+            'whole report here.</p>'
+            + _report_feedback.strip()
+            + '</aside>\n'
+        )
     body = (
         hero_html
         + _verdict_panel(site_report)
@@ -7439,22 +7524,11 @@ def _render_report(site_report: SiteReport) -> str:
         + '<span class="sub">Anchor links shareable</span>'
         + '</div>'
         + claim_blocks
+        + feedback_callout_html
         + methodology_html
         + triage_link_html
         + _run_manifest_html(site_report)
         + _panel_composition_html(site_report)
-    )
-    # Report-level feedback: about the report as a whole, not any one claim.
-    # Wrapped in its own span only when configured, so an unconfigured build
-    # emits no empty element.
-    _report_feedback = _feedback_link_html(
-        cls="report-feedback-link",
-        text="Send feedback on this report",
-        aria="Send feedback about this report (opens a form in a new tab)",
-        claim_url=f"{_site_url()}/reports/{site_report.report_slug}.html",
-        claim_id=getattr(site_report, "speech_id", "") or "",
-        speaker=getattr(site_report, "speaker", "") or "",
-        speech_date=site_report.date.strftime("%Y-%m-%d") if site_report.date else "",
     )
     footer = (
         '<span>truth-bot · pipeline v' + PIPELINE_VERSION + BETA_BADGE_HTML + '</span>'
@@ -7462,7 +7536,6 @@ def _render_report(site_report: SiteReport) -> str:
         + ' · <a href="../corrections.html">Corrections</a></span>'
         + '<span>Source: <a href="' + GITHUB_URL + '" target="_blank" rel="noopener">'
         + 'github.com/aRealGem/Truth-bot</a></span>'
-        + (f'<span>{_report_feedback.strip()}</span>' if _report_feedback else '')
     )
     _headline, _ = _headline_verdict(site_report.verdict_distribution)
     _n_claims = len(site_report.checkable_bundles)
