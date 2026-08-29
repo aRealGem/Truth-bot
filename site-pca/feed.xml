@@ -5,7 +5,7 @@
   <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/" rel="alternate" type="text/html"/>
   <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/corrections.html" rel="related" type="text/html" title="Corrections"/>
-  <updated>2026-08-21T16:07:50Z</updated>
+  <updated>2026-08-23T17:55:20Z</updated>
   <id>urn:truth-bot:feed</id>
   <author>
     <name>truth-bot pipeline</name>
@@ -18,7 +18,7 @@
     <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/reports/2026-02-24-donald-trump-583aca.html" rel="alternate" type="text/html"/>
     <id>urn:truth-bot:report:2026-02-24-donald-trump-583aca</id>
     <published>2026-02-24T00:00:00Z</published>
-    <updated>2026-08-21T16:07:50Z</updated>
+    <updated>2026-08-23T17:55:20Z</updated>
     <summary type="text">182 claims checked. Verdict: 50% True — 61 of 122 decided claims rated True. Multi-model AI fact-check with cited sources.</summary>
     <category term="fact-check"/>
     <category term="speech"/>
@@ -28,7 +28,7 @@
     <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/reports/2022-03-01-joe-biden-d359c0.html" rel="alternate" type="text/html"/>
     <id>urn:truth-bot:report:2022-03-01-joe-biden-d359c0</id>
     <published>2022-03-01T00:00:00Z</published>
-    <updated>2026-08-21T16:07:49Z</updated>
+    <updated>2026-08-23T17:55:19Z</updated>
     <summary type="text">111 claims checked. Verdict: 95% True — 80 of 84 decided claims rated True. Multi-model AI fact-check with cited sources.</summary>
     <category term="fact-check"/>
     <category term="speech"/>
@@ -38,7 +38,7 @@
     <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/reports/2014-01-28-barack-obama-bc9c9f.html" rel="alternate" type="text/html"/>
     <id>urn:truth-bot:report:2014-01-28-barack-obama-bc9c9f</id>
     <published>2014-01-28T00:00:00Z</published>
-    <updated>2026-08-21T16:07:49Z</updated>
+    <updated>2026-08-23T17:55:20Z</updated>
     <summary type="text">96 claims checked. Verdict: 93% True — 69 of 74 decided claims rated True. Multi-model AI fact-check with cited sources.</summary>
     <category term="fact-check"/>
     <category term="speech"/>
@@ -48,7 +48,7 @@
     <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/reports/2006-01-31-george-w-bush-82f462.html" rel="alternate" type="text/html"/>
     <id>urn:truth-bot:report:2006-01-31-george-w-bush-82f462</id>
     <published>2006-01-31T00:00:00Z</published>
-    <updated>2026-08-21T16:07:49Z</updated>
+    <updated>2026-08-23T17:55:20Z</updated>
     <summary type="text">48 claims checked. Verdict: 86% True — 32 of 37 decided claims rated True. Multi-model AI fact-check with cited sources.</summary>
     <category term="fact-check"/>
     <category term="speech"/>
@@ -58,7 +58,7 @@
     <link href="https://raw.githack.com/aRealGem/Truth-bot/main/site-pca/reports/1998-01-27-bill-clinton-54f0ca.html" rel="alternate" type="text/html"/>
     <id>urn:truth-bot:report:1998-01-27-bill-clinton-54f0ca</id>
     <published>1998-01-27T00:00:00Z</published>
-    <updated>2026-08-21T16:07:49Z</updated>
+    <updated>2026-08-23T17:55:19Z</updated>
     <summary type="text">92 claims checked. Verdict: 91% True — 64 of 70 decided claims rated True. Multi-model AI fact-check with cited sources.</summary>
     <category term="fact-check"/>
     <category term="speech"/>

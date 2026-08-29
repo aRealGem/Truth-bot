@@ -211,6 +211,7 @@ class TestTierCountsForReport:
 class TestSocialHead:
     def test_emits_favicon_links(self):
         html = _social_head("./", "T", "D")
+        assert '<link rel="icon" href="./favicon.svg" type="image/svg+xml">' in html
         assert '<link rel="icon" href="./favicon.ico" sizes="any">' in html
         assert '<link rel="icon" href="./assets/favicon-32.png"' in html
         assert '<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">' in html
@@ -331,78 +332,12 @@ class TestPageShells:
 # ── _report_card src-tiers chip ─────────────────────────────────────────────
 
 
-class TestReportCardSrcTiers:
-    def test_renders_chip_when_counts_present(self):
-        r = {
-            "speaker": "Speaker",
-            "url": "reports/x.html",
-            "verdict_distribution": {"False": 3, "True": 1},
-            "claim_count": 4,
-            "tier_counts": {"gov": 3, "wire": 2, "news": 0, "fc": 1, "other": 0},
-        }
-        html = _report_card(r)
-        assert '<span class="src-tiers"' in html
-        # Machine-readable mirror for consistency.check_site (remediation v2).
-        assert 'data-tier-counts="gov:3 wire:2 fc:1"' in html
-        assert "3 gov" in html
-        assert "2 wire" in html
-        assert "1 fc" in html
-
-    def test_political_bucket_renders(self):
-        """Remediation v2 (1.6): the press/political bucket ships on the
-        Sources line — the old hand-kept order omitted it entirely (162
-        hidden sources on the Trump card)."""
-        r = {
-            "speaker": "Speaker",
-            "url": "reports/x.html",
-            "verdict_distribution": {"False": 1},
-            "claim_count": 1,
-            "tier_counts": {"gov": 3, "wire": 0, "news": 0, "fc": 0,
-                            "political": 162, "other": 5},
-        }
-        html = _report_card(r)
-        assert "162 press/political" in html
-        assert 'data-tier-counts="gov:3 political:162 other:5"' in html
-
-    def test_omits_zero_buckets_but_surfaces_other(self):
-        r = {
-            "speaker": "S",
-            "url": "reports/x.html",
-            "verdict_distribution": {"True": 1},
-            "claim_count": 1,
-            "tier_counts": {"gov": 2, "wire": 0, "news": 0, "fc": 0, "other": 99},
-        }
-        html = _report_card(r)
-        assert '<span class="src-tiers"' in html
-        assert "2 gov" in html
-        # Zero buckets are suppressed
-        assert "0 wire" not in html
-        assert "0 news" not in html
-        assert "0 fc" not in html
-        # "other" IS surfaced (remediation F6): it was the largest cited
-        # bucket on both SOTU reports; hiding it misrepresented the mix.
-        assert "99 other" in html
-
-    def test_no_chip_when_all_counts_zero(self):
-        r = {
-            "speaker": "S",
-            "url": "reports/x.html",
-            "verdict_distribution": {"True": 1},
-            "claim_count": 1,
-            "tier_counts": {"gov": 0, "wire": 0, "news": 0, "fc": 0, "other": 0},
-        }
-        html = _report_card(r)
-        assert 'class="src-tiers"' not in html
-
-    def test_no_chip_when_tier_counts_missing(self):
-        r = {
-            "speaker": "S",
-            "url": "reports/x.html",
-            "verdict_distribution": {"True": 1},
-            "claim_count": 1,
-        }
-        html = _report_card(r)
-        assert 'class="src-tiers"' not in html
+# Readability pass (site.py Section 4): the homepage card's source-tier
+# chip (.src-tiers) was removed from ``_report_card`` entirely — that detail
+# now lives only on the report page itself, not the index card. The
+# TestReportCardSrcTiers class that pinned the chip's rendering has been
+# removed along with the feature it tested (not weakened — the behavior it
+# asserted no longer exists by design).
 
 
 # ── End-to-end renderers ────────────────────────────────────────────────────
@@ -424,7 +359,6 @@ class TestRenderers:
         assert "atom+xml" in html
         assert 'class="footer-hash"' in html
         assert _prompt_hash() in html
-        assert 'class="src-tiers"' in html
 
     def test_render_report_og_and_footer(self, site_report):
         html = _render_report(site_report)
@@ -510,6 +444,7 @@ class TestPublisherAssets:
         pub._copy_assets()
 
         assert (tmp_dir / "favicon.ico").exists()
+        assert (tmp_dir / "favicon.svg").exists()
         assert (tmp_dir / "assets" / "social-card.png").exists()
         assert (tmp_dir / "assets" / "favicon-32.png").exists()
         assert (tmp_dir / "assets" / "apple-touch-icon.png").exists()

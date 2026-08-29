@@ -192,10 +192,15 @@ BETA_TEXT_SUFFIX = ' (beta)' if IS_BETA else ''
 # <updated> stamp) is gone.
 
 # Google Fonts link tags (exact — do not modify)
+# Readability pass (Section 10): trimmed to weights actually used. Dropped:
+# Geist 300 (grep for "font-weight: 300" finds zero matching selectors) and
+# Newsreader italic-500 (every "font-style: italic" selector pairs with
+# weight 400, none with 500). Geist 700 and Newsreader italic-400 stay —
+# both are genuinely used (.ccq-claim / .fam .n; .speech-title / .truthy-bubble).
 _GOOGLE_FONTS = """\
   <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-  <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400;6..72,1,500&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap\">
+  <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600;6..72,0,700;6..72,1,400&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap\">
 """
 
 
@@ -739,6 +744,35 @@ def _tier_badge(url: str, tier: "SourceTier | str | None" = None,
             f'{code}</span>')
 
 
+def _evidence_tier_summary(items: list, *, tier_index: "dict[str, SourceTier] | None" = None,
+                           from_pack: bool = False) -> str:
+    """'3 gov, 1 news' style tier breakdown for a details summary line
+    (Section 5, readability pass) — so the reader sees the mix of source
+    quality before clicking to expand the collapsed evidence block.
+
+    ``from_pack=True`` reads each item's OWN stored ``tier`` field directly
+    (pack items — same authority :func:`stored_tier_index` is built from);
+    otherwise ``items`` is a list of bare URLs resolved against
+    ``tier_index`` with the render-time classify_tier fallback.
+    """
+    counts: dict[str, int] = {}
+    if from_pack:
+        for src in items:
+            try:
+                tier = SourceTier((src.get("tier") or "").strip())
+            except ValueError:
+                continue
+            bucket = TIER_BUCKET[tier]
+            counts[bucket] = counts.get(bucket, 0) + 1
+    else:
+        for url in items:
+            tier, _ = _resolve_tier(url, tier_index)
+            bucket = TIER_BUCKET[tier]
+            counts[bucket] = counts.get(bucket, 0) + 1
+    parts = [f'{counts[key]} {label}' for key, label in TIER_LINE_ORDER if counts.get(key)]
+    return ", ".join(parts)
+
+
 # Layer 4 — anti-hallucination publish-layer rendering.
 #
 # A URL's reachability classification (from
@@ -1132,9 +1166,15 @@ def _verdict_bar_html(
             continue
         pct = count / total * 100
         css = _verdict_css(label)
+        # Readability pass: a numeral crammed into a segment under ~6% of the
+        # bar's width just overflows/gets clipped by the bar's overflow:hidden
+        # — the legend already carries the exact count, and the title=
+        # tooltip below carries it on hover/focus regardless of whether the
+        # numeral renders.
+        numeral = str(count) if pct >= 6.0 else ""
         segs.append(
             f'<div class="seg v-{css}" style="width:{pct:.1f}%" '
-            f'title="{_esc(label)}: {count}">{count}</div>'
+            f'title="{_esc(label)}: {count}">{numeral}</div>'
         )
     parts_aria = [f"{dist.get(l,0)} {l}" for l in label_order if dist.get(l, 0) > 0]
     aria = "Verdict distribution: " + ", ".join(parts_aria)
@@ -1409,16 +1449,6 @@ _TRUTHY_SVG = (
     '</svg>'
 )
 
-_TRUTHY_TAP_HINT = (
-    '<div class="truthy-tap-hint">'
-    '<svg class="icon" viewBox="0 0 24 24" fill="currentColor">'
-    '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4.03v8.05a4.5 4.5 0 002.5-4.02zM14 3.23v2.06a7 7 0 010 13.42v2.06a9 9 0 000-17.54z"/>'
-    '</svg>'
-    '<span class="tap-hint-label">Tap</span>'
-    '</div>'
-)
-
-
 def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
     """Return (initial_text, css_class) prior to JS activation."""
     state_map = {"happy": "true", "iffy": "iffy", "sad": "lie"}
@@ -1430,7 +1460,7 @@ def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
         "lie":  "Oh no… that isn't true.",
     }
     captions_multi = {
-        "true": "All sources check out. Looking good!",
+        "true": "Most sources check out. Looking good!",
         "iffy": "Mixed signals — some hold up, some don't.",
         "lie":  "Oh no… most of this doesn't check out.",
     }
@@ -1474,14 +1504,21 @@ def _verdict_panel(site_report) -> str:
     svg_html = _TRUTHY_SVG.replace('class="state-true"', 'class="' + svg_state + '"')
     aria_mood = {"happy": "happy", "iffy": "uncertain", "sad": "sad"}.get(mood, "uncertain")
 
+    # Truthy is decorative-but-informative on report pages: the SVG conveys the
+    # overall mood, so it carries a role="img" + label rather than being silent.
+    # It is deliberately NOT interactive. The mascot used to be a role="button"
+    # tabindex="0" control whose only action was toggling the audio mute, with a
+    # speaker-icon badge overlaying it as the affordance. Both are gone (the badge
+    # rendered oversized on iOS Safari and covered Truthy, and report-page audio
+    # was removed with it), and a focusable button that does nothing is worse than
+    # no button at all. The fun page at truthy.html keeps its own audio + controls.
     widget = (
         '<div class="vp-truthy-col">'
         + '<div class="truthy-frame" id="truthy-mascot-widget"'
         + ' data-mood="' + mood + '" data-claim-count="' + str(claim_count) + '"'
-        + ' role="button" tabindex="0"'
-        + ' aria-label="Truthy McTruthface, the truth-bot mascot. Currently ' + aria_mood + '. Click to hear.">'
+        + ' role="img"'
+        + ' aria-label="Truthy McTruthface, the truth-bot mascot. Currently ' + aria_mood + '.">'
         + svg_html
-        + _TRUTHY_TAP_HINT
         + '</div>'
         + '<div class="truthy-bubble ' + bubble_cls + '" id="truthy-bubble">' + _esc(bubble_text) + '</div>'
         + '</div>'
@@ -1699,10 +1736,18 @@ def _verdict_panel(site_report) -> str:
         # ALL the honest abstentions, not just the self-sourced sub-state, so the
         # old class name misdescribed it. consistency.py parses this chip's copy;
         # the two change in lockstep (test_abstention_chip pins the parse).
+        # Readability pass (Section 5): default-collapsed under a generic
+        # "Why undecided" summary. The inner <p class="vp-abstention-chip">
+        # is UNCHANGED — consistency.py's parser (test_abstention_chip) reads
+        # it by regex and the two must stay in lockstep; nesting it inside
+        # <details> rather than rewriting its markup keeps that parser valid.
         selfsource_chip_html = (
+            '<details class="vp-abstention-details">'
+            '<summary class="vp-abstention-summary">Why undecided</summary>'
             '<p class="vp-abstention-chip" '
             f'title="{_esc(chip_title)}">' + _esc(" · ".join(parts))
-            + '</p>\n'
+            + '</p>'
+            '</details>\n'
         )
 
     # M-6 evenhandedness (Wave A A3): genre-property disclosure for the
@@ -2093,15 +2138,19 @@ def _panel_composition_html(site_report) -> str:
         if name else ""
     )
 
+    # Wave B (P134 item 2): default-collapsed. Once-per-run roster detail, not
+    # first-read content — the title + roster name stay visible in the summary.
     return (
         '<aside class="panel-composition">'
-        '<div class="panel-composition-head">'
+        '<details class="panel-composition-details">'
+        '<summary class="panel-composition-summary">'
         '<span class="panel-composition-title">PCA panel composition</span>'
         + name_html
-        + '</div>'
+        + '</summary>'
         + '<ul class="panel-composition-list">'
         + ''.join(seat_rows)
         + '</ul>'
+        + '</details>'
         '</aside>'
     )
 
@@ -2151,19 +2200,32 @@ def _status_bar(model_count: int = 0, stamp: Optional[str] = None) -> str:
     )
 
 
-def _masthead_full(rel: str = "./") -> str:
+def _masthead_full(rel: str = "./", current: str = "") -> str:
+    """``current`` (readability pass, Section 6-7) names the nav item that
+    matches the page being rendered — "reports" | "about" | "" (neither,
+    e.g. corrections/model-insights/404 pages that aren't literally either
+    top-nav destination) — and gets ``aria-current="page"`` + ``.active``."""
+    def _nav_a(href: str, label: str, key: str) -> str:
+        cls = ' class="active" aria-current="page"' if key == current else ''
+        return f'      <a href="{href}"{cls}>{label}</a>\n'
+    # Readability pass (Section 8): the homepage wordmark is the page's own
+    # <h1> (it had none before). Every other page using this masthead already
+    # carries its own more specific <h1> (report speaker name, "About",
+    # "Model panel insights", ...), so the wordmark stays a plain <div>
+    # there to avoid a second <h1> on the page.
+    wordmark_tag = "h1" if current == "reports" else "div"
     return (
         '<header class="masthead">\n'
         '  <div class="wrap masthead-row">\n'
         '    <div>\n'
-        f'      <div class="wordmark"><a href="{rel}index.html" style="color:inherit;text-decoration:none">'
-        'truth-bot<span class="dot">.</span></a></div>\n'
+        f'      <{wordmark_tag} class="wordmark"><a href="{rel}index.html" style="color:inherit;text-decoration:none">'
+        f'truth-bot<span class="dot">.</span></a></{wordmark_tag}>\n'
         '      <p class="tagline">Automated political fact-checking with multi-model consensus analysis.</p>\n'
         '    </div>\n'
         '    <nav class="top-nav">\n'
-        f'      <a href="{rel}index.html">Reports</a>\n'
-        f'      <a href="{rel}about.html">About</a>\n'
-        f'      <a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub ↗</a>\n'
+        + _nav_a(f'{rel}index.html', 'Reports', 'reports')
+        + _nav_a(f'{rel}about.html', 'About', 'about')
+        + f'      <a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub ↗</a>\n'
         '    </nav>\n'
         '  </div>\n'
         '</header>\n'
@@ -2224,6 +2286,11 @@ def _social_head(
     desc = og_description if meta_description is None else meta_description
     image_abs = f"{_site_url()}/assets/social-card.png"
     parts = [
+        # Readability pass (Section 9): SVG first — legible at 16px, unlike
+        # the 232-byte favicon.ico. Listed before the .ico/32px-PNG
+        # fallbacks (a browser that understands type="image/svg+xml" prefers
+        # it regardless of order; this is just the conventional ordering).
+        f'  <link rel="icon" href="{rel}favicon.svg" type="image/svg+xml">\n',
         f'  <link rel="icon" href="{rel}favicon.ico" sizes="any">\n',
         f'  <link rel="icon" href="{rel}assets/favicon-32.png" type="image/png" sizes="32x32">\n',
         f'  <link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png">\n',
@@ -2291,7 +2358,7 @@ def _page_index(
         '</head>\n'
         '<body>\n'
         + _status_bar(model_count)
-        + _masthead_full(rel="./")
+        + _masthead_full(rel="./", current="reports")
         + '<main class="wrap">\n'
         + body
         + '\n</main>\n'
@@ -2355,6 +2422,7 @@ def _page_about(
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "website",
     page_path: Optional[str] = None,
+    current: str = "",
 ) -> str:
     foot_html = (
         '<footer class="foot wrap">\n' + footer + '\n</footer>\n'
@@ -2378,7 +2446,7 @@ def _page_about(
         '</head>\n'
         '<body>\n'
         + _status_bar()
-        + _masthead_full(rel="./")
+        + _masthead_full(rel="./", current=current)
         + '<main class="wrap">\n'
         + body
         + '\n</main>\n'
@@ -2632,9 +2700,15 @@ def _reason_code_html(claim) -> str:
     reason = _REASON_PILLS.get(getattr(claim, "id", None))
     if not reason:
         return ""
-    return ('<div class="reason-code-note">'
+    # Wave B (P134 item 2): default-collapsed. The code itself is already
+    # visible on the claim-pill chip (with the copy on hover); this block is
+    # the expanded verbatim explainer, one click away rather than in the way.
+    return ('<details class="reason-code-details">'
+            '<summary class="reason-code-summary">Reason-coded — detail</summary>'
+            '<div class="reason-code-note">'
             + _esc(reason["copy"])
-            + '</div>')
+            + '</div>'
+            '</details>')
 
 
 def _is_gate_withheld(bundle: VerdictBundle) -> bool:
@@ -2679,7 +2753,12 @@ def _gate_withheld_html(bundle: VerdictBundle) -> str:
     # about our retrieval. The two species never share a card.
     if getattr(bundle.claim, "id", None) in _REASON_PILLS:
         return ""
+    # Wave B (P134 item 2): default-collapsed. The headline pill already says
+    # "Insufficient qualifying evidence retrieved"; this is the expanded
+    # explanation of the mechanism, not the finding itself.
     return (
+        '<details class="gate-withheld-details">'
+        '<summary class="gate-withheld-summary">Why no verdict was reached</summary>'
         '<div class="gate-withheld-note">'
         '<strong>No verdict was reached.</strong> The evidence we retrieved for '
         'this claim did not meet the quality bar required to decide it — too few '
@@ -2689,6 +2768,7 @@ def _gate_withheld_html(bundle: VerdictBundle) -> str:
         'A claim here may be entirely checkable against evidence we have not yet '
         'collected.'
         '</div>'
+        '</details>'
     )
 
 
@@ -2783,16 +2863,34 @@ def _pca_provenance_strip(bundle: VerdictBundle, roster: Optional[dict] = None,
     seat_html = (
         f'<div class="pca-seats">{_esc(seat_line)}</div>' if seat_line else ""
     )
+    # Readability pass (Section 5): default-collapsed on every viewport,
+    # including desktop — audit-trail detail, not first-read content. The
+    # summary names each seat's own prediction (role: label) when captured,
+    # so the reader can tell at a glance whether the panel disagreed with
+    # itself without opening the strip; falls back to the chain's own text
+    # when no per-seat data was captured (older bundles).
+    by_role = getattr(prov, "panel_by_role", None) or {}
+    if by_role:
+        seat_order = [r for r in _SEAT_ORDER if r in by_role] + sorted(
+            r for r in by_role if r not in _SEAT_ORDER)
+        summary_text = "Provenance — " + " · ".join(
+            f'{role}: {"/".join(by_role[role])}' for role in seat_order)
+    else:
+        summary_text = f"Provenance — {parts[0]}"
     # The correction and coherence notes are NOT emitted here: they ride on the
     # claim card via :func:`_correction_provenance_html` (F14), so they survive on
     # a gated/minimal claim whose provenance chain is empty and this strip renders
     # nothing. One emit path, two templates — they cannot drift.
+    # Wave B (P134 item 2): default-collapsed — the chain + per-seat tally are
+    # audit detail, not first-read content. The headline pill and chip counts
+    # this strip used to sit under stay fully visible; only this aux block closes.
     return (
-        '<div class="pca-provenance" '
-        'title="Pipeline provenance: check-worthiness routing, the PCA panel seat '
-        'tally, each seat&#39;s own prediction, and any Severity Classifier '
-        'stage-2 override.">'
-        f'{chain}{seat_html}</div>'
+        '<details class="pca-provenance-details">'
+        f'<summary class="pca-provenance-summary">{_esc(summary_text)}</summary>'
+        '<div class="pca-provenance-body">'
+        f'{chain}{seat_html}'
+        '</div>'
+        '</details>'
     )
 
 
@@ -3040,9 +3138,13 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         if consulted_inner:
             # Collapsed by default (2026-07-19 review): the snippet verbiage is
             # audit detail, not first-read content — one click away, not in the way.
+            _consulted_tiers = _evidence_tier_summary(consulted, from_pack=True)
+            _consulted_summary = f'Sources consulted ({len(consulted)})'
+            if _consulted_tiers:
+                _consulted_summary += f' · {_consulted_tiers}'
             consulted_html = (
                 '<details class="evidence-details">'
-                f'  <summary class="evidence-summary">Sources consulted ({len(consulted)})</summary>'
+                f'  <summary class="evidence-summary">{_esc(_consulted_summary)}</summary>'
                 f'  <div class="evidence">{consulted_inner}</div>'
                 '</details>'
             )
@@ -3081,9 +3183,18 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         )
     else:
         evidence_inner = _evidence_list_html([], classifications=None)
+    _evidence_summary = "Evidence"
+    if all_urls:
+        _cited = all_urls[:10]
+        _evidence_summary += f' — {len(_cited)} source{"s" if len(_cited) != 1 else ""}'
+        _evidence_tiers = _evidence_tier_summary(_cited, tier_index=_tier_index)
+        if _evidence_tiers:
+            _evidence_summary += f' · {_evidence_tiers}'
+    else:
+        _evidence_summary += ' / sources list'
     evidence_html = (
         '<details class="evidence-details">'
-        '  <summary class="evidence-summary">Combined evidence / sources list</summary>'
+        f'  <summary class="evidence-summary">{_esc(_evidence_summary)}</summary>'
         f'  <div class="evidence">{evidence_inner}</div>'
         '</details>'
     )
@@ -3131,7 +3242,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'  {triage_badge}'
         '</div>'
         '<div class="claim-body">'
-        f'  {_claim_quote_html(claim)}'
+        f'  {_claim_quote_html(claim, css)}'
         f'  {context_html}'
         f'  {caveat_html}'
         f'  {computed_exhibit_html}'
@@ -3153,7 +3264,7 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         '</article>'
     )
 
-def _claim_quote_html(claim) -> str:
+def _claim_quote_html(claim, css: str = "") -> str:
     """The claim quote, rendered INSIDE its surrounding transcript sentences.
 
     Half the Obama-2014 claims (49/96) open with deictic words — "Tonight, I'm
@@ -3167,10 +3278,20 @@ def _claim_quote_html(claim) -> str:
     ``claim.context`` format is the segmenter's ``prev || claim || next``;
     when the claim text isn't a clean element of it, the whole context renders
     below the quote rather than being dropped.
+
+    ``css`` (readability pass, Section 5) is the claim's own ``_verdict_css``
+    slug — when given, adds a ``qb-{css}`` modifier so the quote's left border
+    reads the same verdict color as the claim's headline pill, instead of a
+    fixed neutral rule.
     """
+    # NOTE: deliberately NOT "v-{css}" — that class already means "paint this
+    # element's *background* with the verdict color" (the [19] Verdict color
+    # utilities used by pills/bars/swatches), and a claim quote is body text,
+    # not a filled chip. "qb-{css}" (quote border) keeps the two apart.
+    css_cls = f" qb-{css}" if css else ""
     text = (claim.text or "").strip()
     ctx = (getattr(claim, "context", "") or "").strip()
-    bare = f'<blockquote class="claim-quote">"{_esc(text)}"</blockquote>'
+    bare = f'<blockquote class="claim-quote{css_cls}">"{_esc(text)}"</blockquote>'
     if not ctx or ctx == text:
         return bare
     parts = [p.strip() for p in ctx.split("||") if p.strip()]
@@ -3186,7 +3307,7 @@ def _claim_quote_html(claim) -> str:
                      for p in parts[i + 1:])
     mid = f'<span class="ccq-claim">"{_esc(text)}"</span>'
     return (
-        '<blockquote class="claim-quote claim-quote-ctx" '
+        f'<blockquote class="claim-quote claim-quote-ctx{css_cls}" '
         'title="The checked claim, emphasized, inside the transcript sentences '
         'around it — the same context the verdict panel judged with.">'
         + " ".join(s for s in (before, mid, after) if s)
@@ -3228,6 +3349,7 @@ def _toc(bundles: list[VerdictBundle]) -> str:
 
 def _report_card(r: dict) -> str:
     claim_count = r.get("claim_count", 0)
+    url = _esc(r.get("url", "#"))
 
     # Strict 5-bucket coarse-axis aggregate — the one published axis
     # (remediation v2, 1.8). Falls back to projecting the legacy 6-bucket
@@ -3237,12 +3359,15 @@ def _report_card(r: dict) -> str:
     dist_strict = (r.get("verdict_distribution_strict")
                    or _agg_project_dist(fine_dist, "strict"))
 
-    # Headline (percent-true FamilyVerdict label — the band display, DC-4'),
-    # segment bar, per-bucket counts, and the family rail tying the
-    # headline's leaning totals to the bar.
-    headline, cls, ratio_text = _family_verdict(dist_strict)
-    # Every bucket renders, Models split included — the card bar must sum
-    # to claim_count just like the report-page bar (remediation T0.2).
+    # Full FamilyVerdict (not just the label/css/ratio_text the thin
+    # ``_family_verdict`` wrapper exposes) — the readability pass's pill and
+    # summary line both need true_count/decided/total so their numerator and
+    # denominator can never drift out of lockstep with the headline's own.
+    fam = _agg_family_verdict(dist_strict)
+    undecided = fam.total - fam.decided
+
+    # Bucket-colored segment bar — unchanged; still sums to claim_count
+    # just like the report-page bar (remediation T0.2).
     total_named = sum(dist_strict.values()) or 1
     segs_inner: list[str] = []
     counts_inner: list[str] = []
@@ -3258,14 +3383,21 @@ def _report_card(r: dict) -> str:
             f'<div class="ct"><span class="swatch v-{_verdict_css(label)}"></span>'
             f'{_esc(label)} <span class="n">{count}</span></div>'
         )
-    head_strict = (
-        f'<span class="label {cls}">{_esc(headline)}</span>'
-        f'<span class="ratio">{_esc(ratio_text)}</span>'
-    )
-    rail_strict = _family_rail_html(dist_strict, AGGREGATE_BAR_ORDER,
-                                    rail_class="report-family-rail")
     segs_strict = "".join(segs_inner)
     counts_strict = "".join(counts_inner)
+
+    # Pill: "NN% True · T/D decided" on desktop, "NN% True" alone on mobile
+    # (the "· T/D decided" suffix is CSS-hidden under the mobile breakpoint —
+    # see .pill-decided). Summary line spells the same numbers out in words,
+    # plus the undecided count the pill's ratio omits.
+    pill_html = (
+        f'<span class="label {fam.css}">{_esc(fam.label)}</span>'
+        f'<span class="pill-decided"> · {fam.true_count}/{fam.decided} decided</span>'
+    )
+    summary_text = (
+        f'{fam.ratio_text} · {undecided} undecided'
+        if fam.decided else fam.ratio_text
+    )
 
     meta_bits = []
     if r.get("date"):
@@ -3274,45 +3406,30 @@ def _report_card(r: dict) -> str:
         meta_bits.append(_esc(r["venue"]))
     meta = '<span class="sep">·</span>'.join(meta_bits)
 
-    tier_counts = r.get("tier_counts") or {}
-    # Every nonzero bucket ships, via aggregation.sources_line (1.6):
-    # "other" since remediation F6, and "press/political" since remediation
-    # v2 — the old hand-kept order omitted the political bucket entirely,
-    # hiding 162 sources on the Trump card. The data-tier-counts attribute
-    # is the machine-readable mirror consistency.check_site lints against
-    # reports.json tier_counts.
-    _tier_pairs = _agg_sources_line(tier_counts)
-    _tier_parts = [f'{count} {label}' for label, count in _tier_pairs]
-    _tier_attr = " ".join(
-        f"{key}:{tier_counts.get(key, 0)}"
-        for key, _label in TIER_LINE_ORDER if tier_counts.get(key, 0)
-    )
-    src_tiers_html = (
-        f'    <span class="src-tiers" data-tier-counts="{_esc(_tier_attr)}">'
-        f'Sources: {" · ".join(_tier_parts)}</span>'
-        if _tier_parts else ''
-    )
-
+    # Readability pass (P134 site refinement): the per-family rail and the
+    # source-tier line are report-page detail, not homepage-card detail —
+    # removed here entirely (not just CSS-hidden); a reader wanting that
+    # breakdown clicks through to the report itself.
     return (
-        f'<a href="{_esc(r.get("url", "#"))}" class="report">'
+        f'<div class="report">'
         '  <div class="report-top">'
         '    <div>'
-        f'      <div class="report-headline">{_esc(r.get("speaker", ""))}</div>'
+        f'      <div class="report-headline"><a href="{url}">'
+        f'{_esc(r.get("speaker", ""))}</a></div>'
         f'      <div class="report-meta">{meta}</div>'
         '    </div>'
         '    <div class="verdict-pill">'
-        f'      <span>{head_strict}</span>'
+        f'      <span>{pill_html}</span>'
         '    </div>'
         '  </div>'
-        f'  {rail_strict}'
         f'  <div class="report-bar">{segs_strict}</div>'
+        f'  <div class="report-summary">{_esc(summary_text)}</div>'
         f'  <div class="report-counts">{counts_strict}</div>'
         '  <div class="report-cta">'
         f'    <span class="src">{claim_count} claim{"s" if claim_count != 1 else ""}</span>'
-        + src_tiers_html +
-        '    <span class="read">Read full report →</span>'
+        f'    <a href="{url}" class="read">Read full report →</a>'
         '  </div>'
-        '</a>'
+        '</div>'
     )
 
 
@@ -3408,6 +3525,10 @@ CSS = """\
   --ink: #0c0a09;
   --ink-muted: #57534e;
   --ink-faint: #a8a29e;
+  /* Readability pass: --ink-faint is for decorative/disabled text only. A
+     handful of elements were using it for text that carries meaning (jump
+     links, counts) — those get this slightly darker floor instead. */
+  --ink-dim: #78716c;
   --border: #e7e5e4;
   --border-strong: #d6d3d1;
 
@@ -3462,7 +3583,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--ink);
   color: #d6d3d1;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 0.55rem 1.25rem;
@@ -3479,7 +3600,6 @@ a { color: inherit; text-decoration: none; }
   content: "●";
   color: #4ade80;
   margin-right: 0.45rem;
-  animation: pulse 2.4s ease-in-out infinite;
 }
 .status-bar .stamp { margin-left: auto; color: #a8a29e; }
 @keyframes pulse {
@@ -3514,7 +3634,7 @@ header.masthead {
 }
 .wordmark {
   font-family: var(--serif);
-  font-size: 2.6rem;
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
   font-weight: 500;
   letter-spacing: -0.025em;
   line-height: 1;
@@ -3534,21 +3654,27 @@ nav.top-nav {
   display: flex;
   gap: 1.4rem;
   align-items: center;
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-family: var(--sans);
   padding-top: 0.85rem;
 }
+/* Readability pass (Section 6-7): >=44px touch target (0.75rem*1.5 line-
+   height + 0.75rem vertical padding clears it), sentence case at >=14px —
+   nav links are neither pills nor section-head labels, so they don't keep
+   Section 1's uppercase-mono carve-out. */
 nav.top-nav a {
   color: var(--ink-muted);
+  font-size: 0.875rem;
   transition: color 120ms ease;
-  padding: 0.25rem 0;
-  border-bottom: 1px solid transparent;
+  padding: 0.75rem 0.6rem;
+  border-bottom: 2px solid transparent;
 }
 nav.top-nav a:hover {
   color: var(--ink);
   border-bottom-color: var(--ink);
+}
+nav.top-nav a.active {
+  color: var(--ink);
+  border-bottom-color: #65a30d;
 }
 
 /* Compact masthead override (report pages add .compact OR set padding inline).
@@ -3574,7 +3700,7 @@ header.masthead:has(.mast-row) {
 .wordmark-sm .dot { color: var(--v-false); }
 .breadcrumb {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -3587,7 +3713,7 @@ header.masthead:has(.mast-row) {
 /* [05] Section heads ─────────────────────────────────────────────────── */
 .section-head {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ink-muted);
@@ -3599,6 +3725,11 @@ header.masthead:has(.mast-row) {
   align-items: baseline;
 }
 .section-head .sub { color: var(--ink-faint); }
+/* Readability pass (Section 8): these were plain <span>s until now, so the
+   uppercase-mono label styling above lived entirely on .section-head via
+   inheritance. As <h2>, the UA stylesheet's own font-size/font-weight would
+   otherwise win over that inherited value — reset it back to match. */
+.section-head h2 { font: inherit; }
 
 
 /* [06] Index page — aggregate stats & verdict bar ────────────────────── */
@@ -3630,7 +3761,7 @@ header.masthead:has(.mast-row) {
 }
 .stat .lbl {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -3645,7 +3776,7 @@ header.masthead:has(.mast-row) {
 }
 .agg-label {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -3674,7 +3805,7 @@ header.masthead:has(.mast-row) {
   gap: 0.35rem 1.4rem;
   margin-top: 1rem;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .legend-item {
@@ -3831,7 +3962,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .index-hero .truthy-bubble.is-lie::before  { border-right-color: rgba(153, 27, 27, 0.3); border-bottom-color: transparent; }
 .hero-truthy-wrap {
   flex-shrink: 0;
-  animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
 .hero-truthy-wrap svg {
   width: 280px;
@@ -3847,7 +3977,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .truthy-frame #floorShadow {
   transform-box: fill-box;
   transform-origin: 150px 353px;
-  animation: hero-shadow-breathe 3.2s ease-in-out infinite;
 }
 @keyframes hero-shadow-breathe {
   0%, 100% { transform: translateY(0)   scale(1);    opacity: 1; }
@@ -3861,7 +3990,6 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .index-hero #mascot.state-true.hero-wave #armLeftSwing {
   transform-box: view-box;
   transform-origin: 88px 253px;
-  animation: index-hero-wave-arm 0.9s ease-in-out infinite;
 }
 .hero-truthy-col {
   flex: 1;
@@ -3885,6 +4013,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 /* [07] Index page — report cards ─────────────────────────────────────── */
 .reports { display: flex; flex-direction: column; }
 .report {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
   border-bottom: none;
@@ -3912,12 +4041,23 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   line-height: 1.15;
   color: var(--ink);
 }
+/* Un-nested card link (readability pass): only the leader name and the CTA
+   are real links now — the rest of the card is clickable via this link's
+   stretched pseudo-element, so a reader/screen-reader/keyboard user gets
+   one clearly-labeled link per card instead of a giant unlabeled region. */
+.report-headline a {
+  color: inherit;
+  text-decoration: none;
+}
+.report-headline a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
 .report-meta {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--ink-muted);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: #57534e;
   margin-top: 0.5rem;
 }
 .report-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
@@ -3932,16 +4072,12 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   font-weight: 500;
   letter-spacing: -0.015em;
   line-height: 1.1;
-  display: block;
 }
 .verdict-pill .label.neutral { color: var(--ink); }
-.verdict-pill .ratio {
+.verdict-pill .pill-decided {
   font-family: var(--mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 0.85rem;
   color: var(--ink-muted);
-  margin-top: 0.35rem;
 }
 
 /* Slim verdict bar inside a report card (vs. the chunky one in the verdict panel) */
@@ -3949,16 +4085,23 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   display: flex;
   height: 6px;
   overflow: hidden;
-  margin: 0.25rem 0 1rem;
+  margin: 0.25rem 0 0.6rem;
 }
 .report-bar .seg { transition: filter 200ms ease; }
+
+.report-summary {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: #57534e;
+  margin-bottom: 0.75rem;
+}
 
 .report-counts {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem 1.4rem;
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .report-counts .ct {
@@ -3972,6 +4115,8 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 
 .report-cta {
+  position: relative;
+  z-index: 1;
   margin-top: 1.1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
@@ -3979,33 +4124,30 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   justify-content: space-between;
   align-items: center;
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
 }
 .report-cta .src { color: var(--ink-faint); }
-.report-cta .src-tiers {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-faint);
-}
 .report-cta .read {
   color: var(--ink);
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   transition: gap 200ms ease;
 }
 .report:hover .report-cta .read { gap: 0.7rem; }
+@media (pointer: coarse) {
+  .report-cta .read { gap: 0.7rem; }
+}
 
 
 /* [08] Report page — speech hero ─────────────────────────────────────── */
 .hero { padding: 2.5rem 0 1rem; }
 .hero-overline {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
@@ -4013,7 +4155,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .speaker-name {
   font-family: var(--serif);
-  font-size: 3.2rem;
+  font-size: clamp(1.9rem, 6vw, 3.2rem);
   font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.03em;
@@ -4031,11 +4173,9 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .speech-meta {
   margin-top: 1rem;
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--ink-muted);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: #57534e;
 }
 .speech-meta .sep { margin: 0 0.5rem; color: var(--ink-faint); }
 
@@ -4071,7 +4211,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .vp-verdict.neutral { color: var(--ink); }
 .vp-ratio {
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -4082,7 +4222,8 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .vp-bar-wrap { padding: 1.5rem 1.75rem; }
 .vp-bar {
   display: flex;
-  height: 38px;
+  height: 12px;
+  border-radius: 6px;
   overflow: hidden;
 }
 .vp-bar .seg {
@@ -4102,7 +4243,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   gap: 0.4rem 1.4rem;
   margin-top: 1.1rem;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 
@@ -4115,7 +4256,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   border-top: 1px solid var(--border);
   background: var(--surface-warm);
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
 }
@@ -4137,38 +4278,15 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   gap: 0.75rem;
   min-width: 200px;
 }
+/* Truthy is presentational on report pages — no cursor/hover/active affordance,
+   because there is nothing to activate. The `.truthy-tap-hint` speaker badge that
+   used to sit here (absolutely positioned against this frame) is gone: on iOS
+   Safari it rendered full-size and covered the mascot instead of showing as a
+   small corner badge. It was the mute control, so report-page audio went with it. */
 .truthy-frame {
   position: relative;
-  cursor: pointer;
-  transition: filter 200ms ease;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  /* Match index-hero bob; shadow counter-animates inside the SVG (#floorShadow). */
-  animation: hero-truthy-float 3.2s ease-in-out infinite;
 }
-.truthy-frame:hover { filter: brightness(1.04); }
-.truthy-frame:active { filter: brightness(0.98); }
-.truthy-tap-hint {
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.45rem;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-.truthy-frame:hover .truthy-tap-hint { opacity: 1; }
-.truthy-tap-hint .icon { width: 8px; height: 8px; }
 
 /* Editorial speech bubble — Truthy's voice in Newsreader italic.
    Tail points up at Truthy. Border tints to match mood. */
@@ -4232,14 +4350,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .toc-item:hover { background: var(--surface-warm); }
 .toc-num {
   font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--ink-faint);
+  font-size: 0.75rem;
+  color: var(--ink-dim);
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
 .toc-pill {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: #fff;
@@ -4257,8 +4375,8 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .toc-jump {
   font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--ink-faint);
+  font-size: 0.75rem;
+  color: var(--ink-dim);
 }
 
 
@@ -4280,7 +4398,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .claim-num {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
@@ -4289,16 +4407,16 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 /* Family rail — brackets the Truthy/Falsey family groups above a verdict bar
    at the same widths as the segments, so the headline's "N of M decided
    claims X-leaning" totals are visibly derivable from the graph. */
-.vp-family-rail, .report-family-rail {
+.vp-family-rail {
   display: flex;
   gap: 2px;
   margin-bottom: 0.35rem;
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.vp-family-rail .fam, .report-family-rail .fam {
+.vp-family-rail .fam {
   border-top: 2px solid;
   padding-top: 0.2rem;
   white-space: nowrap;
@@ -4306,14 +4424,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   text-overflow: ellipsis;
   min-width: 0;
 }
-.vp-family-rail .fam .n, .report-family-rail .fam .n { font-weight: 700; }
+.vp-family-rail .fam .n { font-weight: 700; }
 .fam.fam-true    { border-color: var(--v-truthy); color: var(--v-true); }
 .fam.fam-false   { border-color: var(--v-falsey); color: var(--v-false); text-align: right; }
 .fam.fam-abstain { border-color: var(--border-strong, #d6d3d1); color: var(--ink-faint); text-align: center; border-top-style: dashed; }
 
 .claim-pill {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #fff;
@@ -4353,7 +4471,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-pill.pill-gate-withheld {
   outline: 2px dashed rgba(255,255,255,0.55);
   outline-offset: -4.5px;
-  font-size: 0.78em;
+  font-size: 0.75rem;
   line-height: 1.25;
   max-width: 22ch;
   white-space: normal;
@@ -4365,7 +4483,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
    mono chip — a taxonomy key, not a verdict color. */
 .claim-pill.reason-code-pill {
   font-family: var(--mono);
-  font-size: 0.72em;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   color: var(--ink-muted);
   background: rgba(127,127,127,0.10);
@@ -4387,7 +4505,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
    speaker's own organization (era-scoped principal match). */
 .ev-self {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -4404,6 +4522,19 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   color: var(--ink-muted);
   margin: 0.35rem 0 0;
 }
+/* Readability pass (Section 5): default-collapsed wrapper around the chip
+   above — same native-<details> posture as the evidence/provenance blocks. */
+details.vp-abstention-details { margin: 0.35rem 0 0; }
+.vp-abstention-summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.vp-abstention-summary::-webkit-details-marker { display: none; }
+.vp-abstention-summary::before { content: "▶ "; font-size: 0.7rem; }
+details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
 /* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
    concentrates on one speech, say so as a genre property, in the panel. */
 .vp-genre-note {
@@ -4416,21 +4547,30 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-quote {
   font-family: var(--serif);
   font-size: 1.4rem;
-  font-weight: 400;
-  line-height: 1.4;
+  font-weight: 500;
+  line-height: 1.55;
   letter-spacing: -0.012em;
   color: var(--ink);
   padding-left: 1.25rem;
   border-left: 3px solid var(--border-strong);
+  max-width: 72ch;
 }
+/* Readability pass (Section 5): the left border reads the claim's own
+   verdict color instead of a fixed neutral rule — covers both the fine
+   6-bucket and coarse 5-bucket slugs, since callers may pass either. */
+.claim-quote.qb-true, .claim-quote.qb-mostly-true, .claim-quote.qb-truthy { border-left-color: var(--v-true); }
+.claim-quote.qb-exaggerated, .claim-quote.qb-misleading, .claim-quote.qb-falsey { border-left-color: var(--v-misleading); }
+.claim-quote.qb-false { border-left-color: var(--v-false); }
+.claim-quote.qb-unverifiable, .claim-quote.qb-split { border-left-color: var(--v-unverifiable); }
 /* Claim-in-context (2026-08-01): the checked sentence emphasized inside its
    greyed transcript neighbors — deictic quotes ("we'll launch six more") are
    unreadable bare, and the panel always judged with this context. */
 .claim-quote-ctx { font-size: 1.15rem; }
 .claim-quote-ctx .ccq-side {
-  color: var(--ink-muted);
+  color: var(--ink-faint);
   font-size: 0.92rem;
   font-weight: 400;
+  font-style: italic;
 }
 .claim-quote-ctx .ccq-claim {
   color: var(--ink);
@@ -4445,7 +4585,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .claim-context-fallback .ccq-label {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-right: 0.5rem;
@@ -4453,7 +4593,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .claim-context {
   margin-top: 1rem;
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
@@ -4471,7 +4611,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .caveat-label {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--v-exaggerated);
@@ -4497,7 +4637,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .caveat-attribution {
   display: inline-block;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--v-exaggerated);
@@ -4528,7 +4668,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .models-label,
 .models-agreement {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -4538,14 +4678,28 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
-.pca-provenance {
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  color: var(--ink-muted);
+/* Readability pass (Section 5): default-collapsed on every viewport —
+   native <details>, same posture as the evidence/sources blocks below. */
+details.pca-provenance-details {
   margin-bottom: 0.6rem;
-  line-height: 1.5;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+.pca-provenance-summary {
+  cursor: pointer;
+  list-style: none;
+  line-height: 1.4;
   word-break: break-word;
 }
+.pca-provenance-summary::-webkit-details-marker { display: none; }
+.pca-provenance-summary::before {
+  content: "▶ ";
+  font-size: 0.7rem;
+  display: inline-block;
+}
+details.pca-provenance-details[open] > .pca-provenance-summary::before { transform: rotate(90deg); display: inline-block; }
+.pca-provenance-body { margin-top: 0.35rem; line-height: 1.5; word-break: break-word; }
 .pca-seats {
   margin-top: 0.15rem;
   color: var(--ink-faint);
@@ -4569,14 +4723,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .computed-exhibit .ce-badge {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent, #3b6ea5);
 }
 .computed-exhibit .ce-series {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .computed-exhibit .ce-formula {
@@ -4589,7 +4743,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   margin: 0 0 0.35rem;
   padding: 0;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
 }
 .computed-exhibit .ce-inputs li {
@@ -4600,7 +4754,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .computed-exhibit .ce-vintage,
 .computed-exhibit .ce-note {
   margin: 0;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
 }
 .computed-exhibit .ce-note { margin-top: 0.3rem; }
@@ -4610,7 +4764,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .series-rows { margin: 0.4rem 0 0.2rem; }
 .series-summary {
   cursor: pointer;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   letter-spacing: 0.01em;
 }
@@ -4618,7 +4772,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .series-table {
   border-collapse: collapse;
   margin: 0.45rem 0 0.3rem;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 .series-table th,
 .series-table td {
@@ -4629,14 +4783,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .series-table th { color: var(--ink-muted); font-weight: 600; }
 .series-more, .series-units, .series-predicate, .series-full {
   margin: 0.2rem 0 0;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 /* The window does not reach the period the claim is about. Amber, because a
    reader taking the table at face value would be misled by our own exhibit. */
 .series-mismatch {
   margin: 0.35rem 0;
   padding: 0.35rem 0.5rem;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   border-left: 3px solid var(--amber, #b26a00);
   background: rgba(178, 106, 0, 0.07);
 }
@@ -4657,7 +4811,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .pca-coherence .coherence-label {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   display: block;
@@ -4668,7 +4822,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 /* F9: models-split resolution-state badge — neutral, not a verdict colour. */
 .vt-split {
   font-family: var(--mono);
-  font-size: 0.85em;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   border: 1px dashed var(--rule, #d8d4ca);
   border-radius: 3px;
@@ -4685,7 +4839,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 }
 .stance-coverage-label {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
@@ -4708,7 +4862,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   border: 1px solid var(--rule, #ccc); border-radius: 6px;
   padding: 0.35rem 0.6rem; text-align: center; line-height: 1.25;
 }
-.pipeline-diagram .pd-node small { color: var(--ink-muted); font-size: 0.72rem; }
+.pipeline-diagram .pd-node small { color: var(--ink-muted); font-size: 0.75rem; }
 .pipeline-diagram .pd-arrow { color: var(--ink-faint); }
 .seat-insights td .ct { font-weight: 600; }
 .report-correction-banner {
@@ -4734,14 +4888,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
 .triage-text { line-height: 1.5; }
 .triage-meta {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   margin-top: 0.25rem;
 }
 .triage-tag {
   display: inline-block;
   font-family: var(--mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   font-weight: 600;
   padding: 0.05rem 0.35rem;
   border: 1px solid var(--border);
@@ -4773,7 +4927,7 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   top: 0.5rem;
   right: 0.5rem;
   font-family: var(--mono);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--v-exaggerated);
   font-weight: 600;
@@ -4786,14 +4940,14 @@ a.hero-truthy-link:hover .hero-truthy-wrap {
   top: 0.5rem;
   right: 0.5rem;
   font-family: var(--mono);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--ink-faint);
   font-weight: 600;
 }
 .model-name {
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -4816,7 +4970,7 @@ details.model-reasoning > summary {
   cursor: pointer;
   padding: 0.6rem 0.85rem;
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -4828,7 +4982,7 @@ details.model-reasoning > summary {
 details.model-reasoning > summary .model-reasoning-model {
   font-family: var(--mono);
   font-weight: 400;
-  font-size: 0.82em;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   letter-spacing: 0.02em;
 }
@@ -4859,7 +5013,7 @@ details.model-tier-wrap > summary.model-tier-sum {
   cursor: pointer;
   padding: 0.35rem 0.6rem;
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-muted);
@@ -4868,7 +5022,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .model-tier-body {
   padding: 0 0.6rem 0.5rem;
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--ink);
 }
 
@@ -4876,7 +5030,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .evidence { margin-top: 1.5rem; }
 .evidence-label {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
@@ -4900,7 +5054,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 }
 .evidence-list .ev-id {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink-muted);
   margin: 0 0.35rem 0 0.15rem;
@@ -4908,7 +5062,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 /* E-id references inside model reasoning → jump links to the pack item. */
 .model-reasoning-body a.ev-ref {
   font-family: var(--mono);
-  font-size: 0.8em;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink);
   border-bottom: 1px dashed var(--border-strong);
@@ -4924,7 +5078,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 .evidence-list a:hover { border-bottom-color: var(--ink); }
 .evidence-list .ev-src {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -4933,7 +5087,7 @@ details.model-tier-wrap > summary::-webkit-details-marker { display: none; }
 /* Source-tier badges (preserved from existing schema) */
 .evidence-tier {
   font-family: var(--mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
   padding: 0.1rem 0.35rem;
   color: #fff;
@@ -4968,7 +5122,7 @@ details.evidence-details > summary.evidence-summary {
   cursor: pointer;
   padding: 0.6rem 1rem;
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   color: var(--ink-muted);
@@ -4981,7 +5135,7 @@ details.evidence-details > summary.evidence-summary {
 details.evidence-details > summary.evidence-summary::-webkit-details-marker { display: none; }
 details.evidence-details > summary.evidence-summary::before {
   content: "▶";
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   transition: transform 200ms ease;
   display: inline-block;
@@ -4989,6 +5143,61 @@ details.evidence-details > summary.evidence-summary::before {
 details.evidence-details[open] > summary.evidence-summary::before { transform: rotate(90deg); }
 details.evidence-details > summary.evidence-summary:hover { background: var(--surface-warm); }
 details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
+
+/* Wave B (P134 item 2) — default-collapsed disclosure frames: the per-claim
+   provenance strip (+ per-seat votes) and the reason-code / gate-withheld
+   explainer notes. Same native-<details> posture as the evidence/sources
+   blocks above: audit/editorial detail, one click away, not in the way.
+   The claim-pill headline, chip counts, genre-note, and correction notices
+   are untouched by this pass (M-6 hard constraint on disclosure integrity). */
+details.pca-provenance-details {
+  margin-bottom: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+.pca-provenance-summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink-faint);
+  user-select: none;
+}
+.pca-provenance-summary::-webkit-details-marker { display: none; }
+.pca-provenance-summary::before {
+  content: "▶ ";
+  font-size: 0.6rem;
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.pca-provenance-details[open] > .pca-provenance-summary::before { transform: rotate(90deg); }
+.pca-provenance-summary:hover { color: var(--ink-muted); }
+.pca-provenance-body { margin-top: 0.3rem; line-height: 1.5; word-break: break-word; }
+
+details.reason-code-details,
+details.gate-withheld-details {
+  margin: 0.75rem 0 0;
+}
+.reason-code-summary,
+.gate-withheld-summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  user-select: none;
+}
+.reason-code-summary::-webkit-details-marker,
+.gate-withheld-summary::-webkit-details-marker { display: none; }
+.reason-code-summary::before,
+.gate-withheld-summary::before {
+  content: "▶ ";
+  font-size: 0.6rem;
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.reason-code-details[open] > .reason-code-summary::before,
+details.gate-withheld-details[open] > .gate-withheld-summary::before { transform: rotate(90deg); }
+details.reason-code-details .reason-code-note,
+details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
 
 
 /* [17] Report page — claim footer & methodology ──────────────────────── */
@@ -5000,7 +5209,7 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   justify-content: space-between;
   align-items: center;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -5032,6 +5241,28 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   color: var(--ink);
   border-bottom: 1px solid var(--border-strong);
 }
+/* Wave B (P134 item 2): the prose body is default-collapsed behind a native
+   <details>; the lead-in label stays visible as the clickable summary. */
+.methodology-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: var(--ink);
+  user-select: none;
+}
+.methodology-summary::-webkit-details-marker { display: none; }
+.methodology-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.methodology-details[open] > .methodology-summary::before { transform: rotate(90deg); }
+.methodology-details > p { margin: 0.6rem 0 0; }
 
 /* PCA panel composition — which model fills each seat, once per run. */
 .panel-composition {
@@ -5042,23 +5273,37 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
   font-size: 0.85rem;
   color: var(--ink-muted);
 }
-.panel-composition-head {
+/* Wave B (P134 item 2): default-collapsed — title + roster name (the
+   at-a-glance facts) stay in the visible summary; the seat list closes. */
+.panel-composition-summary {
+  cursor: pointer;
+  list-style: none;
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
   flex-wrap: wrap;
-  margin-bottom: 0.5rem;
+  user-select: none;
 }
+.panel-composition-summary::-webkit-details-marker { display: none; }
+.panel-composition-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+details.panel-composition-details[open] > .panel-composition-summary::before { transform: rotate(90deg); }
+.panel-composition-details .panel-composition-list { margin-top: 0.5rem; }
 .panel-composition-title {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-muted);
 }
 .panel-composition-roster {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
 }
 .panel-composition-list {
@@ -5076,7 +5321,7 @@ details.evidence-details .evidence { padding: 0.5rem 1rem 1rem; }
 }
 .panel-composition-role {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-faint);
@@ -5090,7 +5335,7 @@ footer.foot {
   padding: 1.5rem 0 2.5rem;
   border-top: 1px solid var(--border);
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
@@ -5125,7 +5370,7 @@ footer.foot .footer-hash:hover {
   margin-left: 0.4em;
   padding: 0.05em 0.45em;
   font-family: var(--mono);
-  font-size: 0.82em;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5184,6 +5429,49 @@ hr.rule-light {
 .v-truthy       { background: var(--v-truthy); }
 .v-falsey       { background: var(--v-falsey); }
 .v-split        { background: var(--v-split); }
+
+/* Readability pass — WCAG AA pill/badge contrast. The bar/swatch fills
+   above stay saturated (bars carry a numeral or nothing, never body text);
+   only FILLED PILLS/BADGES (.claim-pill, .toc-pill) get tinted-bg/dark-ink
+   pairs here, since white text on --v-truthy/--v-exaggerated (lime/amber)
+   fails AA. One rule per verdict family, covering both the fine 6-bucket
+   slugs (true/mostly-true/exaggerated/misleading/false/unverifiable) and
+   the coarse 5-bucket slugs the claim-card headline pill actually paints
+   with (true/truthy/falsey/false/unverifiable/split) — a pill can carry
+   either axis's slug depending on which label produced it. */
+.claim-pill.v-true, .toc-pill.v-true,
+.claim-pill.v-mostly-true, .toc-pill.v-mostly-true,
+.claim-pill.v-truthy, .toc-pill.v-truthy {
+  background: #ecfccb;
+  color: #3f6212;
+}
+.claim-pill.v-exaggerated, .toc-pill.v-exaggerated,
+.claim-pill.v-misleading, .toc-pill.v-misleading,
+.claim-pill.v-falsey, .toc-pill.v-falsey {
+  background: #fef9c3;
+  color: #713f12;
+}
+.claim-pill.v-false, .toc-pill.v-false {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.claim-pill.v-unverifiable, .toc-pill.v-unverifiable,
+.claim-pill.v-split, .toc-pill.v-split {
+  background: #f5f5f4;
+  color: #57534e;
+}
+/* Sub-state outlines (anecdote / self-sourced / gate-withheld) were tuned
+   for a white-on-saturated pill; on the new tinted-light pills a white
+   outline is invisible, so they switch to a dark-ink-based rgba. */
+.claim-pill.pill-anecdote, .toc-pill.pill-anecdote {
+  outline-color: rgba(87, 83, 78, 0.5);
+}
+.claim-pill.pill-self-sourced {
+  outline-color: rgba(87, 83, 78, 0.55);
+}
+.claim-pill.pill-gate-withheld {
+  outline-color: rgba(87, 83, 78, 0.45);
+}
 /* Text paint */
 .vt-true         { color: var(--v-true); }
 .vt-mostly-true  { color: var(--v-mostly-true); }
@@ -5206,7 +5494,6 @@ hr.rule-light {
   50%      { transform: translateY(-2.5px); }
 }
 #character {
-  animation: idle 4s ease-in-out infinite;
   transform-origin: center bottom;
 }
 
@@ -5215,7 +5502,6 @@ hr.rule-light {
   50%      { transform: rotate(2deg); }
 }
 #antenna {
-  animation: antenna-sway 3s ease-in-out infinite;
   transform-origin: 150px 62px;
   transform-box: fill-box;
 }
@@ -5237,13 +5523,9 @@ hr.rule-light {
   50%      { transform: scale(1.08); }
 }
 .state-true .eye-happy {
-  animation:
-    true-happy-cycle 4s ease-in-out infinite,
-    happy-pulse 2.2s ease-in-out infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
-.state-true .eye-neutral { animation: true-neutral-cycle 4s ease-in-out infinite; }
 .state-iffy .eye-iffy { opacity: 1; }
 
 @keyframes sad-wander {
@@ -5255,7 +5537,6 @@ hr.rule-light {
 }
 .state-lie .eye-sad {
   opacity: 1;
-  animation: sad-wander 4.2s ease-in-out infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
@@ -5275,7 +5556,6 @@ hr.rule-light {
 }
 .state-lie #tearLeft,
 .state-lie #tearRight {
-  animation: tear-fall 2.2s ease-in infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
@@ -5316,27 +5596,15 @@ hr.rule-light {
 }
 #led, #ledHalo { transition: fill 0.3s; }
 
-/* Triggered by JS when user clicks Truthy: brief LED flash */
-@keyframes ledFlash {
-  0%   { filter: brightness(1); }
-  30%  { filter: brightness(1.6) saturate(1.3); }
-  100% { filter: brightness(1); }
-}
-#mascot.speaking #led,
-#mascot.speaking #ledHalo {
-  animation: ledFlash 0.7s ease-out;
-}
-
 
 /* [21] Page-load choreography ────────────────────────────────────────── */
 @keyframes rise {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-/* Staggered reveal of major content blocks */
-.stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
-  animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
-}
+/* Staggered reveal of major content blocks — animation applied only under
+   prefers-reduced-motion:no-preference (see consolidated block below); the
+   animation-delay values below are inert without the animation itself. */
 /* Index page stagger */
 .stats     { animation-delay: 50ms; }
 .how-strip { animation-delay: 80ms; }
@@ -5350,13 +5618,29 @@ hr.rule-light {
 .toc           { animation-delay: 220ms; }
 
 
+/* [21b] Responsive — mid tier ──────────────────────────────────────────
+   New breakpoint between mobile (≤740px, below) and desktop: mascot steps
+   down before the mobile tier shrinks it further, stats stay 3-col with
+   tighter padding, report-page gutters tighten. Placed BEFORE the 740px
+   block so the narrower breakpoint's own overrides still win at ≤740px
+   (later same-specificity rules win the cascade). */
+@media (max-width: 900px) {
+  .hero-truthy-wrap svg { width: 220px; height: 264px; }
+  .stat { padding: 1rem 1.1rem; }
+  .claim-body { padding: 1.25rem 1.25rem 1.1rem; }
+  .vp-bar-wrap, .source-row { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+
 /* [22] Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 740px) {
   /* Masthead variants */
-  .wordmark { font-size: 2rem; }
   header.masthead { padding: 2.25rem 0 1.5rem; }
   .masthead-row { flex-direction: column; gap: 0.5rem; }
   nav.top-nav { padding-top: 0.5rem; }
+
+  /* Verdict bar: legend already carries the counts at this width — belt
+     and suspenders alongside the pct<6% per-segment omission above. */
+  .vp-bar .seg { color: transparent; }
 
   /* Status bar */
   .status-bar .stamp { margin-left: 0; }
@@ -5372,32 +5656,22 @@ hr.rule-light {
   }
   .stat:last-child { border-bottom: none; }
   .stat .num { font-size: 2.4rem; }
-  /* Index hero stacks on mobile */
-  .index-hero { flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
-  .hero-truthy-wrap svg { width: 180px; height: 216px; }
-  /* Mobile hero stacks vertically; revert the bubble tail to point UP at Truthy. */
-  .index-hero .truthy-bubble::before,
-  .index-hero .truthy-bubble::after {
-    left: 50%;
-    top: -9px;
-    transform: translateX(-50%);
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent !important;
-    border-top: none;
-    border-bottom: 8px solid var(--border);
-  }
-  .index-hero .truthy-bubble::after { top: -7px; border-bottom-color: var(--surface-warm); }
-  .index-hero .truthy-bubble.is-true::before { border-right-color: transparent !important; border-bottom-color: rgba(21, 128, 61, 0.3); }
-  .index-hero .truthy-bubble.is-iffy::before { border-right-color: transparent !important; border-bottom-color: rgba(202, 138, 4, 0.4); }
-  .index-hero .truthy-bubble.is-lie::before  { border-right-color: transparent !important; border-bottom-color: rgba(153, 27, 27, 0.3); }
-  .index-hero .truthy-bubble { max-width: min(92vw, 240px); }
+  /* Mobile hero: mascot inline beside the bubble (row, not stacked column) —
+     the left-pointing tail rules above (desktop default) already apply
+     correctly at this width, so no tail re-pointing override is needed. */
+  .index-hero { flex-direction: row; gap: 1rem; padding: 1rem 0 0.5rem; flex-wrap: wrap; }
+  .hero-truthy-wrap svg { width: 110px; height: 132px; }
+  .index-hero .truthy-bubble { max-width: min(60vw, 200px); }
 
   /* Report card layout collapses verdict pill below headline */
   .report-top { flex-direction: column; gap: 0.85rem; }
   .verdict-pill { text-align: left; }
+  /* Mobile pill drops the "· T/D decided" suffix and the swatch/count
+     legend — the summary line already carries the same numbers in words. */
+  .verdict-pill .pill-decided { display: none; }
+  .report-counts { display: none; }
 
   /* Speech hero */
-  .speaker-name { font-size: 2.2rem; }
   .speech-title { font-size: 1.3rem; }
 
   /* Verdict panel: Truthy goes inline next to bubble (bubble tail re-points) */
@@ -5492,7 +5766,7 @@ hr.rule-light {
 }
 .how-num {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink-faint);
   background: var(--border);
@@ -5552,7 +5826,7 @@ hr.rule-light {
   align-items: center;
   gap: 0.55rem;
   flex-wrap: wrap;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
 }
 .claim-back-links .back-link {
@@ -5650,7 +5924,7 @@ hr.rule-light {
 }
 .vp-headline-stat .vp-stat-lbl {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink);
@@ -5658,7 +5932,7 @@ hr.rule-light {
 }
 .vp-headline-stat .vp-stat-hint {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: var(--ink-faint);
   margin-top: 0.1rem;
 }
@@ -5684,7 +5958,7 @@ hr.rule-light {
 .insight-card:last-child { border-right: none; }
 .insight-card-eyebrow {
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -5723,7 +5997,7 @@ hr.rule-light {
 }
 .insights-summary thead th {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-muted);
@@ -5802,7 +6076,7 @@ hr.rule-light {
 }
 .agreement-matrix .agg-n {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--ink-muted);
   font-family: var(--mono);
 }
@@ -5853,6 +6127,51 @@ hr.rule-light {
 }
 .extreme-speaker { color: var(--ink-faint); }
 .insights-method { margin-top: 1.5rem; font-size: 0.92rem; }
+
+/* Readability pass (Section 8) — every `animation:` this stylesheet applies
+   (as opposed to the @keyframes that merely define one) is gated behind
+   prefers-reduced-motion:no-preference, consolidated here rather than left
+   scattered across 13 base selectors above. Each selector keeps every OTHER
+   property (transform-origin, transform-box, opacity, etc.) on its own base
+   rule above — only the animation itself moves. The existing
+   `.how-strip { animation: none; }` HOW_STRIP_RISE off-switch (emitted
+   below, module-level) is an independent manual override and stays
+   compatible: it forces the animation off regardless of motion preference,
+   and nesting the "on" declaration here doesn't change that. */
+@media (prefers-reduced-motion: no-preference) {
+  .status-bar .live::before { animation: pulse 2.4s ease-in-out infinite; }
+  .hero-truthy-wrap { animation: hero-truthy-float 3.2s ease-in-out infinite; }
+  .index-hero #floorShadow,
+  .truthy-frame #floorShadow { animation: hero-shadow-breathe 3.2s ease-in-out infinite; }
+  .index-hero #mascot.state-true.hero-wave #armLeftSwing { animation: index-hero-wave-arm 0.9s ease-in-out infinite; }
+  .truthy-frame { animation: hero-truthy-float 3.2s ease-in-out infinite; }
+  #character { animation: idle 4s ease-in-out infinite; }
+  #antenna { animation: antenna-sway 3s ease-in-out infinite; }
+  .state-true .eye-happy {
+    animation:
+      true-happy-cycle 4s ease-in-out infinite,
+      happy-pulse 2.2s ease-in-out infinite;
+  }
+  .state-true .eye-neutral { animation: true-neutral-cycle 4s ease-in-out infinite; }
+  .state-lie .eye-sad { animation: sad-wander 4.2s ease-in-out infinite; }
+  .state-lie #tearLeft,
+  .state-lie #tearRight { animation: tear-fall 2.2s ease-in infinite; }
+  .stats, .how-strip, .agg, .hero, .verdict-panel, .toc, .reports .report, .claim {
+    animation: rise 480ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  }
+}
+
+/* Readability pass — touch-target type floor (pointer: coarse). The 0.75rem
+   base floor established above is legible on a desktop pointer; a touch
+   viewport gets a slightly higher floor for the same mono micro-labels. */
+@media (pointer: coarse) {
+  .toc-num, .toc-jump,
+  footer.foot, footer.foot .footer-hash,
+  .fam .n, .legend-item .ct,
+  .vp-legend {
+    font-size: 0.8rem;
+  }
+}
 
 """
 
@@ -5905,7 +6224,7 @@ JS = """\
       lie:  "Oh no… that isn't true."
     };
     var captionsMulti = {
-      true: "All sources check out. Looking good!",
+      true: "Most sources check out. Looking good!",
       iffy: "Mixed signals — some hold up, some don't.",
       lie:  "Oh no… most of this doesn't check out."
     };
@@ -5976,216 +6295,18 @@ JS = """\
     }
     scheduleBlink();
 
-    /* ─── Web Audio droid sounds ─────────────────────────────────────
-       Synthesized via Web Audio API. No audio files needed,
-       no licensing, no network round-trips. All sounds resolve in
-       <500ms.
-
-       Autoplay-policy contract: browsers (especially Safari) leave a
-       freshly-created AudioContext in ``suspended`` until a user
-       gesture explicitly resumes it. ``audioCtx.resume()`` returns
-       a Promise. The earlier implementation called resume() and
-       *immediately* scheduled oscillators against ``ctx.currentTime``
-       — on Safari and some Chrome variants the context was still
-       suspended at schedule time, so the oscillator silently
-       no-op'd. The fix: ``unlockAudio()`` returns a Promise, and the
-       play functions are only invoked after that Promise resolves.
-       ──────────────────────────────────────────────────────────── */
-    var audioCtx = null;
-    function unlockAudio() {
-      if (!audioCtx) {
-        try {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        } catch (e) { return Promise.resolve(null); }
-      }
-      if (audioCtx.state === 'suspended') {
-        var p = audioCtx.resume();
-        // Some old Safari versions return undefined from resume().
-        if (p && typeof p.then === 'function') {
-          return p.then(function() { return audioCtx; },
-                        function() { return audioCtx; });
-        }
-      }
-      return Promise.resolve(audioCtx);
-    }
-
-    // Happy: bright rising arpeggio (C5 → E5 → G5 → C6) with square wave
-    function playHappy(ctx) {
-      var notes = [523.25, 659.25, 783.99, 1046.50];
-      notes.forEach(function(freq, i) {
-        var t0 = ctx.currentTime + i * 0.07;
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(freq, t0);
-        gain.gain.setValueAtTime(0, t0);
-        gain.gain.linearRampToValueAtTime(0.12, t0 + 0.01);
-        gain.gain.linearRampToValueAtTime(0, t0 + 0.10);
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(t0);
-        osc.stop(t0 + 0.12);
-      });
-    }
-
-    // Confused: triangle wave bending up to ~620Hz then dropping to ~330Hz
-    function playConfused(ctx) {
-      var t0 = ctx.currentTime;
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(440, t0);
-      osc.frequency.exponentialRampToValueAtTime(620, t0 + 0.18);
-      osc.frequency.exponentialRampToValueAtTime(330, t0 + 0.42);
-      gain.gain.setValueAtTime(0, t0);
-      gain.gain.linearRampToValueAtTime(0.14, t0 + 0.02);
-      gain.gain.linearRampToValueAtTime(0, t0 + 0.45);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(t0);
-      osc.stop(t0 + 0.5);
-    }
-
-    // Sad: descending minor third (G4 → Eb4) with downward pitch bend on each note
-    function playSad(ctx) {
-      var notes = [392.00, 311.13];
-      notes.forEach(function(freq, i) {
-        var t0 = ctx.currentTime + i * 0.20;
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, t0);
-        osc.frequency.linearRampToValueAtTime(freq * 0.93, t0 + 0.25);
-        gain.gain.setValueAtTime(0, t0);
-        gain.gain.linearRampToValueAtTime(0.15, t0 + 0.03);
-        gain.gain.linearRampToValueAtTime(0, t0 + 0.28);
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(t0);
-        osc.stop(t0 + 0.32);
-      });
-    }
-
-    var soundMap = { true: playHappy, iffy: playConfused, lie: playSad };
-
-    /* ─── Speak handler ──────────────────────────────────────────────
-       Awaits the AudioContext unlock Promise before scheduling
-       oscillators. Browsers that silently dropped the prior
-       fire-and-forget pattern now actually emit sound.
-       ──────────────────────────────────────────────────────────── */
-    function speak() {
-      var match = mascot.className.match(/state-(true|iffy|lie)/);
-      if (!match) return;
-      var state = match[1];
-      var fn = soundMap[state];
-      if (!fn) return;
-      mascot.classList.add('speaking');
-      setTimeout(function() { mascot.classList.remove('speaking'); }, 700);
-      unlockAudio().then(function(ctx) {
-        if (!ctx) return;
-        /* Defer oscillator scheduling one microtask so ``resume()``'s
-           state transition has flushed on Safari / some Chrome builds. */
-        queueMicrotask(function() { fn(ctx); });
-      });
-    }
-
     /* ─── Initialize ─── */
     var mood = widget.getAttribute('data-mood') || 'iffy';
     var stateMap = { happy: 'true', iffy: 'iffy', sad: 'lie' };
     setState(stateMap[mood] || 'iffy');
 
-    /* ─── Site-wide mute state + queued first-gesture autoplay ─────
-       Default: ``mute === 'off'`` (sound enabled). On report and
-       index pages we attempt a one-shot mood sound on the user's
-       first interaction with the page (browser autoplay policies
-       block AudioContext.start() until a gesture). On the dedicated
-       Truthy fun page we keep the legacy "tap = always plays"
-       behavior so the page stays a playground.
-
-       Persistence: localStorage["truthy-mute"] in {"on", "off"}.
-       ─────────────────────────────────────────────────────────── */
-    var TRUTHY_MUTE_KEY = 'truthy-mute';
-    var DEFAULT_TRUTHY_MUTE = 'off';
-    var path = (window.location && window.location.pathname) || '';
-    /* The dedicated Truthy fun page keeps the legacy "tap always plays"
-       behavior; everywhere else uses the mute toggle. Detection is by
-       URL path substring so query strings / hashes don't trip it up. */
-    var isTruthyFunPage = path.indexOf('truthy.html') !== -1;
-
-    function readMute() {
-      try {
-        var v = localStorage.getItem(TRUTHY_MUTE_KEY);
-        return (v === 'on' || v === 'off') ? v : DEFAULT_TRUTHY_MUTE;
-      } catch (e) { return DEFAULT_TRUTHY_MUTE; }
-    }
-    function writeMute(v) {
-      try { localStorage.setItem(TRUTHY_MUTE_KEY, v); } catch (e) { /* ignore */ }
-    }
-
-    var tapHintLabel = widget.querySelector('.tap-hint-label');
-    function updateTapHintLabel(mute) {
-      if (!tapHintLabel) return;
-      if (isTruthyFunPage) {
-        tapHintLabel.textContent = 'Tap';
-      } else if (mute === 'on') {
-        tapHintLabel.textContent = 'Muted';
-      } else {
-        tapHintLabel.textContent = 'Tap to mute';
-      }
-    }
-    if (tapHintLabel) widget.setAttribute('data-mute', isTruthyFunPage ? 'na' : readMute());
-    updateTapHintLabel(readMute());
-
-    /* Queued first-gesture autoplay. Suppressed on the fun page
-       (legacy behavior). Removed if the user explicitly taps the
-       mascot before any other gesture (taking explicit control of
-       the mute toggle should not also fire the queued play).
-
-       ``pointerdown`` fires *before* the subsequent ``click``, which
-       matters when the user's first gesture is on a navigation link:
-       click navigates the page away, while pointerdown gives the
-       AudioContext unlock + oscillator schedule a head start. */
-    var queuedHandler = null;
-    var QUEUE_EVENTS = ['pointerdown', 'click', 'keydown', 'touchstart'];
-    function removeQueued() {
-      if (!queuedHandler) return;
-      QUEUE_EVENTS.forEach(function(evt) {
-        document.removeEventListener(evt, queuedHandler, true);
-      });
-      queuedHandler = null;
-    }
-    function setupQueuedAutoplay() {
-      if (isTruthyFunPage) return;
-      if (readMute() === 'on') return;
-      queuedHandler = function() { removeQueued(); speak(); };
-      QUEUE_EVENTS.forEach(function(evt) {
-        document.addEventListener(evt, queuedHandler, true);
-      });
-    }
-    setupQueuedAutoplay();
-
-    function onMascotActivate(e) {
-      if (isTruthyFunPage) {
-        speak();
-        return;
-      }
-      /* User explicitly took control before any queued autoplay
-         could fire — cancel it so the click only does the mute
-         toggle, not also a play. */
-      removeQueued();
-      if (e && e.stopPropagation) e.stopPropagation();
-      var current = readMute();
-      var next = (current === 'on') ? 'off' : 'on';
-      writeMute(next);
-      widget.setAttribute('data-mute', next);
-      updateTapHintLabel(next);
-      if (next === 'off') speak();  // unmuting always plays once
-    }
-
-    widget.addEventListener('click', onMascotActivate);
-    widget.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        onMascotActivate(e);
-      }
-    });
+    /* Report-page audio removed: the mood sounds, the audio-context unlock,
+       the localStorage mute flag and the queued first-gesture autoplay are all
+       gone, along with the speaker-badge control that was their only visible
+       affordance. Truthy is presentational here and has no click/keyboard
+       handler. The playground at truthy.html keeps its own independent audio
+       (_TRUTHY_FUN_SCRIPT) -- this init() no-ops there, since that page has
+       no #truthy-mascot-widget. */
   }
 
   // Run init immediately if DOM is already parsed; otherwise wait
@@ -6680,7 +6801,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
     )
 
     stats_html = (
-        '<div class="section-head"><span>Program stats</span><span class="sub">All time</span></div>'
+        '<div class="section-head"><h2>Program stats</h2><span class="sub">All time</span></div>'
         '<div class="stats">'
         + '<div class="stat">'
         + _icon_svg(_ICON_BODY_LEADERS, size=48, extra_class="stat-icon-lg")
@@ -6734,7 +6855,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + stats_html
         + how_strip_html
         + '<hr class="rule">'
-        + '<div class="section-head"><span>Latest truthiness reviews</span>'
+        + '<div class="section-head"><h2>Latest truthiness reviews</h2>'
         + '<span class="sub">Feed</span></div>'
         + cards_html
         + _HERO_SCRIPT
@@ -6850,10 +6971,10 @@ def _render_report(site_report: SiteReport) -> str:
         # id="claim-catalog" is the anchor target for per-claim "Back to claim list" links.
         toc_section_head = (
             '<div class="section-head" id="claim-catalog">'
-            + '<span class="section-head-label">'
+            + '<h2 class="section-head-label">'
             + _icon_svg(_ICON_BODY_CLAIMS, size=18, extra_class="section-head-icon")
             + '<span>Jump to claim</span>'
-            + '</span>'
+            + '</h2>'
             + '<span class="sub">' + str(claim_count) + ' claim' + ('s' if claim_count != 1 else '') + ' evaluated</span>'
             + '</div>'
         )
@@ -6863,9 +6984,14 @@ def _render_report(site_report: SiteReport) -> str:
     if _roster_seats:
         _comp = " / ".join(
             f"{role}={', '.join(ms or [])}" for role, ms in _roster_seats.items())
+        # Wave B (P134 item 2): default-collapsed \u2014 nested inside the existing
+        # <aside class="methodology"> wrapper so report-ordering checks that
+        # locate that literal tag still pass unchanged.
         methodology_html = (
             '<aside class="methodology">'
-            '<strong>How this report was generated.</strong> truth-bot extracts factual '
+            '<details class="methodology-details">'
+            '<summary class="methodology-summary">How this report was generated</summary>'
+            '<p>truth-bot extracts factual '
             'claims from the source transcript, screens them for check-worthiness, and '
             'routes each checkable claim to a proposer \u2192 critic \u2192 arbiter panel '
             'of language models (' + _esc(_comp) + '), grounded in a retrieved evidence '
@@ -6873,20 +6999,24 @@ def _render_report(site_report: SiteReport) -> str:
             'dedicated Severity Classifier model re-examines the False-vs-Misleading '
             'boundary. Verdicts, seat votes, and sources are shown on every claim page. '
             'Truthy McTruthface\u2019s mood reflects the aggregate score across all claims. '
-            '<a href="../about.html">Read the full methodology \u2192</a>'
+            '<a href="../about.html">Read the full methodology \u2192</a></p>'
+            '</details>'
             '</aside>'
         )
     else:
         _model_word = str(_model_count) + ' frontier language model' + ('s' if _model_count != 1 else '')
         methodology_html = (
             '<aside class="methodology">'
-            '<strong>How this report was generated.</strong> truth-bot extracts factual claims '
+            '<details class="methodology-details">'
+            '<summary class="methodology-summary">How this report was generated</summary>'
+            '<p>truth-bot extracts factual claims '
             'from the source transcript, submits each independently to ' + _model_word + ' '
             'with the instruction to verify against publicly cited sources, and aggregates '
             'verdicts using a simple majority rule. Caveats are surfaced when models flag '
             'ambiguity or framing concerns. Truthy McTruthface\u2019s mood reflects the aggregate '
             'score across all claims. '
-            '<a href="../about.html">Read the full methodology \u2192</a>'
+            '<a href="../about.html">Read the full methodology \u2192</a></p>'
+            '</details>'
             '</aside>'
         )
 
@@ -6922,11 +7052,14 @@ def _render_report(site_report: SiteReport) -> str:
         _n_triage = len(site_report.characterization)
         triage_link_html = (
             '<aside class="methodology">'
-            '<strong>Statement Triage.</strong> Of the sentences in this speech, '
+            '<details class="methodology-details">'
+            '<summary class="methodology-summary">Statement Triage</summary>'
+            '<p>Of the sentences in this speech, '
             + str(_n_triage) + ' were set aside as non-check-worthy '
             '(pleasantries, opinion, or otherwise unimportant) before fact-checking. '
             '<a href="' + _esc(site_report.triage_slug) + '.html">'
-            'See what we set aside and why →</a>'
+            'See what we set aside and why →</a></p>'
+            '</details>'
             '</aside>'
         )
 
@@ -6962,7 +7095,7 @@ def _render_report(site_report: SiteReport) -> str:
         + toc_section_head
         + toc_html
         + '<div class="section-head">'
-        + '<span>Claims, in order spoken</span>'
+        + '<h2>Claims, in order spoken</h2>'
         + '<span class="sub">Anchor links shareable</span>'
         + '</div>'
         + claim_blocks
@@ -7015,12 +7148,16 @@ def _falsifiability_note_html(n_claims: int, n_set_aside: int) -> str:
     ratio = n_claims / total
     return (
         '<aside class="methodology">'
-        f'<strong>Falsifiability ratio.</strong> {n_claims} of the {total} '
+        '<details class="methodology-details">'
+        '<summary class="methodology-summary">Falsifiability ratio</summary>'
+        f'<p>{n_claims} of the {total} '
         f'sentences in this speech ({format(ratio, ".1%")}) made a checkable '
         'factual claim. This is a statistic about the <em>genre</em> — '
         'political speech is mostly narrative, applause lines, and aspiration '
         '— not about the speaker\'s accuracy, which the report itself '
-        'measures.</aside>'
+        'measures.</p>'
+        '</details>'
+        '</aside>'
     )
 
 
@@ -7057,12 +7194,15 @@ def _render_statement_triage(site_report: SiteReport) -> str:
         f'{_esc(site_report.display_date)}</div>'
         '</section>'
         '<aside class="methodology">'
-        '<strong>What we set aside.</strong> The pipeline reads every sentence of '
+        '<details class="methodology-details">'
+        '<summary class="methodology-summary">What we set aside</summary>'
+        '<p>The pipeline reads every sentence of '
         'the speech, but only fact-checks the ones that assert a verifiable claim. '
         f'The {total} sentence' + ('s' if total != 1 else '') + ' below were '
         'recorded as <em>non-check-worthy</em> — pleasantries, opinion, or '
         'otherwise unimportant — and set aside before verification. We surface '
-        'them here so it is clear what was excluded and which stage excluded it.'
+        'them here so it is clear what was excluded and which stage excluded it.</p>'
+        '</details>'
         '</aside>'
         + _falsifiability_note_html(len(site_report.checkable_bundles), total)
     )
@@ -7324,7 +7464,7 @@ def _insights_strip_html(insights: "ModelPanelInsights | None") -> str:
     return (
         '<section class="insights-strip" aria-labelledby="insights-strip-head">\n'
         '  <div class="section-head">'
-        '<span id="insights-strip-head">Model panel insights</span>'
+        '<h2 id="insights-strip-head">Model panel insights</h2>'
         '<span class="sub"><a href="./model-insights.html">'
         'Full breakdown &rarr;</a></span></div>\n'
         '  <div class="insight-cards">' + ''.join(cards) + '</div>\n'
@@ -8056,6 +8196,7 @@ def _render_about() -> str:
         ),
         og_type="website",
         page_path="about.html",
+        current="about",
     )
 
 
@@ -8369,6 +8510,10 @@ class SitePublisher:
         if ico_src.exists():
             (self._root / "favicon.ico").write_bytes(ico_src.read_bytes())
             logger.debug("Copied favicon.ico to site root")
+        svg_src = src_dir / "favicon.svg"
+        if svg_src.exists():
+            (self._root / "favicon.svg").write_bytes(svg_src.read_bytes())
+            logger.debug("Copied favicon.svg to site root")
 
     def _write_alias_stubs(self) -> None:
         """Emit reports/{old}.html redirect stubs for every alias whose

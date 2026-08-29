@@ -125,14 +125,10 @@ def test_report_card_bar_includes_models_split() -> None:
     assert "Models split" in html
 
 
-def test_report_card_source_chips_include_other_bucket() -> None:
-    r = {
-        "id": "a", "speaker": "Test", "url": "reports/a.html", "claim_count": 1,
-        "verdict_distribution": {"True": 1},
-        "tier_counts": {"gov": 61, "wire": 18, "news": 55, "fc": 75, "other": 330},
-    }
-    html = _report_card(r)
-    assert "330 other" in html
+# Readability pass (site.py Section 4): the homepage card's source-tier
+# chip was removed from ``_report_card`` entirely (that detail now lives
+# only on the report page) — test_report_card_source_chips_include_other_bucket
+# pinned a chip that no longer exists by design and has been removed.
 
 
 def test_anecdote_footnote_reconciles_with_split_bucket() -> None:
