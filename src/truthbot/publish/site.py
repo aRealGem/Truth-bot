@@ -30,6 +30,7 @@ import re
 import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Optional
 
@@ -372,6 +373,45 @@ def _esc(text: str) -> str:
             .replace("<", "&lt;")
             .replace(">", "&gt;")
             .replace('"', "&quot;"))
+
+
+#: Reader-feedback config, loaded once per process. Lives in ``data/`` rather
+#: than as a constant here for the same reason ``data/reason_codes.json`` does:
+#: changing it should be a reviewable one-file diff, not an edit buried in a
+#: 9,000-line renderer.
+_READER_FEEDBACK_PATH = Path(__file__).resolve().parents[3] / "data" / "reader_feedback.json"
+
+
+@lru_cache(maxsize=1)
+def _feedback_cfg() -> dict:
+    from truthbot.publish.reader_feedback import load_config
+    return load_config(_READER_FEEDBACK_PATH)
+
+
+def _publishable_claim_id(claim_id: str) -> bool:
+    from truthbot.publish.reader_feedback import is_publishable_id
+    return is_publishable_id(claim_id)
+
+
+def _feedback_link_html(*, cls: str, text: str, aria: str, **values: str) -> str:
+    """One prefilled feedback link, or ``""`` when the form is not configured.
+
+    Both call sites (claim card, report footer) go through this single helper so
+    the URL shape cannot drift between them — the report-footer test pins its
+    prefilled URL against the page's own canonical link to keep them honest.
+
+    Encoding order matters and is not interchangeable: ``prefill_url`` does the
+    percent-encoding, and only then is the result HTML-escaped here. Escaping
+    first would turn each ``&`` separator into ``&amp;`` before it was
+    percent-encoded, corrupting every field after the first.
+    """
+    from truthbot.publish.reader_feedback import prefill_url
+
+    href = prefill_url(_feedback_cfg(), **values)
+    if not href:
+        return ""
+    return (f'    <a class="{cls}" href="{_esc(href)}" target="_blank"'
+            f' rel="noopener" aria-label="{_esc(aria)}">{_esc(text)} &#x2197;</a>')
 
 
 def _verdict_css(label_str: str) -> str:
@@ -3328,6 +3368,27 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
     gen_ts = _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     permalink = f"#{'claim-' + str(idx)}" if standalone else f"{rel}claims/{claim.id}.html"
 
+    # Reader feedback. Emits nothing at all unless the form is configured, so
+    # the site is byte-identical to a build without the feature until then.
+    # The claim page's own canonical URL is the identity we send: it is stable,
+    # already public, and resolves the full claim text that the prefill has to
+    # truncate. Speaker/date come off the bundle (models.py:664-665).
+    #
+    # Guarded on a speech-derived id: Claim.id defaults to a uuid4, and a uuid
+    # in a reader-visible URL would be both opaque and unresolvable. Synthetic
+    # bundles simply get no link rather than a broken one.
+    feedback_html = "" if not _publishable_claim_id(claim.id) else _feedback_link_html(
+        cls="claim-feedback-link",
+        text="Something wrong? Welcome feedback!",
+        aria="Send feedback about this claim (opens a form in a new tab)",
+        claim_url=f"{_site_url()}/claims/{claim.id}.html",
+        claim_id=claim.id,
+        claim_text=claim.text,
+        verdict=getattr(bundle.consensus, "consensus_verdict", "") or "",
+        speaker=getattr(bundle, "speaker", "") or getattr(claim, "speaker", "") or "",
+        speech_date=getattr(bundle, "date_str", "") or "",
+    )
+
     # Back links only appear on the in-report claim cards (standalone=False),
     # since standalone claim pages are their own scroll scope and "#claim-catalog"
     # / "#top" anchors don't exist there.
@@ -3385,7 +3446,8 @@ def _claim_card(bundle: VerdictBundle, idx: int, total: int, rel: str = "../",
         f'    <a href="#claim-{idx}" class="permalink">claim-{idx}</a>'
         + back_links_html
         + f'    <span>Last verified {gen_ts}</span>'
-        '  </div>'
+        + feedback_html
+        + '  </div>'
         '</div>'
         '</article>'
     )
@@ -3658,10 +3720,13 @@ CSS = """\
   --border: #e7e5e4;
   --border-strong: #d6d3d1;
 
-  /* Verdict palette — the ONLY chromatic colors in the design.
+  /* Verdict palette — the only chromatic colors that carry MEANING.
      Change one variable, every bar / pill / swatch / dissent flag /
      Truthy bubble tint updates. Never hardcode these hex values
-     anywhere else in the codebase. */
+     anywhere else in the codebase.
+     One non-verdict accent exists for chrome — see --note-* below. It is
+     deliberately not part of this block and must never be set to one of
+     these values. */
   --v-true:         #15803d;
   --v-mostly-true:  #65a30d;
   --v-exaggerated:  #ca8a04;
@@ -3680,6 +3745,21 @@ CSS = """\
      warm-gray Unverifiable, so the aggregate bars can show the split bucket
      as a real segment (T0.2) rather than silently dropping it. */
   --v-split:        #64748b;
+
+  /* Note accent — the one chromatic color that does NOT carry a verdict.
+     For reader-facing asides that must be noticed without being alarming.
+
+     VIOLET on purpose. The verdict palette runs green -> lime -> amber ->
+     orange -> red, plus stone for Unverifiable and slate for a split panel.
+     Violet is the one hue that appears nowhere in it, so this surface cannot
+     be mistaken for a finding at a glance. An earlier parchment yellow was
+     rejected for exactly that reason: it sat one step from --v-exaggerated
+     (#ca8a04) on a page full of amber pills. Never set these to a verdict hex.
+
+     Contrast on --note-bg: --ink 16.6:1, --ink-muted 6.4:1 (both pass AA).
+     --ink-dim is NOT used on this surface. */
+  --note-bg: #ede9fe;
+  --note-border: #c4b5fd;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -5082,7 +5162,9 @@ details[open] > .stance-coverage-summary .stance-coverage-label::before {
   .vp-anecdote-summary::before,
   .pca-provenance-summary::before,
   .report-correction-summary::before,
-  .stance-coverage-summary .stance-coverage-label::before { transition: none; }
+  .stance-coverage-summary .stance-coverage-label::before,
+  .claim-feedback-link,
+  .report-feedback-link { transition: none; }
 }
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
@@ -5436,6 +5518,97 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   content: "#";
   margin-right: 0.15rem;
   color: var(--ink-faint);
+}
+
+/* [17b] Reader feedback — per-claim link + one report-level callout.
+   Plain links, never buttons: they open a prefilled form in a new tab and
+   submit nothing from this page. min-height is the literal 44px rather than
+   2.75rem so the a11y pin can grep it unambiguously (html is 16px, so they are
+   the same number).
+
+   The per-claim link deliberately BREAKS OUT of .claim-foot's register. That
+   bar is the site's metadata voice -- mono, 0.75rem, uppercase, letterspaced --
+   which is right for "CLAIM-1" and "LAST VERIFIED ...", and wrong for an
+   invitation: styled as a label, the link read as a timestamp and nobody saw
+   it. Sentence case, sans, and a chip make it read as a control.
+
+   Both surfaces carry the same violet note accent, so a reader learns the
+   colour once at the top of the report and then recognises it 182 times below
+   without having to read the label again. Violet appears nowhere in the
+   verdict palette, which is what makes it safe to repeat this often: an amber
+   or green chip under every claim would compete with the verdict pills. */
+.claim-feedback-link,
+.report-feedback-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-height: 44px;
+  text-decoration: none;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+.claim-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0;
+  /* --ink-muted, not --ink-dim: on the violet the dim tone measures 4.04:1 at
+     this size and fails AA. The neutral chip could afford it; this one cannot. */
+  color: var(--ink-muted);
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--note-border);
+  border-radius: 0.4rem;
+  background: var(--note-bg);
+}
+.claim-feedback-link:hover {
+  color: var(--ink);
+  border-color: var(--ink-muted);
+}
+.claim-feedback-link:focus-visible,
+.report-feedback-link:focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 2px;
+}
+
+/* The one visible ask per report, sitting high on the page. Structurally the
+   .methodology callout -- same padding, hairline border -- but on the violet
+   note accent: on the warm neutral it was read straight past, and violet is
+   the one hue absent from the verdict palette, so it cannot be mistaken for a
+   finding. Margin is symmetric because it now sits BETWEEN sections rather
+   than trailing the page. */
+.report-feedback-callout {
+  margin: 2rem 0;
+  background: var(--note-bg);
+  border: 1px solid var(--note-border);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+}
+.report-feedback-callout .rfc-lead {
+  margin: 0 0 0.4rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.report-feedback-callout .rfc-body {
+  margin: 0 0 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+.report-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink);
+  padding: 0.4rem 0.9rem;
+  /* White on the tint, so the control reads as raised off the panel. */
+  border: 1px solid var(--note-border);
+  border-radius: 0.4rem;
+  background: var(--surface);
+}
+.report-feedback-link:hover {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
 }
 
 .methodology {
@@ -7337,11 +7510,51 @@ def _render_report(site_report: SiteReport) -> str:
               'the claim\'s provenance strip.</div></details>'
         )
 
+    # Report-level feedback. ONE visible ask per page, placed HIGH -- directly
+    # after the verdict panel and any corrections banner, above the contents
+    # list and the claims.
+    #
+    # It first shipped after the claims, on the reasoning that a reader who has
+    # read the check arrives with an opinion. That reasoning assumed linear
+    # reading of a document that is ~79,000 words long: measured on the Trump
+    # report, the callout landed at 99.8% of the page, below all 182 claims.
+    # Effectively nobody saw it, and no amount of tinting fixes a placement
+    # problem. The beta framing also belongs BEFORE the verdicts rather than
+    # after them -- "we may have got this wrong" is context for reading the
+    # report, not a footnote to it.
+    #
+    # Still deliberately ONE per report rather than a banner on each of 182
+    # claims: repeated often enough, an invitation stops reading as openness
+    # and starts reading as engagement-farming, which is the last register a
+    # fact-checker wants. The per-claim links stay quiet and carry the
+    # actionable, claim-specific case.
+    _report_feedback = _feedback_link_html(
+        cls="report-feedback-link",
+        text="Send feedback on this report",
+        aria="Send feedback about this report (opens a form in a new tab)",
+        claim_url=f"{_site_url()}/reports/{site_report.report_slug}.html",
+        claim_id=getattr(site_report, "speech_id", "") or "",
+        speaker=getattr(site_report, "speaker", "") or "",
+        speech_date=site_report.date.strftime("%Y-%m-%d") if site_report.date else "",
+    )
+    feedback_callout_html = ""
+    if _report_feedback:
+        feedback_callout_html = (
+            '<aside class="report-feedback-callout">'
+            '<p class="rfc-lead">Something wrong? Welcome feedback!</p>'
+            '<p class="rfc-body">This is a beta. If a verdict looks wrong, or the '
+            'evidence behind it does not hold up, tell us &mdash; every response '
+            'is read. You can flag a single claim from the link under it, or the '
+            'whole report here.</p>'
+            + _report_feedback.strip()
+            + '</aside>\n'
+        )
     body = (
         hero_html
         + _verdict_panel(site_report)
         + correction_banner
         + _render_stance_coverage(site_report)
+        + feedback_callout_html
         + toc_section_head
         + toc_html
         + '<div class="section-head">'

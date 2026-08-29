@@ -1,0 +1,46 @@
+{
+  "schema": "truthbot-reader-feedback v1",
+  "_comment": [
+    "Prefilled Google Form for reader feedback. UNCONFIGURED as shipped: an empty",
+    "form_url renders NO control anywhere on the site, and the rendered HTML stays",
+    "byte-identical to a build without this feature. That is deliberate, so the code",
+    "can merge before the form exists.",
+    "",
+    "TO LIGHT IT UP: create the form (short-answer / paragraph questions only -",
+    "checkbox questions need repeated entry params and are not supported here), use",
+    "the form's 'Get pre-filled link' action, and read the ids out of the URL it",
+    "emits. That URL has exactly the shape this file records:",
+    "  https://docs.google.com/forms/d/e/<FORM_ID>/viewform?usp=pp_url&entry.123=x",
+    "Put everything up to and including /viewform in form_url, and the numeric ids",
+    "in entries. Any entry left empty is simply not prefilled.",
+    "",
+    "claim_url is REQUIRED: without it a response cannot be traced back to the claim",
+    "it is about, which is the whole point. It is also the field that makes claim_text",
+    "truncation harmless, since the full text is one click away."
+  ],
+  "_live": [
+    "Configured 2026-08-28. Form 'TruthBot Reader Feedback', owner-created,",
+    "responses land in the TruthBot-Beta-Feedback sheet.",
+    "",
+    "Only three fields are prefilled, on purpose. Google Forms has no hidden",
+    "questions: every prefilled field is a VISIBLE box the reader has to scroll",
+    "past to reach the one they came to type in. claim_id, speaker and",
+    "speech_date are all recoverable from claim_url when reading the sheet, so",
+    "prefilling them would buy nothing and cost three boxes of noise. They stay",
+    "empty here, which simply means 'not prefilled'.",
+    "",
+    "Verified public at configuration time: anonymous fetch returns HTTP 200",
+    "with all five questions, and the three prefill values populate. A form that",
+    "requires sign-in must never be wired up here -- the whole reason this is a",
+    "link rather than an inline widget is that a reader needs no account."
+  ],
+  "form_url": "https://docs.google.com/forms/d/e/1FAIpQLSc0LJJzRzU58O4_CYpVCJd1JqaZyVDbePZCztUcDIxizLd4Dw/viewform",
+  "entries": {
+    "claim_url": "1117129255",
+    "claim_id": "",
+    "claim_text": "680640025",
+    "verdict": "1163699337",
+    "speaker": "",
+    "speech_date": ""
+  }
+}
