@@ -46,10 +46,13 @@
   --border: #e7e5e4;
   --border-strong: #d6d3d1;
 
-  /* Verdict palette — the ONLY chromatic colors in the design.
+  /* Verdict palette — the only chromatic colors that carry MEANING.
      Change one variable, every bar / pill / swatch / dissent flag /
      Truthy bubble tint updates. Never hardcode these hex values
-     anywhere else in the codebase. */
+     anywhere else in the codebase.
+     One non-verdict accent exists for chrome — see --note-* below. It is
+     deliberately not part of this block and must never be set to one of
+     these values. */
   --v-true:         #15803d;
   --v-mostly-true:  #65a30d;
   --v-exaggerated:  #ca8a04;
@@ -68,6 +71,21 @@
      warm-gray Unverifiable, so the aggregate bars can show the split bucket
      as a real segment (T0.2) rather than silently dropping it. */
   --v-split:        #64748b;
+
+  /* Note accent — the one chromatic color that does NOT carry a verdict.
+     For reader-facing asides that must be noticed without being alarming.
+
+     VIOLET on purpose. The verdict palette runs green -> lime -> amber ->
+     orange -> red, plus stone for Unverifiable and slate for a split panel.
+     Violet is the one hue that appears nowhere in it, so this surface cannot
+     be mistaken for a finding at a glance. An earlier parchment yellow was
+     rejected for exactly that reason: it sat one step from --v-exaggerated
+     (#ca8a04) on a page full of amber pills. Never set these to a verdict hex.
+
+     Contrast on --note-bg: --ink 16.6:1, --ink-muted 6.4:1 (both pass AA).
+     --ink-dim is NOT used on this surface. */
+  --note-bg: #ede9fe;
+  --note-border: #c4b5fd;
 
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -1051,12 +1069,49 @@ details.vp-abstention-details { margin: 0.35rem 0 0; }
 details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
 /* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
    concentrates on one speech, say so as a genre property, in the panel. */
+/* This note is the one disclosure in the panel that never collapses (M-6,
+   ruled 2026-08-24), which left it looking like a stray paragraph: every frame
+   around it indents its text past a marker glyph, so the note's first character
+   sat about a character to the LEFT of every neighbouring line, reading as a
+   rendering slip rather than a deliberate always-open block.
+
+   It now shares that text rail and the same muted 0.8rem treatment. It
+   deliberately does NOT borrow the ▶ marker: a marker here would advertise a
+   control that does not exist. The hairline down the left edge does the job the
+   marker does for the others -- it groups the note with the disclosure stack
+   and marks it as permanently open, rather than a frame whose triangle failed
+   to draw. Prose stays in the body face; the frames use mono for one-line
+   titles, and two sentences of mono would cost more in readability than the
+   consistency is worth. */
 .vp-genre-note {
   font-size: 0.8rem;
   line-height: 1.5;
   color: var(--ink-muted);
-  margin: 0.35rem 0 0;
+  margin: 0.5rem 0 0;
+  /* marker glyph (0.7rem) + its 0.3em gap == the frames' text rail */
+  padding-left: 0.95rem;
+  border-left: 2px solid var(--rule, #e5e2da);
 }
+/* The genre note above is NOT collapsible (M-6): it renders as an open
+   paragraph. The anecdote breakdown carries its own frame instead -- it used to
+   ride inside the genre note's frame, and dissolving that without replacing it
+   would leave the breakdown loose under "Why some claims are undecided" again. */
+details.vp-anecdote-details { margin: 0.35rem 0 0; }
+.vp-anecdote-summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.vp-anecdote-summary::-webkit-details-marker { display: none; }
+.vp-anecdote-summary::before {
+  content: "▶ ";
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.vp-anecdote-body { margin-top: 0.35rem; }
+.vp-anecdote-body .vp-anecdote-note { margin: 0; }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {
   font-family: var(--serif);
@@ -1362,6 +1417,14 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
 }
 .stance-coverage p { margin: 0.35rem 0; }
 .stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+/* Wave B follow-up: collapsed frame. The label + measured rate live in the
+   summary, so the block reads at a glance without opening. */
+.stance-coverage-summary { cursor: pointer; list-style: none; }
+.stance-coverage-summary::-webkit-details-marker { display: none; }
+.stance-coverage-summary .stance-coverage-label { margin-bottom: 0.2rem; }
+.stance-coverage-summary .stance-coverage-label::before { content: "▶ "; }
+.stance-coverage-headline { display: block; line-height: 1.5; }
+.stance-coverage-body { margin-top: 0.5rem; }
 .stance-coverage-exception {
   border-left: 3px solid var(--v-exaggerated);
   padding-left: 0.75rem;
@@ -1387,6 +1450,48 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
   font-size: 0.9rem;
 }
 .report-correction-banner a { text-decoration: underline; }
+/* Wave B follow-up: collapsed frame. "Corrections applied: N verdicts revised"
+   stays in the summary -- only the mechanics collapse. */
+.report-correction-summary { cursor: pointer; list-style: none; }
+.report-correction-summary::-webkit-details-marker { display: none; }
+.report-correction-summary::before { content: "▶ "; font-size: 0.7rem; }
+.report-correction-body { margin-top: 0.5rem; }
+
+/* Wave B follow-up: disclosure markers rotate to their open position instead of
+   snapping there. `evidence-details` and `model-reasoning` already animated;
+   the five below did not -- the provenance marker rotated but had no
+   transition, and the rest never rotated at all -- so a report page with
+   several frames open showed its triangles pointing inconsistently.
+   Consolidated here so every frame turns the same way at the same speed.
+   The glyph is re-declared without its trailing space: a space inside the
+   pseudo-element rotates with it and pushes the triangle off-centre at 90deg,
+   so the gap is a margin instead. */
+.vp-abstention-summary::before,
+.vp-anecdote-summary::before,
+.pca-provenance-summary::before,
+.report-correction-summary::before,
+.stance-coverage-summary .stance-coverage-label::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.3em;
+  transition: transform 200ms ease;
+}
+details[open] > .vp-abstention-summary::before,
+details[open] > .vp-anecdote-summary::before,
+details[open] > .pca-provenance-summary::before,
+details[open] > .report-correction-summary::before,
+details[open] > .stance-coverage-summary .stance-coverage-label::before {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-abstention-summary::before,
+  .vp-anecdote-summary::before,
+  .pca-provenance-summary::before,
+  .report-correction-summary::before,
+  .stance-coverage-summary .stance-coverage-label::before,
+  .claim-feedback-link,
+  .report-feedback-link { transition: none; }
+}
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
@@ -1739,6 +1844,97 @@ details.gate-withheld-details .gate-withheld-note { margin-top: 0.4rem; }
   content: "#";
   margin-right: 0.15rem;
   color: var(--ink-faint);
+}
+
+/* [17b] Reader feedback — per-claim link + one report-level callout.
+   Plain links, never buttons: they open a prefilled form in a new tab and
+   submit nothing from this page. min-height is the literal 44px rather than
+   2.75rem so the a11y pin can grep it unambiguously (html is 16px, so they are
+   the same number).
+
+   The per-claim link deliberately BREAKS OUT of .claim-foot's register. That
+   bar is the site's metadata voice -- mono, 0.75rem, uppercase, letterspaced --
+   which is right for "CLAIM-1" and "LAST VERIFIED ...", and wrong for an
+   invitation: styled as a label, the link read as a timestamp and nobody saw
+   it. Sentence case, sans, and a chip make it read as a control.
+
+   Both surfaces carry the same violet note accent, so a reader learns the
+   colour once at the top of the report and then recognises it 182 times below
+   without having to read the label again. Violet appears nowhere in the
+   verdict palette, which is what makes it safe to repeat this often: an amber
+   or green chip under every claim would compete with the verdict pills. */
+.claim-feedback-link,
+.report-feedback-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-height: 44px;
+  text-decoration: none;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+.claim-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0;
+  /* --ink-muted, not --ink-dim: on the violet the dim tone measures 4.04:1 at
+     this size and fails AA. The neutral chip could afford it; this one cannot. */
+  color: var(--ink-muted);
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--note-border);
+  border-radius: 0.4rem;
+  background: var(--note-bg);
+}
+.claim-feedback-link:hover {
+  color: var(--ink);
+  border-color: var(--ink-muted);
+}
+.claim-feedback-link:focus-visible,
+.report-feedback-link:focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 2px;
+}
+
+/* The one visible ask per report, sitting high on the page. Structurally the
+   .methodology callout -- same padding, hairline border -- but on the violet
+   note accent: on the warm neutral it was read straight past, and violet is
+   the one hue absent from the verdict palette, so it cannot be mistaken for a
+   finding. Margin is symmetric because it now sits BETWEEN sections rather
+   than trailing the page. */
+.report-feedback-callout {
+  margin: 2rem 0;
+  background: var(--note-bg);
+  border: 1px solid var(--note-border);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+}
+.report-feedback-callout .rfc-lead {
+  margin: 0 0 0.4rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.report-feedback-callout .rfc-body {
+  margin: 0 0 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+.report-feedback-link {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink);
+  padding: 0.4rem 0.9rem;
+  /* White on the tint, so the control reads as raised off the panel. */
+  border: 1px solid var(--note-border);
+  border-radius: 0.4rem;
+  background: var(--surface);
+}
+.report-feedback-link:hover {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
 }
 
 .methodology {
