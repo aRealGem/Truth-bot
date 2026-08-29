@@ -1743,7 +1743,8 @@ def _verdict_panel(site_report) -> str:
         # <details> rather than rewriting its markup keeps that parser valid.
         selfsource_chip_html = (
             '<details class="vp-abstention-details">'
-            '<summary class="vp-abstention-summary">Why undecided</summary>'
+            '<summary class="vp-abstention-summary">'
+            'Why some claims are undecided</summary>'
             '<p class="vp-abstention-chip" '
             f'title="{_esc(chip_title)}">' + _esc(" · ".join(parts))
             + '</p>'
@@ -1755,24 +1756,71 @@ def _verdict_panel(site_report) -> str:
     # map), never from prose. Silent when the map is empty or the report holds
     # none, so legacy publishes are byte-identical. Prose is a DRAFT for the
     # owner's red pen (S-8) — flagged in the Wave A PR.
+    # RATE-based trigger and copy (owner-ratified 2026-08-24, Fable ruling of
+    # 2026-08-23; supersedes the count-share wording).
+    #
+    # Why rate and not count-share: the speeches differ ~4x in length, so a
+    # count share ("17 of the corpus's 33") tracks how much a speaker SAID as
+    # much as how they said it. The rate divides that out.
+    #
+    # Trigger: the note renders on the speech with the strictly highest rate,
+    # and on all tied speeches on an exact tie. No other speech gets it.
+    #
+    # Deliberately NOT expressed as a standard deviation / z-score / outlier:
+    # with n=5 the maximum possible |z| is (n-1)/sqrt(n) = 1.789, so a
+    # 2-sigma test could never fire and a 1-sigma test selects exactly one
+    # speech regardless of the data. A rank statement ("the highest rate of the
+    # five speeches checked") is what this sample size can actually support.
     genre_note_html = ""
-    if _REASON_PILLS:
-        _ids = {getattr(b.claim, "id", None) for b in site_report.checkable_bundles}
-        n_coded = sum(1 for cid in _REASON_PILLS if cid in _ids)
-        corpus_coded = len(_REASON_PILLS)
-        if n_coded:
+    rate_table = _genre_rate_table()
+    this_speech = getattr(site_report, "speech_id", "") or ""
+    if rate_table and this_speech in rate_table:
+        mine = rate_table[this_speech]
+        top = max(row["rate"] for row in rate_table.values())
+        # Strictly highest, or tied for highest. Compared on the same rounded
+        # figure the page prints, so the page can never claim "the highest
+        # rate" while showing a number equal to another speech's.
+        is_top = round(mine["rate"], 1) >= round(top, 1) and mine["coded"] > 0
+        if is_top:
+            n_speeches = len(rate_table)
+            median_rate = _median([row["rate"] for row in rate_table.values()])
+            speeches_word = _CARDINALS.get(n_speeches, str(n_speeches))
             genre_line = (
-                f"{n_coded} of the corpus's {corpus_coded} claims recorded as "
-                "beyond the public record fall on this speech."
+                f"Of this speech's {mine['checked']} checked claims, "
+                f"{mine['coded']} ({mine['rate']:.1f}%) were recorded as beyond "
+                f"the public record — the highest rate of the {speeches_word} "
+                f"speeches checked (median {median_rate:.1f}%)."
+                # Sentence 2 is VERBATIM from the shipped note. Do not edit.
+                " That concentration is a property of the speech's "
+                "rhetorical genre — personal stories, intentions, and "
+                "unmeasured superlatives — not a finding about the speaker."
             )
-            if corpus_coded and n_coded * 2 > corpus_coded:
-                genre_line += (
-                    " That concentration is a property of the speech's "
-                    "rhetorical genre — personal stories, intentions, and "
-                    "unmeasured superlatives — not a finding about the speaker."
-                )
+            # M-6 hard constraint: both sentences stay fully visible, outside
+            # any <details>. An earlier revision made this note the <summary> of
+            # a collapsed frame; the ruling of 2026-08-24 puts it back in the
+            # open. It is a plain paragraph in the panel and must stay one.
             genre_note_html = ('<p class="vp-genre-note">'
                                + _esc(genre_line) + '</p>\n')
+
+    # The genre note is emitted OPEN (M-6 hard constraint above) and therefore
+    # cannot host the anecdote breakdown as a collapsed body, which is how the
+    # previous revision framed it. The anecdote note gets its own frame instead,
+    # with its own plain-English summary -- otherwise dissolving the old frame
+    # would leave it loose under "Why some claims are undecided" again, which is
+    # the orphan this pass exists to remove.
+    if anecdote_note_html:
+        anecdote_frame_html = (
+            '<details class="vp-anecdote-details">'
+            '<summary class="vp-anecdote-summary">'
+            'Why some claims can&#39;t be checked at all</summary>'
+            '<div class="vp-anecdote-body">' + anecdote_note_html.strip() + '</div>'
+            '</details>\n'
+        )
+    else:
+        anecdote_frame_html = ""
+
+    # Order: the always-visible disclosure first, then the collapsible detail.
+    disclosure_frame_html = genre_note_html + anecdote_frame_html
 
     return (
         '<section class="verdict-panel">\n'
@@ -1781,8 +1829,7 @@ def _verdict_panel(site_report) -> str:
         + panel_stats_html
         + '  <div class="vp-bar-wrap">' + bar_html + '</div>\n'
         + selfsource_chip_html
-        + genre_note_html
-        + anecdote_note_html
+        + disclosure_frame_html
         + source_row_html
         + '</section>\n'
     )
@@ -2661,6 +2708,85 @@ def set_reason_pills(pills: "Optional[dict]") -> None:
     """Install (or clear) the reason-code render map for this publish."""
     global _REASON_PILLS
     _REASON_PILLS = dict(pills or {})
+
+
+#: Per-speech claim counts for the whole publishing corpus, keyed by speech_id.
+#: The M-6 genre note is RATE-based (owner-ratified 2026-08-24): it renders on
+#: the speech with the strictly highest beyond-public-record rate, which cannot
+#: be decided from one report in isolation. Same keyed-registry pattern as
+#: ``_REASON_PILLS`` -- empty map == the note does not render, so a caller that
+#: does not supply it fails closed rather than guessing from partial data.
+_CORPUS_GENRE_RATES: dict[str, dict] = {}
+
+
+def set_corpus_genre_rates(rates: "Optional[dict]") -> None:
+    """Install (or clear) the corpus-wide per-speech rate map for this publish."""
+    global _CORPUS_GENRE_RATES
+    _CORPUS_GENRE_RATES = dict(rates or {})
+
+
+def build_corpus_genre_rates(runs_dir: "Optional[Path]" = None) -> dict[str, dict]:
+    """Per-speech ``{"checked": n}`` across the publishing corpus.
+
+    Reads the SAME artifact set the renderer publishes -- ``publishing_heads()``,
+    the latest evidence-bearing run per speech -- so the denominator can never
+    disagree with the "Claims Checked" figure on the rendered page. Order
+    independent: the map is a property of the artifact set, not of the sequence
+    in which reports happen to be published. Offline and $0 (JSON reads only).
+    """
+    from truthbot.publish.heads import publishing_heads
+    out: dict[str, dict] = {}
+    for sid, path in publishing_heads(runs_dir).items():
+        try:
+            art = json.loads(Path(path).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        checked = len(art.get("claims") or [])
+        if checked:
+            out[sid] = {"checked": checked}
+    return out
+
+
+def _genre_rate_table() -> dict[str, dict]:
+    """Join the corpus claim counts to the reason-coded map -> per-speech rates.
+
+    Returns ``{speech_id: {"checked", "coded", "rate"}}``. Speeches with no
+    checked claims are absent; a speech with zero coded claims still appears
+    with rate 0.0 so it counts toward the median.
+    """
+    if not _CORPUS_GENRE_RATES:
+        return {}
+    coded: dict[str, int] = {}
+    for row in _REASON_PILLS.values():
+        speech = str(row.get("sid", "")).split(":")[0]
+        if speech:
+            coded[speech] = coded.get(speech, 0) + 1
+    table = {}
+    for speech, meta in _CORPUS_GENRE_RATES.items():
+        checked = meta.get("checked") or 0
+        if not checked:
+            continue
+        n = coded.get(speech, 0)
+        table[speech] = {"checked": checked, "coded": n,
+                         "rate": 100.0 * n / checked}
+    return table
+
+
+#: Small cardinals spelled out; the ratified copy wants "five speeches", not
+#: "5 speeches", up to ten.
+_CARDINALS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five",
+              6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten"}
+
+
+def _median(values: "list[float]") -> float:
+    ordered = sorted(values)
+    n = len(ordered)
+    if not n:
+        return 0.0
+    mid = n // 2
+    if n % 2:
+        return ordered[mid]
+    return (ordered[mid - 1] + ordered[mid]) / 2.0
 
 
 def build_reason_pills(repo_root: Path) -> dict[str, dict]:
@@ -4537,12 +4663,49 @@ details.vp-abstention-details { margin: 0.35rem 0 0; }
 details.vp-abstention-details .vp-abstention-chip { margin-top: 0.35rem; }
 /* M-6 genre-property disclosure (Wave A A3): where the reason-coded species
    concentrates on one speech, say so as a genre property, in the panel. */
+/* This note is the one disclosure in the panel that never collapses (M-6,
+   ruled 2026-08-24), which left it looking like a stray paragraph: every frame
+   around it indents its text past a marker glyph, so the note's first character
+   sat about a character to the LEFT of every neighbouring line, reading as a
+   rendering slip rather than a deliberate always-open block.
+
+   It now shares that text rail and the same muted 0.8rem treatment. It
+   deliberately does NOT borrow the ▶ marker: a marker here would advertise a
+   control that does not exist. The hairline down the left edge does the job the
+   marker does for the others -- it groups the note with the disclosure stack
+   and marks it as permanently open, rather than a frame whose triangle failed
+   to draw. Prose stays in the body face; the frames use mono for one-line
+   titles, and two sentences of mono would cost more in readability than the
+   consistency is worth. */
 .vp-genre-note {
   font-size: 0.8rem;
   line-height: 1.5;
   color: var(--ink-muted);
-  margin: 0.35rem 0 0;
+  margin: 0.5rem 0 0;
+  /* marker glyph (0.7rem) + its 0.3em gap == the frames' text rail */
+  padding-left: 0.95rem;
+  border-left: 2px solid var(--rule, #e5e2da);
 }
+/* The genre note above is NOT collapsible (M-6): it renders as an open
+   paragraph. The anecdote breakdown carries its own frame instead -- it used to
+   ride inside the genre note's frame, and dissolving that without replacing it
+   would leave the breakdown loose under "Why some claims are undecided" again. */
+details.vp-anecdote-details { margin: 0.35rem 0 0; }
+.vp-anecdote-summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.vp-anecdote-summary::-webkit-details-marker { display: none; }
+.vp-anecdote-summary::before {
+  content: "▶ ";
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.vp-anecdote-body { margin-top: 0.35rem; }
+.vp-anecdote-body .vp-anecdote-note { margin: 0; }
 .claim-body { padding: 1.75rem 1.75rem 1.5rem; }
 .claim-quote {
   font-family: var(--serif);
@@ -4848,6 +5011,14 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
 }
 .stance-coverage p { margin: 0.35rem 0; }
 .stance-coverage-note { color: var(--ink-muted); font-size: 0.85rem; }
+/* Wave B follow-up: collapsed frame. The label + measured rate live in the
+   summary, so the block reads at a glance without opening. */
+.stance-coverage-summary { cursor: pointer; list-style: none; }
+.stance-coverage-summary::-webkit-details-marker { display: none; }
+.stance-coverage-summary .stance-coverage-label { margin-bottom: 0.2rem; }
+.stance-coverage-summary .stance-coverage-label::before { content: "▶ "; }
+.stance-coverage-headline { display: block; line-height: 1.5; }
+.stance-coverage-body { margin-top: 0.5rem; }
 .stance-coverage-exception {
   border-left: 3px solid var(--v-exaggerated);
   padding-left: 0.75rem;
@@ -4873,6 +5044,46 @@ details.pca-provenance-details[open] > .pca-provenance-summary::before { transfo
   font-size: 0.9rem;
 }
 .report-correction-banner a { text-decoration: underline; }
+/* Wave B follow-up: collapsed frame. "Corrections applied: N verdicts revised"
+   stays in the summary -- only the mechanics collapse. */
+.report-correction-summary { cursor: pointer; list-style: none; }
+.report-correction-summary::-webkit-details-marker { display: none; }
+.report-correction-summary::before { content: "▶ "; font-size: 0.7rem; }
+.report-correction-body { margin-top: 0.5rem; }
+
+/* Wave B follow-up: disclosure markers rotate to their open position instead of
+   snapping there. `evidence-details` and `model-reasoning` already animated;
+   the five below did not -- the provenance marker rotated but had no
+   transition, and the rest never rotated at all -- so a report page with
+   several frames open showed its triangles pointing inconsistently.
+   Consolidated here so every frame turns the same way at the same speed.
+   The glyph is re-declared without its trailing space: a space inside the
+   pseudo-element rotates with it and pushes the triangle off-centre at 90deg,
+   so the gap is a margin instead. */
+.vp-abstention-summary::before,
+.vp-anecdote-summary::before,
+.pca-provenance-summary::before,
+.report-correction-summary::before,
+.stance-coverage-summary .stance-coverage-label::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.3em;
+  transition: transform 200ms ease;
+}
+details[open] > .vp-abstention-summary::before,
+details[open] > .vp-anecdote-summary::before,
+details[open] > .pca-provenance-summary::before,
+details[open] > .report-correction-summary::before,
+details[open] > .stance-coverage-summary .stance-coverage-label::before {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-abstention-summary::before,
+  .vp-anecdote-summary::before,
+  .pca-provenance-summary::before,
+  .report-correction-summary::before,
+  .stance-coverage-summary .stance-coverage-label::before { transition: none; }
+}
 /* Statement Triage — set-aside (non-check-worthy) sentence stream */
 .triage-group { margin: 0 0 1.5rem; }
 .triage-list {
@@ -6897,9 +7108,35 @@ def _render_stance_coverage(site_report: SiteReport) -> str:
     rate = cov["rate_pct"]
     ceiling = cov["ceiling_pct"]
     scored = cov["items"] - cov["stance_null"]
+    # Readability (Wave B follow-up): collapsed like the other auxiliary frames,
+    # but the measured rate against the ceiling rides in the <summary> so it is
+    # legible without a click -- the number IS the disclosure; the paragraphs
+    # under it are the explanation.
+    #
+    # "shown, not hidden" (see this function's docstring) is preserved for the
+    # over-ceiling speech by naming the exception in the summary too. Otherwise
+    # the one report published under an owner-ratified exception would be the
+    # one report whose exception notice needed a click to find.
+    summary = (
+        '<summary class="stance-coverage-summary">'
+        # Title parallels "Why some claims are undecided" so the frames read as
+        # a matched set. Deliberately NOT "Where evidence coverage falls short":
+        # 4 of the 5 published speeches sit UNDER the stance-null ceiling, so
+        # that title would assert a shortfall the measurement contradicts -- and
+        # would contradict this block's own body copy, which says a share of
+        # null stance is expected and is not a retrieval failure.
+        '<span class="stance-coverage-label">Why some evidence '
+        'carried no stance</span>'
+        f'<span class="stance-coverage-headline">{rate:.1f}% of '
+        f'{cov["items"]:,} evidence items carried no stance '
+        f'(threshold {ceiling:.0f}%)'
+        + (' · published under an exception' if cov.get("over_ceiling") else '')
+        + '</span></summary>'
+    )
     body = (
-        '<aside class="stance-coverage">'
-        '<span class="stance-coverage-label">Evidence coverage</span>'
+        '<details class="stance-coverage">'
+        + summary
+        + '<div class="stance-coverage-body">'
         f'<p>The stance scorer took a support or refute position on '
         f'{scored:,} of {cov["items"]:,} evidence items; '
         f'<strong>{rate:.1f}%</strong> ({cov["stance_null"]:,} items) carried no '
@@ -6942,7 +7179,7 @@ def _render_stance_coverage(site_report: SiteReport) -> str:
             'exception is therefore reviewed at each publish rather than expiring '
             'on any single fix.</p>'
         )
-    return body + '</aside>'
+    return body + '</div></details>'
 
 
 def _render_report(site_report: SiteReport) -> str:
@@ -7075,16 +7312,29 @@ def _render_report(site_report: SiteReport) -> str:
                                 b.consensus.provenance.correction_note)] if m)
         _latest = _dates[-1] if _dates else ""
         _n = len(_corrected)
+        # Readability (Wave B follow-up): collapsed, but the fact that verdicts
+        # were revised is NOT collapsible -- it rides in the <summary>, always
+        # visible. Only the mechanics (what the revision did to the aggregates,
+        # where each change is logged) sit behind the click. A reader who never
+        # opens this still learns the report was corrected and how many verdicts
+        # moved; hiding that behind a bare "Corrections" toggle would make the
+        # disclosure depend on curiosity.
+        # The `report-correction-banner` class is kept on the outer element so
+        # test_corrections keys on the same hook.
         correction_banner = (
-            '<aside class="report-correction-banner">'
+            '<details class="report-correction-banner">'
+            '<summary class="report-correction-summary">'
             f'<strong>Corrections applied:</strong> {_n} verdict'
             f'{"s" if _n != 1 else ""} on this report '
             f'{"were" if _n != 1 else "was"} revised'
             + (f' on {_esc(_latest)}' if _latest else '')
-            + ' following a reasoning audit. Aggregates and the headline reflect '
+            + ' following a reasoning audit.'
+            + '</summary>'
+            + '<div class="report-correction-body">'
+              'Aggregates and the headline reflect '
               'the corrected verdicts; each change is logged on the '
               '<a href="../corrections.html">Corrections page</a> and marked on '
-              'the claim\'s provenance strip.</aside>'
+              'the claim\'s provenance strip.</div></details>'
         )
 
     body = (
@@ -8325,6 +8575,7 @@ class SitePublisher:
                  report_aliases: Optional[dict[str, str]] = None,
                  resolution_changes: Optional[list[dict]] = None,
                  reason_pills: Optional[dict] = None,
+                 corpus_genre_rates: Optional[dict] = None,
                  label_changes: Optional[list[dict]] = None) -> None:
         import os
         if site_root:
@@ -8353,6 +8604,12 @@ class SitePublisher:
         # {"sid","code","copy"}} from build_reason_pills(). None/empty -> the
         # species does not render (legacy publishes stay byte-identical).
         self._reason_pills: dict = dict(reason_pills or {})
+        # Corpus-wide per-speech claim counts for the RATE-based M-6 genre note
+        # ({speech_id -> {"checked": n}} from build_corpus_genre_rates()). The
+        # note compares one speech against every other, so it cannot be decided
+        # from the report being published. None/empty -> the note does not
+        # render, rather than being decided from a partial corpus.
+        self._corpus_genre_rates: dict = dict(corpus_genre_rates or {})
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -8368,6 +8625,7 @@ class SitePublisher:
         # card/panel renderers (same keyed-registry pattern as decidability:
         # nothing has to CARRY it, so no reconstruction path can drop it).
         set_reason_pills(self._reason_pills)
+        set_corpus_genre_rates(self._corpus_genre_rates)
 
         # Backfill speaker/date onto bundles that bridged without them
         # (PR-A2.1). The bridge only threads speaker/date_str when the claim
