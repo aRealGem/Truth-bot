@@ -33,6 +33,26 @@ out via `true-neutral-cycle`; the still freezes that frame). The bottom rule is
 the site's own verdict bar at real corpus proportions. The lower-left is kept
 empty on purpose: that is where Bluesky overlays the avatar.
 
+## The BETA stamp
+
+Both carry a rotated BETA stamp in `--v-false` red (#991b1b) at ~215/230 alpha.
+
+Red was argued against first, on the grounds that red means FALSE in the verdict
+palette and a red BETA might read as a negative marker. That objection was
+wrong, for a reason already sitting in this codebase: the wordmark's `·` is
+drawn in that same red, in `report_cards._chrome()` and in the site's
+`.wordmark .dot` rule. The brand already borrows verdict-red for chrome. The
+context that makes red mean FALSE is a report page with verdict pills beside it;
+a profile banner has none. And red is what makes it read as a *stamp* rather
+than a UI chip -- the neutral-ink version looked like a badge.
+
+On the avatar the stamp sits on the lower jaw, not the periphery as originally
+asked: the head fills nearly the whole inscribed circle, and a stamp sized to
+fit the crescent of background between head-edge and crop-edge clipped the
+circle (far corner 558 against a 512 radius). On the jaw its far corner is 461,
+comfortably inside. It is legible at profile size, a red accent at 96px, and
+gone at 42px -- decorative, not load-bearing.
+
 ## Regenerating
 
 There is no script yet — these were produced interactively. If they need to
