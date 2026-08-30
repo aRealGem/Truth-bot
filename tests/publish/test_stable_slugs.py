@@ -50,7 +50,7 @@ def test_legacy_reports_without_speech_id_keep_uuid_suffix() -> None:
 
 def test_site_url_default_and_env_override(monkeypatch) -> None:
     monkeypatch.delenv("TRUTHBOT_SITE_URL", raising=False)
-    default = "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca"
+    default = "https://arealgem.github.io/Truth-bot/site-pca"
     assert settings.site_url == default
     assert _site_url() == default
     monkeypatch.setenv("TRUTHBOT_SITE_URL", "https://truthbot.example.org/")

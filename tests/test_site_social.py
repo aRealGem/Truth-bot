@@ -47,7 +47,7 @@ from truthbot.publish.site import (
 
 # Default public base URL (no TRUTHBOT_SITE_URL in the test env) — absolute
 # canonical/og:url/og:image links resolve against this (1.10).
-_BASE = "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca"
+_BASE = "https://arealgem.github.io/Truth-bot/site-pca"
 
 
 # ── Fixtures ────────────────────────────────────────────────────────────────

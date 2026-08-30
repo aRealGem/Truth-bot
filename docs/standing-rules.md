@@ -68,7 +68,7 @@ correct in the dimension you were watching.
 
 ## M-12 — Publish checklist
 
-The publication surface is `main/site-pca/` served via raw.githack (see
+The publication surface is `main/site-pca/` served via GitHub Pages (see
 STATUS.md). Every publish to main must satisfy, in order:
 
 1. Pre-publish: full suite green on the branch being published.

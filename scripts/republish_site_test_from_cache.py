@@ -11,7 +11,7 @@ and the bundle cache were generated. Cached bundles therefore still hold a
 ``ConsensusVerdict`` with empty coarse fields, and a vanilla ``truthbot publish``
 rerun would cache-hit those legacy bundles and render via the fine-axis
 fallback. That hides the new headline pill / lens chip behaviour from the
-``raw.githack`` preview.
+GitHub Pages preview.
 
 A full re-fire would be expensive (frontier LLM calls × 84 claims × 4 models).
 This script is the cheap path: every bundle in the cache already contains the

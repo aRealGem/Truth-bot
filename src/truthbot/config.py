@@ -175,12 +175,15 @@ class Settings:
 
         Every absolute self-link (canonical/og:url tags, feed.xml entries)
         derives from this one value. Override with ``TRUTHBOT_SITE_URL`` when
-        the site moves to a custom domain; the default is the githack mirror
-        of the committed ``site-pca/`` tree.
+        the site moves to a custom domain; the default is GitHub Pages, which
+        has served the committed ``site-pca/`` tree since 2026-08-29.
+
+        Must stay equal to ``publish.site._DEFAULT_SITE_URL`` --
+        ``tests/publish/test_stable_slugs.py`` asserts it.
         """
         return _optional(
             "TRUTHBOT_SITE_URL",
-            "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca",
+            "https://arealgem.github.io/Truth-bot/site-pca",
         ).rstrip("/")
 
     @property

@@ -171,7 +171,13 @@ PIPELINE_VERSION = "0.2.0"
 # truthbot.config, but read from the environment directly so the render layer
 # keeps its zero-config-import convention (same reason SitePublisher reads
 # TRUTHBOT_SITE_ROOT itself).
-_DEFAULT_SITE_URL = "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca"
+#
+# GitHub Pages since 2026-08-29. This MUST track wherever the site is actually
+# served from: it is what canonical, og:url, og:image, every feed.xml entry and
+# the reader-feedback prefill all resolve against. When the site moved to Pages
+# and this was left pointing at the githack mirror, the published pages spent a
+# day telling crawlers and social platforms that their real home was elsewhere.
+_DEFAULT_SITE_URL = "https://arealgem.github.io/Truth-bot/site-pca"
 
 
 def _site_url() -> str:
