@@ -343,6 +343,16 @@ def test_a_speech_with_no_entry_gets_no_label(monkeypatch):
 _ASSETS = Path(report_cards.__file__).resolve().parent / "assets"
 
 
+def _pixels(im, opaque_only=False):
+    """Pillow 12 deprecates Image.getdata(), and its replacement does not exist
+    on the older Pillow CI may resolve -- pyproject pins >=12,<13 but CI never
+    reads uv.lock. .load() works on both."""
+    px = im.load()
+    w, h = im.size
+    out = [px[x, y] for y in range(h) for x in range(w)]
+    return [p for p in out if p[3] > 128] if opaque_only else out
+
+
 def test_the_png_favicons_agree_with_favicon_svg():
     """They disagreed for months, invisibly.
 
@@ -357,7 +367,7 @@ def test_the_png_favicons_agree_with_favicon_svg():
         "favicon.svg changed; this test encodes the check-on-plate design")
     for name in ("favicon-32.png", "favicon.ico"):
         im = Image.open(_ASSETS / name).convert("RGBA")
-        px = [p for p in im.getdata() if p[3] > 128]
+        px = _pixels(im, opaque_only=True)
         assert px, f"{name} is fully transparent"
         # the accent must be present, and the plate must dominate
         green = sum(1 for r, g, b, _ in px if g > r + 30 and g > b + 30)
@@ -372,7 +382,7 @@ def test_the_icons_are_not_the_superseded_flat_mascot():
     because at 16px it read as nothing at all."""
     for name in ("favicon-32.png", "favicon.ico"):
         im = Image.open(_ASSETS / name).convert("RGBA")
-        px = [p for p in im.getdata() if p[3] > 128]
+        px = _pixels(im, opaque_only=True)
         dark = sum(1 for r, g, b, _ in px if max(r, g, b) < 60)
         assert dark < len(px) * 0.25, f"{name} is still mostly dark"
 
@@ -382,6 +392,6 @@ def test_the_apple_touch_icon_keeps_the_face():
     the brand should be a face rather than a glyph."""
     im = Image.open(_ASSETS / "apple-touch-icon.png").convert("RGBA")
     assert im.size == (180, 180)
-    px = list(im.convert("RGB").getdata())
+    px = _pixels(im.convert("RGB"))
     mint = sum(1 for r, g, b in px if g > 150 and g > r + 40 and b > r + 20)
     assert mint > 100, "Truthy's lit eyes are missing"
