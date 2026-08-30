@@ -46,17 +46,28 @@ context that makes red mean FALSE is a report page with verdict pills beside it;
 a profile banner has none. And red is what makes it read as a *stamp* rather
 than a UI chip -- the neutral-ink version looked like a badge.
 
-On the avatar the stamp sits in the white space ABOVE-RIGHT of the head, just
-touching its edge and clear of the antenna. Placement was measured, not eyeballed:
-the head is an ellipse at centre (512,557) with radii (410,381) in the 1024px
-frame, so its top edge is y=176 and its right edge x=922, and the stamp's centre
-sits at (775,235) with its farthest corner at 480 against the 512 crop radius.
+On the avatar the stamp floats in the white space ABOVE-RIGHT of the head,
+touching nothing -- clear of the skull, clear of the antenna, inside the crop.
 
-Two earlier placements were wrong and are worth not repeating. Dead-periphery, in
-the crescent between head-edge and crop-edge, CLIPS -- a stamp sized to fit there
-reaches 558 against a 512 radius. On the lower jaw it fits, but it reads as
-something stuck to his face rather than an annotation on the portrait, and at
-96px it blends into the head instead of staying a distinct mark.
+That position was SOLVED, not nudged, and it is worth re-solving rather than
+hand-adjusting if anything about the framing changes. The constraints are in
+tension: the head is an ellipse at centre (512,557) radii (410,381) in the
+1024px frame, and the crop circle is centre (512,512) radius 512. Moving the
+stamp up off the skull pushes it toward the circle boundary, so there is only a
+narrow band that satisfies both. A grid search over size and position -- every
+sampled point outside the head ellipse plus 10px clearance, all four corners
+inside the circle with 8px margin, and clear of an antenna keep-out box of
+x 480-545 / y 80-190 -- lands on size 48 centred at (635,110), farthest corner
+503 against the 512 radius.
+
+It is TIGHT: 9px of margin at the crop boundary. Larger clips; lower touches
+the head.
+
+Three earlier placements were wrong and are worth not repeating. Dead-periphery,
+in the crescent between head-edge and crop-edge, CLIPS (558 against a 512
+radius). The lower jaw fits but reads as something stuck to his face rather than
+an annotation on the portrait, and at 96px it blends into the head. Above-right
+but bordering the skull overlapped it by ~24px.
 
 It is legible at profile size, a red mark in the corner at 96px, and gone at
 42px -- decorative, not load-bearing, which is the right weight for it.
