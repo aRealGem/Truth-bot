@@ -146,14 +146,16 @@ def _png(img: Image.Image) -> bytes:
 
 def render_report_card(*, speaker: str, role: str, display_date: str,
                        headline: str, ratio_text: str, headline_verdict: str,
-                       distribution: dict, claim_count: int) -> bytes:
+                       distribution: dict, claim_count: int,
+                       event: str = "") -> bytes:
     """One card per report. Every figure is supplied, never derived here."""
     img = Image.new("RGB", (CARD_W, CARD_H), BG)
     d = ImageDraw.Draw(img)
     _chrome(d)
 
     d.text((80, 150), speaker, font=_font(_SEMIBOLD, 64), fill=INK)
-    meta = " · ".join(x for x in (role, display_date) if x)
+    # role, occasion, date -- occasion is authored per speech, never inferred
+    meta = " · ".join(x for x in (role, event, display_date) if x)
     d.text((80, 232), meta, font=_font(_REGULAR, 30), fill=INK_MUTED)
 
     colour = VERDICT_RGB.get(headline_verdict, _DEFAULT_RGB)
