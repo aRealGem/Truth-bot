@@ -46,12 +46,20 @@ context that makes red mean FALSE is a report page with verdict pills beside it;
 a profile banner has none. And red is what makes it read as a *stamp* rather
 than a UI chip -- the neutral-ink version looked like a badge.
 
-On the avatar the stamp sits on the lower jaw, not the periphery as originally
-asked: the head fills nearly the whole inscribed circle, and a stamp sized to
-fit the crescent of background between head-edge and crop-edge clipped the
-circle (far corner 558 against a 512 radius). On the jaw its far corner is 461,
-comfortably inside. It is legible at profile size, a red accent at 96px, and
-gone at 42px -- decorative, not load-bearing.
+On the avatar the stamp sits in the white space ABOVE-RIGHT of the head, just
+touching its edge and clear of the antenna. Placement was measured, not eyeballed:
+the head is an ellipse at centre (512,557) with radii (410,381) in the 1024px
+frame, so its top edge is y=176 and its right edge x=922, and the stamp's centre
+sits at (775,235) with its farthest corner at 480 against the 512 crop radius.
+
+Two earlier placements were wrong and are worth not repeating. Dead-periphery, in
+the crescent between head-edge and crop-edge, CLIPS -- a stamp sized to fit there
+reaches 558 against a 512 radius. On the lower jaw it fits, but it reads as
+something stuck to his face rather than an annotation on the portrait, and at
+96px it blends into the head instead of staying a distinct mark.
+
+It is legible at profile size, a red mark in the corner at 96px, and gone at
+42px -- decorative, not load-bearing, which is the right weight for it.
 
 ## Regenerating
 
