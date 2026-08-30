@@ -180,6 +180,136 @@ def render_report_card(*, speaker: str, role: str, display_date: str,
     return _png(img)
 
 
+#: The house card's copy, lifted verbatim from the index page's own tagline and
+#: meta description. Duplicated rather than imported because the card must not
+#: depend on a rendered page, and pinned equal to the page by the test suite.
+_HOUSE_TAGLINE = "Automated political fact-checking"
+_HOUSE_SUB = "with multi-model consensus analysis."
+_HOUSE_STEPS = (
+    "Decompose the speech into checkable claims",
+    "Check each against a shared, cited evidence pack",
+    "Reconcile a multi-model panel into one verdict",
+)
+
+#: House-card geometry. The text column and the mascot must not overlap, and
+#: the first attempt did -- a 58px headline set flush left ran 950px wide and
+#: drove "fact-checking" straight through Truthy's face. So the column has a
+#: hard right edge and every line is wrapped and auto-fitted against it rather
+#: than trusted to fit.
+_HOUSE_COL_L = 80
+_HOUSE_COL_W = 620              # right edge x=700; the mascot starts at 738
+#: Centre x, centre y, height. The figure is FULL BODY rather than the head
+#: used on the Bluesky avatar, and for a different reason than symmetry: at
+#: 1200x630 the head filled 330px of a 548px panel and left the column looking
+#: half-empty, and more to the point the head alone omits the clipboard, which
+#: is the one part of the mascot that says what the site does. Centre-x splits
+#: the gap between the text column's right edge and the panel's.
+_MASCOT_BOX = (929, 318, 500)
+_MASCOT_ASSET = "truthy-fullbody.png"
+
+
+def _mascot(height: int) -> Optional[Image.Image]:
+    """The site's own Truthy, background keyed out so he sits on the panel.
+
+    The source PNG was rendered over ``--bg`` (250,250,249) and the card panel
+    is ``--surface`` white, so pasting it flat would leave a faintly grey
+    rectangle -- the kind of edge that is invisible in a thumbnail and obvious
+    at full size. An exact-match key is safe here precisely because the source
+    is a flat SVG render rather than a photo: the background is one literal
+    colour, and Truthy's own cream fill is far enough from it that no part of
+    him is keyed away. Anti-aliased rim pixels get a distance-ramped alpha so
+    the silhouette stays smooth instead of stair-stepping.
+
+    Returns None if the asset is missing -- unlike a font, the mascot is
+    decoration, and a card without him still says everything it needs to.
+    """
+    src = Path(__file__).resolve().parent / "assets" / "social" / _MASCOT_ASSET
+    if not src.exists():
+        return None
+    im = Image.open(src).convert("RGB")
+    px = im.load()
+    alpha = Image.new("L", im.size, 255)
+    ap = alpha.load()
+    br, bg_, bb = BG
+    for y in range(im.size[1]):
+        for x in range(im.size[0]):
+            r, g, b = px[x, y]
+            d = abs(r - br) + abs(g - bg_) + abs(b - bb)
+            if d <= 2:
+                ap[x, y] = 0
+            elif d < 24:                      # anti-aliased rim
+                ap[x, y] = int(255 * (d - 2) / 22)
+    im.putalpha(alpha)
+    # Crop to the keyed silhouette first: the source canvas carries a wide
+    # transparent margin, so without this `height` would size the padding
+    # rather than the figure.
+    bbox = im.getchannel("A").getbbox()
+    if bbox:
+        im = im.crop(bbox)
+    w = round(im.size[0] * height / im.size[1])
+    return im.resize((w, height), Image.LANCZOS)
+
+
+def render_house_card() -> bytes:
+    """The card for pages that are about the project, not about a report.
+
+    Index, about, corrections, truthy and 404 all share this one.
+
+    IT CARRIES NO FIGURES, AND THAT IS THE POINT. The image this replaced was
+    built by hand and embedded the then-latest report -- "2026-03-04 · 5 claims
+    · Largely False". By the time it was found it was wrong on every one of
+    those figures, because nothing regenerates a hand-made PNG and
+    ``consistency.check_site`` cannot read one to complain. A figure-free house
+    card cannot go stale, so the failure mode is designed out rather than
+    watched for.
+
+    Generated at publish time rather than shipped as a binary for the same
+    reason: it uses the vendored font and the shared chrome, so it cannot drift
+    from the site it fronts, and there is no blob in the tree that nobody knows
+    how to remake.
+    """
+    img = Image.new("RGB", (CARD_W, CARD_H), BG)
+    d = ImageDraw.Draw(img)
+    _chrome(d)
+
+    head = _mascot(_MASCOT_BOX[2])
+    if head is not None:
+        cx, cy, _h = _MASCOT_BOX
+        img.paste(head, (cx - head.size[0] // 2, cy - head.size[1] // 2), head)
+        d = ImageDraw.Draw(img)
+
+    L, W = _HOUSE_COL_L, _HOUSE_COL_W
+    head_f = _font(_SEMIBOLD, 52)
+    y = 168
+    for line in _wrap(d, _HOUSE_TAGLINE, head_f, W, 3):
+        d.text((L, y), line, font=head_f, fill=INK)
+        y += 62
+    sub_f = _font(_REGULAR, 30)
+    y += 4
+    for line in _wrap(d, _HOUSE_SUB, sub_f, W, 2):
+        d.text((L, y), line, font=sub_f, fill=INK_MUTED)
+        y += 40
+
+    # Steps: the longest one sets the size for all three, so they stay a set.
+    num_f = _font(_SEMIBOLD, 20)
+    indent = 52
+    for size in (25, 23, 21, 19):
+        step_f = _font(_REGULAR, size)
+        if max(d.textlength(s_, font=step_f) for s_ in _HOUSE_STEPS) <= W - indent:
+            break
+    y = 372
+    for i, step in enumerate(_HOUSE_STEPS, 1):
+        d.ellipse([L, y, L + 32, y + 32], fill=BG, outline=BORDER, width=1)
+        n = str(i)
+        d.text((L + 16 - d.textlength(n, font=num_f) / 2, y + 4), n,
+               font=num_f, fill=INK_MUTED)
+        d.text((L + indent, y + 3), step, font=step_f, fill=INK)
+        y += 52
+
+    _footer(d, "arealgem.github.io/Truth-bot", "beta")
+    return _png(img)
+
+
 def render_claim_card(*, claim_text: str, verdict: str, speaker: str,
                       display_date: str) -> bytes:
     """One card per claim. The claim is the hero; the verdict labels it."""

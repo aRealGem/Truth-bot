@@ -9073,11 +9073,30 @@ class SitePublisher:
             logger.debug("Copied icon %s -> %s", svg.name, dst)
 
     def _copy_social_assets(self) -> None:
-        """Copy social card + favicon PNGs to assets/, and favicon.ico to site root."""
+        """Copy favicon PNGs to assets/ and favicon.ico to the site root, and
+        RENDER the house social card.
+
+        The house card used to be a committed PNG showing the then-latest
+        report -- "2026-03-04 · 5 claims · Largely False" -- and stayed on
+        every page long after all three figures were wrong. check_site reads
+        HTML and never pixels, so nothing could catch it.
+
+        A generator did exist (social-media/gen_assets.py), which made it
+        worse rather than better: it hardcoded those figures as string
+        literals, so re-running it reproduced exactly the same stale card.
+        That routine is now removed.
+
+        This one carries NO figures, so it can drift from neither the site's
+        look nor the corpus, and it is built from the shared card chrome and
+        the vendored font rather than whatever the rendering machine had.
+        """
+        from truthbot.publish.report_cards import render_house_card
+
         src_dir = Path(__file__).resolve().parent / "assets"
         assets_dir = self._root / "assets"
         assets_dir.mkdir(parents=True, exist_ok=True)
-        for name in ("social-card.png", "favicon-32.png", "apple-touch-icon.png"):
+        (assets_dir / "social-card.png").write_bytes(render_house_card())
+        for name in ("favicon-32.png", "apple-touch-icon.png"):
             src = src_dir / name
             if src.exists():
                 (assets_dir / name).write_bytes(src.read_bytes())

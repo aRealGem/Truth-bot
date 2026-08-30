@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
-"""Generate truth-bot social card (1200×630) and favicons."""
+"""Generate truth-bot favicons.
+
+The 1200x630 social card USED to be made here and no longer is. It hardcoded
+one report's figures as string literals -- "Donald Trump", "2026-03-04",
+"5 claims", "Largely False", and a 20/20/60 verdict bar -- so it could only
+ever reproduce the same card, which went on being served after all of those
+figures were wrong. Re-running it was not a fix; it was how the staleness
+would have been re-applied. The house card is now rendered at publish time by
+truthbot.publish.report_cards.render_house_card, carries no figures at all,
+and uses the vendored font instead of a system one.
+
+The favicon routines below still resolve Liberation fonts by absolute path and
+write to a hardcoded OUT directory from another machine, so this script does
+not run as-is here. It is kept as the provenance record for the committed
+favicon PNGs, not as a working build step.
+"""
 
 from PIL import Image, ImageDraw, ImageFont
 import os
@@ -24,175 +39,6 @@ SANS       = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
 SANS_BOLD  = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
 MONO       = "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf"
 MONO_BOLD  = "/usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf"
-
-
-def make_social_card():
-    """1200×630 OG/Twitter social preview card."""
-    W, H = 1200, 630
-    img = Image.new("RGB", (W, H), BG)
-    draw = ImageDraw.Draw(img)
-
-    # --- Subtle border ---
-    draw.rectangle([0, 0, W-1, H-1], outline=BORDER, width=1)
-
-    # --- Top status bar strip ---
-    draw.rectangle([0, 0, W, 28], fill=INK)
-    f_status = ImageFont.truetype(MONO, 11)
-    draw.text((20, 7), "● OPERATIONAL", fill="#4ade80", font=f_status)
-    draw.text((170, 7), "PIPELINE V0.2.0", fill="#d6d3d1", font=f_status)
-    draw.text((370, 7), "MULTI-MODEL CONSENSUS", fill="#d6d3d1", font=f_status)
-
-    # --- Wordmark ---
-    f_word = ImageFont.truetype(SERIF_BOLD, 48)
-    draw.text((60, 70), "truth-bot", fill=INK, font=f_word)
-    # The signature dot in a warm tone
-    dot_x = 60 + draw.textlength("truth-bot", font=f_word)
-    draw.text((dot_x, 70), ".", fill="#c9a158", font=f_word)
-
-    # --- Tagline ---
-    f_tag = ImageFont.truetype(SANS, 19)
-    draw.text((62, 132), "Automated political fact-checking with multi-model consensus analysis.", fill=INK_MUT, font=f_tag)
-
-    # --- Simplified Truthy silhouette (right side) ---
-    tx, ty = 920, 120  # center of head
-    # Head (large circle)
-    r_head = 95
-    draw.ellipse([tx-r_head, ty-r_head+15, tx+r_head, ty+r_head+15],
-                 fill=None, outline=INK, width=2)
-    # Fill head with very light opacity effect
-    for i in range(r_head, 0, -1):
-        alpha = int(12 + (r_head - i) * 0.15)
-        c = f"#{alpha:02x}{alpha:02x}{alpha:02x}"
-        # Just use a subtle fill
-    draw.ellipse([tx-r_head+2, ty-r_head+17, tx+r_head-2, ty+r_head+13],
-                 fill="#f0ebe3", outline=None)
-    draw.ellipse([tx-r_head, ty-r_head+15, tx+r_head, ty+r_head+15],
-                 fill=None, outline=INK, width=2)
-
-    # Visor band
-    v_top = ty - 15
-    v_h = 50
-    draw.rounded_rectangle([tx-80, v_top, tx+80, v_top+v_h], radius=25,
-                           fill="#1a1410", outline=None)
-    # Eyes in visor (LED style)
-    eye_y = v_top + v_h//2
-    for ex in [tx-30, tx+30]:
-        draw.rounded_rectangle([ex-10, eye_y-12, ex+10, eye_y+12], radius=6,
-                               fill="#50d8b0", outline=None)
-        # Highlight
-        draw.ellipse([ex-4, eye_y-6, ex+2, eye_y-2], fill="#a0ffe0")
-
-    # Antenna
-    draw.line([(tx, ty-r_head+15), (tx+2, ty-r_head-20)], fill=INK, width=3)
-    draw.ellipse([tx-4, ty-r_head-28, tx+8, ty-r_head-16], fill="#ffd870")
-    # Antenna glow dot
-    draw.ellipse([tx-1, ty-r_head-25, tx+5, ty-r_head-19], fill="#fff8d0")
-
-    # Ears
-    for ear_x in [tx-r_head-8, tx+r_head-2]:
-        draw.ellipse([ear_x, ty-5, ear_x+12, ty+30], fill="#c9a158", outline="#8a7550", width=1)
-
-    # Body (below head)
-    body_top = ty + r_head + 10
-    draw.rounded_rectangle([tx-65, body_top, tx+65, body_top+55], radius=12,
-                           fill="#f0ebe3", outline="#8a7550", width=2)
-    # Nameplate
-    draw.rounded_rectangle([tx-30, body_top+5, tx+30, body_top+17], radius=2,
-                           fill="#c9a158", outline="#8a7550", width=1)
-    f_name = ImageFont.truetype(SERIF, 9)
-    draw.text((tx-18, body_top+5), "Truthy M.", fill="#3a2e1f", font=f_name)
-
-    # Chest LED
-    draw.ellipse([tx+25, body_top+25, tx+41, body_top+41], fill="#5ac075", outline="#2a7840", width=1)
-    draw.ellipse([tx+29, body_top+28, tx+35, body_top+34], fill="#b8f5c8")
-
-    # --- "How it works" mini strip ---
-    strip_y = 195
-    f_how = ImageFont.truetype(SANS, 14)
-    f_num = ImageFont.truetype(MONO_BOLD, 12)
-    steps = [
-        "Decompose speech into claims",
-        "Verify each with multiple AI models",
-        "Aggregate into consensus verdict",
-    ]
-    sx = 62
-    for i, step in enumerate(steps):
-        # Number circle
-        draw.ellipse([sx, strip_y, sx+20, strip_y+20], fill=BORDER)
-        draw.text((sx+6, strip_y+2), str(i+1), fill=INK_FAINT, font=f_num)
-        # Step text
-        draw.text((sx+28, strip_y+2), step, fill=INK_MUT, font=f_how)
-        text_w = draw.textlength(step, font=f_how)
-        # Arrow
-        if i < 2:
-            arrow_x = sx + 28 + text_w + 15
-            draw.text((arrow_x, strip_y+1), "→", fill=INK_FAINT, font=f_how)
-            sx = arrow_x + 25
-        else:
-            sx = sx + 28 + text_w + 15
-
-    # --- Mock report card area ---
-    card_y = 270
-    draw.rectangle([60, card_y, W-60, card_y+1], fill=BORDER)
-
-    # Report header
-    f_section = ImageFont.truetype(MONO, 11)
-    draw.text((62, card_y+12), "LATEST REPORT", fill=INK_FAINT, font=f_section)
-
-    f_name_lg = ImageFont.truetype(SANS_BOLD, 26)
-    draw.text((62, card_y+35), "Donald Trump", fill=INK, font=f_name_lg)
-
-    f_meta = ImageFont.truetype(SANS, 14)
-    draw.text((62, card_y+68), "2026-03-04  ·  Joint Session of Congress  ·  5 claims", fill=INK_MUT, font=f_meta)
-
-    # Verdict pill
-    pill_x = 62
-    pill_y = card_y + 100
-    draw.rounded_rectangle([pill_x, pill_y, pill_x+130, pill_y+28], radius=3,
-                           fill=V_FALSE, outline=None)
-    f_pill = ImageFont.truetype(SANS_BOLD, 13)
-    draw.text((pill_x+10, pill_y+6), "Largely False", fill="#ffffff", font=f_pill)
-    f_ratio = ImageFont.truetype(SANS, 13)
-    draw.text((pill_x+142, pill_y+7), "3 of 5 claims", fill=INK_MUT, font=f_ratio)
-
-    # Verdict bar (full width)
-    bar_y = card_y + 145
-    bar_h = 10
-    bar_left = 62
-    bar_right = W - 62
-    bar_total = bar_right - bar_left
-    # 20% true, 20% mostly-true, 60% false
-    segs = [(0.20, V_TRUE), (0.20, V_MOST), (0.60, V_FALSE)]
-    cx = bar_left
-    for pct, color in segs:
-        seg_w = int(bar_total * pct)
-        draw.rectangle([cx, bar_y, cx+seg_w, bar_y+bar_h], fill=color)
-        cx += seg_w
-
-    # Legend below bar
-    f_legend = ImageFont.truetype(SANS, 12)
-    lx = 62
-    for label, color, count in [("True", V_TRUE, "1"), ("Mostly True", V_MOST, "1"), ("False", V_FALSE, "3")]:
-        draw.rectangle([lx, bar_y+20, lx+10, bar_y+30], fill=color)
-        draw.text((lx+14, bar_y+18), f"{label} {count}", fill=INK_MUT, font=f_legend)
-        lx += draw.textlength(f"{label} {count}", font=f_legend) + 40
-
-    # --- Bottom verdict color strip (full width) ---
-    strip_h = 6
-    strip_top = H - strip_h
-    total_w = W
-    cx = 0
-    for pct, color in [(0.25, V_TRUE), (0.25, V_MOST), (0.50, V_FALSE)]:
-        seg_w = int(total_w * pct)
-        draw.rectangle([cx, strip_top, cx+seg_w, H], fill=color)
-        cx += seg_w
-
-    # --- Footer text ---
-    f_foot = ImageFont.truetype(MONO, 11)
-    draw.text((62, H-28), "PIPELINE V0.2.0  ·  PROMPT 39B42838  ·  GITHUB.COM/AREALGEM/TRUTH-BOT", fill=INK_FAINT, font=f_foot)
-
-    img.save(os.path.join(OUT, "social-card.png"), "PNG", optimize=True)
-    print("✓ social-card.png (1200×630)")
 
 
 def make_truthy_favicon(size, filename):
@@ -306,7 +152,6 @@ def make_apple_touch():
 
 
 if __name__ == "__main__":
-    make_social_card()
     make_favicon_ico()
     make_truthy_favicon(16, "favicon-16.png")
     make_truthy_favicon(32, "favicon-32.png")
