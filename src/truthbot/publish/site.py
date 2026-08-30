@@ -1456,9 +1456,15 @@ _TRUTHY_SVG = (
     '<ellipse cx="252" cy="144" rx="2" ry="6" fill="#2a1e10" opacity="0.8"/>'
     '<ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#headShade)" stroke="#8a7550" stroke-width="2"/>'
     '<ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#rimLight)" opacity="0.7"/>'
-    '<ellipse cx="108" cy="95" rx="26" ry="14" fill="#ffffff" opacity="0.55"/>'
-    '<ellipse cx="104" cy="92" rx="10" ry="5" fill="#ffffff" opacity="0.9"/>'
-    '<ellipse cx="140" cy="80" rx="8" ry="3" fill="#ffffff" opacity="0.4"/>'
+    # The skull's specular highlights are GONE -- three white ellipses used to
+    # sit here (a broad soft one at rx=26 ry=14 opacity 0.55, a hard glint, and
+    # a detached streak at cx=140). White at 55% over the cream head is a pale
+    # grey, and at card and icon sizes the group stopped reading as light on a
+    # curved surface and started reading as a smudge on his forehead. Removing
+    # only the broad one was tried first and was worse: without the soft
+    # gradient to sit in, the lone hard glint read as a stray white blob rather
+    # than a highlight. The head now relies on #headShade and #rimLight alone,
+    # which are gradients across the whole form and so survive any scale.
     '<path d="M 210 110 L 218 118" stroke="#8a7550" stroke-width="1" opacity="0.5"/>'
     '<circle cx="72" cy="180" r="3" fill="#8a7550"/>'
     '<circle cx="72" cy="180" r="2" fill="url(#brassShade)"/>'
