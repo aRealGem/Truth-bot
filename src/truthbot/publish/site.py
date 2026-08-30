@@ -171,7 +171,13 @@ PIPELINE_VERSION = "0.2.0"
 # truthbot.config, but read from the environment directly so the render layer
 # keeps its zero-config-import convention (same reason SitePublisher reads
 # TRUTHBOT_SITE_ROOT itself).
-_DEFAULT_SITE_URL = "https://raw.githack.com/aRealGem/Truth-bot/main/site-pca"
+#
+# GitHub Pages since 2026-08-29. This MUST track wherever the site is actually
+# served from: it is what canonical, og:url, og:image, every feed.xml entry and
+# the reader-feedback prefill all resolve against. When the site moved to Pages
+# and this was left pointing at the githack mirror, the published pages spent a
+# day telling crawlers and social platforms that their real home was elsewhere.
+_DEFAULT_SITE_URL = "https://arealgem.github.io/Truth-bot/site-pca"
 
 
 def _site_url() -> str:
@@ -379,7 +385,46 @@ def _esc(text: str) -> str:
 #: than as a constant here for the same reason ``data/reason_codes.json`` does:
 #: changing it should be a reviewable one-file diff, not an edit buried in a
 #: 9,000-line renderer.
+#: The occasion a speech was given (e.g. "2026 State of the Union"), keyed by
+#: speech_id. AUTHORED, never derived: "President + Capitol + January" looks
+#: like it implies a State of the Union, but that is wrong for an inaugural,
+#: a farewell, and for a first-year address, which is formally an Address to a
+#: Joint Session. Mislabelling the occasion on our own share card is not a
+#: mistake a fact-checker gets to make. No entry -> no label, never a guess.
+_REPORT_EVENTS_PATH = Path(__file__).resolve().parents[3] / "data" / "report_events.json"
+
 _READER_FEEDBACK_PATH = Path(__file__).resolve().parents[3] / "data" / "reader_feedback.json"
+
+
+#: Verdicts that earn their own claim card. Unverifiable and Models-split are
+#: excluded: "we could not check this" is the least shareable thing the site
+#: produces, and they are a quarter of the corpus by weight.
+_CARDED_VERDICTS = frozenset({"True", "Mostly True", "Truthy",
+                              "Exaggerated", "Misleading", "Falsey", "False"})
+
+
+def _report_card_path(report_slug: str) -> str:
+    """Site-relative path of a report's share card.
+
+    One definition, three callers (report page, triage page, claim page) --
+    they must agree or a page will name a card that was never written.
+    """
+    return f"assets/cards/{report_slug}.png"
+
+
+def _claim_card_path(claim_id: str) -> str:
+    """Site-relative path of a claim's own share card."""
+    return f"assets/cards/claims/{claim_id}.png"
+
+
+@lru_cache(maxsize=1)
+def _report_events() -> dict:
+    """speech_id -> occasion label. Missing file or entry -> no label."""
+    try:
+        doc = json.loads(_REPORT_EVENTS_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {str(k): str(v) for k, v in (doc.get("events") or {}).items() if v}
 
 
 @lru_cache(maxsize=1)
@@ -1411,9 +1456,15 @@ _TRUTHY_SVG = (
     '<ellipse cx="252" cy="144" rx="2" ry="6" fill="#2a1e10" opacity="0.8"/>'
     '<ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#headShade)" stroke="#8a7550" stroke-width="2"/>'
     '<ellipse cx="150" cy="148" rx="100" ry="93" fill="url(#rimLight)" opacity="0.7"/>'
-    '<ellipse cx="108" cy="95" rx="26" ry="14" fill="#ffffff" opacity="0.55"/>'
-    '<ellipse cx="104" cy="92" rx="10" ry="5" fill="#ffffff" opacity="0.9"/>'
-    '<ellipse cx="140" cy="80" rx="8" ry="3" fill="#ffffff" opacity="0.4"/>'
+    # The skull's specular highlights are GONE -- three white ellipses used to
+    # sit here (a broad soft one at rx=26 ry=14 opacity 0.55, a hard glint, and
+    # a detached streak at cx=140). White at 55% over the cream head is a pale
+    # grey, and at card and icon sizes the group stopped reading as light on a
+    # curved surface and started reading as a smudge on his forehead. Removing
+    # only the broad one was tried first and was worse: without the soft
+    # gradient to sit in, the lone hard glint read as a stray white blob rather
+    # than a highlight. The head now relies on #headShade and #rimLight alone,
+    # which are gradients across the whole form and so survive any scale.
     '<path d="M 210 110 L 218 118" stroke="#8a7550" stroke-width="1" opacity="0.5"/>'
     '<circle cx="72" cy="180" r="3" fill="#8a7550"/>'
     '<circle cx="72" cy="180" r="2" fill="url(#brassShade)"/>'
@@ -2354,6 +2405,7 @@ def _social_head(
     include_feed_link: bool = False,
     page_path: Optional[str] = None,
     meta_description: Optional[str] = None,
+    og_image_path: Optional[str] = None,
 ) -> str:
     """Emit favicon links, description/canonical meta, Open Graph meta,
     Twitter Card meta, and optional feed link.
@@ -2371,7 +2423,9 @@ def _social_head(
     """
     twitter_desc = og_description
     desc = og_description if meta_description is None else meta_description
-    image_abs = f"{_site_url()}/assets/social-card.png"
+    # Per-report card when the caller has one, else the house card. Both
+    # og:image and twitter:image read this, so they cannot disagree.
+    image_abs = f"{_site_url()}/{og_image_path or 'assets/social-card.png'}"
     parts = [
         # Readability pass (Section 9): SVG first — legible at 16px, unlike
         # the 232-byte favicon.ico. Listed before the .ico/32px-PNG
@@ -2466,6 +2520,7 @@ def _page_report(
     og_description: str = _DEFAULT_OG_DESCRIPTION,
     og_type: str = "article",
     page_path: Optional[str] = None,
+    og_image_path: Optional[str] = None,
 ) -> str:
     stamp = f"Analyzed {analyzed_at}" if analyzed_at else "Analyzed " + _reproducible_now().strftime("%Y-%m-%d %H:%M UTC")
     foot_html = (
@@ -2483,7 +2538,7 @@ def _page_report(
         '  <meta name="theme-color" content="#fafaf9">\n'
         '  <meta name="color-scheme" content="light">\n'
         + _social_head("../", _og_title, og_description, og_type=og_type,
-                       page_path=page_path)
+                       page_path=page_path, og_image_path=og_image_path)
         + f'  <title>{_esc(title.removesuffix(" — truth-bot"))} — truth-bot</title>\n'
         + _GOOGLE_FONTS + '\n'
         '  <link rel="stylesheet" href="../assets/styles.css">\n'
@@ -7592,6 +7647,7 @@ def _render_report(site_report: SiteReport) -> str:
         og_description=_report_og_desc,
         og_type="article",
         page_path=site_report.report_url,
+        og_image_path=_report_card_path(site_report.report_slug),
     )
 
 
@@ -7728,6 +7784,7 @@ def _render_statement_triage(site_report: SiteReport) -> str:
         ),
         og_type="article",
         page_path=f"reports/{site_report.triage_slug}.html",
+        og_image_path=_report_card_path(site_report.report_slug),
     )
 
 
@@ -7781,6 +7838,14 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
         f"{_agree_text} "
         "Checked against a shared, cited evidence pack."
     )
+    # Only DECIDED claims get their own card, so only they may name one.
+    # Naming a card unconditionally ships a 404 og:image on every undecided
+    # claim -- 142 of 529 here -- and nothing would have reported it: the
+    # page renders fine and only the social preview breaks, silently.
+    _claim_verdict = getattr(bundle.consensus, "consensus_verdict", "") or ""
+    _claim_og_image = (_claim_card_path(bundle.claim.id)
+                       if _claim_verdict in _CARDED_VERDICTS
+                       else _report_card_path(site_report.report_slug))
     return _page_report(
         f"Claim: {_claim_text_trunc}",
         body,
@@ -7789,6 +7854,7 @@ def _render_claim_page(bundle: VerdictBundle, site_report: SiteReport) -> str:
         og_description=_claim_og_desc,
         og_type="article",
         page_path=f"claims/{bundle.claim.id}.html",
+        og_image_path=_claim_og_image,
     )
 
 
@@ -8839,6 +8905,7 @@ class SitePublisher:
         # nothing has to CARRY it, so no reconstruction path can drop it).
         set_reason_pills(self._reason_pills)
         set_corpus_genre_rates(self._corpus_genre_rates)
+        self._write_cards(site_report)
 
         # Backfill speaker/date onto bundles that bridged without them
         # (PR-A2.1). The bridge only threads speaker/date_str when the claim
@@ -8946,8 +9013,52 @@ class SitePublisher:
     # ── Private helpers ───────────────────────────────────────────────────────
 
     def _ensure_structure(self) -> None:
-        for sub in ("reports", "claims", "assets", "data", "assets/icons"):
+        for sub in ("reports", "claims", "assets", "data", "assets/icons",
+                    "assets/cards", "assets/cards/claims"):
             (self._root / sub).mkdir(parents=True, exist_ok=True)
+
+    def _write_cards(self, site_report: SiteReport) -> None:
+        """Share cards: one per report, one per DECIDED claim.
+
+        Every figure is read here and passed in; report_cards computes
+        nothing. The values are the same ones the HTML renders --
+        _family_verdict over the strict distribution, and
+        len(checkable_bundles) -- both of which consistency.check_site
+        already re-derives against data/*.json. That makes the card linted
+        transitively: a drift fails on the page before the image can lie.
+
+        Undecided claims get no card. They are the least shareable thing on
+        the site and would be a quarter of the weight; their pages fall back
+        to the parent report card via _social_head.
+        """
+        from truthbot.publish.report_cards import (render_claim_card,
+                                                   render_report_card)
+        dist = site_report.verdict_distribution_strict
+        headline, _css, ratio_text = _family_verdict(dist)
+        card = render_report_card(
+            speaker=site_report.speaker,
+            role=getattr(site_report, "role", "") or "",
+            display_date=site_report.display_date,
+            event=_report_events().get(getattr(site_report, "speech_id", ""), ""),
+            headline=headline,
+            ratio_text=ratio_text,
+            headline_verdict=_headline_verdict(dist)[0],
+            distribution=dist,
+            claim_count=len(site_report.checkable_bundles),
+        )
+        (self._root / _report_card_path(site_report.report_slug)).write_bytes(card)
+
+        for b in site_report.checkable_bundles:
+            verdict = getattr(b.consensus, "consensus_verdict", "") or ""
+            if verdict not in _CARDED_VERDICTS:
+                continue
+            png = render_claim_card(
+                claim_text=b.claim.text,
+                verdict=verdict,
+                speaker=site_report.speaker,
+                display_date=site_report.display_date,
+            )
+            (self._root / _claim_card_path(b.claim.id)).write_bytes(png)
 
     def _copy_assets(self) -> None:
         self._write(self._root / "assets" / "styles.css", CSS)
@@ -8968,11 +9079,30 @@ class SitePublisher:
             logger.debug("Copied icon %s -> %s", svg.name, dst)
 
     def _copy_social_assets(self) -> None:
-        """Copy social card + favicon PNGs to assets/, and favicon.ico to site root."""
+        """Copy favicon PNGs to assets/ and favicon.ico to the site root, and
+        RENDER the house social card.
+
+        The house card used to be a committed PNG showing the then-latest
+        report -- "2026-03-04 · 5 claims · Largely False" -- and stayed on
+        every page long after all three figures were wrong. check_site reads
+        HTML and never pixels, so nothing could catch it.
+
+        A generator did exist (social-media/gen_assets.py), which made it
+        worse rather than better: it hardcoded those figures as string
+        literals, so re-running it reproduced exactly the same stale card.
+        That routine is now removed.
+
+        This one carries NO figures, so it can drift from neither the site's
+        look nor the corpus, and it is built from the shared card chrome and
+        the vendored font rather than whatever the rendering machine had.
+        """
+        from truthbot.publish.report_cards import render_house_card
+
         src_dir = Path(__file__).resolve().parent / "assets"
         assets_dir = self._root / "assets"
         assets_dir.mkdir(parents=True, exist_ok=True)
-        for name in ("social-card.png", "favicon-32.png", "apple-touch-icon.png"):
+        (assets_dir / "social-card.png").write_bytes(render_house_card())
+        for name in ("favicon-32.png", "apple-touch-icon.png"):
             src = src_dir / name
             if src.exists():
                 (assets_dir / name).write_bytes(src.read_bytes())

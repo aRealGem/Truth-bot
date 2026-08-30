@@ -1,0 +1,33 @@
+{
+  "schema": "truthbot-report-events v1",
+  "_comment": [
+    "The occasion a speech was given, keyed by speech_id. Shown on the report's",
+    "share card and available to the report page.",
+    "",
+    "AUTHORED, NEVER DERIVED. 'President + U.S. Capitol + late January' looks",
+    "like it implies State of the Union, but that heuristic is wrong for an",
+    "inaugural, a farewell, and -- most easily missed -- for a first-year",
+    "address, which is formally an Address to a Joint Session of Congress and",
+    "NOT a State of the Union. A fact-checking site cannot afford to mislabel",
+    "the occasion on its own share card, so each entry is a judgement recorded",
+    "by hand.",
+    "",
+    "Trump 2026 IS a State of the Union: his 2025 address was the joint-session",
+    "one, and the transcript itself says 'When I last spoke in this chamber 12",
+    "months ago'.",
+    "",
+    "A speech_id with no entry simply has no event label; the card omits the",
+    "line rather than guessing. Future runs should set this at publish time.",
+    "",
+    "WORDING: spelled out here because the card has no space pressure and the",
+    "audience is broad. The short form ('2026 SOTU') is for posts, where 300",
+    "characters binds and readers are already politically engaged."
+  ],
+  "events": {
+    "clinton_1998": "1998 State of the Union",
+    "gwbush_2006": "2006 State of the Union",
+    "obama_2014": "2014 State of the Union",
+    "biden_2022": "2022 State of the Union",
+    "trump_2026": "2026 State of the Union"
+  }
+}

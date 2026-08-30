@@ -45,6 +45,21 @@ truthbot = "truthbot.pipeline:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+# Declared explicitly rather than left to include-package-data's defaults.
+# The publish path treats a missing vendored font as FATAL -- report_cards
+# raises CardFontError on purpose, because a silently-skipped card ships a 404
+# og:image that nothing reports. That turns "are the non-Python assets actually
+# in the wheel?" into a correctness question rather than a cosmetic one, and it
+# should not rest on a default. CI installs editable, so this path is untested
+# by the current pipeline; that is the reason to be explicit, not to skip it.
+[tool.setuptools.package-data]
+"truthbot.publish" = [
+    "assets/*.png", "assets/*.ico", "assets/*.svg",
+    "assets/icons/*.svg",
+    "assets/fonts/*.ttf", "assets/fonts/OFL.txt",
+    "assets/social/*.png",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
