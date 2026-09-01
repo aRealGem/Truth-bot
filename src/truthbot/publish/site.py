@@ -9306,6 +9306,12 @@ class SitePublisher:
             "source_of_claims_professional_public_title": sr.source_of_claims_professional_public_title or sr.role,
             "event":               sr.event,
             "channel":             sr.channel,
+            # Step 3f (P-senate): the authored occasion class, always present
+            # (UNCLASSIFIED rather than omitted/null) so every reader of
+            # reports.json can partition without a None-check.
+            "class":               report_class(getattr(sr, "speech_id", "") or ""),
+            "class_label":         report_class_label(
+                report_class(getattr(sr, "speech_id", "") or "")),
         }
 
     def _claim_meta(self, bundle: VerdictBundle, sr: SiteReport) -> dict:
