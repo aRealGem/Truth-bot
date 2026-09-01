@@ -27,7 +27,14 @@
     "",
     "'order' fixes the index section order. It is authored too -- there is",
     "no meaningful sort key over class names, and alphabetical order would",
-    "put a new class somewhere arbitrary."
+    "put a new class somewhere arbitrary.",
+    "",
+    "'labels_inline' is the mid-sentence form ('the five presidential",
+    "addresses checked'). It is authored rather than lower-cased from",
+    "'labels' because casing is not mechanical: 'Presidential addresses'",
+    "de-capitalises mid-sentence but 'Senate' is a proper noun and does",
+    "not. Deriving it would silently produce 'the four senate floor",
+    "speeches checked'."
   ],
   "order": [
     "presidential_address",
@@ -35,6 +42,10 @@
   ],
   "labels": {
     "presidential_address": "Presidential addresses",
+    "senate_floor": "Senate floor speeches"
+  },
+  "labels_inline": {
+    "presidential_address": "presidential addresses",
     "senate_floor": "Senate floor speeches"
   },
   "classes": {

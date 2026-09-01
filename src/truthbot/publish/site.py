@@ -395,6 +395,15 @@ _REPORT_EVENTS_PATH = Path(__file__).resolve().parents[3] / "data" / "report_eve
 
 _READER_FEEDBACK_PATH = Path(__file__).resolve().parents[3] / "data" / "reader_feedback.json"
 
+#: The occasion-class registry (P-senate). Authored in data/report_classes.json;
+#: see that file's comment for why class is not derived from the speaker.
+_REPORT_CLASSES_PATH = Path(__file__).resolve().parents[3] / "data" / "report_classes.json"
+
+#: A report with no authored class. It still renders and stays visible, but is
+#: excluded from every rate statistic -- forgetting to classify a new report
+#: understates the corpus rather than silently contaminating another class.
+UNCLASSIFIED = "unclassified"
+
 
 #: Verdicts that earn their own claim card. Unverifiable and Models-split are
 #: excluded: "we could not check this" is the least shareable thing the site
@@ -425,6 +434,56 @@ def _report_events() -> dict:
     except (OSError, ValueError):
         return {}
     return {str(k): str(v) for k, v in (doc.get("events") or {}).items() if v}
+
+
+@lru_cache(maxsize=1)
+def _report_classes() -> dict:
+    """The authored class registry. Missing/broken file -> everything unclassified.
+
+    Failing to the empty registry is deliberate: with no classes, every report
+    is UNCLASSIFIED, every rate statistic suppresses itself, and the site still
+    renders. The alternative -- guessing a class -- is what the file exists to
+    prevent.
+    """
+    try:
+        doc = json.loads(_REPORT_CLASSES_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"classes": {}, "labels": {}, "labels_inline": {}, "order": []}
+    return {
+        "classes": {str(k): str(v)
+                    for k, v in (doc.get("classes") or {}).items() if v},
+        "labels": {str(k): str(v)
+                   for k, v in (doc.get("labels") or {}).items() if v},
+        "labels_inline": {str(k): str(v)
+                          for k, v in (doc.get("labels_inline") or {}).items() if v},
+        "order": [str(c) for c in (doc.get("order") or [])],
+    }
+
+
+def report_class(speech_id: str) -> str:
+    """The authored class of a speech, or UNCLASSIFIED. Never derived."""
+    if not speech_id:
+        return UNCLASSIFIED
+    return _report_classes()["classes"].get(str(speech_id), UNCLASSIFIED)
+
+
+def report_class_label(cls: str) -> str:
+    """Section-heading form ('Presidential addresses')."""
+    if cls == UNCLASSIFIED:
+        return "Unclassified"
+    return _report_classes()["labels"].get(cls, cls)
+
+
+def report_class_label_inline(cls: str) -> str:
+    """Mid-sentence form ('presidential addresses'). Authored, not lower-cased."""
+    if cls == UNCLASSIFIED:
+        return "unclassified reports"
+    return _report_classes()["labels_inline"].get(cls, report_class_label(cls))
+
+
+def report_class_order() -> "list[str]":
+    """Authored section order; classes outside it sort after, alphabetically."""
+    return list(_report_classes()["order"])
 
 
 @lru_cache(maxsize=1)
@@ -1863,9 +1922,12 @@ def _verdict_panel(site_report) -> str:
     # speech regardless of the data. A rank statement ("the highest rate of the
     # five speeches checked") is what this sample size can actually support.
     genre_note_html = ""
-    rate_table = _genre_rate_table()
     this_speech = getattr(site_report, "speech_id", "") or ""
-    if rate_table and this_speech in rate_table:
+    # Partitioned by the class of THIS speech (M-6). An unclassified report
+    # gets an empty table and therefore no note.
+    rate_table = _genre_rate_table(this_speech)
+    if (len(rate_table) >= _GENRE_NOTE_MIN_SPEECHES
+            and this_speech in rate_table):
         mine = rate_table[this_speech]
         top = max(row["rate"] for row in rate_table.values())
         # Strictly highest, or tied for highest. Compared on the same rounded
@@ -1876,11 +1938,14 @@ def _verdict_panel(site_report) -> str:
             n_speeches = len(rate_table)
             median_rate = _median([row["rate"] for row in rate_table.values()])
             speeches_word = _CARDINALS.get(n_speeches, str(n_speeches))
+            # Authored mid-sentence label, never lower-cased mechanically:
+            # "presidential addresses" but "Senate floor speeches".
+            class_phrase = report_class_label_inline(report_class(this_speech))
             genre_line = (
                 f"Of this speech's {mine['checked']} checked claims, "
                 f"{mine['coded']} ({mine['rate']:.1f}%) were recorded as beyond "
                 f"the public record — the highest rate of the {speeches_word} "
-                f"speeches checked (median {median_rate:.1f}%)."
+                f"{class_phrase} checked (median {median_rate:.1f}%)."
                 # Sentence 2 is VERBATIM from the shipped note. Do not edit.
                 " That concentration is a property of the speech's "
                 "rhetorical genre — personal stories, intentions, and "
@@ -2842,12 +2907,24 @@ def build_corpus_genre_rates(runs_dir: "Optional[Path]" = None) -> dict[str, dic
     return out
 
 
-def _genre_rate_table() -> dict[str, dict]:
+#: A rank statement ("the highest rate of the N ... checked") needs a field to
+#: rank within. Below three the note either restates the obvious ("higher than
+#: the one other") or is a coin flip, so it suppresses itself.
+_GENRE_NOTE_MIN_SPEECHES = 3
+
+
+def _genre_rate_table(speech_id: str = "") -> dict[str, dict]:
     """Join the corpus claim counts to the reason-coded map -> per-speech rates.
 
     Returns ``{speech_id: {"checked", "coded", "rate"}}``. Speeches with no
     checked claims are absent; a speech with zero coded claims still appears
     with rate 0.0 so it counts toward the median.
+
+    PARTITIONED BY CLASS. With ``speech_id`` given, the table is restricted to
+    that speech's authored class, so a rate is only ever compared against
+    like occasions -- a Senate floor speech is not ranked against a State of
+    the Union. An UNCLASSIFIED speech gets an EMPTY table: it is excluded from
+    every rate statistic rather than pooled with anything.
     """
     if not _CORPUS_GENRE_RATES:
         return {}
@@ -2864,7 +2941,13 @@ def _genre_rate_table() -> dict[str, dict]:
         n = coded.get(speech, 0)
         table[speech] = {"checked": checked, "coded": n,
                          "rate": 100.0 * n / checked}
-    return table
+    if not speech_id:
+        return table
+    cls = report_class(speech_id)
+    if cls == UNCLASSIFIED:
+        return {}
+    return {sid: row for sid, row in table.items()
+            if report_class(sid) == cls}
 
 
 #: Small cardinals spelled out; the ratified copy wants "five speeches", not
