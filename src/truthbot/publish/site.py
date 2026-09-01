@@ -1815,7 +1815,7 @@ def _verdict_panel(site_report) -> str:
         '    <div class="stat">'
         + _icon_svg(_ICON_BODY_LEADERS, size=32)
         + '<div class="num">1</div>'
-        + '<div class="lbl">Leaders Reviewed</div></div>\n'
+        + '<div class="lbl">Speakers Reviewed</div></div>\n'
         '  </div>\n'
     )
 
@@ -4139,6 +4139,35 @@ header.masthead:has(.mast-row) {
    inheritance. As <h2>, the UA stylesheet's own font-size/font-weight would
    otherwise win over that inherited value — reset it back to match. */
 .section-head h2 { font: inherit; }
+.section-head h3 { font: inherit; }
+
+/* Per-class index sections (P-senate 3d): a section head per occasion class,
+   each with its own small stats strip. Every figure in .class-strip is
+   scoped to that one class -- never a cross-class ratio or comparison. */
+.class-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  margin: -0.4rem 0 1.2rem;
+}
+.class-strip .cs-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.class-strip .cs-num {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.class-strip .cs-lbl {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
 
 
 /* [06] Index page — aggregate stats & verdict bar ────────────────────── */
@@ -7361,6 +7390,48 @@ def _icon_svg(body: str, size: int = 28, extra_class: str = "") -> str:
         'viewBox="0 0 24 24" fill="none" aria-hidden="true">' + body + '</svg>'
     )
 
+def _class_stats_strip(group: list[dict]) -> str:
+    """Per-class stats strip under an index section head (step 3d-2).
+
+    Five figures, every one of them scoped to THIS class alone: reports,
+    claims checked, decided, the true-leaning share of decided, and n
+    visible -- the same denominator the share is computed over, disclosed
+    explicitly so the percentage never appears without it (the site-wide
+    convention already used for the report-page headline's "N of M decided
+    claims X-leaning").
+
+    ABSOLUTE CONSTRAINT: no figure here is ever compared, ratioed, or ranked
+    against another class. Each strip is computed from -- and reads about --
+    only the reports passed in.
+    """
+    n_reports = len(group)
+    claims_checked = 0
+    decided = 0
+    true_count = 0
+    for r in group:
+        fine_dist = r.get("verdict_distribution", {}) or {}
+        dist_strict = (r.get("verdict_distribution_strict")
+                       or _agg_project_dist(fine_dist, "strict"))
+        fam = _agg_family_verdict(dist_strict)
+        claims_checked += fam.total
+        decided += fam.decided
+        true_count += fam.true_count
+    share_txt = f'{round(100 * true_count / decided)}%' if decided else "—"
+    items = [
+        (str(n_reports), f'report{"s" if n_reports != 1 else ""}'),
+        (str(claims_checked), f'claim{"s" if claims_checked != 1 else ""} checked'),
+        (str(decided), "decided"),
+        (share_txt, "true-leaning share of decided"),
+        (str(decided), "n visible"),
+    ]
+    cells = "".join(
+        f'<div class="cs-item"><span class="cs-num">{_esc(val)}</span>'
+        f'<span class="cs-lbl">{_esc(lbl)}</span></div>'
+        for val, lbl in items
+    )
+    return f'<div class="class-strip">{cells}</div>'
+
+
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
     reports = _disambiguate_report_urls(reports)
@@ -7393,7 +7464,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + '<div class="stat">'
         + _icon_svg(_ICON_BODY_LEADERS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + str(total_leaders) + '</div>'
-        + '<div class="lbl">Leaders Reviewed</div></div>'
+        + '<div class="lbl">Speakers Reviewed</div></div>'
         + '<div class="stat">'
         + _icon_svg(_ICON_BODY_CLAIMS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + str(total_claims) + '</div>'
@@ -7425,13 +7496,42 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         '</div>'
     )
 
-    cards_html = '<div class="reports">'
-    if reports:
-        for r in reports[:20]:
-            cards_html += _report_card(r)
+    # Index grouping by occasion class (step 3d-1). Cards keep exactly the
+    # order they have today WITHIN a section -- grouping only decides which
+    # section a card lands in, never re-sorts it. Section order is authored
+    # (report_class_order()); a class outside that list sorts after it,
+    # alphabetically, and UNCLASSIFIED always sorts last under its own head.
+    # A class with no reports in the visible set renders no section at all.
+    visible_reports = reports[:20]
+    if visible_reports:
+        _order = report_class_order()
+
+        def _section_sort_key(cls: str):
+            if cls in _order:
+                return (0, _order.index(cls), "")
+            if cls == UNCLASSIFIED:
+                return (2, 0, "")
+            return (1, 0, cls)
+
+        groups: "dict[str, list[dict]]" = {}
+        for r in visible_reports:
+            cls = report_class(r.get("speech_id", ""))
+            groups.setdefault(cls, []).append(r)
+
+        cards_html = ""
+        for cls in sorted(groups, key=_section_sort_key):
+            group = groups[cls]
+            cards_html += (
+                '<div class="section-head index-class-head">'
+                f'<h3>{_esc(report_class_label(cls))}</h3></div>'
+            )
+            cards_html += _class_stats_strip(group)
+            cards_html += '<div class="reports">'
+            for r in group:
+                cards_html += _report_card(r)
+            cards_html += '</div>'
     else:
-        cards_html += '<p class="dim">No reports yet.</p>'
-    cards_html += '</div>'
+        cards_html = '<div class="reports"><p class="dim">No reports yet.</p></div>'
 
     # Model-insights strip retired with the vestigial insights page
     # (remediation T0.4) — it summarized a single pseudo-model with 0%
@@ -9338,6 +9438,13 @@ class SitePublisher:
     def _report_meta(self, sr: SiteReport) -> dict:
         return {
             "id":                  sr.report_id,
+            # Occasion-class lookup key (P-senate 3d): report_class() is keyed
+            # by speech_id, not report_id (a per-run UUID) -- without this
+            # field the index has no way to know which section a report
+            # belongs in. Empty on legacy runs with no speech_id -> that
+            # report classifies as UNCLASSIFIED, same as report_class("")
+            # everywhere else, and still renders.
+            "speech_id":           sr.speech_id,
             "date":                sr.date_str,
             # Publish stamp for the feed's per-entry <updated> (1.5).
             # Deterministic when the caller sets SiteReport.generated_at
