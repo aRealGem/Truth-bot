@@ -1616,6 +1616,28 @@ def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
     }
     caps = captions_single if claim_count == 1 else captions_multi
     return caps.get(state, ""), bubble_class_map.get(state, "is-iffy")
+
+
+# Small-sample guard (step 3e): below this many DECIDED claims, a percent
+# implies more precision than the sample supports — "8 of 9" and "9 of 9"
+# both round to headlines a reader will over-trust. Under the threshold the
+# report drops the percent from the headline and swaps the "Truthy or
+# better" stat frame for a plain caveat instead of a second percent covering
+# the same ground.
+_SMALL_N_THRESHOLD = 10
+
+#: The five flagship presidential reports are exempted BY SPEECH_ID —
+#: belt-and-suspenders alongside their real decided counts (each is
+#: comfortably over the threshold; see ``data/report_classes.json``'s
+#: ``presidential_address`` class for the same five ids) so a future data
+#: anomaly could never quietly caveat one of them.
+_SMALL_N_EXEMPT_SPEECH_IDS: frozenset[str] = frozenset({
+    "clinton_1998", "gwbush_2006", "obama_2014", "biden_2022", "trump_2026",
+})
+
+_SMALL_N_NOTE = "Small sample — read the claims, not the score."
+
+
 def _verdict_panel(site_report) -> str:
     """Build the full .verdict-panel section for a report page."""
     claim_count = len(site_report.checkable_bundles)
@@ -1632,7 +1654,20 @@ def _verdict_panel(site_report) -> str:
     # since 2026-07-25 it is the percent-true figure ("56% True", color
     # carries the band) and it already renders here on report headers and in
     # ``_report_card`` on index cards. No separate band-word chip exists.
-    headline_strict, hcls_strict, ratio_text_strict = _family_verdict(dist_strict)
+    #
+    # Computed once here via ``_agg_family_verdict`` directly (rather than
+    # the ``_family_verdict`` wrapper AND a second, independent
+    # ``_agg_family_verdict`` call further down) so the small-sample guard
+    # and the headline-stats percentages read one FamilyVerdict — the
+    # decided count can never drift between the two.
+    _fam_strict = _agg_family_verdict(dist_strict)
+    headline_strict, hcls_strict, ratio_text_strict = (
+        _fam_strict.label, _fam_strict.css, _fam_strict.ratio_text)
+    t_strict, f_strict, decided_strict = (
+        _fam_strict.true_count, _fam_strict.adverse_count, _fam_strict.decided)
+    is_small_n = (decided_strict < _SMALL_N_THRESHOLD
+                  and (getattr(site_report, "speech_id", "") or "")
+                  not in _SMALL_N_EXEMPT_SPEECH_IDS)
 
     # Mascot mood derives from the published headline (remediation T0.3), not
     # the independent truthy-score rollup. Since 2026-07-25 the headline TEXT
@@ -1676,12 +1711,26 @@ def _verdict_panel(site_report) -> str:
 
     # Single headline+ratio block (the paired strict/lenient twin blocks
     # left with the lens toggle, remediation v2 1.8).
-    text_col = (
-        '<div class="vp-text-col">'
-        + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
-        + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
-        + '</div>'
-    )
+    #
+    # Small-sample guard (3e): below the threshold, a percent headline
+    # ("100% True" off one decided claim) reads as far more confident than
+    # the sample supports, so the plain ratio ("1 of 1 decided claims rated
+    # True") takes the headline slot instead and the percent is dropped —
+    # not just de-emphasized into the smaller line below it, which would
+    # still publish the same number.
+    if is_small_n:
+        text_col = (
+            '<div class="vp-text-col">'
+            + '<div class="vp-verdict neutral">' + _esc(ratio_text_strict) + '</div>'
+            + '</div>'
+        )
+    else:
+        text_col = (
+            '<div class="vp-text-col">'
+            + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
+            + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
+            + '</div>'
+        )
 
     # Headline-stats frames: "Truthy or better" + "False or worse",
     # promoted out of the stats grid into two prominent block frames
@@ -1693,11 +1742,9 @@ def _verdict_panel(site_report) -> str:
     def _pct(numerator: int, total: int) -> str:
         return format(numerator / total, '.0%') if total else "0%"
 
-    # Family math comes from the same FamilyVerdict the headline used (1.6) —
-    # chips and headline literally share one computation.
-    _fam_strict = _agg_family_verdict(dist_strict)
-    t_strict,  f_strict,  decided_strict  = (
-        _fam_strict.true_count, _fam_strict.adverse_count, _fam_strict.decided)
+    # Family math comes from the same FamilyVerdict the headline used above
+    # (1.6) — chips and headline literally share one computation; t_strict /
+    # f_strict / decided_strict were already unpacked from it there.
     truthy_pct_strict  = _pct(t_strict,  decided_strict)
     false_pct_strict   = _pct(f_strict,  decided_strict)
 
@@ -1712,15 +1759,33 @@ def _verdict_panel(site_report) -> str:
         "headline; Unverifiable and Models split are excluded."
     )
 
+    # Small-sample guard (3e): the "Truthy or better" frame is the second
+    # place a percent off this same small decided-count would appear
+    # (identical numerator/denominator as the dropped headline percent, just
+    # restated as "true-leaning" instead of "True"). Below the threshold its
+    # number+label+hint collapse to the one-line caveat; "False or worse"
+    # is unchanged (only "Truthy" is named by this guard's spec).
+    if is_small_n:
+        truthy_stat_body_html = (
+            '      <div class="vp-stat-body">\n'
+            + '        <div class="vp-stat-lbl">' + _esc(_SMALL_N_NOTE) + '</div>\n'
+            + '      </div>\n'
+        )
+        truthy_frame_title = _SMALL_N_NOTE
+    else:
+        truthy_stat_body_html = (
+            '      <div class="vp-stat-body">\n'
+            + '        <div class="vp-stat-num">' + truthy_pct_strict + '</div>\n'
+            + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
+            + '        <div class="vp-stat-hint">true-leaning / decided claims</div>\n'
+            + '      </div>\n'
+        )
+
     headline_stats_html = (
         '  <div class="vp-headline-stats">\n'
         + '    <div class="vp-headline-stat vp-stat-truthy" title="' + _esc(truthy_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_TRUTHY_RATE, size=42) + '</div>\n'
-        + '      <div class="vp-stat-body">\n'
-        + '        <div class="vp-stat-num">' + truthy_pct_strict + '</div>\n'
-        + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
-        + '        <div class="vp-stat-hint">true-leaning / decided claims</div>\n'
-        + '      </div>\n'
+        + truthy_stat_body_html
         + '    </div>\n'
         + '    <div class="vp-headline-stat vp-stat-false" title="' + _esc(false_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_FALSE_RATE, size=42) + '</div>\n'
