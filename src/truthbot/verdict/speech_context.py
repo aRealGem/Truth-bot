@@ -39,6 +39,14 @@ SPEECH_DATE: dict[str, date] = {
     "obama_2014": date(2014, 1, 28),    # Obama SOTU, 2014-01-28
     "biden_2022": date(2022, 3, 1),     # Biden SOTU, 2022-03-01
     "trump_2026": date(2026, 2, 24),    # Trump SOTU, 2026-02-24
+    # Senate floor speeches. Pinned statically for the same reason the five
+    # presidential speeches are: a re-render or a script does not go through
+    # the CLI runner that would otherwise register them, and an unpinned
+    # speech_id resolves to None -> no era gate.
+    "budd_2025-04-02": date(2025, 4, 2),     # Budd, fentanyl, 2025-04-02
+    "cruz_2026-06-24": date(2026, 6, 24),    # Cruz, Dobbs, 2026-06-24
+    "tillis_2025-01-23": date(2025, 1, 23),  # Tillis, Trump admin, 2025-01-23
+    "warren_2025-04-29": date(2025, 4, 29),  # Warren, first 100 days, 2025-04-29
 }
 
 
@@ -47,12 +55,36 @@ def speech_date_for(sid: str) -> Optional[date]:
     return SPEECH_DATE.get(sid.split(":", 1)[0]) if sid else None
 
 
-def register_speech_date(speech_id: str, utterance: date) -> None:
+class SpeechIdCollision(ValueError):
+    """A speech_id was registered against a second, different utterance date."""
+
+
+def register_speech_date(speech_id: str, utterance: date, *,
+                         strict: bool = False) -> None:
     """Register a speech-prefix → utterance date so the temporal preamble and
     Layer C evidence window resolve for a transcript that isn't a pinned eval
     fixture. Used by the v2 publish path to thread the CLI ``--date`` into
     temporal grounding for an arbitrary speech_id. Idempotent; last write wins
-    (a per-process CLI run adjudicates one speech)."""
+    (a per-process CLI run adjudicates one speech).
+
+    ``strict=True`` refuses a rebind to a DIFFERENT date, raising
+    :class:`SpeechIdCollision`. That is the CLI publish path, where the id may
+    have come from :func:`~truthbot.pipeline._default_speech_id` — which is
+    only ``speaker_year``, so two speeches by the same senator in one year
+    collide on it. Silently taking the last write there would file the second
+    speech's claims under the first speech's date and merge two distinct
+    speeches into one corpus entry. Default stays permissive: the in-process
+    callers below (and the test suite) legitimately rebind a scratch id, and
+    last-write-wins is the documented contract for them."""
+    if strict:
+        prior = SPEECH_DATE.get(speech_id)
+        if prior is not None and prior != utterance:
+            raise SpeechIdCollision(
+                f"speech_id {speech_id!r} is already registered to "
+                f"{prior.isoformat()}; refusing to rebind it to "
+                f"{utterance.isoformat()}. Two different speeches are sharing "
+                f"one id — pass an explicit --speech-id to distinguish them "
+                f"(the default id is only speaker+year).")
     SPEECH_DATE[speech_id] = utterance
 
 
