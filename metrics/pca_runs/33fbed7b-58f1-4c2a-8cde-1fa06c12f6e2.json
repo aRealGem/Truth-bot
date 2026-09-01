@@ -1,0 +1,1324 @@
+{
+  "run_id": "33fbed7b-58f1-4c2a-8cde-1fa06c12f6e2",
+  "meta": {
+    "speaker": "Ted Cruz",
+    "date": "2026-06-24",
+    "speech_id": "cruz_2026-06-24",
+    "venue": "U.S. Senate floor",
+    "roster": "prod",
+    "n_sentences": 30,
+    "n_check_worthy": 6,
+    "cost_usd": 0.0407039,
+    "retrieval_cost_usd": 0.0,
+    "total_cost_usd": 0.0407039,
+    "phase_r_pool": null,
+    "origin_speech_id": "cruz_2026_06_24_prod"
+  },
+  "claims": [
+    {
+      "sid": "cruz_2026_06_24_prod:0001",
+      "text": "Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life.",
+      "context": "Mr. President, I rise today to address one of the most consequential decisions the Supreme Court of the United States has ever made. || Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life. || At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "historical",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0002",
+      "text": "At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation.",
+      "context": "Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life. || At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation. || Overturning Roe v.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "historical",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0007",
+      "text": "Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives.",
+      "context": "And in Dobbs v. || Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives. || While today and every day we celebrate this milestone, it is important to remember that the fight for life did not end 4 years ago.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "historical",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0010",
+      "text": "Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year.",
+      "context": "It continues today and will continue to be a fight for many years to come. || Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year. || Unfortunately, in some areas, the numbers are rising.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "statistical",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0024",
+      "text": "I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life.",
+      "context": "It means uplifting pregnancy resource centers and ensuring that when mothers welcome children into the world, they have the support that they need. || I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life. || People from all across the Nation come together and walk miles and miles, marching for the unborn and the protection of human life. ] They remind us that this is a moment and a movement of conviction, of compassion, and of courage.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "historical",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0027",
+      "text": "That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life.",
+      "context": "The decision 4 years ago today was the result of millions of Americans working, standing, speaking, marching, organizing, and praying. || That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life. || Today, I call upon my colleagues in the Senate to help pass this resolution so that we can be reminded every June of the importance of the fight for life, that we can recommit to the American ideal that every single life has dignity, and that we can stand together as a nation that chooses life.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "attribution",
+        "claim_shape": "c-exist"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "sid": "cruz_2026_06_24_prod:0001",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.94,
+      "citations": [
+        "E1",
+        "E2",
+        "E4",
+        "E6"
+      ],
+      "reasoning": "Uttered 2026-06-24, exactly four years after the Supreme Court's widely anticipated June 24, 2022 Dobbs decision overturning Roe v. Wade, so the dated core assertion is accurate and the anticipation language is rhetorical framing.",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.93,
+          "reasoning": "Uttered 2026-06-24, exactly four years after the Supreme Court's widely anticipated June 24, 2022 Dobbs decision overturning Roe v. Wade, so the dated core assertion is accurate and the anticipation language is rhetorical framing.",
+          "citations": [
+            "E1",
+            "E2",
+            "E4",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "reasoning": "Evidence from multiple sources confirms the Dobbs decision was announced on June 24, 2022, exactly four years before the 2026-06-24 utterance date, matching the core timing and event asserted.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0002",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.835,
+      "citations": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6"
+      ],
+      "reasoning": "Evidence confirms the core assertion — on June 24, 2022 the Supreme Court's Dobbs decision overturned Roe v. Wade (1973), ending the federally mandated nationwide right to abortion for the first time since 1973; the loose phrase 'mandated by Federal law' and the unverified 10:10 a.m. timestamp are peripheral to that accurate core.",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.82,
+          "reasoning": "Evidence confirms the core assertion — on June 24, 2022 the Supreme Court's Dobbs decision overturned Roe v. Wade (1973), ending the federally mandated nationwide right to abortion for the first time since 1973; the loose phrase 'mandated by Federal law' and the unverified 10:10 a.m. timestamp are peripheral to that accurate core.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.85,
+          "reasoning": "Evidence directly confirms the June 24 2022 Dobbs decision overturned Roe and ended the federal constitutional mandate on abortion; the 10:10 timestamp is an uncontradicted peripheral detail.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E5"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0007",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.95,
+      "citations": [
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "reasoning": "Multiple sources confirm the Dobbs majority overruled Roe and Casey and expressly returned the authority to regulate abortion 'to the people and their elected representatives,' matching the claim's core assertion without material distortion.",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "reasoning": "Multiple sources confirm the Dobbs majority overruled Roe and Casey and expressly returned the authority to regulate abortion 'to the people and their elected representatives,' matching the claim's core assertion without material distortion.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "reasoning": "Evidence directly confirms the Dobbs majority explicitly stated abortion regulation is returned to the people and their elected representatives.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E5"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0010",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.9299999999999999,
+      "citations": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E6"
+      ],
+      "reasoning": "Evidence confirms abortion remained legal in many states as of mid-2026 (only 12 total bans; 9 states plus D.C. unrestricted) and that roughly a million abortions occur annually with monthly averages rising each year since 2022, so the core assertion — continued legality, large annual numbers, and rising counts in some areas — is supported without material distortion (the understated 'thousands upon thousands' does not overstate).",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.91,
+          "reasoning": "Evidence confirms abortion remained legal in many states as of mid-2026 (only 12 total bans; 9 states plus D.C. unrestricted) and that roughly a million abortions occur annually with monthly averages rising each year since 2022, so the core assertion — continued legality, large annual numbers, and rising counts in some areas — is supported without material distortion (the understated 'thousands upon thousands' does not overstate).",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "reasoning": "Core claim (legal in many states, producing >1M abortions/year) is directly confirmed by post-Dobbs state counts and national provision data through 2025.",
+          "citations": [
+            "E6",
+            "E1",
+            "E2",
+            "E3"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0024",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.955,
+      "citations": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6"
+      ],
+      "reasoning": "Evidence confirms the March for Life draws thousands to tens of thousands of demonstrators in Washington, DC each January (2024, 2025, 2026), so the claim's core assertion is accurate and if anything understated.",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.96,
+          "reasoning": "Evidence confirms the March for Life draws thousands to tens of thousands of demonstrators in Washington, DC each January (2024, 2025, 2026), so the claim's core assertion is accurate and if anything understated.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.95,
+          "reasoning": "Evidence from 2024-2026 confirms the annual January March for Life draws thousands (often tens of thousands) in DC each year.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5",
+            "E6"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0027",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.9,
+      "citations": [
+        "E2",
+        "E5",
+        "E6"
+      ],
+      "reasoning": "the evidence shows the Life Month resolution was introduced in the Senate in early June 2025, about a year before the June 24, 2026 utterance",
+      "votes": {
+        "TRUE": 2,
+        "FALSE": 1
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "FALSE"
+        ],
+        "arbiter": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "reasoning": "Cruz co-led and introduced the resolution designating June as \"Life Month\" (S.J.Res.56) on June 3-4, 2025, roughly one year before the June 24, 2026 utterance, matching the claim's core assertion.",
+          "citations": [
+            "E2",
+            "E5",
+            "E1",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "reasoning": "Evidence from June 2025 shows the resolution was introduced by Cruz and Young, directly contradicting the speaker's claim that they themselves introduced it a year earlier.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "role": "arbiter",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "reasoning": "the evidence shows the Life Month resolution was introduced in the Senate in early June 2025, about a year before the June 24, 2026 utterance",
+          "citations": [
+            "E2",
+            "E5",
+            "E6"
+          ]
+        }
+      ],
+      "split": true,
+      "escalated": true
+    }
+  ],
+  "characterization": [
+    {
+      "sid": "cruz_2026_06_24_prod:0004",
+      "speech": "cruz_2026_06_24_prod",
+      "idx": 4,
+      "text": "Wade was an incredible milestone.",
+      "context": "Overturning Roe v. || Wade was an incredible milestone. || It reversed precedent set by judges whose interpretations were rooted in judicial activism.",
+      "label": "non-check-worthy",
+      "source": "A1",
+      "a1_score": 0.4
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0009",
+      "speech": "cruz_2026_06_24_prod",
+      "idx": 9,
+      "text": "It continues today and will continue to be a fight for many years to come.",
+      "context": "While today and every day we celebrate this milestone, it is important to remember that the fight for life did not end 4 years ago. || It continues today and will continue to be a fight for many years to come. || Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year.",
+      "label": "non-check-worthy",
+      "source": "A1",
+      "a1_score": 0.4
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0015",
+      "speech": "cruz_2026_06_24_prod",
+      "idx": 15,
+      "text": "While we should celebrate the victories that we have achieved, we must also continue to seek new avenues and new opportunities to ensure that every life is protected.",
+      "context": "It is evident that this battle is far from over. || While we should celebrate the victories that we have achieved, we must also continue to seek new avenues and new opportunities to ensure that every life is protected. || One of the most important ways we can do this is by reaffirming the inherent value of life.",
+      "label": "non-check-worthy",
+      "source": "A1",
+      "a1_score": 0.4
+    },
+    {
+      "sid": "cruz_2026_06_24_prod:0023",
+      "speech": "cruz_2026_06_24_prod",
+      "idx": 23,
+      "text": "It means uplifting pregnancy resource centers and ensuring that when mothers welcome children into the world, they have the support that they need.",
+      "context": "It also means supporting mothers. || It means uplifting pregnancy resource centers and ensuring that when mothers welcome children into the world, they have the support that they need. || I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life.",
+      "label": "non-check-worthy",
+      "source": "A1",
+      "a1_score": 0.15000000000000002
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence's dominant speech-act is a value judgment ('one of the most consequential decisions') rather than a specific factual assertion; it frames an upcoming address with rhetorical emphasis rather than asserting a verifiable fact about what the Court decided or did.",
+      "sid": "cruz_2026_06_24_prod:0000",
+      "text": "Mr. President, I rise today to address one of the most consequential decisions the Supreme Court of the United States has ever made.",
+      "context": "|| Mr. President, I rise today to address one of the most consequential decisions the Supreme Court of the United States has ever made. || Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "Sentence fragment lacking a complete assertion; the factual content (that Roe v. Wade was overturned) is established in the preceding context and here serves only as a noun phrase within an evaluative statement, not as an independent checkable claim.",
+      "sid": "cruz_2026_06_24_prod:0003",
+      "text": "Overturning Roe v.",
+      "context": "At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation. || Overturning Roe v. || Wade was an incredible milestone.",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.85,
+      "rationale": "The sentence's dominant speech-act is a value judgment ('rooted in judicial activism') characterizing prior judicial interpretations as illegitimate. While it embeds a factual premise (that Dobbs reversed precedent), the assertion being made is evaluative/rhetorical rather than a specific, verifiable factual claim.",
+      "sid": "cruz_2026_06_24_prod:0005",
+      "text": "It reversed precedent set by judges whose interpretations were rooted in judicial activism.",
+      "context": "Wade was an incredible milestone. || It reversed precedent set by judges whose interpretations were rooted in judicial activism. || And in Dobbs v.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "Sentence fragment ('And in Dobbs v.') with no complete assertion; becomes meaningful only in context of the following clause about what the Court did, which is the actual checkable claim.",
+      "sid": "cruz_2026_06_24_prod:0006",
+      "text": "And in Dobbs v.",
+      "context": "It reversed precedent set by judges whose interpretations were rooted in judicial activism. || And in Dobbs v. || Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a value judgment and aspiration ('it is important to remember'; 'the fight for life...will continue'). While it references a temporal marker ('4 years ago'), the main assertion is normative/rhetorical about what matters and what lies ahead, not a specific verifiable factual claim.",
+      "sid": "cruz_2026_06_24_prod:0008",
+      "text": "While today and every day we celebrate this milestone, it is important to remember that the fight for life did not end 4 years ago.",
+      "context": "Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives. || While today and every day we celebrate this milestone, it is important to remember that the fight for life did not end 4 years ago. || It continues today and will continue to be a fight for many years to come.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.85,
+      "rationale": "The sentence expresses concern ('Unfortunately') about a vague trend ('the numbers are rising'), but lacks a specific, verifiable factual assertion. The referent 'the numbers' is undefined in the sentence itself and depends entirely on context interpretation. The dominant speech-act is evaluative/rhetorical rather than asserting a concrete, checkable fact.",
+      "sid": "cruz_2026_06_24_prod:0011",
+      "text": "Unfortunately, in some areas, the numbers are rising.",
+      "context": "Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year. || Unfortunately, in some areas, the numbers are rising. || There are serious challenges we face in this fight.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence expresses a value judgment ('serious challenges') without asserting a specific, verifiable fact. While the context identifies particular issues, this sentence itself is rhetorical framing rather than a checkable factual assertion.",
+      "sid": "cruz_2026_06_24_prod:0012",
+      "text": "There are serious challenges we face in this fight.",
+      "context": "Unfortunately, in some areas, the numbers are rising. || There are serious challenges we face in this fight. || The expansion of mail-order abortion pills, individuals traveling across State lines for abortions, and significant funding--taxpayer funding--for organizations like Planned Parenthood are among the most significant issues.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a value judgment ranking issues as 'most significant.' While the sentence embeds factual premises (mail-order pills exist, people travel for abortions, Planned Parenthood receives funding), the main assertion is evaluative—characterizing these as 'among the most significant issues'—which is a matter of political priority and judgment, not a verifiable fact.",
+      "sid": "cruz_2026_06_24_prod:0013",
+      "text": "The expansion of mail-order abortion pills, individuals traveling across State lines for abortions, and significant funding--taxpayer funding--for organizations like Planned Parenthood are among the most significant issues.",
+      "context": "There are serious challenges we face in this fight. || The expansion of mail-order abortion pills, individuals traveling across State lines for abortions, and significant funding--taxpayer funding--for organizations like Planned Parenthood are among the most significant issues. || It is evident that this battle is far from over.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence's dominant speech-act is a value judgment and rhetorical assertion about the state of an ongoing political struggle ('this battle is far from over'). It expresses a characterization and aspiration rather than asserting a specific, verifiable fact of public consequence. The framing as 'evident' does not convert the metaphorical claim into a checkable factual assertion.",
+      "sid": "cruz_2026_06_24_prod:0014",
+      "text": "It is evident that this battle is far from over.",
+      "context": "The expansion of mail-order abortion pills, individuals traveling across State lines for abortions, and significant funding--taxpayer funding--for organizations like Planned Parenthood are among the most significant issues. || It is evident that this battle is far from over. || While we should celebrate the victories that we have achieved, we must also continue to seek new avenues and new opportunities to ensure that every life is protected.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence's main speech-act is a value judgment and proposal ('one of the most important ways...is by reaffirming'). It asserts a normative claim about what should be prioritized, not a specific verifiable fact of public consequence.",
+      "sid": "cruz_2026_06_24_prod:0016",
+      "text": "One of the most important ways we can do this is by reaffirming the inherent value of life.",
+      "context": "While we should celebrate the victories that we have achieved, we must also continue to seek new avenues and new opportunities to ensure that every life is protected. || One of the most important ways we can do this is by reaffirming the inherent value of life. || Life is not an accident or a coincidence.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence expresses a metaphysical/religious value judgment about the nature of life ('is a gift from God'), not a specific verifiable factual assertion of public consequence.",
+      "sid": "cruz_2026_06_24_prod:0017",
+      "text": "Life is not an accident or a coincidence.",
+      "context": "One of the most important ways we can do this is by reaffirming the inherent value of life. || Life is not an accident or a coincidence. || It is a gift from God and a blessing, and it is the very greatest gift we can share.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence expresses a value judgment and religious/philosophical assertion ('gift from God', 'blessing', 'greatest gift') rather than a verifiable factual claim. The dominant speech-act is evaluative and aspirational, not factual assertion.",
+      "sid": "cruz_2026_06_24_prod:0018",
+      "text": "It is a gift from God and a blessing, and it is the very greatest gift we can share.",
+      "context": "Life is not an accident or a coincidence. || It is a gift from God and a blessing, and it is the very greatest gift we can share. || Life is the foundation of every other right we hold dear.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence expresses a value judgment and philosophical assertion about what constitutes 'the foundation' of rights—a normative claim about priorities and principles rather than a verifiable factual assertion about what occurred, was said, or can be measured.",
+      "sid": "cruz_2026_06_24_prod:0019",
+      "text": "Life is the foundation of every other right we hold dear.",
+      "context": "It is a gift from God and a blessing, and it is the very greatest gift we can share. || Life is the foundation of every other right we hold dear. || Without life, there can be no liberty, no prosperity, no pursuit of happiness.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence asserts a philosophical/rhetorical value judgment about the relationship between life and other rights, not a specific verifiable factual claim. It is a normative assertion about what 'can' exist given a premise, functioning as an argument for a position rather than a checkable fact.",
+      "sid": "cruz_2026_06_24_prod:0020",
+      "text": "Without life, there can be no liberty, no prosperity, no pursuit of happiness.",
+      "context": "Life is the foundation of every other right we hold dear. || Without life, there can be no liberty, no prosperity, no pursuit of happiness. || Protecting life means more than just defending the unborn.",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence expresses a value judgment about what 'protecting life' means and entails; it is a normative assertion about priorities and scope rather than a verifiable factual claim about what occurred, was said, or can be measured.",
+      "sid": "cruz_2026_06_24_prod:0021",
+      "text": "Protecting life means more than just defending the unborn.",
+      "context": "Without life, there can be no liberty, no prosperity, no pursuit of happiness. || Protecting life means more than just defending the unborn. || It also means supporting mothers.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence expresses a value judgment about what 'protecting life' entails—a normative claim about priorities and policy direction, not a specific verifiable factual assertion.",
+      "sid": "cruz_2026_06_24_prod:0022",
+      "text": "It also means supporting mothers.",
+      "context": "Protecting life means more than just defending the unborn. || It also means supporting mothers. || It means uplifting pregnancy resource centers and ensuring that when mothers welcome children into the world, they have the support that they need.",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence describes a general characterization of March for Life participants and their motivations using rhetorical language ('conviction, compassion, courage'). It contains no specific, verifiable factual assertion about what happened, when, how many, or what was achieved. The descriptive framing is aspirational and evaluative rather than a checkable claim of public consequence.",
+      "sid": "cruz_2026_06_24_prod:0025",
+      "text": "People from all across the Nation come together and walk miles and miles, marching for the unborn and the protection of human life. ] They remind us that this is a moment and a movement of conviction, of compassion, and of courage.",
+      "context": "I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life. || People from all across the Nation come together and walk miles and miles, marching for the unborn and the protection of human life. ] They remind us that this is a moment and a movement of conviction, of compassion, and of courage. || The decision 4 years ago today was the result of millions of Americans working, standing, speaking, marching, organizing, and praying.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.85,
+      "rationale": "The sentence's dominant speech-act is a causal attribution framed as value judgment ('was the result of'), attributing a decision to collective action in a way that celebrates and endorses that action. While it embeds a factual premise (a decision occurred 4 years ago), the assertion being made is fundamentally evaluative—crediting millions of Americans' activism as the cause—which is a rhetorical/interpretive claim rather than a specific, independently verifiable fact.",
+      "sid": "cruz_2026_06_24_prod:0026",
+      "text": "The decision 4 years ago today was the result of millions of Americans working, standing, speaking, marching, organizing, and praying.",
+      "context": "People from all across the Nation come together and walk miles and miles, marching for the unborn and the protection of human life. ] They remind us that this is a moment and a movement of conviction, of compassion, and of courage. || The decision 4 years ago today was the result of millions of Americans working, standing, speaking, marching, organizing, and praying. || That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The dominant speech-act is a policy proposal and call to action ('I call upon my colleagues...to help pass this resolution'), framed around value judgments about life's dignity and what the nation should 'choose.' The embedded factual premise (that a resolution was introduced a year ago) is context, not the main assertion being made.",
+      "sid": "cruz_2026_06_24_prod:0028",
+      "text": "Today, I call upon my colleagues in the Senate to help pass this resolution so that we can be reminded every June of the importance of the fight for life, that we can recommit to the American ideal that every single life has dignity, and that we can stand together as a nation that chooses life.",
+      "context": "That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life. || Today, I call upon my colleagues in the Senate to help pass this resolution so that we can be reminded every June of the importance of the fight for life, that we can recommit to the American ideal that every single life has dignity, and that we can stand together as a nation that chooses life. || I yield the floor.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.99,
+      "rationale": "A procedural statement indicating the speaker is relinquishing speaking time; no factual assertion of public consequence.",
+      "sid": "cruz_2026_06_24_prod:0029",
+      "text": "I yield the floor.",
+      "context": "Today, I call upon my colleagues in the Senate to help pass this resolution so that we can be reminded every June of the importance of the fight for life, that we can recommit to the American ideal that every single life has dignity, and that we can stand together as a nation that chooses life. || I yield the floor. ||",
+      "source": "A2",
+      "a1_pass": false
+    }
+  ],
+  "roster": {
+    "name": "prod",
+    "seats": {
+      "proposer": [
+        "opus-worker"
+      ],
+      "critic": [
+        "grok-4.3"
+      ],
+      "arbiter": [
+        "gpt-5.5"
+      ]
+    }
+  },
+  "evidence": {
+    "cruz_2026_06_24_prod:0001": [
+      {
+        "id": "6862de77-28a4-47fa-97a2-eccad3e20a39",
+        "claim_id": "cruz_2026_06_24_prod:0001",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2026/06/25/nx-s1-5869560/abortion-dobbs-roe-rights-restrictions-anniversary-update",
+        "source_tier": "Established",
+        "snippet": "[2026-06-25] How abortion in America has changed since the Dobbs decision A confusing patchwork of state laws began to take shape hours after the Supreme Court ruled to overturn Roe v. Wade on June 24, 2022.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986486",
+        "published_at": "2026-06-25T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "7ed59ee5-c3bb-4bf9-bb06-207b65ad6eca",
+        "claim_id": "cruz_2026_06_24_prod:0001",
+        "source_name": "Encyclopedia Britannica",
+        "source_url": "https://www.britannica.com/event/Roe-v-Wade",
+        "source_tier": "Other",
+        "snippet": "[2026-06-29] Roe v. Wade was overturned on June 24, 2022. Roe v. Wade was issued on January 22, 1973. Roe v. Wade was overturned by the U.S. Supreme Court—in Dobbs v.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986504",
+        "published_at": "2026-06-29T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "a536f40b-a171-41ba-adab-cf44081585f7",
+        "claim_id": "cruz_2026_06_24_prod:0001",
+        "source_name": "Time",
+        "source_url": "https://time.com/6189476/abortion-supreme-court-overturns-roe-v-wade/",
+        "source_tier": "Other",
+        "snippet": "[2026-03-31] On June 24, the high court ruled that pre-viability bans on elective abortions are constitutional, with Justice Samuel Alito writing the majority opinion joined by Justices Clarence Thomas, Neil Gorsuch, Brett Kavanaugh, and Amy Coney Barrett.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986515",
+        "published_at": "2026-03-31T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "9149c312-088f-49bd-b388-9ac94d719780",
+        "claim_id": "cruz_2026_06_24_prod:0001",
+        "source_name": "Encyclopedia Britannica",
+        "source_url": "https://www.britannica.com/event/Dobbs-v-Jackson-Womens-Health-Organization",
+        "source_tier": "Other",
+        "snippet": "[2026-06-29] Dobbs v. Jackson Women’s Health Organization, legal decision in which the U.S. Supreme Court in June 2022 overturned two historic Supreme Court rulings, Roe v. Wade (1973) and Planned Parenthood of Southeastern Pennsylvania v. Casey (1992), which ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986525",
+        "published_at": "2026-06-29T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "3d6ce9c1-7ffd-450a-be13-4b268992da9f",
+        "claim_id": "cruz_2026_06_24_prod:0001",
+        "source_name": "National Women's Law Center",
+        "source_url": "https://nwlc.org/resource/dobbs-v-jackson-womens-health-organization-the-court-takes-away-a-guaranteed-nationwide-right-to-abortion/",
+        "source_tier": "Other",
+        "snippet": "[2026-03-09] On June 24, 2022, the United States ... Roe v. Wade2 and Planned Parenthood v. Casey3 and declared that there is no federal constitutional right to abortion, a decision that affects millions of people nationwide....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986535",
+        "published_at": "2026-03-09T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "e408ce04-8a79-40a4-806c-b85264853d9e",
+        "claim_id": "cruz_2026_06_24_prod:0001",
+        "source_name": "AP News",
+        "source_url": "https://apnews.com/article/abortion-supreme-court-decision-854f60302f21c2c35129e58cf8d8a7b0",
+        "source_tier": "Wire",
+        "snippet": "[2024-12-11] The Supreme Court has ended constitutional protections for abortion that had been in place nearly 50 years in a decision by its conservative majority to overturn Roe v. Wade.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986546",
+        "published_at": "2024-12-11T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "cruz_2026_06_24_prod:0002": [
+      {
+        "id": "31838468-ef67-4432-80dc-7e3d0608feed",
+        "claim_id": "cruz_2026_06_24_prod:0002",
+        "source_name": "Encyclopedia Britannica",
+        "source_url": "https://www.britannica.com/event/Roe-v-Wade",
+        "source_tier": "Other",
+        "snippet": "[2026-06-29] Roe v. Wade was overturned on June 24, 2022. Roe v. Wade was issued on January 22, 1973. Roe v. Wade was overturned by the U.S. Supreme Court—in Dobbs v. Jackson Women’s Health Organization (2022)—because the Court’s majority at the ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986692",
+        "published_at": "2026-06-29T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "085eee66-08a4-439b-8691-4d3c25eafedd",
+        "claim_id": "cruz_2026_06_24_prod:0002",
+        "source_name": "HISTORY",
+        "source_url": "https://www.history.com/articles/roe-v-wade",
+        "source_tier": "Other",
+        "snippet": "[2025-12-18] Since the 1973 ruling, many states imposed restrictions on abortion rights. The Supreme Court overturned Roe v. Wade on June 24, 2022, holding that there was no longer a federal constitutional right to an abortion.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986705",
+        "published_at": "2025-12-18T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "d6823e41-4944-4290-a71d-b70fc0b629b1",
+        "claim_id": "cruz_2026_06_24_prod:0002",
+        "source_name": "Time",
+        "source_url": "https://time.com/6189476/abortion-supreme-court-overturns-roe-v-wade/",
+        "source_tier": "Other",
+        "snippet": "[2026-03-31] On June 24 the Supreme Court agreed, overturning both Roe and Casey and ruling the Constitution does not grant the right to abortion access. The decision is a sweeping victory for the conservative legal movement, which developed in the 1970s ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986716",
+        "published_at": "2026-03-31T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "87e8a543-b6a8-45ee-8a2e-1a850e3f6ed0",
+        "claim_id": "cruz_2026_06_24_prod:0002",
+        "source_name": "LegalClarity",
+        "source_url": "https://legalclarity.org/why-was-the-rowe-v-wade-case-overturned/",
+        "source_tier": "Other",
+        "snippet": "[2026-05-20] From the 1973 ruling to its 2022 reversal in Dobbs, here's how abortion rights became a state-by-state question in the U.S. ... The Supreme Court overturned Roe v. Wade on June 24, 2022, in a case called Dobbs v. Jackson Women’s Health ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986725",
+        "published_at": "2026-05-20T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "998700f3-3a82-4be9-8fde-7a30d6063320",
+        "claim_id": "cruz_2026_06_24_prod:0002",
+        "source_name": "AP News",
+        "source_url": "https://apnews.com/article/abortion-supreme-court-decision-854f60302f21c2c35129e58cf8d8a7b0",
+        "source_tier": "Wire",
+        "snippet": "[2024-12-11] The Supreme Court has ended constitutional protections for abortion that had been in place nearly 50 years, a decision by its conservative majority to overturn the court’s landmark abortion cases.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986735",
+        "published_at": "2024-12-11T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.85,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "620cc56b-f42d-4019-9dd5-e504c70c514c",
+        "claim_id": "cruz_2026_06_24_prod:0002",
+        "source_name": "LegalClarity",
+        "source_url": "https://legalclarity.org/when-did-roe-v-wade-pass-and-when-was-it-overturned/",
+        "source_tier": "Other",
+        "snippet": "[2026-05-25] ... The U.S. Supreme Court decided ... decision stood as binding law for nearly 50 years before the Court overturned it on June 24, 2022, in Dobbs v....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986745",
+        "published_at": "2026-05-25T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.85,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "cruz_2026_06_24_prod:0007": [
+      {
+        "id": "a34f714a-5942-4861-a909-ae00f717730e",
+        "claim_id": "cruz_2026_06_24_prod:0007",
+        "source_name": "GovFacts",
+        "source_url": "https://govfacts.org/health-healthcare/reproductive-health/abortion-access-laws/the-unexpected-impacts-of-state-level-abortion-bans/",
+        "source_tier": "Other",
+        "snippet": "[2026-06-08] The Court upheld Mississippi’s law in a 6–3 vote, but by 5–4, the majority went further and overturned Roe and Casey entirely. The majority declared that abortion regulation “is returned to the people and their elected representatives.”",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986851",
+        "published_at": "2026-06-08T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 1.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "a7cb9d2f-45e7-487f-9355-da48728f5f52",
+        "claim_id": "cruz_2026_06_24_prod:0007",
+        "source_name": "Virginia Law Review -",
+        "source_url": "https://virginialawreview.org/articles/the-promise-and-peril-of-direct-democracy-after-dobbs/",
+        "source_tier": "Other",
+        "snippet": "[2026-03-26] In Dobbs v. Jackson Women’s Health Organization, the Supreme Court deconstitutionalized the right to choose abortion, announcing that it was leaving the power to regulate abortion “to the people and their elected representatives.” In the wake of Dobbs, state-level “elected ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986861",
+        "published_at": "2026-03-26T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 1.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "ee0ab751-0ac4-46eb-b08a-b394ea3b19ee",
+        "claim_id": "cruz_2026_06_24_prod:0007",
+        "source_name": "LegalClarity",
+        "source_url": "https://legalclarity.org/is-abortion-a-federal-or-state-issue/",
+        "source_tier": "Other",
+        "snippet": "[2026-05-20] Dobbs v. Jackson Women’s Health Organization, No. 19-1392 · With the undue burden standard gone, the Court returned “the authority to regulate abortion to the people and their elected representatives.”4Cornell Law School.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986871",
+        "published_at": "2026-05-20T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 1.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "abf03296-2445-435b-84dc-60379e8278fa",
+        "claim_id": "cruz_2026_06_24_prod:0007",
+        "source_name": "Encyclopedia Britannica",
+        "source_url": "https://www.britannica.com/event/Dobbs-v-Jackson-Womens-Health-Organization",
+        "source_tier": "Other",
+        "snippet": "[2026-06-29] Dobbs v. Jackson Women’s Health ... June 2022, that overturned Roe v. Wade and Planned Parenthood v. Casey, by which the Court had respectively established and affirmed a constitutional right to abortion....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986881",
+        "published_at": "2026-06-29T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "2ee06536-b530-451f-bc63-fd166fda156a",
+        "claim_id": "cruz_2026_06_24_prod:0007",
+        "source_name": "LifeNews",
+        "source_url": "https://www.lifenews.com/2026/06/24/four-years-after-dobbs-19-states-protect-babies-from-abortions/",
+        "source_tier": "Other",
+        "snippet": "[2026-06-24] Four years after the U.S. Supreme Court overturned Roe v. Wade in its Dobbs v. Jackson Women’s Health Organization decision, 19 states now have laws protecting babies from abortion. The June 24, 2022, ruling restored to the American people ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986890",
+        "published_at": "2026-06-24T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "9102de17-567b-4714-b2bb-4ff5f2ff02d6",
+        "claim_id": "cruz_2026_06_24_prod:0007",
+        "source_name": "Quimbee",
+        "source_url": "https://www.quimbee.com/cases/dobbs-v-jackson-women-s-health-organization",
+        "source_tier": "Other",
+        "snippet": "[2026-05-15] The United States Court of Appeals for the Fifth Circuit affirmed, and the United States Supreme Court granted certiorari. Mississippi and 25 other states asked the Court to overrule Roe and Casey and return regulation of abortion to the individual states. Jackson and the United States solicitor general asked the Court to reaffirm Roe and Casey and find the Mississippi statute unconstitutional. The rule of law is the black letter law upon which the court rested its decision.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986899",
+        "published_at": "2026-05-15T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "cruz_2026_06_24_prod:0010": [
+      {
+        "id": "b112552a-7bfd-49f3-81bf-d5cc35516860",
+        "claim_id": "cruz_2026_06_24_prod:0010",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/sections/health-shots/2024/03/19/1238293143/abortion-data-how-many-us-2023",
+        "source_tier": "Established",
+        "snippet": "[2024-03-19] More than a million abortions were provided in the U.S. in 2023.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.986999",
+        "published_at": "2024-03-19T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "2a988461-70ce-4375-9efe-387f914b9f40",
+        "claim_id": "cruz_2026_06_24_prod:0010",
+        "source_name": "Guttmacher Institute",
+        "source_url": "https://www.guttmacher.org/2024/03/despite-bans-number-abortions-united-states-increased-2023",
+        "source_tier": "Other",
+        "snippet": "[2024-11-26] New findings from the Monthly Abortion Provision Study show that an estimated 1,037,000 abortions occurred in the formal health care system in 2023, the first full calendar year after the US Supreme Court’s decision in Dobbs v. Jackson Women's ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987009",
+        "published_at": "2024-11-26T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "cff96640-1175-4499-9913-80b6d4f77748",
+        "claim_id": "cruz_2026_06_24_prod:0010",
+        "source_name": "KFF",
+        "source_url": "https://www.kff.org/womens-health-policy/key-facts-on-abortion-in-the-united-states/",
+        "source_tier": "Other",
+        "snippet": "[2026-01-07] The monthly average number of abortions steadily increased from 79,620 monthly abortions in 2022 (April to December 2022), to 88,180 abortions in 2023, to 95,250 abortions in 2024, and to 98,630 in 2025 (January to June 2025).",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987019",
+        "published_at": "2026-01-07T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "41fc1c20-393c-44ee-8030-0e4001ce024f",
+        "claim_id": "cruz_2026_06_24_prod:0010",
+        "source_name": "Guttmacher Institute",
+        "source_url": "https://www.guttmacher.org/fact-sheet/induced-abortion-united-states",
+        "source_tier": "Other",
+        "snippet": "[2026-03-24] The abortion rate in 2025 was 16.7 abortions per 1,000 women aged 15–44. This is the same as the rate for 2024, a 5% increase from 2023 (when the abortion rate was 15.9), and a 16% increase from the 2020 rate.3",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987029",
+        "published_at": "2026-03-24T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "9b2498df-8b81-49a9-9901-1ee8677655c0",
+        "claim_id": "cruz_2026_06_24_prod:0010",
+        "source_name": "-",
+        "source_url": "https://theworlddata.com/abortion-statistics-per-year-in-us/",
+        "source_tier": "Other",
+        "snippet": "[2026-01-25] The monthly average of 95,200 abortions in 2024 marks a substantial increase from the 81,400 monthly average in 2022, indicating that expanded access methods have more than compensated for state-level bans in aggregate national numbers, even ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987040",
+        "published_at": "2026-01-25T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "a40f1e82-d6d6-4892-ab8f-1a5cec14ee54",
+        "claim_id": "cruz_2026_06_24_prod:0010",
+        "source_name": "ConsumerShield",
+        "source_url": "https://www.consumershield.com/articles/abortion-laws-by-state",
+        "source_tier": "Other",
+        "snippet": "[2025-08-11] As of July 2025, 12 states have total abortion bans, while 9 states and D.C. impose no restrictions. This guide details abortion laws in all 50 states.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987050",
+        "published_at": "2025-08-11T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "cruz_2026_06_24_prod:0024": [
+      {
+        "id": "348606ea-05da-4b17-86a1-2dc1ac6c632c",
+        "claim_id": "cruz_2026_06_24_prod:0024",
+        "source_name": "Washington Post",
+        "source_url": "https://www.washingtonpost.com/dc-md-va/2024/01/18/dc-march-for-life-rally-abortion/",
+        "source_tier": "Established",
+        "snippet": "[2024-01-18] Thousands of anti-abortion demonstrators are expected to gather in the nation’s capital Friday for the annual March for Life.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987148",
+        "published_at": "2024-01-18T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "5639abb2-95ce-4821-a7ae-e0d43ca6c5fe",
+        "claim_id": "cruz_2026_06_24_prod:0024",
+        "source_name": "WJLA",
+        "source_url": "https://wjla.com/news/local/2024-march-for-life-washington-dc-rally-national-mall-pro-life-woman-child-help-resources-pregnant-women-post-roe-v-wade-abortion-issue-election-republicans-state-congress-laws-scotus",
+        "source_tier": "Other",
+        "snippet": "[2024-01-19] WASHINGTON (7News/AP) — Thousands of anti-abortion activists rallied in the D.C. National Mall despite snow conditions Friday for2024 March for Life, in efforts by religious, political, and athletic speakers to motivate its base months ahead of the 2024 presidential election, and capitalize on the movement's major victory and goal of eliminating abortion in the U.S.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987158",
+        "published_at": "2024-01-19T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "4379b7f0-248f-4194-b3a4-52205823f9c0",
+        "claim_id": "cruz_2026_06_24_prod:0024",
+        "source_name": "National Catholic Register",
+        "source_url": "https://www.ncregister.com/news/march-for-life-2026-recap",
+        "source_tier": "Other",
+        "snippet": "[2026-01-27] WASHINGTON — Tens of thousands of pro-life advocates gathered in the nation’s capital Friday for the 53rd annual March for Life, marching from the National Mall to the Supreme Court to voice their opposition to abortion.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987167",
+        "published_at": "2026-01-27T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "db27410d-3f7a-4942-b47a-9a32dffb35db",
+        "claim_id": "cruz_2026_06_24_prod:0024",
+        "source_name": "USA Today",
+        "source_url": "https://www.usatoday.com/picture-gallery/news/2026/01/23/march-for-life/88318723007/",
+        "source_tier": "Other",
+        "snippet": "[2026-01-23] Anti-abortion activists gathered in DC for the annual March for Life rally on Jan. 23, 2026. Activists have marched each year since 1973.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987176",
+        "published_at": "2026-01-23T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "842c96f7-dcfa-4899-b2fa-71ef671d8521",
+        "claim_id": "cruz_2026_06_24_prod:0024",
+        "source_name": "Washington Post",
+        "source_url": "https://www.washingtonpost.com/dc-md-va/2025/01/24/march-for-life-2025-dc-rally-abortion-rights/",
+        "source_tier": "Established",
+        "snippet": "[2025-01-25] Rally organizers estimated a crowd of up to 150,000 would turn out and send a message to Trump, who is a complicated figure for the antiabortion movement.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987185",
+        "published_at": "2025-01-25T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "1788458f-cd07-4a94-999d-d100dd0492e2",
+        "claim_id": "cruz_2026_06_24_prod:0024",
+        "source_name": "Washington Post",
+        "source_url": "https://www.washingtonpost.com/dc-md-va/2025/01/23/dc-march-for-life-rally-abortion-access/",
+        "source_tier": "Established",
+        "snippet": "[2025-01-23] Organizers expect 150,000 demonstrators to march in D.C. on Friday to advocate for tightened restrictions on abortion.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987195",
+        "published_at": "2025-01-23T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "cruz_2026_06_24_prod:0027": [
+      {
+        "id": "e520e37c-9c82-4047-8f93-e53dafc91a03",
+        "claim_id": "cruz_2026_06_24_prod:0027",
+        "source_name": "The Bloomingtonian",
+        "source_url": "https://bloomingtonian.com/2025/06/04/context-senators-young-cruz-introduce-life-month-resolution-during-pride-month/",
+        "source_tier": "Other",
+        "snippet": "[2025-06-04] Staff report WASHINGTON, D.C. — June 4, 2025 U.S. Senators Todd Young (R-Ind.) and Ted Cruz (R-Texas) introduced a resolution Wednesday to designate June as “Life Month,” commemorating the June 2022 Supreme Court decision that overturned Roe v. Wade. The resolution is backed by more than ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987294",
+        "published_at": "2025-06-04T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "540d04c2-ff80-458b-a4d5-6e80ffb6537e",
+        "claim_id": "cruz_2026_06_24_prod:0027",
+        "source_name": "U.S. Senator Ted Cruz",
+        "source_url": "https://www.cruz.senate.gov/newsroom/press-releases/sen-cruz-leads-resolution-designating-june-as-life-month",
+        "source_tier": "Political",
+        "snippet": "[2025-06-03] WASHINGTON, D.C. – U.S. Sen. Ted Cruz (R-Texas) introduced a resolution to designate June as “Life Month” to mark the Supreme Court overturning Roe v.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987305",
+        "published_at": "2025-06-03T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "07a7728d-e96c-4ee4-aef7-dc2bebfc1093",
+        "claim_id": "cruz_2026_06_24_prod:0027",
+        "source_name": "U.S. Senate",
+        "source_url": "https://www.kennedy.senate.gov/public/press-releases?id=2239A98C-4DAB-4E57-9D3B-4C2F10E1A1A7",
+        "source_tier": "Political",
+        "snippet": "[2025-06-04] Ted Cruz (R-Texas) and 25 colleagues in introducing a resolution to designate the month of June as “Life Month.” The resolution commemorates the U.S. Supreme Court’s overturning of Roe v. ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987314",
+        "published_at": "2025-06-04T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "1a9936c3-8c9f-4366-861d-7c74e283bb44",
+        "claim_id": "cruz_2026_06_24_prod:0027",
+        "source_name": "The Independent",
+        "source_url": "https://www.the-independent.com/news/world/americas/us-politics/ted-cruz-pride-pro-life-month-senate-b2764114.html",
+        "source_tier": "Other",
+        "snippet": "[2025-06-05] While last week marked the start ... ‘‘Life Month Resolution” to the upper chamber Tuesday to “recognize that every human life is a sacred gift from God,” it states....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987323",
+        "published_at": "2025-06-05T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "f310629f-8c12-49f2-9617-017d46eaa4e5",
+        "claim_id": "cruz_2026_06_24_prod:0027",
+        "source_name": "GovTrack.us",
+        "source_url": "https://www.govtrack.us/congress/bills/119/sjres56",
+        "source_tier": "Other",
+        "snippet": "[2025-06-03] A joint resolution designating the month of June as \"Life Month\".",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987332",
+        "published_at": "2025-06-03T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "115ef134-c1f5-4427-8dda-589057b02a91",
+        "claim_id": "cruz_2026_06_24_prod:0027",
+        "source_name": "Senator Young",
+        "source_url": "https://www.young.senate.gov/newsroom/press-releases/young-cruz-lead-resolution-designating-june-as-life-month/",
+        "source_tier": "Political",
+        "snippet": "[2025-06-04] I’m proud to lead this resolution that affirms the sanctity of human life and recognizes the efforts by champions of life to provide care and resources to pregnant mothers and families in need,” said Senator Young. In addition to Senators Young and Cruz, the “Life Month” resolution is also cosponsored by Senators John Cornyn (R-Texas), Mike Lee (R-Utah), Chuck Grassley (R-Iowa), Josh Hawley (R-Mo.), John Kennedy (R-La.), Ted Budd (R-N.C.), Pete Ricketts (R-Neb.), Cindy Hyde-Smith (R-Miss.), Jame",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T00:45:43.987342",
+        "published_at": "2025-06-04T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ]
+  },
+  "composition": {
+    "schema": "truthbot-composition-telemetry v1",
+    "quarantined_tier": "Political",
+    "overall": {
+      "claims": 6,
+      "decided": 6,
+      "decided_rate": 1.0,
+      "evidence_items": 36,
+      "quarantined_items": 3,
+      "quarantined_item_share": 0.083,
+      "packs_exposed": 1,
+      "pack_exposure_rate": 0.167,
+      "decided_rate_exposed": 1.0,
+      "decided_rate_unexposed": 1.0,
+      "decided_rate_gap": 0.0,
+      "sole_quarantined": 0,
+      "sole_quarantined_decided": 0
+    },
+    "by_speaker": {
+      "cruz_2026_06_24_prod": {
+        "claims": 6,
+        "decided": 6,
+        "decided_rate": 1.0,
+        "evidence_items": 36,
+        "quarantined_items": 3,
+        "quarantined_item_share": 0.083,
+        "packs_exposed": 1,
+        "pack_exposure_rate": 0.167,
+        "decided_rate_exposed": 1.0,
+        "decided_rate_unexposed": 1.0,
+        "decided_rate_gap": 0.0,
+        "sole_quarantined": 0,
+        "sole_quarantined_decided": 0
+      }
+    }
+  }
+}
