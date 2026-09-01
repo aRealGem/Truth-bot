@@ -1,0 +1,51 @@
+{
+  "schema": "truthbot-report-classes v1",
+  "_comment": [
+    "The kind of speaking occasion a report covers, keyed by speech_id.",
+    "Drives the index grouping and -- the reason this file exists -- the",
+    "partition for every rate statistic on the site.",
+    "",
+    "AUTHORED, NEVER DERIVED. The tempting heuristic is 'a President gave",
+    "it, so it is a presidential address'; that is wrong for a candidate",
+    "debate, a press conference, and a Senate floor speech given by a",
+    "former President. Class is a property of the OCCASION, not of the",
+    "speaker's office, so each entry is a judgement recorded by hand.",
+    "",
+    "WHY IT GATES STATISTICS. A State of the Union and a Senate floor",
+    "speech are not the same genre: different length, different rhetorical",
+    "register, different density of checkable claims. Pooling them into one",
+    "rate would let a floor speech's score be read against a SOTU baseline,",
+    "which the corpus cannot support. Rates are computed WITHIN a class and",
+    "never across classes.",
+    "",
+    "NO RESERVED CLASSES. This file is the whole authority on what classes",
+    "exist; the renderer does not carry a hardcoded allowlist. A speech_id",
+    "with no entry here is 'unclassified': it still renders and stays",
+    "visible, but is excluded from every rate statistic. Failing closed",
+    "that way means forgetting to classify a new report understates the",
+    "corpus rather than silently contaminating another class's numbers.",
+    "",
+    "'order' fixes the index section order. It is authored too -- there is",
+    "no meaningful sort key over class names, and alphabetical order would",
+    "put a new class somewhere arbitrary."
+  ],
+  "order": [
+    "presidential_address",
+    "senate_floor"
+  ],
+  "labels": {
+    "presidential_address": "Presidential addresses",
+    "senate_floor": "Senate floor speeches"
+  },
+  "classes": {
+    "clinton_1998": "presidential_address",
+    "gwbush_2006": "presidential_address",
+    "obama_2014": "presidential_address",
+    "biden_2022": "presidential_address",
+    "trump_2026": "presidential_address",
+    "budd_2025-04-02": "senate_floor",
+    "cruz_2026-06-24": "senate_floor",
+    "tillis_2025-01-23": "senate_floor",
+    "warren_2025-04-29": "senate_floor"
+  }
+}
