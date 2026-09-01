@@ -36,9 +36,9 @@ def test_unknown_speech_yields_empty_preamble():
     assert sc.build_temporal_preamble("mystery:0001", today=date(2026, 7, 14)) == ""
 
 
-# ── A4: all five corpus speeches pinned statically ───────────────────────────
+# ── A4: every corpus speech pinned statically ────────────────────────────────
 
-def test_all_five_corpus_speeches_are_statically_pinned():
+def test_all_corpus_speeches_are_statically_pinned():
     """Only biden_2022 + trump_2026 used to be in the map; the other three
     resolved solely because a runner called register_speech_date() at run
     time, so any path that skipped the runner ran with NO era gate at all.
@@ -63,6 +63,11 @@ def test_all_five_corpus_speeches_are_statically_pinned():
         "obama_2014": (2014, 1, 28),
         "biden_2022": (2022, 3, 1),
         "trump_2026": (2026, 2, 24),
+        # Senate floor speeches -- same requirement, same reason.
+        "budd_2025-04-02": (2025, 4, 2),
+        "cruz_2026-06-24": (2026, 6, 24),
+        "tillis_2025-01-23": (2025, 1, 23),
+        "warren_2025-04-29": (2025, 4, 29),
     }
     for speech, ymd in pinned.items():          # …and the live map agrees
         assert sc.SPEECH_DATE[speech] == date(*ymd)
@@ -70,8 +75,31 @@ def test_all_five_corpus_speeches_are_statically_pinned():
 
 def test_every_pinned_speech_resolves_through_a_sid():
     for speech in ("clinton_1998", "gwbush_2006", "obama_2014",
-                   "biden_2022", "trump_2026"):
+                   "biden_2022", "trump_2026", "budd_2025-04-02",
+                   "cruz_2026-06-24", "tillis_2025-01-23",
+                   "warren_2025-04-29"):
         assert sc.speech_date_for(f"{speech}:0313") is not None, speech
+
+
+def test_every_classified_report_is_statically_pinned():
+    """The durable guard: publishing a speech that is not pinned means
+    rendering it with NO era gate, so the authored corpus and the pin map must
+    not drift apart. Keyed off data/report_classes.json rather than a second
+    hand-maintained list -- a new report added there fails here until pinned."""
+    import ast
+    import json
+    from pathlib import Path
+
+    repo = Path(sc.__file__).resolve().parents[3]
+    classes = json.loads(
+        (repo / "data" / "report_classes.json").read_text(encoding="utf-8"))
+    tree = ast.parse(Path(sc.__file__).read_text(encoding="utf-8"))
+    literal = next(node.value for node in tree.body
+                   if isinstance(node, ast.AnnAssign)
+                   and node.target.id == "SPEECH_DATE")
+    pinned = {k.value for k in literal.keys}
+    unpinned = sorted(set(classes["classes"]) - pinned)
+    assert not unpinned, f"classified but not statically pinned: {unpinned}"
 
 
 def test_pinned_dates_give_the_historical_speeches_a_real_window():
