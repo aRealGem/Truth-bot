@@ -262,6 +262,35 @@ header.masthead:has(.mast-row) {
    inheritance. As <h2>, the UA stylesheet's own font-size/font-weight would
    otherwise win over that inherited value — reset it back to match. */
 .section-head h2 { font: inherit; }
+.section-head h3 { font: inherit; }
+
+/* Per-class index sections (P-senate 3d): a section head per occasion class,
+   each with its own small stats strip. Every figure in .class-strip is
+   scoped to that one class -- never a cross-class ratio or comparison. */
+.class-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  margin: -0.4rem 0 1.2rem;
+}
+.class-strip .cs-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.class-strip .cs-num {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.class-strip .cs-lbl {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
 
 
 /* [06] Index page — aggregate stats & verdict bar ────────────────────── */

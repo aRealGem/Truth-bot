@@ -1,8 +1,83 @@
 [
   {
+    "id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
+    "speech_id": "cruz_2026-06-24",
+    "date": "2026-06-24",
+    "generated_at": "2026-09-01T23:02:43Z",
+    "speaker": "Ted Cruz",
+    "role": "Senator",
+    "venue": "U.S. Senate floor",
+    "claim_count": 6,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "triage_count": 24,
+    "verdict_distribution": {
+      "True": 6,
+      "Mostly True": 0,
+      "Misleading": 0,
+      "Exaggerated": 0,
+      "False": 0,
+      "Unverifiable": 0,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_lenient": {
+      "True": 6,
+      "Truthy": 0,
+      "Unverifiable": 0,
+      "Falsey": 0,
+      "False": 0,
+      "Models split": 0
+    },
+    "verdict_distribution_strict": {
+      "True": 6,
+      "Truthy": 0,
+      "Unverifiable": 0,
+      "Falsey": 0,
+      "False": 0,
+      "Models split": 0
+    },
+    "model_agreement_rate": 0.833,
+    "url": "reports/2026-06-24-ted-cruz-425daf.html",
+    "tier_counts": {
+      "gov": 0,
+      "wire": 1,
+      "news": 5,
+      "fc": 0,
+      "political": 2,
+      "other": 17
+    },
+    "tier_fallback": {
+      "joined": 25,
+      "fallback": 0,
+      "total": 25,
+      "fallback_rate": 0.0
+    },
+    "source_of_claims": "Ted Cruz",
+    "source_of_claims_professional_public_title": "Senator",
+    "event": "",
+    "channel": "",
+    "class": "senate_floor",
+    "class_label": "Senate floor speeches"
+  },
+  {
     "id": "e1196059-e7d4-5672-89e7-d58b298f80ce",
+    "speech_id": "trump_2026",
     "date": "2026-02-24",
-    "generated_at": "2026-08-30T21:00:04Z",
+    "generated_at": "2026-09-01T23:00:17Z",
     "speaker": "Donald Trump",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -70,12 +145,91 @@
     "source_of_claims": "Donald Trump",
     "source_of_claims_professional_public_title": "President",
     "event": "",
-    "channel": ""
+    "channel": "",
+    "class": "presidential_address",
+    "class_label": "Presidential addresses"
+  },
+  {
+    "id": "4aedeaad-d75a-f16c-7b7f-ee53e93ab5b9",
+    "speech_id": "warren_2025-04-29",
+    "date": "2025-04-29",
+    "generated_at": "2026-09-01T23:02:45Z",
+    "speaker": "Elizabeth Warren",
+    "role": "Senator",
+    "venue": "U.S. Senate floor",
+    "claim_count": 103,
+    "panel_roster": {
+      "name": "prod",
+      "seats": {
+        "proposer": [
+          "opus-worker"
+        ],
+        "critic": [
+          "grok-4.3"
+        ],
+        "arbiter": [
+          "gpt-5.5"
+        ]
+      }
+    },
+    "triage_count": 23,
+    "verdict_distribution": {
+      "True": 74,
+      "Mostly True": 0,
+      "Misleading": 18,
+      "Exaggerated": 0,
+      "False": 0,
+      "Unverifiable": 6,
+      "Truthy": 0,
+      "Falsey": 0,
+      "Models split": 5
+    },
+    "verdict_distribution_lenient": {
+      "True": 74,
+      "Truthy": 0,
+      "Unverifiable": 6,
+      "Falsey": 0,
+      "False": 0,
+      "Models split": 5,
+      "Misleading": 18
+    },
+    "verdict_distribution_strict": {
+      "True": 74,
+      "Truthy": 0,
+      "Unverifiable": 6,
+      "Falsey": 0,
+      "False": 0,
+      "Models split": 5,
+      "Misleading": 18
+    },
+    "model_agreement_rate": 0.66,
+    "url": "reports/2025-04-29-elizabeth-warren-9537ac.html",
+    "tier_counts": {
+      "gov": 10,
+      "wire": 20,
+      "news": 62,
+      "fc": 0,
+      "political": 22,
+      "other": 266
+    },
+    "tier_fallback": {
+      "joined": 380,
+      "fallback": 0,
+      "total": 380,
+      "fallback_rate": 0.0
+    },
+    "source_of_claims": "Elizabeth Warren",
+    "source_of_claims_professional_public_title": "Senator",
+    "event": "",
+    "channel": "",
+    "class": "senate_floor",
+    "class_label": "Senate floor speeches"
   },
   {
     "id": "62b4b112-e471-c7a6-3397-57daa08ce6d0",
+    "speech_id": "biden_2022",
     "date": "2022-03-01",
-    "generated_at": "2026-08-30T20:59:19Z",
+    "generated_at": "2026-09-01T22:59:33Z",
     "speaker": "Joe Biden",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -143,12 +297,15 @@
     "source_of_claims": "Joe Biden",
     "source_of_claims_professional_public_title": "President",
     "event": "",
-    "channel": ""
+    "channel": "",
+    "class": "presidential_address",
+    "class_label": "Presidential addresses"
   },
   {
     "id": "f2aeafee-21f3-5ee4-5157-a443a990ea4d",
+    "speech_id": "obama_2014",
     "date": "2014-01-28",
-    "generated_at": "2026-08-30T20:59:51Z",
+    "generated_at": "2026-09-01T23:00:05Z",
     "speaker": "Barack Obama",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -216,12 +373,15 @@
     "source_of_claims": "Barack Obama",
     "source_of_claims_professional_public_title": "President",
     "event": "",
-    "channel": ""
+    "channel": "",
+    "class": "presidential_address",
+    "class_label": "Presidential addresses"
   },
   {
     "id": "e9907c96-c4f2-a087-fd85-5cf69e9a94be",
+    "speech_id": "gwbush_2006",
     "date": "2006-01-31",
-    "generated_at": "2026-08-30T20:59:44Z",
+    "generated_at": "2026-09-01T22:59:58Z",
     "speaker": "George W. Bush",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -289,12 +449,15 @@
     "source_of_claims": "George W. Bush",
     "source_of_claims_professional_public_title": "President",
     "event": "",
-    "channel": ""
+    "channel": "",
+    "class": "presidential_address",
+    "class_label": "Presidential addresses"
   },
   {
     "id": "ffe5032b-e1d3-4a6b-f9c5-1dfa53439a0b",
+    "speech_id": "clinton_1998",
     "date": "1998-01-27",
-    "generated_at": "2026-08-30T20:59:32Z",
+    "generated_at": "2026-09-01T22:59:46Z",
     "speaker": "Bill Clinton",
     "role": "President",
     "venue": "U.S. Capitol",
@@ -362,6 +525,8 @@
     "source_of_claims": "Bill Clinton",
     "source_of_claims_professional_public_title": "President",
     "event": "",
-    "channel": ""
+    "channel": "",
+    "class": "presidential_address",
+    "class_label": "Presidential addresses"
   }
 ]

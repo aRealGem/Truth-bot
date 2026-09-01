@@ -178,11 +178,24 @@ def check_report_page(page: str, report: dict, report_claims: list[dict]) -> lis
     # lens-target span (the leading optional-span matches the strict value,
     # which renders first there).
     for frame_cls, pick in (("vp-stat-truthy", 0), ("vp-stat-false", 1)):
-        m = re.search(
-            r'class="vp-headline-stat %s.*?vp-stat-num">'
-            r'(?:<span[^>]*>)?([\d%%]+)' % frame_cls,
-            page, re.S)
+        # Slice the frame FIRST and search inside it. The old pattern ran
+        # `.*?` across the whole page under re.S, so a frame carrying no
+        # vp-stat-num silently matched the NEXT frame's number and reported
+        # the other chip's percentage as this one's.
+        start = re.search(r'class="vp-headline-stat %s\b' % frame_cls, page)
+        if not start:
+            violations.append(f"{slug}: chip frame {frame_cls} not found")
+            continue
+        rest = page[start.end():]
+        nxt = re.search(r'class="vp-headline-stat ', rest)
+        frame = rest[:nxt.start()] if nxt else rest
+        m = re.search(r'vp-stat-num">(?:<span[^>]*>)?([\d%%]+)', frame)
         if not m:
+            # The small-sample guard replaces the percentage with a caveat:
+            # under 10 decided claims there is deliberately no number to
+            # check. That is the ONLY licensed reason for a missing chip.
+            if "Small sample" in frame:
+                continue
             violations.append(f"{slug}: chip frame {frame_cls} not found")
             continue
         got = m.group(1)
