@@ -212,7 +212,10 @@ def test_only_the_score_propagated_heads_are_fit_to_gate():
         a third legitimate provenance for scored evidence rather than a stray.
         Two of the four still come back unfit: budd_2025-04-02 at 47.6% and
         tillis_2025-01-23 at 31.8% stance-null. The ceiling does not move to
-        accommodate a speech, so they are registered but published:false.
+        accommodate a speech, so both are HELD (FR-0901-04) and leave head
+        resolution; budd is additionally relabelled pre-s5-cap, because its
+        :0012 pack stores 4 POLITICAL items against a <=3 cap and so does not
+        satisfy the methodology its generation names.
 
     Both halves of the record are held here:
 

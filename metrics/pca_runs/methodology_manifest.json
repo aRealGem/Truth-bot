@@ -1,6 +1,9 @@
 {
   "schema": "truthbot-methodology-manifest v1",
-  "comment": "Remediation v2 item 1.4 (2026-08-02). Every pca_runs artifact is pinned to the methodology GENERATION it was produced under, so an older-generation artifact can never be re-published as-is: truthbot.publish.consistency.check_run_artifacts asserts the current-generation invariants (S5 cap, era, zero fact-check URLs) only over runs labeled current_generation and permanently reports the rest as legacy. Generations classified by inspection: no 'evidence' key => no-evidence; evidence with no Political tier => pre-s5-tiering; Political present but per-sid counts exceed the <=3 cap => pre-s5-cap; cap respected + role axis + era fail-closed => v2.3-role-axis-s5cap.",
+  "comment": [
+    "Remediation v2 item 1.4 (2026-08-02). Every pca_runs artifact is pinned to the methodology GENERATION it was produced under, so an older-generation artifact can never be re-published as-is: truthbot.publish.consistency.check_run_artifacts asserts the current-generation invariants (S5 cap, era, zero fact-check URLs) only over runs labeled current_generation and permanently reports the rest as legacy. Generations classified by inspection: no 'evidence' key => no-evidence; evidence with no Political tier => pre-s5-tiering; Political present but per-sid counts exceed the <=3 cap => pre-s5-cap; cap respected + role axis + era fail-closed => v2.3-role-axis-s5cap.",
+    "`published` is a HISTORICAL MARKER of what a publish once emitted, not a control -- heads.py has never read it. `held` is the control: a run carrying it is excluded from head resolution entirely (FR-0901-04)."
+  ],
   "current_generation": "v2.3-role-axis-s5cap",
   "generations": {
     "v2.3-role-axis-s5cap": "S5 political tier + <=3 cap + role axis + era fail-closed",
@@ -47,7 +50,7 @@
     "33fbed7b-58f1-4c2a-8cde-1fa06c12f6e2": {
       "speech_id": "cruz_2026-06-24",
       "generation": "v2.3-role-axis-s5cap",
-      "published": true
+      "published": false
     },
     "365f5caa-07cb-4d1b-a570-dcb02e1c5cbe": {
       "speech_id": "biden_2022",
@@ -87,7 +90,7 @@
     "50576c4e-29fe-4f7c-a42e-87e8dd90a707": {
       "speech_id": "warren_2025-04-29",
       "generation": "v2.3-role-axis-s5cap",
-      "published": true
+      "published": false
     },
     "577f6ff6-0e4b-47c6-aed9-83df855dddb7": {
       "speech_id": "biden_2022",
@@ -181,13 +184,15 @@
     },
     "a5661996-9a5d-4cb7-93a6-0277ac448bc8": {
       "speech_id": "budd_2025-04-02",
-      "generation": "v2.3-role-axis-s5cap",
-      "published": false
+      "generation": "pre-s5-cap",
+      "published": false,
+      "held": "S5 cap violated at :0012 and stance-null 47.6%, FR-0901-04"
     },
     "b7e0a697-f199-4bb5-bb0f-74a478cf7132": {
       "speech_id": "tillis_2025-01-23",
       "generation": "v2.3-role-axis-s5cap",
-      "published": false
+      "published": false,
+      "held": "stance-null 31.8% > 15% ceiling, FR-0901-04"
     },
     "c156d8f9-be85-5263-92a1-c08949afdedd": {
       "speech_id": "biden_2022",

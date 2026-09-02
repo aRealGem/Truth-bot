@@ -89,8 +89,18 @@ def publishing_heads(runs_dir: Path | None = None) -> dict[str, Path]:
         raise SystemExit(
             "publishing_heads: methodology_manifest has no current_generation; "
             "cannot resolve heads deterministically")
+    # HELD runs leave the candidate universe BEFORE leaf resolution, so a held
+    # artifact can neither be selected as a head nor make its speech look like
+    # a lineage fork. A speech whose current-generation runs are ALL held simply
+    # has no head: it is absent from the map rather than raising, because "not
+    # published right now" is a normal state, not a broken lineage.
+    # This is the ONE place the filter lives -- consumers do not each re-filter.
+    # (`published` is deliberately NOT consulted: it is a historical marker of
+    # what a publish once emitted, and the live obama/biden/trump heads carry
+    # published:false on main.)
     cur = {rid for rid in arts
-           if runs_meta.get(rid, {}).get("generation") == current_gen}
+           if runs_meta.get(rid, {}).get("generation") == current_gen
+           and not runs_meta.get(rid, {}).get("held")}
 
     by_speech: dict[str, list[str]] = defaultdict(list)
     for rid in cur:
