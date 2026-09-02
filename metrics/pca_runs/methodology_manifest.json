@@ -50,7 +50,8 @@
     "33fbed7b-58f1-4c2a-8cde-1fa06c12f6e2": {
       "speech_id": "cruz_2026-06-24",
       "generation": "v2.3-role-axis-s5cap",
-      "published": false
+      "published": false,
+      "held": "A2 scaffold miss at :0001 scored TRUE, FR-0901-06"
     },
     "365f5caa-07cb-4d1b-a570-dcb02e1c5cbe": {
       "speech_id": "biden_2022",

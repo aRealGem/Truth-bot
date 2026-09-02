@@ -1,5 +1,285 @@
 [
   {
+    "id": "cruz_2026_06_24_prod-0001",
+    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
+    "claim_text": "Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life.",
+    "claim_context": "Mr. President, I rise today to address one of the most consequential decisions the Supreme Court of the United States has ever made. || Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life. || At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "hydramind-pca",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "provenance": {
+      "layer_a_label": "check-worthy",
+      "layer_a_source": "A2",
+      "layer_a_claim_type": "historical",
+      "layer_a_claim_shape": "c-third",
+      "panel_votes": {
+        "True": 2
+      },
+      "panel_split": false,
+      "panel_escalated": false,
+      "crm114_stage1": "",
+      "crm114_final": "",
+      "panel_by_role": {
+        "proposer": [
+          "True"
+        ],
+        "critic": [
+          "True"
+        ]
+      },
+      "evidence_gate": "",
+      "self_sourced_only": false,
+      "reason_code": "",
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    "url": "claims/cruz_2026_06_24_prod-0001.html"
+  },
+  {
+    "id": "cruz_2026_06_24_prod-0002",
+    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
+    "claim_text": "At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation.",
+    "claim_context": "Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life. || At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation. || Overturning Roe v.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "hydramind-pca",
+        "label": "True",
+        "confidence": "Medium"
+      }
+    ],
+    "provenance": {
+      "layer_a_label": "check-worthy",
+      "layer_a_source": "A2",
+      "layer_a_claim_type": "historical",
+      "layer_a_claim_shape": "c-third",
+      "panel_votes": {
+        "True": 2
+      },
+      "panel_split": false,
+      "panel_escalated": false,
+      "crm114_stage1": "",
+      "crm114_final": "",
+      "panel_by_role": {
+        "proposer": [
+          "True"
+        ],
+        "critic": [
+          "True"
+        ]
+      },
+      "evidence_gate": "",
+      "self_sourced_only": false,
+      "reason_code": "",
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    "url": "claims/cruz_2026_06_24_prod-0002.html"
+  },
+  {
+    "id": "cruz_2026_06_24_prod-0007",
+    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
+    "claim_text": "Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives.",
+    "claim_context": "And in Dobbs v. || Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives. || While today and every day we celebrate this milestone, it is important to remember that the fight for life did not end 4 years ago.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "hydramind-pca",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "provenance": {
+      "layer_a_label": "check-worthy",
+      "layer_a_source": "A2",
+      "layer_a_claim_type": "historical",
+      "layer_a_claim_shape": "c-third",
+      "panel_votes": {
+        "True": 2
+      },
+      "panel_split": false,
+      "panel_escalated": false,
+      "crm114_stage1": "",
+      "crm114_final": "",
+      "panel_by_role": {
+        "proposer": [
+          "True"
+        ],
+        "critic": [
+          "True"
+        ]
+      },
+      "evidence_gate": "",
+      "self_sourced_only": false,
+      "reason_code": "",
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    "url": "claims/cruz_2026_06_24_prod-0007.html"
+  },
+  {
+    "id": "cruz_2026_06_24_prod-0010",
+    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
+    "claim_text": "Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year.",
+    "claim_context": "It continues today and will continue to be a fight for many years to come. || Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year. || Unfortunately, in some areas, the numbers are rising.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "hydramind-pca",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "provenance": {
+      "layer_a_label": "check-worthy",
+      "layer_a_source": "A2",
+      "layer_a_claim_type": "statistical",
+      "layer_a_claim_shape": "c-eval",
+      "panel_votes": {
+        "True": 2
+      },
+      "panel_split": false,
+      "panel_escalated": false,
+      "crm114_stage1": "",
+      "crm114_final": "",
+      "panel_by_role": {
+        "proposer": [
+          "True"
+        ],
+        "critic": [
+          "True"
+        ]
+      },
+      "evidence_gate": "",
+      "self_sourced_only": false,
+      "reason_code": "",
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    "url": "claims/cruz_2026_06_24_prod-0010.html"
+  },
+  {
+    "id": "cruz_2026_06_24_prod-0024",
+    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
+    "claim_text": "I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life.",
+    "claim_context": "It means uplifting pregnancy resource centers and ensuring that when mothers welcome children into the world, they have the support that they need. || I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life. || People from all across the Nation come together and walk miles and miles, marching for the unborn and the protection of human life. ] They remind us that this is a moment and a movement of conviction, of compassion, and of courage.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "hydramind-pca",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "provenance": {
+      "layer_a_label": "check-worthy",
+      "layer_a_source": "A2",
+      "layer_a_claim_type": "historical",
+      "layer_a_claim_shape": "c-third",
+      "panel_votes": {
+        "True": 2
+      },
+      "panel_split": false,
+      "panel_escalated": false,
+      "crm114_stage1": "",
+      "crm114_final": "",
+      "panel_by_role": {
+        "proposer": [
+          "True"
+        ],
+        "critic": [
+          "True"
+        ]
+      },
+      "evidence_gate": "",
+      "self_sourced_only": false,
+      "reason_code": "",
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    "url": "claims/cruz_2026_06_24_prod-0024.html"
+  },
+  {
+    "id": "cruz_2026_06_24_prod-0027",
+    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
+    "claim_text": "That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life.",
+    "claim_context": "The decision 4 years ago today was the result of millions of Americans working, standing, speaking, marching, organizing, and praying. || That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life. || Today, I call upon my colleagues in the Senate to help pass this resolution so that we can be reminded every June of the importance of the fight for life, that we can recommit to the American ideal that every single life has dignity, and that we can stand together as a nation that chooses life.",
+    "consensus_verdict": "True",
+    "consensus_strength": "weak",
+    "coarse_lenient_label": "True",
+    "coarse_lenient_strength": "weak",
+    "coarse_strict_label": "True",
+    "coarse_strict_strength": "weak",
+    "model_verdicts_summary": [
+      {
+        "adapter": "hydramind-pca",
+        "label": "True",
+        "confidence": "High"
+      }
+    ],
+    "provenance": {
+      "layer_a_label": "check-worthy",
+      "layer_a_source": "A2",
+      "layer_a_claim_type": "attribution",
+      "layer_a_claim_shape": "c-exist",
+      "panel_votes": {
+        "True": 2,
+        "False": 1
+      },
+      "panel_split": true,
+      "panel_escalated": true,
+      "crm114_stage1": "",
+      "crm114_final": "",
+      "panel_by_role": {
+        "proposer": [
+          "True"
+        ],
+        "critic": [
+          "False"
+        ],
+        "arbiter": [
+          "True"
+        ]
+      },
+      "evidence_gate": "",
+      "self_sourced_only": false,
+      "reason_code": "",
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    "url": "claims/cruz_2026_06_24_prod-0027.html"
+  },
+  {
     "id": "biden_2022-0017",
     "report_id": "62b4b112-e471-c7a6-3397-57daa08ce6d0",
     "claim_text": "Groups of citizens blocking tanks with their bodies.",
@@ -23411,286 +23691,6 @@
       "audit_queue": false
     },
     "url": "claims/trump_2026-0699.html"
-  },
-  {
-    "id": "cruz_2026_06_24_prod-0001",
-    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
-    "claim_text": "Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life.",
-    "claim_context": "Mr. President, I rise today to address one of the most consequential decisions the Supreme Court of the United States has ever made. || Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life. || At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation.",
-    "consensus_verdict": "True",
-    "consensus_strength": "weak",
-    "coarse_lenient_label": "True",
-    "coarse_lenient_strength": "weak",
-    "coarse_strict_label": "True",
-    "coarse_strict_strength": "weak",
-    "model_verdicts_summary": [
-      {
-        "adapter": "hydramind-pca",
-        "label": "True",
-        "confidence": "High"
-      }
-    ],
-    "provenance": {
-      "layer_a_label": "check-worthy",
-      "layer_a_source": "A2",
-      "layer_a_claim_type": "historical",
-      "layer_a_claim_shape": "c-third",
-      "panel_votes": {
-        "True": 2
-      },
-      "panel_split": false,
-      "panel_escalated": false,
-      "crm114_stage1": "",
-      "crm114_final": "",
-      "panel_by_role": {
-        "proposer": [
-          "True"
-        ],
-        "critic": [
-          "True"
-        ]
-      },
-      "evidence_gate": "",
-      "self_sourced_only": false,
-      "reason_code": "",
-      "audit_flags": [],
-      "audit_queue": false
-    },
-    "url": "claims/cruz_2026_06_24_prod-0001.html"
-  },
-  {
-    "id": "cruz_2026_06_24_prod-0002",
-    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
-    "claim_text": "At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation.",
-    "claim_context": "Four years ago, on this day, our country waited with bated breath-- from the streets of Washington, DC, to homes all across America-- waiting to hear news from the Supreme Court on a case that sought to determine the value of human life. || At approximately 10:10 that morning, on June 24, 2022, the Supreme Court announced that, for the first time since 1973, abortion was no longer mandated by Federal law across the Nation. || Overturning Roe v.",
-    "consensus_verdict": "True",
-    "consensus_strength": "weak",
-    "coarse_lenient_label": "True",
-    "coarse_lenient_strength": "weak",
-    "coarse_strict_label": "True",
-    "coarse_strict_strength": "weak",
-    "model_verdicts_summary": [
-      {
-        "adapter": "hydramind-pca",
-        "label": "True",
-        "confidence": "Medium"
-      }
-    ],
-    "provenance": {
-      "layer_a_label": "check-worthy",
-      "layer_a_source": "A2",
-      "layer_a_claim_type": "historical",
-      "layer_a_claim_shape": "c-third",
-      "panel_votes": {
-        "True": 2
-      },
-      "panel_split": false,
-      "panel_escalated": false,
-      "crm114_stage1": "",
-      "crm114_final": "",
-      "panel_by_role": {
-        "proposer": [
-          "True"
-        ],
-        "critic": [
-          "True"
-        ]
-      },
-      "evidence_gate": "",
-      "self_sourced_only": false,
-      "reason_code": "",
-      "audit_flags": [],
-      "audit_queue": false
-    },
-    "url": "claims/cruz_2026_06_24_prod-0002.html"
-  },
-  {
-    "id": "cruz_2026_06_24_prod-0007",
-    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
-    "claim_text": "Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives.",
-    "claim_context": "And in Dobbs v. || Jackson, the Court made clear that the issue of abortion--an issue on which people of good faith can disagree--would be returned to the people and their elected representatives. || While today and every day we celebrate this milestone, it is important to remember that the fight for life did not end 4 years ago.",
-    "consensus_verdict": "True",
-    "consensus_strength": "weak",
-    "coarse_lenient_label": "True",
-    "coarse_lenient_strength": "weak",
-    "coarse_strict_label": "True",
-    "coarse_strict_strength": "weak",
-    "model_verdicts_summary": [
-      {
-        "adapter": "hydramind-pca",
-        "label": "True",
-        "confidence": "High"
-      }
-    ],
-    "provenance": {
-      "layer_a_label": "check-worthy",
-      "layer_a_source": "A2",
-      "layer_a_claim_type": "historical",
-      "layer_a_claim_shape": "c-third",
-      "panel_votes": {
-        "True": 2
-      },
-      "panel_split": false,
-      "panel_escalated": false,
-      "crm114_stage1": "",
-      "crm114_final": "",
-      "panel_by_role": {
-        "proposer": [
-          "True"
-        ],
-        "critic": [
-          "True"
-        ]
-      },
-      "evidence_gate": "",
-      "self_sourced_only": false,
-      "reason_code": "",
-      "audit_flags": [],
-      "audit_queue": false
-    },
-    "url": "claims/cruz_2026_06_24_prod-0007.html"
-  },
-  {
-    "id": "cruz_2026_06_24_prod-0010",
-    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
-    "claim_text": "Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year.",
-    "claim_context": "It continues today and will continue to be a fight for many years to come. || Abortion remains legal in many States across the country, and, as a result, thousands upon thousands of unborn children are lost to abortion every year. || Unfortunately, in some areas, the numbers are rising.",
-    "consensus_verdict": "True",
-    "consensus_strength": "weak",
-    "coarse_lenient_label": "True",
-    "coarse_lenient_strength": "weak",
-    "coarse_strict_label": "True",
-    "coarse_strict_strength": "weak",
-    "model_verdicts_summary": [
-      {
-        "adapter": "hydramind-pca",
-        "label": "True",
-        "confidence": "High"
-      }
-    ],
-    "provenance": {
-      "layer_a_label": "check-worthy",
-      "layer_a_source": "A2",
-      "layer_a_claim_type": "statistical",
-      "layer_a_claim_shape": "c-eval",
-      "panel_votes": {
-        "True": 2
-      },
-      "panel_split": false,
-      "panel_escalated": false,
-      "crm114_stage1": "",
-      "crm114_final": "",
-      "panel_by_role": {
-        "proposer": [
-          "True"
-        ],
-        "critic": [
-          "True"
-        ]
-      },
-      "evidence_gate": "",
-      "self_sourced_only": false,
-      "reason_code": "",
-      "audit_flags": [],
-      "audit_queue": false
-    },
-    "url": "claims/cruz_2026_06_24_prod-0010.html"
-  },
-  {
-    "id": "cruz_2026_06_24_prod-0024",
-    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
-    "claim_text": "I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life.",
-    "claim_context": "It means uplifting pregnancy resource centers and ensuring that when mothers welcome children into the world, they have the support that they need. || I am reminded of how important this fight is every January, when thousands gather in Washington, DC, for the March for Life. || People from all across the Nation come together and walk miles and miles, marching for the unborn and the protection of human life. ] They remind us that this is a moment and a movement of conviction, of compassion, and of courage.",
-    "consensus_verdict": "True",
-    "consensus_strength": "weak",
-    "coarse_lenient_label": "True",
-    "coarse_lenient_strength": "weak",
-    "coarse_strict_label": "True",
-    "coarse_strict_strength": "weak",
-    "model_verdicts_summary": [
-      {
-        "adapter": "hydramind-pca",
-        "label": "True",
-        "confidence": "High"
-      }
-    ],
-    "provenance": {
-      "layer_a_label": "check-worthy",
-      "layer_a_source": "A2",
-      "layer_a_claim_type": "historical",
-      "layer_a_claim_shape": "c-third",
-      "panel_votes": {
-        "True": 2
-      },
-      "panel_split": false,
-      "panel_escalated": false,
-      "crm114_stage1": "",
-      "crm114_final": "",
-      "panel_by_role": {
-        "proposer": [
-          "True"
-        ],
-        "critic": [
-          "True"
-        ]
-      },
-      "evidence_gate": "",
-      "self_sourced_only": false,
-      "reason_code": "",
-      "audit_flags": [],
-      "audit_queue": false
-    },
-    "url": "claims/cruz_2026_06_24_prod-0024.html"
-  },
-  {
-    "id": "cruz_2026_06_24_prod-0027",
-    "report_id": "285f334f-6f79-518d-a625-8a2aab3c97b1",
-    "claim_text": "That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life.",
-    "claim_context": "The decision 4 years ago today was the result of millions of Americans working, standing, speaking, marching, organizing, and praying. || That is why, a year ago, I introduced a resolution to designate June as ``Life Month,'' so that each year we can recommit to celebrating and defending the preciousness of life. || Today, I call upon my colleagues in the Senate to help pass this resolution so that we can be reminded every June of the importance of the fight for life, that we can recommit to the American ideal that every single life has dignity, and that we can stand together as a nation that chooses life.",
-    "consensus_verdict": "True",
-    "consensus_strength": "weak",
-    "coarse_lenient_label": "True",
-    "coarse_lenient_strength": "weak",
-    "coarse_strict_label": "True",
-    "coarse_strict_strength": "weak",
-    "model_verdicts_summary": [
-      {
-        "adapter": "hydramind-pca",
-        "label": "True",
-        "confidence": "High"
-      }
-    ],
-    "provenance": {
-      "layer_a_label": "check-worthy",
-      "layer_a_source": "A2",
-      "layer_a_claim_type": "attribution",
-      "layer_a_claim_shape": "c-exist",
-      "panel_votes": {
-        "True": 2,
-        "False": 1
-      },
-      "panel_split": true,
-      "panel_escalated": true,
-      "crm114_stage1": "",
-      "crm114_final": "",
-      "panel_by_role": {
-        "proposer": [
-          "True"
-        ],
-        "critic": [
-          "False"
-        ],
-        "arbiter": [
-          "True"
-        ]
-      },
-      "evidence_gate": "",
-      "self_sourced_only": false,
-      "reason_code": "",
-      "audit_flags": [],
-      "audit_queue": false
-    },
-    "url": "claims/cruz_2026_06_24_prod-0027.html"
   },
   {
     "id": "warren_2025_04_29_prod-0003",
