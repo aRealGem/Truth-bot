@@ -29,6 +29,21 @@ from datetime import datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def _transcript_url(speech_id: str) -> str:
+    """Authored transcript source URL for a speech, or "" when none is recorded.
+
+    The artifacts carry no meta.source_url, so without this the authored
+    Congressional Record URLs in data/report_events.json would be recorded and
+    never rendered. Absent entry -> empty string -> the page omits the link,
+    exactly as before (this is why the presidential pages are untouched)."""
+    try:
+        doc = json.loads(
+            (REPO / "data" / "report_events.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    return str((doc.get("transcript_source_urls") or {}).get(speech_id, "") or "")
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO))
 
@@ -219,7 +234,7 @@ def render_artifact(path: Path, publisher: SitePublisher, role: str,
         role=role,
         date=date_val,
         venue=meta.get("venue", ""),
-        transcript_source_url="",
+        transcript_source_url=_transcript_url(meta.get("speech_id") or ""),
         bundles=out.bundles,
         characterization=list(d.get("characterization") or []),
         panel_roster=dict(d.get("roster") or {}),
