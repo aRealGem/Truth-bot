@@ -12,7 +12,8 @@
     "retrieval_cost_usd": 0.0,
     "total_cost_usd": 1.4035636500000002,
     "phase_r_pool": null,
-    "origin_speech_id": "warren_2025_04_29_prod"
+    "origin_speech_id": "warren_2025_04_29_prod",
+    "scoring": "native"
   },
   "claims": [
     {

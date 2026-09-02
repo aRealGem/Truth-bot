@@ -12,7 +12,8 @@
     "retrieval_cost_usd": 0.0,
     "total_cost_usd": 0.0407039,
     "phase_r_pool": null,
-    "origin_speech_id": "cruz_2026_06_24_prod"
+    "origin_speech_id": "cruz_2026_06_24_prod",
+    "scoring": "native"
   },
   "claims": [
     {

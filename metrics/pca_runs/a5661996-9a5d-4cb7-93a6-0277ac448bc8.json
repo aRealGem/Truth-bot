@@ -12,7 +12,8 @@
     "retrieval_cost_usd": 0.0,
     "total_cost_usd": 0.51824505,
     "phase_r_pool": null,
-    "origin_speech_id": "budd_2025_04_02_prod"
+    "origin_speech_id": "budd_2025_04_02_prod",
+    "scoring": "native"
   },
   "claims": [
     {

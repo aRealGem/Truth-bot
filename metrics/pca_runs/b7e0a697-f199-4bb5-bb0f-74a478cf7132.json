@@ -12,7 +12,8 @@
     "retrieval_cost_usd": 0.0,
     "total_cost_usd": 0.39444165000000003,
     "phase_r_pool": null,
-    "origin_speech_id": "tillis_2025_01_23_prod"
+    "origin_speech_id": "tillis_2025_01_23_prod",
+    "scoring": "native"
   },
   "claims": [
     {
