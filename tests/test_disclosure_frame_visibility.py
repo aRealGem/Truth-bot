@@ -69,13 +69,14 @@ def test_every_disclosure_frame_is_default_closed() -> None:
             assert el.get("open") is None, f"{p.name}: a <details> ships open"
 
 
-# The exact ratified note, at the current corpus (5 speeches, trump_2026 top at
-# 17/182 = 9.3%, median 4.5%). Pinned verbatim: the wording is owner-ratified
-# and sentence 2 must not be edited.
+# The exact ratified note, at the presidential class (5 speeches, trump_2026
+# top at 17/182 = 9.3%, median 4.5%). Sentence 1 is owner-ratified as a
+# TEMPLATE (FR-0901-02) so one ratified sentence serves every class; the class
+# label is a substitution. Sentence 2 is verbatim and must not be edited.
 EXPECTED_GENRE_NOTE = (
     "Of this speech's 182 checked claims, 17 (9.3%) were recorded as beyond "
-    "the public record — the highest rate of the five speeches checked "
-    "(median 4.5%). That concentration is a property of the speech's "
+    "the public record — the highest rate of the five presidential addresses "
+    "checked (median 4.5%). That concentration is a property of the speech's "
     "rhetorical genre — personal stories, intentions, and unmeasured "
     "superlatives — not a finding about the speaker."
 )
@@ -144,8 +145,36 @@ def test_genre_note_uses_no_inferential_statistics_vocabulary() -> None:
 # through a terminal, or a well-meaning "fix the punctuation" edit silently
 # mangles into something that still LOOKS right in a diff.
 EXPECTED_GENRE_NOTE_SHA256 = (
-    "bb36728bb68ec430e02cca319cb71e990e2c3ab45c90930e35d9ba3fe4ba4b87")
-EXPECTED_GENRE_NOTE_LEN = 312
+    "25d2804037eaf0813158bcfc234e88a15680a17121893fab688af62d0b3119fd")
+# 312 -> 326 (FR-0901-02): the class label "presidential addresses" replaced
+# the bare "speeches" when the rate statistic became class-partitioned. The
+# length moved because the ratified copy gained a substitution, not because
+# anyone edited the prose.
+EXPECTED_GENRE_NOTE_LEN = 326
+
+#: The ratified pieces pinned at SOURCE, independent of any rendered page.
+#: Sentence 2's hash is the one that must never move.
+EXPECTED_GENRE_S1_TEMPLATE_SHA256 = (
+    "42b388b365b9b48bf71ac1df1e25c81139dd3aa50f8c1814c15c8b01f056fca4")
+EXPECTED_GENRE_S2_SHA256 = (
+    "5bd503bad02117b631dfe434686b121ccdca4181bd10a34afef007edf621ad66")
+
+
+def test_ratified_genre_sentences_are_pinned_at_source() -> None:
+    """Pins the ratified copy itself, not one rendering of it. Runs even when
+    site-pca is absent, so a copy edit cannot slip through on an unrendered
+    tree."""
+    import hashlib
+
+    from truthbot.publish.site import (_GENRE_NOTE_S1_TEMPLATE,
+                                       _GENRE_NOTE_S2)
+    assert hashlib.sha256(
+        _GENRE_NOTE_S1_TEMPLATE.encode("utf-8")).hexdigest() == (
+        EXPECTED_GENRE_S1_TEMPLATE_SHA256), "sentence 1 template was edited"
+    assert hashlib.sha256(_GENRE_NOTE_S2.encode("utf-8")).hexdigest() == (
+        EXPECTED_GENRE_S2_SHA256), "sentence 2 is VERBATIM and was edited"
+    assert _GENRE_NOTE_S2.count("—") == 2
+    assert _GENRE_NOTE_S1_TEMPLATE.count("—") == 1
 
 
 @pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")
@@ -250,7 +279,7 @@ def test_frame_titles_are_plain_english_and_parallel() -> None:
     Asserted against RENDERED text, not the module source -- the source also
     carries the comment explaining why the rejected wording was rejected, and a
     source-level scan cannot tell copy from commentary about copy."""
-    seen = 0
+    seen = undecided_frames = stance_frames = 0
     for p, doc in _docs():
         # Statement-triage pages carry no verdict panel and none of these
         # frames -- they are not in scope for this pin.
@@ -258,12 +287,30 @@ def test_frame_titles_are_plain_english_and_parallel() -> None:
             continue
         seen += 1
         text = doc.text_content()
-        assert "Why some claims are undecided" in text, f"{p.name}"
-        assert "Why some evidence carried no stance" in text, f"{p.name}"
-        assert "falls short" not in text, f"{p.name}: rejected wording shipped"
-        assert "Why undecided" not in text.replace(
+        # PRESENCE is conditional, WORDING is not. A report with no honest
+        # abstentions to decompose renders no undecided frame at all -- true of
+        # the Senate floor speeches, and not a defect. What this test pins is
+        # that wherever the frames DO appear they carry the ratified parallel
+        # titles, and that the rejected wording never ships anywhere.
+        undecided_frames += "Why some claims are undecided" in text
+        stance_frames += "Why some evidence carried no stance" in text
+        # Scoped to the site's OWN chrome, not the page text. A speech may say
+        # "falls short" -- Warren's does, about an ethics pledge -- and a
+        # whole-page scan would police the transcript instead of the UI. Only
+        # the frame titles are the site speaking in its own voice.
+        chrome = " ".join(
+            " ".join(el.text_content().split())
+            for el in list(doc.iter("summary"))
+            + doc.find_class("stance-coverage-label"))
+        assert "falls short" not in chrome, (
+            f"{p.name}: rejected wording shipped in a frame title")
+        assert "Why undecided" not in chrome.replace(
             "Why some claims are undecided", ""), f"{p.name}: old title survives"
     assert seen, "no full report pages found to check"
+    # ...and the pin stays live: both titles must actually be in the corpus,
+    # or this test would pass vacuously on a site that rendered neither.
+    assert undecided_frames, "no page carries the undecided frame -- pin is dead"
+    assert stance_frames, "no page carries the stance frame -- pin is dead"
 
 
 def test_genre_note_shares_the_frame_rail_without_looking_clickable() -> None:

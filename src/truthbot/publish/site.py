@@ -2007,15 +2007,11 @@ def _verdict_panel(site_report) -> str:
             # "presidential addresses" but "Senate floor speeches".
             class_phrase = report_class_label_inline(report_class(this_speech))
             genre_line = (
-                f"Of this speech's {mine['checked']} checked claims, "
-                f"{mine['coded']} ({mine['rate']:.1f}%) were recorded as beyond "
-                f"the public record — the highest rate of the {speeches_word} "
-                f"{class_phrase} checked (median {median_rate:.1f}%)."
-                # Sentence 2 is VERBATIM from the shipped note. Do not edit.
-                " That concentration is a property of the speech's "
-                "rhetorical genre — personal stories, intentions, and "
-                "unmeasured superlatives — not a finding about the speaker."
-            )
+                _GENRE_NOTE_S1_TEMPLATE.format(
+                    checked=mine["checked"], coded=mine["coded"],
+                    rate=mine["rate"], n=speeches_word,
+                    class_label=class_phrase, median=median_rate)
+                + _GENRE_NOTE_S2)
             # M-6 hard constraint: both sentences stay fully visible, outside
             # any <details>. An earlier revision made this note the <summary> of
             # a collapsed frame; the ruling of 2026-08-24 puts it back in the
@@ -2976,6 +2972,24 @@ def build_corpus_genre_rates(runs_dir: "Optional[Path]" = None) -> dict[str, dic
 #: rank within. Below three the note either restates the obvious ("higher than
 #: the one other") or is a coin flip, so it suppresses itself.
 _GENRE_NOTE_MIN_SPEECHES = 3
+
+#: Sentence 1 of the genre note, owner-ratified as a TEMPLATE (FR-0901-02).
+#: The class label is a substitution, not a literal, so the same ratified
+#: sentence serves every class. Pinned by hash in
+#: tests/test_disclosure_frame_visibility.py -- edit this and that test fails.
+_GENRE_NOTE_S1_TEMPLATE = (
+    "Of this speech's {checked} checked claims, {coded} ({rate:.1f}%) were "
+    "recorded as beyond the public record — the highest rate of the {n} "
+    "{class_label} checked (median {median:.1f}%)."
+)
+
+#: Sentence 2 is VERBATIM from the shipped note and is NOT a template.
+#: Unchanged since ratification; pinned by its own hash.
+_GENRE_NOTE_S2 = (
+    " That concentration is a property of the speech's "
+    "rhetorical genre — personal stories, intentions, and "
+    "unmeasured superlatives — not a finding about the speaker."
+)
 
 
 def _genre_rate_table(speech_id: str = "") -> dict[str, dict]:
