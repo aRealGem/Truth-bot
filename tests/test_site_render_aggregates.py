@@ -115,7 +115,8 @@ def _make_bundle(
 
 
 def _make_site_report(bundles: list[VerdictBundle],
-                      panel_roster: dict | None = None) -> SiteReport:
+                      panel_roster: dict | None = None,
+                      speech_id: str = "") -> SiteReport:
     return SiteReport(
         report_id="00000000-1111-2222-3333-444444444444",
         speaker="Test Speaker",
@@ -127,6 +128,7 @@ def _make_site_report(bundles: list[VerdictBundle],
         source_of_claims="Test Speaker",
         source_of_claims_professional_public_title="President",
         event="Test Event",
+        speech_id=speech_id,
         channel="",
         panel_roster=dict(panel_roster or {}),
     )
@@ -318,7 +320,12 @@ def test_verdict_panel_single_axis_no_lens_markup() -> None:
         _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
         _make_bundle(VerdictLabel.FALSE, coarse_lenient="False", coarse_strict="False"),
     ]
-    sr = _make_site_report(bundles)
+    # speech_id pins the NON-small-sample rendering path: these fixtures
+    # carry single-digit decided counts, and the small-sample guard would
+    # otherwise replace the percent this test is about with a caveat.
+    # What is under test here is the family-verdict headline and frames,
+    # not the guard -- which has its own tests in test_small_n_guard.py.
+    sr = _make_site_report(bundles, speech_id="trump_2026")
     html = _verdict_panel(sr)
     assert "data-lens-axis" not in html
     assert "lens-target" not in html
@@ -339,7 +346,12 @@ def test_verdict_panel_headline_is_family_verdict_band_display() -> None:
     ``_report_card``); there is no separate band-word chip."""
     bundles = [_make_bundle(VerdictLabel.TRUE,
                             coarse_lenient="True", coarse_strict="True")] * 4
-    sr = _make_site_report(bundles)
+    # speech_id pins the NON-small-sample rendering path: these fixtures
+    # carry single-digit decided counts, and the small-sample guard would
+    # otherwise replace the percent this test is about with a caveat.
+    # What is under test here is the family-verdict headline and frames,
+    # not the guard -- which has its own tests in test_small_n_guard.py.
+    sr = _make_site_report(bundles, speech_id="trump_2026")
     html = _verdict_panel(sr)
     assert '<div class="vp-verdict vt-true">100% True</div>' in html
     assert "4 of 4 decided claims rated True" in html
@@ -512,7 +524,12 @@ def test_verdict_panel_promotes_truthy_and_false_into_headline_frames() -> None:
         _make_bundle(VerdictLabel.EXAGGERATED, coarse_lenient="Truthy", coarse_strict="Falsey"),
         _make_bundle(VerdictLabel.FALSE,       coarse_lenient="False",  coarse_strict="False"),
     ]
-    sr = _make_site_report(bundles)
+    # speech_id pins the NON-small-sample rendering path: these fixtures
+    # carry single-digit decided counts, and the small-sample guard would
+    # otherwise replace the percent this test is about with a caveat.
+    # What is under test here is the family-verdict headline and frames,
+    # not the guard -- which has its own tests in test_small_n_guard.py.
+    sr = _make_site_report(bundles, speech_id="trump_2026")
     html = _verdict_panel(sr)
     # Frame markup present, both labels visible.
     assert 'vp-headline-stats' in html
@@ -554,7 +571,12 @@ def test_truthy_or_better_uses_decided_denominator() -> None:
         _make_bundle(VerdictLabel.UNVERIFIABLE, coarse_lenient="Unverifiable", coarse_strict="Unverifiable"),
         _make_bundle(VerdictLabel.FALSE,        coarse_lenient="False",       coarse_strict="False"),
     ]
-    sr = _make_site_report(bundles)
+    # speech_id pins the NON-small-sample rendering path: these fixtures
+    # carry single-digit decided counts, and the small-sample guard would
+    # otherwise replace the percent this test is about with a caveat.
+    # What is under test here is the family-verdict headline and frames,
+    # not the guard -- which has its own tests in test_small_n_guard.py.
+    sr = _make_site_report(bundles, speech_id="trump_2026")
     html = _verdict_panel(sr)
     # 2 truthy of 3 DECIDED → 67%. The retired all-claims convention
     # would render 2/4 = 50%.
