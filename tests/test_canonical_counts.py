@@ -46,12 +46,14 @@ OLD_RUNS = {
 CANONICAL_CLAIMS = 529
 
 #: What the PUBLISHED site carries, which is no longer the same number.
-#: 529 (the DC-6' presidential record) + 103 (warren_2025-04-29) + 6
-#: (cruz_2026-06-24) = 638. FR-0901-02 D3, clerical: the 529 canonical
+#: 529 (the DC-6' presidential record) + 103 (warren_2025-04-29) = 632.
+#: Was 638 while cruz_2026-06-24 was published; the owner's veto held that
+#: run (FR-0901-06) and FR-0901-10 pruned it from the site, so its 6 claims
+#: left with it. FR-0901-02 D3, clerical: the 529 canonical
 #: reconciliation and its named orphan are untouched -- that record is about
 #: the presidential remediation and does not move when the corpus grows.
 #: budd and tillis are registered but published:false, so they add nothing.
-PUBLISHED_SITE_CLAIMS = 638
+PUBLISHED_SITE_CLAIMS = 632
 PUBLISHED_RECORDS = 530
 ORPHAN_SID = "trump_2026:0311"
 PLACEHOLDER_TEXT = "(claim text unavailable)"
@@ -131,7 +133,7 @@ def test_the_old_artifacts_carry_exactly_one_named_orphan():
 
 @pytest.mark.skipif(not (SITE / "data" / "claims.json").exists(),
                     reason="site-pca tree not present")
-def test_the_published_site_is_638_and_the_orphan_is_ledgered_not_placeheld():
+def test_the_published_site_is_632_and_the_orphan_is_ledgered_not_placeheld():
     """After the DC-6' publish (rev 5) the committed site carries EXACTLY the 529
     canonical claims. The pre-remediation orphan row (trump_2026:0311, which the
     old run published as a "(claim text unavailable)" placeholder to reach 530) is

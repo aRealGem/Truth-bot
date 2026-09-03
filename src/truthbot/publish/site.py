@@ -9117,8 +9117,12 @@ class SitePublisher:
                  resolution_changes: Optional[list[dict]] = None,
                  reason_pills: Optional[dict] = None,
                  corpus_genre_rates: Optional[dict] = None,
-                 label_changes: Optional[list[dict]] = None) -> None:
+                 label_changes: Optional[list[dict]] = None,
+                 runs_dir: Optional[str | Path] = None) -> None:
         import os
+        #: Where head resolution reads from. None -> the repo's metrics dir
+        #: (heads.PCA_RUNS_DIR). Injectable so a test can build a corpus.
+        self._runs_dir = Path(runs_dir) if runs_dir else None
         if site_root:
             self._root = Path(site_root)
         else:
@@ -9214,6 +9218,14 @@ class SitePublisher:
         # Update data files
         reports_index = self._load_reports_index()
         claims_index = self._load_claims_index()
+
+        # A run that has left head resolution must leave the SITE (FR-0901-10).
+        # data/reports.json accumulates across renders, so without this a run
+        # that is no longer a publishing head keeps its row, its pages and its
+        # claims forever -- the index and the resolver disagree, and the site
+        # goes on publishing a withdrawn report.
+        reports_index, claims_index = self._prune_unpublished(
+            reports_index, claims_index)
 
         # Remove stale entry for this report (re-add updated)
         reports_index = [r for r in reports_index if r.get("id") != site_report.report_id]
@@ -9406,6 +9418,56 @@ class SitePublisher:
     def _write(self, path: Path, content: str) -> None:
         path.write_text(content, encoding="utf-8")
         logger.debug("Wrote %s (%d B)", path, len(content))
+
+    def _prune_unpublished(self, reports_index: list[dict],
+                           claims_index: list[dict]) -> tuple[list[dict], list[dict]]:
+        """Drop every surface of a report whose speech is no longer a head.
+
+        The live set is whatever ``publishing_heads()`` resolves -- this never
+        reads ``held`` (or any other manifest field) itself, so any future
+        reason a run leaves head resolution prunes for free. Rows with no
+        speech_id are LEFT ALONE: legacy rows predate the field and "unknown"
+        must not mean "delete".
+        """
+        from truthbot.publish.heads import publishing_heads
+        try:
+            live = set(publishing_heads(self._runs_dir))
+        except SystemExit:
+            # A broken lineage is not a licence to delete the site. Fail closed:
+            # prune nothing and let the resolver's own error surface elsewhere.
+            logger.warning("prune: publishing_heads() failed; pruning nothing")
+            return reports_index, claims_index
+        if not live:
+            return reports_index, claims_index
+
+        dead = [r for r in reports_index
+                if r.get("speech_id") and r["speech_id"] not in live]
+        if not dead:
+            return reports_index, claims_index
+        dead_ids = {r.get("id") for r in dead}
+
+        for row in dead:
+            url = str(row.get("url") or "")
+            paths = []
+            if url:
+                paths.append(self._root / url)
+                paths.append(self._root / url.replace(".html", "-triage.html"))
+            for claim in claims_index:
+                if claim.get("report_id") in dead_ids and claim.get("id"):
+                    paths.append(self._root / "claims" / f"{claim['id']}.html")
+            for path in paths:
+                if path.exists():
+                    path.unlink()
+                    logger.info("pruned %s (%s not a publishing head)",
+                                path.relative_to(self._root), row.get("speech_id"))
+                    print(f"pruned: {path.relative_to(self._root)}")
+
+        kept_reports = [r for r in reports_index if r.get("id") not in dead_ids]
+        kept_claims = [c for c in claims_index if c.get("report_id") not in dead_ids]
+        print(f"prune: dropped {len(dead)} report(s), "
+              f"{len(claims_index) - len(kept_claims)} claim row(s) -- "
+              f"{', '.join(sorted(r.get('speech_id') or '?' for r in dead))}")
+        return kept_reports, kept_claims
 
     def _load_reports_index(self) -> list[dict]:
         p = self._root / "data" / "reports.json"

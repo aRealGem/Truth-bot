@@ -266,8 +266,9 @@ def test_each_report_names_its_own_card():
         urls.add(img)
         tw = doc.xpath('//meta[@name="twitter:image"]/@content')
         assert tw and tw[0] == img, f"{p.name}: twitter:image disagrees with og:image"
-    # 5 presidential + the 2 published Senate floor speeches (FR-0901-02).
-    assert seen == 7
+    # 5 presidential + warren_2025-04-29; cruz held (FR-0901-06) and
+    # pruned from the site (FR-0901-10).
+    assert seen == 6
     assert len(urls) == seen, "reports are sharing a card"
 
 

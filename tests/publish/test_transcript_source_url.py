@@ -16,9 +16,11 @@ _spec = importlib.util.spec_from_file_location(
 _rr = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_rr)
 
+# cruz_2026-06-24 was held (FR-0901-06) and pruned from the site
+# (FR-0901-10); its page no longer exists. The authored URL stays in
+# report_events.json -- holding a run does not unauthor its metadata, which
+# test_authored_url_is_returned_for_a_senate_speech still covers.
 PUBLISHED_SENATE = {
-    "2026-06-24-ted-cruz-425daf.html":
-        "CREC-2026-06-24-pt1-PgS3177.htm",
     "2025-04-29-elizabeth-warren-9537ac.html":
         "CREC-2025-04-29-pt1-PgS2644-2.htm",
 }
