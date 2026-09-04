@@ -9446,18 +9446,30 @@ class SitePublisher:
             return reports_index, claims_index
         dead_ids = {r.get("id") for r in dead}
 
+        cards = 0
         for row in dead:
             url = str(row.get("url") or "")
             paths = []
             if url:
                 paths.append(self._root / url)
                 paths.append(self._root / url.replace(".html", "-triage.html"))
+                # The share card is generated per report and is publicly
+                # reachable on its own URL, so leaving it behind keeps a
+                # withdrawn report's card live with nothing linking to it
+                # (FR-0901-12 item 4). Slug comes from the row's OWN url, not
+                # from a filename grep on a speaker name.
+                slug = url.rsplit("/", 1)[-1][: -len(".html")]
+                if slug:
+                    paths.append(self._root / _report_card_path(slug))
             for claim in claims_index:
                 if claim.get("report_id") in dead_ids and claim.get("id"):
                     paths.append(self._root / "claims" / f"{claim['id']}.html")
+                    paths.append(self._root / _claim_card_path(claim["id"]))
             for path in paths:
                 if path.exists():
                     path.unlink()
+                    if path.suffix == ".png":
+                        cards += 1
                     logger.info("pruned %s (%s not a publishing head)",
                                 path.relative_to(self._root), row.get("speech_id"))
                     print(f"pruned: {path.relative_to(self._root)}")
@@ -9467,6 +9479,7 @@ class SitePublisher:
         print(f"prune: dropped {len(dead)} report(s), "
               f"{len(claims_index) - len(kept_claims)} claim row(s) -- "
               f"{', '.join(sorted(r.get('speech_id') or '?' for r in dead))}")
+        print(f"prune: dropped {cards} share-card asset(s)")
         return kept_reports, kept_claims
 
     def _load_reports_index(self) -> list[dict]:
