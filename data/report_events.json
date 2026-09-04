@@ -21,13 +21,32 @@
     "",
     "WORDING: spelled out here because the card has no space pressure and the",
     "audience is broad. The short form ('2026 SOTU') is for posts, where 300",
-    "characters binds and readers are already politically engaged."
+    "characters binds and readers are already politically engaged.",
+    "",
+    "SENATE FLOOR SPEECHES (added 2026-09-01). The event label is the",
+    "Congressional Record section heading VERBATIM as printed over the",
+    "remarks -- not the granule's outer bill heading, which on the Warren",
+    "page is 'PROVIDING FOR CONGRESSIONAL DISAPPROVAL...' and governs the",
+    "whole page rather than the speech. Each heading was read off the",
+    "govinfo.gov Record page recorded in transcript_source_urls below.",
+    "A page heading can cover several senators' remarks in sequence; that",
+    "is the Record's own structure and is preserved rather than narrowed."
   ],
   "events": {
     "clinton_1998": "1998 State of the Union",
     "gwbush_2006": "2006 State of the Union",
     "obama_2014": "2014 State of the Union",
     "biden_2022": "2022 State of the Union",
-    "trump_2026": "2026 State of the Union"
+    "trump_2026": "2026 State of the Union",
+    "budd_2025-04-02": "Fentanyl",
+    "cruz_2026-06-24": "Dobbs v. Jackson Women's Health Organization",
+    "tillis_2025-01-23": "Trump Administration",
+    "warren_2025-04-29": "Trump Administration First 100 Days"
+  },
+  "transcript_source_urls": {
+    "budd_2025-04-02": "https://www.govinfo.gov/content/pkg/CREC-2025-04-02/html/CREC-2025-04-02-pt1-PgS2116.htm",
+    "cruz_2026-06-24": "https://www.govinfo.gov/content/pkg/CREC-2026-06-24/html/CREC-2026-06-24-pt1-PgS3177.htm",
+    "tillis_2025-01-23": "https://www.govinfo.gov/content/pkg/CREC-2025-01-23/html/CREC-2025-01-23-pt1-PgS323.htm",
+    "warren_2025-04-29": "https://www.govinfo.gov/content/pkg/CREC-2025-04-29/html/CREC-2025-04-29-pt1-PgS2644-2.htm"
   }
 }

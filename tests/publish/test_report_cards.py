@@ -266,7 +266,9 @@ def test_each_report_names_its_own_card():
         urls.add(img)
         tw = doc.xpath('//meta[@name="twitter:image"]/@content')
         assert tw and tw[0] == img, f"{p.name}: twitter:image disagrees with og:image"
-    assert seen == 5
+    # 5 presidential + warren_2025-04-29; cruz held (FR-0901-06) and
+    # pruned from the site (FR-0901-10).
+    assert seen == 6
     assert len(urls) == seen, "reports are sharing a card"
 
 
@@ -325,11 +327,21 @@ def test_event_labels_are_authored_not_derived():
     occasion on our own share card is not a mistake a fact-checker gets to
     make, so every label is a recorded judgement."""
     events = _report_events()
-    assert set(events) == {"clinton_1998", "gwbush_2006", "obama_2014",
-                           "biden_2022", "trump_2026"}
-    for speech_id, label in events.items():
+    presidential = {"clinton_1998", "gwbush_2006", "obama_2014",
+                    "biden_2022", "trump_2026"}
+    assert presidential <= set(events)
+    # A presidential address is named by its occasion, which leads with the year.
+    for speech_id in presidential:
+        label = events[speech_id]
         year = speech_id.rsplit("_", 1)[1]
         assert label.startswith(year), f"{speech_id}: {label!r} does not lead with its year"
+    # A Senate floor speech is named by its Congressional Record heading, which
+    # is authored from the Record and has no year convention. Pinned verbatim --
+    # the point of the test is that these are recorded, not generated.
+    assert events["budd_2025-04-02"] == "Fentanyl"
+    assert events["cruz_2026-06-24"] == "Dobbs v. Jackson Women's Health Organization"
+    assert events["tillis_2025-01-23"] == "Trump Administration"
+    assert events["warren_2025-04-29"] == "Trump Administration First 100 Days"
 
 
 def test_a_speech_with_no_entry_gets_no_label(monkeypatch):

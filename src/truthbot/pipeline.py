@@ -1249,7 +1249,8 @@ def _run_publish_pca(args) -> None:
     source_url = getattr(args, "source_url", "") or ""
 
     speech_id = getattr(args, "speech_id", None) or _default_speech_id(args.speaker, date)
-    sentences = publish_pipeline.prepare_speech(text, speech_id, date.date())
+    sentences = publish_pipeline.prepare_speech(text, speech_id, date.date(),
+                                               strict=True)
     print(f"Segmented {len(sentences)} sentence(s) (speech_id={speech_id}, "
           f"utterance={date.date().isoformat()})")
 

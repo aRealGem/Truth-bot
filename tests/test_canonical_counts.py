@@ -44,6 +44,16 @@ OLD_RUNS = {
 }
 
 CANONICAL_CLAIMS = 529
+
+#: What the PUBLISHED site carries, which is no longer the same number.
+#: 529 (the DC-6' presidential record) + 103 (warren_2025-04-29) = 632.
+#: Was 638 while cruz_2026-06-24 was published; the owner's veto held that
+#: run (FR-0901-06) and FR-0901-10 pruned it from the site, so its 6 claims
+#: left with it. FR-0901-02 D3, clerical: the 529 canonical
+#: reconciliation and its named orphan are untouched -- that record is about
+#: the presidential remediation and does not move when the corpus grows.
+#: budd and tillis are registered but published:false, so they add nothing.
+PUBLISHED_SITE_CLAIMS = 632
 PUBLISHED_RECORDS = 530
 ORPHAN_SID = "trump_2026:0311"
 PLACEHOLDER_TEXT = "(claim text unavailable)"
@@ -123,7 +133,7 @@ def test_the_old_artifacts_carry_exactly_one_named_orphan():
 
 @pytest.mark.skipif(not (SITE / "data" / "claims.json").exists(),
                     reason="site-pca tree not present")
-def test_the_published_site_is_529_and_the_orphan_is_ledgered_not_placeheld():
+def test_the_published_site_is_632_and_the_orphan_is_ledgered_not_placeheld():
     """After the DC-6' publish (rev 5) the committed site carries EXACTLY the 529
     canonical claims. The pre-remediation orphan row (trump_2026:0311, which the
     old run published as a "(claim text unavailable)" placeholder to reach 530) is
@@ -133,7 +143,7 @@ def test_the_published_site_is_529_and_the_orphan_is_ledgered_not_placeheld():
     published = json.loads((SITE / "data" / "claims.json").read_text("utf-8"))
     placeholders = [c for c in published
                     if PLACEHOLDER_TEXT in (c.get("claim_text") or "")]
-    assert len(published) == CANONICAL_CLAIMS
+    assert len(published) == PUBLISHED_SITE_CLAIMS
     assert placeholders == []
     net = json.loads((REPO / "metrics" / "remediation_v2"
                       / "dc6_net_ledger.json").read_text("utf-8"))
@@ -152,7 +162,7 @@ def test_canonical_counts_reports_the_same_reconciliation():
     # Rev 5: the published site is now the DC-6' render — 529 records, no
     # placeholder; the orphan is still NAMED as an excluded row in the
     # reconciliation, just no longer rendered as a page.
-    assert counts["published"]["records"] == CANONICAL_CLAIMS
+    assert counts["published"]["records"] == PUBLISHED_SITE_CLAIMS
     assert counts["published"]["placeholder_records"] == 0
     assert [e["sid"] for e in counts["named_exclusions"]] == [ORPHAN_SID]
     assert str(CANONICAL_CLAIMS) in counts["statement"]

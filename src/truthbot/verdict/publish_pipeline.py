@@ -565,7 +565,8 @@ def build_pca_lane_fns(
     return layer_a_fn, adjudicate_fn
 
 
-def prepare_speech(text: str, speech_id: str, utterance: date) -> list[dict]:
+def prepare_speech(text: str, speech_id: str, utterance: date, *,
+                   strict: bool = False) -> list[dict]:
     """Segment a transcript and register its utterance date for temporal grounding.
 
     Convenience for the CLI: registers ``speech_id → utterance`` (so the temporal
@@ -574,5 +575,5 @@ def prepare_speech(text: str, speech_id: str, utterance: date) -> list[dict]:
     when only ``run_pca_verify`` is used (offline tests)."""
     from truthbot.ingest.segment import segment
 
-    register_speech_date(speech_id, utterance)
+    register_speech_date(speech_id, utterance, strict=strict)
     return segment(text, speech_id)

@@ -307,7 +307,9 @@ def test_report_carries_exactly_one_feedback_callout():
         assert len(callouts) == (1 if on else 0), f"{p.name}: {len(callouts)} callouts"
         if on:
             assert len(doc.find_class("report-feedback-link")) == 1
-    assert seen == 5, f"expected the five published reports, walked {seen}"
+    # 5 presidential + warren_2025-04-29; cruz held (FR-0901-06) and
+    # pruned from the site (FR-0901-10).
+    assert seen == 6, f"expected the six published reports, walked {seen}"
 
 
 @pytest.mark.skipif(not REPORTS, reason="site-pca not rendered")

@@ -193,8 +193,8 @@ def test_only_the_score_propagated_heads_are_fit_to_gate():
     unreachable from build_evidence_pack_v2, so no stored run carried a single
     relevance-scored evidence item.
 
-    UPDATED TWICE, following this test's own standing instruction to update
-    rather than delete once a run gets genuinely scored:
+    UPDATED THREE TIMES, following this test's own standing instruction to
+    update rather than delete once a run gets genuinely scored:
 
       * the adjudication wave (2026-08-09) scored the 29 packs it
         re-adjudicated and nothing else — 29 repaired packs could not pull a
@@ -205,6 +205,17 @@ def test_only_the_score_propagated_heads_are_fit_to_gate():
         runtime — into a new publishing head per speech. Those heads are the
         first artifacts whose STORED evidence is the evidence their verdicts
         were actually reached on.
+      * the Senate floor speeches (2026-09-01, FR-0901-02) are the first runs
+        scored NATIVELY -- their evidence was scored by the pipeline that
+        produced them, not repaired after the fact by a wave or a propagation.
+        They carry meta.scoring = "native" (authored at registration), which is
+        a third legitimate provenance for scored evidence rather than a stray.
+        Two of the four still come back unfit: budd_2025-04-02 at 47.6% and
+        tillis_2025-01-23 at 31.8% stance-null. The ceiling does not move to
+        accommodate a speech, so both are HELD (FR-0901-04) and leave head
+        resolution; budd is additionally relabelled pre-s5-cap, because its
+        :0012 pack stores 4 POLITICAL items against a <=3 cap and so does not
+        satisfy the methodology its generation names.
 
     Both halves of the record are held here:
 
@@ -229,18 +240,23 @@ def test_only_the_score_propagated_heads_are_fit_to_gate():
 
     scored = [r for r in rows if r["relevance_scored"]]
     assert scored, "no scored run at all — the repaired artifacts are missing"
-    stray = [r["run_id"] for r in scored
-             if not (_meta(r["run_id"]).get("wave")
-                     or _meta(r["run_id"]).get("score_propagation"))]
-    assert not stray, f"scored evidence outside the wave/propagation: {stray}"
+    def _provenance(run_id: str) -> bool:
+        m = _meta(run_id)
+        return bool(m.get("wave") or m.get("score_propagation")
+                    or m.get("scoring") == "native")
+
+    stray = [r["run_id"] for r in scored if not _provenance(r["run_id"])]
+    assert not stray, (
+        f"scored evidence outside the wave/propagation/native: {stray}")
 
     assert {r["speech_id"] for r in rows if r["fit_to_gate"]} == {
-        "gwbush_2006", "clinton_1998", "obama_2014", "biden_2022"}
+        "gwbush_2006", "clinton_1998", "obama_2014", "biden_2022",
+        "cruz_2026-06-24", "warren_2025-04-29"}
     for row in rows:
         if row["fit_to_gate"]:
-            assert _meta(row["run_id"]).get("score_propagation"), (
-                f"{row['run_id']}: fit to gate without carrying the merged "
-                "scores — something moved the bar instead of the evidence")
+            assert _provenance(row["run_id"]), (
+                f"{row['run_id']}: fit to gate without a scoring provenance — "
+                "something moved the bar instead of the evidence")
 
 
 @pytest.mark.skipif(not (REPO / "metrics" / "pca_runs").is_dir(),

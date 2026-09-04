@@ -1,0 +1,2623 @@
+{
+  "run_id": "a5661996-9a5d-4cb7-93a6-0277ac448bc8",
+  "meta": {
+    "speaker": "Ted Budd",
+    "date": "2025-04-02",
+    "speech_id": "budd_2025-04-02",
+    "venue": "U.S. Senate floor",
+    "roster": "prod",
+    "n_sentences": 41,
+    "n_check_worthy": 14,
+    "cost_usd": 0.51824505,
+    "retrieval_cost_usd": 0.0,
+    "total_cost_usd": 0.51824505,
+    "phase_r_pool": null,
+    "origin_speech_id": "budd_2025_04_02_prod",
+    "scoring": "native"
+  },
+  "claims": [
+    {
+      "sid": "budd_2025_04_02_prod:0000",
+      "text": "Mr. President, the fentanyl epidemic has touched nearly every American.",
+      "context": "|| Mr. President, the fentanyl epidemic has touched nearly every American. || Whether it is a family member, a friend, a neighbor, a coworker--we all know someone whose life has been affected by the tragic reality of this crisis.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "statistical",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0008",
+      "text": "And the harsh reality is fentanyl is the leading cause of death for Americans age 18 to 45--not cancer, not car accidents, fentanyl.",
+      "context": "But for too many, it ended the same way: with a loss of life and the eternal grief that comes from losing a loved one. || And the harsh reality is fentanyl is the leading cause of death for Americans age 18 to 45--not cancer, not car accidents, fentanyl. || Last year alone, as my colleagues have shared with you, more than 70,000 Americans died from a fentanyl overdose, and, unsurprisingly, the Biden administration failed to act.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "statistical",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0009",
+      "text": "Last year alone, as my colleagues have shared with you, more than 70,000 Americans died from a fentanyl overdose, and, unsurprisingly, the Biden administration failed to act.",
+      "context": "And the harsh reality is fentanyl is the leading cause of death for Americans age 18 to 45--not cancer, not car accidents, fentanyl. || Last year alone, as my colleagues have shared with you, more than 70,000 Americans died from a fentanyl overdose, and, unsurprisingly, the Biden administration failed to act. || Instead, President Biden willingly chose to let the situation get worse.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "statistical",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0011",
+      "text": "For years, our southern border has been a major entry point for illegal drugs to pour into our country.",
+      "context": "Instead, President Biden willingly chose to let the situation get worse. || For years, our southern border has been a major entry point for illegal drugs to pour into our country. || But under President Trump's leadership, illegal crossings at the southern border have now dropped 94 percent.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "historical",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0012",
+      "text": "But under President Trump's leadership, illegal crossings at the southern border have now dropped 94 percent.",
+      "context": "For years, our southern border has been a major entry point for illegal drugs to pour into our country. || But under President Trump's leadership, illegal crossings at the southern border have now dropped 94 percent. || That is real progress.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "statistical",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0015",
+      "text": "Drug cartels have found a new route and a new loophole to continue trafficking drugs into our communities, and it is through the northern border with Canada.",
+      "context": "Now, however, we are seeing a dangerous shift. || Drug cartels have found a new route and a new loophole to continue trafficking drugs into our communities, and it is through the northern border with Canada. || Just last year, Customs and Border Patrol seized enough fentanyl at the northern border to kill 9.5 million Americans.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "attribution",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0016",
+      "text": "Just last year, Customs and Border Patrol seized enough fentanyl at the northern border to kill 9.5 million Americans.",
+      "context": "Drug cartels have found a new route and a new loophole to continue trafficking drugs into our communities, and it is through the northern border with Canada. || Just last year, Customs and Border Patrol seized enough fentanyl at the northern border to kill 9.5 million Americans. || That is nothing short of alarming.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "statistical",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0018",
+      "text": "In fact, a member of the Sinaloa Cartel, one of Mexico's largest and most well-known operations, they openly claim, they openly brag--and I quote you this: Canada's border is much larger than Mexico's.",
+      "context": "That is nothing short of alarming. || In fact, a member of the Sinaloa Cartel, one of Mexico's largest and most well-known operations, they openly claim, they openly brag--and I quote you this: Canada's border is much larger than Mexico's. || There are more entry points through Canada than through Mexico--a lot more entry points.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "attribution",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0019",
+      "text": "There are more entry points through Canada than through Mexico--a lot more entry points.",
+      "context": "In fact, a member of the Sinaloa Cartel, one of Mexico's largest and most well-known operations, they openly claim, they openly brag--and I quote you this: Canada's border is much larger than Mexico's. || There are more entry points through Canada than through Mexico--a lot more entry points. || So that won't stop us.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "comparison",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0021",
+      "text": "And when asked about the impact of fentanyl killing countless Americans, here is what he said: Unfortunately, here, for money, we do anything.",
+      "context": "So that won't stop us. || And when asked about the impact of fentanyl killing countless Americans, here is what he said: Unfortunately, here, for money, we do anything. || It's a business. ``It's a business.'' Friends, killing America is not a business.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "attribution",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0025",
+      "text": "When I talk to sheriffs in all 100 counties in North Carolina, I repeatedly hear the same message: Every single county in North Carolina is a border county.",
+      "context": "This is nothing short of a serious threat to our national security. || When I talk to sheriffs in all 100 counties in North Carolina, I repeatedly hear the same message: Every single county in North Carolina is a border county. || The U.S.-Canada border is the world's longest international border at more than 5,500 miles long, but it remains extraordinarily vulnerable as criminal cartel networks continue to take advantage of the gaps of our porous northern border.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "attribution",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0026",
+      "text": "The U.S.-Canada border is the world's longest international border at more than 5,500 miles long, but it remains extraordinarily vulnerable as criminal cartel networks continue to take advantage of the gaps of our porous northern border.",
+      "context": "When I talk to sheriffs in all 100 counties in North Carolina, I repeatedly hear the same message: Every single county in North Carolina is a border county. || The U.S.-Canada border is the world's longest international border at more than 5,500 miles long, but it remains extraordinarily vulnerable as criminal cartel networks continue to take advantage of the gaps of our porous northern border. || I think it is important to know that 87 percent of all Terror Watchlist suspects that were encountered at land border ports last year came across our northern border.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "comparison",
+        "claim_shape": "c-eval"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0027",
+      "text": "I think it is important to know that 87 percent of all Terror Watchlist suspects that were encountered at land border ports last year came across our northern border.",
+      "context": "The U.S.-Canada border is the world's longest international border at more than 5,500 miles long, but it remains extraordinarily vulnerable as criminal cartel networks continue to take advantage of the gaps of our porous northern border. || I think it is important to know that 87 percent of all Terror Watchlist suspects that were encountered at land border ports last year came across our northern border. || We have invested heavily in our southern border and rightfully so.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "statistical",
+        "claim_shape": "c-third"
+      }
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0034",
+      "text": "What is even more disturbing is that Mexican cartels are now setting up fentanyl labs in Canada and expanding their role in the global drug trade.",
+      "context": "We are just watching history repeat itself, and if we don't act to provide our law enforcement officials with the proper tools and technology that they need to defend our northern border, we are going to allow this to get even worse. || What is even more disturbing is that Mexican cartels are now setting up fentanyl labs in Canada and expanding their role in the global drug trade. || Now, as our ally, we need Canada to step up before more lives are lost, because the truth is that behind every statistic--behind every statistic--is a grieving family, and the American people deserve more than just empty words.",
+      "layer_a": {
+        "label": "check-worthy",
+        "source": "A2",
+        "claim_type": "attribution",
+        "claim_shape": "c-third"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "sid": "budd_2025_04_02_prod:0000",
+      "status": "resolved",
+      "verdict": "MISLEADING",
+      "confidence": 0.71,
+      "citations": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E6"
+      ],
+      "reasoning": "The fentanyl epidemic's scale is real and severe — ~107,000 overdose deaths in 2023 with roughly 70-78% from synthetic opioids and ~5.7 million people with opioid use disorder — but the evidence shows a crisis affecting millions, not one that has 'touched nearly every American,' so the universal reach is a rhetorical overstatement of a genuine underlying fact.",
+      "votes": {
+        "MISLEADING": 2
+      },
+      "by_role": {
+        "proposer": [
+          "MISLEADING"
+        ],
+        "critic": [
+          "MISLEADING"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "MISLEADING",
+          "confidence": 0.62,
+          "reasoning": "The fentanyl epidemic's scale is real and severe — ~107,000 overdose deaths in 2023 with roughly 70-78% from synthetic opioids and ~5.7 million people with opioid use disorder — but the evidence shows a crisis affecting millions, not one that has 'touched nearly every American,' so the universal reach is a rhetorical overstatement of a genuine underlying fact.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "MISLEADING",
+          "confidence": 0.8,
+          "reasoning": "Evidence confirms large-scale deaths (~87k-107k/yr) and 5.7M OUD cases but supplies no data on personal acquaintance rates, so the absolute 'nearly every American' claim exaggerates reach beyond the documented prevalence.",
+          "citations": [
+            "E1",
+            "E4",
+            "E6"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0008",
+      "status": "resolved",
+      "verdict": "MISLEADING",
+      "confidence": 0.73,
+      "citations": [
+        "E1",
+        "E4",
+        "E6"
+      ],
+      "reasoning": "CDC evidence supports overdose as the leading cause for ages 18-44 and fentanyl as a major driver, but the claim overstates this as definitively fentanyl for ages 18-45 rather than the broader overdose category",
+      "votes": {
+        "MISLEADING": 2,
+        "FALSE": 1
+      },
+      "by_role": {
+        "proposer": [
+          "MISLEADING"
+        ],
+        "critic": [
+          "FALSE"
+        ],
+        "arbiter": [
+          "MISLEADING"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "MISLEADING",
+          "confidence": 0.72,
+          "reasoning": "The real underlying fact is that drug overdose overall — not fentanyl specifically — is the leading cause of death for adults 18-44 (E1), with fentanyl the dominant driver (E6); calling fentanyl itself the leading cause requires an assumption-laden breakout the CDC only hedged as 'one can argue' (E4), and conflicts with standard cause-of-death categories (E3, E5), so the claim overstates a true trend rather than being flatly contradicted.",
+          "citations": [
+            "E1",
+            "E3",
+            "E4",
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "FALSE",
+          "confidence": 0.8,
+          "reasoning": "CDC data establish overdose (or unintentional injuries) as leading for ages 18-44, not fentanyl specifically; claim's absolute identification of fentanyl as the single leading cause is directly contradicted.",
+          "citations": [
+            "E1",
+            "E3"
+          ]
+        },
+        {
+          "role": "arbiter",
+          "verdict": "MISLEADING",
+          "confidence": 0.74,
+          "reasoning": "CDC evidence supports overdose as the leading cause for ages 18-44 and fentanyl as a major driver, but the claim overstates this as definitively fentanyl for ages 18-45 rather than the broader overdose category",
+          "citations": [
+            "E1",
+            "E4",
+            "E6"
+          ]
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0009",
+      "status": "resolved",
+      "verdict": "UNVERIFIABLE",
+      "confidence": 0.81,
+      "citations": [],
+      "reasoning": "provided evidence gives 2022 fentanyl/synthetic-opioid death figures and notes 2024 declines, but does not establish whether 2024 fentanyl overdose deaths exceeded 70,000 or whether the administration failed to act",
+      "votes": {
+        "MISLEADING": 1,
+        "UNVERIFIABLE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "MISLEADING"
+        ],
+        "critic": [
+          "UNVERIFIABLE"
+        ],
+        "arbiter": [
+          "UNVERIFIABLE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "MISLEADING",
+          "confidence": 0.72,
+          "reasoning": "The >70,000 figure matches the 2022 peak (E1/E2: ~68-70% of ~107,000 overdose deaths involved illicit fentanyl), not \"last year\" (2024), by which CDC data showed fentanyl deaths falling sharply toward the first sub-100,000 overdose year since 2020 (E3) alongside declining DEA-measured pill lethality (E4) — so a real crisis is stated with a stale, inflated number and framed as inaction against evidence of a substantial decline.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.9,
+          "reasoning": "No evidence item reports 2024 fentanyl-specific death counts; only 2022 figures and 2024 total-overdose projections exist.",
+          "citations": []
+        },
+        {
+          "role": "arbiter",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.72,
+          "reasoning": "provided evidence gives 2022 fentanyl/synthetic-opioid death figures and notes 2024 declines, but does not establish whether 2024 fentanyl overdose deaths exceeded 70,000 or whether the administration failed to act",
+          "citations": []
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0011",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.81,
+      "citations": [
+        "E2",
+        "E6",
+        "E3",
+        "E5"
+      ],
+      "reasoning": "The core assertion — that the U.S.-Mexico border has for years been a major entry point for illegal drugs — is supported by CBP seizure data showing the bulk of fentanyl and 93% of methamphetamine seized there (E2, E6, E3, E5), even though that flow moves mainly through legal ports of entry carried by U.S. citizens rather than via illegal crossings, a distinction the surrounding rhetoric elides but which does not contradict the claim as stated.",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.72,
+          "reasoning": "The core assertion — that the U.S.-Mexico border has for years been a major entry point for illegal drugs — is supported by CBP seizure data showing the bulk of fentanyl and 93% of methamphetamine seized there (E2, E6, E3, E5), even though that flow moves mainly through legal ports of entry carried by U.S. citizens rather than via illegal crossings, a distinction the surrounding rhetoric elides but which does not contradict the claim as stated.",
+          "citations": [
+            "E2",
+            "E6",
+            "E3",
+            "E5"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "reasoning": "Core claim that the southern border (including ports of entry) has long been a major conduit for illegal drugs is directly supported by seizure data and federal analyses showing the majority of fentanyl and other drugs entering via that border.",
+          "citations": [
+            "E2",
+            "E3",
+            "E5"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0012",
+      "status": "resolved",
+      "verdict": "MISLEADING",
+      "confidence": 0.78,
+      "citations": [
+        "E1",
+        "E4",
+        "E6"
+      ],
+      "reasoning": "March 2025 encounters were about 95% below March 2024, but the claim credits Trump while evidence shows illegal crossings had already been falling substantially under Biden before Trump took office",
+      "votes": {
+        "TRUE": 1,
+        "MISLEADING": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "MISLEADING"
+        ],
+        "arbiter": [
+          "MISLEADING"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.74,
+          "reasoning": "March 2025 Border Patrol southwest-border encounters of 7,181 were ~95% below March 2024 (E1), with February already the lowest since FY2000 (E2) and an 85% post-inauguration drop (E3), so the ~94% figure is accurate as of 2025-04-02 — the only caveat being that declines began under Biden (E4), though crossings still fell ~85% from December 2024 (47,316) to March 2025 under Trump.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "MISLEADING",
+          "confidence": 0.8,
+          "reasoning": "Core claim of ~94-95% drop by March 2025 vs 2024 is supported by E1, but evidence in E4 and E6 shows the decline began and reached 60% under Biden in 2024, so attributing the full drop to Trump's leadership exaggerates causation and timing.",
+          "citations": [
+            "E1",
+            "E4",
+            "E6"
+          ]
+        },
+        {
+          "role": "arbiter",
+          "verdict": "MISLEADING",
+          "confidence": 0.76,
+          "reasoning": "March 2025 encounters were about 95% below March 2024, but the claim credits Trump while evidence shows illegal crossings had already been falling substantially under Biden before Trump took office",
+          "citations": [
+            "E1",
+            "E4",
+            "E6"
+          ]
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0015",
+      "status": "resolved",
+      "verdict": "FALSE",
+      "confidence": 0.86,
+      "citations": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E6"
+      ],
+      "reasoning": "CBP data show northern-border fentanyl seizures are trivial (~43 lbs in FY2024, ~70 lbs since FY2022) versus ~21,100 lbs at the southern border, and overall northern-border drug seizures declined 8% in FY2023 and 35% from FY2021, contradicting the core assertion of a new cartel trafficking route/dangerous shift through Canada.",
+      "votes": {
+        "FALSE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "FALSE"
+        ],
+        "critic": [
+          "FALSE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "FALSE",
+          "confidence": 0.82,
+          "reasoning": "CBP data show northern-border fentanyl seizures are trivial (~43 lbs in FY2024, ~70 lbs since FY2022) versus ~21,100 lbs at the southern border, and overall northern-border drug seizures declined 8% in FY2023 and 35% from FY2021, contradicting the core assertion of a new cartel trafficking route/dangerous shift through Canada.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "reasoning": "Evidence shows only ~20-43 lbs seized at northern border in 2024 (vs ~10+ tonnes southern), with seizures minimal or declining, directly contradicting the core assertion of a new significant trafficking route via Canada.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0016",
+      "status": "disagreement",
+      "verdict": null,
+      "confidence": null,
+      "citations": [],
+      "reasoning": "",
+      "votes": {
+        "MISLEADING": 1,
+        "FALSE": 1,
+        "TRUE": 1
+      },
+      "by_role": {
+        "proposer": [
+          "MISLEADING"
+        ],
+        "critic": [
+          "FALSE"
+        ],
+        "arbiter": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "MISLEADING",
+          "confidence": 0.7,
+          "reasoning": "A real but tiny northern-border seizure total (E1: only ~70 lbs since Oct 2021; E2: 14 lbs in FY2022; E3: 946 g intercepted by Canada in FY2023-24) is inflated into a '9.5 million dead Americans' figure by the DEA 2 mg-per-lethal-dose conversion (E6) applied to seized weight, and framed as a major new cartel route while omitting that northern-border seizures are a negligible fraction of national fentanyl interdiction.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "reasoning": "Evidence shows northern-border fentanyl seizures of only ~14 lbs (FY2022), ~2 lbs (FY2023-24), or ~70 lbs cumulative since FY2022 start—far below the ~42 lbs needed for 9.5M lethal doses (2 mg each).",
+          "citations": [
+            "E1",
+            "E2",
+            "E3"
+          ]
+        },
+        {
+          "role": "arbiter",
+          "verdict": "TRUE",
+          "confidence": 0.72,
+          "reasoning": "CBP’s fiscal-year 2024 northern-border fentanyl figure was about 43 pounds, which at DEA’s 2 mg lethal-dose benchmark is roughly 9.5 million lethal doses",
+          "citations": [
+            "E2",
+            "E6"
+          ]
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0018",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.88,
+      "citations": [
+        "E1",
+        "E5",
+        "E6",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "reasoning": "A self-described Sinaloa Cartel smuggler did publicly tout the 5,500-mile U.S.-Canada border as prime smuggling territory in March 2025 reporting, and the underlying comparison holds — the U.S.-Canada border (8,891 km) is roughly triple the U.S.-Mexico border (3,145 km) — so only the exact wording, not the substance, is paraphrased.",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.86,
+          "reasoning": "A self-described Sinaloa Cartel smuggler did publicly tout the 5,500-mile U.S.-Canada border as prime smuggling territory in March 2025 reporting, and the underlying comparison holds — the U.S.-Canada border (8,891 km) is roughly triple the U.S.-Mexico border (3,145 km) — so only the exact wording, not the substance, is paraphrased.",
+          "citations": [
+            "E1",
+            "E5",
+            "E6",
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.9,
+          "reasoning": "Core assertion (cartel member openly stated US-Canada border is much larger) is directly confirmed by contemporaneous reporting on the Javi/60 Minutes interview.",
+          "citations": [
+            "E1",
+            "E5",
+            "E6"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0019",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.7,
+      "citations": [
+        "E4",
+        "E6"
+      ],
+      "reasoning": "CBP/BTS government port-of-entry data identify official land ports on both borders, and the U.S.-Canada border has substantially more such entry points than the U.S.-Mexico border",
+      "votes": {
+        "TRUE": 2,
+        "UNVERIFIABLE": 1
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "UNVERIFIABLE"
+        ],
+        "arbiter": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.62,
+          "reasoning": "The core assertion — that the U.S.-Canada border has far more ports/entry points than the U.S.-Mexico border — matches the documented land-port landscape (roughly 120 northern-border land ports of entry, including the many remote, hard-to-staff northern LPOEs referenced by DHS, versus roughly 30 southern-border ports), with E1 alone showing 42 Canadian ports of entry, and no evidence here contradicting it.",
+          "citations": [
+            "E1",
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.9,
+          "reasoning": "No evidence item supplies or compares total counts of US land ports of entry on the northern vs southern borders.",
+          "citations": []
+        },
+        {
+          "role": "arbiter",
+          "verdict": "TRUE",
+          "confidence": 0.78,
+          "reasoning": "CBP/BTS government port-of-entry data identify official land ports on both borders, and the U.S.-Canada border has substantially more such entry points than the U.S.-Mexico border",
+          "citations": [
+            "E4",
+            "E6"
+          ]
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0021",
+      "status": "resolved",
+      "verdict": "UNVERIFIABLE",
+      "confidence": 0.86,
+      "citations": [],
+      "reasoning": "The core assertion is that a specific individual said the quoted line when asked about fentanyl deaths, and the provided evidence covers only overdose statistics and fentanyl money-laundering typologies, none of which can confirm or refute the attributed quotation.",
+      "votes": {
+        "UNVERIFIABLE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "UNVERIFIABLE"
+        ],
+        "critic": [
+          "UNVERIFIABLE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.82,
+          "reasoning": "The core assertion is that a specific individual said the quoted line when asked about fentanyl deaths, and the provided evidence covers only overdose statistics and fentanyl money-laundering typologies, none of which can confirm or refute the attributed quotation.",
+          "citations": []
+        },
+        {
+          "role": "critic",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.9,
+          "reasoning": "evidence contains no quote, attribution, or reference to any speaker's statement matching the claimed remark",
+          "citations": []
+        }
+      ],
+      "split": false,
+      "escalated": false
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0025",
+      "status": "resolved",
+      "verdict": "UNVERIFIABLE",
+      "confidence": 0.72,
+      "citations": [],
+      "reasoning": "provided evidence shows immigration/drug-enforcement activity in North Carolina but does not verify the private conversations with sheriffs in all 100 counties or that every county conveyed that message",
+      "votes": {
+        "UNVERIFIABLE": 2,
+        "FALSE": 1
+      },
+      "by_role": {
+        "proposer": [
+          "UNVERIFIABLE"
+        ],
+        "critic": [
+          "FALSE"
+        ],
+        "arbiter": [
+          "UNVERIFIABLE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.72,
+          "reasoning": "The core assertion is a report of what sheriffs privately told the speaker in unrecorded conversations, plus a metaphorical 'border county' framing; the supplied evidence (sheriff-ICE cooperation, inland fentanyl seizures, state drug-fine changes) neither confirms nor contradicts that sheriffs in all 100 counties repeatedly delivered this message.",
+          "citations": []
+        },
+        {
+          "role": "critic",
+          "verdict": "FALSE",
+          "confidence": 0.9,
+          "reasoning": "Core assertion that every NC county is a border county is directly contradicted by geography (NC shares no international border) and none of the evidence records or supports any such statement from sheriffs.",
+          "citations": [
+            "E1"
+          ]
+        },
+        {
+          "role": "arbiter",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.72,
+          "reasoning": "provided evidence shows immigration/drug-enforcement activity in North Carolina but does not verify the private conversations with sheriffs in all 100 counties or that every county conveyed that message",
+          "citations": []
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0026",
+      "status": "resolved",
+      "verdict": "MISLEADING",
+      "confidence": 0.7050000000000001,
+      "citations": [
+        "E1",
+        "E6"
+      ],
+      "reasoning": "the border-length claim is supported, and official evidence notes cross-border smuggling by organized crime networks, but the provided evidence does not substantiate the stronger characterization that the northern border is extraordinarily porous or being exploited by cartel networks",
+      "votes": {
+        "TRUE": 1,
+        "MISLEADING": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "MISLEADING"
+        ],
+        "arbiter": [
+          "MISLEADING"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.78,
+          "reasoning": "The core factual assertion — the U.S.-Canada border is the world's longest international border at 5,525 miles (more than 5,500) — is confirmed by the evidence (E4's shorter figure covers only the land segment, not the full boundary), and the accompanying vulnerability characterization is supported by dated evidence of elevated terrorist-watchlist encounters and binational organized-crime/human-smuggling networks at that border.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "MISLEADING",
+          "confidence": 0.75,
+          "reasoning": "Length fact is accurate per multiple sources, but core assertion of extraordinary vulnerability specifically to criminal cartel networks exploiting the northern border is unsupported and overstated by the provided evidence, which addresses terrorist encounters and general smuggling without referencing cartels.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E5",
+            "E6"
+          ]
+        },
+        {
+          "role": "arbiter",
+          "verdict": "MISLEADING",
+          "confidence": 0.66,
+          "reasoning": "the border-length claim is supported, and official evidence notes cross-border smuggling by organized crime networks, but the provided evidence does not substantiate the stronger characterization that the northern border is extraordinarily porous or being exploited by cartel networks",
+          "citations": [
+            "E1",
+            "E6"
+          ]
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0027",
+      "status": "resolved",
+      "verdict": "UNVERIFIABLE",
+      "confidence": 0.81,
+      "citations": [],
+      "reasoning": "the provided evidence concerns FY2023 or partial FY2023 figures, not the 2024 “last year” land-border-port percentage claimed",
+      "votes": {
+        "TRUE": 1,
+        "UNVERIFIABLE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "UNVERIFIABLE"
+        ],
+        "arbiter": [
+          "UNVERIFIABLE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.62,
+          "reasoning": "The core assertion — that the overwhelming majority (~87%) of terror-watchlist encounters at land ports of entry occurred on the northern border — matches the CBP-attributed 85% figure for the prior fiscal year and the port-of-entry-heavy northern-border encounter counts (484 north vs 169 southwest), with the claim properly limited to land ports rather than total border encounters; the exact 87% for FY2024 is not directly documented in the provided evidence, which is why confidence is moderate rather than high.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E5"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.9,
+          "reasoning": "provided evidence covers only FY2023 (85% figure) while claim refers to 'last year' relative to 2025-04-02 utterance",
+          "citations": []
+        },
+        {
+          "role": "arbiter",
+          "verdict": "UNVERIFIABLE",
+          "confidence": 0.72,
+          "reasoning": "the provided evidence concerns FY2023 or partial FY2023 figures, not the 2024 “last year” land-border-port percentage claimed",
+          "citations": []
+        }
+      ],
+      "split": true,
+      "escalated": true
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0034",
+      "status": "resolved",
+      "verdict": "TRUE",
+      "confidence": 0.71,
+      "citations": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5"
+      ],
+      "reasoning": "As of April 2025, Canadian police had dismantled domestic fentanyl super labs — including one where investigators found, for the first time in Canada, an opioid production method used primarily by Mexican cartels — with output reaching overseas markets and cartels documented operating abroad, supporting both the Canadian-lab and global-expansion halves of the core assertion, though direct cartel ownership of the labs is inferred from method and linkage rather than shown outright.",
+      "votes": {
+        "TRUE": 2
+      },
+      "by_role": {
+        "proposer": [
+          "TRUE"
+        ],
+        "critic": [
+          "TRUE"
+        ]
+      },
+      "seat_rationales": [
+        {
+          "role": "proposer",
+          "verdict": "TRUE",
+          "confidence": 0.62,
+          "reasoning": "As of April 2025, Canadian police had dismantled domestic fentanyl super labs — including one where investigators found, for the first time in Canada, an opioid production method used primarily by Mexican cartels — with output reaching overseas markets and cartels documented operating abroad, supporting both the Canadian-lab and global-expansion halves of the core assertion, though direct cartel ownership of the labs is inferred from method and linkage rather than shown outright.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E5"
+          ]
+        },
+        {
+          "role": "critic",
+          "verdict": "TRUE",
+          "confidence": 0.8,
+          "reasoning": "Evidence directly confirms Mexican-cartel-linked methods, operations, and super-lab activity in Canada plus export to Asia by the utterance date.",
+          "citations": [
+            "E1",
+            "E2",
+            "E3"
+          ]
+        }
+      ],
+      "split": false,
+      "escalated": false,
+      "audit_flags": [],
+      "audit_queue": false
+    }
+  ],
+  "characterization": [
+    {
+      "sid": "budd_2025_04_02_prod:0023",
+      "speech": "budd_2025_04_02_prod",
+      "idx": 23,
+      "text": "We should not be endorsing known criminal activity with inaction.",
+      "context": "It's a business. ``It's a business.'' Friends, killing America is not a business. || We should not be endorsing known criminal activity with inaction. || This is nothing short of a serious threat to our national security.",
+      "label": "non-check-worthy",
+      "source": "A1",
+      "a1_score": 0.15000000000000002
+    },
+    {
+      "sid": "budd_2025_04_02_prod:0029",
+      "speech": "budd_2025_04_02_prod",
+      "idx": 29,
+      "text": "We have done that, and we should continue to do so at our southern border.",
+      "context": "We have invested heavily in our southern border and rightfully so. || We have done that, and we should continue to do so at our southern border. || But the northern border has been overlooked and underresourced for way too long.",
+      "label": "non-check-worthy",
+      "source": "A1",
+      "a1_score": 0.4
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence's dominant speech-act is a rhetorical assertion of shared experience and emotional resonance ('we all know someone'), not a specific verifiable factual claim. While it presupposes the fentanyl crisis is real and widespread, the assertion itself is a generalization about collective experience and a value judgment ('tragic reality'), not a checkable fact.",
+      "sid": "budd_2025_04_02_prod:0001",
+      "text": "Whether it is a family member, a friend, a neighbor, a coworker--we all know someone whose life has been affected by the tragic reality of this crisis.",
+      "context": "Mr. President, the fentanyl epidemic has touched nearly every American. || Whether it is a family member, a friend, a neighbor, a coworker--we all know someone whose life has been affected by the tragic reality of this crisis. || It is widespread, it is devastating, and it can't be ignored.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence's dominant speech-act is rhetorical assertion of value judgments ('widespread', 'devastating', 'can't be ignored') rather than a specific, verifiable factual claim. It characterizes a crisis in evaluative terms without asserting a checkable fact about what occurred, when, or by how much.",
+      "sid": "budd_2025_04_02_prod:0002",
+      "text": "It is widespread, it is devastating, and it can't be ignored.",
+      "context": "Whether it is a family member, a friend, a neighbor, a coworker--we all know someone whose life has been affected by the tragic reality of this crisis. || It is widespread, it is devastating, and it can't be ignored. || For too long, this crisis has been fueled by the chaos at our southern border, and now it is happening at our northern border.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.85,
+      "rationale": "The dominant speech-act is a causal attribution and value judgment ('fueled by chaos'), framed as political rhetoric about a crisis. While it embeds factual premises (fentanyl epidemic, border issues), the main assertion is evaluative/interpretive rather than a specific, verifiable factual claim. The causal link between 'border chaos' and 'fentanyl crisis' is contested political framing, not a discrete checkable fact.",
+      "sid": "budd_2025_04_02_prod:0003",
+      "text": "For too long, this crisis has been fueled by the chaos at our southern border, and now it is happening at our northern border.",
+      "context": "It is widespread, it is devastating, and it can't be ignored. || For too long, this crisis has been fueled by the chaos at our southern border, and now it is happening at our northern border. || Today, I rise to honor the American lives lost to our country's horrific fentanyl epidemic, and I call on our Canadian allies to shut down these operations before more devastation occurs.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.85,
+      "rationale": "The dominant speech-act is a call to action (a policy proposal/recommendation to Canadian allies) combined with a value judgment ('horrific epidemic'). While the sentence presupposes that fentanyl operations exist in Canada and that American lives have been lost, the main assertion being made is a rhetorical call for action, not a specific verifiable factual claim about what happened or what is true.",
+      "sid": "budd_2025_04_02_prod:0004",
+      "text": "Today, I rise to honor the American lives lost to our country's horrific fentanyl epidemic, and I call on our Canadian allies to shut down these operations before more devastation occurs.",
+      "context": "For too long, this crisis has been fueled by the chaos at our southern border, and now it is happening at our northern border. || Today, I rise to honor the American lives lost to our country's horrific fentanyl epidemic, and I call on our Canadian allies to shut down these operations before more devastation occurs. || For many Americans, it started with a prescription.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "A general descriptive statement about how addiction pathways begin for some Americans; lacks specific, verifiable factual content (no statistic, named event, or causal claim) and serves as rhetorical framing rather than a checkable assertion.",
+      "sid": "budd_2025_04_02_prod:0005",
+      "text": "For many Americans, it started with a prescription.",
+      "context": "Today, I rise to honor the American lives lost to our country's horrific fentanyl epidemic, and I call on our Canadian allies to shut down these operations before more devastation occurs. || For many Americans, it started with a prescription. || For others, it was a single accidental exposure.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "A general, non-specific statement about how some people's opioid addiction began; lacks quantifiable detail, named individuals, or verifiable factual content that would constitute public consequence.",
+      "sid": "budd_2025_04_02_prod:0006",
+      "text": "For others, it was a single accidental exposure.",
+      "context": "For many Americans, it started with a prescription. || For others, it was a single accidental exposure. || But for too many, it ended the same way: with a loss of life and the eternal grief that comes from losing a loved one.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is emotional rhetoric and value judgment ('eternal grief') about loss, not a specific verifiable factual assertion. While it references deaths, it makes no checkable claim about quantities, causation, or specific events—it is a general characterization of tragic outcomes.",
+      "sid": "budd_2025_04_02_prod:0007",
+      "text": "But for too many, it ended the same way: with a loss of life and the eternal grief that comes from losing a loved one.",
+      "context": "For others, it was a single accidental exposure. || But for too many, it ended the same way: with a loss of life and the eternal grief that comes from losing a loved one. || And the harsh reality is fentanyl is the leading cause of death for Americans age 18 to 45--not cancer, not car accidents, fentanyl.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence's dominant speech-act is a value judgment and causal attribution ('willingly chose to let...get worse'). While it embeds a factual premise about Biden's actions, the assertion is fundamentally a negative characterization of intent and responsibility, not a specific verifiable fact about what Biden did or said.",
+      "sid": "budd_2025_04_02_prod:0010",
+      "text": "Instead, President Biden willingly chose to let the situation get worse.",
+      "context": "Last year alone, as my colleagues have shared with you, more than 70,000 Americans died from a fentanyl overdose, and, unsurprisingly, the Biden administration failed to act. || Instead, President Biden willingly chose to let the situation get worse. || For years, our southern border has been a major entry point for illegal drugs to pour into our country.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence 'That is real progress' is a value judgment characterizing the preceding statistic as positive/meaningful; the main speech-act is evaluative rhetoric, not assertion of a specific checkable fact.",
+      "sid": "budd_2025_04_02_prod:0013",
+      "text": "That is real progress.",
+      "context": "But under President Trump's leadership, illegal crossings at the southern border have now dropped 94 percent. || That is real progress. || Now, however, we are seeing a dangerous shift.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence's main speech-act is a value judgment ('dangerous shift') without asserting a specific, verifiable fact. The characterization 'dangerous' is evaluative rhetoric; the specific factual claim about drug cartels and routes appears in the next sentence, not this one.",
+      "sid": "budd_2025_04_02_prod:0014",
+      "text": "Now, however, we are seeing a dangerous shift.",
+      "context": "That is real progress. || Now, however, we are seeing a dangerous shift. || Drug cartels have found a new route and a new loophole to continue trafficking drugs into our communities, and it is through the northern border with Canada.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence is a value judgment ('alarming') expressing the speaker's reaction to the preceding factual claim about fentanyl seizures. The main speech-act is evaluative rhetoric, not assertion of a verifiable fact.",
+      "sid": "budd_2025_04_02_prod:0017",
+      "text": "That is nothing short of alarming.",
+      "context": "Just last year, Customs and Border Patrol seized enough fentanyl at the northern border to kill 9.5 million Americans. || That is nothing short of alarming. || In fact, a member of the Sinaloa Cartel, one of Mexico's largest and most well-known operations, they openly claim, they openly brag--and I quote you this: Canada's border is much larger than Mexico's.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "A vague assertion of resolve or determination with no specific factual content, public consequence, or verifiable claim; functions as rhetorical flourish rather than a checkable assertion.",
+      "sid": "budd_2025_04_02_prod:0020",
+      "text": "So that won't stop us.",
+      "context": "There are more entry points through Canada than through Mexico--a lot more entry points. || So that won't stop us. || And when asked about the impact of fentanyl killing countless Americans, here is what he said: Unfortunately, here, for money, we do anything.",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a value judgment and moral assertion ('killing America is not a business'), not a specific factual claim. While it references fentanyl deaths as context, the sentence's main assertion is rhetorical condemnation, not a verifiable fact.",
+      "sid": "budd_2025_04_02_prod:0022",
+      "text": "It's a business. ``It's a business.'' Friends, killing America is not a business.",
+      "context": "And when asked about the impact of fentanyl killing countless Americans, here is what he said: Unfortunately, here, for money, we do anything. || It's a business. ``It's a business.'' Friends, killing America is not a business. || We should not be endorsing known criminal activity with inaction.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence's main speech-act is a value judgment characterizing something as 'a serious threat to our national security' — a rhetorical assertion of danger/severity rather than a specific, verifiable factual claim. The referent ('this') is vague and depends on prior context, and the characterization itself is evaluative.",
+      "sid": "budd_2025_04_02_prod:0024",
+      "text": "This is nothing short of a serious threat to our national security.",
+      "context": "We should not be endorsing known criminal activity with inaction. || This is nothing short of a serious threat to our national security. || When I talk to sheriffs in all 100 counties in North Carolina, I repeatedly hear the same message: Every single county in North Carolina is a border county.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a value judgment ('rightfully so') combined with a commitment/aspiration ('should continue'). While 'invested heavily' is factual, the sentence's main assertion is evaluative—that the investment is justified and should persist—not a specific, verifiable factual claim.",
+      "sid": "budd_2025_04_02_prod:0028",
+      "text": "We have invested heavily in our southern border and rightfully so.",
+      "context": "I think it is important to know that 87 percent of all Terror Watchlist suspects that were encountered at land border ports last year came across our northern border. || We have invested heavily in our southern border and rightfully so. || We have done that, and we should continue to do so at our southern border.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.85,
+      "rationale": "The sentence's main speech-act is a value judgment ('overlooked and underresourced for way too long') expressing a normative assessment rather than asserting a specific, verifiable fact. While it embeds an implicit factual premise about resource allocation, the dominant assertion is evaluative/rhetorical.",
+      "sid": "budd_2025_04_02_prod:0030",
+      "text": "But the northern border has been overlooked and underresourced for way too long.",
+      "context": "We have done that, and we should continue to do so at our southern border. || But the northern border has been overlooked and underresourced for way too long. || Our law enforcement officers are doing everything they can.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The sentence expresses a value judgment and rhetorical assertion ('doing everything they can') rather than a specific, verifiable factual claim. It is a generalized characterization of effort without quantifiable or falsifiable content.",
+      "sid": "budd_2025_04_02_prod:0031",
+      "text": "Our law enforcement officers are doing everything they can.",
+      "context": "But the northern border has been overlooked and underresourced for way too long. || Our law enforcement officers are doing everything they can. || But without enough resources, they are being set up to fail, and that is not fair to them.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a value judgment ('that is not fair to them') and a causal prediction ('they are being set up to fail'). While it embeds a factual premise about resource levels, the main assertion is evaluative/normative, not a specific verifiable fact.",
+      "sid": "budd_2025_04_02_prod:0032",
+      "text": "But without enough resources, they are being set up to fail, and that is not fair to them.",
+      "context": "Our law enforcement officers are doing everything they can. || But without enough resources, they are being set up to fail, and that is not fair to them. || We are just watching history repeat itself, and if we don't act to provide our law enforcement officials with the proper tools and technology that they need to defend our northern border, we are going to allow this to get even worse.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a policy proposal/recommendation ('we should act to provide...') combined with a prediction ('we are going to allow this to get even worse'). The embedded factual premise about 'history repeating itself' is context, not the main assertion being made.",
+      "sid": "budd_2025_04_02_prod:0033",
+      "text": "We are just watching history repeat itself, and if we don't act to provide our law enforcement officials with the proper tools and technology that they need to defend our northern border, we are going to allow this to get even worse.",
+      "context": "But without enough resources, they are being set up to fail, and that is not fair to them. || We are just watching history repeat itself, and if we don't act to provide our law enforcement officials with the proper tools and technology that they need to defend our northern border, we are going to allow this to get even worse. || What is even more disturbing is that Mexican cartels are now setting up fentanyl labs in Canada and expanding their role in the global drug trade.",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a policy proposal/exhortation ('we need Canada to step up') combined with value rhetoric ('the American people deserve more than just empty words'). While it embeds a factual premise about fentanyl deaths, the main assertion is a normative call for action and criticism, not a specific verifiable fact.",
+      "sid": "budd_2025_04_02_prod:0035",
+      "text": "Now, as our ally, we need Canada to step up before more lives are lost, because the truth is that behind every statistic--behind every statistic--is a grieving family, and the American people deserve more than just empty words.",
+      "context": "What is even more disturbing is that Mexican cartels are now setting up fentanyl labs in Canada and expanding their role in the global drug trade. || Now, as our ally, we need Canada to step up before more lives are lost, because the truth is that behind every statistic--behind every statistic--is a grieving family, and the American people deserve more than just empty words. || They deserve real action.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "The sentence expresses a value judgment and implicit policy prescription ('deserve real action') rather than asserting a specific, verifiable fact. It is rhetorical and aspirational, not a factual claim about what happened, exists, or was said.",
+      "sid": "budd_2025_04_02_prod:0036",
+      "text": "They deserve real action.",
+      "context": "Now, as our ally, we need Canada to step up before more lives are lost, because the truth is that behind every statistic--behind every statistic--is a grieving family, and the American people deserve more than just empty words. || They deserve real action. || The fentanyl crisis will only continue to strangle our country until we deal with the threat at our northern border like the emergency that it truly is.",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "opinion",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.92,
+      "rationale": "The dominant speech-act is a causal prediction and policy proposal ('will only continue...until we deal with...like the emergency that it truly is'). While it embeds a factual premise about fentanyl and the border, the main assertion is a predictive/prescriptive judgment about what must happen, not a specific verifiable fact.",
+      "sid": "budd_2025_04_02_prod:0037",
+      "text": "The fentanyl crisis will only continue to strangle our country until we deal with the threat at our northern border like the emergency that it truly is.",
+      "context": "They deserve real action. || The fentanyl crisis will only continue to strangle our country until we deal with the threat at our northern border like the emergency that it truly is. || I yield the floor.",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.99,
+      "rationale": "A procedural statement indicating the speaker is relinquishing speaking time; no factual assertion or public consequence.",
+      "sid": "budd_2025_04_02_prod:0038",
+      "text": "I yield the floor.",
+      "context": "The fentanyl crisis will only continue to strangle our country until we deal with the threat at our northern border like the emergency that it truly is. || I yield the floor. || The PRESIDING OFFICER (Mr. Banks).",
+      "source": "A2",
+      "a1_pass": false
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.99,
+      "rationale": "Procedural notation identifying the presiding officer; no factual assertion or public consequence.",
+      "sid": "budd_2025_04_02_prod:0039",
+      "text": "The PRESIDING OFFICER (Mr. Banks).",
+      "context": "I yield the floor. || The PRESIDING OFFICER (Mr. Banks). || The Senator from North Dakota.",
+      "source": "A2",
+      "a1_pass": true
+    },
+    {
+      "label": "unimportant",
+      "claim_type": null,
+      "claim_shape": null,
+      "confidence": 0.95,
+      "rationale": "This is a procedural utterance identifying who has the floor; it contains no factual assertion of public consequence.",
+      "sid": "budd_2025_04_02_prod:0040",
+      "text": "The Senator from North Dakota.",
+      "context": "The PRESIDING OFFICER (Mr. Banks). || The Senator from North Dakota. ||",
+      "source": "A2",
+      "a1_pass": true
+    }
+  ],
+  "roster": {
+    "name": "prod",
+    "seats": {
+      "proposer": [
+        "opus-worker"
+      ],
+      "critic": [
+        "grok-4.3"
+      ],
+      "arbiter": [
+        "gpt-5.5"
+      ]
+    }
+  },
+  "evidence": {
+    "budd_2025_04_02_prod:0000": [
+      {
+        "id": "74797d8a-583a-40a7-9d69-63bd1c51dd15",
+        "claim_id": "budd_2025_04_02_prod:0000",
+        "source_name": "Progressive Policy Institute",
+        "source_url": "https://www.progressivepolicy.org/u-s-drug-overdose-deaths-down-21-7-from-2023-to-2024/",
+        "source_tier": "Other",
+        "snippet": "[2025-01-29] Synthetic opioids, in particular fentanyl, are the main cause, accounting for 87,155 or 78% of all American drug overdose deaths in 2023. CDC’s most recent numbers show a startling change: drug overdose deaths turned down in mid-2023 and have ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792712",
+        "published_at": "2025-01-29T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "6687143d-e756-4bb6-beb5-5cac40ed225b",
+        "claim_id": "budd_2025_04_02_prod:0000",
+        "source_name": "FAIR",
+        "source_url": "https://www.fairus.org/news/state-and-local/drug-overdoses-surpass-six-figures-states-grapple-fentanyl",
+        "source_tier": "Other",
+        "snippet": "[2024-06-17] According to data released by the CDC, over 107,500 people in the United States died from drug overdoses in 2023, marking the third consecutive year in which overdose deaths have exceeded six figures. Seventy percent of these deaths are the ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792731",
+        "published_at": "2024-06-17T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "0a8c795b-25c0-4e79-ad82-c39edd8c4834",
+        "claim_id": "budd_2025_04_02_prod:0000",
+        "source_name": "DEA",
+        "source_url": "https://www.dea.gov/press-releases/2024/12/16/overdose-deaths-decline-fentanyl-threat-looms",
+        "source_tier": "Political",
+        "snippet": "[2024-12-16] More than 107,000 people lost their lives to a drug overdose in 2023, with nearly 70 percent of those deaths attributed to opioids such as fentanyl. “While we are grateful to see a decline in the number of lives lost, we know that this holiday ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792743",
+        "published_at": "2024-12-16T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "21c7039e-58e2-4615-895b-c5a8539a8bc3",
+        "claim_id": "budd_2025_04_02_prod:0000",
+        "source_name": "CDC",
+        "source_url": "https://www.cdc.gov/media/releases/2025/2025-cdc-reports-decline-in-us-drug-overdose-deaths.html",
+        "source_tier": "Government",
+        "snippet": "[2025-02-25] This is the most recent national data available and shows a continued steep decline in overdose deaths. Provisional data shows about 87,000 drug overdose deaths from October 2023 to September 2024, down from around 114,000 the previous year.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792752",
+        "published_at": "2025-02-25T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "7f843a5f-92a9-4031-be3a-7f1d7a3a6701",
+        "claim_id": "budd_2025_04_02_prod:0000",
+        "source_name": "Addiction Group",
+        "source_url": "https://www.addictiongroup.org/resources/fentanyl-statistics/",
+        "source_tier": "Other",
+        "snippet": "[2025-01-30] The United States is in the middle of a devastating opioid epidemic, and its deadliest driver is fentanyl. This synthetic opioid, far more potent than heroin, is fueling a tragic and alarming surge in overdose deaths. Here's why the fentanyl crisis demands urgent action⁠—and why it's a critical issue today: This article utilizes the most […]",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792762",
+        "published_at": "2025-01-30T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "7bc7ff73-a698-4945-bb24-00cac759fa20",
+        "claim_id": "budd_2025_04_02_prod:0000",
+        "source_name": "White House",
+        "source_url": "https://www.whitehouse.gov/releases/2025/03/the-staggering-cost-of-the-illicit-opioid-epidemic-in-the-united-states/",
+        "source_tier": "Political",
+        "snippet": "[2025-03-26] Together these values imply that the lost quality of life costs $234,478 per year for each person living with OUD. We then multiply this value by the prevalence of OUD, estimated to be 5.7 million in 2023.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792772",
+        "published_at": "2025-03-26T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0008": [
+      {
+        "id": "bc48ec28-8228-4386-84d0-e05cd40c1788",
+        "claim_id": "budd_2025_04_02_prod:0008",
+        "source_name": "CDC",
+        "source_url": "https://www.cdc.gov/media/releases/2025/2025-cdc-reports-decline-in-us-drug-overdose-deaths.html",
+        "source_tier": "Government",
+        "snippet": "[2025-02-25] While this national decline is encouraging news, overdose remains the leading cause of death for Americans aged 18-44, highlighting the importance of sustained efforts to ensure this progress continues.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792905",
+        "published_at": "2025-02-25T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "15e1adf9-38c0-4f0d-a007-8c215e0353cd",
+        "claim_id": "budd_2025_04_02_prod:0008",
+        "source_name": "Dallas Morning News",
+        "source_url": "https://www.dallasnews.com/news/politifact/2023/04/24/gov-greg-abbott-says-fentanyl-is-the-leading-cause-of-death-for-americans-18-45-is-it/",
+        "source_tier": "Other",
+        "snippet": "[2023-04-24] The day before holding a “One ... Gov. Greg Abbott pointed out how deadly the drug has been. “Fentanyl is the leading cause of death for Americans 18-45,” Abbott tweeted April 5....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792916",
+        "published_at": "2023-04-24T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "68de526c-fa85-4696-ada9-c811ba5e5296",
+        "claim_id": "budd_2025_04_02_prod:0008",
+        "source_name": "Causeofdeath",
+        "source_url": "https://www.causeofdeath.info/general-information/cause-of-death-by-age-usa/",
+        "source_tier": "Other",
+        "snippet": "[2024-09-25] Understanding these patterns provides valuable insights into public health priorities and potential areas for intervention. For Americans aged 1-44, unintentional injuries are the leading cause of death, while heart disease and cancer top the ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792926",
+        "published_at": "2024-09-25T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "4992ee63-b03c-4841-81ce-580b5a538886",
+        "claim_id": "budd_2025_04_02_prod:0008",
+        "source_name": "El Paso Times",
+        "source_url": "https://www.elpasotimes.com/story/news/2023/02/02/fentanyl-overdose-cause-of-death-among-adults-greg-abbott/69867350007/",
+        "source_tier": "Other",
+        "snippet": "[2023-02-02] In an email to PolitiFact Texas, the CDC spokesperson said, “If one assumes that the other synthetic narcotics category for those 18-45 is 90% fentanyl, then one can argue that unintentional fentanyl overdose is likely the leading cause in ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792935",
+        "published_at": "2023-02-02T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "e26a9343-c2be-494f-a2e9-f3bd6d44994e",
+        "claim_id": "budd_2025_04_02_prod:0008",
+        "source_name": "USAFacts",
+        "source_url": "https://usafacts.org/articles/americans-causes-of-death-by-age-cdc-data/",
+        "source_tier": "Other",
+        "snippet": "[2023-10-06] Heart disease, cancer, and COVID-19 remain the leading causes of death among adults in the US.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792945",
+        "published_at": "2023-10-06T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "d156fefb-81ee-4381-a967-84e1c36bd7e9",
+        "claim_id": "budd_2025_04_02_prod:0008",
+        "source_name": "CDC",
+        "source_url": "https://www.cdc.gov/mmwr/volumes/72/wr/mm7226a4.htm",
+        "source_tier": "Government",
+        "snippet": "[2023-06-29] In 2022, provisional data indicated that more than two thirds (68%) of the reported 107,081 drug overdose deaths in the United States involved synthetic opioids other than methadone, principally illicitly manufactured fentanyls (IMFs) (1). Xylazine, ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.792955",
+        "published_at": "2023-06-29T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0009": [
+      {
+        "id": "b6101320-f3de-4273-a047-9e64285f9a48",
+        "claim_id": "budd_2025_04_02_prod:0009",
+        "source_name": "CDC",
+        "source_url": "https://www.cdc.gov/mmwr/volumes/72/wr/mm7226a4.htm",
+        "source_tier": "Government",
+        "snippet": "[2023-06-29] In 2022, provisional data indicated that more than two thirds (68%) of the reported 107,081 drug overdose deaths in the United States involved synthetic opioids other than methadone, principally illicitly manufactured fentanyls (IMFs) (1). Xylazine, ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793059",
+        "published_at": "2023-06-29T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "51bd7444-1c38-4506-aeec-5c0b71b602c2",
+        "claim_id": "budd_2025_04_02_prod:0009",
+        "source_name": "PubMed",
+        "source_url": "https://pubmed.ncbi.nlm.nih.gov/38358969/",
+        "source_tier": "Government",
+        "snippet": "[2024-02-15] Preliminary reports indicate that more than 109,000 drug overdose deaths occurred in the United States in 2022; nearly 70% of these involved synthetic opioids other than methadone, primarily illegally manufactured fentanyl and fentanyl analogs ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793069",
+        "published_at": "2024-02-15T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "7824905d-232c-4c3b-a506-6ee5d2200bab",
+        "claim_id": "budd_2025_04_02_prod:0009",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2024/10/17/nx-s1-5155960/fentanyl-overdose-deaths-dropping-cdc-says",
+        "source_tier": "Established",
+        "snippet": "[2024-10-17] Fentanyl deaths in the U.S. continue to drop, CDC says If the downward trend holds, this year is expected to be the first since 2020 to see overdose deaths fall below the 100,000 mark. However, Black and Native American communities remain vulnerable.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793087",
+        "published_at": "2024-10-17T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "c057de86-a96e-41da-857f-090ab10101c1",
+        "claim_id": "budd_2025_04_02_prod:0009",
+        "source_name": "DEA",
+        "source_url": "https://www.dea.gov/press-releases/2024/12/16/overdose-deaths-decline-fentanyl-threat-looms",
+        "source_tier": "Political",
+        "snippet": "[2024-12-16] The latest DEA laboratory testing, announced earlier this fall, indicates that 5 out of 10 pills tested contain a potentially deadly dose of fentanyl. This is down from 7 out of 10 pills in 2023 and 6 out of 10 pills in 2022. Two milligrams ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793097",
+        "published_at": "2024-12-16T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.4,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "89db337a-f225-45bb-9d61-f1959ae305ae",
+        "claim_id": "budd_2025_04_02_prod:0009",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2023/05/18/1176830906/overdose-death-2022-record",
+        "source_tier": "Established",
+        "snippet": "[2023-05-18] Preliminary data from the Centers for Disease Control and Prevention shows some states reduced drug deaths in 2022 by up to 7 percent. But other states saw surges in fatal overdoses of 10-20 percent.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793107",
+        "published_at": "2023-05-18T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.3,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "0c0dc5e4-12b3-4ac4-9736-126e5495e375",
+        "claim_id": "budd_2025_04_02_prod:0009",
+        "source_name": "Washington Post",
+        "source_url": "https://www.washingtonpost.com/nation/2022/11/03/fentanyl-opioid-epidemic/",
+        "source_tier": "Established",
+        "snippet": "[2023-04-14] Fentanyl is now the leading cause of death for Americans ages 18 to 49, according to a Washington Post analysis of death data for 2021 from the Centers for Disease Control and Prevention.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793117",
+        "published_at": "2023-04-14T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.3,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0011": [
+      {
+        "id": "b5a9b8e5-f309-4c82-8ed8-d70275cf4203",
+        "claim_id": "budd_2025_04_02_prod:0011",
+        "source_name": "Forumtogether",
+        "source_url": "https://forumtogether.org/article/illicit-fentanyl-and-drug-smuggling-at-the-u-s-mexico-border-an-overview/",
+        "source_tier": "Other",
+        "snippet": "[2025-01-24] The trend at the southern border mirrors the nationwide trend: seizures at the southern border by pounds are down compared to previous years, including 16 percent below FY 2022 and 66 percent below FY 2020.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793221",
+        "published_at": "2025-01-24T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "8e186e41-941c-4625-a76f-4ca58c00dcd2",
+        "claim_id": "budd_2025_04_02_prod:0011",
+        "source_name": "KPBS",
+        "source_url": "https://www.kpbs.org/news/border-immigration/2024/08/29/american-citizens-smuggle-more-fentanyl-into-the-u-s-than-migrants-data-show",
+        "source_tier": "Other",
+        "snippet": "[2024-09-17] But data from U.S. Customs and Border Protection (CBP) and other federal agencies show the vast majority of fentanyl comes through legal ports of entry. And the people bringing it into the country are native born Americans. Approximately 80% of people prosecuted and convicted of federal drug trafficking offenses were U.S.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793232",
+        "published_at": "2024-09-17T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "8f805062-7bb8-4b12-9fb5-2e58ac52e8c7",
+        "claim_id": "budd_2025_04_02_prod:0011",
+        "source_name": "Adam Isacson",
+        "source_url": "https://adamisacson.com/charts-drug-seizures-at-the-u-s-mexico-border/",
+        "source_tier": "Other",
+        "snippet": "[2023-10-08] The one drug that’s being seized in far greater amounts is fentanyl. CBP seized 106 percent more of the highly potent, highly compact synthetic opioid in the first 11 months of fiscal 2023 than it did in the same period of fiscal 2022.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793243",
+        "published_at": "2023-10-08T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "de354109-a14a-4400-890a-a58a819083e3",
+        "claim_id": "budd_2025_04_02_prod:0011",
+        "source_name": "Medium",
+        "source_url": "https://medium.com/@adam_wola/charts-drug-seizures-at-the-u-s-mexico-border-64e728289fda",
+        "source_tier": "Other",
+        "snippet": "[2023-10-05] The one drug that’s being seized in far greater amounts is fentanyl. CBP seized 106 percent more of the highly potent, highly compact synthetic opioid in the first 11 months of fiscal 2023 than it did in the same period of fiscal 2022.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793257",
+        "published_at": "2023-10-05T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "ea799fbd-e0e9-448c-8153-16c434b395d5",
+        "claim_id": "budd_2025_04_02_prod:0011",
+        "source_name": "Reuters",
+        "source_url": "https://www.reuters.com/world/americas/measuring-drug-seizures-southern-border-how-reuters-analyzed-data-2023-08-09/",
+        "source_tier": "Wire",
+        "snippet": "[2023-08-09] MEXICO CITY, Aug 9 (Reuters) - Through a Freedom of Information Act (FOIA) request, Reuters obtained and analyzed a dataset of drug seizures by U.S. Customs and Border Protection (CBP) agents at ports of entry along the U.S.-Mexican border from January 1, 2012 through December 31, 2022.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793268",
+        "published_at": "2023-08-09T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "98a914c8-99a3-4d9d-b3da-93ac6fa54e25",
+        "claim_id": "budd_2025_04_02_prod:0011",
+        "source_name": "WOLA",
+        "source_url": "https://www.wola.org/2024/05/weekly-u-s-mexico-border-update-april-dip-in-migration-drug-seizure-data-investigations-published/",
+        "source_tier": "Other",
+        "snippet": "[2025-02-19] CBP is seizing 93 percent of methamphetamine at ports of entry. Sixty-three percent is seized in California, 29 percent in Texas or New Mexico, and the remainder in Arizona. ... Regulation of legal cannabis in many U.S. states has long since ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793278",
+        "published_at": "2025-02-19T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0012": [
+      {
+        "id": "1e3d6635-b86b-4a7b-96f7-011649385536",
+        "claim_id": "budd_2025_04_02_prod:0012",
+        "source_name": "White House",
+        "source_url": "https://www.whitehouse.gov/releases/2025/04/icymi-illegal-border-crossings-hit-new-record-low-in-march/",
+        "source_tier": "Political",
+        "snippet": "[2025-04-01] ... In March, Border Patrol encountered just 7,181 illegal immigrants at the southern border. Compared to the same month under Biden, that represents a 95% decrease from 2024 (137,473), a 96% decrease from 2023 (163,672), and a 97% decrease ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793383",
+        "published_at": "2025-04-01T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "9989f39f-f60f-4073-90cf-cb6d282bcec4",
+        "claim_id": "budd_2025_04_02_prod:0012",
+        "source_name": "Axios",
+        "source_url": "https://www.axios.com/2025/03/04/illegal-border-crossings-february-decline-trump",
+        "source_tier": "Other",
+        "snippet": "[2025-03-04] The February numbers are the lowest recorded since FY 2000, the earliest year of monthly data publicly accessible. There were over 130,000 encounters in both February 2023 and 2024.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793396",
+        "published_at": "2025-03-04T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.85,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "3140383d-548d-4559-ba35-ca4e226c3cd8",
+        "claim_id": "budd_2025_04_02_prod:0012",
+        "source_name": "Homeland Security",
+        "source_url": "https://homeland.house.gov/2025/02/19/border-brief-the-trump-effect-is-here/",
+        "source_tier": "Political",
+        "snippet": "[2025-02-19] Apprehensions between ports of entry at the Southwest border decreased by 38%––from 47,316 in December 2024 to 29,116 this past month. From January 21 through January 31, 2025, U.S. Border Patrol (USBP) apprehensions dropped 85% compared to the same period in 2024.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793406",
+        "published_at": "2025-02-19T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.75,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "837f8feb-7ed7-4b94-981b-116788d37599",
+        "claim_id": "budd_2025_04_02_prod:0012",
+        "source_name": "CBS News",
+        "source_url": "https://www.cbsnews.com/news/illegal-crossings-plunge-to-levels-not-seen-in-decades-amid-trump-crackdown/",
+        "source_tier": "Established",
+        "snippet": "[2025-03-03] Illegal crossings along the U.S. southern border have been trending downward over the past year, including under the Biden administration, after spiking to an all-time high in late 2023. They first dropped in early 2024 after Mexican officials ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793415",
+        "published_at": "2025-03-03T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "02645a02-fd5c-414b-aa30-9e422148d987",
+        "claim_id": "budd_2025_04_02_prod:0012",
+        "source_name": "U.S. Customs and Border Protection",
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/cbp-releases-june-2024-monthly-update",
+        "source_tier": "Political",
+        "snippet": "[2024-07-15] In June – the first month in which the Presidential Proclamation and IFR have been in effect – the U.S. Border Patrol recorded 83,536 encounters between ports of entry along the southwest border. These Border Patrol encounters were 29% lower than in May 2024 and were the lowest monthly ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793425",
+        "published_at": "2024-07-15T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "9484960d-04c9-4042-a0e3-406d9bf763b3",
+        "claim_id": "budd_2025_04_02_prod:0012",
+        "source_name": "U.S. Customs and Border Protection",
+        "source_url": "https://www.cbp.gov/newsroom/national-media-release/cbp-releases-december-2024-monthly-update",
+        "source_tier": "Political",
+        "snippet": "[2025-01-14] Since the Biden-Harris Administration took executive action in June, there has been a significant and sustained decrease in unlawful border crossings – including a 60% decrease in encounters between ports of entry along the southwest border from May to December.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793435",
+        "published_at": "2025-01-14T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.3,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0015": [
+      {
+        "id": "fd15c6c1-617d-411f-b21b-17d30f039a1f",
+        "claim_id": "budd_2025_04_02_prod:0015",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2025/02/02/nx-s1-5283957/fentanyl-trump-tariffs-china-canada-mexico",
+        "source_tier": "Established",
+        "snippet": "[2025-02-02] In 2024, only about 43 pounds of fentanyl was seized at America's northern border. That compares with roughly 21,100 pounds seized at the southern border. Before these tariffs were announced, Canadian law enforcement had already moved to target ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793544",
+        "published_at": "2025-02-02T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "6e54fc71-10e9-4520-a265-2d6899f0361d",
+        "claim_id": "budd_2025_04_02_prod:0015",
+        "source_name": "Vancouver Sun",
+        "source_url": "https://vancouversun.com/news/bc-organized-crime-expanding-export-of-fentanyl-and-other-drugs",
+        "source_tier": "Other",
+        "snippet": "[2025-02-05] But the U.S. border patrol seized less than 20 kilograms of fentanyl from Canada in the 2024 fiscal year, while intercepting almost 10 tonnes headed north from Mexico.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793554",
+        "published_at": "2025-02-05T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "eb553da5-f8a7-44fe-bc70-d955c630bd66",
+        "claim_id": "budd_2025_04_02_prod:0015",
+        "source_name": "The Globe and Mail",
+        "source_url": "https://www.theglobeandmail.com/canada/article-white-house-fentanyl-seizure-canadian-border-data/",
+        "source_tier": "Other",
+        "snippet": "[2025-02-05] The White House’s assertion that ... to the Customs and Border Protection data, 14 pounds of fentanyl had been intercepted at the northern border in fiscal year 2022....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793563",
+        "published_at": "2025-02-05T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "04839cec-46ed-4b67-837d-7b25d61455bd",
+        "claim_id": "budd_2025_04_02_prod:0015",
+        "source_name": "Miami Herald",
+        "source_url": "https://www.miamiherald.com/news/nation-world/national/article299845909.html",
+        "source_tier": "Other",
+        "snippet": "[2025-02-06] Tens of thousands of pounds of cocaine and marijuana have been seized at the U.S.-Canada border, while about 70 pounds of fentanyl have been seized since October 2021, the start of the 2022 fiscal year, data from U.S. Customs and Border Protection ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793573",
+        "published_at": "2025-02-06T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "cb6c5c15-8297-4f08-819e-33fac8a18218",
+        "claim_id": "budd_2025_04_02_prod:0015",
+        "source_name": "Public Safety Canada",
+        "source_url": "https://www.publicsafety.gc.ca/cnt/trnsprnc/brfng-mtrls/prlmntry-bndrs/20250402/52-en.aspx?wbdisable=true",
+        "source_tier": "Other",
+        "snippet": "[2025-03-28] In 2022, the CBSA seized a record ... to seize inbound shipments of finished fentanyl. For example, in fiscal-year 2023-24, the CBSA seized inbound shipments of finished fentanyl for a total of 946 grams....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793582",
+        "published_at": "2025-03-28T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.85,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "b06dc097-e7ba-4e47-9610-b8a5837174b0",
+        "claim_id": "budd_2025_04_02_prod:0015",
+        "source_name": "Forumtogether",
+        "source_url": "https://forumtogether.org/article/illicit-fentanyl-and-drug-smuggling-at-the-u-s-mexico-border-an-overview/",
+        "source_tier": "Other",
+        "snippet": "[2025-01-24] CBP data indicates that drug seizures at the northern border are down compared to previous years, with 55,100 pounds seized in FY 2023 compared to 60,100 pounds in FY 2022 (an 8 percent decrease) and 84,900 pounds in FY 2021 (a 35 percent decrease).",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793591",
+        "published_at": "2025-01-24T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0016": [
+      {
+        "id": "32baf1da-20d3-4c85-abc9-5e6cf372cca8",
+        "claim_id": "budd_2025_04_02_prod:0016",
+        "source_name": "Miami Herald",
+        "source_url": "https://www.miamiherald.com/news/nation-world/national/article299845909.html",
+        "source_tier": "Other",
+        "snippet": "[2025-02-06] Tens of thousands of pounds of cocaine and marijuana have been seized at the U.S.-Canada border, while about 70 pounds of fentanyl have been seized since October 2021, the start of the 2022 fiscal year, data from U.S. Customs and Border Protection ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793706",
+        "published_at": "2025-02-06T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "d9e8a313-178f-4b62-9b18-559897161d5f",
+        "claim_id": "budd_2025_04_02_prod:0016",
+        "source_name": "The Globe and Mail",
+        "source_url": "https://www.theglobeandmail.com/canada/article-white-house-fentanyl-seizure-canadian-border-data/",
+        "source_tier": "Other",
+        "snippet": "[2025-02-05] The White House’s assertion that ... figure for fiscal year 2023. According to the Customs and Border Protection data, 14 pounds of fentanyl had been intercepted at the northern border in fiscal year 2022....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793716",
+        "published_at": "2025-02-05T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "f7c4d7fb-b458-4abc-bba5-06c470ffbed6",
+        "claim_id": "budd_2025_04_02_prod:0016",
+        "source_name": "Public Safety Canada",
+        "source_url": "https://www.publicsafety.gc.ca/cnt/trnsprnc/brfng-mtrls/prlmntry-bndrs/20250402/52-en.aspx?wbdisable=true",
+        "source_tier": "Other",
+        "snippet": "[2025-03-28] In 2022, the CBSA seized a record ... For example, in fiscal-year 2023-24, the CBSA seized inbound shipments of finished fentanyl for a total of 946 grams....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793725",
+        "published_at": "2025-03-28T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.3,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "6dacbcbc-5eef-4f41-8757-2e4242141a9a",
+        "claim_id": "budd_2025_04_02_prod:0016",
+        "source_name": "Adam Isacson",
+        "source_url": "https://adamisacson.com/charts-drug-seizures-at-the-u-s-mexico-border/",
+        "source_tier": "Other",
+        "snippet": "[2023-10-08] We now have 11 months of data from U.S. Customs and Border Protection (CBP) about how much illicit drugs the agency seized at the U.S.-Mexico border during the 2023 fiscal year so far (from October 2022 to August 2023).",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793735",
+        "published_at": "2023-10-08T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.2,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "622cd0db-c2f7-4d2f-94a6-665578206d30",
+        "claim_id": "budd_2025_04_02_prod:0016",
+        "source_name": "DEA",
+        "source_url": "https://www.dea.gov/press-releases/2024/01/17/dea-omaha-division-notes-record-fentanyl-seizures-2023",
+        "source_tier": "Political",
+        "snippet": "[2024-01-17] – The five state Drug Enforcement Administration (DEA) Omaha Division marked an 83 percent increase in the number of fentanyl pills seized in 2023 and removed an estimated 2.9 million lethal doses of fentanyl both in pill and powder form, from ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793744",
+        "published_at": "2024-01-17T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.2,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "b9321e81-74d9-45c4-b12b-75312da778fa",
+        "claim_id": "budd_2025_04_02_prod:0016",
+        "source_name": "CA",
+        "source_url": "https://www.gov.ca.gov/2024/02/27/california-seizes-record-62000-pounds-of-fentanyl/",
+        "source_tier": "Political",
+        "snippet": "[2024-06-17] The amount of fentanyl seized in California in 2023 is enough to potentially kill the global population nearly twice over. According to the Drug Enforcement Administration, a lethal dose of fentanyl is 2 mg.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793754",
+        "published_at": "2024-06-17T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.2,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0018": [
+      {
+        "id": "b9dea75d-7c88-48dd-9ef7-1b6b68101aad",
+        "claim_id": "budd_2025_04_02_prod:0018",
+        "source_name": "Straight Arrow News",
+        "source_url": "https://san.com/cc/smuggler-details-drug-migrant-operation-across-us-canada-border-report/",
+        "source_tier": "Other",
+        "snippet": "[2025-03-25] Despite heightened border security efforts from both the U.S. and Canada, Javi insists the cartel’s operations won’t be stopped. He also notes an increasing number of migrants are choosing to head to Canada instead of the U.S. A self-proclaimed smuggler who works for the notorious Sinaloa Cartel claims the U.S.-Canada border, stretching over 5,500 miles, is a prime location for illegal activity.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793868",
+        "published_at": "2025-03-25T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "032b655d-9df3-45b1-8fe3-c57bc3932a30",
+        "claim_id": "budd_2025_04_02_prod:0018",
+        "source_name": "Mexico News Daily",
+        "source_url": "https://mexiconewsdaily.com/canada/mexico-and-canada-data-comparison/",
+        "source_tier": "Other",
+        "snippet": "[2024-07-13] Canada is the second-largest country in the world by area, and Mexico is the 13th largest. (Thetruesize.com) Meanwhile, the land border between Canada and the United States is the longest international border in the world, measuring 8,891 kilometers.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793878",
+        "published_at": "2024-07-13T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "d452db62-857a-4cbd-9480-9a269b60b532",
+        "claim_id": "budd_2025_04_02_prod:0018",
+        "source_name": "Ucsf",
+        "source_url": "https://chimail.ucsf.edu/length-of-u-s-mexico-border",
+        "source_tier": "Other",
+        "snippet": "[2023-10-18] The U.S.-Mexico border, while substantial, is less than half the length of the U.S.-Canada border, yet it presents unique challenges due to its terrain, climate, and the volume of traffic and migration it experiences.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793887",
+        "published_at": "2023-10-18T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "00355dbd-edae-437d-ba97-c36b8ae3b9da",
+        "claim_id": "budd_2025_04_02_prod:0018",
+        "source_name": "Vivid Maps",
+        "source_url": "https://vividmaps.com/borders-united-states/",
+        "source_tier": "Other",
+        "snippet": "[2023-02-05] The total length of the United States – Mexico border is 3,145 kilometers (1,954 miles). The United States is a country of 50 states, each with its own unique boundaries and history.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793897",
+        "published_at": "2023-02-05T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "c9845161-a937-4506-93bc-773796f9ee5e",
+        "claim_id": "budd_2025_04_02_prod:0018",
+        "source_name": "CBS News",
+        "source_url": "https://www.cbsnews.com/news/canadian-border-with-mexican-cartel-smuggler-60-minutes/",
+        "source_tier": "Established",
+        "snippet": "[2025-03-24] A self-described member of Mexico's Sinaloa cartel told 60 Minutes that drugs and people pass both ways between the U.S. and Canada.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793906",
+        "published_at": "2025-03-24T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "3750b706-cc57-471d-bb95-4b8d77e50fcc",
+        "claim_id": "budd_2025_04_02_prod:0018",
+        "source_name": "CBS News",
+        "source_url": "https://www.cbsnews.com/news/smuggler-migrants-us-canada-border-60-minutes-transcript/",
+        "source_tier": "Established",
+        "snippet": "[2025-03-24] While it's not possible to verify everything Javi told us, he sent these pictures of what he says are his guns as proof of his ties to the Sinaloa Cartel. A source in Canadian intelligence told us Javi's story is consistent with the cartel's human and drug smuggling operations.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.793916",
+        "published_at": "2025-03-24T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0019": [
+      {
+        "id": "d719e467-bc6b-419c-b4ac-327f161ac662",
+        "claim_id": "budd_2025_04_02_prod:0019",
+        "source_name": "Canada.ca",
+        "source_url": "https://www.canada.ca/en/border-services-agency/news/2023/03/the-cbsa-is-resuming-regular-hours-of-service-at-42-ports-of-entry-across-canada.html",
+        "source_tier": "Other",
+        "snippet": "[2023-03-27] The CBSA is resuming regular hours of service at 42 ports of entry across Canada",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794010",
+        "published_at": "2023-03-27T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "9f2203c3-6a8a-4eb9-9bb0-6e446c0ca550",
+        "claim_id": "budd_2025_04_02_prod:0019",
+        "source_name": "Kaggle",
+        "source_url": "https://www.kaggle.com/datasets/nafayunnoor/border-crossing-entry-in-the-us-data",
+        "source_tier": "Other",
+        "snippet": "[2025-01-31] The Border Crossing Entry Data, provided by the Bureau of Transportation Statistics (BTS), offers summary statistics on inbound crossings at U.S. land ports along the 🇨🇦 Canada-U.S. and 🇲🇽 Mexico-U.S.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794020",
+        "published_at": "2025-01-31T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.3,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "83c74458-9502-45ba-8425-641793b1f1e2",
+        "claim_id": "budd_2025_04_02_prod:0019",
+        "source_name": "Bureau of Transportation Statistics",
+        "source_url": "https://www.bts.gov/newsroom/border-crossing-data-annual-release-2023",
+        "source_tier": "Political",
+        "snippet": "[2024-03-04] The Bureau of Transportation Statistics (BTS) Border Crossing Data provide summary statistics for inbound crossings at the U.S.-Canada and the U.S.-Mexico border at the port level. Data are available for trucks, trains, containers, buses, personal vehicles, passengers, and pedestrians.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794029",
+        "published_at": "2024-03-04T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.3,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "6ba99010-447c-46aa-a80a-ea5de5462f46",
+        "claim_id": "budd_2025_04_02_prod:0019",
+        "source_name": "Bureau of Transportation Statistics",
+        "source_url": "https://www.bts.gov/newsroom/border-crossing-data-annual-release-2023-2024",
+        "source_tier": "Political",
+        "snippet": "[2025-02-18] The Bureau of Transportation Statistics (BTS) Border Crossing Data provides summary statistics for inbound crossings at the U.S.-Canada and the U.S.-Mexico border at the port level. Data are available for trucks, trains, containers, buses, personal vehicles, passengers, and pedestrians. Border crossing data are collected at ports of entry by U.S.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794039",
+        "published_at": "2025-02-18T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.3,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "92d6361c-55d8-4609-ab78-2965c643f540",
+        "claim_id": "budd_2025_04_02_prod:0019",
+        "source_name": "DHS",
+        "source_url": "https://www.dhs.gov/sites/default/files/2024-03/2024_0116_cbp_land_ports_of_entry_hours_of_operation.pdf?wpmobileexternal=true",
+        "source_tier": "Government",
+        "snippet": "[2024-01-16] CBP officer (CBPO) staffing at remote, hard-to-fill northern border (NB) LPOEs increased 100 · CBPOs from FY 2021 to FY 2022, even though attrition increased from 6.1 percent to 8.5 · percent. As of March 25, 2023, based on advanced hiring for new facilities, total staffing at the",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794048",
+        "published_at": "2024-01-16T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.2,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "c95d1d5e-bc9f-4f05-888e-b6435c42a28d",
+        "claim_id": "budd_2025_04_02_prod:0019",
+        "source_name": "U.S. Customs and Border Protection",
+        "source_url": "https://www.cbp.gov/locate-port-entry",
+        "source_tier": "Government",
+        "snippet": "[2024-11-15] U.S. Customs and Border Protection provides information on border security, trade, travel, customs regulations, trusted traveler programs and enforcement news to the public.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794058",
+        "published_at": "2024-11-15T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0021": [
+      {
+        "id": "cd15e3ef-ca71-4c5f-8718-cdee571b1de0",
+        "claim_id": "budd_2025_04_02_prod:0021",
+        "source_name": "FinCEN",
+        "source_url": "https://www.fincen.gov/system/files/advisory/2024-06-20/FinCEN-Supplemental-Advisory-on-Fentanyl-508C.pdf",
+        "source_tier": "Political",
+        "snippet": "[2024-06-20] illicit proceeds with earnings from legitimate business operations. See Treasury, “2024 National Money Laundering · Risk Assessment” (Feb. 2024), at p. 53. 46. See Commission on Combating Synthetic Opioid Trafficking, “Final Report” (Feb. 8, 2022), at p. 9; FATF, “Money Laundering from Fentanyl and Synthetic Opioids” (Nov. 30, 2022), at pp. 13-14. 47. See generally Treasury, “Treasury Targets Large Chinese Network of Illicit Drug Producers” (Oct. 3, 2023); DOJ,",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794143",
+        "published_at": "2024-06-20T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "d272b78c-8870-462a-a72a-649bbe6dbc83",
+        "claim_id": "budd_2025_04_02_prod:0021",
+        "source_name": "CDC",
+        "source_url": "https://www.cdc.gov/mmwr/volumes/73/wr/mm7348a2.htm",
+        "source_tier": "Government",
+        "snippet": "[2024-12-05] During 2023, approximately 72,000, or nearly seven in 10, drug overdose deaths in the United States were estimated to involve illegally manufactured fentanyls (IMFs). Carfentanil, a fentanyl analog 100 times more potent than fentanyl, has reemerged ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794153",
+        "published_at": "2024-12-05T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "d514a544-e957-4c45-9605-a8a711fed40b",
+        "claim_id": "budd_2025_04_02_prod:0021",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2024/10/17/nx-s1-5155960/fentanyl-overdose-deaths-dropping-cdc-says",
+        "source_tier": "Established",
+        "snippet": "[2024-10-17] Fentanyl deaths in the U.S. continue to drop, CDC says If the downward trend holds, this year is expected to be the first since 2020 to see overdose deaths fall below the 100,000 mark.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794163",
+        "published_at": "2024-10-17T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "2f9b50b5-62a6-45b2-831b-2c20d1bd3523",
+        "claim_id": "budd_2025_04_02_prod:0021",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2023/12/28/1220881380/overdose-fentanyl-drugs-addiction",
+        "source_tier": "Established",
+        "snippet": "[2023-12-28] Fentanyl fueled unprecedented carnage with 112,000 fatal overdoses. The nation is increasingly divided over how to respond.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794172",
+        "published_at": "2023-12-28T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "35e50bb6-a3e0-4f9d-b1b3-78fc34c8912c",
+        "claim_id": "budd_2025_04_02_prod:0021",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2024/09/18/nx-s1-5107417/overdose-fatal-fentanyl-death-opioid",
+        "source_tier": "Established",
+        "snippet": "[2024-09-18] U.S. sees a sudden and unexpected ... deaths are dropping sharply in much of the U.S. The trend could mean roughly 20,000 fewer deaths in 2024....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794181",
+        "published_at": "2024-09-18T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "3868afdb-5a1c-4f03-a173-281152e28682",
+        "claim_id": "budd_2025_04_02_prod:0021",
+        "source_name": "NPR",
+        "source_url": "https://www.npr.org/2025/03/07/nx-s1-5295618/fentanyl-overdose-drugs",
+        "source_tier": "Established",
+        "snippet": "[2025-03-10] Drug deaths in the U.S. have dropped from a peak of 114,000 in the 12-month period that ended in August 2023 to just under 87,000 for the period that ended in September 2024, according to the latest provisional data from the Centers for Disease ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794190",
+        "published_at": "2025-03-10T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0025": [
+      {
+        "id": "be118a68-1201-4394-be42-d94a13c463fe",
+        "claim_id": "budd_2025_04_02_prod:0025",
+        "source_name": "WUNC",
+        "source_url": "https://www.wunc.org/race-class-communities/2024-11-25/immigration-enforcement-house-bill-10-north-carolina",
+        "source_tier": "Other",
+        "snippet": "[2024-12-06] Yes — the vast majority of sheriffs in North Carolina’s 100 counties already voluntarily cooperate with requests from Immigration and Customs Enforcement, commonly known as ICE.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794285",
+        "published_at": "2024-12-06T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "8839b364-c14f-4cd7-8cce-c3d02a72eece",
+        "claim_id": "budd_2025_04_02_prod:0025",
+        "source_name": "NC OSBM",
+        "source_url": "https://www.osbm.nc.gov/documents/files/strategic-plan-doj/download",
+        "source_tier": "Government",
+        "snippet": "[2023-05-17] Sheriffs’ Standards Divisions. Measure ... Standards Manual in July of 2023.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794296",
+        "published_at": "2023-05-17T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "e188f100-7396-4641-b124-b33d583b8812",
+        "claim_id": "budd_2025_04_02_prod:0025",
+        "source_name": "Manning Law Firm",
+        "source_url": "https://manninglaw.com/criminal-law/north-carolinas-new-stance-on-drug-trafficking-fines/",
+        "source_tier": "Other",
+        "snippet": "[2025-01-24] In an effort to combat the escalating ... bold move. Starting December 1, 2023, the state will implement significantly higher fines for trafficking certain dangerous drugs, including heroin, fentanyl, and carfentanil....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794305",
+        "published_at": "2025-01-24T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "4853451b-ade9-4026-abbb-1027832ee457",
+        "claim_id": "budd_2025_04_02_prod:0025",
+        "source_name": "WCNC",
+        "source_url": "https://www.wcnc.com/article/news/crime/north-carolina-drug-trafficking-arrests-12-10-2024/275-fce6f620-693d-43b3-9cbe-a2c9f739bbdf",
+        "source_tier": "Other",
+        "snippet": "[2024-12-11] 27 people from the Tar Heel State are now facing charges tied to fentanyl.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794315",
+        "published_at": "2024-12-11T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "a2230d13-0a6f-47e4-9316-d5fa262b5196",
+        "claim_id": "budd_2025_04_02_prod:0025",
+        "source_name": "UPI",
+        "source_url": "https://www.upi.com/Top_News/US/2023/10/15/buncombe-north-carolina-fentanyl-raid/2871697402187/",
+        "source_tier": "Other",
+        "snippet": "[2023-10-15] Oct. 15, 2023 / 4:55 PM ... Sheriff’s deputies seized 5 pounds of fentanyl in a raid in North Carolina's mountainous western region.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794324",
+        "published_at": "2023-10-15T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "bcb9a071-c76e-4dd0-a0f4-0474de6099e0",
+        "claim_id": "budd_2025_04_02_prod:0025",
+        "source_name": "The Center Square",
+        "source_url": "https://www.thecentersquare.com/north_carolina/article_129c59b6-f44c-11ef-96d1-476add8c9090.html",
+        "source_tier": "Other",
+        "snippet": "[2025-02-26] (The Center Square) – Cooperation by the gubernatorial administration, counties and municipalities, and the state’s public university system campuses would be required and subject to penalty, a proposal in the North Carolina General Assembly says.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794334",
+        "published_at": "2025-02-26T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0026": [
+      {
+        "id": "b8503535-c64a-4918-8300-ad647cedf087",
+        "claim_id": "budd_2025_04_02_prod:0026",
+        "source_name": "Wikipedia",
+        "source_url": "https://en.wikipedia.org/wiki/U.S.-Canada_Border",
+        "source_tier": "Other",
+        "snippet": "[2024-11-03] The Canada–United States border is the longest international border in the world. The boundary (including boundaries in the Great Lakes, Atlantic, and Pacific coasts) is 8,891 km (5,525 mi) long. The land border has two sections: Canada's border with the contiguous United States to its south, ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794433",
+        "published_at": "2024-11-03T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 1.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "df87f2f4-eb57-4d6b-be30-f2708bfdf358",
+        "claim_id": "budd_2025_04_02_prod:0026",
+        "source_name": "Ryan J. Hite",
+        "source_url": "https://www.ryanjhite.com/2024/12/17/the-us-canada-border-the-worlds-longest-and-weirdest-boundary/",
+        "source_tier": "Other",
+        "snippet": "[2024-12-17] At 5,525 miles, the US-Canada border is the longest international boundary in the world.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794442",
+        "published_at": "2024-12-17T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 1.0,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "18487f16-c420-47c7-a4af-bd730e94506c",
+        "claim_id": "budd_2025_04_02_prod:0026",
+        "source_name": "Reddit",
+        "source_url": "https://www.reddit.com/r/MapPorn/comments/1ifm6je/the_uscanada_border_is_the_longest_international/",
+        "source_tier": "Other",
+        "snippet": "[2025-02-02] The border between the United States and Canada is 8,891 kilometers (5,525 miles) long - not even half as long. Do you mean it is the longest border between two countries perhaps?",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794452",
+        "published_at": "2025-02-02T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "d38d4ea7-ed58-472d-a334-8b6cff95ce31",
+        "claim_id": "budd_2025_04_02_prod:0026",
+        "source_name": "Sovereign Limits",
+        "source_url": "https://sovereignlimits.com/boundaries/canada-united-states-land",
+        "source_tier": "Other",
+        "snippet": "[2023-01-16] The Canada–United States land boundary is the longest in the world at 6,435 kilometers (3,999 miles). It begins in the outlet of the Passamaquoddy Bay in the Atlantic Ocean and ends in the west where the Strait of Juan de Fuca meets the Pacific ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794461",
+        "published_at": "2023-01-16T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "aefafba9-c855-49b0-bf05-9d36f7c16d43",
+        "claim_id": "budd_2025_04_02_prod:0026",
+        "source_name": "True North",
+        "source_url": "https://tnc.news/2024/11/28/terrorist-apprehensions-canada-u-s-border/",
+        "source_tier": "Other",
+        "snippet": "[2024-11-28] In 2023 alone, 484 individuals on the terrorist watchlist were intercepted at the Canada-U.S. border, compared to 80 at the U.S.-Mexico border, meaning six times more potential terrorists were apprehended trying to cross through the northern border.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794470",
+        "published_at": "2024-11-28T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "daee3531-734c-4254-ad30-8ad32f219470",
+        "claim_id": "budd_2025_04_02_prod:0026",
+        "source_name": "Canada.ca",
+        "source_url": "https://www.canada.ca/en/public-safety-canada/news/2024/07/the-2024-uscanada-cross-border-crime-forum-cbcf.html",
+        "source_tier": "Other",
+        "snippet": "[2024-07-12] In the context of enhancing information sharing, the Ministers also discussed the challenges associated with cross-border human smuggling that is occurring in both directions, and challenges in related investigations. Accordingly, the Ministers called on their officials to continue strengthening ways to gather and share information for the detection and investigation of organized crime groups and networks that target vulnerable people and engage in human smuggling.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794480",
+        "published_at": "2024-07-12T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0027": [
+      {
+        "id": "00473f42-6930-4b5a-ae2e-470b4840d748",
+        "claim_id": "budd_2025_04_02_prod:0027",
+        "source_name": "Congressman Mike Kelly",
+        "source_url": "https://kelly.house.gov/media/press-releases/reps-kelly-zinke-introduce-resolution-addressing-alarming-number-terror",
+        "source_tier": "Political",
+        "snippet": "[2023-10-13] Mike Kelly (R-PA) and Ryan Zinke ... Canada. To date in FY23, 85% of all suspected terrorists encountered at land border ports of entry have crossed into the United States along the Northern border, according to U.S...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794568",
+        "published_at": "2023-10-13T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "5a780053-be67-4957-93c3-ff0ba13f6b8e",
+        "claim_id": "budd_2025_04_02_prod:0027",
+        "source_name": "Congressman Mike Kelly",
+        "source_url": "https://kelly.house.gov/media/press-releases/kelly-house-judiciary-committee-we-must-address-surge-suspected-terrorists",
+        "source_tier": "Political",
+        "snippet": "[2023-11-03] Kelly's testimony follows recent ... Canada. To date in FY23, 85% of all suspected terrorists encountered at land border ports of entry have crossed into the United States along the Northern border, according to U.S...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794578",
+        "published_at": "2023-11-03T00:00:00",
+        "supports_claim": false,
+        "relevance_score": 0.95,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "5892a83c-460e-4b74-85b8-10f2e2601416",
+        "claim_id": "budd_2025_04_02_prod:0027",
+        "source_name": "CBS News",
+        "source_url": "https://www.cbsnews.com/news/us-mexico-border-terrorists/",
+        "source_tier": "Established",
+        "snippet": "[2023-10-11] For example, Customs and Border Protection recorded more than 430 watchlist hits along the northern border in fiscal year 2023, the vast majority of them at official ports of entry.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794587",
+        "published_at": "2023-10-11T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "f885d802-c190-4af8-b6c7-0e0448ed5b95",
+        "claim_id": "budd_2025_04_02_prod:0027",
+        "source_name": "NewsNation",
+        "source_url": "https://www.newsnationnow.com/us-news/immigration/border-coverage/terror-watch-list-border-record/amp/",
+        "source_tier": "Other",
+        "snippet": "[2023-10-22] The northern border saw 484 encounters, an increase of 54% from last year with 313 encounters of all nationalities. The Terrorist Screening Dataset often referred to as the “watchlist,” contains sensitive information about individuals who ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794597",
+        "published_at": "2023-10-22T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "709e6cc0-93e6-4459-8810-3a4d6f522c16",
+        "claim_id": "budd_2025_04_02_prod:0027",
+        "source_name": "NewsNation",
+        "source_url": "https://www.newsnationnow.com/us-news/immigration/border-coverage/terror-watch-list-border-record/",
+        "source_tier": "Other",
+        "snippet": "[2023-10-22] Southwest border: 169 encounters (up 72%) for non-U.S. citizens · Northern border: 484 encounters (up 54%) for all nationalities",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794606",
+        "published_at": "2023-10-22T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.5,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "fb8172c9-6e3b-4f30-b45d-13f0fe2e3b2f",
+        "claim_id": "budd_2025_04_02_prod:0027",
+        "source_name": "NBC News",
+        "source_url": "https://www.nbcnews.com/politics/national-security/number-people-terror-watchlist-stopped-mexico-us-border-risen-rcna105095",
+        "source_tier": "Established",
+        "snippet": "[2023-09-14] As of July, 160 migrants whose identities match those on the Terrorist Screening Dataset had been apprehended by Customs and Border Protection trying to cross the U.S.-Mexico border during fiscal year 2023, compared to 100 in fiscal year 2022.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794616",
+        "published_at": "2023-09-14T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.4,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ],
+    "budd_2025_04_02_prod:0034": [
+      {
+        "id": "d4beaa9e-1e78-493c-89a4-1645236d80ed",
+        "claim_id": "budd_2025_04_02_prod:0034",
+        "source_name": "NYTimes",
+        "source_url": "https://www.nytimes.com/2024/11/01/world/canada/canada-drug-lab-fentanyl.html",
+        "source_tier": "Established",
+        "snippet": "[2024-11-02] 1, 2024 · Canadian authorities ... deaths. For the first time in Canada, the police also found evidence of a drug production method used primarily by Mexican cartels to make opioids....",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794715",
+        "published_at": "2024-11-02T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.9,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "f5262c75-9100-4172-944e-a1d105cfedcd",
+        "claim_id": "budd_2025_04_02_prod:0034",
+        "source_name": "CBS News",
+        "source_url": "https://www.cbsnews.com/news/trump-tariffs-canada-fentanyl-trafficking/",
+        "source_tier": "Established",
+        "snippet": "[2025-02-04] In recent weeks, Mexican authorities have announced several major seizures of chemical precursors and fentanyl. In November 2024, Canadian police said they had dismantled the most sophisticated drug \"super lab\" that they had ever seen in the country.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794724",
+        "published_at": "2025-02-04T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.85,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "60470809-5c17-4983-8ce5-b9d3bc3cbce3",
+        "claim_id": "budd_2025_04_02_prod:0034",
+        "source_name": "Vancouver Sun",
+        "source_url": "https://vancouversun.com/news/bc-organized-crime-expanding-export-of-fentanyl-and-other-drugs",
+        "source_tier": "Other",
+        "snippet": "[2025-02-05] Police can’t say yet if Canadian fentanyl is being shipped to Europe, but there has been evidence of Mexican cartels operating there. Some of the B.C. super lab fentanyl “has been going to Southeast Asia,” Seyed said.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794734",
+        "published_at": "2025-02-05T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.8,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "aea6e0ca-7c60-4457-95fd-487899e6401b",
+        "claim_id": "budd_2025_04_02_prod:0034",
+        "source_name": "Royal Canadian Mounted Police",
+        "source_url": "https://rcmp.ca/en/news/2024/10/federal-investigators-take-down-largest-most-sophisticated-drug-superlab-canada",
+        "source_tier": "Other",
+        "snippet": "[2024-10-31] Furthermore, the investigation to date has resulted in the seizure of a very significant volume (approximately 5000 Litres, and over 10 tons of powdered precursor chemicals) of unregulated and scheduled precursor chemicals, believed to be used to produce Fentanyl and MDMA. That said, of particular concern is the discovery of several tons of unregulated chemicals believed to be used to produce P2P (Phenyl-2-Propanone); a Class A scheduled precursor essential to manufacture crystal methamphetamine",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794743",
+        "published_at": "2024-10-31T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.7,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "55aa01bf-c263-4134-9653-98165c40e673",
+        "claim_id": "budd_2025_04_02_prod:0034",
+        "source_name": "CBC News",
+        "source_url": "https://www.cbc.ca/news/politics/fentanyl-produced-in-canada-1.7275200",
+        "source_tier": "Other",
+        "snippet": "[2024-08-06] Organized crime groups have shifted their efforts away from importing the deadly synthetic opioid fentanyl and are now producing it primarily on Canadian soil. A briefing note prepared for the deputy minister of Health Canada — obtained by CBC News through an access to information request — lays out the changes law enforcement agencies have observed in the illegal market for the drug.",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794752",
+        "published_at": "2024-08-06T00:00:00",
+        "supports_claim": true,
+        "relevance_score": 0.65,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      },
+      {
+        "id": "e1b27123-271a-42f5-b1d7-e51568b1def5",
+        "claim_id": "budd_2025_04_02_prod:0034",
+        "source_name": "Public Safety Canada",
+        "source_url": "https://www.publicsafety.gc.ca/cnt/trnsprnc/brfng-mtrls/prlmntry-bndrs/20250402/52-en.aspx?wbdisable=true",
+        "source_tier": "Other",
+        "snippet": "[2025-03-28] Analysis demonstrates that most of the fentanyl production facilities dismantled were likely “super labs” capable of producing more than 5 kilograms of finished product per production cycle. While the majority (23) were located in urban areas, many were also in rural areas, likely to avoid ...",
+        "series_rows": null,
+        "retrieved_at": "2026-08-31T01:44:18.794762",
+        "published_at": "2025-03-28T00:00:00",
+        "supports_claim": null,
+        "relevance_score": 0.6,
+        "one_line_why": null,
+        "arithmetic_hinge": false
+      }
+    ]
+  },
+  "composition": {
+    "schema": "truthbot-composition-telemetry v1",
+    "quarantined_tier": "Political",
+    "overall": {
+      "claims": 14,
+      "decided": 9,
+      "decided_rate": 0.643,
+      "evidence_items": 84,
+      "quarantined_items": 14,
+      "quarantined_item_share": 0.167,
+      "packs_exposed": 7,
+      "pack_exposure_rate": 0.5,
+      "decided_rate_exposed": 0.429,
+      "decided_rate_unexposed": 0.857,
+      "decided_rate_gap": 0.428,
+      "sole_quarantined": 1,
+      "sole_quarantined_decided": 0
+    },
+    "by_speaker": {
+      "budd_2025_04_02_prod": {
+        "claims": 14,
+        "decided": 9,
+        "decided_rate": 0.643,
+        "evidence_items": 84,
+        "quarantined_items": 14,
+        "quarantined_item_share": 0.167,
+        "packs_exposed": 7,
+        "pack_exposure_rate": 0.5,
+        "decided_rate_exposed": 0.429,
+        "decided_rate_unexposed": 0.857,
+        "decided_rate_gap": 0.428,
+        "sole_quarantined": 1,
+        "sole_quarantined_decided": 0
+      }
+    }
+  }
+}

@@ -153,18 +153,25 @@ def test_genre_note_states_the_rate_and_the_rank():
     """
     b1, b2 = _bundle(), _bundle()
     other = _bundle(VerdictLabel.TRUE, gate="")
+    # Real speech_ids: the table is partitioned by authored class, so the
+    # comparison set has to be a real class with at least _GENRE_NOTE_MIN_SPEECHES
+    # members. These three are all presidential_address.
     set_reason_pills({
-        b1.claim.id: {"sid": "mine:1", "code": "INTENT", "copy": "c."},
-        b2.claim.id: {"sid": "mine:2", "code": "INTENT", "copy": "c."},
-        "elsewhere": {"sid": "other:3", "code": "INTENT", "copy": "c."},
+        b1.claim.id: {"sid": "clinton_1998:1", "code": "INTENT", "copy": "c."},
+        b2.claim.id: {"sid": "clinton_1998:2", "code": "INTENT", "copy": "c."},
+        "elsewhere": {"sid": "obama_2014:3", "code": "INTENT", "copy": "c."},
     })
-    # mine: 2 coded / 4 checked = 50.0%   other: 1 coded / 10 checked = 10.0%
-    # -> mine is top; median over [50.0, 10.0] = 30.0
-    set_corpus_genre_rates({"mine": {"checked": 4}, "other": {"checked": 10}})
-    html = _verdict_panel(_site_report([b1, b2, other], speech_id="mine"))
+    # clinton: 2 coded / 4 checked = 50.0%   obama: 1 / 10 = 10.0%   biden: 0 / 10 = 0.0%
+    # -> clinton is top; median over [0.0, 10.0, 50.0] = 10.0
+    set_corpus_genre_rates({"clinton_1998": {"checked": 4},
+                            "obama_2014": {"checked": 10},
+                            "biden_2022": {"checked": 10}})
+    html = _verdict_panel(_site_report([b1, b2, other], speech_id="clinton_1998"))
     assert "vp-genre-note" in html
     assert "Of this speech's 4 checked claims, 2 (50.0%)" in html
-    assert "the highest rate of the two speeches checked (median 30.0%)" in html
+    # the class label is authored and rides in the rank statement
+    assert ("the highest rate of the three presidential addresses checked "
+            "(median 10.0%)") in html
     # sentence 2 is verbatim and always rides with the rank statement
     assert "rhetorical genre" in html
     assert "not a finding about the speaker" in html
@@ -177,13 +184,15 @@ def test_genre_note_absent_when_this_speech_is_not_the_top_rate():
     """Only the highest-rate speech carries the note."""
     b1 = _bundle()
     set_reason_pills({
-        b1.claim.id: {"sid": "mine:1", "code": "INTENT", "copy": "c."},
-        "a": {"sid": "other:1", "code": "INTENT", "copy": "c."},
-        "b": {"sid": "other:2", "code": "INTENT", "copy": "c."},
+        b1.claim.id: {"sid": "clinton_1998:1", "code": "INTENT", "copy": "c."},
+        "a": {"sid": "obama_2014:1", "code": "INTENT", "copy": "c."},
+        "b": {"sid": "obama_2014:2", "code": "INTENT", "copy": "c."},
     })
-    # mine: 1/10 = 10%   other: 2/4 = 50% -> other wins, so mine stays silent
-    set_corpus_genre_rates({"mine": {"checked": 10}, "other": {"checked": 4}})
-    html = _verdict_panel(_site_report([b1], speech_id="mine"))
+    # clinton: 1/10 = 10%   obama: 2/4 = 50% -> obama wins, so clinton stays silent
+    set_corpus_genre_rates({"clinton_1998": {"checked": 10},
+                            "obama_2014": {"checked": 4},
+                            "biden_2022": {"checked": 10}})
+    html = _verdict_panel(_site_report([b1], speech_id="clinton_1998"))
     assert "vp-genre-note" not in html
 
 
@@ -191,13 +200,16 @@ def test_genre_note_renders_on_every_speech_tied_for_top():
     """On an exact tie for highest rate, all tied speeches carry it."""
     b1 = _bundle()
     set_reason_pills({
-        b1.claim.id: {"sid": "mine:1", "code": "INTENT", "copy": "c."},
-        "a": {"sid": "other:1", "code": "INTENT", "copy": "c."},
+        b1.claim.id: {"sid": "clinton_1998:1", "code": "INTENT", "copy": "c."},
+        "a": {"sid": "obama_2014:1", "code": "INTENT", "copy": "c."},
     })
-    set_corpus_genre_rates({"mine": {"checked": 10}, "other": {"checked": 10}})
-    html = _verdict_panel(_site_report([b1], speech_id="mine"))
+    # clinton and obama tie at 10.0%; biden makes the class big enough to rank in.
+    set_corpus_genre_rates({"clinton_1998": {"checked": 10},
+                            "obama_2014": {"checked": 10},
+                            "biden_2022": {"checked": 10}})
+    html = _verdict_panel(_site_report([b1], speech_id="clinton_1998"))
     assert "vp-genre-note" in html
-    assert "the highest rate of the two speeches checked" in html
+    assert "the highest rate of the three presidential addresses checked" in html
 
 
 def test_genre_note_absent_when_species_absent():

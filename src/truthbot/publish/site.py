@@ -395,6 +395,15 @@ _REPORT_EVENTS_PATH = Path(__file__).resolve().parents[3] / "data" / "report_eve
 
 _READER_FEEDBACK_PATH = Path(__file__).resolve().parents[3] / "data" / "reader_feedback.json"
 
+#: The occasion-class registry (P-senate). Authored in data/report_classes.json;
+#: see that file's comment for why class is not derived from the speaker.
+_REPORT_CLASSES_PATH = Path(__file__).resolve().parents[3] / "data" / "report_classes.json"
+
+#: A report with no authored class. It still renders and stays visible, but is
+#: excluded from every rate statistic -- forgetting to classify a new report
+#: understates the corpus rather than silently contaminating another class.
+UNCLASSIFIED = "unclassified"
+
 
 #: Verdicts that earn their own claim card. Unverifiable and Models-split are
 #: excluded: "we could not check this" is the least shareable thing the site
@@ -425,6 +434,56 @@ def _report_events() -> dict:
     except (OSError, ValueError):
         return {}
     return {str(k): str(v) for k, v in (doc.get("events") or {}).items() if v}
+
+
+@lru_cache(maxsize=1)
+def _report_classes() -> dict:
+    """The authored class registry. Missing/broken file -> everything unclassified.
+
+    Failing to the empty registry is deliberate: with no classes, every report
+    is UNCLASSIFIED, every rate statistic suppresses itself, and the site still
+    renders. The alternative -- guessing a class -- is what the file exists to
+    prevent.
+    """
+    try:
+        doc = json.loads(_REPORT_CLASSES_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"classes": {}, "labels": {}, "labels_inline": {}, "order": []}
+    return {
+        "classes": {str(k): str(v)
+                    for k, v in (doc.get("classes") or {}).items() if v},
+        "labels": {str(k): str(v)
+                   for k, v in (doc.get("labels") or {}).items() if v},
+        "labels_inline": {str(k): str(v)
+                          for k, v in (doc.get("labels_inline") or {}).items() if v},
+        "order": [str(c) for c in (doc.get("order") or [])],
+    }
+
+
+def report_class(speech_id: str) -> str:
+    """The authored class of a speech, or UNCLASSIFIED. Never derived."""
+    if not speech_id:
+        return UNCLASSIFIED
+    return _report_classes()["classes"].get(str(speech_id), UNCLASSIFIED)
+
+
+def report_class_label(cls: str) -> str:
+    """Section-heading form ('Presidential addresses')."""
+    if cls == UNCLASSIFIED:
+        return "Unclassified"
+    return _report_classes()["labels"].get(cls, cls)
+
+
+def report_class_label_inline(cls: str) -> str:
+    """Mid-sentence form ('presidential addresses'). Authored, not lower-cased."""
+    if cls == UNCLASSIFIED:
+        return "unclassified reports"
+    return _report_classes()["labels_inline"].get(cls, report_class_label(cls))
+
+
+def report_class_order() -> "list[str]":
+    """Authored section order; classes outside it sort after, alphabetically."""
+    return list(_report_classes()["order"])
 
 
 @lru_cache(maxsize=1)
@@ -1557,6 +1616,28 @@ def _initial_bubble(mood: str, claim_count: int) -> tuple[str, str]:
     }
     caps = captions_single if claim_count == 1 else captions_multi
     return caps.get(state, ""), bubble_class_map.get(state, "is-iffy")
+
+
+# Small-sample guard (step 3e): below this many DECIDED claims, a percent
+# implies more precision than the sample supports — "8 of 9" and "9 of 9"
+# both round to headlines a reader will over-trust. Under the threshold the
+# report drops the percent from the headline and swaps the "Truthy or
+# better" stat frame for a plain caveat instead of a second percent covering
+# the same ground.
+_SMALL_N_THRESHOLD = 10
+
+#: The five flagship presidential reports are exempted BY SPEECH_ID —
+#: belt-and-suspenders alongside their real decided counts (each is
+#: comfortably over the threshold; see ``data/report_classes.json``'s
+#: ``presidential_address`` class for the same five ids) so a future data
+#: anomaly could never quietly caveat one of them.
+_SMALL_N_EXEMPT_SPEECH_IDS: frozenset[str] = frozenset({
+    "clinton_1998", "gwbush_2006", "obama_2014", "biden_2022", "trump_2026",
+})
+
+_SMALL_N_NOTE = "Small sample — read the claims, not the score."
+
+
 def _verdict_panel(site_report) -> str:
     """Build the full .verdict-panel section for a report page."""
     claim_count = len(site_report.checkable_bundles)
@@ -1573,7 +1654,20 @@ def _verdict_panel(site_report) -> str:
     # since 2026-07-25 it is the percent-true figure ("56% True", color
     # carries the band) and it already renders here on report headers and in
     # ``_report_card`` on index cards. No separate band-word chip exists.
-    headline_strict, hcls_strict, ratio_text_strict = _family_verdict(dist_strict)
+    #
+    # Computed once here via ``_agg_family_verdict`` directly (rather than
+    # the ``_family_verdict`` wrapper AND a second, independent
+    # ``_agg_family_verdict`` call further down) so the small-sample guard
+    # and the headline-stats percentages read one FamilyVerdict — the
+    # decided count can never drift between the two.
+    _fam_strict = _agg_family_verdict(dist_strict)
+    headline_strict, hcls_strict, ratio_text_strict = (
+        _fam_strict.label, _fam_strict.css, _fam_strict.ratio_text)
+    t_strict, f_strict, decided_strict = (
+        _fam_strict.true_count, _fam_strict.adverse_count, _fam_strict.decided)
+    is_small_n = (decided_strict < _SMALL_N_THRESHOLD
+                  and (getattr(site_report, "speech_id", "") or "")
+                  not in _SMALL_N_EXEMPT_SPEECH_IDS)
 
     # Mascot mood derives from the published headline (remediation T0.3), not
     # the independent truthy-score rollup. Since 2026-07-25 the headline TEXT
@@ -1617,12 +1711,26 @@ def _verdict_panel(site_report) -> str:
 
     # Single headline+ratio block (the paired strict/lenient twin blocks
     # left with the lens toggle, remediation v2 1.8).
-    text_col = (
-        '<div class="vp-text-col">'
-        + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
-        + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
-        + '</div>'
-    )
+    #
+    # Small-sample guard (3e): below the threshold, a percent headline
+    # ("100% True" off one decided claim) reads as far more confident than
+    # the sample supports, so the plain ratio ("1 of 1 decided claims rated
+    # True") takes the headline slot instead and the percent is dropped —
+    # not just de-emphasized into the smaller line below it, which would
+    # still publish the same number.
+    if is_small_n:
+        text_col = (
+            '<div class="vp-text-col">'
+            + '<div class="vp-verdict neutral">' + _esc(ratio_text_strict) + '</div>'
+            + '</div>'
+        )
+    else:
+        text_col = (
+            '<div class="vp-text-col">'
+            + '<div class="vp-verdict ' + hcls_strict + '">' + _esc(headline_strict) + '</div>'
+            + '<div class="vp-ratio">' + _esc(ratio_text_strict) + '</div>'
+            + '</div>'
+        )
 
     # Headline-stats frames: "Truthy or better" + "False or worse",
     # promoted out of the stats grid into two prominent block frames
@@ -1634,11 +1742,9 @@ def _verdict_panel(site_report) -> str:
     def _pct(numerator: int, total: int) -> str:
         return format(numerator / total, '.0%') if total else "0%"
 
-    # Family math comes from the same FamilyVerdict the headline used (1.6) —
-    # chips and headline literally share one computation.
-    _fam_strict = _agg_family_verdict(dist_strict)
-    t_strict,  f_strict,  decided_strict  = (
-        _fam_strict.true_count, _fam_strict.adverse_count, _fam_strict.decided)
+    # Family math comes from the same FamilyVerdict the headline used above
+    # (1.6) — chips and headline literally share one computation; t_strict /
+    # f_strict / decided_strict were already unpacked from it there.
     truthy_pct_strict  = _pct(t_strict,  decided_strict)
     false_pct_strict   = _pct(f_strict,  decided_strict)
 
@@ -1653,15 +1759,33 @@ def _verdict_panel(site_report) -> str:
         "headline; Unverifiable and Models split are excluded."
     )
 
+    # Small-sample guard (3e): the "Truthy or better" frame is the second
+    # place a percent off this same small decided-count would appear
+    # (identical numerator/denominator as the dropped headline percent, just
+    # restated as "true-leaning" instead of "True"). Below the threshold its
+    # number+label+hint collapse to the one-line caveat; "False or worse"
+    # is unchanged (only "Truthy" is named by this guard's spec).
+    if is_small_n:
+        truthy_stat_body_html = (
+            '      <div class="vp-stat-body">\n'
+            + '        <div class="vp-stat-lbl">' + _esc(_SMALL_N_NOTE) + '</div>\n'
+            + '      </div>\n'
+        )
+        truthy_frame_title = _SMALL_N_NOTE
+    else:
+        truthy_stat_body_html = (
+            '      <div class="vp-stat-body">\n'
+            + '        <div class="vp-stat-num">' + truthy_pct_strict + '</div>\n'
+            + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
+            + '        <div class="vp-stat-hint">true-leaning / decided claims</div>\n'
+            + '      </div>\n'
+        )
+
     headline_stats_html = (
         '  <div class="vp-headline-stats">\n'
         + '    <div class="vp-headline-stat vp-stat-truthy" title="' + _esc(truthy_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_TRUTHY_RATE, size=42) + '</div>\n'
-        + '      <div class="vp-stat-body">\n'
-        + '        <div class="vp-stat-num">' + truthy_pct_strict + '</div>\n'
-        + '        <div class="vp-stat-lbl">Truthy or better</div>\n'
-        + '        <div class="vp-stat-hint">true-leaning / decided claims</div>\n'
-        + '      </div>\n'
+        + truthy_stat_body_html
         + '    </div>\n'
         + '    <div class="vp-headline-stat vp-stat-false" title="' + _esc(false_frame_title) + '">\n'
         + '      <div class="vp-stat-icon">' + _icon_svg(_ICON_BODY_FALSE_RATE, size=42) + '</div>\n'
@@ -1691,7 +1815,7 @@ def _verdict_panel(site_report) -> str:
         '    <div class="stat">'
         + _icon_svg(_ICON_BODY_LEADERS, size=32)
         + '<div class="num">1</div>'
-        + '<div class="lbl">Leaders Reviewed</div></div>\n'
+        + '<div class="lbl">Speakers Reviewed</div></div>\n'
         '  </div>\n'
     )
 
@@ -1863,9 +1987,12 @@ def _verdict_panel(site_report) -> str:
     # speech regardless of the data. A rank statement ("the highest rate of the
     # five speeches checked") is what this sample size can actually support.
     genre_note_html = ""
-    rate_table = _genre_rate_table()
     this_speech = getattr(site_report, "speech_id", "") or ""
-    if rate_table and this_speech in rate_table:
+    # Partitioned by the class of THIS speech (M-6). An unclassified report
+    # gets an empty table and therefore no note.
+    rate_table = _genre_rate_table(this_speech)
+    if (len(rate_table) >= _GENRE_NOTE_MIN_SPEECHES
+            and this_speech in rate_table):
         mine = rate_table[this_speech]
         top = max(row["rate"] for row in rate_table.values())
         # Strictly highest, or tied for highest. Compared on the same rounded
@@ -1876,16 +2003,15 @@ def _verdict_panel(site_report) -> str:
             n_speeches = len(rate_table)
             median_rate = _median([row["rate"] for row in rate_table.values()])
             speeches_word = _CARDINALS.get(n_speeches, str(n_speeches))
+            # Authored mid-sentence label, never lower-cased mechanically:
+            # "presidential addresses" but "Senate floor speeches".
+            class_phrase = report_class_label_inline(report_class(this_speech))
             genre_line = (
-                f"Of this speech's {mine['checked']} checked claims, "
-                f"{mine['coded']} ({mine['rate']:.1f}%) were recorded as beyond "
-                f"the public record — the highest rate of the {speeches_word} "
-                f"speeches checked (median {median_rate:.1f}%)."
-                # Sentence 2 is VERBATIM from the shipped note. Do not edit.
-                " That concentration is a property of the speech's "
-                "rhetorical genre — personal stories, intentions, and "
-                "unmeasured superlatives — not a finding about the speaker."
-            )
+                _GENRE_NOTE_S1_TEMPLATE.format(
+                    checked=mine["checked"], coded=mine["coded"],
+                    rate=mine["rate"], n=speeches_word,
+                    class_label=class_phrase, median=median_rate)
+                + _GENRE_NOTE_S2)
             # M-6 hard constraint: both sentences stay fully visible, outside
             # any <details>. An earlier revision made this note the <summary> of
             # a collapsed frame; the ruling of 2026-08-24 puts it back in the
@@ -2842,12 +2968,42 @@ def build_corpus_genre_rates(runs_dir: "Optional[Path]" = None) -> dict[str, dic
     return out
 
 
-def _genre_rate_table() -> dict[str, dict]:
+#: A rank statement ("the highest rate of the N ... checked") needs a field to
+#: rank within. Below three the note either restates the obvious ("higher than
+#: the one other") or is a coin flip, so it suppresses itself.
+_GENRE_NOTE_MIN_SPEECHES = 3
+
+#: Sentence 1 of the genre note, owner-ratified as a TEMPLATE (FR-0901-02).
+#: The class label is a substitution, not a literal, so the same ratified
+#: sentence serves every class. Pinned by hash in
+#: tests/test_disclosure_frame_visibility.py -- edit this and that test fails.
+_GENRE_NOTE_S1_TEMPLATE = (
+    "Of this speech's {checked} checked claims, {coded} ({rate:.1f}%) were "
+    "recorded as beyond the public record — the highest rate of the {n} "
+    "{class_label} checked (median {median:.1f}%)."
+)
+
+#: Sentence 2 is VERBATIM from the shipped note and is NOT a template.
+#: Unchanged since ratification; pinned by its own hash.
+_GENRE_NOTE_S2 = (
+    " That concentration is a property of the speech's "
+    "rhetorical genre — personal stories, intentions, and "
+    "unmeasured superlatives — not a finding about the speaker."
+)
+
+
+def _genre_rate_table(speech_id: str = "") -> dict[str, dict]:
     """Join the corpus claim counts to the reason-coded map -> per-speech rates.
 
     Returns ``{speech_id: {"checked", "coded", "rate"}}``. Speeches with no
     checked claims are absent; a speech with zero coded claims still appears
     with rate 0.0 so it counts toward the median.
+
+    PARTITIONED BY CLASS. With ``speech_id`` given, the table is restricted to
+    that speech's authored class, so a rate is only ever compared against
+    like occasions -- a Senate floor speech is not ranked against a State of
+    the Union. An UNCLASSIFIED speech gets an EMPTY table: it is excluded from
+    every rate statistic rather than pooled with anything.
     """
     if not _CORPUS_GENRE_RATES:
         return {}
@@ -2864,7 +3020,13 @@ def _genre_rate_table() -> dict[str, dict]:
         n = coded.get(speech, 0)
         table[speech] = {"checked": checked, "coded": n,
                          "rate": 100.0 * n / checked}
-    return table
+    if not speech_id:
+        return table
+    cls = report_class(speech_id)
+    if cls == UNCLASSIFIED:
+        return {}
+    return {sid: row for sid, row in table.items()
+            if report_class(sid) == cls}
 
 
 #: Small cardinals spelled out; the ratified copy wants "five speeches", not
@@ -3991,6 +4153,35 @@ header.masthead:has(.mast-row) {
    inheritance. As <h2>, the UA stylesheet's own font-size/font-weight would
    otherwise win over that inherited value — reset it back to match. */
 .section-head h2 { font: inherit; }
+.section-head h3 { font: inherit; }
+
+/* Per-class index sections (P-senate 3d): a section head per occasion class,
+   each with its own small stats strip. Every figure in .class-strip is
+   scoped to that one class -- never a cross-class ratio or comparison. */
+.class-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  margin: -0.4rem 0 1.2rem;
+}
+.class-strip .cs-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.class-strip .cs-num {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.class-strip .cs-lbl {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
 
 
 /* [06] Index page — aggregate stats & verdict bar ────────────────────── */
@@ -7213,6 +7404,48 @@ def _icon_svg(body: str, size: int = 28, extra_class: str = "") -> str:
         'viewBox="0 0 24 24" fill="none" aria-hidden="true">' + body + '</svg>'
     )
 
+def _class_stats_strip(group: list[dict]) -> str:
+    """Per-class stats strip under an index section head (step 3d-2).
+
+    Five figures, every one of them scoped to THIS class alone: reports,
+    claims checked, decided, the true-leaning share of decided, and n
+    visible -- the same denominator the share is computed over, disclosed
+    explicitly so the percentage never appears without it (the site-wide
+    convention already used for the report-page headline's "N of M decided
+    claims X-leaning").
+
+    ABSOLUTE CONSTRAINT: no figure here is ever compared, ratioed, or ranked
+    against another class. Each strip is computed from -- and reads about --
+    only the reports passed in.
+    """
+    n_reports = len(group)
+    claims_checked = 0
+    decided = 0
+    true_count = 0
+    for r in group:
+        fine_dist = r.get("verdict_distribution", {}) or {}
+        dist_strict = (r.get("verdict_distribution_strict")
+                       or _agg_project_dist(fine_dist, "strict"))
+        fam = _agg_family_verdict(dist_strict)
+        claims_checked += fam.total
+        decided += fam.decided
+        true_count += fam.true_count
+    share_txt = f'{round(100 * true_count / decided)}%' if decided else "—"
+    items = [
+        (str(n_reports), f'report{"s" if n_reports != 1 else ""}'),
+        (str(claims_checked), f'claim{"s" if claims_checked != 1 else ""} checked'),
+        (str(decided), "decided"),
+        (share_txt, "true-leaning share of decided"),
+        (str(decided), "n visible"),
+    ]
+    cells = "".join(
+        f'<div class="cs-item"><span class="cs-num">{_esc(val)}</span>'
+        f'<span class="cs-lbl">{_esc(lbl)}</span></div>'
+        for val, lbl in items
+    )
+    return f'<div class="class-strip">{cells}</div>'
+
+
 def _render_index(reports: list[dict], stats: dict) -> str:
     """Render the landing page from the reports index."""
     reports = _disambiguate_report_urls(reports)
@@ -7245,7 +7478,7 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + '<div class="stat">'
         + _icon_svg(_ICON_BODY_LEADERS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + str(total_leaders) + '</div>'
-        + '<div class="lbl">Leaders Reviewed</div></div>'
+        + '<div class="lbl">Speakers Reviewed</div></div>'
         + '<div class="stat">'
         + _icon_svg(_ICON_BODY_CLAIMS, size=48, extra_class="stat-icon-lg")
         + '<div class="num">' + str(total_claims) + '</div>'
@@ -7277,13 +7510,42 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         '</div>'
     )
 
-    cards_html = '<div class="reports">'
-    if reports:
-        for r in reports[:20]:
-            cards_html += _report_card(r)
+    # Index grouping by occasion class (step 3d-1). Cards keep exactly the
+    # order they have today WITHIN a section -- grouping only decides which
+    # section a card lands in, never re-sorts it. Section order is authored
+    # (report_class_order()); a class outside that list sorts after it,
+    # alphabetically, and UNCLASSIFIED always sorts last under its own head.
+    # A class with no reports in the visible set renders no section at all.
+    visible_reports = reports[:20]
+    if visible_reports:
+        _order = report_class_order()
+
+        def _section_sort_key(cls: str):
+            if cls in _order:
+                return (0, _order.index(cls), "")
+            if cls == UNCLASSIFIED:
+                return (2, 0, "")
+            return (1, 0, cls)
+
+        groups: "dict[str, list[dict]]" = {}
+        for r in visible_reports:
+            cls = report_class(r.get("speech_id", ""))
+            groups.setdefault(cls, []).append(r)
+
+        cards_html = ""
+        for cls in sorted(groups, key=_section_sort_key):
+            group = groups[cls]
+            cards_html += (
+                '<div class="section-head index-class-head">'
+                f'<h3>{_esc(report_class_label(cls))}</h3></div>'
+            )
+            cards_html += _class_stats_strip(group)
+            cards_html += '<div class="reports">'
+            for r in group:
+                cards_html += _report_card(r)
+            cards_html += '</div>'
     else:
-        cards_html += '<p class="dim">No reports yet.</p>'
-    cards_html += '</div>'
+        cards_html = '<div class="reports"><p class="dim">No reports yet.</p></div>'
 
     # Model-insights strip retired with the vestigial insights page
     # (remediation T0.4) — it summarized a single pseudo-model with 0%
@@ -8855,8 +9117,12 @@ class SitePublisher:
                  resolution_changes: Optional[list[dict]] = None,
                  reason_pills: Optional[dict] = None,
                  corpus_genre_rates: Optional[dict] = None,
-                 label_changes: Optional[list[dict]] = None) -> None:
+                 label_changes: Optional[list[dict]] = None,
+                 runs_dir: Optional[str | Path] = None) -> None:
         import os
+        #: Where head resolution reads from. None -> the repo's metrics dir
+        #: (heads.PCA_RUNS_DIR). Injectable so a test can build a corpus.
+        self._runs_dir = Path(runs_dir) if runs_dir else None
         if site_root:
             self._root = Path(site_root)
         else:
@@ -8952,6 +9218,14 @@ class SitePublisher:
         # Update data files
         reports_index = self._load_reports_index()
         claims_index = self._load_claims_index()
+
+        # A run that has left head resolution must leave the SITE (FR-0901-10).
+        # data/reports.json accumulates across renders, so without this a run
+        # that is no longer a publishing head keeps its row, its pages and its
+        # claims forever -- the index and the resolver disagree, and the site
+        # goes on publishing a withdrawn report.
+        reports_index, claims_index = self._prune_unpublished(
+            reports_index, claims_index)
 
         # Remove stale entry for this report (re-add updated)
         reports_index = [r for r in reports_index if r.get("id") != site_report.report_id]
@@ -9145,6 +9419,69 @@ class SitePublisher:
         path.write_text(content, encoding="utf-8")
         logger.debug("Wrote %s (%d B)", path, len(content))
 
+    def _prune_unpublished(self, reports_index: list[dict],
+                           claims_index: list[dict]) -> tuple[list[dict], list[dict]]:
+        """Drop every surface of a report whose speech is no longer a head.
+
+        The live set is whatever ``publishing_heads()`` resolves -- this never
+        reads ``held`` (or any other manifest field) itself, so any future
+        reason a run leaves head resolution prunes for free. Rows with no
+        speech_id are LEFT ALONE: legacy rows predate the field and "unknown"
+        must not mean "delete".
+        """
+        from truthbot.publish.heads import publishing_heads
+        try:
+            live = set(publishing_heads(self._runs_dir))
+        except SystemExit:
+            # A broken lineage is not a licence to delete the site. Fail closed:
+            # prune nothing and let the resolver's own error surface elsewhere.
+            logger.warning("prune: publishing_heads() failed; pruning nothing")
+            return reports_index, claims_index
+        if not live:
+            return reports_index, claims_index
+
+        dead = [r for r in reports_index
+                if r.get("speech_id") and r["speech_id"] not in live]
+        if not dead:
+            return reports_index, claims_index
+        dead_ids = {r.get("id") for r in dead}
+
+        cards = 0
+        for row in dead:
+            url = str(row.get("url") or "")
+            paths = []
+            if url:
+                paths.append(self._root / url)
+                paths.append(self._root / url.replace(".html", "-triage.html"))
+                # The share card is generated per report and is publicly
+                # reachable on its own URL, so leaving it behind keeps a
+                # withdrawn report's card live with nothing linking to it
+                # (FR-0901-12 item 4). Slug comes from the row's OWN url, not
+                # from a filename grep on a speaker name.
+                slug = url.rsplit("/", 1)[-1][: -len(".html")]
+                if slug:
+                    paths.append(self._root / _report_card_path(slug))
+            for claim in claims_index:
+                if claim.get("report_id") in dead_ids and claim.get("id"):
+                    paths.append(self._root / "claims" / f"{claim['id']}.html")
+                    paths.append(self._root / _claim_card_path(claim["id"]))
+            for path in paths:
+                if path.exists():
+                    path.unlink()
+                    if path.suffix == ".png":
+                        cards += 1
+                    logger.info("pruned %s (%s not a publishing head)",
+                                path.relative_to(self._root), row.get("speech_id"))
+                    print(f"pruned: {path.relative_to(self._root)}")
+
+        kept_reports = [r for r in reports_index if r.get("id") not in dead_ids]
+        kept_claims = [c for c in claims_index if c.get("report_id") not in dead_ids]
+        print(f"prune: dropped {len(dead)} report(s), "
+              f"{len(claims_index) - len(kept_claims)} claim row(s) -- "
+              f"{', '.join(sorted(r.get('speech_id') or '?' for r in dead))}")
+        print(f"prune: dropped {cards} share-card asset(s)")
+        return kept_reports, kept_claims
+
     def _load_reports_index(self) -> list[dict]:
         p = self._root / "data" / "reports.json"
         if p.exists():
@@ -9190,6 +9527,13 @@ class SitePublisher:
     def _report_meta(self, sr: SiteReport) -> dict:
         return {
             "id":                  sr.report_id,
+            # Occasion-class lookup key (P-senate 3d): report_class() is keyed
+            # by speech_id, not report_id (a per-run UUID) -- without this
+            # field the index has no way to know which section a report
+            # belongs in. Empty on legacy runs with no speech_id -> that
+            # report classifies as UNCLASSIFIED, same as report_class("")
+            # everywhere else, and still renders.
+            "speech_id":           sr.speech_id,
             "date":                sr.date_str,
             # Publish stamp for the feed's per-entry <updated> (1.5).
             # Deterministic when the caller sets SiteReport.generated_at
@@ -9223,6 +9567,12 @@ class SitePublisher:
             "source_of_claims_professional_public_title": sr.source_of_claims_professional_public_title or sr.role,
             "event":               sr.event,
             "channel":             sr.channel,
+            # Step 3f (P-senate): the authored occasion class, always present
+            # (UNCLASSIFIED rather than omitted/null) so every reader of
+            # reports.json can partition without a None-check.
+            "class":               report_class(getattr(sr, "speech_id", "") or ""),
+            "class_label":         report_class_label(
+                report_class(getattr(sr, "speech_id", "") or "")),
         }
 
     def _claim_meta(self, bundle: VerdictBundle, sr: SiteReport) -> dict:
