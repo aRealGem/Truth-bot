@@ -47,13 +47,28 @@ def test_an_unlisted_report_is_unclassified_not_guessed():
 def test_labels_and_order_are_authored():
     assert report_class_label("presidential_address") == "Presidential addresses"
     assert report_class_label("senate_floor") == "Senate floor speeches"
-    assert report_class_order() == ["presidential_address", "senate_floor"]
+    assert report_class_label("cabinet_address") == "Cabinet addresses"
+    assert report_class_order() == [
+        "presidential_address", "senate_floor", "cabinet_address"]
 
 
 def test_inline_label_is_authored_not_lowercased():
     """'Senate' is a proper noun; mechanical .lower() would corrupt it."""
     assert report_class_label_inline("presidential_address") == "presidential addresses"
     assert report_class_label_inline("senate_floor") == "Senate floor speeches"
+    assert report_class_label_inline("cabinet_address") == "cabinet address"
+
+
+def test_registered_class_with_no_reports_is_inert():
+    """cabinet_address is registered ahead of its first report (FR-0901-24).
+
+    A class in 'order'/'labels' with no 'classes' entry must name no speech,
+    render no section, and leave every other class's rate statistics alone --
+    otherwise registering a class early would perturb the published corpus.
+    """
+    classes = site._report_classes()["classes"]
+    assert "cabinet_address" not in classes.values()
+    assert report_class_order()[-1] == "cabinet_address"
 
 
 def test_table_is_partitioned_to_the_speech_class(corpus):
