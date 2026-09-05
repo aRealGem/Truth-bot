@@ -38,15 +38,18 @@
   ],
   "order": [
     "presidential_address",
-    "senate_floor"
+    "senate_floor",
+    "cabinet_address"
   ],
   "labels": {
     "presidential_address": "Presidential addresses",
-    "senate_floor": "Senate floor speeches"
+    "senate_floor": "Senate floor speeches",
+    "cabinet_address": "Cabinet addresses"
   },
   "labels_inline": {
     "presidential_address": "presidential addresses",
-    "senate_floor": "Senate floor speeches"
+    "senate_floor": "Senate floor speeches",
+    "cabinet_address": "cabinet address"
   },
   "classes": {
     "clinton_1998": "presidential_address",
