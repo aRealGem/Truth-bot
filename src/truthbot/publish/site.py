@@ -4142,6 +4142,27 @@ a.class-jump:focus-visible {
   background: var(--surface-hover);
 }
 .index-class-head { scroll-margin-top: 1.5rem; }
+#reports-top { scroll-margin-top: 1.5rem; }
+
+/* Return link closing each index class section. */
+.back-to-top {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.55rem 0 1.9rem;
+}
+.back-to-top a {
+  color: var(--ink-muted);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  padding: 0.2rem 0.15rem;
+  border-bottom: 1px solid transparent;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.back-to-top a:hover,
+.back-to-top a:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--border-strong);
+}
 
 /* Compact masthead override (report pages add .compact OR set padding inline).
    When a report page uses the smaller wordmark + breadcrumb pattern,
@@ -7478,6 +7499,21 @@ def _class_jump_links(ordered_classes: list[str]) -> str:
     )
 
 
+#: Anchor on the feed heading, immediately above the jump strip. "Back to top"
+#: lands here rather than at the document top so the reader arrives with the
+#: heading AND the jump links in view -- the next thing they want after
+#: finishing a section is usually another section.
+_REPORTS_TOP_ANCHOR = "reports-top"
+
+
+def _back_to_top_link() -> str:
+    """The return link that closes each index class section."""
+    return (
+        f'<div class="back-to-top"><a href="#{_REPORTS_TOP_ANCHOR}">'
+        '<span aria-hidden="true">&uarr;</span> Back to top</a></div>'
+    )
+
+
 def _class_stats_strip(group: list[dict]) -> str:
     """Per-class stats strip under an index section head (step 3d-2).
 
@@ -7622,6 +7658,10 @@ def _render_index(reports: list[dict], stats: dict) -> str:
             for r in group:
                 cards_html += _report_card(r)
             cards_html += '</div>'
+            # Closes each section, on the same condition as the jump strip:
+            # with a single section there is nothing to return past.
+            if jump_html:
+                cards_html += _back_to_top_link()
     else:
         cards_html = '<div class="reports"><p class="dim">No reports yet.</p></div>'
         jump_html = ""
@@ -7635,7 +7675,8 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + stats_html
         + how_strip_html
         + '<hr class="rule">'
-        + '<div class="section-head"><h2>Latest truthiness reviews</h2>'
+        + '<div class="section-head" id="reports-top">'
+        + '<h2>Latest truthiness reviews</h2>'
         + '<span class="sub">Feed</span></div>'
         + jump_html
         + cards_html

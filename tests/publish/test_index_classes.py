@@ -514,3 +514,56 @@ def test_anchor_is_derived_from_the_key_not_the_label():
     assert site.class_anchor("senate_floor") == "class-senate-floor"
     assert site.class_anchor("cabinet_address") == "class-cabinet-address"
     assert site.class_anchor("Odd Class!!") == "class-odd-class"
+
+
+def test_each_section_closes_with_a_back_to_top_link(monkeypatch):
+    """One return link per section, pointing at the feed heading anchor."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"sen1": "senate_floor", "pres1": "presidential_address"},
+        "labels": {"senate_floor": "Senate floor speeches",
+                   "presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address", "senate_floor"],
+    })
+    reports = [_report("sen1", "Senator A", "reports/a.html"),
+               _report("pres1", "President B", "reports/b.html")]
+    html = _render_index(reports, {"total_claims": 0, "total_leaders": 0,
+                                   "avg_consensus": 0})
+    assert html.count('class="back-to-top"') == 2          # one per section
+    assert html.count('href="#reports-top"') == 2
+    assert 'id="reports-top"' in html                      # the target exists
+    # The target precedes both links, so every return scrolls upward.
+    top_i = html.index('id="reports-top"')
+    assert all(top_i < m for m in
+               [html.index('href="#reports-top"'),
+                html.rindex('href="#reports-top"')])
+
+
+def test_back_to_top_closes_the_section_it_belongs_to(monkeypatch):
+    """Each link sits after its own cards, before the next section head."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"sen1": "senate_floor", "pres1": "presidential_address"},
+        "labels": {"senate_floor": "Senate floor speeches",
+                   "presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address", "senate_floor"],
+    })
+    reports = [_report("sen1", "Senator A", "reports/a.html"),
+               _report("pres1", "President B", "reports/b.html")]
+    html = _render_index(reports, {"total_claims": 0, "total_leaders": 0,
+                                   "avg_consensus": 0})
+    first_link = html.index('class="back-to-top"')
+    senate_head = html.index('id="class-senate-floor"')
+    pres_head = html.index('id="class-presidential-address"')
+    assert pres_head < first_link < senate_head
+
+
+def test_no_back_to_top_for_a_single_section(monkeypatch):
+    """Same condition as the jump strip: nothing to return past."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"pres1": "presidential_address"},
+        "labels": {"presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address"],
+    })
+    html = _render_index([_report("pres1", "President B", "reports/b.html")],
+                         {"total_claims": 0, "total_leaders": 0, "avg_consensus": 0})
+    assert 'class="back-to-top"' not in html
+    assert 'class="class-jumps"' not in html
