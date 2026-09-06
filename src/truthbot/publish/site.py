@@ -4141,7 +4141,6 @@ a.class-jump:focus-visible {
   border-color: var(--border-strong);
   background: var(--surface-hover);
 }
-.index-class-head { scroll-margin-top: 1.5rem; }
 #reports-top { scroll-margin-top: 1.5rem; }
 
 /* Return link closing each index class section. */
@@ -4218,6 +4217,41 @@ header.masthead:has(.mast-row) {
    otherwise win over that inherited value — reset it back to match. */
 .section-head h2 { font: inherit; }
 .section-head h3 { font: inherit; }
+
+/* Occasion-class section heads are the page's primary structural divider and
+   must outrank the generic .section-head above them. They previously shared
+   its exact styling -- 12px muted uppercase mono over a 1px hairline -- which
+   made a class boundary indistinguishable from the feed heading, so a reader
+   arriving from a jump link could not see where the section began. Same type
+   family, same case, same tracking: only contrast, weight, rule and space
+   change, and the accent is the one already used for the active nav link. */
+.index-class-head {
+  scroll-margin-top: 2.25rem;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  margin-top: 3.5rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--ink);
+}
+/* .section-head h2/h3 reset font to inherit; the h3 therefore picks up the
+   weight and size above rather than the generic head's. */
+.index-class-head h3 { font: inherit; }
+/* Accent sits on the h3, not the container: .section-head is a flex row with
+   justify-content: space-between, so a container ::before would become a
+   second flex item and push the label to the opposite edge. */
+.index-class-head h3::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 0.82em;
+  margin-right: 0.6rem;
+  background: #65a30d;
+  border-radius: 1px;
+  transform: translateY(0.08em);
+}
+/* The section you actually landed on, when arriving via a jump link. */
+.index-class-head:target { border-bottom-color: #65a30d; }
 
 /* Per-class index sections (P-senate 3d): a section head per occasion class,
    each with its own small stats strip. Every figure in .class-strip is
@@ -5560,7 +5594,6 @@ details[open] > .stance-coverage-summary .stance-coverage-label::before {
   font-size: 0.85rem;
   font-weight: 500;
 }
-
 
 
 /* [15] Report page — per-model reasoning (native <details>) ─────────── */
@@ -7070,7 +7103,6 @@ def _disambiguate_report_urls(reports: list[dict]) -> list[dict]:
             r = {**r, "url": f"reports/{base}-{short}.html"}
         result.append(r)
     return result
-
 
 
 # ── Index page hero animation script ────────────────────────────────────────

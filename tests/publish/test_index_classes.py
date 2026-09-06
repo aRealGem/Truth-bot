@@ -567,3 +567,33 @@ def test_no_back_to_top_for_a_single_section(monkeypatch):
                          {"total_claims": 0, "total_leaders": 0, "avg_consensus": 0})
     assert 'class="back-to-top"' not in html
     assert 'class="class-jumps"' not in html
+
+
+def test_class_head_emphasis_wins_the_cascade():
+    """The emphasis rule must follow the generic .section-head rule.
+
+    .index-class-head and .section-head have equal specificity and the section
+    heads carry BOTH classes, so source order alone decides which colour,
+    size, weight, margin and border win. Authored earlier in the stylesheet,
+    the emphasis is silently overridden and class boundaries render exactly
+    like the feed heading again -- the bug this styling exists to fix, and one
+    no markup assertion can see.
+    """
+    from truthbot.publish.site import CSS
+    assert CSS.index(".index-class-head {") > CSS.index(".section-head {")
+    # The properties that actually do the emphasising.
+    rule = CSS[CSS.index(".index-class-head {"):]
+    rule = rule[:rule.index("}")]
+    for prop in ("color:", "font-weight:", "border-bottom:", "margin-top:"):
+        assert prop in rule, prop
+
+
+def test_class_head_accent_is_on_the_h3_not_the_flex_container():
+    """.section-head is a flex row with justify-content: space-between.
+
+    An accent ::before on the container becomes a second flex item and pushes
+    the label to the far edge, so it belongs on the h3.
+    """
+    from truthbot.publish.site import CSS
+    assert ".index-class-head h3::before" in CSS
+    assert ".index-class-head::before" not in CSS
