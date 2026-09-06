@@ -427,3 +427,173 @@ def test_presidential_report_pages_byte_identical_except_label_rename(
     assert "Leaders Reviewed" not in new_html
     assert "Speakers Reviewed" in new_html
     assert old_html.replace("Leaders Reviewed", "Speakers Reviewed") == new_html
+
+
+# ── 5. Occasion-class jump links (cosmetic navigation) ────────────────────────
+
+
+def test_jump_links_point_at_the_sections_that_exist(monkeypatch):
+    """Every link resolves to a section head actually rendered on the page."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"sen1": "senate_floor", "pres1": "presidential_address"},
+        "labels": {"senate_floor": "Senate floor speeches",
+                   "presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address", "senate_floor"],
+    })
+    reports = [_report("sen1", "Senator A", "reports/a.html"),
+               _report("pres1", "President B", "reports/b.html")]
+    html = _render_index(reports, {"total_claims": 0, "total_leaders": 0,
+                                   "avg_consensus": 0})
+    assert 'class="class-jumps"' in html
+    for cls in ("presidential_address", "senate_floor"):
+        anchor = site.class_anchor(cls)
+        assert f'href="#{anchor}"' in html
+        assert f'id="{anchor}"' in html
+    # Links carry the SAME authored labels as the headings they point at.
+    assert '<a class="class-jump" href="#class-presidential-address">' \
+           'Presidential addresses</a>' in html
+    # Strip precedes the first section head.
+    assert html.index('class="class-jumps"') < html.index('id="class-presidential-address"')
+
+
+def test_jump_links_follow_authored_section_order(monkeypatch):
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"sen1": "senate_floor", "pres1": "presidential_address"},
+        "labels": {"senate_floor": "Senate floor speeches",
+                   "presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address", "senate_floor"],
+    })
+    # Senate first in input; link order must still be authored order.
+    reports = [_report("sen1", "Senator A", "reports/a.html"),
+               _report("pres1", "President B", "reports/b.html")]
+    html = _render_index(reports, {"total_claims": 0, "total_leaders": 0,
+                                   "avg_consensus": 0})
+    nav = html[html.index('class="class-jumps"'):html.index("</nav>",
+                                                            html.index('class="class-jumps"'))]
+    assert nav.index("#class-presidential-address") < nav.index("#class-senate-floor")
+
+
+def test_no_jump_links_for_a_single_section(monkeypatch):
+    """One section needs no navigation; the strip is suppressed entirely."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"pres1": "presidential_address"},
+        "labels": {"presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address"],
+    })
+    html = _render_index([_report("pres1", "President B", "reports/b.html")],
+                         {"total_claims": 0, "total_leaders": 0, "avg_consensus": 0})
+    assert 'class="class-jumps"' not in html
+    assert "Presidential addresses" in html
+
+
+def test_registered_class_with_no_visible_reports_gets_no_link(monkeypatch):
+    """A class registered ahead of its first report must not yield a dead link.
+
+    cabinet_address is authored in the registry before any cabinet report
+    exists (FR-0901-24); a link to a section that is not on the page would be
+    a broken anchor the moment the class is registered.
+    """
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"sen1": "senate_floor", "pres1": "presidential_address"},
+        "labels": {"senate_floor": "Senate floor speeches",
+                   "presidential_address": "Presidential addresses",
+                   "cabinet_address": "Cabinet addresses"},
+        "labels_inline": {},
+        "order": ["presidential_address", "senate_floor", "cabinet_address"],
+    })
+    reports = [_report("sen1", "Senator A", "reports/a.html"),
+               _report("pres1", "President B", "reports/b.html")]
+    html = _render_index(reports, {"total_claims": 0, "total_leaders": 0,
+                                   "avg_consensus": 0})
+    assert "Cabinet addresses" not in html
+    assert "#class-cabinet-address" not in html
+
+
+def test_anchor_is_derived_from_the_key_not_the_label():
+    """Re-wording a heading must not break a bookmarked in-page link."""
+    assert site.class_anchor("senate_floor") == "class-senate-floor"
+    assert site.class_anchor("cabinet_address") == "class-cabinet-address"
+    assert site.class_anchor("Odd Class!!") == "class-odd-class"
+
+
+def test_each_section_closes_with_a_back_to_top_link(monkeypatch):
+    """One return link per section, pointing at the feed heading anchor."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"sen1": "senate_floor", "pres1": "presidential_address"},
+        "labels": {"senate_floor": "Senate floor speeches",
+                   "presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address", "senate_floor"],
+    })
+    reports = [_report("sen1", "Senator A", "reports/a.html"),
+               _report("pres1", "President B", "reports/b.html")]
+    html = _render_index(reports, {"total_claims": 0, "total_leaders": 0,
+                                   "avg_consensus": 0})
+    assert html.count('class="back-to-top"') == 2          # one per section
+    assert html.count('href="#reports-top"') == 2
+    assert 'id="reports-top"' in html                      # the target exists
+    # The target precedes both links, so every return scrolls upward.
+    top_i = html.index('id="reports-top"')
+    assert all(top_i < m for m in
+               [html.index('href="#reports-top"'),
+                html.rindex('href="#reports-top"')])
+
+
+def test_back_to_top_closes_the_section_it_belongs_to(monkeypatch):
+    """Each link sits after its own cards, before the next section head."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"sen1": "senate_floor", "pres1": "presidential_address"},
+        "labels": {"senate_floor": "Senate floor speeches",
+                   "presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address", "senate_floor"],
+    })
+    reports = [_report("sen1", "Senator A", "reports/a.html"),
+               _report("pres1", "President B", "reports/b.html")]
+    html = _render_index(reports, {"total_claims": 0, "total_leaders": 0,
+                                   "avg_consensus": 0})
+    first_link = html.index('class="back-to-top"')
+    senate_head = html.index('id="class-senate-floor"')
+    pres_head = html.index('id="class-presidential-address"')
+    assert pres_head < first_link < senate_head
+
+
+def test_no_back_to_top_for_a_single_section(monkeypatch):
+    """Same condition as the jump strip: nothing to return past."""
+    monkeypatch.setattr(site, "_report_classes", lambda: {
+        "classes": {"pres1": "presidential_address"},
+        "labels": {"presidential_address": "Presidential addresses"},
+        "labels_inline": {}, "order": ["presidential_address"],
+    })
+    html = _render_index([_report("pres1", "President B", "reports/b.html")],
+                         {"total_claims": 0, "total_leaders": 0, "avg_consensus": 0})
+    assert 'class="back-to-top"' not in html
+    assert 'class="class-jumps"' not in html
+
+
+def test_class_head_emphasis_wins_the_cascade():
+    """The emphasis rule must follow the generic .section-head rule.
+
+    .index-class-head and .section-head have equal specificity and the section
+    heads carry BOTH classes, so source order alone decides which colour,
+    size, weight, margin and border win. Authored earlier in the stylesheet,
+    the emphasis is silently overridden and class boundaries render exactly
+    like the feed heading again -- the bug this styling exists to fix, and one
+    no markup assertion can see.
+    """
+    from truthbot.publish.site import CSS
+    assert CSS.index(".index-class-head {") > CSS.index(".section-head {")
+    # The properties that actually do the emphasising.
+    rule = CSS[CSS.index(".index-class-head {"):]
+    rule = rule[:rule.index("}")]
+    for prop in ("color:", "font-weight:", "border-bottom:", "margin-top:"):
+        assert prop in rule, prop
+
+
+def test_class_head_accent_is_on_the_h3_not_the_flex_container():
+    """.section-head is a flex row with justify-content: space-between.
+
+    An accent ::before on the container becomes a second flex item and pushes
+    the label to the far edge, so it belongs on the h3.
+    """
+    from truthbot.publish.site import CSS
+    assert ".index-class-head h3::before" in CSS
+    assert ".index-class-head::before" not in CSS
