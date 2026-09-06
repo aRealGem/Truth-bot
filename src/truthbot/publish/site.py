@@ -486,6 +486,17 @@ def report_class_order() -> "list[str]":
     return list(_report_classes()["order"])
 
 
+def class_anchor(cls: str) -> str:
+    """The index section's anchor id for a class ('class-senate-floor').
+
+    Derived from the class key, not from the label: labels are authored prose
+    and may be re-worded, and a re-worded heading must not silently break an
+    in-page link or a URL someone has bookmarked.
+    """
+    slug = re.sub(r"[^a-z0-9]+", "-", str(cls).lower()).strip("-")
+    return f"class-{slug or 'unclassified'}"
+
+
 @lru_cache(maxsize=1)
 def _feedback_cfg() -> dict:
     from truthbot.publish.reader_feedback import load_config
@@ -4100,6 +4111,58 @@ nav.top-nav a.active {
   border-bottom-color: #65a30d;
 }
 
+/* Index occasion-class jump links. Navigation only -- deliberately carries no
+   count or rate, so it cannot read as a cross-class comparison. */
+nav.class-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--sans);
+  margin: 0.1rem 0 1.1rem;
+}
+.class-jumps-lbl {
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+a.class-jump {
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+a.class-jump:hover,
+a.class-jump:focus-visible {
+  color: var(--ink);
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+#reports-top { scroll-margin-top: 1.5rem; }
+
+/* Return link closing each index class section. */
+.back-to-top {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.55rem 0 1.9rem;
+}
+.back-to-top a {
+  color: var(--ink-muted);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  padding: 0.2rem 0.15rem;
+  border-bottom: 1px solid transparent;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.back-to-top a:hover,
+.back-to-top a:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--border-strong);
+}
+
 /* Compact masthead override (report pages add .compact OR set padding inline).
    When a report page uses the smaller wordmark + breadcrumb pattern,
    reduce the masthead padding via the .mast-row container. */
@@ -4154,6 +4217,41 @@ header.masthead:has(.mast-row) {
    otherwise win over that inherited value — reset it back to match. */
 .section-head h2 { font: inherit; }
 .section-head h3 { font: inherit; }
+
+/* Occasion-class section heads are the page's primary structural divider and
+   must outrank the generic .section-head above them. They previously shared
+   its exact styling -- 12px muted uppercase mono over a 1px hairline -- which
+   made a class boundary indistinguishable from the feed heading, so a reader
+   arriving from a jump link could not see where the section began. Same type
+   family, same case, same tracking: only contrast, weight, rule and space
+   change, and the accent is the one already used for the active nav link. */
+.index-class-head {
+  scroll-margin-top: 2.25rem;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  margin-top: 3.5rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--ink);
+}
+/* .section-head h2/h3 reset font to inherit; the h3 therefore picks up the
+   weight and size above rather than the generic head's. */
+.index-class-head h3 { font: inherit; }
+/* Accent sits on the h3, not the container: .section-head is a flex row with
+   justify-content: space-between, so a container ::before would become a
+   second flex item and push the label to the opposite edge. */
+.index-class-head h3::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 0.82em;
+  margin-right: 0.6rem;
+  background: #65a30d;
+  border-radius: 1px;
+  transform: translateY(0.08em);
+}
+/* The section you actually landed on, when arriving via a jump link. */
+.index-class-head:target { border-bottom-color: #65a30d; }
 
 /* Per-class index sections (P-senate 3d): a section head per occasion class,
    each with its own small stats strip. Every figure in .class-strip is
@@ -5496,7 +5594,6 @@ details[open] > .stance-coverage-summary .stance-coverage-label::before {
   font-size: 0.85rem;
   font-weight: 500;
 }
-
 
 
 /* [15] Report page — per-model reasoning (native <details>) ─────────── */
@@ -7008,7 +7105,6 @@ def _disambiguate_report_urls(reports: list[dict]) -> list[dict]:
     return result
 
 
-
 # ── Index page hero animation script ────────────────────────────────────────
 
 
@@ -7404,6 +7500,52 @@ def _icon_svg(body: str, size: int = 28, extra_class: str = "") -> str:
         'viewBox="0 0 24 24" fill="none" aria-hidden="true">' + body + '</svg>'
     )
 
+def _class_jump_links(ordered_classes: list[str]) -> str:
+    """Convenience links to the index's occasion-class sections.
+
+    Built from the classes that ACTUALLY HAVE visible reports, in the same
+    order the sections render, so a link can never point at a section that is
+    not on the page. A class registered ahead of its first report (cabinet_
+    address on the day it was added) contributes no link until a report of
+    that class is visible, and then starts appearing with no code change.
+
+    Labels are ``report_class_label`` -- the same authored strings as the
+    section headings they point at, so the two can never drift apart. Nothing
+    here is a count or a rate: this is navigation, and it must stay outside
+    the class-comparison prohibition that governs :func:`_class_stats_strip`.
+
+    One section needs no jump links; the caller suppresses the strip.
+    """
+    if len(ordered_classes) < 2:
+        return ""
+    links = "".join(
+        f'<a class="class-jump" href="#{_esc(class_anchor(cls))}">'
+        f'{_esc(report_class_label(cls))}</a>'
+        for cls in ordered_classes
+    )
+    return (
+        '<nav class="class-jumps" aria-label="Jump to report type">'
+        '<span class="class-jumps-lbl">Jump to</span>'
+        + links
+        + '</nav>'
+    )
+
+
+#: Anchor on the feed heading, immediately above the jump strip. "Back to top"
+#: lands here rather than at the document top so the reader arrives with the
+#: heading AND the jump links in view -- the next thing they want after
+#: finishing a section is usually another section.
+_REPORTS_TOP_ANCHOR = "reports-top"
+
+
+def _back_to_top_link() -> str:
+    """The return link that closes each index class section."""
+    return (
+        f'<div class="back-to-top"><a href="#{_REPORTS_TOP_ANCHOR}">'
+        '<span aria-hidden="true">&uarr;</span> Back to top</a></div>'
+    )
+
+
 def _class_stats_strip(group: list[dict]) -> str:
     """Per-class stats strip under an index section head (step 3d-2).
 
@@ -7532,11 +7674,15 @@ def _render_index(reports: list[dict], stats: dict) -> str:
             cls = report_class(r.get("speech_id", ""))
             groups.setdefault(cls, []).append(r)
 
+        ordered_classes = sorted(groups, key=_section_sort_key)
+        jump_html = _class_jump_links(ordered_classes)
+
         cards_html = ""
-        for cls in sorted(groups, key=_section_sort_key):
+        for cls in ordered_classes:
             group = groups[cls]
             cards_html += (
-                '<div class="section-head index-class-head">'
+                '<div class="section-head index-class-head" '
+                f'id="{_esc(class_anchor(cls))}">'
                 f'<h3>{_esc(report_class_label(cls))}</h3></div>'
             )
             cards_html += _class_stats_strip(group)
@@ -7544,8 +7690,13 @@ def _render_index(reports: list[dict], stats: dict) -> str:
             for r in group:
                 cards_html += _report_card(r)
             cards_html += '</div>'
+            # Closes each section, on the same condition as the jump strip:
+            # with a single section there is nothing to return past.
+            if jump_html:
+                cards_html += _back_to_top_link()
     else:
         cards_html = '<div class="reports"><p class="dim">No reports yet.</p></div>'
+        jump_html = ""
 
     # Model-insights strip retired with the vestigial insights page
     # (remediation T0.4) — it summarized a single pseudo-model with 0%
@@ -7556,8 +7707,10 @@ def _render_index(reports: list[dict], stats: dict) -> str:
         + stats_html
         + how_strip_html
         + '<hr class="rule">'
-        + '<div class="section-head"><h2>Latest truthiness reviews</h2>'
+        + '<div class="section-head" id="reports-top">'
+        + '<h2>Latest truthiness reviews</h2>'
         + '<span class="sub">Feed</span></div>'
+        + jump_html
         + cards_html
         + _HERO_SCRIPT
     )
