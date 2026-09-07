@@ -93,6 +93,97 @@
           "campaign_domains": ["georgewbush.com"]
         }
       ]
+    },
+    {
+      "speaker": "Elizabeth Warren",
+      "aliases": ["Senator Elizabeth Warren", "Sen. Elizabeth Warren", "Ms. WARREN"],
+      "eras": [
+        {
+          "start": "2013-01-03",
+          "end": null,
+          "administration_domains": ["warren.senate.gov"],
+          "party_domains": ["democrats.org", "dnc.org"],
+          "campaign_domains": ["elizabethwarren.com"]
+        }
+      ]
+    },
+    {
+      "speaker": "Ted Cruz",
+      "aliases": ["Senator Ted Cruz", "Sen. Ted Cruz", "Mr. CRUZ"],
+      "eras": [
+        {
+          "start": "2013-01-03",
+          "end": null,
+          "administration_domains": ["cruz.senate.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": ["tedcruz.org"]
+        }
+      ]
+    },
+    {
+      "speaker": "Thomas Tillis",
+      "aliases": ["Senator Thom Tillis", "Senator Thomas Tillis", "Sen. Thom Tillis", "Mr. TILLIS"],
+      "eras": [
+        {
+          "start": "2015-01-06",
+          "end": null,
+          "administration_domains": ["tillis.senate.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": ["thomtillis.com"]
+        }
+      ]
+    },
+    {
+      "speaker": "Ted Budd",
+      "aliases": ["Senator Ted Budd", "Sen. Ted Budd", "Mr. BUDD"],
+      "eras": [
+        {
+          "start": "2023-01-03",
+          "end": null,
+          "administration_domains": ["budd.senate.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": ["tedbudd.com"]
+        }
+      ]
+    },
+    {
+      "speaker": "Scott Bessent",
+      "aliases": ["Secretary Bessent", "Treasury Secretary Scott Bessent", "Secretary of the Treasury Scott Bessent", "Mr. BESSENT"],
+      "eras": [
+        {
+          "start": "2025-01-28",
+          "end": null,
+          "administration_domains": ["treasury.gov", "home.treasury.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": []
+        }
+      ]
+    },
+    {
+      "speaker": "Chris Wright",
+      "aliases": ["Secretary Wright", "Energy Secretary Chris Wright", "Secretary of Energy Chris Wright", "Mr. WRIGHT"],
+      "eras": [
+        {
+          "start": "2025-02-03",
+          "end": null,
+          "administration_domains": ["energy.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": []
+        }
+      ]
+    },
+    {
+      "speaker": "Pete Hegseth",
+      "aliases": ["Secretary Hegseth", "Secretary of Defense Pete Hegseth", "Secretary of War Pete Hegseth", "Defense Secretary Pete Hegseth", "Mr. HEGSETH"],
+      "eras": [
+        {
+          "start": "2025-01-25",
+          "end": null,
+          "administration_domains": ["war.gov", "defense.gov"],
+          "party_domains": ["gop.com", "rnc.org"],
+          "campaign_domains": []
+        }
+      ]
     }
   ]
 }
