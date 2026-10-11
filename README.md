@@ -1,3 +1,7 @@
+<p>
+  <img src="src/truthbot/publish/assets/social/truthy-avatar.png" alt="Truthy, the truth-bot mascot" width="96" height="96">
+</p>
+
 # truth-bot 🔍
 
 Automated political rhetoric fact-checker. Feed it a transcript; get back a structured, scored, shareable fact-check report.
